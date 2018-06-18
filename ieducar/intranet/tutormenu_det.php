@@ -24,49 +24,44 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Tutor Menu" );
-        $this->processoAp = "445";
+        $this->SetTitulo("{$this->_instituicao} Tutor Menu");
+        $this->processoAp = '445';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe de Tutor Menu";
-        
+        $this->titulo = 'Detalhe de Tutor Menu';
 
         $cod_tutormenu = @$_GET['cod_tutormenu'];
 
         $obj = new clsTutormenu($cod_tutormenu);
         $detalhe = $obj->detalhe();
-        
-        $this->addDetalhe( array("Nome", $detalhe['nm_tutormenu']) );
 
-        $this->url_novo = "tutormenu_cad.php";
+        $this->addDetalhe(['Nome', $detalhe['nm_tutormenu']]);
+
+        $this->url_novo = 'tutormenu_cad.php';
         $this->url_editar = "tutormenu_cad.php?cod_tutormenu={$cod_tutormenu}";
-        $this->url_cancelar = "menu_suspenso_lst.php";
+        $this->url_cancelar = 'menu_suspenso_lst.php';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

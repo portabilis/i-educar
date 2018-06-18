@@ -26,8 +26,11 @@
  *
  * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package  Core
+ *
  * @since    Arquivo disponível desde a versão 1.0.0
+ *
  * @version  $Id$
  */
 
@@ -36,150 +39,174 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
-
 class clsIndexBase extends clsBase
 {
-  public function Formular() {
-    $this->SetTitulo($this->_instituicao . 'Categorias ou níveis do servidor');
-    $this->processoAp = '829';
-    $this->addEstilo('localizacaoSistema');    
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . 'Categorias ou níveis do servidor');
+        $this->processoAp = '829';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
+class indice extends clsListagem
+{
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    public $__pessoa_logada;
 
-class indice extends clsListagem {
-  /**
-   * Referencia pega da session para o idpes do usuario atual
-   *
-   * @var int
-   */
-  var $__pessoa_logada;
+    /**
+     * Titulo no topo da pagina
+     *
+     * @var int
+     */
+    public $__titulo;
 
-  /**
-   * Titulo no topo da pagina
-   *
-   * @var int
-   */
-  var $__titulo;
+    /**
+     * Quantidade de registros a ser apresentada em cada pagina
+     *
+     * @var int
+     */
+    public $__limite;
 
-  /**
-   * Quantidade de registros a ser apresentada em cada pagina
-   *
-   * @var int
-   */
-  var $__limite;
+    /**
+     * Inicio dos registros a serem exibidos (limit)
+     *
+     * @var int
+     */
+    public $__offset;
 
-  /**
-   * Inicio dos registros a serem exibidos (limit)
-   *
-   * @var int
-   */
-  var $__offset;
+    public $cod_categoria_nivel;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_categoria_nivel;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-  var $cod_categoria_nivel;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $nm_categoria_nivel;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
+    public function Gerar()
+    {
+        session_start();
+        $this->__pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-  public function Gerar() {
-    session_start();
-    $this->__pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        $this->__titulo = 'Categoria Nivel - Listagem';
 
-    $this->__titulo = 'Categoria Nivel - Listagem';
+        // passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    // passa todos os valores obtidos no GET para atributos do objeto
-    foreach ($_GET as $var => $val) {
-      $this->$var = ($val === "") ? NULL : $val;
-    }
+        $this->addBanner('imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg', 'Intranet');
-
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Nome Categoria Nivel'
-    ));
+    ]);
 
-    // Filtros
-    $this->campoTexto('nm_categoria_nivel', 'Nome Categoria Nivel',
-      $this->nm_categoria_nivel, 30, 255, FALSE);
-
-    // Paginador
-    $this->__limite = 20;
-    $this->__offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->__limite-$this->__limite : 0;
-
-    $obj_categoria_nivel = new clsPmieducarCategoriaNivel();
-    $obj_categoria_nivel->setOrderby('nm_categoria_nivel ASC');
-    $obj_categoria_nivel->setLimite($this->__limite, $this->__offset);
-
-    $lista = $obj_categoria_nivel->lista(
-      NULL, NULL, $this->nm_categoria_nivel, NULL, NULL, NULL, NULL, NULL, 1
+        // Filtros
+        $this->campoTexto(
+        'nm_categoria_nivel',
+        'Nome Categoria Nivel',
+      $this->nm_categoria_nivel,
+        30,
+        255,
+        false
     );
 
-    $total = $obj_categoria_nivel->_total;
+        // Paginador
+        $this->__limite = 20;
+        $this->__offset = ($_GET['pagina_' . $this->nome]) ?
+      $_GET['pagina_' . $this->nome] * $this->__limite-$this->__limite : 0;
 
-    // Monta a lista
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        // muda os campos data
-        $registro['data_cadastro_time'] = strtotime( substr( $registro['data_cadastro'], 0, 16));
-        $registro['data_cadastro_br']   = date('d/m/Y H:i', $registro['data_cadastro_time']);
+        $obj_categoria_nivel = new clsPmieducarCategoriaNivel();
+        $obj_categoria_nivel->setOrderby('nm_categoria_nivel ASC');
+        $obj_categoria_nivel->setLimite($this->__limite, $this->__offset);
 
-        $registro['data_exclusao_time'] = strtotime(substr( $registro['data_exclusao'], 0, 16));
-        $registro['data_exclusao_br']   = date('d/m/Y H:i', $registro['data_exclusao_time']);
+        $lista = $obj_categoria_nivel->lista(
+      null,
+        null,
+        $this->nm_categoria_nivel,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1
+    );
 
-        // pega detalhes de foreign_keys
-        if (class_exists('clsPmieducarUsuario')) {
-          $obj_ref_usuario_cad = new clsPmieducarUsuario($registro['ref_usuario_cad']);
-          $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
-          $registro['ref_usuario_cad'] = $det_ref_usuario_cad['data_cadastro'];
+        $total = $obj_categoria_nivel->_total;
+
+        // Monta a lista
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                // muda os campos data
+                $registro['data_cadastro_time'] = strtotime(substr($registro['data_cadastro'], 0, 16));
+                $registro['data_cadastro_br']   = date('d/m/Y H:i', $registro['data_cadastro_time']);
+
+                $registro['data_exclusao_time'] = strtotime(substr($registro['data_exclusao'], 0, 16));
+                $registro['data_exclusao_br']   = date('d/m/Y H:i', $registro['data_exclusao_time']);
+
+                // pega detalhes de foreign_keys
+                if (class_exists('clsPmieducarUsuario')) {
+                    $obj_ref_usuario_cad = new clsPmieducarUsuario($registro['ref_usuario_cad']);
+                    $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
+                    $registro['ref_usuario_cad'] = $det_ref_usuario_cad['data_cadastro'];
+                } else {
+                    $registro['ref_usuario_cad'] = 'Erro na geracao';
+                }
+
+                if (class_exists('clsPmieducarUsuario')) {
+                    $obj_ref_usuario_exc = new clsPmieducarUsuario($registro['ref_usuario_exc']);
+                    $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
+                    $registro['ref_usuario_exc'] = $det_ref_usuario_exc['data_cadastro'];
+                } else {
+                    $registro['ref_usuario_exc'] = 'Erro na geracao';
+                }
+
+                $this->addLinhas([
+          sprintf(
+              '<a href="educar_categoria_nivel_det.php?cod_categoria_nivel=%s">%s</a>',
+            $registro['cod_categoria_nivel'],
+              $registro['nm_categoria_nivel']
+          )
+        ]);
+            }
         }
-        else {
-          $registro['ref_usuario_cad'] = 'Erro na geracao';
+
+        $this->addPaginador2(
+        'educar_categoria_nivel_lst.php',
+        $total,
+        $_GET,
+      $this->nome,
+        $this->__limite
+    );
+
+        $obj_permissoes = new clsPermissoes();
+        if ($obj_permissoes->permissao_cadastra(
+        829,
+        $this->__pessoa_logada,
+        3,
+      null,
+        true
+    )) {
+            $this->acao = 'go("educar_categoria_nivel_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
-        if (class_exists('clsPmieducarUsuario')) {
-          $obj_ref_usuario_exc = new clsPmieducarUsuario( $registro['ref_usuario_exc']);
-          $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
-          $registro['ref_usuario_exc'] = $det_ref_usuario_exc['data_cadastro'];
-        }
-        else {
-          $registro['ref_usuario_exc'] = 'Erro na geracao';
-        }
+        $this->largura = '100%';
 
-        $this->addLinhas(array(
-          sprintf('<a href="educar_categoria_nivel_det.php?cod_categoria_nivel=%s">%s</a>',
-            $registro['cod_categoria_nivel'], $registro['nm_categoria_nivel'])
-        ));
-      }
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
+         'educar_servidores_index.php'       => 'Servidores',
+         ''                                  => 'Categorias ou níveis do servidor'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->addPaginador2('educar_categoria_nivel_lst.php', $total, $_GET,
-      $this->nome, $this->__limite);
-
-    $obj_permissoes = new clsPermissoes();
-    if ($obj_permissoes->permissao_cadastra(829, $this->__pessoa_logada, 3,
-      NULL, TRUE)) {
-      $this->acao = 'go("educar_categoria_nivel_cad.php")';
-      $this->nome_acao = 'Novo';
-    }
-
-    $this->largura = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Categorias ou níveis do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
 }
-
-
 
 // Instancia a classe da página
 $pagina = new clsIndexBase();
@@ -188,7 +215,7 @@ $pagina = new clsIndexBase();
 $miolo = new indice();
 
 // Passa o conteúdo para a classe da página
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 // Imprime o HTML
 $pagina->MakeAll();

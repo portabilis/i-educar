@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -38,61 +43,66 @@ require_once 'CoreExt/_stub/EntityDataMapper.php';
  * de banco de dados estática de CoreExt_DataMapper funciona.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_DataMapper_StaticAdapterTest extends IntegrationBaseTest
 {
-  protected function setUp()
-  {
-    parent::setUp();
-    CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
-  }
+    protected function setUp()
+    {
+        parent::setUp();
+        CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
+    }
 
-  protected function tearDown()
-  {
-    parent::tearDown();
-    CoreExt_DataMapper::resetDefaultDbAdapter();
-  }
+    protected function tearDown()
+    {
+        parent::tearDown();
+        CoreExt_DataMapper::resetDefaultDbAdapter();
+    }
 
-  public function getSetUpOperation()
-  {
-    return PHPUnit_Extensions_Database_Operation_Factory::NONE();
-  }
+    public function getSetUpOperation()
+    {
+        return PHPUnit_Extensions_Database_Operation_Factory::NONE();
+    }
 
-  /**
-   * Esse método precisa ser sobrescrito mas a utilidade dele nesse teste é
-   * irrelevante.
-   */
-  public function getDataSet()
-  {
-    return $this->createXMLDataSet($this->getFixture('pessoa.xml'));
-  }
+    /**
+     * Esse método precisa ser sobrescrito mas a utilidade dele nesse teste é
+     * irrelevante.
+     */
+    public function getDataSet()
+    {
+        return $this->createXMLDataSet($this->getFixture('pessoa.xml'));
+    }
 
-  public function testAdapterParaNovaInstanciaDeDataMapperEOStatic()
-  {
-    $entityMapper = new CoreExt_EntityDataMapperStub();
-    $this->assertSame($this->getDbAdapter(), $entityMapper->getDbAdapter());
+    public function testAdapterParaNovaInstanciaDeDataMapperEOStatic()
+    {
+        $entityMapper = new CoreExt_EntityDataMapperStub();
+        $this->assertSame($this->getDbAdapter(), $entityMapper->getDbAdapter());
 
-    $entityMapper = new CoreExt_EntityDataMapperStub();
-    $this->assertSame($this->getDbAdapter(), $entityMapper->getDbAdapter());
-  }
+        $entityMapper = new CoreExt_EntityDataMapperStub();
+        $this->assertSame($this->getDbAdapter(), $entityMapper->getDbAdapter());
+    }
 
-  public function testAdapterNoConstrutorSobrescreveOAdapterStaticPadrao()
-  {
-    $db = new CustomPdo('sqlite::memory:');
-    $entityMapper = new CoreExt_EntityDataMapperStub($db);
-    $this->assertSame($db, $entityMapper->getDbAdapter());
-  }
+    public function testAdapterNoConstrutorSobrescreveOAdapterStaticPadrao()
+    {
+        $db = new CustomPdo('sqlite::memory:');
+        $entityMapper = new CoreExt_EntityDataMapperStub($db);
+        $this->assertSame($db, $entityMapper->getDbAdapter());
+    }
 
-  public function testResetarAdapterFazComQueODataMapperInstancieUmNovoAdapter()
-  {
-    CoreExt_EntityDataMapperStub::resetDefaultDbAdapter();
-    $entityMapper = new CoreExt_EntityDataMapperStub();
-    $this->assertNotSame($this->getDbAdapter(), $entityMapper->getDbAdapter());
-  }
+    public function testResetarAdapterFazComQueODataMapperInstancieUmNovoAdapter()
+    {
+        CoreExt_EntityDataMapperStub::resetDefaultDbAdapter();
+        $entityMapper = new CoreExt_EntityDataMapperStub();
+        $this->assertNotSame($this->getDbAdapter(), $entityMapper->getDbAdapter());
+    }
 }

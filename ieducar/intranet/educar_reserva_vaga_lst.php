@@ -22,9 +22,12 @@
  *
  * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package     Core
  * @subpackage  ReservaVaga
+ *
  * @since       Arquivo disponível desde a versão 1.0.0
+ *
  * @version     $Id$
  */
 
@@ -35,187 +38,185 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-  public function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
-    $this->processoAp = '639';
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
+        $this->processoAp = '639';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsListagem
 {
-  /**
-   * Referência a usuário da sessão
-   * @var int
-   */
-  var $pessoa_logada = NULL;
+    /**
+     * Referência a usuário da sessão
+     *
+     * @var int
+     */
+    public $pessoa_logada = null;
 
-  /**
-   * Título no topo da página
-   * @var string
-   */
-  var $titulo = '';
+    /**
+     * Título no topo da página
+     *
+     * @var string
+     */
+    public $titulo = '';
 
-  /**
-   * Limite de registros por página
-   * @var int
-   */
-  var $limite = 0;
+    /**
+     * Limite de registros por página
+     *
+     * @var int
+     */
+    public $limite = 0;
 
-  /**
-   * Início dos registros a serem exibidos (limit)
-   * @var int
-   */
-  var $offset = 0;
+    /**
+     * Início dos registros a serem exibidos (limit)
+     *
+     * @var int
+     */
+    public $offset = 0;
 
-  var $ref_cod_escola;
-  var $ref_cod_serie;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $ref_ref_cod_serie;
-  var $ref_cod_curso;
-  var $ref_cod_instituicao;
+    public $ref_cod_escola;
+    public $ref_cod_serie;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_ref_cod_serie;
+    public $ref_cod_curso;
+    public $ref_cod_instituicao;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = "Reserva Vaga - Listagem";
+        $this->titulo = 'Reserva Vaga - Listagem';
 
-    foreach ($_GET as $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
-      $this->$var = ($val === '') ? NULL : $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    
+        $lista_busca = [
+      'S&eacute;rie',
+      'Curso'
+    ];
 
-    $lista_busca = array(
-      "S&eacute;rie",
-      "Curso"
-    );
+        $obj_permissao = new clsPermissoes();
+        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        if ($nivel_usuario == 1) {
+            $lista_busca[] = 'Escola';
+            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+        } elseif ($nivel_usuario == 2) {
+            $lista_busca[] = 'Escola';
+        }
+        $this->addCabecalhos($lista_busca);
 
-    $obj_permissao = new clsPermissoes();
-    $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-    if ($nivel_usuario == 1) {
-      $lista_busca[] = 'Escola';
-      $lista_busca[] = 'Institui&ccedil;&atilde;o';
-    }
-    elseif ($nivel_usuario == 2) {
-      $lista_busca[] = "Escola";
-    }
-    $this->addCabecalhos($lista_busca);
+        $get_escola = true;
+        $get_curso  = true;
+        $get_escola_curso_serie = true;
+        include 'include/pmieducar/educar_campo_lista.php';
 
-    $get_escola = TRUE;
-    $get_curso  = TRUE;
-    $get_escola_curso_serie = TRUE;
-    include 'include/pmieducar/educar_campo_lista.php';
-
-    // Paginador
-    $this->limite = 20;
-    $this->offset = $_GET['pagina_' . $this->nome] ?
+        // Paginador
+        $this->limite = 20;
+        $this->offset = $_GET['pagina_' . $this->nome] ?
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite :
       0;
 
-    $obj_escola_serie = new clsPmieducarEscolaSerie();
-    $obj_escola_serie->setLimite($this->limite, $this->offset);
+        $obj_escola_serie = new clsPmieducarEscolaSerie();
+        $obj_escola_serie->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_escola_serie->lista(
+        $lista = $obj_escola_serie->lista(
       $this->ref_cod_escola,
       $this->ref_ref_cod_serie,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       1,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
+      null,
+      null,
+      null,
+      null,
       $this->ref_cod_instituicao,
       $this->ref_cod_curso
     );
 
-    $total = $obj_escola_serie->_total;
+        $total = $obj_escola_serie->_total;
 
-    // monta a lista
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        if (class_exists('clsPmieducarSerie')) {
-          $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
-          $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
-          $nm_serie = $det_ref_cod_serie['nm_serie'];
-        }
-        else {
-          $registro['ref_cod_serie'] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
+        // monta a lista
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                if (class_exists('clsPmieducarSerie')) {
+                    $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
+                    $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
+                    $nm_serie = $det_ref_cod_serie['nm_serie'];
+                } else {
+                    $registro['ref_cod_serie'] = 'Erro na gera&ccedil;&atilde;o';
+                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
+                }
+
+                if (class_exists('clsPmieducarCurso')) {
+                    $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+                    $det_curso = $obj_curso->detalhe();
+                    $registro['ref_cod_curso'] = $det_curso['nm_curso'];
+                } else {
+                    $registro['ref_cod_serie'] = 'Erro na gera&ccedil;&atilde;o';
+                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
+                }
+
+                if (class_exists('clsPmieducarEscola')) {
+                    $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
+                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+                    $nm_escola = $det_ref_cod_escola['nome'];
+                } else {
+                    $registro['ref_cod_escola'] = 'Erro na gera&ccedil;&atilde;o';
+                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
+                }
+
+                if (class_exists('clsPmieducarInstituicao')) {
+                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                    $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+                    $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
+                } else {
+                    $registro['ref_cod_escola'] = 'Erro na gera&ccedil;&atilde;o';
+                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
+                }
+
+                $lista_busca = [
+          "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_serie}</a>",
+          "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_curso']}</a>"
+        ];
+
+                if ($nivel_usuario == 1) {
+                    $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_escola}</a>";
+                    $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
+                } elseif ($nivel_usuario == 2) {
+                    $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro['ref_cod_escola']}&ref_cod_serie={$registro['ref_cod_serie']}\">{$nm_escola}</a>";
+                }
+                $this->addLinhas($lista_busca);
+            }
         }
 
-        if (class_exists('clsPmieducarCurso')) {
-          $obj_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
-          $det_curso = $obj_curso->detalhe();
-          $registro["ref_cod_curso"] = $det_curso["nm_curso"];
-        }
-        else {
-          $registro["ref_cod_serie"] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
-        }
+        $this->addPaginador2('educar_reserva_vaga_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->largura = '100%';
 
-        if (class_exists('clsPmieducarEscola')) {
-          $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-          $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-          $nm_escola = $det_ref_cod_escola["nome"];
-        }
-        else {
-          $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
-
-        if (class_exists('clsPmieducarInstituicao')) {
-          $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-          $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-          $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-        }
-        else {
-          $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
-
-        $lista_busca = array(
-          "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_serie}</a>",
-          "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_curso"]}</a>"
-        );
-
-        if ($nivel_usuario == 1) {
-          $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
-          $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_instituicao"]}</a>";
-        }
-        else if ($nivel_usuario == 2) {
-          $lista_busca[] = "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
-        }
-        $this->addLinhas($lista_busca);
-      }
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Listagem de reservas de vaga'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->addPaginador2('educar_reserva_vaga_lst.php', $total, $_GET, $this->nome, $this->limite);
-    $this->largura = "100%";
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de reservas de vaga"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
 }
 
 // Instancia objeto de página

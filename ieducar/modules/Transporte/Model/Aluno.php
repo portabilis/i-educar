@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Transporte
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,48 +40,54 @@ require_once 'CoreExt/Entity.php';
  * Transporte_Model_Aluno class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Transporte
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Transporte_Model_Aluno extends CoreExt_Entity
 {
-  protected $_data = array(
-    'aluno'       => NULL,
-    'responsavel' => NULL,
-    'user'        => NULL,
-    'created_at'  => NULL,
-    'updated_at'  => NULL
-  );
+    protected $_data = [
+    'aluno'       => null,
+    'responsavel' => null,
+    'user'        => null,
+    'created_at'  => null,
+    'updated_at'  => null
+  ];
 
-  protected $_references = array(
-    'responsavel' => array(
-      'value' => NULL,
+    protected $_references = [
+    'responsavel' => [
+      'value' => null,
       'class' => 'Transporte_Model_Responsavel',
       'file'  => 'Transporte/Model/Responsavel.php'
-    )
-  );
+    ]
+  ];
 
-  public function __construct($options = array())
-  {
-    parent::__construct($options);
-    unset($this->_data['id']);
-  }
+    public function __construct($options = [])
+    {
+        parent::__construct($options);
+        unset($this->_data['id']);
+    }
 
-  public function getDefaultValidatorCollection()
-  {
-    require_once 'Transporte/Model/Responsavel.php';
-    $responsavel = Transporte_Model_Responsavel::getInstance();
+    public function getDefaultValidatorCollection()
+    {
+        require_once 'Transporte/Model/Responsavel.php';
+        $responsavel = Transporte_Model_Responsavel::getInstance();
 
-    return array(
+        return [
       'aluno'       => new CoreExt_Validate_Numeric(),
-      'responsavel' => new CoreExt_Validate_Choice(array(
-        'choices' => $responsavel->getKeys())
+      'responsavel' => new CoreExt_Validate_Choice(
+          [
+        'choices' => $responsavel->getKeys()]
       ),
       'user'        => new CoreExt_Validate_Numeric()
-    );
-  }
+    ];
+    }
 }

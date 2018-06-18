@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/portal/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/portal/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Compras Modalidade" );
-        $this->processoAp = "773";
+        $this->SetTitulo("{$this->_instituicao} Compras Modalidade");
+        $this->processoAp = '773';
     }
 }
 
@@ -45,115 +45,117 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_compras_modalidade;
-    var $nm_modalidade;
+    public $cod_compras_modalidade;
+    public $nm_modalidade;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_compras_modalidade=$_GET["cod_compras_modalidade"];
+        $this->cod_compras_modalidade=$_GET['cod_compras_modalidade'];
 
-        if( is_numeric( $this->cod_compras_modalidade ) )
-        {
-            $obj = new clsPortalComprasModalidade( $this->cod_compras_modalidade );
+        if (is_numeric($this->cod_compras_modalidade)) {
+            $obj = new clsPortalComprasModalidade($this->cod_compras_modalidade);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
                 $db = new clsBanco();
-                $db->Consulta( "SELECT 1 FROM compras_licitacoes WHERE ref_cod_compras_modalidade = '{$this->cod_compras_modalidade}'" );
-                if( !$db->ProximoRegistro() )
-                {
+                $db->Consulta("SELECT 1 FROM compras_licitacoes WHERE ref_cod_compras_modalidade = '{$this->cod_compras_modalidade}'");
+                if (!$db->ProximoRegistro()) {
                     $this->fexcluir = true;
                 }
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "portal_compras_modalidade_det.php?cod_compras_modalidade={$registro["cod_compras_modalidade"]}" : "portal_compras_modalidade_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "portal_compras_modalidade_det.php?cod_compras_modalidade={$registro['cod_compras_modalidade']}" : 'portal_compras_modalidade_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_compras_modalidade", $this->cod_compras_modalidade );
+        $this->campoOculto('cod_compras_modalidade', $this->cod_compras_modalidade);
 
         // foreign keys
 
         // text
-        $this->campoTexto( "nm_modalidade", "Modalidade", $this->nm_modalidade, 30, 255, true );
+        $this->campoTexto('nm_modalidade', 'Modalidade', $this->nm_modalidade, 30, 255, true);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $obj = new clsPortalComprasModalidade( $this->cod_compras_modalidade, $this->nm_modalidade );
+        $obj = new clsPortalComprasModalidade($this->cod_compras_modalidade, $this->nm_modalidade);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: portal_compras_modalidade_lst.php" );
+        if ($cadastrou) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: portal_compras_modalidade_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPortalComprasModalidade\nvalores obrigatorios\nis_string( $this->nm_modalidade )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $obj = new clsPortalComprasModalidade( $this->cod_compras_modalidade, $this->nm_modalidade );
+        $obj = new clsPortalComprasModalidade($this->cod_compras_modalidade, $this->nm_modalidade);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: portal_compras_modalidade_lst.php" );
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: portal_compras_modalidade_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPortalComprasModalidade\nvalores obrigatorios\nif( is_numeric( $this->cod_compras_modalidade ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj = new clsPortalComprasModalidade($this->cod_compras_modalidade, $this->nm_modalidade);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: portal_compras_modalidade_lst.php" );
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: portal_compras_modalidade_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPortalComprasModalidade\nvalores obrigatorios\nif( is_numeric( $this->cod_compras_modalidade ) )\n-->";
+
         return false;
     }
 }
@@ -163,7 +165,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Transporte
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -36,34 +41,40 @@ require_once 'Transporte/Model/Responsavel.php';
  * Transporte_Model_AlunoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Transporte
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Transporte_Model_AlunoTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new Transporte_Model_Aluno();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new Transporte_Model_Aluno();
+    }
 
-  public function testEntityValidators()
-  {
-    // Recupera os objetos CoreExt_Validate
-    $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['aluno']);
-    $this->assertType('CoreExt_Validate_Choice',  $validators['responsavel']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['user']);
+    public function testEntityValidators()
+    {
+        // Recupera os objetos CoreExt_Validate
+        $validators = $this->_entity->getDefaultValidatorCollection();
+        $this->assertType('CoreExt_Validate_Numeric', $validators['aluno']);
+        $this->assertType('CoreExt_Validate_Choice', $validators['responsavel']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['user']);
 
-    // Verifica se a opção 'choices' corresponde aos valores do Enum Responsavel.
-    $responsavel = Transporte_Model_Responsavel::getInstance();
-    $this->assertEquals(
-      $responsavel->getKeys(), $validators['responsavel']->getOption('choices')
+        // Verifica se a opção 'choices' corresponde aos valores do Enum Responsavel.
+        $responsavel = Transporte_Model_Responsavel::getInstance();
+        $this->assertEquals(
+      $responsavel->getKeys(),
+        $validators['responsavel']->getOption('choices')
     );
-  }
+    }
 }

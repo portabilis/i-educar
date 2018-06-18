@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -36,30 +41,35 @@ require_once 'Educacenso/Model/CodigoReferencia.php';
  * Educacenso_Model_Docente class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Educacenso_Model_Docente extends Educacenso_Model_CodigoReferencia
 {
-  public function getDefaultValidatorCollection()
-  {
-    $validators = array(
-      'docente'     => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'docenteInep' => new CoreExt_Validate_Numeric(array('min' => 0)),
-    );
+    public function getDefaultValidatorCollection()
+    {
+        $validators = [
+      'docente'     => new CoreExt_Validate_Numeric(['min' => 0]),
+      'docenteInep' => new CoreExt_Validate_Numeric(['min' => 0]),
+    ];
 
-    return array_merge($validators, parent::getDefaultValidatorCollection());
-  }
+        return array_merge($validators, parent::getDefaultValidatorCollection());
+    }
 
-  public function __construct(array $options = array())
-  {
-    $this->_data['docente'] = NULL;
-    $this->_data['docenteInep'] = NULL;
+    public function __construct(array $options = [])
+    {
+        $this->_data['docente'] = null;
+        $this->_data['docenteInep'] = null;
 
-    parent::__construct($options);
-  }
+        parent::__construct($options);
+    }
 }

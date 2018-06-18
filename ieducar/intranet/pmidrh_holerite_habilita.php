@@ -24,12 +24,12 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/clsBancoMS.inc.php");
-require_once ("include/funcoes.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/clsBancoMS.inc.php');
+require_once('include/funcoes.inc.php');
 
 /*$db=new clsBancoMS();
 $db->Consulta("SELECT DateToStr(datnas, 'dd/mm/YYYY') FROM senior.r034fun where numcad=1206101");
@@ -41,24 +41,23 @@ die();*/
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Holerite" );
-        $this->processoAp = "480";
+        $this->SetTitulo("{$this->_instituicao} Holerite");
+        $this->processoAp = '480';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $matricula,
-        $data_nasc,
-        $cpf,
-        $senha_intranet;
+    public $matricula;
+    public $data_nasc;
+    public $cpf;
+    public $senha_intranet;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
         //$this->url_cancelar = ($retorno == "Editar") ? "secretarias_det.php?cod={$this->cod}" : "secretarias_lst.php";
         //$this->nome_url_cancelar = "Cancelar";
@@ -66,93 +65,81 @@ class indice extends clsCadastro
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->campoTexto( "matricula", "Matrícula",  $this->matricula, "16", "12", true );
-        $this->campoSenha( "senha_intranet", "Senha",  $this->senha_intranet, true );
-        $this->campoData( "data_nasc", "Data Nascimento",  $this->data_nasc, true );
-        $this->campoCpf( "cpf", "CPF",  $this->cpf, true );     
-        if ($_GET['erro']==1)
-        {
-            echo "<script>alert('Informações incorretas!');</script>";
+        $this->campoTexto('matricula', 'Matrícula', $this->matricula, '16', '12', true);
+        $this->campoSenha('senha_intranet', 'Senha', $this->senha_intranet, true);
+        $this->campoData('data_nasc', 'Data Nascimento', $this->data_nasc, true);
+        $this->campoCpf('cpf', 'CPF', $this->cpf, true);
+        if ($_GET['erro']==1) {
+            echo '<script>alert(\'Informações incorretas!\');</script>';
         }
     }
 
-    function Novo() 
+    public function Novo()
     {
         $db = new clsBanco();
-        
-        
+
         /*
          * INFORMAÇÕES DO BANCO DE DADOS
          */
         $banco_matricula = $db->CampoUnico("SELECT matricula FROM portal.funcionario WHERE ref_cod_pessoa_fj='{$_SESSION['id_pessoa']}'");
-        
+
         $banco_senha = $db->CampoUnico("SELECT senha FROM portal.funcionario WHERE ref_cod_pessoa_fj='{$_SESSION['id_pessoa']}'");
-        
+
         $banco_data_nasc = $db->CampoUnico("SELECT data_nasc FROM cadastro.fisica WHERE idpes='{$_SESSION['id_pessoa']}'");
-        
+
         $banco_cpf = $db->CampoUnico("SELECT cpf FROM cadastro.fisica_cpf WHERE idpes='{$_SESSION['id_pessoa']}'");
-        
+
         /*
          * COMPARA DADOS
          */
-        
+
         $this->senha_intranet = md5($this->senha_intranet);
         $banco_data_nasc = dataToBrasil($banco_data_nasc);
         $banco_cpf = int2CPF($banco_cpf);
         /*echo "Banco: {$banco_matricula} - {$banco_senha} - {$banco_cpf} - {$banco_data_nasc}<br>";
         echo "User: {$this->matricula} - {$this->senha_intranet} - {$this->cpf} - {$this->data_nasc}<br>";*/
-        
-        
+
         if ($banco_matricula == $this->matricula &&
             $banco_senha == $this->senha_intranet &&
             $banco_data_nasc == $this->data_nasc &&
-            $banco_cpf == $this->cpf)
-        {
+            $banco_cpf == $this->cpf) {
             //$banco_data_nasc == $this->data_nasc &&
             $autorizado = true;
-        }
-        else 
-        {
+        } else {
             $autorizado = false;
         }
-        
+
         /*
          * NEGA OU AUTORIZA VISUALIZAÇÃO
          */
-        
-        
-        if ($autorizado)
-        {
+
+        if ($autorizado) {
             session_start();
             $_SESSION['autorizado_holerite'] = true;
             $_SESSION['matricula_user'] = $banco_matricula;
-            
-            header("Location: pmidrh_holerite_lst.php");
-            die("era pra ter ido...");
+
+            header('Location: pmidrh_holerite_lst.php');
+            die('era pra ter ido...');
         }
-        header("Location: pmidrh_holerite_habilita.php?erro=1");
-        
+        header('Location: pmidrh_holerite_habilita.php?erro=1');
     }
 
-    function Editar() 
+    public function Editar()
     {
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         return false;
     }
-
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-?>

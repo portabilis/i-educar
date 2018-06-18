@@ -24,63 +24,73 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
 require_once 'Core/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once "lib/Portabilis/View/Helper/Inputs.php";
+require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
 // Process controller
 class Portabilis_Controller_Page_ListController extends Core_Controller_Page_ListController
 {
+    protected $backwardCompatibility = false;
 
-  protected $backwardCompatibility = false;
+    public function __construct()
+    {
+        $this->rodape  = '';
+        $this->largura = '100%';
 
-  public function __construct() {
-    $this->rodape  = "";
-    $this->largura = '100%';
+        $this->loadAssets();
+        parent::__construct();
+    }
 
-    $this->loadAssets();
-    parent::__construct();
-  }
+    protected function loadResourceAssets($dispatcher)
+    {
+        $rootPath       = $_SERVER['DOCUMENT_ROOT'];
+        $controllerName = ucwords($dispatcher->getControllerName());
+        $actionName     = ucwords($dispatcher->getActionName());
 
-  protected function loadResourceAssets($dispatcher){
-    $rootPath       = $_SERVER['DOCUMENT_ROOT'];
-    $controllerName = ucwords($dispatcher->getControllerName());
-    $actionName     = ucwords($dispatcher->getActionName());
+        $style          = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
+        $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
 
-    $style          = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
-    $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+        if (file_exists($rootPath . $style)) {
+            Portabilis_View_Helper_Application::loadStylesheet($this, $style);
+        }
 
-    if (file_exists($rootPath . $style))
-      Portabilis_View_Helper_Application::loadStylesheet($this, $style);
+        if (file_exists($rootPath . $script)) {
+            Portabilis_View_Helper_Application::loadJavascript($this, $script);
+        }
+    }
 
-    if (file_exists($rootPath . $script))
-      Portabilis_View_Helper_Application::loadJavascript($this, $script);
-  }
+    protected function loadAssets()
+    {
+        Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
-  protected function loadAssets(){
-    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
+        $styles = ['/modules/Portabilis/Assets/Stylesheets/Frontend.css',
+                    '/modules/Portabilis/Assets/Stylesheets/Frontend/Process.css'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Frontend/Process.css');
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
-    $scripts = array(
+        $scripts = [
       '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
       '/modules/Portabilis/Assets/Javascripts/Validator.js',
       '/modules/Portabilis/Assets/Javascripts/Utils.js'
-    );
+    ];
 
-    if (! $this->backwardCompatibility)
-      $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js';
+        if (! $this->backwardCompatibility) {
+            $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js';
+        }
 
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-  }
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
 }

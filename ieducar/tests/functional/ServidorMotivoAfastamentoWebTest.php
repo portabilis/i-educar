@@ -38,51 +38,57 @@
  * versão 1.0.0.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @link      http://svn.softwarepublico.gov.br/trac/ieducar/ticket/20
+ *
  * @package   FunctionalTests
+ *
  * @since     Classe disponível desde a versão 1.0.1
+ *
  * @version   @@package_version@@
  */
 class ServidorMotivoAfastamentoWebTest extends FunctionalBaseTest
 {
-  public function createNewEntry()
-  {
-    $this->open("/intranet/educar_motivo_afastamento_lst.php");
-    $this->clickAndWait("//input[@value=' Novo ']");
-    $this->select("ref_cod_instituicao", "label=i-Educar");
-    $this->type("nm_motivo", "Motivo teste");
-    $this->clickAndWait("btn_enviar");
-  }
+    public function createNewEntry()
+    {
+        $this->open('/intranet/educar_motivo_afastamento_lst.php');
+        $this->clickAndWait('//input[@value=\' Novo \']');
+        $this->select('ref_cod_instituicao', 'label=i-Educar');
+        $this->type('nm_motivo', 'Motivo teste');
+        $this->clickAndWait('btn_enviar');
+    }
 
-  public function testMotivoAfastamentoUpdate()
-  {
-    $this->doLogin();
-    $this->createNewEntry();
+    public function testMotivoAfastamentoUpdate()
+    {
+        $this->doLogin();
+        $this->createNewEntry();
 
-    $this->open("/intranet/educar_motivo_afastamento_cad.php?cod_motivo_afastamento=1");
-    $this->select("ref_cod_instituicao", "label=i-Educar");
-    $this->type("nm_motivo", "Motivo teste");
-    $this->clickAndWait("btn_enviar");
+        $this->open('/intranet/educar_motivo_afastamento_cad.php?cod_motivo_afastamento=1');
+        $this->select('ref_cod_instituicao', 'label=i-Educar');
+        $this->type('nm_motivo', 'Motivo teste');
+        $this->clickAndWait('btn_enviar');
 
-    $statusMessage = $this->isTextPresent("Edição não realizada.");
-    $this->assertTrue(!$statusMessage);
-    $this->doLogout();
-  }
+        $statusMessage = $this->isTextPresent('Edição não realizada.');
+        $this->assertTrue(!$statusMessage);
+        $this->doLogout();
+    }
 
-  public function testMotivoAfastamentoDelete()
-  {
-    $this->doLogin();
+    public function testMotivoAfastamentoDelete()
+    {
+        $this->doLogin();
 
-    $this->open("/intranet/educar_motivo_afastamento_lst.php");
-    $this->clickAndWait("link=Motivo teste");
-    $this->clickAndWait("//input[@value=' Editar ']");
-    $this->clickAndWait("//input[@value=' Excluir ']");
-    $this->assertTrue((bool)preg_match('/^Excluir registro[\s\S]$/',$this->getConfirmation()));
-    $statusMessage = $this->isTextPresent("Exclusão não realizada.");
-    $this->assertTrue(!$statusMessage);
+        $this->open('/intranet/educar_motivo_afastamento_lst.php');
+        $this->clickAndWait('link=Motivo teste');
+        $this->clickAndWait('//input[@value=\' Editar \']');
+        $this->clickAndWait('//input[@value=\' Excluir \']');
+        $this->assertTrue((bool)preg_match('/^Excluir registro[\s\S]$/', $this->getConfirmation()));
+        $statusMessage = $this->isTextPresent('Exclusão não realizada.');
+        $this->assertTrue(!$statusMessage);
 
-    $this->doLogout();
-  }
+        $this->doLogout();
+    }
 }

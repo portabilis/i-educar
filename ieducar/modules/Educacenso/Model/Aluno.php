@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -36,32 +41,36 @@ require_once 'Educacenso/Model/CodigoReferencia.php';
  * Educacenso_Model_Aluno class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Educacenso_Model_Aluno extends Educacenso_Model_CodigoReferencia
 {
-   protected $_data = array(
-    'aluno'      => NULL,
-    'alunoInep'  => NULL,
-    'nomeInep'   => NULL,
-    'fonte'      => NULL,
-    'created_at' => NULL,
-    'updated_at' => NULL
-  );
+    protected $_data = [
+    'aluno'      => null,
+    'alunoInep'  => null,
+    'nomeInep'   => null,
+    'fonte'      => null,
+    'created_at' => null,
+    'updated_at' => null
+  ];
 
+    public function getDefaultValidatorCollection()
+    {
+        $validators = [
+      'aluno'     => new CoreExt_Validate_Numeric(['min' => 0]),
+      'alunoInep' => new CoreExt_Validate_Numeric(['min' => 0]),
+    ];
 
-  public function getDefaultValidatorCollection()
-  {
-    $validators = array(
-      'aluno'     => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'alunoInep' => new CoreExt_Validate_Numeric(array('min' => 0)),
-    );
-
-    return array_merge($validators, parent::getDefaultValidatorCollection());
-  }
+        return array_merge($validators, parent::getDefaultValidatorCollection());
+    }
 }

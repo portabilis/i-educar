@@ -24,19 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+    require_once('include/clsBanco.inc.php');
+    require_once('include/funcoes.inc.php');
 
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
-    if( is_numeric( $_GET["ins"] ) )
-    {
+    if (is_numeric($_GET['ins'])) {
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
             SELECT
                 cod_escola
                 , nome
@@ -44,18 +43,16 @@
                 pmieducar.escola
                 , cadastro.pessoa
             WHERE
-                ref_cod_instituicao = {$_GET["ins"]}
+                ref_cod_instituicao = {$_GET['ins']}
                 AND idpes = ref_idpes
                 AND ativo = 1
             ORDER BY sigla ASC
-        " );
+        ");
 
-        while ( $db->ProximoRegistro() )
-        {
-            list( $cod, $nome ) = $db->Tupla();
+        while ($db->ProximoRegistro()) {
+            list($cod, $nome) = $db->Tupla();
             echo "  <item>{$cod}</item>\n";
             echo "  <item>{$nome}</item>\n";
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

@@ -7,100 +7,99 @@ require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Customiza&ccedil;&atilde;o de labels');
-    $this->processoAp = 9998869;
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Customiza&ccedil;&atilde;o de labels');
+        $this->processoAp = 9998869;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
-  var $ref_cod_instituicao;
-  var $custom_labels;
+    public $pessoa_logada;
+    public $ref_cod_instituicao;
+    public $custom_labels;
 
-  function Inicializar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Inicializar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(9998869, $this->pessoa_logada, 7, 'educar_index.php');
-    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(9998869, $this->pessoa_logada, 7, 'educar_index.php');
+        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php" => "Configurações",
-         "" => "Customiza&ccedil;&atilde;o de labels"
-    ));
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_configuracoes_index.php' => 'Configurações',
+         '' => 'Customiza&ccedil;&atilde;o de labels'
+    ]);
 
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->enviaLocalizacao($localizacao->montar());
 
-    return 'Editar';
-  }
+        return 'Editar';
+    }
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-    $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $obj_permissoes = new clsPermissoes();
+        $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao);
-    $configuracoes = $configuracoes->detalhe();
+        $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao);
+        $configuracoes = $configuracoes->detalhe();
 
-    $this->custom_labels = $configuracoes['custom_labels'];
+        $this->custom_labels = $configuracoes['custom_labels'];
 
-    $customLabel = new CustomLabel(PROJECT_ROOT . DS . 'configuration' . DS . 'custom_labels.json');
-    $defaults = $customLabel->getDefaults();
+        $customLabel = new CustomLabel(PROJECT_ROOT . DS . 'configuration' . DS . 'custom_labels.json');
+        $defaults = $customLabel->getDefaults();
 
-    foreach($defaults as $k => $v) {
-        $this->inputsHelper()->text('custom_labels[' . $k . ']', array(
+        foreach ($defaults as $k => $v) {
+            $this->inputsHelper()->text('custom_labels[' . $k . ']', [
             'label' => $k,
             'size' => 100,
             'required' => false,
             'placeholder' => $v,
             'value' => (!empty($this->custom_labels[$k])) ? $this->custom_labels[$k] : ''
-        ));
+        ]);
+        }
     }
-  }
 
-  function Editar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Editar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-    $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $obj_permissoes = new clsPermissoes();
+        $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, array(
+        $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, [
         'custom_labels' => $this->custom_labels
-    ));
+    ]);
 
-    $detalheAntigo = $configuracoes->detalhe();
-    $editou = $configuracoes->edita();
+        $detalheAntigo = $configuracoes->detalhe();
+        $editou = $configuracoes->edita();
 
-    if ($editou) {
-      $detalheAtual = $configuracoes->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("configuracoes_gerais", $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
-      $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header("Location: index.php");
-      die();
+        if ($editou) {
+            $detalheAtual = $configuracoes->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('configuracoes_gerais', $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
+            $auditoria->alteracao($detalheAntigo, $detalheAtual);
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: index.php');
+            die();
+        }
+
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+
+        return false;
     }
-
-    $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-
-    return false;
-  }
-
 }
 // Instancia objeto de página
 $pagina = new clsIndexBase();
@@ -113,4 +112,3 @@ $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
-?>

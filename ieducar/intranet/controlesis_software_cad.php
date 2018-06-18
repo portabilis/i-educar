@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "Prefeitura de Itaja&iacute; - Cadastro de Software" );
-        $this->processoAp = "793";
+        $this->SetTitulo('Prefeitura de Itaja&iacute; - Cadastro de Software');
+        $this->processoAp = '793';
     }
 }
 
@@ -45,128 +45,120 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_software;
-    var $ref_funcionario_exc;
-    var $ref_funcionario_cad;
-    var $nm_software;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_software;
+    public $ref_funcionario_exc;
+    public $ref_funcionario_cad;
+    public $nm_software;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_software=$_GET["cod_software"];
+        $this->cod_software=$_GET['cod_software'];
 
-
-        if( is_numeric( $this->cod_software ) )
-        {
-
-            $obj = new clsPmicontrolesisSoftware( $this->cod_software );
+        if (is_numeric($this->cod_software)) {
+            $obj = new clsPmicontrolesisSoftware($this->cod_software);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
-                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
-
+                }
+                $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
+                $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
                 $this->fexcluir = true;
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "controlesis_software_det.php?cod_software={$registro["cod_software"]}" : "controlesis_software_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "controlesis_software_det.php?cod_software={$registro['cod_software']}" : 'controlesis_software_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_software", $this->cod_software );
+        $this->campoOculto('cod_software', $this->cod_software);
 
         // foreign keys
 
         // text
-        $this->campoTexto( "nm_software", "Nome Software", $this->nm_software, 30, 255, true );
-
-
+        $this->campoTexto('nm_software', 'Nome Software', $this->nm_software, 30, 255, true);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-
-
-        $obj = new clsPmicontrolesisSoftware( $this->cod_software, $this->pessoa_logada, $this->pessoa_logada, $this->nm_software, $this->data_cadastro, $this->data_exclusao, $this->ativo );
+        $obj = new clsPmicontrolesisSoftware($this->cod_software, $this->pessoa_logada, $this->pessoa_logada, $this->nm_software, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: controlesis_software_lst.php" );
+        if ($cadastrou) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: controlesis_software_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmicontrolesisSoftware\nvalores obrigatorios\nis_numeric( $this->ref_funcionario_cad ) && is_string( $this->nm_software )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-
-
 
         $obj = new clsPmicontrolesisSoftware($this->cod_software, $this->pessoa_logada, $this->pessoa_logada, $this->nm_software, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_software_lst.php" );
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: controlesis_software_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmicontrolesisSoftware\nvalores obrigatorios\nif( is_numeric( $this->cod_software ) && is_numeric( $this->ref_funcionario_exc ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-
-
 
         $obj = new clsPmicontrolesisSoftware($this->cod_software, $this->pessoa_logada, $this->pessoa_logada, $this->nm_software, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_software_lst.php" );
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: controlesis_software_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmicontrolesisSoftware\nvalores obrigatorios\nif( is_numeric( $this->cod_software ) && is_numeric( $this->ref_funcionario_exc ) )\n-->";
+
         return false;
     }
 }
@@ -176,7 +168,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

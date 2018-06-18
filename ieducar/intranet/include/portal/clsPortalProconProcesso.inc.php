@@ -30,25 +30,25 @@
 * Criado em 08/02/2007 08:39 pelo gerador automatico de classes
 */
 
-require_once( "include/portal/geral.inc.php" );
+require_once('include/portal/geral.inc.php');
 
-    require_once( "include/portal/clsPortalProconProcesso.inc.php" );
-    require_once( "include/portal/clsPortalProconConfiguracao.inc.php" );
-    require_once( "include/portal/clsPortalProconProcessoReclamada.inc.php" );
+    require_once('include/portal/clsPortalProconProcesso.inc.php');
+    require_once('include/portal/clsPortalProconConfiguracao.inc.php');
+    require_once('include/portal/clsPortalProconProcessoReclamada.inc.php');
 
 class clsPortalProconProcesso
 {
-    var $cod_processo;
-    var $ref_funcionario_finaliza;
-    var $ref_funcionario_cad;
-    var $ref_idpes;
-    var $num_processo;
-    var $nome_representante;
-    var $descricao_fatos;
-    var $legislacao;
-    var $parecer;
-    var $data_cadastro;
-    var $data_finalizacao;
+    public $cod_processo;
+    public $ref_funcionario_finaliza;
+    public $ref_funcionario_cad;
+    public $ref_idpes;
+    public $num_processo;
+    public $nome_representante;
+    public $descricao_fatos;
+    public $legislacao;
+    public $parecer;
+    public $data_cadastro;
+    public $data_finalizacao;
 
     // propriedades padrao
 
@@ -57,61 +57,60 @@ class clsPortalProconProcesso
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
-     * 
+     *
      * @param integer cod_processo
      * @param integer ref_funcionario_finaliza
      * @param integer ref_funcionario_cad
@@ -126,133 +125,93 @@ class clsPortalProconProcesso
      *
      * @return object
      */
-    function __construct( $cod_processo = null, $ref_funcionario_finaliza = null, $ref_funcionario_cad = null, $ref_idpes = null, $num_processo = null, $nome_representante = null, $descricao_fatos = null, $legislacao = null, $parecer = null, $data_cadastro = null, $data_finalizacao = null )
+    public function __construct($cod_processo = null, $ref_funcionario_finaliza = null, $ref_funcionario_cad = null, $ref_idpes = null, $num_processo = null, $nome_representante = null, $descricao_fatos = null, $legislacao = null, $parecer = null, $data_cadastro = null, $data_finalizacao = null)
     {
         $db = new clsBanco();
-        $this->_schema = "portal.";
+        $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}procon_processo";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_processo, ref_funcionario_finaliza, ref_funcionario_cad, ref_idpes, num_processo, nome_representante, descricao_fatos, legislacao, parecer, data_cadastro, data_finalizacao";
+        $this->_campos_lista = $this->_todos_campos = 'cod_processo, ref_funcionario_finaliza, ref_funcionario_cad, ref_idpes, num_processo, nome_representante, descricao_fatos, legislacao, parecer, data_cadastro, data_finalizacao';
 
-        if( is_numeric( $ref_funcionario_finaliza ) )
-        {
-            if( class_exists( "clsFuncionario" ) )
-            {
-                $tmp_obj = new clsFuncionario( $ref_funcionario_finaliza );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_funcionario_finaliza)) {
+            if (class_exists('clsFuncionario')) {
+                $tmp_obj = new clsFuncionario($ref_funcionario_finaliza);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_funcionario_finaliza = $ref_funcionario_finaliza;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_funcionario_finaliza = $ref_funcionario_finaliza;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_funcionario_finaliza = $ref_funcionario_finaliza;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_finaliza}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_finaliza}'")) {
                     $this->ref_funcionario_finaliza = $ref_funcionario_finaliza;
                 }
             }
         }
-        if( is_numeric( $ref_funcionario_cad ) )
-        {
-            if( class_exists( "clsFuncionario" ) )
-            {
-                $tmp_obj = new clsFuncionario( $ref_funcionario_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_funcionario_cad)) {
+            if (class_exists('clsFuncionario')) {
+                $tmp_obj = new clsFuncionario($ref_funcionario_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_funcionario_cad = $ref_funcionario_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_funcionario_cad = $ref_funcionario_cad;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_funcionario_cad = $ref_funcionario_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'")) {
                     $this->ref_funcionario_cad = $ref_funcionario_cad;
                 }
             }
         }
-        if( is_numeric( $ref_idpes ) )
-        {
-            if( class_exists( "clsCadastroPessoa" ) )
-            {
-                $tmp_obj = new clsCadastroPessoa( $ref_idpes );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_idpes)) {
+            if (class_exists('clsCadastroPessoa')) {
+                $tmp_obj = new clsCadastroPessoa($ref_idpes);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_idpes = $ref_idpes;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_idpes = $ref_idpes;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_idpes = $ref_idpes;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$ref_idpes}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$ref_idpes}'")) {
                     $this->ref_idpes = $ref_idpes;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_processo ) )
-        {
+        if (is_numeric($cod_processo)) {
             $this->cod_processo = $cod_processo;
         }
-        if( is_numeric( $num_processo ) )
-        {
+        if (is_numeric($num_processo)) {
             $this->num_processo = $num_processo;
         }
-        if( is_string( $nome_representante ) )
-        {
+        if (is_string($nome_representante)) {
             $this->nome_representante = $nome_representante;
         }
-        if( is_string( $descricao_fatos ) )
-        {
+        if (is_string($descricao_fatos)) {
             $this->descricao_fatos = $descricao_fatos;
         }
-        if( is_string( $legislacao ) )
-        {
+        if (is_string($legislacao)) {
             $this->legislacao = $legislacao;
         }
-        if( is_string( $parecer ) )
-        {
+        if (is_string($parecer)) {
             $this->parecer = $parecer;
         }
-        if( is_string( $data_cadastro ) )
-        {
+        if (is_string($data_cadastro)) {
             $this->data_cadastro = $data_cadastro;
         }
-        if( is_string( $data_finalizacao ) )
-        {
+        if (is_string($data_finalizacao)) {
             $this->data_finalizacao = $data_finalizacao;
         }
-
     }
 
     /**
@@ -260,88 +219,77 @@ class clsPortalProconProcesso
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_funcionario_cad ) && is_numeric( $this->ref_idpes ) && is_string( $this->descricao_fatos ) )
-        {
+        if (is_numeric($this->ref_funcionario_cad) && is_numeric($this->ref_idpes) && is_string($this->descricao_fatos)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_funcionario_finaliza ) )
-            {
+            if (is_numeric($this->ref_funcionario_finaliza)) {
                 $campos .= "{$gruda}ref_funcionario_finaliza";
                 $valores .= "{$gruda}'{$this->ref_funcionario_finaliza}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_funcionario_cad ) )
-            {
+            if (is_numeric($this->ref_funcionario_cad)) {
                 $campos .= "{$gruda}ref_funcionario_cad";
                 $valores .= "{$gruda}'{$this->ref_funcionario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_idpes ) )
-            {
+            if (is_numeric($this->ref_idpes)) {
                 $campos .= "{$gruda}ref_idpes";
                 $valores .= "{$gruda}'{$this->ref_idpes}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->num_processo ) )
-            {
+            if (is_numeric($this->num_processo)) {
                 $campos .= "{$gruda}num_processo";
                 $valores .= "{$gruda}'{$this->num_processo}'";
-                $gruda = ", ";
-            }
-            else 
-            {
+                $gruda = ', ';
+            } else {
                 $campos .= "{$gruda}num_processo";
-                $select = "(select (count (cod_processo)+1) as num_processo from procon_processo where data_cadastro >= (extract(year from now() ) || '-01-01 00:00:00') AND data_cadastro <= (extract(year from now() ) ||'-12-31 23:59:59'))";
+                $select = '(select (count (cod_processo)+1) as num_processo from procon_processo where data_cadastro >= (extract(year from now() ) || \'-01-01 00:00:00\') AND data_cadastro <= (extract(year from now() ) ||\'-12-31 23:59:59\'))';
                 $valores .= "{$gruda}{$select}";
             }
-            if( is_string( $this->nome_representante ) )
-            {
+            if (is_string($this->nome_representante)) {
                 $campos .= "{$gruda}nome_representante";
                 $valores .= "{$gruda}'{$this->nome_representante}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->descricao_fatos ) )
-            {
+            if (is_string($this->descricao_fatos)) {
                 $campos .= "{$gruda}descricao_fatos";
                 $valores .= "{$gruda}'{$this->descricao_fatos}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->legislacao ) )
-            {
+            if (is_string($this->legislacao)) {
                 $campos .= "{$gruda}legislacao";
                 $valores .= "{$gruda}'{$this->legislacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->parecer ) )
-            {
+            if (is_string($this->parecer)) {
                 $campos .= "{$gruda}parecer";
                 $valores .= "{$gruda}'{$this->parecer}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda = ", ";
-            if( is_string( $this->data_finalizacao ) )
-            {
+            $gruda = ', ';
+            if (is_string($this->data_finalizacao)) {
                 $campos .= "{$gruda}data_finalizacao";
                 $valores .= "{$gruda}'{$this->data_finalizacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            
+
             $sql = "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )";
-            
+
             // echo $sql;
 
+            $db->Consulta($sql);
 
-            $db->Consulta( $sql );
-            return $db->InsertId( "{$this->_tabela}_cod_processo_seq");
+            return $db->InsertId("{$this->_tabela}_cod_processo_seq");
         }
+
         return false;
     }
 
@@ -350,83 +298,71 @@ class clsPortalProconProcesso
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_processo ) )
-        {
-
+        if (is_numeric($this->cod_processo)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->ref_funcionario_finaliza ) )
-            {
+            if (is_numeric($this->ref_funcionario_finaliza)) {
                 $set .= "{$gruda}ref_funcionario_finaliza = '{$this->ref_funcionario_finaliza}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_funcionario_cad ) )
-            {
+            if (is_numeric($this->ref_funcionario_cad)) {
                 $set .= "{$gruda}ref_funcionario_cad = '{$this->ref_funcionario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_idpes ) )
-            {
+            if (is_numeric($this->ref_idpes)) {
                 $set .= "{$gruda}ref_idpes = '{$this->ref_idpes}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->num_processo ) )
-            {
+            if (is_numeric($this->num_processo)) {
                 $set .= "{$gruda}num_processo = '{$this->num_processo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nome_representante ) )
-            {
+            if (is_string($this->nome_representante)) {
                 $set .= "{$gruda}nome_representante = '{$this->nome_representante}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->descricao_fatos ) )
-            {
+            if (is_string($this->descricao_fatos)) {
                 $set .= "{$gruda}descricao_fatos = '{$this->descricao_fatos}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->legislacao ) )
-            {
+            if (is_string($this->legislacao)) {
                 $set .= "{$gruda}legislacao = '{$this->legislacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->parecer ) )
-            {
+            if (is_string($this->parecer)) {
                 $set .= "{$gruda}parecer = '{$this->parecer}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_cadastro ) )
-            {
+            if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_finalizacao ) )
-            {
+            if (is_string($this->data_finalizacao)) {
                 $set .= "{$gruda}data_finalizacao = '{$this->data_finalizacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            
+
             $sql = "UPDATE {$this->_tabela} SET $set WHERE cod_processo = '{$this->cod_processo}'";
 
+            if ($set) {
 
-            if( $set )
-            {
-                
                 // echo $sql;
-                
-                $db->Consulta( $sql );
+
+                $db->Consulta($sql);
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
-     * 
+     *
      * @param integer int_ref_funcionario_finaliza
      * @param integer int_ref_funcionario_cad
      * @param integer int_ref_idpes
@@ -442,112 +378,93 @@ class clsPortalProconProcesso
      *
      * @return array
      */
-    function lista( $int_ref_funcionario_finaliza = null, $int_ref_funcionario_cad = null, $int_ref_idpes = null, $int_num_processo = null, $str_nome_representante = null, $str_descricao_fatos = null, $str_legislacao = null, $str_parecer = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_finalizacao_ini = null, $date_data_finalizacao_fim = null )
+    public function lista($int_ref_funcionario_finaliza = null, $int_ref_funcionario_cad = null, $int_ref_idpes = null, $int_num_processo = null, $str_nome_representante = null, $str_descricao_fatos = null, $str_legislacao = null, $str_parecer = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_finalizacao_ini = null, $date_data_finalizacao_fim = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_processo ) )
-        {
+        if (is_numeric($int_cod_processo)) {
             $filtros .= "{$whereAnd} cod_processo = '{$int_cod_processo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_funcionario_finaliza ) )
-        {
+        if (is_numeric($int_ref_funcionario_finaliza)) {
             $filtros .= "{$whereAnd} ref_funcionario_finaliza = '{$int_ref_funcionario_finaliza}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_funcionario_cad ) )
-        {
+        if (is_numeric($int_ref_funcionario_cad)) {
             $filtros .= "{$whereAnd} ref_funcionario_cad = '{$int_ref_funcionario_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_idpes ) )
-        {
+        if (is_numeric($int_ref_idpes)) {
             $filtros .= "{$whereAnd} ref_idpes = '{$int_ref_idpes}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_num_processo ) )
-        {
+        if (is_numeric($int_num_processo)) {
             $filtros .= "{$whereAnd} num_processo = '{$int_num_processo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nome_representante ) )
-        {
+        if (is_string($str_nome_representante)) {
             $filtros .= "{$whereAnd} nome_representante LIKE '%{$str_nome_representante}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_descricao_fatos ) )
-        {
+        if (is_string($str_descricao_fatos)) {
             $filtros .= "{$whereAnd} descricao_fatos LIKE '%{$str_descricao_fatos}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_legislacao ) )
-        {
+        if (is_string($str_legislacao)) {
             $filtros .= "{$whereAnd} legislacao LIKE '%{$str_legislacao}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_parecer ) )
-        {
+        if (is_string($str_parecer)) {
             $filtros .= "{$whereAnd} parecer LIKE '%{$str_parecer}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_ini ) )
-        {
+        if (is_string($date_data_cadastro_ini)) {
             $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_fim ) )
-        {
+        if (is_string($date_data_cadastro_fim)) {
             $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_finalizacao_ini ) )
-        {
+        if (is_string($date_data_finalizacao_ini)) {
             $filtros .= "{$whereAnd} data_finalizacao >= '{$date_data_finalizacao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_finalizacao_fim ) )
-        {
+        if (is_string($date_data_finalizacao_fim)) {
             $filtros .= "{$whereAnd} data_finalizacao <= '{$date_data_finalizacao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -556,16 +473,16 @@ class clsPortalProconProcesso
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_processo ) )
-        {
-
+        if (is_numeric($this->cod_processo)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_processo = '{$this->cod_processo}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_processo = '{$this->cod_processo}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -574,18 +491,16 @@ class clsPortalProconProcesso
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_processo ) )
-        {
-
+        if (is_numeric($this->cod_processo)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_processo = '{$this->cod_processo}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_processo = '{$this->cod_processo}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -594,10 +509,9 @@ class clsPortalProconProcesso
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_processo ) )
-        {
+        if (is_numeric($this->cod_processo)) {
 
         /*
             delete
@@ -605,18 +519,17 @@ class clsPortalProconProcesso
         $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_processo = '{$this->cod_processo}'" );
         return true;
         */
-
-        
         }
+
         return false;
     }
-    
+
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -626,7 +539,7 @@ class clsPortalProconProcesso
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -636,7 +549,7 @@ class clsPortalProconProcesso
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -647,18 +560,18 @@ class clsPortalProconProcesso
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -666,13 +579,12 @@ class clsPortalProconProcesso
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -682,14 +594,12 @@ class clsPortalProconProcesso
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

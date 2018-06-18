@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o" );
-        $this->processoAp = "587";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o");
+        $this->processoAp = '587';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -46,94 +46,88 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $ref_serie_origem;
-    var $ref_serie_destino;
-    var $ref_curso_origem;
-    var $ref_curso_destino;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $ref_serie_origem;
+    public $ref_serie_destino;
+    public $ref_curso_origem;
+    public $ref_curso_destino;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    var $ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Sequ&ecirc;ncia Enturma&ccedil;&atilde;o - Listagem";
+        $this->titulo = 'Sequ&ecirc;ncia Enturma&ccedil;&atilde;o - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        
-
-        $lista_busca = array(
-            "Curso Origem",
-            "S&eacute;rie Origem",
-            "Curso Destino",
-            "S&eacute;rie Destino"
-        );
+        $lista_busca = [
+            'Curso Origem',
+            'S&eacute;rie Origem',
+            'Curso Destino',
+            'S&eacute;rie Destino'
+        ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivel_usuario == 1)
-            $lista_busca[] = "Institui&ccedil;&atilde;o";
+        if ($nivel_usuario == 1) {
+            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+        }
         $this->addCabecalhos($lista_busca);
 
         // Filtros de Foreign Keys
-        if( $nivel_usuario == 1 )
-        {
+        if ($nivel_usuario == 1) {
             $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = array( "" => "Selecione" );
-            $objInstituicao->setOrderby( "nm_instituicao ASC" );
+            $opcoes = [ '' => 'Selecione' ];
+            $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
-            if( is_array( $lista ) )
-            {
-                foreach ( $lista AS $linha )
-                {
-                    $opcoes[$linha["cod_instituicao"]] = $linha["nm_instituicao"];
+            if (is_array($lista)) {
+                foreach ($lista as $linha) {
+                    $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, "",null,null,null,null,false );
-        }
-        else
-        {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, '', null, null, null, null, false);
+        } else {
             $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
             $obj_usuario_det = $obj_usuario->detalhe();
-            $this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];
+            $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
         }
 
-        $opcoes = array( "" => "Selecione" );
-        $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarCurso" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        $opcoes_ = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarCurso')) {
             /*$todos_cursos = "curso = new Array();\n";
             $objTemp = new clsPmieducarCurso();
             $objTemp->setOrderby("nm_curso");
@@ -148,35 +142,29 @@ class indice extends clsListagem
             echo "<script>{$todos_cursos}</script>";*/
 
             // EDITAR
-            if ($this->ref_cod_instituicao)
-            {
+            if ($this->ref_cod_instituicao) {
                 $objTemp = new clsPmieducarCurso();
-                $objTemp->setOrderby("nm_curso");
-                $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes[$registro["cod_curso"]] = $registro["nm_curso"];
-                        $opcoes_[$registro["cod_curso"]] = $registro["nm_curso"];
+                $objTemp->setOrderby('nm_curso');
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['cod_curso']] = $registro['nm_curso'];
+                        $opcoes_[$registro['cod_curso']] = $registro['nm_curso'];
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
+            $opcoes = [ '' => 'Erro na gera&ccedil;&atilde;o' ];
         }
-        $this->campoLista( "ref_curso_origem", "Curso Origem", $opcoes, $this->ref_curso_origem,"",true,"","",false,false);
-        $this->campoLista( "ref_curso_destino", " Curso Destino", $opcoes_, $this->ref_curso_destino,"",false,"","",false,false);
+        $this->campoLista('ref_curso_origem', 'Curso Origem', $opcoes, $this->ref_curso_origem, '', true, '', '', false, false);
+        $this->campoLista('ref_curso_destino', ' Curso Destino', $opcoes_, $this->ref_curso_destino, '', false, '', '', false, false);
 
         // primary keys
 
-        $opcoes = array( "" => "Selecione" );
-        $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        $opcoes_ = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarSerie')) {
             /*$todas_series = "serie = new Array();\n";
             $objTemp = new clsPmieducarSerie();
             $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,1 );
@@ -189,48 +177,39 @@ class indice extends clsListagem
             }
             echo "<script>{$todas_series}</script>";*/
 
-            if ($this->ref_curso_origem)
-            {
+            if ($this->ref_curso_origem) {
                 $objTemp = new clsPmieducarSerie();
-                $lista = $objTemp->lista( null,null,null,$this->ref_curso_origem,null,null,null,null,null,null,null,null,1 );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes[$registro["cod_serie"]] = $registro["nm_serie"];
+                $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['cod_serie']] = $registro['nm_serie'];
                     }
                 }
             }
-            if ($this->ref_curso_destino)
-            {
+            if ($this->ref_curso_destino) {
                 $objTemp = new clsPmieducarSerie();
-                $lista = $objTemp->lista( null,null,null,$this->ref_curso_destino,null,null,null,null,null,null,null,null,1 );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes_[$registro["cod_serie"]] = $registro["nm_serie"];
+                $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes_[$registro['cod_serie']] = $registro['nm_serie'];
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarSerie n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-            $opcoes_ = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
+            $opcoes_ = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true,"","",false,false);
-        $this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino,"",false,"","",false,false);
-
+        $this->campoLista('ref_serie_origem', 'S&eacute;rie Origem', $opcoes, $this->ref_serie_origem, null, true, '', '', false, false);
+        $this->campoLista('ref_serie_destino', ' S&eacute;rie Destino', $opcoes_, $this->ref_serie_destino, '', false, '', '', false, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_sequencia_serie = new clsPmieducarSequenciaSerie();
-        $obj_sequencia_serie->setOrderby( "data_cadastro ASC" );
-        $obj_sequencia_serie->setLimite( $this->limite, $this->offset );
+        $obj_sequencia_serie->setOrderby('data_cadastro ASC');
+        $obj_sequencia_serie->setLimite($this->limite, $this->offset);
 
         $lista = $obj_sequencia_serie->lista(
             $this->ref_serie_origem,
@@ -250,99 +229,82 @@ class indice extends clsListagem
         $total = $obj_sequencia_serie->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarSerie" ) )
-                {
-                    $obj_ref_serie_origem = new clsPmieducarSerie( $registro["ref_serie_origem"] );
+                if (class_exists('clsPmieducarSerie')) {
+                    $obj_ref_serie_origem = new clsPmieducarSerie($registro['ref_serie_origem']);
                     $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
-                    $serie_origem = $det_ref_serie_origem["nm_serie"];
-                    $registro["ref_curso_origem"] = $det_ref_serie_origem["ref_cod_curso"];
-                    if( class_exists( "clsPmieducarCurso" ) )
-                    {
-                        $obj_ref_curso_origem = new clsPmieducarCurso( $registro["ref_curso_origem"] );
+                    $serie_origem = $det_ref_serie_origem['nm_serie'];
+                    $registro['ref_curso_origem'] = $det_ref_serie_origem['ref_cod_curso'];
+                    if (class_exists('clsPmieducarCurso')) {
+                        $obj_ref_curso_origem = new clsPmieducarCurso($registro['ref_curso_origem']);
                         $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-                        $registro["ref_curso_origem"] = $det_ref_curso_origem["nm_curso"];
-                        $registro["ref_cod_instituicao"] = $det_ref_curso_origem["ref_cod_instituicao"];
-                        if( class_exists( "clsPmieducarInstituicao" ) )
-                        {
-                            $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                        $registro['ref_curso_origem'] = $det_ref_curso_origem['nm_curso'];
+                        $registro['ref_cod_instituicao'] = $det_ref_curso_origem['ref_cod_instituicao'];
+                        if (class_exists('clsPmieducarInstituicao')) {
+                            $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                             $det_instituicao = $obj_instituicao->detalhe();
-                            $registro["ref_cod_instituicao"] = $det_instituicao["nm_instituicao"];
-                        }
-                        else
-                        {
-                            $registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
+                            $registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
+                        } else {
+                            $registro['ref_cod_instituicao'] = 'Erro na gera&ccedil;&atilde;o';
                             echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
                         }
-                    }
-                    else
-                    {
-                        $registro["ref_cod_origem"] = "Erro na gera&ccedil;&atilde;o";
+                    } else {
+                        $registro['ref_cod_origem'] = 'Erro na gera&ccedil;&atilde;o';
                         echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarCurso\n-->";
                     }
-                }
-                else
-                {
-                    $registro["ref_serie_origem"] = "Erro na gera&ccedil;&atilde;o";
+                } else {
+                    $registro['ref_serie_origem'] = 'Erro na gera&ccedil;&atilde;o';
                     echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
                 }
-                if( class_exists( "clsPmieducarSerie" ) )
-                {
-                    $obj_ref_serie_destino = new clsPmieducarSerie( $registro["ref_serie_destino"] );
+                if (class_exists('clsPmieducarSerie')) {
+                    $obj_ref_serie_destino = new clsPmieducarSerie($registro['ref_serie_destino']);
                     $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
-                    $serie_destino = $det_ref_serie_destino["nm_serie"];
-                    $registro["ref_curso_destino"] = $det_ref_serie_destino["ref_cod_curso"];
-                    if( class_exists( "clsPmieducarCurso" ) )
-                    {
-                        $obj_ref_curso_destino = new clsPmieducarCurso( $registro["ref_curso_destino"] );
+                    $serie_destino = $det_ref_serie_destino['nm_serie'];
+                    $registro['ref_curso_destino'] = $det_ref_serie_destino['ref_cod_curso'];
+                    if (class_exists('clsPmieducarCurso')) {
+                        $obj_ref_curso_destino = new clsPmieducarCurso($registro['ref_curso_destino']);
                         $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
-                        $registro["ref_curso_destino"] = $det_ref_curso_destino["nm_curso"];
-                    }
-                    else
-                    {
-                        $registro["ref_cod_destino"] = "Erro na gera&ccedil;&atilde;o";
+                        $registro['ref_curso_destino'] = $det_ref_curso_destino['nm_curso'];
+                    } else {
+                        $registro['ref_cod_destino'] = 'Erro na gera&ccedil;&atilde;o';
                         echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarCurso\n-->";
                     }
-                }
-                else
-                {
-                    $registro["ref_serie_destino"] = "Erro na gera&ccedil;&atilde;o";
+                } else {
+                    $registro['ref_serie_destino'] = 'Erro na gera&ccedil;&atilde;o';
                     echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
                 }
 
-                $lista_busca = array(
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}\">{$registro["ref_curso_origem"]}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}\">{$serie_origem}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}\">{$registro["ref_curso_destino"]}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}\">{$serie_destino}</a>"
-                );
+                $lista_busca = [
+                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_origem']}</a>",
+                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$serie_origem}</a>",
+                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_destino']}</a>",
+                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$serie_destino}</a>"
+                ];
 
-                if ($nivel_usuario == 1)
-                    $lista_busca[] = "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}\">{$registro["ref_cod_instituicao"]}</a>";
+                if ($nivel_usuario == 1) {
+                    $lista_busca[] = "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_cod_instituicao']}</a>";
+                }
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2( "educar_sequencia_serie_lst.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2('educar_sequencia_serie_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3 ) )
-        {
-            $this->acao = "go(\"educar_sequencia_serie_cad.php\")";
-            $this->nome_acao = "Novo";
+        if ($obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3)) {
+            $this->acao = 'go("educar_sequencia_serie_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Listagem de sequ&ecirc;ncias de enturma&ccedil;&atilde;o"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());                
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => 'Listagem de sequ&ecirc;ncias de enturma&ccedil;&atilde;o'
+        ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
@@ -350,7 +312,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

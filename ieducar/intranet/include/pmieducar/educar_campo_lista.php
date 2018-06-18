@@ -26,8 +26,7 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 $pessoa_logada = $_SESSION['id_pessoa'];
 
-    if(!isset($exibe_campo_lista_curso_escola))
-    {
+    if (!isset($exibe_campo_lista_curso_escola)) {
         $exibe_campo_lista_curso_escola = true;
     }
 
@@ -56,341 +55,283 @@ $pessoa_logada = $_SESSION['id_pessoa'];
         $escola_curso_serie_desabilitado =  isset($escola_curso_serie_desabilitado) ? $escola_curso_serie_desabilitado  : false;
         $serie_desabilitado =               isset($serie_desabilitado)              ? $serie_desabilitado               : false;
         $biblioteca_desabilitado =          isset($biblioteca_desabilitado)         ? $biblioteca_desabilitado          : false;
-        $cliente_tipo_desabilitado =        isset( $cliente_tipo_desabilitado )     ? $cliente_tipo_desabilitado        : false;
-        $funcao_desabilitado =              isset( $funcao_desabilitado )           ? $funcao_desabilitado              : false;
-        $turma_desabilitado =               isset( $turma_desabilitado )            ? $turma_desabilitado               : false;
+        $cliente_tipo_desabilitado =        isset($cliente_tipo_desabilitado)     ? $cliente_tipo_desabilitado        : false;
+        $funcao_desabilitado =              isset($funcao_desabilitado)           ? $funcao_desabilitado              : false;
+        $turma_desabilitado =               isset($turma_desabilitado)            ? $turma_desabilitado               : false;
     }
 
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 
     //Se administrador
-    if( $nivel_usuario == 1 || $cad_usuario )
-    {
-        $opcoes = array( "" => "Selecione" );
+    if ($nivel_usuario == 1 || $cad_usuario) {
+        $opcoes = [ '' => 'Selecione' ];
         $obj_instituicao = new clsPmieducarInstituicao();
-        $obj_instituicao->setCamposLista("cod_instituicao, nm_instituicao");
-        $obj_instituicao->setOrderby("nm_instituicao ASC");
-        $lista = $obj_instituicao->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,1);
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
+        $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
+        $obj_instituicao->setOrderby('nm_instituicao ASC');
+        $lista = $obj_instituicao->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
             }
         }
 
-        if ($get_escola && $get_biblioteca)
-        {
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getDuploEscolaBiblioteca();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-        } else if ($get_escola && $get_curso && $get_matricula) {
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, "getMatricula();", null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio );
-        } else if ($get_escola && $get_curso ) {
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, "getDuploEscolaCurso();", null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio );
-        } else if ($get_escola) {
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getEscola();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-        } else if ($get_curso) {
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getCurso();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-        } else if ($get_biblioteca) {
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getBiblioteca(1);",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-        } else if ( $get_cliente_tipo ) {
-            $this->campoLista( "ref_cod_cliente_tipo", "Tipo de Cliente", $opcoes, $this->ref_cod_cliente_tipo, "getCliente();", null, null, null, $cliente_tipo_desabilitado, $cliente_tipo_obrigatorio );
+        if ($get_escola && $get_biblioteca) {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getDuploEscolaBiblioteca();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        } elseif ($get_escola && $get_curso && $get_matricula) {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getMatricula();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        } elseif ($get_escola && $get_curso) {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getDuploEscolaCurso();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        } elseif ($get_escola) {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getEscola();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        } elseif ($get_curso) {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getCurso();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        } elseif ($get_biblioteca) {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getBiblioteca(1);', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        } elseif ($get_cliente_tipo) {
+            $this->campoLista('ref_cod_cliente_tipo', 'Tipo de Cliente', $opcoes, $this->ref_cod_cliente_tipo, 'getCliente();', null, null, null, $cliente_tipo_desabilitado, $cliente_tipo_obrigatorio);
         } else {
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, '', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
         }
     }
 
     //se nao eh administrador
-    elseif ($nivel_usuario != 1)
-    {
+    elseif ($nivel_usuario != 1) {
         $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
         $det_usuario = $obj_usuario->detalhe();
-        $this->ref_cod_instituicao = $det_usuario["ref_cod_instituicao"];
-        $this->campoOculto( "ref_cod_instituicao", $this->ref_cod_instituicao );
+        $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
+        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         //se eh institucional - admin
-        if ($nivel_usuario == 4 || $nivel_usuario == 8)
-        {
+        if ($nivel_usuario == 4 || $nivel_usuario == 8) {
             $obj_usuario = new clsPmieducarUsuario($pessoa_logada);
             $det_usuario = $obj_usuario->detalhe();
-            $this->ref_cod_escola = $det_usuario["ref_cod_escola"];
-            $this->campoOculto( "ref_cod_escola", $this->ref_cod_escola );
-            if($exibe_nm_escola == true)
-            {
+            $this->ref_cod_escola = $det_usuario['ref_cod_escola'];
+            $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+            if ($exibe_nm_escola == true) {
                 $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
                 $det_escola = $obj_escola->detalhe();
                 $nm_escola = $det_escola['nome'];
-                $this->campoRotulo( "nm_escola","Escola", $nm_escola );
+                $this->campoRotulo('nm_escola', 'Escola', $nm_escola);
             }
-            if ( $get_biblioteca ) {
+            if ($get_biblioteca) {
                 $obj_per = new clsPermissoes();
-                $ref_cod_biblioteca_ = $obj_per->getBiblioteca( $pessoa_logada );
+                $ref_cod_biblioteca_ = $obj_per->getBiblioteca($pessoa_logada);
             }
         }
     }
     //                    administrador          institucional - CPD
-    if ( $get_escola && ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario ) )
-    {
-        $opcoes_escola = array( "" => "Selecione uma escola" );
+    if ($get_escola && ($nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario)) {
+        $opcoes_escola = [ '' => 'Selecione uma escola' ];
         // EDITAR
-        if ($this->ref_cod_instituicao)
-        {
+        if ($this->ref_cod_instituicao) {
             $obj_escola = new clsPmieducarEscola();
-            $obj_escola->setOrderby("nome ASC");
-            $lista = $obj_escola->lista(null,null,null,$this->ref_cod_instituicao,null,null,null,null,null,null,1);
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes_escola["{$registro["cod_escola"]}"] = "{$registro['nome']}";
+            $obj_escola->setOrderby('nome ASC');
+            $lista = $obj_escola->lista(null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1);
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes_escola["{$registro['cod_escola']}"] = "{$registro['nome']}";
                 }
             }
         }
 
-        if ($get_biblioteca)
-        {
-            $this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
-        }
-        else
-        {
-            $this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,null,null,null,null,$escola_desabilitado,$escola_obrigatorio );
+        if ($get_biblioteca) {
+            $this->campoLista('ref_cod_escola', 'Escola', $opcoes_escola, $this->ref_cod_escola, 'getBiblioteca(2);', null, null, null, $escola_desabilitado, $escola_obrigatorio);
+        } else {
+            $this->campoLista('ref_cod_escola', 'Escola', $opcoes_escola, $this->ref_cod_escola, null, null, null, null, $escola_desabilitado, $escola_obrigatorio);
         }
     }
-    if ($get_curso)
-    {
-        $opcoes_curso = array( "" => "Selecione" );
+    if ($get_curso) {
+        $opcoes_curso = [ '' => 'Selecione' ];
 
         // EDITAR
-        if( $this->ref_cod_escola )
-        {
+        if ($this->ref_cod_escola) {
             $obj_escola_curso = new clsPmieducarEscolaCurso();
 
-            $lst_escola_curso = $obj_escola_curso->lista( $this->ref_cod_escola,null,null,null,null,null,null,null,1 );
+            $lst_escola_curso = $obj_escola_curso->lista($this->ref_cod_escola, null, null, null, null, null, null, null, 1);
 
-            if ( is_array( $lst_escola_curso ) && count( $lst_escola_curso ) )
-            {
-                foreach ( $lst_escola_curso as $escola_curso )
-                {
-                    $opcoes_curso["{$escola_curso["ref_cod_curso"]}"] = $escola_curso['nm_curso'];
+            if (is_array($lst_escola_curso) && count($lst_escola_curso)) {
+                foreach ($lst_escola_curso as $escola_curso) {
+                    $opcoes_curso["{$escola_curso['ref_cod_curso']}"] = $escola_curso['nm_curso'];
                 }
             }
-        }
-        else if( $this->ref_cod_instituicao )
-        {
-            $opcoes_curso = array( "" => "Selecione" );
+        } elseif ($this->ref_cod_instituicao) {
+            $opcoes_curso = [ '' => 'Selecione' ];
             $obj_curso = new clsPmieducarCurso();
-            $obj_curso->setOrderby("nm_curso ASC");
+            $obj_curso->setOrderby('nm_curso ASC');
 
-            if ($sem_padrao)
-                $lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao,0 );
-            else
-                $lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao);
+            if ($sem_padrao) {
+                $lista = $obj_curso->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao, 0);
+            } else {
+                $lista = $obj_curso->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
+            }
 
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes_curso["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
                 }
             }
-
         }
-        $this->campoLista( "ref_cod_curso", "Curso", $opcoes_curso, $this->ref_cod_curso,null,null,null,null,$curso_desabilitado,$curso_obrigatorio );
+        $this->campoLista('ref_cod_curso', 'Curso', $opcoes_curso, $this->ref_cod_curso, null, null, null, null, $curso_desabilitado, $curso_obrigatorio);
 
-        if ($get_semestre)
-        {
-            $this->campoRotulo("semestres", "Semestre", "<div id='div_semestre'>Selecione um Curso</div>");
-            $this->campoOculto("is_padrao", 1);
+        if ($get_semestre) {
+            $this->campoRotulo('semestres', 'Semestre', '<div id=\'div_semestre\'>Selecione um Curso</div>');
+            $this->campoOculto('is_padrao', 1);
         }
     }
 
-    if ( $get_escola_curso_serie )
-    {
-
-        $opcoes_series_curso_escola = array( "" => "Selecione" );
+    if ($get_escola_curso_serie) {
+        $opcoes_series_curso_escola = [ '' => 'Selecione' ];
         // EDITAR
-        if ( $this->ref_cod_escola && $this->ref_cod_curso )
-        {
+        if ($this->ref_cod_escola && $this->ref_cod_curso) {
             $obj_escola_serie = new clsPmieducarEscolaSerie();
-            $obj_escola_serie->setOrderby("nm_serie ASC");
-            $lst_escola_serie = $obj_escola_serie->lista( $this->ref_cod_escola,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,$this->ref_cod_curso );
-            if ( is_array( $lst_escola_serie ) && count( $lst_escola_serie ) )
-            {
-                foreach ( $lst_escola_serie as $escola_curso_serie )
-                {
-                    $opcoes_series_curso_escola["{$escola_curso_serie["ref_cod_serie"]}"] = $escola_curso_serie['nm_serie'];
+            $obj_escola_serie->setOrderby('nm_serie ASC');
+            $lst_escola_serie = $obj_escola_serie->lista($this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, $this->ref_cod_curso);
+            if (is_array($lst_escola_serie) && count($lst_escola_serie)) {
+                foreach ($lst_escola_serie as $escola_curso_serie) {
+                    $opcoes_series_curso_escola["{$escola_curso_serie['ref_cod_serie']}"] = $escola_curso_serie['nm_serie'];
                 }
             }
         }
-        $this->campoLista( "ref_ref_cod_serie", "S&eacute;rie", $opcoes_series_curso_escola, $this->ref_ref_cod_serie, null, null, null, null, $escola_curso_serie_desabilitado, $escola_curso_serie_obrigatorio );
+        $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_series_curso_escola, $this->ref_ref_cod_serie, null, null, null, null, $escola_curso_serie_desabilitado, $escola_curso_serie_obrigatorio);
     }
 
-    if ( $get_serie )
-    {
-        $opcoes_serie = array( "" => "Selecione" );
+    if ($get_serie) {
+        $opcoes_serie = [ '' => 'Selecione' ];
         // EDITAR
-        if ( $this->ref_cod_curso )
-        {
+        if ($this->ref_cod_curso) {
             $obj_serie = new clsPmieducarSerie();
-            $obj_serie->setOrderby("nm_serie ASC");
-            $lst_serie = $obj_serie->lista( null,null,null,$this->ref_cod_curso,null,null,null,null,null,null,null,null,1);
-            if ( is_array( $lst_serie ) && count( $lst_serie ) )
-            {
-                foreach ( $lst_serie as $serie )
-                {
-                    $opcoes_serie["{$serie["cod_serie"]}"] = $serie['nm_serie'];
+            $obj_serie->setOrderby('nm_serie ASC');
+            $lst_serie = $obj_serie->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
+            if (is_array($lst_serie) && count($lst_serie)) {
+                foreach ($lst_serie as $serie) {
+                    $opcoes_serie["{$serie['cod_serie']}"] = $serie['nm_serie'];
                 }
             }
         }
-        $this->campoLista( "ref_cod_serie", "Série", $opcoes_serie, $this->ref_cod_serie, null, null, null, null, $serie_desabilitado, $serie_obrigatorio );
-
+        $this->campoLista('ref_cod_serie', 'Série', $opcoes_serie, $this->ref_cod_serie, null, null, null, null, $serie_desabilitado, $serie_obrigatorio);
     }
 
-    if ( $get_biblioteca )
-    {
-        if ($ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2 )
-        {
-            $this->campoOculto( "ref_cod_biblioteca", $this->ref_cod_biblioteca );
-        }
-        else
-        {
+    if ($get_biblioteca) {
+        if ($ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2) {
+            $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
+        } else {
             $qtd_bibliotecas = count($ref_cod_biblioteca_);
-            if ( $qtd_bibliotecas == 1 && ($nivel_usuario == 4 || $nivel_usuario == 8))
-            {
+            if ($qtd_bibliotecas == 1 && ($nivel_usuario == 4 || $nivel_usuario == 8)) {
                 $det_unica_biblioteca = array_shift($ref_cod_biblioteca_);
-                $this->ref_cod_biblioteca = $det_unica_biblioteca["ref_cod_biblioteca"];
-                $this->campoOculto( "ref_cod_biblioteca", $this->ref_cod_biblioteca );
-            }
-            else if ( $qtd_bibliotecas > 1)
-            {
-
-                $opcoes_biblioteca = array( "" => "Selecione" );
-                if ( is_array( $ref_cod_biblioteca_ ) && count( $ref_cod_biblioteca_ ) )
-                {
-                    foreach ($ref_cod_biblioteca_ as $biblioteca)
-                    {
-                        $obj_biblioteca = new clsPmieducarBiblioteca($biblioteca["ref_cod_biblioteca"]);
+                $this->ref_cod_biblioteca = $det_unica_biblioteca['ref_cod_biblioteca'];
+                $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
+            } elseif ($qtd_bibliotecas > 1) {
+                $opcoes_biblioteca = [ '' => 'Selecione' ];
+                if (is_array($ref_cod_biblioteca_) && count($ref_cod_biblioteca_)) {
+                    foreach ($ref_cod_biblioteca_ as $biblioteca) {
+                        $obj_biblioteca = new clsPmieducarBiblioteca($biblioteca['ref_cod_biblioteca']);
                         $det_biblioteca = $obj_biblioteca->detalhe();
-                        $opcoes_biblioteca["{$biblioteca["ref_cod_biblioteca"]}"] = "{$det_biblioteca['nm_biblioteca']}";
+                        $opcoes_biblioteca["{$biblioteca['ref_cod_biblioteca']}"] = "{$det_biblioteca['nm_biblioteca']}";
                     }
                 }
                 $getCliente = '';
                 if ($get_cliente_tipo) {
-              $getCliente = "getClienteTipo()";
+                    $getCliente = 'getClienteTipo()';
                 }
-                $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,$getCliente,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
-            }
-            else
-            {
-                $opcoes_biblioteca = array( "" => "Selecione" );
+                $this->campoLista('ref_cod_biblioteca', 'Biblioteca', $opcoes_biblioteca, $this->ref_cod_biblioteca, $getCliente, null, null, null, $biblioteca_desabilitado, $biblioteca_obrigatorio);
+            } else {
+                $opcoes_biblioteca = [ '' => 'Selecione' ];
                 // EDITAR
-                if ($this->ref_cod_escola || $this->ref_cod_instituicao)
-                {
+                if ($this->ref_cod_escola || $this->ref_cod_instituicao) {
                     $objTemp = new clsPmieducarBiblioteca();
-                    $objTemp->setOrderby("nm_biblioteca ASC");
-                    $lista = $objTemp->lista(null,$this->ref_cod_instituicao,null,null,null,null,null,null,null,null,null,null,1);
+                    $objTemp->setOrderby('nm_biblioteca ASC');
+                    $lista = $objTemp->lista(null, $this->ref_cod_instituicao, null, null, null, null, null, null, null, null, null, null, 1);
 
-                    if ( is_array( $lista ) && count( $lista ) )
-                    {
-                        foreach ( $lista as $registro )
-                        {
+                    if (is_array($lista) && count($lista)) {
+                        foreach ($lista as $registro) {
                             $opcoes_biblioteca["{$registro['cod_biblioteca']}"] = "{$registro['nm_biblioteca']}";
                         }
                     }
                 }
-              $getCliente = '';
-        if ($get_cliente_tipo) {
-          $getCliente = "getClienteTipo()";
-        }
-                $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes_biblioteca, $this->ref_cod_biblioteca,$getCliente,null,null,null,$biblioteca_desabilitado,$biblioteca_obrigatorio );
+                $getCliente = '';
+                if ($get_cliente_tipo) {
+                    $getCliente = 'getClienteTipo()';
+                }
+                $this->campoLista('ref_cod_biblioteca', 'Biblioteca', $opcoes_biblioteca, $this->ref_cod_biblioteca, $getCliente, null, null, null, $biblioteca_desabilitado, $biblioteca_obrigatorio);
             }
         }
-
     }
 
-    if ( $get_cliente_tipo )
-    {
-        $opcoes_cli_tpo = array( "" => "Selecione" );
-        if ( $this->ref_cod_biblioteca )
-        {
+    if ($get_cliente_tipo) {
+        $opcoes_cli_tpo = [ '' => 'Selecione' ];
+        if ($this->ref_cod_biblioteca) {
             $obj_cli_tpo = new clsPmieducarClienteTipo();
-            $obj_cli_tpo->setOrderby("nm_tipo ASC");
-            $lst_cli_tpo = $obj_cli_tpo->lista( null, $this->ref_cod_biblioteca, null, null, null, null, null, null, null, null, 1 );
-            if ( is_array( $lst_cli_tpo ) && count( $lst_cli_tpo ) )
-            {
-                foreach ( $lst_cli_tpo as $cli_tpo )
-                {
+            $obj_cli_tpo->setOrderby('nm_tipo ASC');
+            $lst_cli_tpo = $obj_cli_tpo->lista(null, $this->ref_cod_biblioteca, null, null, null, null, null, null, null, null, 1);
+            if (is_array($lst_cli_tpo) && count($lst_cli_tpo)) {
+                foreach ($lst_cli_tpo as $cli_tpo) {
                     $opcoes_cli_tpo["{$cli_tpo['cod_cliente_tipo']}"] = "{$cli_tpo['nm_tipo']}";
                 }
             }
         }
-        $this->campoLista( "ref_cod_cliente_tipo", "Tipo do Cliente", $opcoes_cli_tpo, $this->ref_cod_cliente_tipo, null, null, null, null, $cliente_tipo_desabilitado, $cliente_tipo_obrigatorio );
+        $this->campoLista('ref_cod_cliente_tipo', 'Tipo do Cliente', $opcoes_cli_tpo, $this->ref_cod_cliente_tipo, null, null, null, null, $cliente_tipo_desabilitado, $cliente_tipo_obrigatorio);
     }
-    if ( $get_funcao )
-    {
-        $opcoes_funcao = array( "" => "Selecione" );
-        if ( $this->ref_cod_instituicao )
-        {
+    if ($get_funcao) {
+        $opcoes_funcao = [ '' => 'Selecione' ];
+        if ($this->ref_cod_instituicao) {
             $obj_funcao = new clsPmieducarFuncao();
-            $obj_funcao->setOrderby("nm_funcao ASC");
-            $lst_funcao = $obj_funcao->lista( null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao );
-            if ( is_array( $lst_funcao ) && count( $lst_funcao ) )
-            {
-                foreach ( $lst_funcao as $funcao )
-                {
+            $obj_funcao->setOrderby('nm_funcao ASC');
+            $lst_funcao = $obj_funcao->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+            if (is_array($lst_funcao) && count($lst_funcao)) {
+                foreach ($lst_funcao as $funcao) {
                     $opcoes_funcao["{$funcao['cod_funcao']}"] = "{$funcao['nm_funcao']}";
                 }
             }
         }
-        $this->campoLista( "ref_cod_funcao", "Função", $opcoes_funcao, $this->ref_cod_funcao, null, null, null, null, $funcao_desabilitado, $funcao_obrigatorio );
+        $this->campoLista('ref_cod_funcao', 'Função', $opcoes_funcao, $this->ref_cod_funcao, null, null, null, null, $funcao_desabilitado, $funcao_obrigatorio);
     }
-    if ( $get_turma )
-    {
-        $opcoes_turma = array( "" => "Selecione" );
+    if ($get_turma) {
+        $opcoes_turma = [ '' => 'Selecione' ];
         // EDITAR
-        if ( ($this->ref_ref_cod_serie && $this->ref_cod_escola) || $this->ref_cod_curso )
-        {
+        if (($this->ref_ref_cod_serie && $this->ref_cod_escola) || $this->ref_cod_curso) {
             $obj_turma = new clsPmieducarTurma();
-            $obj_turma->setOrderby("nm_turma ASC");
-            $lst_turma = $obj_turma->lista( null, null, null, $this->ref_ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso );
-            if ( is_array( $lst_turma ) && count( $lst_turma ) )
-            {
-                foreach ( $lst_turma as $turma )
-                {
+            $obj_turma->setOrderby('nm_turma ASC');
+            $lst_turma = $obj_turma->lista(null, null, null, $this->ref_ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso);
+            if (is_array($lst_turma) && count($lst_turma)) {
+                foreach ($lst_turma as $turma) {
                     $opcoes_turma["{$turma['cod_turma']}"] = "{$turma['nm_turma']}";
                 }
             }
         }
-        $this->campoLista( "ref_cod_turma", "Turma", $opcoes_turma, $this->ref_cod_turma, null, null, null, null, $turma_desabilitado, $turma_obrigatorio );
+        $this->campoLista('ref_cod_turma', 'Turma', $opcoes_turma, $this->ref_cod_turma, null, null, null, null, $turma_desabilitado, $turma_obrigatorio);
     }
-    if ($get_ano){
+    if ($get_ano) {
         $lst_anos = Portabilis_Utils_Database::fetchPreparedQuery('SELECT distinct ano from pmieducar.turma where ativo = 1 order by ano desc');
-        if ( is_array( $lst_anos ) && count( $lst_anos ) ){
-            foreach ($lst_anos as $ano){
-                if ($ano['ano'])
-                $opcoes_ano["{$ano['ano']}"] = "{$ano['ano']}";
+        if (is_array($lst_anos) && count($lst_anos)) {
+            foreach ($lst_anos as $ano) {
+                if ($ano['ano']) {
+                    $opcoes_ano["{$ano['ano']}"] = "{$ano['ano']}";
+                }
             }
-        }else
-            $opcoes_ano = array( "" => "Indisponível" );
-        $this->campoLista( "ano", "Ano", $opcoes_ano, $this->ano, null, null, null, null, false, false);
+        } else {
+            $opcoes_ano = [ '' => 'Indisponível' ];
+        }
+        $this->campoLista('ano', 'Ano', $opcoes_ano, $this->ano, null, null, null, null, false, false);
     }
-    if (isset($get_cabecalho))
-    {
-        if ( $qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8) )
-            ${$get_cabecalho}[] = "Biblioteca";
-        else if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4)
-            ${$get_cabecalho}[] = "Biblioteca";
-        if ($nivel_usuario == 1 || $nivel_usuario == 2)
-            ${$get_cabecalho}[] = "Escola";
-        if ($nivel_usuario == 1)
-            ${$get_cabecalho}[] = "Institui&ccedil;&atilde;o";
+    if (isset($get_cabecalho)) {
+        if ($qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8)) {
+            ${$get_cabecalho}[] = 'Biblioteca';
+        } elseif ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4) {
+            ${$get_cabecalho}[] = 'Biblioteca';
+        }
+        if ($nivel_usuario == 1 || $nivel_usuario == 2) {
+            ${$get_cabecalho}[] = 'Escola';
+        }
+        if ($nivel_usuario == 1) {
+            ${$get_cabecalho}[] = 'Institui&ccedil;&atilde;o';
+        }
     }
 ?>
 <script type='text/javascript'>
 <?php
 //   administrador          institucional = cpd
-if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
-{
-?>
+if ($nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario) {
+    ?>
     var before_getEscola;
     var after_getEscola;
 
@@ -452,9 +393,8 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
         }
     }
 <?php
-    if ($get_escola && $get_biblioteca)
-    {
-?>
+    if ($get_escola && $get_biblioteca) {
+        ?>
         function getDuploEscolaBiblioteca()
         {
             getEscola();
@@ -463,9 +403,8 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 <?php
     }
 }
-if ( $get_curso && $sem_padrao && !$get_matricula )
-{
-?>
+if ($get_curso && $sem_padrao && !$get_matricula) {
+    ?>
     function getCurso()
     {
         var campoCurso = document.getElementById('ref_cod_curso');
@@ -507,10 +446,8 @@ if ( $get_curso && $sem_padrao && !$get_matricula )
         }
     }
 <?php
-}
-elseif ( $get_curso && !$get_matricula )
-{
-?>
+} elseif ($get_curso && !$get_matricula) {
+    ?>
     function getCurso()
     {
         var campoCurso = document.getElementById('ref_cod_curso');
@@ -553,9 +490,8 @@ elseif ( $get_curso && !$get_matricula )
     }
 <?php
 }
-if ( $get_escola && $get_curso && $get_matricula)
-{
-?>
+if ($get_escola && $get_curso && $get_matricula) {
+    ?>
     function getMatricula()
     {
         getEscola();
@@ -563,9 +499,8 @@ if ( $get_escola && $get_curso && $get_matricula)
     }
 <?php
 }
-if ( $get_escola && $get_curso && !$get_matricula)
-{
-?>
+if ($get_escola && $get_curso && !$get_matricula) {
+    ?>
     function getDuploEscolaCurso()
     {
         getEscola();
@@ -574,9 +509,8 @@ if ( $get_escola && $get_curso && !$get_matricula)
 <?php
 }
 //if ( $get_escola_curso )
-if ( $get_curso )
-{
-?>
+if ($get_curso) {
+    ?>
     function getEscolaCurso()
     {
         var campoCurso = document.getElementById('ref_cod_curso');
@@ -597,11 +531,15 @@ if ( $get_curso )
             campoCurso.options[0].text = 'Carregando cursos';
 
             var xml = new ajax( atualizaLstEscolaCurso );
-            <?php if ($get_cursos_nao_padrao) {?>
+            <?php if ($get_cursos_nao_padrao) {
+        ?>
                 xml.envia( "educar_curso_xml.php?esc="+campoEscola+"&padrao_ano_escolar=nao" );
-            <?php } else {?>
+            <?php
+    } else {
+        ?>
                 xml.envia( "educar_curso_xml.php?esc="+campoEscola );
-            <?php }?>
+            <?php
+    } ?>
         }
         else
         {
@@ -631,8 +569,7 @@ if ( $get_curso )
     }
 <?php
 }
-if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
-{
+if ($get_escola_curso_serie && $get_matricula && $_GET['ref_cod_aluno']) {
     // tah matriculando o aluno, seleciona as series que ele pode se matricular?
 ?>
     function getEscolaCursoSerie()
@@ -642,7 +579,7 @@ if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
         var campoCursoValue  = document.getElementById('ref_cod_curso').value;
         var campoCurso  = document.getElementById('ref_cod_curso');
         var campoSerie  = document.getElementById('ref_ref_cod_serie');
-        var cod_aluno = <?=$_GET["ref_cod_aluno"]?>;
+        var cod_aluno = <?=$_GET['ref_cod_aluno']?>;
 
         campoSerie.length = 1;
 
@@ -683,9 +620,8 @@ if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
     }
 <?php
 }
-if ( $get_escola_curso_serie  && !$get_matricula )
-{
-?>
+if ($get_escola_curso_serie  && !$get_matricula) {
+    ?>
     function getEscolaCursoSerie()
     {
         var campoCurso = document.getElementById('ref_cod_curso').value;
@@ -736,8 +672,7 @@ if ( $get_escola_curso_serie  && !$get_matricula )
     }
 <?php
 }
-if ( $get_serie && $get_escola_serie)
-{
+if ($get_serie && $get_escola_serie) {
     // lista todas as series que nao estao associadas a essa escola
 ?>
     function getSerie()
@@ -793,9 +728,8 @@ if ( $get_serie && $get_escola_serie)
     }
 <?php
 }
-if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
-{
-?>
+if ($get_serie && !$get_escola_serie  || $exibe_get_serie) {
+    ?>
     function getSerie()
     {
         var campoCurso = document.getElementById('ref_cod_curso').value;
@@ -843,9 +777,8 @@ if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
     }
 <?php
 }
-if ( $get_biblioteca )
-{
-?>
+if ($get_biblioteca) {
+    ?>
     function getBiblioteca(flag)
     {
         var campoBiblioteca = document.getElementById('ref_cod_biblioteca');
@@ -887,9 +820,8 @@ if ( $get_biblioteca )
     }
 <?php
 }
-if ( $get_cliente_tipo )
-{
-?>
+if ($get_cliente_tipo) {
+    ?>
     function getClienteTipo()
     {
         var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
@@ -935,9 +867,8 @@ if ( $get_cliente_tipo )
     }
 <?php
 }
-if ( $get_funcao )
-{
-?>
+if ($get_funcao) {
+    ?>
     function getFuncao()
     {
         var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -980,9 +911,8 @@ if ( $get_funcao )
     }
 <?php
 }
-if ( $get_turma )
-{
-?>
+if ($get_turma) {
+    ?>
     function getTurma()
     {
         var campoEscola = document.getElementById('ref_cod_escola').value;
@@ -1085,8 +1015,7 @@ function limpaCampos(nivel)
 }
 
 <?php
-if ($get_semestre)
-{
+if ($get_semestre) {
     ?>
 
     function verifica_curso()
@@ -1119,6 +1048,7 @@ if ($get_semestre)
         }
     }
 
-<?php } ?>
+<?php
+} ?>
 
 </script>

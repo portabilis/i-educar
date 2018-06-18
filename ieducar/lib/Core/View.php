@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Core_View
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,114 +42,135 @@ require_once 'include/clsBase.inc.php';
  * a geração de páginas usando CoreExt_Controller_Page_Interface.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Core_View
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Core_View extends clsBase
 {
-  /**
-   * Uma instância de CoreExt_Controller_Page_Interface.
-   * @var CoreExt_Controller_Page_Interface
-   */
-  protected $_pageController = NULL;
+    /**
+     * Uma instância de CoreExt_Controller_Page_Interface.
+     *
+     * @var CoreExt_Controller_Page_Interface
+     */
+    protected $_pageController = null;
 
-  /**
-   * Construtor.
-   * @param Core_Controller_Page_Interface $instance
-   */
-  public function __construct(Core_Controller_Page_Interface $instance)
-  {
-    parent::__construct();
-    $this->_setPageController($instance);
-  }
+    /**
+     * Construtor.
+     *
+     * @param Core_Controller_Page_Interface $instance
+     */
+    public function __construct(Core_Controller_Page_Interface $instance)
+    {
+        parent::__construct();
+        $this->_setPageController($instance);
+    }
 
-  /**
-   * Setter.
-   * @param Core_Controller_Page_Interface $instance
-   * @return Core_View Provê interface fluída
-   */
-  protected function _setPageController(Core_Controller_Page_Interface $instance)
-  {
-    $this->_pageController = $instance;
-    return $this;
-  }
+    /**
+     * Setter.
+     *
+     * @param Core_Controller_Page_Interface $instance
+     *
+     * @return Core_View Provê interface fluída
+     */
+    protected function _setPageController(Core_Controller_Page_Interface $instance)
+    {
+        $this->_pageController = $instance;
 
-  /**
-   * Getter.
-   * @return CoreExt_Controller_Page_Interface
-   */
-  protected function _getPageController()
-  {
-    return $this->_pageController;
-  }
+        return $this;
+    }
 
-  /**
-   * Setter
-   * @param string $titulo
-   * @return Core_View Provê interface fluída
-   */
-  public function setTitulo($titulo)
-  {
-    parent::SetTitulo($titulo);
-    return $this;
-  }
+    /**
+     * Getter.
+     *
+     * @return CoreExt_Controller_Page_Interface
+     */
+    protected function _getPageController()
+    {
+        return $this->_pageController;
+    }
 
-  /**
-   * Getter.
-   * @return string
-   */
-  public function getTitulo()
-  {
-    return $this->titulo;
-  }
+    /**
+     * Setter
+     *
+     * @param string $titulo
+     *
+     * @return Core_View Provê interface fluída
+     */
+    public function setTitulo($titulo)
+    {
+        parent::SetTitulo($titulo);
 
-  /**
-   * Setter.
-   * @param int $processo
-   * @return Core_View Provê interface fluída
-   */
-  public function setProcessoAp($processo)
-  {
-    $this->processoAp = (int) $processo;
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Getter.
-   * @return int
-   */
-  public function getProcessoAp()
-  {
-    return $this->processoAp;
-  }
+    /**
+     * Getter.
+     *
+     * @return string
+     */
+    public function getTitulo()
+    {
+        return $this->titulo;
+    }
 
-  /**
-   * Configura algumas variáveis de instância usando o container global
-   * $coreExt.
-   *
-   * @global $coreExt
-   * @see clsBase#Formular()
-   */
-  public function Formular()
-  {
-    global $coreExt;
-    $instituicao = $coreExt['Config']->app->template->vars->instituicao;
+    /**
+     * Setter.
+     *
+     * @param int $processo
+     *
+     * @return Core_View Provê interface fluída
+     */
+    public function setProcessoAp($processo)
+    {
+        $this->processoAp = (int) $processo;
 
-    $this->setTitulo($instituicao . ' | ' . $this->_getPageController()->getBaseTitulo())
+        return $this;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return int
+     */
+    public function getProcessoAp()
+    {
+        return $this->processoAp;
+    }
+
+    /**
+     * Configura algumas variáveis de instância usando o container global
+     * $coreExt.
+     *
+     * @global $coreExt
+     *
+     * @see clsBase#Formular()
+     */
+    public function Formular()
+    {
+        global $coreExt;
+        $instituicao = $coreExt['Config']->app->template->vars->instituicao;
+
+        $this->setTitulo($instituicao . ' | ' . $this->_getPageController()->getBaseTitulo())
          ->setProcessoAp($this->_getPageController()->getBaseProcessoAp());
-  }
+    }
 
-  /**
-   * Executa o método de geração de HTML para a classe.
-   * @param Core_View $instance
-   */
-  public static function generate($instance)
-  {
-    $viewBase = new self($instance);
-    $viewBase->addForm($instance);
-    $viewBase->MakeAll();
-  }
+    /**
+     * Executa o método de geração de HTML para a classe.
+     *
+     * @param Core_View $instance
+     */
+    public static function generate($instance)
+    {
+        $viewBase = new self($instance);
+        $viewBase->addForm($instance);
+        $viewBase->MakeAll();
+    }
 }

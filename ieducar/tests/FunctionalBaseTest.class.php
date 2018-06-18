@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   FunctionalTests
+ *
  * @since     Arquivo disponível desde a versão 1.0.1
+ *
  * @version   $Id$
  */
 
@@ -40,44 +45,47 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
  * de banco de dados para facilitar no tearDown de dados de teste.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package   FunctionalTests
+ *
  * @since     Classe disponível desde a versão 1.0.1
+ *
  * @version   @@package_version@@
  */
 abstract class FunctionalBaseTest extends PHPUnit_Extensions_SeleniumTestCase
 {
-  // Configurações do Selenium RC.
-  static protected
-    $slBrowserUrl = 'http://ieducar.local',
-    $slBrowser    = '*firefox',
-    $slPort       = 4444,
-    $slHost       = 'localhost';
+    // Configurações do Selenium RC.
+    protected static $slBrowserUrl = 'http://ieducar.local';
+    protected static $slBrowser    = '*firefox';
+    protected static $slPort       = 4444;
+    protected static $slHost       = 'localhost';
 
-  // Conta de usuário para testes funcionais.
-  protected
-    $slUsuarioLogin = 'admin',
-    $slUsuarioSenha = 'admin';
+    // Conta de usuário para testes funcionais.
+    protected $slUsuarioLogin = 'admin';
+    protected $slUsuarioSenha = 'admin';
 
-  protected function setUp()
-  {
-    $this->setBrowser(self::$slBrowser);
-    $this->setHost(self::$slHost);
-    $this->setPort(self::$slPort);
-    $this->setBrowserUrl(self::$slBrowserUrl);
-  }
+    protected function setUp()
+    {
+        $this->setBrowser(self::$slBrowser);
+        $this->setHost(self::$slHost);
+        $this->setPort(self::$slPort);
+        $this->setBrowserUrl(self::$slBrowserUrl);
+    }
 
-  protected function doLogin()
-  {
-    $this->open('/intranet');
-    $this->type('login', $this->slUsuarioLogin);
-    $this->type('senha', $this->slUsuarioSenha);
-    $this->clickAndWait("//input[@value='Entrar']");
-  }
+    protected function doLogin()
+    {
+        $this->open('/intranet');
+        $this->type('login', $this->slUsuarioLogin);
+        $this->type('senha', $this->slUsuarioSenha);
+        $this->clickAndWait('//input[@value=\'Entrar\']');
+    }
 
-  protected function doLogout()
-  {
-    $this->click("//img[@alt='Logout']");
-  }
+    protected function doLogout()
+    {
+        $this->click('//img[@alt=\'Logout\']');
+    }
 }

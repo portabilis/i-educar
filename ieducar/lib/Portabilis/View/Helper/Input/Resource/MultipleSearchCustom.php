@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   $Id$
  */
 
@@ -38,44 +43,52 @@ require_once 'lib/Utils/SafeJson.php';
  * Portabilis_View_Helper_Input_MultipleSearchCustom class.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabilis_View_Helper_Input_MultipleSearch {
-
-  public function MultipleSearchCustom($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'custom',
+class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabilis_View_Helper_Input_MultipleSearch
+{
+    public function MultipleSearchCustom($attrName, $options = [])
+    {
+        $defaultOptions = ['objectName'    => 'custom',
                             'apiController' => 'custom',
                             'apiResource'   => 'custom-search',
-                            'type'          => 'multiple');
+                            'type'          => 'multiple'];
 
-    $options                         = $this->mergeOptions($options, $defaultOptions);
-    $options['options']['resources'] = $this->insertOption(NULL, '', $options['options']['options']['all_values']);
+        $options                         = $this->mergeOptions($options, $defaultOptions);
+        $options['options']['resources'] = $this->insertOption(null, '', $options['options']['options']['all_values']);
 
-    $this->placeholderJs($options);
+        $this->placeholderJs($options);
 
-    parent::multipleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::multipleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function placeholderJs($options) {
-    $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
-    $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
+    protected function placeholderJs($options)
+    {
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
+        $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione');";
 
-    $json = SafeJson::encode($options['options']['options']['values']);
+        $json = SafeJson::encode($options['options']['options']['values']);
 
-    $js .= 'arrayOptions.push({element : $j("#'. $options['objectName'] .'"),values : '. $json .'})';
+        $js .= 'arrayOptions.push({element : $j("#'. $options['objectName'] .'"),values : '. $json .'})';
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
-  }
-  protected function loadAssets() {
-    Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchCustom.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
+    }
+    protected function loadAssets()
+    {
+        Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchCustom.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    }
 }

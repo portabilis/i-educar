@@ -20,10 +20,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -38,106 +43,114 @@ require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de logradouros');
-    $this->processoAp = 762;
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de logradouros');
+        $this->processoAp = 762;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $tabela_logradouros = array();
-  var $logradouro_duplicado;
+    public $tabela_logradouros = [];
+    public $logradouro_duplicado;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(762, $this->pessoa_logada, 7,
-       'index.php');
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        762,
+        $this->pessoa_logada,
+        7,
+       'index.php'
+    );
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "Unifica&ccedil;&atilde;o de logradouros"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''        => 'Unifica&ccedil;&atilde;o de logradouros'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    return $retorno;
-  }
+        return $retorno;
+    }
 
-  function Gerar()
-  {
-      $this->inputsHelper()->hidden('exibir_municipio');
-      $this->inputsHelper()->simpleSearchlogradouro(null,array('label' => 'Logradouro principal' ));
-      $this->campoTabelaInicio("tabela_logradouros","",array("Logradouro duplicado"),$this->tabela_logradouros);
-      $this->campoTexto( "logradouro_duplicado", "Logradouro duplicado", $this->logradouro_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus' );
-      $this->campoTabelaFim();
+    public function Gerar()
+    {
+        $this->inputsHelper()->hidden('exibir_municipio');
+        $this->inputsHelper()->simpleSearchlogradouro(null, ['label' => 'Logradouro principal' ]);
+        $this->campoTabelaInicio('tabela_logradouros', '', ['Logradouro duplicado'], $this->tabela_logradouros);
+        $this->campoTexto('logradouro_duplicado', 'Logradouro duplicado', $this->logradouro_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoTabelaFim();
+    }
 
-  }
+    public function Novo()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        762,
+        $this->pessoa_logada,
+        7,
+      'index.php'
+    );
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(762, $this->pessoa_logada, 7,
-      'index.php');
+        $logradouro_principal = $this->logradouro_id;
+        $obj_logradouro = new clsPublicLogradouro($logradouro_principal);
+        $obj_logradouro = $obj_logradouro->detalhe();
+        $municipio_principal = $obj_logradouro['idmun'];
 
-    $logradouro_principal = $this->logradouro_id;
-    $obj_logradouro = new clsPublicLogradouro($logradouro_principal);
-    $obj_logradouro = $obj_logradouro->detalhe();
-    $municipio_principal = $obj_logradouro['idmun'];
+        $logradouros_duplicados = [];
 
-    $logradouros_duplicados = array();
+        // Loop entre logradouros das tabelas
+        foreach ($this->logradouro_duplicado as $key => $logradouro_duplicado) {
+            $idlog = $this->retornaCodigo($logradouro_duplicado);
 
-    // Loop entre logradouros das tabelas
-    foreach ( $this->logradouro_duplicado AS $key => $logradouro_duplicado ){
+            // Verifica se o logradouro é válido e não é igual ao logradouro principal
+            if (is_numeric($idlog) && $idlog != $logradouro_principal) {
+                $obj_logradouro = new clsPubliclogradouro($logradouro_principal);
+                $obj_logradouro_det = $obj_logradouro->detalhe();
+                if ($obj_logradouro_det) {
+                    // Verifica se o município é o mesmo que o logradouro principal
+                    if ($obj_logradouro_det['idmun'] == $municipio_principal) {
+                        $logradouros_duplicados[] = $idlog;
+                    } else {
+                        $this->mensagem = 'Logradouros a serem unificados devem pertencer a mesma cidade que o logradouro principal.<br />';
 
-      $idlog = $this->retornaCodigo($logradouro_duplicado);
-
-      // Verifica se o logradouro é válido e não é igual ao logradouro principal
-      if(is_numeric($idlog) && $idlog != $logradouro_principal){
-        $obj_logradouro = new clsPubliclogradouro($logradouro_principal);
-        $obj_logradouro_det = $obj_logradouro->detalhe();
-        if($obj_logradouro_det){
-          // Verifica se o município é o mesmo que o logradouro principal
-          if($obj_logradouro_det['idmun'] == $municipio_principal)
-            $logradouros_duplicados[] = $idlog;
-          else{
-            $this->mensagem = 'Logradouros a serem unificados devem pertencer a mesma cidade que o logradouro principal.<br />';
-            return FALSE;
-          }
+                        return false;
+                    }
+                }
+            }
         }
-      }
+        // Unifica o array de logradouros a serem unificados
+        $logradouros_duplicados = array_keys(array_flip($logradouros_duplicados));
+        $db = new clsBanco();
+        foreach ($logradouros_duplicados as $key => $value) {
+            $db->consulta("SELECT public.unifica_logradouro({$value}, {$logradouro_principal});");
+        }
+
+        $this->mensagem = '<span>Logradouros unificados com sucesso.</span>';
+
+        return true;
     }
-    // Unifica o array de logradouros a serem unificados
-    $logradouros_duplicados = array_keys(array_flip($logradouros_duplicados));
-    $db = new clsBanco();
-    foreach ($logradouros_duplicados as $key => $value) {
-      $db->consulta("SELECT public.unifica_logradouro({$value}, {$logradouro_principal});");
+
+    protected function retornaCodigo($palavra)
+    {
+        return substr($palavra, 0, strpos($palavra, ' -'));
     }
-
-    $this->mensagem = "<span>Logradouros unificados com sucesso.</span>";
-    return TRUE;
-  }
-
-  protected function retornaCodigo($palavra){
-
-    return substr($palavra, 0, strpos($palavra, " -"));
-  }
 }
 
 // Instancia objeto de página

@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/portal/clsPortalAcesso.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/portal/clsPortalAcesso.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Acesso" );
-        $this->processoAp = "666";
+        $this->SetTitulo("{$this->_instituicao} Acesso");
+        $this->processoAp = '666';
     }
 }
 
@@ -45,72 +45,61 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_acesso;
-    var $data_hora;
-    var $ip_externo;
-    var $ip_interno;
-    var $cod_pessoa;
-    var $obs;
-    var $sucesso;
+    public $cod_acesso;
+    public $data_hora;
+    public $ip_externo;
+    public $ip_interno;
+    public $cod_pessoa;
+    public $obs;
+    public $sucesso;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Acesso - Detalhe";
-        
+        $this->titulo = 'Acesso - Detalhe';
 
-        $this->cod_acesso=$_GET["cod_acesso"];
+        $this->cod_acesso=$_GET['cod_acesso'];
 
-        $tmp_obj = new clsPortalAcesso( $this->cod_acesso );
+        $tmp_obj = new clsPortalAcesso($this->cod_acesso);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: portal_acesso_lst.php" );
+        if (! $registro) {
+            header('location: portal_acesso_lst.php');
             die();
         }
 
-
-        if( $registro["cod_acesso"] )
-        {
-            $this->addDetalhe( array( "Acesso", "{$registro["cod_acesso"]}") );
+        if ($registro['cod_acesso']) {
+            $this->addDetalhe([ 'Acesso', "{$registro['cod_acesso']}"]);
         }
-        if( $registro["data_hora"] )
-        {
-            $this->addDetalhe( array( "Data Hora", dataFromPgToBr( $registro["data_hora"], "d/m/Y H:i" ) ) );
+        if ($registro['data_hora']) {
+            $this->addDetalhe([ 'Data Hora', dataFromPgToBr($registro['data_hora'], 'd/m/Y H:i') ]);
         }
-        if( $registro["ip_externo"] )
-        {
-            $this->addDetalhe( array( "Ip Externo", "{$registro["ip_externo"]}") );
+        if ($registro['ip_externo']) {
+            $this->addDetalhe([ 'Ip Externo', "{$registro['ip_externo']}"]);
         }
-        if( $registro["ip_interno"] )
-        {
-            $this->addDetalhe( array( "Ip Interno", "{$registro["ip_interno"]}") );
+        if ($registro['ip_interno']) {
+            $this->addDetalhe([ 'Ip Interno', "{$registro['ip_interno']}"]);
         }
-        if( $registro["cod_pessoa"] )
-        {
-            $this->addDetalhe( array( "Pessoa", "{$registro["cod_pessoa"]}") );
+        if ($registro['cod_pessoa']) {
+            $this->addDetalhe([ 'Pessoa', "{$registro['cod_pessoa']}"]);
         }
-        if( $registro["obs"] )
-        {
-            $this->addDetalhe( array( "Obs", "{$registro["obs"]}") );
+        if ($registro['obs']) {
+            $this->addDetalhe([ 'Obs', "{$registro['obs']}"]);
         }
-        if( ! is_null( $registro["sucesso"] ) )
-        {
-            $this->addDetalhe( array( "Sucesso", dbBool( $registro["sucesso"] ) ? "Sim": "Não" ) );
+        if (! is_null($registro['sucesso'])) {
+            $this->addDetalhe([ 'Sucesso', dbBool($registro['sucesso']) ? 'Sim': 'Não' ]);
         }
 
+        $this->url_novo = 'portal_acesso_cad.php';
+        $this->url_editar = "portal_acesso_cad.php?cod_acesso={$registro['cod_acesso']}";
 
-        $this->url_novo = "portal_acesso_cad.php";
-        $this->url_editar = "portal_acesso_cad.php?cod_acesso={$registro["cod_acesso"]}";
-
-        $this->url_cancelar = "portal_acesso_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'portal_acesso_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -119,7 +108,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

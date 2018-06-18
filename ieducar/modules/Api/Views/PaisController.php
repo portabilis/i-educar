@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -38,20 +43,24 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 /**
  * Class PaisController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class PaisController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  protected function searchOptions() {
-    return array('namespace' => 'public', 'idAttr' => 'idpais');
-  }
+    protected function searchOptions()
+    {
+        return ['namespace' => 'public', 'idAttr' => 'idpais'];
+    }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'pais-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'pais-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

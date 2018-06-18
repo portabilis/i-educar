@@ -25,25 +25,20 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
-require_once ("include/funcoes.inc.php");
+require_once('include/clsBanco.inc.php');
+require_once('include/Geral.inc.php');
+require_once('include/funcoes.inc.php');
 
 $tipo = 1;
 
-
-if (!empty($_POST['cep']) || !empty($_POST['cidade']) || !empty($_POST['logradouro']))
-{
+if (!empty($_POST['cep']) || !empty($_POST['cidade']) || !empty($_POST['logradouro'])) {
     $tipo = 3;
 
-
-    if($_POST['cep'])
-    {
-        $_POST["cep"] = str_replace( "-", "", $_POST["cep"] );
+    if ($_POST['cep']) {
+        $_POST['cep'] = str_replace('-', '', $_POST['cep']);
         $objCepLogBairro = new clsCepLogradouroBairro();
-        $listaCepLogBairro = $objCepLogBairro->lista(false,$_POST['cep']);
-        if($listaCepLogBairro)
-        {
+        $listaCepLogBairro = $objCepLogBairro->lista(false, $_POST['cep']);
+        if ($listaCepLogBairro) {
             foreach ($listaCepLogBairro as $juncao) {
                 $detalheBairro = $juncao['idbai']->detalhe();
                 $nome_bairro = $detalheBairro['nome'];
@@ -59,85 +54,62 @@ if (!empty($_POST['cep']) || !empty($_POST['cidade']) || !empty($_POST['logradou
                 $detalheTipoLog = $detalheLogradouro['idtlog']->detalhe();
                 $idtlog = $detalheTipoLog['idtlog'];
                 $idlog = $detalheLogradouro['idlog'];
-                $resultado[] = array($nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep, $estado, $idtlog);
+                $resultado[] = [$nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep, $estado, $idtlog];
             }
         }
-
-    }
-    elseif($_POST['cidade'])
-    {
-        $_POST["cidade"] = strtoupper( limpa_acentos( $_POST['cidade'] ) );
-        $resultado = "";
+    } elseif ($_POST['cidade']) {
+        $_POST['cidade'] = strtoupper(limpa_acentos($_POST['cidade']));
+        $resultado = '';
         $objMunicipio = new clsMunicipio();
-        $lista = $objMunicipio->lista( $_POST['cidade'] );
-        if($lista)
-        {
-            foreach ($lista as $cidade)
-            {
+        $lista = $objMunicipio->lista($_POST['cidade']);
+        if ($lista) {
+            foreach ($lista as $cidade) {
                 $nome_cidade = $cidade['nome'];
                 $detalhe_estado = $cidade['sigla_uf']->detalhe();
                 $estado = $detalhe_estado['sigla_uf'];
                 $objBairro = new clsBairro();
-                $listaBairro = $objBairro->lista($cidade['idmun'],false);
+                $listaBairro = $objBairro->lista($cidade['idmun'], false);
 
-                if($listaBairro)
-                {
-                    foreach ($listaBairro as $bairro)
-                    {
-
+                if ($listaBairro) {
+                    foreach ($listaBairro as $bairro) {
                         $nome_bairro = $bairro['nome'];
                         $idbai = $bairro['idbai'];
 
                         $objCepLogBairro = new clsCepLogradouroBairro();
-                        $listaCepLogBairro = $objCepLogBairro->lista(false,false,$bairro['idbai'],false,false);
-                        if($listaCepLogBairro)
-                        {
-                            foreach ($listaCepLogBairro as $id=>$juncao)
-                            {
+                        $listaCepLogBairro = $objCepLogBairro->lista(false, false, $bairro['idbai'], false, false);
+                        if ($listaCepLogBairro) {
+                            foreach ($listaCepLogBairro as $id=>$juncao) {
                                 $detalheCepLogradouro = $juncao['idlog']->detalhe();
                                 $detalheLogradouro = $detalheCepLogradouro['idlog']->detalhe();
                                 $detalheTipoLog = $detalheLogradouro['idtlog']->detalhe();
                                 $idtlog = $detalheTipoLog['idtlog'];
 
-
                                 $nome_logradouro = $detalheLogradouro['nome'];
                                 $idlog = $detalheLogradouro['idlog'];
                                 $cep = $detalheCepLogradouro['cep'];
 
-                                if($_POST['logradouro'])
-                                {
-                                    if(substr_count(strtolower($nome_logradouro),strtolower($_POST['logradouro'])) > 0)
-                                    {
-                                        $resultado[] = array($nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep,$estado,$idtlog);
+                                if ($_POST['logradouro']) {
+                                    if (substr_count(strtolower($nome_logradouro), strtolower($_POST['logradouro'])) > 0) {
+                                        $resultado[] = [$nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep,$estado,$idtlog];
                                     }
+                                } else {
+                                    $resultado[] = [$nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep, $estado,$idtlog];
                                 }
-                                else
-                                {
-                                    $resultado[] = array($nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep, $estado,$idtlog);
-                                }
-
                             } //foreach ($listaCepLogBairro as $id=>$juncao)
                         } //if(count($listaCepLogBairro))
                     } //foreach ($listaBairro as $bairro)
                 } //if($listaBairro)
             } //foreach ($lista as $cidade)
         } //if($lista)
-    }elseif($_POST['logradouro'])
-    {
+    } elseif ($_POST['logradouro']) {
         $obj_logradouro = new clsLogradouro();
-        $lista_logradouros =$obj_logradouro->lista(false,$_POST['logradouro']);
-        if($lista_logradouros)
-        {
-
-            foreach ($lista_logradouros as $logradouro)
-            {
+        $lista_logradouros =$obj_logradouro->lista(false, $_POST['logradouro']);
+        if ($lista_logradouros) {
+            foreach ($lista_logradouros as $logradouro) {
                 $objCepLogBairro = new clsCepLogradouroBairro();
-                $listaCepLogBairro = $objCepLogBairro->lista($logradouro['idlog'],false,"",false,false);
-                if($listaCepLogBairro)
-                {
-                    foreach ($listaCepLogBairro as $id=>$juncao)
-                    {
-
+                $listaCepLogBairro = $objCepLogBairro->lista($logradouro['idlog'], false, '', false, false);
+                if ($listaCepLogBairro) {
+                    foreach ($listaCepLogBairro as $id=>$juncao) {
                         $detalheCepLogradouro = $juncao['idlog']->detalhe();
                         $detalheLogradouro = $detalheCepLogradouro['idlog']->detalhe();
                         $detalheTipoLog = $detalheLogradouro['idtlog']->detalhe();
@@ -149,37 +121,31 @@ if (!empty($_POST['cep']) || !empty($_POST['cidade']) || !empty($_POST['logradou
 
                         $detalhe_bairro = $juncao['idbai']->detalhe();
                         $nome_bairro = $detalhe_bairro['nome'];
-                        $idbai = $detalhe_bairro["idbai"];
+                        $idbai = $detalhe_bairro['idbai'];
                         $detalhe_cidade = $detalhe_bairro['idmun']->detalhe();
                         $nome_cidade = $detalhe_cidade['nome'];
 
-                        $resultado[] = array($nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep, $estado,$idtlog);
+                        $resultado[] = [$nome_cidade,$nome_bairro,$idbai,$nome_logradouro,$idlog, $cep, $estado,$idtlog];
                     }
                 }
             } //foreach ($listaCepLogBairro as $id=>$juncao)
         }
     }
 
-    if ($resultado)
-    {
+    if ($resultado) {
         $tipo = 3;
         $total = count($resultado);
         $classe = $md ? 'formmdtd' : 'formlttd';
 
-
-
-
         //$db->Consulta( $fields.$sql );
 
         $bor  = '<table style="font-size: 10px; font-family: verdana, arial;" width="100%" cellspacing="3" cellpadding="1">';
-        $bor .= "<tr bgcolor='#BABABA'><td><b>[selecionar]</b></a><td><b>Cidade</b><td><b>Bairro</b><td><b>Logradouro</b><td><b>CEP</b><td></tr>";
+        $bor .= '<tr bgcolor=\'#BABABA\'><td><b>[selecionar]</b></a><td><b>Cidade</b><td><b>Bairro</b><td><b>Logradouro</b><td><b>CEP</b><td></tr>';
         $bor .= "<tr bgcolor='#BABABA'><td colspan=5><i>Total de Registros: {$total}</tr>";
 
-        if($resultado)
-        {
-            foreach ($resultado AS $logradouro)
-            {
-                $cor_fundo = $cor_fundo == "#DADADA" ? "#FFFFFF" : "#DADADA";
+        if ($resultado) {
+            foreach ($resultado as $logradouro) {
+                $cor_fundo = $cor_fundo == '#DADADA' ? '#FFFFFF' : '#DADADA';
 
                 $cidade = $logradouro[0];
                 $bairro = $logradouro[1];
@@ -190,13 +156,13 @@ if (!empty($_POST['cep']) || !empty($_POST['cidade']) || !empty($_POST['logradou
                 $estado = $logradouro[6];
                 $idtlog = $logradouro[7];
 
-                $obj_logradouro = new clsLogradouro( $idlog );
+                $obj_logradouro = new clsLogradouro($idlog);
                 $det = $obj_logradouro->detalhe();
-                $objMun = new clsMunicipio( $det["idmun"] );
+                $objMun = new clsMunicipio($det['idmun']);
                 $detMun = $objMun->detalhe();
-                $uf = $detMun["sigla_uf"];
+                $uf = $detMun['sigla_uf'];
                 $detUF = $uf->detalhe();
-                $estado = $detUF["sigla_uf"];
+                $estado = $detUF['sigla_uf'];
 
                 $bor .= "<tr bgcolor='{$cor_fundo}'><td><a href='#' onclick='javascript:enviar(\"{$_POST['campo']}\", \"{$cep}\", \"{$idbai}\", \"{$idlog}\", \"{$cidade}\", \"{$bairro}\", \"{$log}\", \"{$estado}\", \"{$idtlog}\")'>[selecionar]</a><td>{$cidade}<td>{$bairro}<td>{$log}<td>{$cep}<td></tr>";
             }
@@ -207,23 +173,17 @@ if (!empty($_POST['cep']) || !empty($_POST['cidade']) || !empty($_POST['logradou
         $bor .= '</table>';
 
         $bor = $funcao . $bor;
-    }
-    else
-    {
+    } else {
         $tipo = 2;
     }
-
 }
 
-if ($tipo != 3)
-{
+if ($tipo != 3) {
     $bor = '<table style="font-size: 11px; font-family: verdana, arial;" width="100%" cellspacing="8" cellpadding="5"><form action="" method="POST" name="form">';
 
-    if ($tipo == 2)
-    {
+    if ($tipo == 2) {
         $bor .= '<tr bgcolor="#BABABA"><td colspan="2"><b style="color: red">SEM RESULTADOS</b>';
         $bor .= "<tr bgcolor='{$cor_fundo}'><td><a href='#' onclick='javascript:enviar(\"{$_POST['campo']}\", \"\", \"\", \"\", \"\", \"\", \"\", \"\")'>[selecionar]</a><td colspan=5>Adicionar Novo Endereço</td></tr>";
-
     }
 
     $bor .='

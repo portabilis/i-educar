@@ -22,58 +22,72 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_BibliotecaTipoExemplar class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_BibliotecaTipoExemplar extends Portabilis_View_Helper_DynamicInput_CoreSelect {
-
-  protected function inputName() {
-    return 'ref_cod_exemplar_tipo';
-  }
-
-  protected function inputOptions($options) {
-    $bibliotecaId = $this->getBibliotecaId($bibliotecaId);
-    $resources    = $options['resources'];
-
-    if (empty($resources) && $bibliotecaId) {
-      $columns = array('cod_exemplar_tipo', 'nm_tipo');
-      $where   = array('ref_cod_biblioteca' => $bibliotecaId, 'ativo' => '1');
-      $orderBy = array('nm_tipo' => 'ASC');
-
-      $resources = $this->getDataMapperFor('biblioteca', 'tipoExemplar')->findAll($columns,
-                                                                                  $where,
-                                                                                  $orderBy,
-                                                                                  $addColumnIdIfNotSet = false);
-
-      $resources = Portabilis_Object_Utils::asIdValue($resources, 'cod_exemplar_tipo', 'nm_tipo');
+class Portabilis_View_Helper_DynamicInput_BibliotecaTipoExemplar extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'ref_cod_exemplar_tipo';
     }
 
-    return $this->insertOption(null, "Selecione um tipo de exemplar", $resources);
-  }
+    protected function inputOptions($options)
+    {
+        $bibliotecaId = $this->getBibliotecaId($bibliotecaId);
+        $resources    = $options['resources'];
 
-  protected function defaultOptions(){
-    return array('options' => array('label' => 'Tipo exemplar'));
-  }
+        if (empty($resources) && $bibliotecaId) {
+            $columns = ['cod_exemplar_tipo', 'nm_tipo'];
+            $where   = ['ref_cod_biblioteca' => $bibliotecaId, 'ativo' => '1'];
+            $orderBy = ['nm_tipo' => 'ASC'];
 
-  public function bibliotecaTipoExemplar($options = array()) {
-    parent::select($options);
-  }
+            $resources = $this->getDataMapperFor('biblioteca', 'tipoExemplar')->findAll(
+          $columns,
+                                                                                  $where,
+                                                                                  $orderBy,
+                                                                                  $addColumnIdIfNotSet = false
+      );
 
+            $resources = Portabilis_Object_Utils::asIdValue($resources, 'cod_exemplar_tipo', 'nm_tipo');
+        }
+
+        return $this->insertOption(null, 'Selecione um tipo de exemplar', $resources);
+    }
+
+    protected function defaultOptions()
+    {
+        return ['options' => ['label' => 'Tipo exemplar']];
+    }
+
+    public function bibliotecaTipoExemplar($options = [])
+    {
+        parent::select($options);
+    }
 }

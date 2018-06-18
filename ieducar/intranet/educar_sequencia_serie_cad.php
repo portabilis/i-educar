@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o" );
-        $this->processoAp = "587";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o");
+        $this->processoAp = '587';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -48,119 +48,109 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $ref_serie_origem;
-    var $ref_serie_destino;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $ref_serie_origem;
+    public $ref_serie_destino;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    var $ref_cod_instituicao;
-    var $ref_curso_origem;
-    var $ref_curso_destino;
+    public $ref_cod_instituicao;
+    public $ref_curso_origem;
+    public $ref_curso_destino;
 
-    var $serie_origem_old;
-    var $serie_destino_old;
+    public $serie_origem_old;
+    public $serie_destino_old;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->ref_serie_origem=$_GET["ref_serie_origem"];
-        $this->ref_serie_destino=$_GET["ref_serie_destino"];
+        $this->ref_serie_origem=$_GET['ref_serie_origem'];
+        $this->ref_serie_destino=$_GET['ref_serie_destino'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
+        $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        if( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) )
-        {
-
-            $obj = new clsPmieducarSequenciaSerie( $this->ref_serie_origem, $this->ref_serie_destino );
+        if (is_numeric($this->ref_serie_origem) && is_numeric($this->ref_serie_destino)) {
+            $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                $obj_ref_serie_origem = new clsPmieducarSerie( $this->ref_serie_origem );
+            if ($registro) {
+                $obj_ref_serie_origem = new clsPmieducarSerie($this->ref_serie_origem);
                 $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
-                $this->ref_curso_origem = $det_ref_serie_origem["ref_cod_curso"];
-                if( class_exists( "clsPmieducarCurso" ) )
-                {
-                    $obj_ref_curso_origem = new clsPmieducarCurso( $this->ref_curso_origem );
+                $this->ref_curso_origem = $det_ref_serie_origem['ref_cod_curso'];
+                if (class_exists('clsPmieducarCurso')) {
+                    $obj_ref_curso_origem = new clsPmieducarCurso($this->ref_curso_origem);
                     $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-                    $this->ref_cod_instituicao = $det_ref_curso_origem["ref_cod_instituicao"];
+                    $this->ref_cod_instituicao = $det_ref_curso_origem['ref_cod_instituicao'];
                 }
-                $obj_ref_serie_destino = new clsPmieducarSerie( $this->ref_serie_destino );
+                $obj_ref_serie_destino = new clsPmieducarSerie($this->ref_serie_destino);
                 $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
-                $this->ref_curso_destino = $det_ref_serie_destino["ref_cod_curso"];
+                $this->ref_curso_destino = $det_ref_serie_destino['ref_cod_curso'];
 
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                if( $obj_permissoes->permissao_excluir( 587, $this->pessoa_logada, 3 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(587, $this->pessoa_logada, 3)) {
                     $this->fexcluir = true;
                 }
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}" : "educar_sequencia_serie_lst.php";
-        
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}" : 'educar_sequencia_serie_lst.php';
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} sequ&ecirc;ncia de enturma&ccedil;&atilde;o"             
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => "{$nomeMenu} sequ&ecirc;ncia de enturma&ccedil;&atilde;o"
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
 
-        $this->nome_url_cancelar = "Cancelar";
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-        $this->campoOculto( "serie_origem_old", $this->ref_serie_origem );
-        $this->campoOculto( "serie_destino_old", $this->ref_serie_destino );
+        $this->campoOculto('serie_origem_old', $this->ref_serie_origem);
+        $this->campoOculto('serie_destino_old', $this->ref_serie_destino);
         // foreign keys
-        if( $nivel_usuario == 1 )
-        {
+        if ($nivel_usuario == 1) {
 //      echo "<pre>"; print_r($GLOBALS); die();
-            $GLOBALS["nivel_usuario_fora"] = 1;
+            $GLOBALS['nivel_usuario_fora'] = 1;
             $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = array( "" => "Selecione" );
-            $objInstituicao->setOrderby( "nm_instituicao ASC" );
+            $opcoes = [ '' => 'Selecione' ];
+            $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
-            if( is_array( $lista ) )
-            {
-                foreach ( $lista AS $linha )
-                {
-                    $opcoes[$linha["cod_instituicao"]] = $linha["nm_instituicao"];
+            if (is_array($lista)) {
+                foreach ($lista as $linha) {
+                    $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao );
-        }
-        else
-        {
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao);
+        } else {
             $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
             $obj_usuario_det = $obj_usuario->detalhe();
-            $this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];
+            $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
         }
 
-
-        $opcoes = array( "" => "Selecione" );
-        $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarCurso" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        $opcoes_ = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarCurso')) {
             /*$todos_cursos = "curso = new Array();\n";
             $objTemp = new clsPmieducarCurso();
             $objTemp->setOrderby("nm_curso");
@@ -175,35 +165,29 @@ class indice extends clsCadastro
             echo "<script>{$todos_cursos}</script>";*/
 
             // EDITAR
-            if ($this->ref_cod_instituicao)
-            {
+            if ($this->ref_cod_instituicao) {
                 $objTemp = new clsPmieducarCurso();
-                $objTemp->setOrderby("nm_curso");
-                $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes[$registro["cod_curso"]] = $registro["nm_curso"];
-                        $opcoes_[$registro["cod_curso"]] = $registro["nm_curso"];
+                $objTemp->setOrderby('nm_curso');
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['cod_curso']] = $registro['nm_curso'];
+                        $opcoes_[$registro['cod_curso']] = $registro['nm_curso'];
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
+            $opcoes = [ '' => 'Erro na gera&ccedil;&atilde;o' ];
         }
-        $this->campoLista( "ref_curso_origem", "Curso Origem", $opcoes, $this->ref_curso_origem,"",true );
-        $this->campoLista( "ref_curso_destino", " Curso Destino", $opcoes_, $this->ref_curso_destino );
+        $this->campoLista('ref_curso_origem', 'Curso Origem', $opcoes, $this->ref_curso_origem, '', true);
+        $this->campoLista('ref_curso_destino', ' Curso Destino', $opcoes_, $this->ref_curso_destino);
 
         // primary keys
 
-        $opcoes = array( "" => "Selecione" );
-        $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        $opcoes_ = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarSerie')) {
             /*$todas_series = "serie = new Array();\n";
             $objTemp = new clsPmieducarSerie();
             $objTemp->setOrderby( "nm_serie ASC" );
@@ -217,141 +201,130 @@ class indice extends clsCadastro
             }
             echo "<script>{$todas_series}</script>";*/
 
-            if ($this->ref_curso_origem)
-            {
+            if ($this->ref_curso_origem) {
                 $objTemp = new clsPmieducarSerie();
-                $objTemp->setOrderby( "nm_serie ASC" );
-                $lista = $objTemp->lista( null,null,null,$this->ref_curso_origem,null,null,null,null,null,null,null,null,1 );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes[$registro["cod_serie"]] = $registro["nm_serie"];
+                $objTemp->setOrderby('nm_serie ASC');
+                $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['cod_serie']] = $registro['nm_serie'];
                     }
                 }
             }
-            if ($this->ref_curso_destino)
-            {
+            if ($this->ref_curso_destino) {
                 $objTemp = new clsPmieducarSerie();
-                $objTemp->setOrderby( "nm_serie ASC" );
-                $lista = $objTemp->lista( null,null,null,$this->ref_curso_destino,null,null,null,null,null,null,null,null,1 );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes_[$registro["cod_serie"]] = $registro["nm_serie"];
+                $objTemp->setOrderby('nm_serie ASC');
+                $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes_[$registro['cod_serie']] = $registro['nm_serie'];
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarSerie n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-            $opcoes_ = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
+            $opcoes_ = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true);
-        $this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino);
-        
-        
-        $this->campoOculto("nivel_usuario", $nivel_usuario);
-        
+        $this->campoLista('ref_serie_origem', 'S&eacute;rie Origem', $opcoes, $this->ref_serie_origem, null, true);
+        $this->campoLista('ref_serie_destino', ' S&eacute;rie Destino', $opcoes_, $this->ref_serie_destino);
+
+        $this->campoOculto('nivel_usuario', $nivel_usuario);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
+        $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-        $obj_sequencia = new clsPmieducarSequenciaSerie( $this->ref_serie_origem, $this->ref_serie_destino );
+        $obj_sequencia = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino);
         $det_sequencia = $obj_sequencia->detalhe();
-        if (!$det_sequencia)
-        {
-            $obj = new clsPmieducarSequenciaSerie( $this->ref_serie_origem, $this->ref_serie_destino, null, $this->pessoa_logada, null, null, 1 );
+        if (!$det_sequencia) {
+            $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, null, $this->pessoa_logada, null, null, 1);
             $cadastrou = $obj->cadastra();
-            if( $cadastrou )
-            {
-                $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
+            if ($cadastrou) {
+                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                header('Location: educar_sequencia_serie_lst.php');
                 die();
+
                 return true;
             }
-        }
-        else
-        {
+        } else {
             $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);
             $editou = $obj->edita();
-            if( $editou )
-            {
-                $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
+            if ($editou) {
+                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                header('Location: educar_sequencia_serie_lst.php');
                 die();
+
                 return true;
             }
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarSequenciaSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
+        $obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
-//echo "clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);";
+        //echo "clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);";
         $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);
         $existe = $obj->existe();
-        if (!$existe)
-        {
-            $editou = $obj->editar( $this->serie_origem_old, $this->serie_destino_old );
-            if( $editou )
-            {
-                $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
+        if (!$existe) {
+            $editou = $obj->editar($this->serie_origem_old, $this->serie_destino_old);
+            if ($editou) {
+                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                header('Location: educar_sequencia_serie_lst.php');
                 die();
+
                 return true;
             }
-            $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
             echo "<!--\nErro ao editar clsPmieducarSequenciaSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
             return false;
         }
-        echo "<script> alert('Edição não realizada! \\n Já existe essa sequência.') </script>";
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        echo '<script> alert(\'Edição não realizada! \\n Já existe essa sequência.\') </script>';
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
-
+        $obj_permissoes->permissao_excluir(587, $this->pessoa_logada, 3, 'educar_sequencia_serie_lst.php');
 
         $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_sequencia_serie_lst.php" );
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_sequencia_serie_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarSequenciaSerie\nvalores obrigatorios\nif( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }
@@ -361,7 +334,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
@@ -520,7 +493,8 @@ function getSerie( tipo )
     $('img_serie_origem').style.display = 'none;';
     $('img_serie_destino').style.display = 'none;';
 }*/
-<?php if ($nivel_usuario_fora == 1) { ?>
+<?php if ($nivel_usuario_fora == 1) {
+    ?>
 document.getElementById('ref_cod_instituicao').onchange = function()
 {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -542,7 +516,8 @@ document.getElementById('ref_cod_instituicao').onchange = function()
     $('img_serie_destino').style.display = 'none;';
     
 };
-<?php } ?>
+<?php
+} ?>
 
 document.getElementById('ref_curso_origem').onchange = function()
 {

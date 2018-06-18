@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,66 +40,71 @@ require_once 'CoreExt/Config/Ini.class.php';
  * CoreExt_Config_IniTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_Config_IniTest extends UnitBaseTest
 {
-  public function testParsedIni()
-  {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar.ini');
-    $this->assertNotNull($ini->app);
-  }
+    public function testParsedIni()
+    {
+        $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar.ini');
+        $this->assertNotNull($ini->app);
+    }
 
-  public function testChangeEnviroment()
-  {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar.ini');
-    $this->assertEquals(FALSE, (bool) $ini->php->display_errors);
+    public function testChangeEnviroment()
+    {
+        $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar.ini');
+        $this->assertEquals(false, (bool) $ini->php->display_errors);
 
-    $ini->changeEnviroment('development');
-    $this->assertEquals(TRUE, (bool) $ini->php->display_errors);
+        $ini->changeEnviroment('development');
+        $this->assertEquals(true, (bool) $ini->php->display_errors);
 
-    $ini->changeEnviroment('testing');
-    $this->assertEquals(TRUE, (bool) $ini->php->display_errors);
+        $ini->changeEnviroment('testing');
+        $this->assertEquals(true, (bool) $ini->php->display_errors);
 
-    $ini->changeEnviroment();
-    $this->assertEquals(FALSE, (bool) $ini->php->display_errors);
-  }
+        $ini->changeEnviroment();
+        $this->assertEquals(false, (bool) $ini->php->display_errors);
+    }
 
-  /**
-   * @expectedException Exception
-   */
-  public function testInvalidIniFile()
-  {
-    // Tentando carregar configuração do blackhole!
-    $ini = new CoreExt_Config_Ini('/dev/null');
-  }
+    /**
+     * @expectedException Exception
+     */
+    public function testInvalidIniFile()
+    {
+        // Tentando carregar configuração do blackhole!
+        $ini = new CoreExt_Config_Ini('/dev/null');
+    }
 
-  /**
-   * @expectedException Exception
-   */
-  public function testSectionExtendsMoreThanOne()
-  {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-extends-broken.ini');
-  }
+    /**
+     * @expectedException Exception
+     */
+    public function testSectionExtendsMoreThanOne()
+    {
+        $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-extends-broken.ini');
+    }
 
-  /**
-   * @expectedException Exception
-   */
-  public function testIniSyntaxError()
-  {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-syntax-broken.ini');
-  }
+    /**
+     * @expectedException Exception
+     */
+    public function testIniSyntaxError()
+    {
+        $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-syntax-broken.ini');
+    }
 
-  /**
-   * @expectedException Exception
-   */
-  public function testSectionInheritanceNotExist()
-  {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-inheritance-broken.ini');
-  }
+    /**
+     * @expectedException Exception
+     */
+    public function testSectionInheritanceNotExist()
+    {
+        $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-inheritance-broken.ini');
+    }
 }

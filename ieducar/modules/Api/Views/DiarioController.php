@@ -16,6 +16,7 @@ require_once 'Portabilis/String/Utils.php';
 
 /**
  * Class DiarioController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class DiarioController extends ApiCoreController
@@ -36,32 +37,33 @@ class DiarioController extends ApiCoreController
     {
         $objTurma = new clsPmieducarTurma($turmaId);
         $detTurma = $objTurma->detalhe();
-        $escolaId = $detTurma["ref_ref_cod_escola"];
-        $serieId = $detTurma["ref_ref_cod_serie"];
+        $escolaId = $detTurma['ref_ref_cod_escola'];
+        $serieId = $detTurma['ref_ref_cod_serie'];
+
         return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId);
     }
 
     protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
     {
-
         $componentes = $this->getComponentesPorMatricula($matriculaId);
         $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
         $valid = in_array($componenteCurricularId, $componentes);
         if (!$valid) {
             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para essa turma/matrícula."));
         }
+
         return $valid;
     }
 
     protected function validateComponenteTurma($turmaId, $componenteCurricularId)
     {
-
         $componentesTurma = $this->getComponentesPorTurma($turmaId);
         $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
         $valid = in_array($componenteCurricularId, $componentesTurma);
         if (!$valid) {
             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para a turma $turmaId ."));
         }
+
         return $valid;
     }
 
@@ -86,7 +88,7 @@ class DiarioController extends ApiCoreController
 
     protected function findMatriculaByTurmaAndAluno($turmaId, $alunoId)
     {
-        $resultado = array();
+        $resultado = [];
 
         $sql = 'SELECT m.cod_matricula AS id
               FROM pmieducar.matricula m
@@ -101,7 +103,7 @@ class DiarioController extends ApiCoreController
             ORDER BY m.aprovado
               LIMIT 1';
 
-        $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
+        $matriculaId = $this->fetchPreparedQuery($sql, [$turmaId, $alunoId], true, 'first-field');
 
         return $matriculaId;
     }
@@ -110,15 +112,14 @@ class DiarioController extends ApiCoreController
     {
         $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
         if ($matriculaId) {
-
             if (!isset($this->_boletimServiceInstances)) {
-                $this->_boletimServiceInstances = array();
+                $this->_boletimServiceInstances = [];
             }
 
             // set service
             if (!isset($this->_boletimServiceInstances[$matriculaId])) {
                 try {
-                    $params = array('matricula' => $matriculaId);
+                    $params = ['matricula' => $matriculaId];
                     $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
                 } catch (Exception $e) {
                     $this->messenger->append(Portabilis_String_Utils::toLatin1("Erro ao instanciar serviço boletim para matricula {$matriculaId}: ") . $e->getMessage(), 'error', true);
@@ -178,9 +179,7 @@ class DiarioController extends ApiCoreController
             $notas = $this->getRequest()->notas;
 
             foreach ($notas as $turmaId => $notaTurma) {
-
                 foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
-
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
                     if (!empty($matriculaId)) {
@@ -197,11 +196,11 @@ class DiarioController extends ApiCoreController
 
                                 $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
 
-                                $array_nota = array(
+                                $array_nota = [
                                     'componenteCurricular' => $componenteCurricularId,
                                     'nota' => $valorNota,
                                     'etapa' => $etapa,
-                                    'notaOriginal' => $valor);
+                                    'notaOriginal' => $valor];
 
                                 if (!empty($nomeCampoRecuperacao)) {
                                     $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
@@ -231,11 +230,9 @@ class DiarioController extends ApiCoreController
             $notas = $this->getRequest()->notas;
 
             foreach ($notas as $turmaId => $notaTurma) {
-
                 foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
-
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                    if (empty($matriculaId)){
+                    if (empty($matriculaId)) {
                         continue;
                     }
                     foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
@@ -259,12 +256,12 @@ class DiarioController extends ApiCoreController
                             $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
 
                             $notaOriginal = $this->truncate($notaOriginal, 4);
-                            $array_nota = array(
+                            $array_nota = [
                                 'componenteCurricular' => $componenteCurricularId,
                                 'nota' => $valorNota,
                                 'etapa' => $etapa,
                                 'notaOriginal' => $notaOriginal,
-                                $nomeCampoRecuperacao => $notaRecuperacao);
+                                $nomeCampoRecuperacao => $notaRecuperacao];
 
                             $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
@@ -305,9 +302,8 @@ class DiarioController extends ApiCoreController
 
             foreach ($faltas as $turmaId => $faltaTurma) {
                 foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
-
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                    if(empty($matriculaId)){
+                    if (empty($matriculaId)) {
                         continue;
                     }
                     if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
@@ -315,19 +311,16 @@ class DiarioController extends ApiCoreController
                     }
 
                     foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
-
                         if ($matriculaId) {
-
                             if ($this->validateMatricula($matriculaId)) {
-
                                 if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
-                                    $valor = $faltaTurmaAlunoDisciplina["valor"];
+                                    $valor = $faltaTurmaAlunoDisciplina['valor'];
 
-                                    $falta = new Avaliacao_Model_FaltaComponente(array(
+                                    $falta = new Avaliacao_Model_FaltaComponente([
                                         'componenteCurricular' => $componenteCurricularId,
                                         'quantidade' => $valor,
                                         'etapa' => $etapa,
-                                    ));
+                                    ]);
 
                                     $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
                                     $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
@@ -349,21 +342,19 @@ class DiarioController extends ApiCoreController
             $faltas = $this->getRequest()->faltas;
 
             foreach ($faltas as $turmaId => $faltaTurma) {
-
                 foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
                     $faltas = $faltaTurmaAluno['valor'];
 
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
                     if (!empty($matriculaId)) {
-
                         if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
                         }
 
-                        $falta = new Avaliacao_Model_FaltaGeral(array(
+                        $falta = new Avaliacao_Model_FaltaGeral([
                             'quantidade' => $faltas,
                             'etapa' => $etapa,
-                        ));
+                        ]);
 
                         $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
                         $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
@@ -382,25 +373,22 @@ class DiarioController extends ApiCoreController
             $etapa = $this->getRequest()->etapa;
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
-
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
                     if (!empty($matriculaId)) {
-
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
                             if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
-
                                 $parecer = $parecerTurmaAlunoComponente['valor'];
 
-                                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
                                     'parecer' => Portabilis_String_Utils::toLatin1($parecer),
                                     'etapa' => $etapa,
-                                ));
+                                ]);
 
                                 $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
                                 $this->trySaveServiceBoletim($turmaId, $alunoId);
@@ -423,20 +411,18 @@ class DiarioController extends ApiCoreController
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
                     if (!empty($matriculaId)) {
-
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
                             if ($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)) {
-
                                 $parecer = $parecerTurmaAlunoComponente['valor'];
 
-                                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
                                     'parecer' => Portabilis_String_Utils::toLatin1($parecer),
-                                ));
+                                ]);
 
                                 $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
                                 $this->trySaveServiceBoletim($turmaId, $alunoId);
@@ -458,19 +444,17 @@ class DiarioController extends ApiCoreController
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
                     if (!empty($matriculaId)) {
-
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
                         }
                         $parecer = $parecerTurmaAluno['valor'];
 
-                        $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+                        $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral([
                             'parecer' => Portabilis_String_Utils::toLatin1($parecer),
                             'etapa' => $etapa,
-                        ));
+                        ]);
 
                         $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
                         $this->trySaveServiceBoletim($turmaId, $alunoId);
@@ -488,20 +472,17 @@ class DiarioController extends ApiCoreController
             $pareceres = $this->getRequest()->pareceres;
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
-
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-
                     $parecer = $parecerTurmaAluno['valor'];
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
                     if (!empty($matriculaId)) {
-
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
                         }
 
-                        $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+                        $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral([
                             'parecer' => Portabilis_String_Utils::toLatin1($parecer),
-                        ));
+                        ]);
 
                         $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
                         $this->trySaveServiceBoletim($turmaId, $alunoId);
@@ -538,26 +519,26 @@ class DiarioController extends ApiCoreController
 
     protected function validateMatricula($matriculaId)
     {
-
         $ativo = false;
 
         if (!empty($matriculaId)) {
-            $sql = "SELECT m.ativo as ativo
+            $sql = 'SELECT m.ativo as ativo
                 FROM pmieducar.matricula m
                WHERE m.cod_matricula = $1
-               LIMIT 1";
+               LIMIT 1';
 
-            $ativo = $this->fetchPreparedQuery($sql, array($matriculaId), true, 'first-field');
+            $ativo = $this->fetchPreparedQuery($sql, [$matriculaId], true, 'first-field');
         }
 
         return $ativo;
     }
 
-    private function truncate($val, $f = "0")
+    private function truncate($val, $f = '0')
     {
         if (($p = strpos($val, '.')) !== false) {
             $val = floatval(substr($val, 0, $p + 1 + $f));
         }
+
         return $val;
     }
 
@@ -582,6 +563,5 @@ class DiarioController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
-
     }
 }

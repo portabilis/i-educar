@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,30 +40,38 @@ require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
  * Portabilis_View_Helper_Input_SimpleSearchServidor class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchServidor extends Portabilis_View_Helper_Input_SimpleSearch {
-
-  public function simpleSearchServidor($attrName = '', $options = array()) {
-    $defaultOptions = array('objectName'    => 'servidor',
+class Portabilis_View_Helper_Input_Resource_SimpleSearchServidor extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    public function simpleSearchServidor($attrName = '', $options = [])
+    {
+        $defaultOptions = ['objectName'    => 'servidor',
                             'apiController' => 'Servidor',
-                            'apiResource'   => 'servidor-search');
+                            'apiResource'   => 'servidor-search'];
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::simpleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Digite um nome para buscar';
-  }
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Digite um nome para buscar';
+    }
 
-  protected function loadAssets() {
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchServidor.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-  }
+    protected function loadAssets()
+    {
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchServidor.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    }
 }

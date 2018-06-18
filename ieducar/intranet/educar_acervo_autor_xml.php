@@ -24,38 +24,34 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+    require_once('include/clsBanco.inc.php');
+    require_once('include/funcoes.inc.php');
 
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    if( is_numeric( $_GET["bib"] ) )
-    {
+    if (is_numeric($_GET['bib'])) {
         $db = new clsBanco();
         $sql = "SELECT
                     cod_acervo_autor, nm_autor
                 FROM
                     pmieducar.acervo_autor
                 WHERE
-                    ref_cod_biblioteca = {$_GET["bib"]}
+                    ref_cod_biblioteca = {$_GET['bib']}
                 AND
                     ativo = 1
                 ORDER BY
                     nm_autor";
         $db->Consulta($sql);
-        if ($db->Num_Linhas())
-        {
-            while ($db->ProximoRegistro())
-            {
+        if ($db->Num_Linhas()) {
+            while ($db->ProximoRegistro()) {
                 list($cod_acervo_autor, $nm_autor) = $db->Tupla();
                 echo "<acervo_autor cod_acervo_autor=\"{$cod_acervo_autor}\">{$nm_autor}</acervo_autor>\n";
             }
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

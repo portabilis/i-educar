@@ -20,7 +20,8 @@ class CriaTabelaCodigoCartorioInep extends AbstractMigration
         );
     }
 
-    public function down(){
+    public function down()
+    {
         $this->execute('DROP TABLE cadastro.codigo_cartorio_inep;');
     }
 }

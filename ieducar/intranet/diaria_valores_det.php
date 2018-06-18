@@ -24,89 +24,83 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Diaria Valores" );
-        $this->processoAp = "295";
+        $this->SetTitulo("{$this->_instituicao} Diaria Valores");
+        $this->processoAp = '295';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe do valor";
-        
+        $this->titulo = 'Detalhe do valor';
 
         $cod_diaria_valores = @$_GET['cod_diaria_valores'];
-        
+
         $db = new clsBanco();
         $db2 = new clsBanco();
-        
-        $db->Consulta( "SELECT cod_diaria_valores, ref_funcionario_cadastro, ref_cod_diaria_grupo, estadual, p100, p75, p50, p25, data_vigencia FROM pmidrh.diaria_valores WHERE cod_diaria_valores='{$cod_diaria_valores}'" );
-        if( $db->ProximoRegistro() )
-        {
-            list( $cod_diaria_valores, $ref_funcionario_cadastro, $ref_cod_diaria_grupo, $estadual, $p100, $p75, $p50, $p25, $data_vigencia ) = $db->Tupla();
-            
-            $objPessoa = new clsPessoa_( $ref_funcionario_cadastro );
+
+        $db->Consulta("SELECT cod_diaria_valores, ref_funcionario_cadastro, ref_cod_diaria_grupo, estadual, p100, p75, p50, p25, data_vigencia FROM pmidrh.diaria_valores WHERE cod_diaria_valores='{$cod_diaria_valores}'");
+        if ($db->ProximoRegistro()) {
+            list($cod_diaria_valores, $ref_funcionario_cadastro, $ref_cod_diaria_grupo, $estadual, $p100, $p75, $p50, $p25, $data_vigencia) = $db->Tupla();
+
+            $objPessoa = new clsPessoa_($ref_funcionario_cadastro);
             $detalhePessoa = $objPessoa->detalhe();
-            $this->addDetalhe( array( "Ultimo Editor", $detalhePessoa["nome"] ) );
-            
-            $nome_grupo = $db2->CampoUnico( "SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'" );
-            $this->addDetalhe( array( "Grupo", $nome_grupo ) );
-            
-            $estadual = ( $estadual ) ? "Sim": "N&atilde;e";
-            $this->addDetalhe( array( "Estadual", $estadual ) );
-            
-            $p100 = number_format( $p100, 2, ",", "." );
-            $this->addDetalhe( array( "100%", $p100 ) );
-            
-            $p75 = number_format( $p75, 2, ",", "." );
-            $this->addDetalhe( array( "75%", $p75 ) );
-            
-            $p50 = number_format( $p50, 2, ",", "." );
-            $this->addDetalhe( array( "50%", $p50 ) );
-            
-            $p25 = number_format( $p25, 2, ",", "." );
-            $this->addDetalhe( array( "25%", $p25 ) );
-            
-            $data_vigencia = date( "d/m/Y", strtotime( $data_vigencia ) );
-            $this->addDetalhe( array( "Data de vig&ecirc;ncia", $data_vigencia ) );
-            
+            $this->addDetalhe([ 'Ultimo Editor', $detalhePessoa['nome'] ]);
+
+            $nome_grupo = $db2->CampoUnico("SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'");
+            $this->addDetalhe([ 'Grupo', $nome_grupo ]);
+
+            $estadual = ($estadual) ? 'Sim': 'N&atilde;e';
+            $this->addDetalhe([ 'Estadual', $estadual ]);
+
+            $p100 = number_format($p100, 2, ',', '.');
+            $this->addDetalhe([ '100%', $p100 ]);
+
+            $p75 = number_format($p75, 2, ',', '.');
+            $this->addDetalhe([ '75%', $p75 ]);
+
+            $p50 = number_format($p50, 2, ',', '.');
+            $this->addDetalhe([ '50%', $p50 ]);
+
+            $p25 = number_format($p25, 2, ',', '.');
+            $this->addDetalhe([ '25%', $p25 ]);
+
+            $data_vigencia = date('d/m/Y', strtotime($data_vigencia));
+            $this->addDetalhe([ 'Data de vig&ecirc;ncia', $data_vigencia ]);
+
             $this->url_editar = "diaria_valores_cad.php?cod_diaria_valores={$cod_diaria_valores}";
+        } else {
+            $this->addDetalhe([ 'Erro', 'Codigo de diaria-valor invalido' ]);
         }
-        else 
-        {
-            $this->addDetalhe( array( "Erro", "Codigo de diaria-valor invalido" ) );
-        }
-        
-        $this->url_novo = "diaria_valores_cad.php";
-        $this->url_cancelar = "diaria_valores_lst.php";
 
-        $this->largura = "100%";
+        $this->url_novo = 'diaria_valores_cad.php';
+        $this->url_cancelar = 'diaria_valores_lst.php';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe dos valores da di&aacute;ria"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         ''                                  => 'Detalhe dos valores da di&aacute;ria'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-?>

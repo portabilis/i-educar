@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Topo Portal" );
-        $this->processoAp = "694";
+        $this->SetTitulo("{$this->_instituicao} Topo Portal");
+        $this->processoAp = '694';
     }
 }
 
@@ -45,112 +45,91 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
-    
-    var $cod_topo_portal;
-    var $ref_funcionario_cad;
-    var $ref_funcionario_exc;
-    var $ref_cod_menu_portal;
-    var $caminho1;
-    var $caminho2;
-    var $caminho3;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    
-    function Gerar()
+    public $titulo;
+
+    public $cod_topo_portal;
+    public $ref_funcionario_cad;
+    public $ref_funcionario_exc;
+    public $ref_cod_menu_portal;
+    public $caminho1;
+    public $caminho2;
+    public $caminho3;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
-        
-        $this->titulo = "Topo Portal - Detalhe";
-        
 
-        $this->cod_topo_portal=$_GET["cod_topo_portal"];
+        $this->titulo = 'Topo Portal - Detalhe';
 
-        $tmp_obj = new clsPmicontrolesisTopoPortal( $this->cod_topo_portal );
+        $this->cod_topo_portal=$_GET['cod_topo_portal'];
+
+        $tmp_obj = new clsPmicontrolesisTopoPortal($this->cod_topo_portal);
         $registro = $tmp_obj->detalhe();
-        
-        if( ! $registro )
-        {
-            header( "location: controlesis_topo_portal_lst.php" );
+
+        if (! $registro) {
+            header('location: controlesis_topo_portal_lst.php');
             die();
         }
-        
-        if( class_exists( "clsFuncionario" ) )
-        {
-            $obj_ref_funcionario_exc = new clsFuncionario( $registro["ref_funcionario_exc"] );
+
+        if (class_exists('clsFuncionario')) {
+            $obj_ref_funcionario_exc = new clsFuncionario($registro['ref_funcionario_exc']);
             $det_ref_funcionario_exc = $obj_ref_funcionario_exc->detalhe();
-            if( is_object( $det_ref_funcionario_exc["idpes"] ) )
-            {
-            $det_ref_funcionario_exc = $det_ref_funcionario_exc["idpes"]->detalhe();
-            $registro["ref_funcionario_exc"] = $det_ref_funcionario_exc["nome"];
+            if (is_object($det_ref_funcionario_exc['idpes'])) {
+                $det_ref_funcionario_exc = $det_ref_funcionario_exc['idpes']->detalhe();
+                $registro['ref_funcionario_exc'] = $det_ref_funcionario_exc['nome'];
+            } else {
+                $pessoa = new clsPessoa_($det_ref_funcionario_exc['idpes']);
+                $det_ref_funcionario_exc = $pessoa->detalhe();
+                $registro['ref_funcionario_exc'] = $det_ref_funcionario_exc['nome'];
             }
-            else
-            {
-            $pessoa = new clsPessoa_( $det_ref_funcionario_exc["idpes"] );
-            $det_ref_funcionario_exc = $pessoa->detalhe();
-            $registro["ref_funcionario_exc"] = $det_ref_funcionario_exc["nome"];
-            }
-        }
-        else
-        {
-            $registro["ref_funcionario_exc"] = "Erro na geracao";
+        } else {
+            $registro['ref_funcionario_exc'] = 'Erro na geracao';
             echo "<!--\nErro\nClasse nao existente: clsFuncionario\n-->";
         }
 
-        if( class_exists( "clsFuncionario" ) )
-        {
-            $obj_ref_funcionario_cad = new clsFuncionario( $registro["ref_funcionario_cad"] );
+        if (class_exists('clsFuncionario')) {
+            $obj_ref_funcionario_cad = new clsFuncionario($registro['ref_funcionario_cad']);
             $det_ref_funcionario_cad = $obj_ref_funcionario_cad->detalhe();
-            if( is_object( $det_ref_funcionario_cad["idpes"] ) )
-            {
-            $det_ref_funcionario_cad = $det_ref_funcionario_cad["idpes"]->detalhe();
-            $registro["ref_funcionario_cad"] = $det_ref_funcionario_cad["nome"];
+            if (is_object($det_ref_funcionario_cad['idpes'])) {
+                $det_ref_funcionario_cad = $det_ref_funcionario_cad['idpes']->detalhe();
+                $registro['ref_funcionario_cad'] = $det_ref_funcionario_cad['nome'];
+            } else {
+                $pessoa = new clsPessoa_($det_ref_funcionario_cad['idpes']);
+                $det_ref_funcionario_cad = $pessoa->detalhe();
+                $registro['ref_funcionario_cad'] = $det_ref_funcionario_cad['nome'];
             }
-            else
-            {
-            $pessoa = new clsPessoa_( $det_ref_funcionario_cad["idpes"] );
-            $det_ref_funcionario_cad = $pessoa->detalhe();
-            $registro["ref_funcionario_cad"] = $det_ref_funcionario_cad["nome"];
-            }
-        }
-        else
-        {
-            $registro["ref_funcionario_cad"] = "Erro na geracao";
+        } else {
+            $registro['ref_funcionario_cad'] = 'Erro na geracao';
             echo "<!--\nErro\nClasse nao existente: clsFuncionario\n-->";
         }
 
-        if( class_exists( "clsPmicontrolesisMenuPortal" ) )
-        {
-            $obj_ref_cod_menu_portal = new clsPmicontrolesisMenuPortal( $registro["ref_cod_menu_portal"] );
+        if (class_exists('clsPmicontrolesisMenuPortal')) {
+            $obj_ref_cod_menu_portal = new clsPmicontrolesisMenuPortal($registro['ref_cod_menu_portal']);
             $det_ref_cod_menu_portal = $obj_ref_cod_menu_portal->detalhe();
-            $registro["ref_cod_menu_portal"] = $det_ref_cod_menu_portal["nm_menu"];
-        }
-        else
-        {
-            $registro["ref_cod_menu_portal"] = "Erro na geracao";
+            $registro['ref_cod_menu_portal'] = $det_ref_cod_menu_portal['nm_menu'];
+        } else {
+            $registro['ref_cod_menu_portal'] = 'Erro na geracao';
             echo "<!--\nErro\nClasse nao existente: clsPmicontrolesisMenuPortal\n-->";
         }
 
-
-        if( $registro["cod_topo_portal"] )
-        {
-            $this->addDetalhe( array( "Topo Portal", "{$registro["cod_topo_portal"]}") );
+        if ($registro['cod_topo_portal']) {
+            $this->addDetalhe([ 'Topo Portal', "{$registro['cod_topo_portal']}"]);
         }
-        if( $registro["ref_cod_menu_portal"] )
-        {
-            $this->addDetalhe( array( "Menu Portal", "{$registro["ref_cod_menu_portal"]}") );
+        if ($registro['ref_cod_menu_portal']) {
+            $this->addDetalhe([ 'Menu Portal', "{$registro['ref_cod_menu_portal']}"]);
         }
-        $this->addDetalhe( array( "Caminho1", "<img src='imagens/topos/{$registro["caminho1"]}' height='40'><img height='40' src='imagens/topos/{$registro["caminho2"]}'><img src='imagens/topos/{$registro["caminho3"]}' height='40'>") );
-        
+        $this->addDetalhe([ 'Caminho1', "<img src='imagens/topos/{$registro['caminho1']}' height='40'><img height='40' src='imagens/topos/{$registro['caminho2']}'><img src='imagens/topos/{$registro['caminho3']}' height='40'>"]);
 
-        $this->url_novo = "controlesis_topo_portal_cad.php";
-        $this->url_editar = "controlesis_topo_portal_cad.php?cod_topo_portal={$registro["cod_topo_portal"]}";
+        $this->url_novo = 'controlesis_topo_portal_cad.php';
+        $this->url_editar = "controlesis_topo_portal_cad.php?cod_topo_portal={$registro['cod_topo_portal']}";
 
-        $this->url_cancelar = "controlesis_topo_portal_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'controlesis_topo_portal_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -159,7 +138,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

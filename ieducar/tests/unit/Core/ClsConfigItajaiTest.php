@@ -21,65 +21,76 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
 require_once 'clsConfigItajai.inc.php';
 
-
 /**
  * clsConfigItajaiTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.0.1
+ *
  * @version     @@package_version@@
  */
 class ClsConfigItajai extends UnitBaseTest
 {
-  protected $config = NULL;
+    protected $config = null;
 
-  protected function setUp()
-  {
-    $this->config = new clsConfig();
-  }
+    protected function setUp()
+    {
+        $this->config = new clsConfig();
+    }
 
-  public function testConfigInstituicao()
-  {
-    $this->assertEquals('i-Educar - ', $this->config->_instituicao);
-  }
+    public function testConfigInstituicao()
+    {
+        $this->assertEquals('i-Educar - ', $this->config->_instituicao);
+    }
 
-  public function testArrayConfigHasEmailsAdministradores()
-  {
-    $this->assertTrue((bool) count($this->config->arrayConfig['ArrStrEmailsAdministradores']));
-  }
+    public function testArrayConfigHasEmailsAdministradores()
+    {
+        $this->assertTrue((bool) count($this->config->arrayConfig['ArrStrEmailsAdministradores']));
+    }
 
-  public function testArrayCheckEmailAdministradores()
-  {
-    $this->assertEquals('seu.email@example.com',
-      $this->config->arrayConfig['ArrStrEmailsAdministradores'][0]);
-  }
+    public function testArrayCheckEmailAdministradores()
+    {
+        $this->assertEquals(
+        'seu.email@example.com',
+      $this->config->arrayConfig['ArrStrEmailsAdministradores'][0]
+    );
+    }
 
-  public function testArrayConfigDirectoryTemplates()
-  {
-    $this->assertEquals('templates/', $this->config->arrayConfig['strDirTemplates']);
-  }
+    public function testArrayConfigDirectoryTemplates()
+    {
+        $this->assertEquals('templates/', $this->config->arrayConfig['strDirTemplates']);
+    }
 
-  public function testArrayConfigIntSegundosQuerySql()
-  {
-    $this->assertEquals(3, $this->config->arrayConfig['intSegundosQuerySQL']);
-  }
+    public function testArrayConfigIntSegundosQuerySql()
+    {
+        $this->assertEquals(3, $this->config->arrayConfig['intSegundosQuerySQL']);
+    }
 
-  public function testArrayConfigIntSegundosPagina()
-  {
-    $this->assertEquals(5, $this->config->arrayConfig['intSegundosProcessaPagina']);
-  }
+    public function testArrayConfigIntSegundosPagina()
+    {
+        $this->assertEquals(5, $this->config->arrayConfig['intSegundosProcessaPagina']);
+    }
 }

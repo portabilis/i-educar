@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,39 +40,44 @@ require_once 'Avaliacao/Model/Etapa.php';
  * Avaliacao_Model_FaltaAbstract abstract class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 abstract class Avaliacao_Model_FaltaAbstract extends Avaliacao_Model_Etapa
 {
-  protected $_data = array(
-    'faltaAluno' => NULL,
-    'quantidade' => NULL,
-  );
+    protected $_data = [
+    'faltaAluno' => null,
+    'quantidade' => null,
+  ];
 
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'quantidade' => 'numeric'
-  );
+  ];
 
-  protected $_references = array(
-    'faltaAluno' => array(
-      'value' => NULL,
+    protected $_references = [
+    'faltaAluno' => [
+      'value' => null,
       'class' => 'Avaliacao_Model_FaltaAluno',
       'file'  => 'Avaliacao/Model/FaltaAluno.php'
-    )
-  );
+    ]
+  ];
 
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
-  {
-    return array(
-      'quantidade' => new CoreExt_Validate_Numeric(array('min' => 0, 'max' => 100))
-    );
-  }
+    /**
+     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     */
+    public function getDefaultValidatorCollection()
+    {
+        return [
+      'quantidade' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 100])
+    ];
+    }
 }

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Entity
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -34,44 +39,51 @@ require_once 'CoreExt/Validate/Validatable.php';
  * CoreExt_Entity_Validatable interface.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Entity
+ *
  * @since     Interface disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface CoreExt_Entity_Validatable extends CoreExt_Validate_Validatable
 {
-  /**
-   * Configura uma coleção de CoreExt_Validate_Interface na instância.
-   * @return CoreExt_Entity Provê interface fluída
-   */
-  public function setValidatorCollection(array $validators);
+    /**
+     * Configura uma coleção de CoreExt_Validate_Interface na instância.
+     *
+     * @return CoreExt_Entity Provê interface fluída
+     */
+    public function setValidatorCollection(array $validators);
 
-  /**
-   * Retorna um array de itens CoreExt_Validate_Interface da instância.
-   * @return array
-   */
-  public function getValidatorCollection();
+    /**
+     * Retorna um array de itens CoreExt_Validate_Interface da instância.
+     *
+     * @return array
+     */
+    public function getValidatorCollection();
 
-  /**
-   * Retorna um array de CoreExt_Validate_Interface padrão para as propriedades
-   * de CoreExt_Entity.
-   *
-   * Cada item do array precisa ser um item associativo com o mesmo nome do
-   * atributo público definido pelo array $_data:
-   *
-   * <code>
-   * <?php
-   * // Uma classe concreta de CoreExt_Entity com as propriedades públicas
-   * // nome e telefone poderia ter os seguintes validadores.
-   * array(
-   *   'nome' => new CoreExt_Validate_Alpha(),
-   *   'telefone' => new CoreExt_Validate_Alphanum()
-   * );
-   * </code>
-   *
-   * @return array
-   */
-  public function getDefaultValidatorCollection();
+    /**
+     * Retorna um array de CoreExt_Validate_Interface padrão para as propriedades
+     * de CoreExt_Entity.
+     *
+     * Cada item do array precisa ser um item associativo com o mesmo nome do
+     * atributo público definido pelo array $_data:
+     *
+     * <code>
+     * <?php
+     * // Uma classe concreta de CoreExt_Entity com as propriedades públicas
+     * // nome e telefone poderia ter os seguintes validadores.
+     * array(
+     *   'nome' => new CoreExt_Validate_Alpha(),
+     *   'telefone' => new CoreExt_Validate_Alphanum()
+     * );
+     * </code>
+     *
+     * @return array
+     */
+    public function getDefaultValidatorCollection();
 }

@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -36,44 +41,51 @@ require_once 'Docente/Model/LicenciaturaDataMapper.php';
  * ViewController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Docente
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class ViewController extends Core_Controller_Page_ViewController
 {
-  protected $_dataMapper = 'Docente_Model_LicenciaturaDataMapper';
-  protected $_titulo     = 'Detalhes da licenciatura';
-  protected $_processoAp = 635;
-  protected $_tableMap   = array(
+    protected $_dataMapper = 'Docente_Model_LicenciaturaDataMapper';
+    protected $_titulo     = 'Detalhes da licenciatura';
+    protected $_processoAp = 635;
+    protected $_tableMap   = [
     'Licenciatura'     => 'licenciatura',
     'Curso'            => 'curso',
     'Ano de conclusão' => 'anoConclusao',
     'IES'              => 'ies'
-  );
+  ];
 
-  public function setUrlEditar(CoreExt_Entity $entry)
-  {
-    $this->url_editar = CoreExt_View_Helper_UrlHelper::url(
-      'edit', array('query' => array(
+    public function setUrlEditar(CoreExt_Entity $entry)
+    {
+        $this->url_editar = CoreExt_View_Helper_UrlHelper::url(
+      'edit',
+        ['query' => [
         'id'          => $entry->id,
         'servidor'    => $entry->servidor,
         'instituicao' => $this->getRequest()->instituicao
-      ))
+      ]]
     );
-  }
+    }
 
-  public function setUrlCancelar(CoreExt_Entity $entry)
-  {
-    $this->url_cancelar = CoreExt_View_Helper_UrlHelper::url(
-      'index', array('query' => array(
+    public function setUrlCancelar(CoreExt_Entity $entry)
+    {
+        $this->url_cancelar = CoreExt_View_Helper_UrlHelper::url(
+      'index',
+        ['query' => [
         'id'          => $entry->id,
         'servidor'    => $entry->servidor,
         'instituicao' => $this->getRequest()->instituicao
-      ))
+      ]]
     );
-  }
+    }
 }

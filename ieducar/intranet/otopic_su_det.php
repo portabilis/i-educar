@@ -24,60 +24,54 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Pauta - Super Usuários" );
-        $this->processoAp = "335";
+        $this->SetTitulo("{$this->_instituicao} i-Pauta - Super Usuários");
+        $this->processoAp = '335';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe";
-        $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet", false);
+        $this->titulo = 'Detalhe';
+        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet', false);
 
         $obj = new clsFuncionarioSu();
         $lista = $obj->lista();
         $novo = true;
-        if($lista)
-        {   
-            foreach ($lista AS $cod) 
-            {           
+        if ($lista) {
+            foreach ($lista as $cod) {
                 $novo =false;
                 $cod = $cod['ref_ref_cod_pessoa_fj'];
                 $obj = new clsPessoaFisica($cod);
                 $detalhe = $obj->detalhe();
-                $this->addDetalhe(array("Super Usuário", $detalhe['nome']));
+                $this->addDetalhe(['Super Usuário', $detalhe['nome']]);
             }
         }
-        
-        if($novo)
-        {
-            header("Location: otopic_su_lst.php");
+
+        if ($novo) {
+            header('Location: otopic_su_lst.php');
         }
-        $this->url_editar = "otopic_su_cad.php";
-        $this->url_cancelar = "otopic_su_lst.php";
-        $this->largura = "100%";
+        $this->url_editar = 'otopic_su_cad.php';
+        $this->url_cancelar = 'otopic_su_lst.php';
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

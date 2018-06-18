@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -36,41 +41,50 @@ require_once 'Portabilis/Business/Professor.php';
  * Portabilis_View_Helper_DynamicInput_Serie class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_DynamicInput_CoreSelect {
-
-  protected function inputName() {
-    return 'ref_cod_serie';
-  }
-
-  protected function inputOptions($options) {
-    $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $escolaId      = $this->getEscolaId($options['escolaId']);
-    $cursoId       = $this->getCursoId($options['cursoId']);
-    $userId        = $this->getCurrentUserId();
-    $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
-
-    if ($isProfessor && Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId)){      
-      $series = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $serieId, $userId);
-      //$resources = Portabilis_Array_Utils::setAsIdValue($series, 'id', 'nome');
+class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'ref_cod_serie';
     }
-    elseif ($escolaId && $cursoId && empty($resources))
-      $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId);
 
-    return $this->insertOption(null, "Selecione uma s&eacute;rie", $resources);
-  }
+    protected function inputOptions($options)
+    {
+        $resources     = $options['resources'];
+        $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
+        $escolaId      = $this->getEscolaId($options['escolaId']);
+        $cursoId       = $this->getCursoId($options['cursoId']);
+        $userId        = $this->getCurrentUserId();
+        $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-  protected function defaultOptions(){
-    return array('options' => array('label' => 'S&eacute;rie'));
-  }  
+        if ($isProfessor && Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId)) {
+            $series = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $serieId, $userId);
+        //$resources = Portabilis_Array_Utils::setAsIdValue($series, 'id', 'nome');
+        } elseif ($escolaId && $cursoId && empty($resources)) {
+            $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId);
+        }
 
-  public function serie($options = array()) {
-    parent::select($options);
-  }
+        return $this->insertOption(null, 'Selecione uma s&eacute;rie', $resources);
+    }
+
+    protected function defaultOptions()
+    {
+        return ['options' => ['label' => 'S&eacute;rie']];
+    }
+
+    public function serie($options = [])
+    {
+        parent::select($options);
+    }
 }

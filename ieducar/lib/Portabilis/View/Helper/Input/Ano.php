@@ -22,41 +22,54 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_Ano class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core {
-  protected function inputValue($value = null) {
-    if (! $value && $this->viewInstance->ano)
-      $value = $this->viewInstance->ano;
-    else
-      $value = date('Y');
+class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
+{
+    protected function inputValue($value = null)
+    {
+        if (! $value && $this->viewInstance->ano) {
+            $value = $this->viewInstance->ano;
+        } else {
+            $value = date('Y');
+        }
 
-    return $value;
-  }
+        return $value;
+    }
 
-  public function ano($options = array()) {
-    $defaultOptions      = array('options' => array());
-    $options             = $this->mergeOptions($options, $defaultOptions);
+    public function ano($options = [])
+    {
+        $defaultOptions      = ['options' => []];
+        $options             = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'ano',
+        $defaultInputOptions = ['id'         => 'ano',
                                  'label'      => 'Ano',
                                  'value'      => $this->inputValue($options['options']['value']),
                                  'size'       => 4,
@@ -67,9 +80,9 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
                                  'script'     => false,
                                  'callback'   => false,
                                  'inline'     => false,
-                                 'disabled'   => false);
+                                 'disabled'   => false];
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
-  }
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        call_user_func_array([$this->viewInstance, 'campoNumero'], $inputOptions);
+    }
 }

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Configurable
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -68,24 +73,32 @@
  * </code>
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Configurable
+ *
  * @since     Interface disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface CoreExt_Configurable
 {
-  /**
-   * Setter.
-   * @param  array $options
-   * @return CoreExt_Configurable Provê interface fluída
-   */
-  public function setOptions(array $options = array());
+    /**
+     * Setter.
+     *
+     * @param array $options
+     *
+     * @return CoreExt_Configurable Provê interface fluída
+     */
+    public function setOptions(array $options = []);
 
-  /**
-   * Getter.
-   * @return array
-   */
-  public function getOptions();
+    /**
+     * Getter.
+     *
+     * @return array
+     */
+    public function getOptions();
 }

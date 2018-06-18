@@ -26,69 +26,64 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     class clsCronometro
     {
-        var $tempo_inicial;
-        var $tempo_ultimo;
-        var $tempo_total;
-        var $tomadas = array();
+        public $tempo_inicial;
+        public $tempo_ultimo;
+        public $tempo_total;
+        public $tomadas = [];
 
-        function __construct()
+        public function __construct()
         {
             $this->tempo_inicial = $this->get_microtime();
             $this->tempo_ultimo = $this->tempo_inicial;
             $this->tempo_total = 0;
         }
 
-        function get_microtime()
+        public function get_microtime()
         {
-            list( $usec, $sec ) = explode( " ", microtime() );
+            list($usec, $sec) = explode(' ', microtime());
+
             return $usec + $sec;
         }
 
-        function getTempoTotal()
+        public function getTempoTotal()
         {
             return $this->tempo_total;
         }
 
-        function marca( $str_nome = "" )
+        public function marca($str_nome = '')
         {
-            if( ! $str_nome )
-            {
-                $str_nome = "checkpoint " . count( $this->tomadas ) + 1;
+            if (! $str_nome) {
+                $str_nome = 'checkpoint ' . count($this->tomadas) + 1;
             }
             $mictime = $this->get_microtime();
-            $this->tomadas[] = array( "nome" => $str_nome, "tempo_absoluto" => $mictime - $this->tempo_inicial, "diferenca_ultimo" => $mictime - $this->tempo_ultimo, "mictime" => $mictime );
+            $this->tomadas[] = [ 'nome' => $str_nome, 'tempo_absoluto' => $mictime - $this->tempo_inicial, 'diferenca_ultimo' => $mictime - $this->tempo_ultimo, 'mictime' => $mictime ];
             $this->tempo_ultimo = $mictime;
             $this->tempo_total = $this->tempo_ultimo - $this->tempo_inicial;
         }
 
-        function get_tabela( $html = false)
+        public function get_tabela($html = false)
         {
-            if( $html )
-            {
-                $retorno = "<table border=\"1\" cellpadding=\"2\"><tr><td>Nome</td><td>Tempo Absoluto</td><td>Diferenca Ultimo</td><td>MicroTime</td></tr>";
-                foreach ( $this->tomadas AS $tomada )
-                {
-                    $retorno .= "<tr>";
-                    $retorno .= "<td>{$tomada["nome"]}</td>";
-                    $retorno .= "<td>" . number_format( $tomada["tempo_absoluto"], 10, ",", "." ) . "</td>";
-                    $retorno .= "<td>" . number_format( $tomada["diferenca_ultimo"], 10, ",", "." ) . "</td>";
-                    $retorno .= "<td>{$tomada["mictime"]}</td>";
-                    $retorno .= "</tr>";
+            if ($html) {
+                $retorno = '<table border="1" cellpadding="2"><tr><td>Nome</td><td>Tempo Absoluto</td><td>Diferenca Ultimo</td><td>MicroTime</td></tr>';
+                foreach ($this->tomadas as $tomada) {
+                    $retorno .= '<tr>';
+                    $retorno .= "<td>{$tomada['nome']}</td>";
+                    $retorno .= '<td>' . number_format($tomada['tempo_absoluto'], 10, ',', '.') . '</td>';
+                    $retorno .= '<td>' . number_format($tomada['diferenca_ultimo'], 10, ',', '.') . '</td>';
+                    $retorno .= "<td>{$tomada['mictime']}</td>";
+                    $retorno .= '</tr>';
                 }
-                $retorno .= "</table>";
-            }
-            else
-            {
+                $retorno .= '</table>';
+            } else {
                 $retorno = "\n\nCronometro\n";
-                foreach ( $this->tomadas AS $tomada )
-                {
-                    $retorno .= "\tnome: {$tomada["nome"]}\n";
-                    $retorno .= "\ttempo absoluto: " . number_format( $tomada["tempo_absoluto"], 10, ",", "." ) . "\n";
-                    $retorno .= "\tdiferenca ultimo: " . number_format( $tomada["diferenca_ultimo"], 10, ",", "." ) . "\n";
-                    $retorno .= "\tmicrotime: {$tomada["mictime"]}\n\n";
+                foreach ($this->tomadas as $tomada) {
+                    $retorno .= "\tnome: {$tomada['nome']}\n";
+                    $retorno .= "\ttempo absoluto: " . number_format($tomada['tempo_absoluto'], 10, ',', '.') . "\n";
+                    $retorno .= "\tdiferenca ultimo: " . number_format($tomada['diferenca_ultimo'], 10, ',', '.') . "\n";
+                    $retorno .= "\tmicrotime: {$tomada['mictime']}\n\n";
                 }
             }
+
             return $retorno;
         }
     }
-?>

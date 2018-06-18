@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "Prefeitura de Itaja&iacute; - Listagem de Software" );
-        $this->processoAp = "793";
+        $this->SetTitulo('Prefeitura de Itaja&iacute; - Listagem de Software');
+        $this->processoAp = '793';
     }
 }
 
@@ -45,68 +45,67 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $__pessoa_logada;
+    public $__pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $__titulo;
+    public $__titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $__limite;
+    public $__limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $__offset;
+    public $__offset;
 
-    var $cod_software;
-    var $ref_funcionario_exc;
-    var $ref_funcionario_cad;
-    var $nm_software;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_software;
+    public $ref_funcionario_exc;
+    public $ref_funcionario_cad;
+    public $nm_software;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->__pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->__titulo = "Software - Listagem";
+        $this->__titulo = 'Software - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        $this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+        $this->addBanner('/intranet/imagens/nvp_top_intranet.jpg', '/intranet/imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-        $this->addCabecalhos( array(
-            "Nome Software"
-        ) );
+        $this->addCabecalhos([
+            'Nome Software'
+        ]);
 
         // Filtros de Foreign Keys
 
-
         // outros Filtros
-        $this->campoTexto( "nm_software", "Nome Software", $this->nm_software, 30, 255, false );
-
+        $this->campoTexto('nm_software', 'Nome Software', $this->nm_software, 30, 255, false);
 
         // Paginador
         $this->__limite = 20;
-        $this->__offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
+        $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
 
         $obj_software = new clsPmicontrolesisSoftware();
-        $obj_software->setOrderby( "nm_software ASC" );
-        $obj_software->setLimite( $this->__limite, $this->__offset );
+        $obj_software->setOrderby('nm_software ASC');
+        $obj_software->setLimite($this->__limite, $this->__offset);
 
         $lista = $obj_software->lista(
             null,
@@ -120,23 +119,20 @@ class indice extends clsListagem
         $total = $obj_software->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-
-                $this->addLinhas( array(
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $this->addLinhas([
                     //"<a href=\"controlesis_software_det.php?cod_software={$registro["cod_software"]}\">{$registro["cod_software"]}</a>",
-                    "<a href=\"controlesis_software_det.php?cod_software={$registro["cod_software"]}\">{$registro["nm_software"]}</a>"
-                ) );
+                    "<a href=\"controlesis_software_det.php?cod_software={$registro['cod_software']}\">{$registro['nm_software']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "controlesis_software_lst.php", $total, $_GET, $this->nome, $this->__limite );
+        $this->addPaginador2('controlesis_software_lst.php', $total, $_GET, $this->nome, $this->__limite);
 
-        $this->acao = "go(\"controlesis_software_cad.php\")";
-        $this->nome_acao = "Novo";
+        $this->acao = 'go("controlesis_software_cad.php")';
+        $this->nome_acao = 'Novo';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 // cria uma extensao da classe base
@@ -144,7 +140,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Validate
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,82 +40,87 @@ require_once 'CoreExt/Locale.php';
  * CoreExt_Validate_Numeric class.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Validate
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class CoreExt_Validate_Numeric extends CoreExt_Validate_Abstract
 {
-  /**
-   * @see CoreExt_Validate_Abstract#_getDefaultOptions()
-   */
-  protected function _getDefaultOptions()
-  {
-    return array(
-      'min'       => NULL,
-      'max'       => NULL,
-      'trim'      => FALSE,
+    /**
+     * @see CoreExt_Validate_Abstract#_getDefaultOptions()
+     */
+    protected function _getDefaultOptions()
+    {
+        return [
+      'min'       => null,
+      'max'       => null,
+      'trim'      => false,
       'invalid'   => 'O valor "@value" não é um tipo numérico',
       'min_error' => '"@value" é menor que o valor mínimo permitido (@min)',
       'max_error' => '"@value" é maior que o valor máximo permitido (@max)',
-    );
-  }
-
-  /**
-   * @see CoreExt_DataMapper#_getFindStatment($pkey) Sobre a conversão com floatval()
-   * @see CoreExt_Validate_Abstract#_validate($value)
-   */
-  protected function _validate($value)
-  {
-    if (FALSE === $this->getOption('required') && is_null($value)) {
-      return TRUE;
+    ];
     }
 
-    if (!is_numeric($value)) {
-      throw new Exception($this->_getErrorMessage('invalid', array('@value' => $value)));
-    }
+    /**
+     * @see CoreExt_DataMapper#_getFindStatment($pkey) Sobre a conversão com floatval()
+     * @see CoreExt_Validate_Abstract#_validate($value)
+     */
+    protected function _validate($value)
+    {
+        if (false === $this->getOption('required') && is_null($value)) {
+            return true;
+        }
 
-    // Converte usando floatval para evitar problemas com range do tipo int.
-    $value = floatval($value);
+        if (!is_numeric($value)) {
+            throw new Exception($this->_getErrorMessage('invalid', ['@value' => $value]));
+        }
 
-    if ($this->_hasOption('min') &&
+        // Converte usando floatval para evitar problemas com range do tipo int.
+        $value = floatval($value);
+
+        if ($this->_hasOption('min') &&
       $value < floatval($this->getOption('min'))) {
-      throw new Exception($this->_getErrorMessage('min_error', array(
+            throw new Exception($this->_getErrorMessage('min_error', [
         '@value' => $value, '@min' => $this->getOption('min')
-      )));
-    }
+      ]));
+        }
 
-    if ($this->_hasOption('max') &&
+        if ($this->_hasOption('max') &&
       $value > floatval($this->getOption('max'))) {
-      throw new Exception($this->_getErrorMessage('max_error', array(
+            throw new Exception($this->_getErrorMessage('max_error', [
         '@value' => $value, '@max' => $this->getOption('max')
-      )));
+      ]));
+        }
+
+        return true;
     }
 
-    return TRUE;
-  }
+    /**
+     * Realiza um sanitização de acordo com o locale, para permitir que valores
+     * flutuantes ou números de precisão arbitrária utilizem a pontuação sem
+     * localização.
+     *
+     * @see CoreExt_Validate_Abstract#_sanitize($value)
+     */
+    protected function _sanitize($value)
+    {
+        $locale = CoreExt_Locale::getInstance();
+        $decimalPoint = $locale->getCultureInfo('decimal_point');
 
-  /**
-   * Realiza um sanitização de acordo com o locale, para permitir que valores
-   * flutuantes ou números de precisão arbitrária utilizem a pontuação sem
-   * localização.
-   *
-   * @see CoreExt_Validate_Abstract#_sanitize($value)
-   */
-  protected function _sanitize($value)
-  {
-    $locale = CoreExt_Locale::getInstance();
-    $decimalPoint = $locale->getCultureInfo('decimal_point');
+        // Verifica se possui o ponto decimal do locale e substitui para o
+        // padrão do locale en_US (ponto ".")
+        if (false !== strstr($value, $decimalPoint)) {
+            $value = strtr($value, $decimalPoint, '.');
+            $value = floatval($value);
+        }
 
-    // Verifica se possui o ponto decimal do locale e substitui para o
-    // padrão do locale en_US (ponto ".")
-    if (FALSE !== strstr($value, $decimalPoint)) {
-      $value = strtr($value, $decimalPoint, '.');
-      $value = floatval($value);
+        return parent::_sanitize($value);
     }
-
-    return parent::_sanitize($value);
-  }
 }

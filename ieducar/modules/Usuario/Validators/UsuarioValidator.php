@@ -21,41 +21,44 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Usuario
  * @subpackage  Modules
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
 class UsuarioValidator
 {
-  static function validatePassword($messenger,
+    public static function validatePassword(
+      $messenger,
                                              $oldPassword,
                                              $newPassword,
                                              $confirmation,
                                              $encriptedPassword,
-                                             $matricula)
-  {
-    $newPassword  = strtolower($newPassword);
-    $confirmation = strtolower($confirmation);
+                                             $matricula
+  ) {
+        $newPassword  = strtolower($newPassword);
+        $confirmation = strtolower($confirmation);
 
-    if (empty($newPassword))
-      $messenger->append('Por favor informe uma senha.', 'error');
+        if (empty($newPassword)) {
+            $messenger->append('Por favor informe uma senha.', 'error');
+        } elseif (strlen($newPassword) < 8) {
+            $messenger->append('Por favor informe uma senha mais segura, com pelo menos 8 caracteres.', 'error');
+        } elseif ($newPassword != $confirmation) {
+            $messenger->append('A confirma&ccedil;&atilde;o de senha n&atilde;o confere com a senha.', 'error');
+        } elseif (strpos($newPassword, $matricula) != false) {
+            $messenger->append('A senha informada &eacute; similar a sua matricula, informe outra senha.', 'error');
+        } elseif ($encriptedPassword == $oldPassword) {
+            $messenger->append('Informe uma senha diferente da atual.', 'error');
+        }
 
-    elseif (strlen($newPassword) < 8)
-      $messenger->append('Por favor informe uma senha mais segura, com pelo menos 8 caracteres.', 'error');
-
-    elseif ($newPassword != $confirmation)
-      $messenger->append('A confirma&ccedil;&atilde;o de senha n&atilde;o confere com a senha.', 'error');
-
-    elseif (strpos($newPassword, $matricula) != false)
-      $messenger->append('A senha informada &eacute; similar a sua matricula, informe outra senha.', 'error');
-
-    elseif ($encriptedPassword == $oldPassword)
-      $messenger->append('Informe uma senha diferente da atual.', 'error');
-
-    return ! $messenger->hasMsgWithType('error');
-  }
+        return ! $messenger->hasMsgWithType('error');
+    }
 }

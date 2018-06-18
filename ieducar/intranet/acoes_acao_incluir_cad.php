@@ -24,53 +24,53 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once("include/pmiacoes/geral.inc.php");
-require_once( "include/Geral.inc.php" );
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/pmiacoes/geral.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
-        $this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Inclusão de ação!" );
-        $this->processoAp = "551";
+        $this->SetTitulo("{$this->_instituicao} Sistema de Cadastro de A&ccedil;&oatilde;es do Governo - Inclusão de ação!");
+        $this->processoAp = '551';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $pessoa_logada;
-    var $cod_acao_governo;
-    var $setor;
-    var $status = 1;
+    public $pessoa_logada;
+    public $cod_acao_governo;
+    public $setor;
+    public $status = 1;
 
-    function Inicializar()
+    public function Inicializar()
     {
-
         $cod_acao_governo = @$_GET['cod_acao_governo'];
         $this->status = @$_GET['status'];
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        if(!(int)$cod_acao_governo)
-            header("Location: acoes_acao_lst.php");
+        if (!(int)$cod_acao_governo) {
+            header('Location: acoes_acao_lst.php');
+        }
 
         //Objeto Perturbação
         $obj_acao_governo = new clsPmiacoesAcaoGoverno($cod_acao_governo);
         $det_acao_governo = $obj_acao_governo->detalhe();
 
-        if(!$det_acao_governo = $obj_acao_governo->detalhe() )
-            header("Location: acoes_acao_lst.php");
-
+        if (!$det_acao_governo = $obj_acao_governo->detalhe()) {
+            header('Location: acoes_acao_lst.php');
+        }
 
         $obj_funcionario = new clsFuncionario($this->pessoa_logada);
         $detalhe_func = $obj_funcionario->detalhe();
-        $setor_funcionario = $detalhe_func["ref_cod_setor_new"];
+        $setor_funcionario = $detalhe_func['ref_cod_setor_new'];
 
         //*
         $obj = new clsSetor();
@@ -80,50 +80,42 @@ class indice extends clsCadastro
         $obj_secretaria_responsavel_det = $obj_secretaria_responsavel->detalhe();
         $obj_acao = new clsPmiacoesAcaoGoverno($cod_acao_governo);
         $obj_acao_det = $obj_acao->detalhe();
-        $status = $obj_acao_det["status_acao"];
+        $status = $obj_acao_det['status_acao'];
         $isSecom = $setor_pai == 4327 ? true : false;
 
-        if(($obj_secretaria_responsavel_det != false && $status == 0) || $status == 1 || $isSecom)
-        {
-                $ac =$this->status ? "incluída" : "removida";
-                $obj_acao = new clsPmiacoesAcaoGoverno($cod_acao_governo,null,null,null,null,null,null,null,$this->status);
-                if($obj_acao->edita())
-                    echo "<script>alert('Ação $ac com sucesso');window.location=\"acoes_acao_det.php?cod_acao_governo={$cod_acao_governo}\";</script>";
-
+        if (($obj_secretaria_responsavel_det != false && $status == 0) || $status == 1 || $isSecom) {
+            $ac =$this->status ? 'incluída' : 'removida';
+            $obj_acao = new clsPmiacoesAcaoGoverno($cod_acao_governo, null, null, null, null, null, null, null, $this->status);
+            if ($obj_acao->edita()) {
+                echo "<script>alert('Ação $ac com sucesso');window.location=\"acoes_acao_det.php?cod_acao_governo={$cod_acao_governo}\";</script>";
+            }
         }
 
-        header("Location: acoes_acao_lst.php");
+        header('Location: acoes_acao_lst.php');
         die;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-
-
     }
 
-    function Novo()
+    public function Novo()
     {
-
         return true;
     }
 
-    function Editar()
+    public function Editar()
     {
-
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
-
         return false;
     }
-
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-?>

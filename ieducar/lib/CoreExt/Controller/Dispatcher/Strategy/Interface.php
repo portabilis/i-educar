@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -32,39 +37,49 @@
  * CoreExt_Controller_Dispatcher_Strategy_Interface interface.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Interface disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface CoreExt_Controller_Dispatcher_Strategy_Interface
 {
-  /**
-   * Construtor.
-   * @param CoreExt_Controller_Interface $controller
-   */
-  public function __construct(CoreExt_Controller_Interface $controller);
+    /**
+     * Construtor.
+     *
+     * @param CoreExt_Controller_Interface $controller
+     */
+    public function __construct(CoreExt_Controller_Interface $controller);
 
-  /**
-   * Setter para a instância de CoreExt_Controller_Interface.
-   * @param CoreExt_Controller_Interface $controller
-   * @return CoreExt_Controller_Strategy_Interface Provê interface fluída
-   */
-  public function setController(CoreExt_Controller_Interface $controller);
+    /**
+     * Setter para a instância de CoreExt_Controller_Interface.
+     *
+     * @param CoreExt_Controller_Interface $controller
+     *
+     * @return CoreExt_Controller_Strategy_Interface Provê interface fluída
+     */
+    public function setController(CoreExt_Controller_Interface $controller);
 
-  /**
-   * Getter.
-   * @return CoreExt_Controller_Interface
-   */
-  public function getController();
+    /**
+     * Getter.
+     *
+     * @return CoreExt_Controller_Interface
+     */
+    public function getController();
 
-  /**
-   * Realiza o dispatch da requisição, encaminhando o controle da execução ao
-   * controller adequado.
-   *
-   * @return bool
-   * @throws Exception
-   */
-  public function dispatch();
+    /**
+     * Realiza o dispatch da requisição, encaminhando o controle da execução ao
+     * controller adequado.
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function dispatch();
 }

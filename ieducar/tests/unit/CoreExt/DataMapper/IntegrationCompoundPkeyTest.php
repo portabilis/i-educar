@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,111 +40,116 @@ require_once 'CoreExt/_stub/EntityCompoundDataMapper.php';
  * CoreExt_DataMapper_IntegrationCompoundPkeyTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_DataMapper_IntegrationCompoundPkeyTest extends IntegrationBaseTest
 {
-  /**
-   * Cria a tabela do objeto CoreExt_DataMapper para testes.
-   */
-  public function __construct()
-  {
-    parent::__construct();
-    CoreExt_EntityCompoundDataMapperStub::createTable($this->getDbAdapter());
-  }
+    /**
+     * Cria a tabela do objeto CoreExt_DataMapper para testes.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        CoreExt_EntityCompoundDataMapperStub::createTable($this->getDbAdapter());
+    }
 
-  protected function setUp()
-  {
-    parent::setUp();
-    CoreExt_DataMapper::resetDefaultDbAdapter();
-  }
+    protected function setUp()
+    {
+        parent::setUp();
+        CoreExt_DataMapper::resetDefaultDbAdapter();
+    }
 
-  public function getDataSet()
-  {
-    return $this->createXMLDataSet($this->getFixture('matricula.xml'));
-  }
+    public function getDataSet()
+    {
+        return $this->createXMLDataSet($this->getFixture('matricula.xml'));
+    }
 
-  public function testRecuperaRegistroUnico()
-  {
-    $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
-    $found = $mapper->find(array(1, 1));
+    public function testRecuperaRegistroUnico()
+    {
+        $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
+        $found = $mapper->find([1, 1]);
 
-    $expected = new CoreExt_EntityCompoundStub(array(
+        $expected = new CoreExt_EntityCompoundStub([
       'pessoa' => 1,
       'curso'  => 1,
-      'confirmado' => TRUE
-    ));
+      'confirmado' => true
+    ]);
 
-    // Marca como se tivesse sido carregado, para garantir a comparação
-    $expected->markOld();
+        // Marca como se tivesse sido carregado, para garantir a comparação
+        $expected->markOld();
 
-    $this->assertEquals($expected, $found);
-    $this->assertFalse($found->isNew());
-  }
+        $this->assertEquals($expected, $found);
+        $this->assertFalse($found->isNew());
+    }
 
-  public function testCadastraNovoRegistroComChaveComposta()
-  {
-    $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
+    public function testCadastraNovoRegistroComChaveComposta()
+    {
+        $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
 
-    $entity = new CoreExt_EntityCompoundStub(array(
+        $entity = new CoreExt_EntityCompoundStub([
       'pessoa' => 1,
       'curso'  => 3,
-      'confirmado' => TRUE
-    ));
+      'confirmado' => true
+    ]);
 
-    $mapper->save($entity);
+        $mapper->save($entity);
 
-    $this->assertTablesEqual(
+        $this->assertTablesEqual(
       $this->createXMLDataSet($this->getFixture('matricula-depois-salvo.xml'))
            ->getTable('matricula'),
       $this->getConnection()
            ->createDataSet()
            ->getTable('matricula')
     );
-  }
+    }
 
-  public function testAtualizaRegistroComChaveComposta()
-  {
-    $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
+    public function testAtualizaRegistroComChaveComposta()
+    {
+        $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
 
-    $entity = new CoreExt_EntityCompoundStub(array(
+        $entity = new CoreExt_EntityCompoundStub([
       'pessoa' => 1,
       'curso' => 2,
-      'confirmado' => TRUE
-    ));
+      'confirmado' => true
+    ]);
 
-    // Marca como se tivesse sido carregado, para forçar CoreExt_DataMapper
-    // a usar o INSERT.
-    $entity->markOld();
+        // Marca como se tivesse sido carregado, para forçar CoreExt_DataMapper
+        // a usar o INSERT.
+        $entity->markOld();
 
-    $mapper->save($entity);
+        $mapper->save($entity);
 
-    $this->assertTablesEqual(
+        $this->assertTablesEqual(
       $this->createXMLDataSet($this->getFixture('matricula-depois-atualizado.xml'))
            ->getTable('matricula'),
       $this->getConnection()
            ->createDataSet()
            ->getTable('matricula')
     );
-  }
+    }
 
-  public function testApagaRegistroComChaveComposta()
-  {
-    $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
+    public function testApagaRegistroComChaveComposta()
+    {
+        $mapper = new CoreExt_EntityCompoundDataMapperStub($this->getDbAdapter());
 
-    $entity = new CoreExt_EntityCompoundStub(array(
+        $entity = new CoreExt_EntityCompoundStub([
       'pessoa' => 1,
       'curso' => 2
-    ));
+    ]);
 
-    $mapper->delete($entity);
+        $mapper->delete($entity);
 
-    $this->assertTablesEqual(
+        $this->assertTablesEqual(
       $this->createXMLDataSet($this->getFixture('matricula-depois-removido.xml'))
            ->getTable('matricula'),
       $this->getConnection()
@@ -147,9 +157,9 @@ class CoreExt_DataMapper_IntegrationCompoundPkeyTest extends IntegrationBaseTest
            ->getTable('matricula')
     );
 
-    // Apaga usando array com os valores da chave
-    $mapper->delete(array('pessoa' => 1, 'curso' => 1));
-    $this->assertEquals(0, $this->getConnection()->createDataSet()
+        // Apaga usando array com os valores da chave
+        $mapper->delete(['pessoa' => 1, 'curso' => 1]);
+        $this->assertEquals(0, $this->getConnection()->createDataSet()
                                 ->getTable('matricula')->getRowCount());
-  }
+    }
 }

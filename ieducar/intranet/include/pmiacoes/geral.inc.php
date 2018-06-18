@@ -24,14 +24,16 @@
 /**
  * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package  Core
+ *
  * @since    Arquivo disponível desde a versão 1.0.0
+ *
  * @version  $Id$
  */
 
 // Inclui operações de bootstrap.
 require_once '../includes/bootstrap.php';
-
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmiacoes/clsPmiacoesAcaoGoverno.inc.php';

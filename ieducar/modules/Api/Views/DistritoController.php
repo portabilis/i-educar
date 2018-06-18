@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -35,38 +40,40 @@ require_once 'intranet/include/clsBanco.inc.php';
 
 /**
  * Class DistritoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class DistritoController extends ApiCoreController
 {
+    protected function searchOptions()
+    {
+        $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;
 
-  protected function searchOptions() {
-    $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;
-    return array('sqlParams'    => array($municipioId));
-    
-  }
+        return ['sqlParams'    => [$municipioId]];
+    }
 
-  protected function sqlsForNumericSearch() {
-    
-    $sqls[] = "select iddis as id, nome as name from
-                 public.distrito where iddis like $1||'%' and idmun = $2 ";
+    protected function sqlsForNumericSearch()
+    {
+        $sqls[] = 'select iddis as id, nome as name from
+                 public.distrito where iddis like $1||\'%\' and idmun = $2 ';
 
-    return $sqls;
-  }
+        return $sqls;
+    }
 
-  protected function sqlsForStringSearch() {
+    protected function sqlsForStringSearch()
+    {
+        $sqls[] = 'select iddis as id, nome as name from
+                 public.distrito where lower((nome)) like \'%\'||lower(($1))||\'%\' and idmun = $2 ';
 
-    $sqls[] = "select iddis as id, nome as name from
-                 public.distrito where lower((nome)) like '%'||lower(($1))||'%' and idmun = $2 ";
+        return $sqls;
+    }
 
-    return $sqls;
-  }
-
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'distrito-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
-
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'distrito-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

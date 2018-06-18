@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,38 +41,43 @@ require_once 'RegraAvaliacao/Model/TipoPresenca.php';
  * Avaliacao_Model_FaltaAluno class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Model_FaltaAluno extends CoreExt_Entity
 {
-  protected $_data = array(
-    'matricula' => NULL,
-    'tipoFalta' => NULL
-  );
+    protected $_data = [
+    'matricula' => null,
+    'tipoFalta' => null
+  ];
 
-  protected $_references = array(
-    'tipoFalta' => array(
-      'value' => NULL,
+    protected $_references = [
+    'tipoFalta' => [
+      'value' => null,
       'class' => 'RegraAvaliacao_Model_TipoPresenca',
       'file'  => 'RegraAvaliacao/Model/TipoPresenca.php'
-    )
-  );
+    ]
+  ];
 
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
-  {
-    $presenca = RegraAvaliacao_Model_TipoPresenca::getInstance();
+    /**
+     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     */
+    public function getDefaultValidatorCollection()
+    {
+        $presenca = RegraAvaliacao_Model_TipoPresenca::getInstance();
 
-    return array(
-      'matricula' => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'tipoFalta' => new CoreExt_Validate_Choice(array('choices' => $presenca->getKeys())),
-    );
-  }
+        return [
+      'matricula' => new CoreExt_Validate_Numeric(['min' => 0]),
+      'tipoFalta' => new CoreExt_Validate_Choice(['choices' => $presenca->getKeys()]),
+    ];
+    }
 }

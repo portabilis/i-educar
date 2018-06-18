@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/clsPmicontrolesisSubmenuPortal.inc.php" );
-require_once( "include/pmicontrolesis/clsPmicontrolesisMenuPortal.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/clsPmicontrolesisSubmenuPortal.inc.php');
+require_once('include/pmicontrolesis/clsPmicontrolesisMenuPortal.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Submenu Portal" );
-        $this->processoAp = "613";
+        $this->SetTitulo("{$this->_instituicao} Submenu Portal");
+        $this->processoAp = '613';
     }
 }
 
@@ -46,74 +46,62 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_submenu_portal;
-    var $ref_funcionario_cad;
-    var $ref_funcionario_exc;
-    var $ref_cod_menu_portal;
-    var $nm_submenu;
-    var $arquivo;
-    var $target;
-    var $title;
-    var $ordem;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_submenu_portal;
+    public $ref_funcionario_cad;
+    public $ref_funcionario_exc;
+    public $ref_cod_menu_portal;
+    public $nm_submenu;
+    public $arquivo;
+    public $target;
+    public $title;
+    public $ordem;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Submenu Portal - Detalhe";
-        
+        $this->titulo = 'Submenu Portal - Detalhe';
 
-        $this->cod_submenu_portal=$_GET["cod_submenu_portal"];
+        $this->cod_submenu_portal=$_GET['cod_submenu_portal'];
 
-        $tmp_obj = new clsPmicontrolesisSubmenuPortal( $this->cod_submenu_portal );
+        $tmp_obj = new clsPmicontrolesisSubmenuPortal($this->cod_submenu_portal);
         $registro = $tmp_obj->detalhe();
-        if( class_exists( "clsPmicontrolesisMenuPortal" ) )
-        {
-            $obj_ref_cod_menu_portal = new clsPmicontrolesisMenuPortal( $registro["ref_cod_menu_portal"] );
+        if (class_exists('clsPmicontrolesisMenuPortal')) {
+            $obj_ref_cod_menu_portal = new clsPmicontrolesisMenuPortal($registro['ref_cod_menu_portal']);
             $det_ref_cod_menu_portal = $obj_ref_cod_menu_portal->detalhe();
-            $registro["ref_cod_menu_portal"] = $det_ref_cod_menu_portal["nm_menu_portal"];
-        }
-        else
-        {
-            $registro["ref_cod_menu_portal"] = "Erro na geracao";
+            $registro['ref_cod_menu_portal'] = $det_ref_cod_menu_portal['nm_menu_portal'];
+        } else {
+            $registro['ref_cod_menu_portal'] = 'Erro na geracao';
             echo "<!--\nErro\nClasse nao existente: clsPmicontrolesisMenuPortal\n-->";
         }
 
-
-
-    if( $registro["ref_cod_menu_portal"] )
-        {
-            $this->addDetalhe( array( "Menu Portal", "{$registro["ref_cod_menu_portal"]}") );
+        if ($registro['ref_cod_menu_portal']) {
+            $this->addDetalhe([ 'Menu Portal', "{$registro['ref_cod_menu_portal']}"]);
         }
-        if( $registro["nm_submenu"] )
-        {
-            $this->addDetalhe( array( "Nome Submenu", "{$registro["nm_submenu"]}") );
+        if ($registro['nm_submenu']) {
+            $this->addDetalhe([ 'Nome Submenu', "{$registro['nm_submenu']}"]);
         }
-        if( $registro["arquivo"] )
-        {
-            $this->addDetalhe( array( "Arquivo", "{$registro["arquivo"]}") );
+        if ($registro['arquivo']) {
+            $this->addDetalhe([ 'Arquivo', "{$registro['arquivo']}"]);
         }
-        if( $registro["target"] )
-        {
-            $registro["target"] = $registro["target"]=='S' ? '_self' : '_blank';
-            $this->addDetalhe( array( "Target", "{$registro["target"]}") );
+        if ($registro['target']) {
+            $registro['target'] = $registro['target']=='S' ? '_self' : '_blank';
+            $this->addDetalhe([ 'Target', "{$registro['target']}"]);
         }
-        if( $registro["title"] )
-        {
-            $this->addDetalhe( array( "Title", "{$registro["title"]}") );
+        if ($registro['title']) {
+            $this->addDetalhe([ 'Title', "{$registro['title']}"]);
         }
-        if( $registro["ordem"] )
-        {
-            $this->addDetalhe( array( "Ordem", "{$registro["ordem"]}") );
+        if ($registro['ordem']) {
+            $this->addDetalhe([ 'Ordem', "{$registro['ordem']}"]);
         }
 
-        $this->url_novo = "controlesis_submenu_portal_cad.php";
-        $this->url_editar = "controlesis_submenu_portal_cad.php?cod_submenu_portal={$registro["cod_submenu_portal"]}";
-        $this->url_cancelar = "controlesis_submenu_portal_lst.php";
-        $this->largura = "100%";
+        $this->url_novo = 'controlesis_submenu_portal_cad.php';
+        $this->url_editar = "controlesis_submenu_portal_cad.php?cod_submenu_portal={$registro['cod_submenu_portal']}";
+        $this->url_cancelar = 'controlesis_submenu_portal_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -122,7 +110,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

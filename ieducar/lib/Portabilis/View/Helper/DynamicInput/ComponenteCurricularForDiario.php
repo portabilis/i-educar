@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -36,16 +41,21 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/ComponenteCurricular.php';
  * Portabilis_View_Helper_DynamicInput_ComponenteCurricularForDiario class.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_ComponenteCurricularForDiario extends Portabilis_View_Helper_DynamicInput_ComponenteCurricular {
-
-  public function componenteCurricularForDiario($options = array()){
-    return parent::componenteCurricular($options);
-  }
-
+class Portabilis_View_Helper_DynamicInput_ComponenteCurricularForDiario extends Portabilis_View_Helper_DynamicInput_ComponenteCurricular
+{
+    public function componenteCurricularForDiario($options = [])
+    {
+        return parent::componenteCurricular($options);
+    }
 }

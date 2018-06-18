@@ -24,35 +24,36 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
-require_once ("include/funcoes.inc.php");
-require_once( "include/imagem/clsPortalImagemTipo.inc.php" );
-require_once( "include/imagem/clsPortalImagem.inc.php" );
+require_once('include/clsBanco.inc.php');
+require_once('include/Geral.inc.php');
+require_once('include/funcoes.inc.php');
+require_once('include/imagem/clsPortalImagemTipo.inc.php');
+require_once('include/imagem/clsPortalImagem.inc.php');
 
-$imagens = "<table cellpadding='4' celspacing='4' border='0' align='center'>";
-        $imagens .= "<tr><td colspan='27' class='linha'>Ícones</td></tr>";
+$imagens = '<table cellpadding=\'4\' celspacing=\'4\' border=\'0\' align=\'center\'>';
+        $imagens .= '<tr><td colspan=\'27\' class=\'linha\'>Ícones</td></tr>';
         $ObjImagem = new clsPortalImagem();
-        $ObjImagem->setOrderby("cod_imagem");
+        $ObjImagem->setOrderby('cod_imagem');
         $detalheImagens = $ObjImagem->lista(false, 1);
         $cont = 0;
-        foreach ($detalheImagens as $imagem)
-        {
-            if($cont == 0)
-                $imagens .= "<tr>";
+        foreach ($detalheImagens as $imagem) {
+            if ($cont == 0) {
+                $imagens .= '<tr>';
+            }
             $imagens .= "<td class='celula' onclick='enviar_img(\"{$imagem['cod_imagem']}\")' 
             
                     onMouseOver=\"cor(this, '#CCCCCC')\" 
                     onMouseOut=\"cor(this, '#FFFFFF')\">
                     
                     <img align='center' src='imagens/banco_imagens/{$imagem['caminho']}' alt='{$imagem['nm_imagem']}' title='{$imagem['nm_imagem']}'></td>";
-                    
-            if($cont == 26) 
-                $imagens .= "</tr>";                
-            $cont = ($cont==26) ?  0 : $cont+1;     
+
+            if ($cont == 26) {
+                $imagens .= '</tr>';
+            }
+            $cont = ($cont==26) ?  0 : $cont+1;
         }
 
-$imagens .= "</table>";
+$imagens .= '</table>';
 ?>
 <html>
     <head>

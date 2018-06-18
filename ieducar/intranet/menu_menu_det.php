@@ -24,50 +24,46 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Menu" );
-        $this->processoAp = "79";
+        $this->SetTitulo("{$this->_instituicao} Menu");
+        $this->processoAp = '79';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe de Menu";
-        
+        $this->titulo = 'Detalhe de Menu';
 
         $id_item = @$_GET['id_item'];
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT a.cod_menu_menu, a.nm_menu, a.title, pai.nm_menu FROM menu_menu a left outer join menu_menu pai on ( a.ref_cod_menu_pai = pai.cod_menu_menu) WHERE a.cod_menu_menu={$id_item}" );
-        if ($db->ProximoRegistro())
-        {
-            list ($cod_menu, $nome, $title,$ref_cod_menu_pai) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nome) );
-            $this->addDetalhe( array("Title", $title) );
-            $this->addDetalhe( array("Menu Pai", $ref_cod_menu_pai) );
+        $db->Consulta("SELECT a.cod_menu_menu, a.nm_menu, a.title, pai.nm_menu FROM menu_menu a left outer join menu_menu pai on ( a.ref_cod_menu_pai = pai.cod_menu_menu) WHERE a.cod_menu_menu={$id_item}");
+        if ($db->ProximoRegistro()) {
+            list($cod_menu, $nome, $title, $ref_cod_menu_pai) = $db->Tupla();
+            $this->addDetalhe(['Nome', $nome]);
+            $this->addDetalhe(['Title', $title]);
+            $this->addDetalhe(['Menu Pai', $ref_cod_menu_pai]);
         }
-        $this->url_novo = "menu_menu_cad.php";
+        $this->url_novo = 'menu_menu_cad.php';
         $this->url_editar = "menu_menu_cad.php?id_item={$id_item}";
-        $this->url_cancelar = "menu_menu_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'menu_menu_lst.php';
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-?>

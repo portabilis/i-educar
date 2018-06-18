@@ -30,14 +30,14 @@
 * Criado em 26/06/2006 16:19 pelo gerador automatico de classes
 */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 
 class clsPmieducarTurmaDisciplina
 {
-    var $ref_cod_turma;
-    var $ref_cod_disciplina;
-    var $ref_cod_escola;
-    var $ref_cod_serie;
+    public $ref_cod_turma;
+    public $ref_cod_disciplina;
+    public $ref_cod_escola;
+    public $ref_cod_serie;
 
     // propriedades padrao
 
@@ -46,136 +46,112 @@ class clsPmieducarTurmaDisciplina
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
      *
      * @return object
      */
-    function __construct( $ref_cod_turma = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null )
+    public function __construct($ref_cod_turma = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null)
     {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}turma_disciplina";
 
-        $this->_campos_lista = $this->_todos_campos = "ref_cod_turma, ref_cod_disciplina, ref_cod_escola, ref_cod_serie";
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_turma, ref_cod_disciplina, ref_cod_escola, ref_cod_serie';
 
-        if( is_numeric( $ref_cod_serie ) && is_numeric( $ref_cod_escola ) && is_numeric( $ref_cod_disciplina ) )
-        {
-            if( class_exists( "clsPmieducarEscolaSerieDisciplina" ) )
-            {
-                $tmp_obj = new clsPmieducarEscolaSerieDisciplina( $ref_cod_serie, $ref_cod_escola, $ref_cod_disciplina );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_serie) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_disciplina)) {
+            if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
+                $tmp_obj = new clsPmieducarEscolaSerieDisciplina($ref_cod_serie, $ref_cod_escola, $ref_cod_disciplina);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_serie = $ref_cod_serie;
+                        $this->ref_cod_escola = $ref_cod_escola;
+                        $this->ref_cod_disciplina = $ref_cod_disciplina;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_serie = $ref_cod_serie;
                         $this->ref_cod_escola = $ref_cod_escola;
                         $this->ref_cod_disciplina = $ref_cod_disciplina;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_serie = '{$ref_cod_serie}' AND ref_ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_disciplina = '{$ref_cod_disciplina}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_serie = '{$ref_cod_serie}' AND ref_ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_disciplina = '{$ref_cod_disciplina}'")) {
                     $this->ref_cod_serie = $ref_cod_serie;
                     $this->ref_cod_escola = $ref_cod_escola;
                     $this->ref_cod_disciplina = $ref_cod_disciplina;
                 }
             }
         }
-        if( is_numeric( $ref_cod_turma ) )
-        {
-            if( class_exists( "clsPmieducarTurma" ) )
-            {
-                $tmp_obj = new clsPmieducarTurma( $ref_cod_turma );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_turma)) {
+            if (class_exists('clsPmieducarTurma')) {
+                $tmp_obj = new clsPmieducarTurma($ref_cod_turma);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_turma = $ref_cod_turma;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_turma = $ref_cod_turma;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_turma = $ref_cod_turma;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.turma WHERE cod_turma = '{$ref_cod_turma}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.turma WHERE cod_turma = '{$ref_cod_turma}'")) {
                     $this->ref_cod_turma = $ref_cod_turma;
                 }
             }
         }
-
-
-
     }
 
     /**
@@ -183,45 +159,41 @@ class clsPmieducarTurmaDisciplina
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) )
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_turma ) )
-            {
+            if (is_numeric($this->ref_cod_turma)) {
                 $campos .= "{$gruda}ref_cod_turma";
                 $valores .= "{$gruda}'{$this->ref_cod_turma}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_disciplina ) )
-            {
+            if (is_numeric($this->ref_cod_disciplina)) {
                 $campos .= "{$gruda}ref_cod_disciplina";
                 $valores .= "{$gruda}'{$this->ref_cod_disciplina}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_escola ) )
-            {
+            if (is_numeric($this->ref_cod_escola)) {
                 $campos .= "{$gruda}ref_cod_escola";
                 $valores .= "{$gruda}'{$this->ref_cod_escola}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_serie ) )
-            {
+            if (is_numeric($this->ref_cod_serie)) {
                 $campos .= "{$gruda}ref_cod_serie";
                 $valores .= "{$gruda}'{$this->ref_cod_serie}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return true;
         }
+
         return false;
     }
 
@@ -230,22 +202,19 @@ class clsPmieducarTurmaDisciplina
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) )
-        {
-
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'");
 
-
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'" );
                 return true;
             }
         }
+
         return false;
     }
 
@@ -254,72 +223,62 @@ class clsPmieducarTurmaDisciplina
      *
      * @return array
      */
-    function lista( $int_ref_cod_turma = null, $int_ref_cod_disciplina = null, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $str_disciplina_not_in = null )
+    public function lista($int_ref_cod_turma = null, $int_ref_cod_disciplina = null, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $str_disciplina_not_in = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_ref_cod_turma ) )
-        {
+        if (is_numeric($int_ref_cod_turma)) {
             $filtros .= "{$whereAnd} ref_cod_turma = '{$int_ref_cod_turma}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_disciplina ) )
-        {
+        if (is_numeric($int_ref_cod_disciplina)) {
             $filtros .= "{$whereAnd} ref_cod_disciplina = '{$int_ref_cod_disciplina}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_escola ) )
-        {
+        if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} ref_cod_escola = '{$int_ref_cod_escola}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_serie ) )
-        {
+        if (is_numeric($int_ref_cod_serie)) {
             $filtros .= "{$whereAnd} ref_cod_serie = '{$int_ref_cod_serie}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_string( $str_disciplina_not_in ) )
-        {
+        if (is_string($str_disciplina_not_in)) {
             $filtros .= "{$whereAnd} ref_cod_disciplina not in ($str_disciplina_not_in)";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -328,16 +287,16 @@ class clsPmieducarTurmaDisciplina
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) )
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -346,16 +305,16 @@ class clsPmieducarTurmaDisciplina
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) )
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -364,10 +323,9 @@ class clsPmieducarTurmaDisciplina
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) )
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
 
         /*
             delete
@@ -375,29 +333,28 @@ class clsPmieducarTurmaDisciplina
         $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_serie = '{$this->ref_cod_serie}'" );
         return true;
         */
-
-
         }
+
         return false;
     }
 
     /**
      * Exclui todos os registros referentes a um tipo de avaliacao
      */
-    function  excluirTodos( $ref_cod_turma = null, $ref_cod_escola = null, $ref_cod_serie = null )
+    public function excluirTodos($ref_cod_turma = null, $ref_cod_escola = null, $ref_cod_serie = null)
     {
-        if ( is_numeric( $ref_cod_turma ) && is_numeric( $ref_cod_escola ) && is_numeric( $ref_cod_serie ) )
-        {
+        if (is_numeric($ref_cod_turma) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$ref_cod_turma}' AND ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_serie = '{$ref_cod_serie}'" );
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$ref_cod_turma}' AND ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_serie = '{$ref_cod_serie}'");
+
+            return true;
+        } elseif (is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
+            $db = new clsBanco();
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_serie = '{$ref_cod_serie}'");
+
             return true;
         }
-        else if ( is_numeric( $ref_cod_escola ) && is_numeric( $ref_cod_serie ) )
-        {
-            $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_serie = '{$ref_cod_serie}'" );
-            return true;
-        }
+
         return false;
     }
 
@@ -406,7 +363,7 @@ class clsPmieducarTurmaDisciplina
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -416,7 +373,7 @@ class clsPmieducarTurmaDisciplina
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -426,7 +383,7 @@ class clsPmieducarTurmaDisciplina
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -437,18 +394,18 @@ class clsPmieducarTurmaDisciplina
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -456,13 +413,12 @@ class clsPmieducarTurmaDisciplina
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -472,27 +428,24 @@ class clsPmieducarTurmaDisciplina
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
+
+        return '';
     }
 
-    function diferente( $disciplinas )
+    public function diferente($disciplinas)
     {
-        if( is_array( $disciplinas ) && is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) )
-        {
+        if (is_array($disciplinas) && is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_escola)) {
             $disciplina_in= '';
             $conc = '';
-            foreach ( $disciplinas AS $disciplina )
-            {
-                for ($i = 0; $i < sizeof($disciplina) ; $i++)
-                {
+            foreach ($disciplinas as $disciplina) {
+                for ($i = 0; $i < sizeof($disciplina) ; $i++) {
                     $disciplina_in .= "{$conc}{$disciplina[$i]}";
-                    $conc = ",";
+                    $conc = ',';
                 }
             }
 
@@ -500,40 +453,40 @@ class clsPmieducarTurmaDisciplina
 //          echo "SELECT ref_cod_disciplina FROM {$this->_tabela} WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina not in ({$disciplina_in})";
             $db->Consulta("SELECT ref_cod_disciplina FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_serie = '{$this->ref_cod_serie}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_disciplina not in ({$disciplina_in})");
 
-            $resultado = array();
+            $resultado = [];
 
-            while ( $db->ProximoRegistro() )
-            {
+            while ($db->ProximoRegistro()) {
                 $resultado[] = $db->Tupla();
             }
+
             return $resultado;
         }
+
         return false;
     }
 
-    function jah_existe()
+    public function jah_existe()
     {
-        if( is_array( $this->ref_cod_disciplina ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) )
-        {
+        if (is_array($this->ref_cod_disciplina) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_escola)) {
             $db = new clsBanco();
 //          echo "SELECT ref_cod_disciplina FROM {$this->_tabela} WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina not in ({$disciplina_in})";
             $db->Consulta("SELECT ref_cod_turma FROM {$this->_tabela} WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_cod_serie = '{$this->ref_cod_serie}' AND ref_cod_escola = '{$this->ref_cod_escola}'");
 
-            $resultado = array();
+            $resultado = [];
 
-            while ( $db->ProximoRegistro() )
-            {
+            while ($db->ProximoRegistro()) {
                 $resultado[] = $db->Tupla();
             }
+
             return $resultado;
         }
+
         return false;
     }
 
-    function eh_usado( $disciplina )
+    public function eh_usado($disciplina)
     {
-        if( is_numeric( $disciplina ) && is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) )
-        {
+        if (is_numeric($disciplina) && is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_escola)) {
             $db = new clsBanco();
             $resultado = $db->CampoUnico("SELECT 1
                             FROM pmieducar.dispensa_disciplina dd
@@ -573,10 +526,10 @@ class clsPmieducarTurmaDisciplina
                                 AND qhh.ref_ref_cod_turma = {$this->ref_cod_turma}
                                 AND qhh.ref_ref_cod_serie = {$this->ref_cod_serie}
                                 AND qhh.ref_ref_cod_escola = {$this->ref_cod_escola}");
+
             return $resultado;
         }
+
         return false;
     }
-
 }
-?>

@@ -24,146 +24,134 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/relatorio.inc.php");
-require_once ("include/Geral.inc.php");
-
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/relatorio.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Relatório de Diárias" );
-        $this->processoAp = "299";
+        $this->SetTitulo("{$this->_instituicao} Relatório de Diárias");
+        $this->processoAp = '299';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $cod_funcionario;
-    var $nome_funcionario;
-    var $data_partida;
-    var $data_chegada;
-    var $data_inicial;
-    var $data_final;
-    var $valor_total;
+    public $cod_funcionario;
+    public $nome_funcionario;
+    public $data_partida;
+    public $data_chegada;
+    public $data_inicial;
+    public $data_final;
+    public $valor_total;
 
-    function Inicializar()
+    public function Inicializar()
     {
         @session_start();
         $this->cod_pessoa_fj = $_SESSION['id_pessoa'];
         session_write_close();
-        $retorno = "Novo";
+        $retorno = 'Novo';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->campoData("data_inicial", "Data Inicial", $this->data_inicial);
-        $this->campoData("data_final", "Data Final", $this->data_final);
+        $this->campoData('data_inicial', 'Data Inicial', $this->data_inicial);
+        $this->campoData('data_final', 'Data Final', $this->data_final);
     }
 
-    function Novo()
+    public function Novo()
     {
-        if ($this->data_inicial != "" || $this->data_final != "")
-        {
+        if ($this->data_inicial != '' || $this->data_final != '') {
             $AND = '';
-            if ($this->data_inicial)
-            {
-                $data = explode("/", $this->data_inicial);
+            if ($this->data_inicial) {
+                $data = explode('/', $this->data_inicial);
                 $dia_i = $data[0];
                 $mes_i = $data[1];
                 $ano_i = $data[2];
 
-                $data_inicial = $ano_i."-".$mes_i."-".$dia_i." 00:00:00";
+                $data_inicial = $ano_i.'-'.$mes_i.'-'.$dia_i.' 00:00:00';
 
                 $AND = " AND a.data_partida >= '{$data_inicial}'";
             }
 
-            if ($this->data_final)
-            {
-
-                $data_ = explode("/", $this->data_final);
+            if ($this->data_final) {
+                $data_ = explode('/', $this->data_final);
                 $dia_f = $data_[0];
                 $mes_f = $data_[1];
                 $ano_f = $data_[2];
 
-                $data_final = $ano_f."-".$mes_f."-".$dia_f." 23:59:59";
+                $data_final = $ano_f.'-'.$mes_f.'-'.$dia_f.' 23:59:59';
 
                 $AND .= " AND a.data_chegada <= '{$data_final}'";
             }
 
 //          if ($data_inicial <= $data_final)
 //          {
-                $sql = "SELECT a.ref_funcionario, b.nome, a.data_partida, a.data_chegada, sum( COALESCE(vl100,0) + COALESCE(vl75,0) + COALESCE(vl50,0) + COALESCE(vl25,0) ) as valor, a.objetivo, a.destino FROM pmidrh.diaria a, cadastro.pessoa b WHERE a.ref_funcionario = b.idpes {$AND} AND ativo = 't' GROUP BY a.ref_funcionario, b.nome, a.data_partida, a.data_chegada, a.objetivo, a.destino ORDER BY b.nome";
+            $sql = "SELECT a.ref_funcionario, b.nome, a.data_partida, a.data_chegada, sum( COALESCE(vl100,0) + COALESCE(vl75,0) + COALESCE(vl50,0) + COALESCE(vl25,0) ) as valor, a.objetivo, a.destino FROM pmidrh.diaria a, cadastro.pessoa b WHERE a.ref_funcionario = b.idpes {$AND} AND ativo = 't' GROUP BY a.ref_funcionario, b.nome, a.data_partida, a.data_chegada, a.objetivo, a.destino ORDER BY b.nome";
 
-                $relatorio = new relatorios("Relatório de Diárias", 200, false, "SEGPOG - Departamento de Logística", "A4", "Prefeitura de Itajaí\nSEGPOG - Departamento de Logística\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC");
+            $relatorio = new relatorios('Relatório de Diárias', 200, false, 'SEGPOG - Departamento de Logística', 'A4', "Prefeitura de Itajaí\nSEGPOG - Departamento de Logística\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC");
 
-                //tamanho do retangulo, tamanho das linhas.
-                $relatorio->novaPagina();
+            //tamanho do retangulo, tamanho das linhas.
+            $relatorio->novaPagina();
 
-                $db = new clsBanco();
-                $db->Consulta( $sql );
-                if( $db->Num_Linhas() )
-                {
-                    $old_funcionario = 0;
-                    $soma_valores = 0;
-                    while ( $db->ProximoRegistro() )
-                    {
-                        list( $cod_funcionario, $nome_funcionario, $data_partida, $data_chegada, $valor_total, $objetivo, $destino ) = $db->Tupla();
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            if ($db->Num_Linhas()) {
+                $old_funcionario = 0;
+                $soma_valores = 0;
+                while ($db->ProximoRegistro()) {
+                    list($cod_funcionario, $nome_funcionario, $data_partida, $data_chegada, $valor_total, $objetivo, $destino) = $db->Tupla();
 
-                        if ($old_funcionario != $cod_funcionario )
-                        {
-                            $relatorio->novalinha( array( "Funcionário: {$nome_funcionario}"), 0, 13, true);
-                            $old_funcionario = $cod_funcionario;
+                    if ($old_funcionario != $cod_funcionario) {
+                        $relatorio->novalinha([ "Funcionário: {$nome_funcionario}"], 0, 13, true);
+                        $old_funcionario = $cod_funcionario;
 
-                            $relatorio->novalinha( array( "Data Partida", "Data Chegada", "Valor Total" ) );
-                        }
-
-                        $data_partida = date( "d/m/Y H:i", strtotime( substr($data_partida,0,19) ) );
-                        $data_chegada = date( "d/m/Y H:i", strtotime( substr($data_chegada,0,19) ) );
-
-                        $relatorio->novalinha( array( $data_partida, $data_chegada, number_format($valor_total, 2, ',', '.') ),1,13);
-                        $relatorio->novalinha( array( "Destino", $destino ) );
-                        $relatorio->novalinha( array( "Objetivo", $objetivo ) );
-                        $relatorio->novalinha( array( "" ) );
-
-                        $soma_valores += $valor_total;
+                        $relatorio->novalinha([ 'Data Partida', 'Data Chegada', 'Valor Total' ]);
                     }
 
-                    $relatorio->novalinha( array( "" ) );
-                    $relatorio->novalinha( array( "Valor total do periodo:", number_format( $soma_valores, 2, ',', '.' ) ) );
+                    $data_partida = date('d/m/Y H:i', strtotime(substr($data_partida, 0, 19)));
+                    $data_chegada = date('d/m/Y H:i', strtotime(substr($data_chegada, 0, 19)));
 
-                    // pega o link e exibe ele ao usuario
-                    $link = $relatorio->fechaPdf();
-                    $this->campoRotulo("arquivo","Arquivo", "<a href='" . $link . "'>Visualizar Relatório</a>");
+                    $relatorio->novalinha([ $data_partida, $data_chegada, number_format($valor_total, 2, ',', '.') ], 1, 13);
+                    $relatorio->novalinha([ 'Destino', $destino ]);
+                    $relatorio->novalinha([ 'Objetivo', $objetivo ]);
+                    $relatorio->novalinha([ '' ]);
+
+                    $soma_valores += $valor_total;
                 }
-                else
-                {
-                    $this->campoRotulo("aviso", "Aviso", "Nenhum Funcionário neste relatório.");
-                }
+
+                $relatorio->novalinha([ '' ]);
+                $relatorio->novalinha([ 'Valor total do periodo:', number_format($soma_valores, 2, ',', '.') ]);
+
+                // pega o link e exibe ele ao usuario
+                $link = $relatorio->fechaPdf();
+                $this->campoRotulo('arquivo', 'Arquivo', '<a href=\'' . $link . '\'>Visualizar Relatório</a>');
+            } else {
+                $this->campoRotulo('aviso', 'Aviso', 'Nenhum Funcionário neste relatório.');
+            }
             //}
             //else
             //{
             //  $this->campoRotulo("aviso", "Aviso", "Data //Chegada maior que a Data Partida.");
             //}
+        } else {
+            $this->campoRotulo('aviso', 'Aviso', 'Preencha os campos.');
         }
-        else
-        {
-            $this->campoRotulo("aviso","Aviso", "Preencha os campos.");
-        }
-    $this->largura = "100%";
+        $this->largura = '100%';
 
-    return true;
+        return true;
+    }
 
-}
-
-    function Editar()
+    public function Editar()
     {
     }
 
-    function Excluir()
+    public function Excluir()
     {
     }
 }
@@ -171,7 +159,6 @@ class indice extends clsCadastro
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-?>

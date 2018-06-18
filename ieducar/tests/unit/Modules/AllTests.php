@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Modules
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,36 +40,42 @@
  * Arquivo de definição de suíte para o pacote CoreExt (nova API).
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Modules
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Modules_AllTests extends TestCollector
 {
-  protected $_name = 'Suíte de testes unitários de Modules';
-  protected $_file = __FILE__;
+    protected $_name = 'Suíte de testes unitários de Modules';
+    protected $_file = __FILE__;
 
-  public static function suite()
-  {
-    $instance = new self;
-    $instance->blacklistDirectories();
-    $instance->addDirectory('../modules/*');
-    return $instance->addDirectoryTests();
-  }
+    public static function suite()
+    {
+        $instance = new self;
+        $instance->blacklistDirectories();
+        $instance->addDirectory('../modules/*');
 
-  public function blacklistDirectories()
-  {
-    $directories = new DirectoryIterator(PROJECT_ROOT . DS . 'modules');
-    foreach ($directories as $directory) {
-      if (!$directory->isDot() && $directory->isDir()) {
-        $path = $directory->getPathname() . DS . '_tests';
-        if (is_dir($path)) {
-          PHPUnit_Util_Filter::addDirectoryToFilter($path, '.php');
-        }
-      }
+        return $instance->addDirectoryTests();
     }
-  }
+
+    public function blacklistDirectories()
+    {
+        $directories = new DirectoryIterator(PROJECT_ROOT . DS . 'modules');
+        foreach ($directories as $directory) {
+            if (!$directory->isDot() && $directory->isDir()) {
+                $path = $directory->getPathname() . DS . '_tests';
+                if (is_dir($path)) {
+                    PHPUnit_Util_Filter::addDirectoryToFilter($path, '.php');
+                }
+            }
+        }
+    }
 }

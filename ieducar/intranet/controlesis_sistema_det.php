@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Sistema" );
-        $this->processoAp = "588";
+        $this->SetTitulo("{$this->_instituicao} Sistema");
+        $this->processoAp = '588';
     }
 }
 
@@ -45,52 +45,46 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_sistema;
-    var $nm_sistema;
-    var $ref_cod_funcionario_cad;
-    var $ref_cod_funcionario_exc;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_sistema;
+    public $nm_sistema;
+    public $ref_cod_funcionario_cad;
+    public $ref_cod_funcionario_exc;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Sistema - Detalhe";
-        
+        $this->titulo = 'Sistema - Detalhe';
 
-        $this->cod_sistema=$_GET["cod_sistema"];
+        $this->cod_sistema=$_GET['cod_sistema'];
 
-        $tmp_obj = new clsPmicontrolesisSistema( $this->cod_sistema );
+        $tmp_obj = new clsPmicontrolesisSistema($this->cod_sistema);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: controlesis_sistema_lst.php" );
+        if (! $registro) {
+            header('location: controlesis_sistema_lst.php');
             die();
         }
 
-
-
-        if( $registro["cod_sistema"] )
-        {
-            $this->addDetalhe( array( "Sistema", "{$registro["cod_sistema"]}") );
+        if ($registro['cod_sistema']) {
+            $this->addDetalhe([ 'Sistema', "{$registro['cod_sistema']}"]);
         }
-        if( $registro["nm_sistema"] )
-        {
-            $this->addDetalhe( array( "Nome Sistema", "{$registro["nm_sistema"]}") );
+        if ($registro['nm_sistema']) {
+            $this->addDetalhe([ 'Nome Sistema', "{$registro['nm_sistema']}"]);
         }
 
-        $this->url_novo = "controlesis_sistema_cad.php";
-        $this->url_editar = "controlesis_sistema_cad.php?cod_sistema={$registro["cod_sistema"]}";
+        $this->url_novo = 'controlesis_sistema_cad.php';
+        $this->url_editar = "controlesis_sistema_cad.php?cod_sistema={$registro['cod_sistema']}";
 
-        $this->url_cancelar = "controlesis_sistema_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'controlesis_sistema_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -99,7 +93,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

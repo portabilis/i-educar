@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,26 +40,31 @@ require_once 'CoreExt/Entity.php';
  * Avaliacao_Model_NotaAluno class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Model_NotaAluno extends CoreExt_Entity
 {
-  protected $_data = array(
-    'matricula' => NULL
-  );
+    protected $_data = [
+    'matricula' => null
+  ];
 
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
-  {
-    return array(
-      'matricula' => new CoreExt_Validate_Numeric(array('min' => 0))
-    );
-  }
+    /**
+     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     */
+    public function getDefaultValidatorCollection()
+    {
+        return [
+      'matricula' => new CoreExt_Validate_Numeric(['min' => 0])
+    ];
+    }
 }

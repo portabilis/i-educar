@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,62 +40,67 @@ require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
  * TurmDataMapperTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class TurmaDataMapperTest extends UnitBaseTest
 {
-  protected $_mapper = NULL;
+    protected $_mapper = null;
 
-  public function testBulkUpdate()
-  {
-    $returnValue = array(
-      array(
+    public function testBulkUpdate()
+    {
+        $returnValue = [
+      [
         'componente_curricular_id' => 1,
         'ano_escolar_id'           => 1,
         'escola_id'                => 1,
         'turma_id'                 => 1,
-        'carga_horaria'            => NULL
-      ),
-      array(
+        'carga_horaria'            => null
+      ],
+      [
         'componente_curricular_id' => 3,
         'ano_escolar_id'           => 1,
         'escola_id'                => 1,
         'turma_id'                 => 1,
         'carga_horaria'            => 100
-      )
-    );
+      ]
+    ];
 
-    $componentes = array(
-      array(
+        $componentes = [
+      [
         'id' => 1,
         'cargaHoraria' => 100
-      ),
-      array(
+      ],
+      [
         'id' => 2,
-        'cargaHoraria' => NULL
-      )
-    );
+        'cargaHoraria' => null
+      ]
+    ];
 
-    $mock = $this->getDbMock();
+        $mock = $this->getDbMock();
 
-    // 1 SELECT, 1 DELETE, 1 INSERT e 1 UPDATE
-    $mock->expects($this->exactly(4))
+        // 1 SELECT, 1 DELETE, 1 INSERT e 1 UPDATE
+        $mock->expects($this->exactly(4))
          ->method('Consulta');
 
-    $mock->expects($this->exactly(3))
+        $mock->expects($this->exactly(3))
          ->method('ProximoRegistro')
-         ->will($this->onConsecutiveCalls(TRUE, TRUE, FALSE));
+         ->will($this->onConsecutiveCalls(true, true, false));
 
-    $mock->expects($this->exactly(2))
+        $mock->expects($this->exactly(2))
          ->method('Tupla')
          ->will($this->onConsecutiveCalls($returnValue[0], $returnValue[1]));
 
-    $mapper = new ComponenteCurricular_Model_TurmaDataMapper($mock);
-    $mapper->bulkUpdate(1, 1, 1, $componentes);
-  }
+        $mapper = new ComponenteCurricular_Model_TurmaDataMapper($mock);
+        $mapper->bulkUpdate(1, 1, 1, $componentes);
+    }
 }

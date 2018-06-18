@@ -38,48 +38,46 @@
  */
 
 $permissoes = new clsPermissoes();
-$privilegio = $permissoes->nivel_acesso( $this->pessoa_logada );
+$privilegio = $permissoes->nivel_acesso($this->pessoa_logada);
 
-$this->campoOculto( "ref_cod_instituicao", $permissoes->getInstituicao( $this->pessoa_logada ) );
-$this->campoOculto( "ref_cod_escola", $permissoes->getEscola( $this->pessoa_logada ) );
+$this->campoOculto('ref_cod_instituicao', $permissoes->getInstituicao($this->pessoa_logada));
+$this->campoOculto('ref_cod_escola', $permissoes->getEscola($this->pessoa_logada));
 
-if ( $editar )
+if ($editar) {
     echo $script = "<script> var editar = false; \n {$series}</script>\n";
-else
+} else {
     echo $script = "<script> var editar = true; \n {$series}</script>\n";
+}
 
-if ( $privilegio == 4 ) {
-
-    $opcoes = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarEscolaCurso" ) ) {
+if ($privilegio == 4) {
+    $opcoes = [ '' => 'Selecione' ];
+    if (class_exists('clsPmieducarEscolaCurso')) {
         $objTemp = new clsPmieducarEscolaCurso();
-        $lista   = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ), null, null, null, null, null, null, null, 1 );
-        if ( $lista ) {
+        $lista   = $objTemp->lista($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, 1);
+        if ($lista) {
             $series = '';
             $ESeries = '';
-            foreach ( $lista as $registro ) {
-                if ( class_exists( "clsPmieducarCurso" ) ) {
-                    $objTemp = new clsPmieducarCurso( $registro["ref_cod_curso"] );
+            foreach ($lista as $registro) {
+                if (class_exists('clsPmieducarCurso')) {
+                    $objTemp = new clsPmieducarCurso($registro['ref_cod_curso']);
                     $detalhe = $objTemp->detalhe();
-                    if ( $editar )
-                        $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
-                    else {
-                        $opcoes[""] = "Selecione um curso";
-                        $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
+                    if ($editar) {
+                        $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                    } else {
+                        $opcoes[''] = 'Selecione um curso';
+                        $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
                     }
-                    $series .= " curso['_{$registro["ref_cod_curso"]}'] = new Array();\n";
-                    if ( class_exists( "clsPmieducarEscolaSerie" ) ) {
-                        $obj_esc_ser = new clsPmieducarEscolaSerie( $permissoes->getEscola( $this->pessoa_logada ), null, null, null, null, null, null, null, null, 1 );
-                        $lst_esc_ser = $obj_esc_ser->lista( $permissoes->getEscola( $this->pessoa_logada ), null, null, null, null, null, null, null, null, null, null, null, null, 1, $permissoes->getInstituicao( $this->pessoa_logada ), $registro["ref_cod_curso"] );
-                        if ( $lst_esc_ser ) {
-                            foreach ( $lst_esc_ser as $esc_ser ) {
-
+                    $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
+                    if (class_exists('clsPmieducarEscolaSerie')) {
+                        $obj_esc_ser = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, null, 1);
+                        $lst_esc_ser = $obj_esc_ser->lista($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, null, null, null, null, null, 1, $permissoes->getInstituicao($this->pessoa_logada), $registro['ref_cod_curso']);
+                        if ($lst_esc_ser) {
+                            foreach ($lst_esc_ser as $esc_ser) {
                             }
                         }
-                    }
-                    else {
+                    } else {
                         echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                        $opcoes = array( "" => "Erro na geracao" );
+                        $opcoes = [ '' => 'Erro na geracao' ];
                     }
 
                     /*if( class_exists( "clsPmieducarSerie" ) ) {
@@ -95,79 +93,68 @@ if ( $privilegio == 4 ) {
                         echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
                         $opcoes = array( "" => "Erro na geracao" );
                     }*/
-                }
-                else {
+                } else {
                     echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                    $opcoes = array( "" => "Erro na geracao" );
+                    $opcoes = [ '' => 'Erro na geracao' ];
                 }
             }
             echo $script = "<script> var curso = new Array(); \n {$series}</script>\n";
         }
-    }
-    else {
+    } else {
         echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
+        $opcoes = [ '' => 'Erro na geracao' ];
     }
-    $this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "CursoSerie();", false, "", "", false, $obrigatorio );
+    $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, 'CursoSerie();', false, '', '', false, $obrigatorio);
 
-    $opcoes = array( "" => "Selecione" );
-    if( class_exists( "clsPmieducarEscolaSerie" ) )
-    {
-        $objTemp = new clsPmieducarEscolaSerie( $permissoes->getEscola( $this->pessoa_logada ) );
-        $lista = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ) );
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $obj_ser = new clsPmieducarSerie( $registro["ref_cod_serie"] );
-                $lst_ser = $obj_ser->lista( null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1 );
-                if ( $lst_ser ) {
-                    foreach ( $lst_ser as $serie ) {
-                        if ( $editar )
+    $opcoes = [ '' => 'Selecione' ];
+    if (class_exists('clsPmieducarEscolaSerie')) {
+        $objTemp = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada));
+        $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada));
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $obj_ser = new clsPmieducarSerie($registro['ref_cod_serie']);
+                $lst_ser = $obj_ser->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
+                if ($lst_ser) {
+                    foreach ($lst_ser as $serie) {
+                        if ($editar) {
                             $opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
-                        else
-                            $opcoes[""] = "Selecione uma série";
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
-    }
-    $this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
-
-    /*$opcoes = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarEscolaCurso" ) ) {
-        $objTemp = new clsPmieducarEscolaCurso();
-        $lista   = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ), null, null, null, null, null, null, null, 1 );
-        if ( $lista ) {
-            $series = '';
-            foreach ( $lista as $registro ) {
-                if ( class_exists( "clsPmieducarCurso" ) ) {
-                    $objTemp = new clsPmieducarCurso( $registro["ref_cod_curso"] );
-                    $detalhe = $objTemp->detalhe();
-                    if ( $editar )
-                        $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
-                    else {
-                        $opcoes[""] = "Selecione um curso";
-                        $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
-                    }
-                    $series .= " curso['_{$registro["ref_cod_curso"]}'] = new Array();\n";
-                    if( class_exists( "clsPmieducarSerie" ) ) {
-                        $objSe = new clsPmieducarSerie( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, 1 );
-                        $listaSe = $objSe->lista( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, null, null, 1 );
-                        if ( $listaSe ) {
-                            foreach ( $listaSe as $registroSe ) {
-                                $series .= " curso['_{$registro["ref_cod_curso"]}'][curso['_{$registro["ref_cod_curso"]}'].length] = new Array( {$registroSe["cod_serie"]}, '{$registroSe["nm_serie"]}' );\n";
-                            }
+                        } else {
+                            $opcoes[''] = 'Selecione uma série';
                         }
                     }
-                    else {
-                        echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                        $opcoes = array( "" => "Erro na geracao" );
+                }
+            }
+        }
+    } else {
+        echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
+        $opcoes = [ '' => 'Erro na geracao' ];
+    }
+    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes, $this->ref_ref_cod_serie, '', false, '', '', false, $obrigatorio);
+
+/*$opcoes = array( "" => "Selecione" );
+if ( class_exists( "clsPmieducarEscolaCurso" ) ) {
+    $objTemp = new clsPmieducarEscolaCurso();
+    $lista   = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ), null, null, null, null, null, null, null, 1 );
+    if ( $lista ) {
+        $series = '';
+        foreach ( $lista as $registro ) {
+            if ( class_exists( "clsPmieducarCurso" ) ) {
+                $objTemp = new clsPmieducarCurso( $registro["ref_cod_curso"] );
+                $detalhe = $objTemp->detalhe();
+                if ( $editar )
+                    $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
+                else {
+                    $opcoes[""] = "Selecione um curso";
+                    $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
+                }
+                $series .= " curso['_{$registro["ref_cod_curso"]}'] = new Array();\n";
+                if( class_exists( "clsPmieducarSerie" ) ) {
+                    $objSe = new clsPmieducarSerie( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, 1 );
+                    $listaSe = $objSe->lista( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, null, null, 1 );
+                    if ( $listaSe ) {
+                        foreach ( $listaSe as $registroSe ) {
+                            $series .= " curso['_{$registro["ref_cod_curso"]}'][curso['_{$registro["ref_cod_curso"]}'].length] = new Array( {$registroSe["cod_serie"]}, '{$registroSe["nm_serie"]}' );\n";
+                        }
                     }
                 }
                 else {
@@ -175,263 +162,252 @@ if ( $privilegio == 4 ) {
                     $opcoes = array( "" => "Erro na geracao" );
                 }
             }
-            echo $script = "<script> var curso = new Array(); \n {$series}</script>\n";
+            else {
+                echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
+                $opcoes = array( "" => "Erro na geracao" );
+            }
         }
+        echo $script = "<script> var curso = new Array(); \n {$series}</script>\n";
     }
-    else {
-        echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
-    }
-    $this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "CursoSerie();", false, "", "", false, $obrigatorio );
+}
+else {
+    echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
+    $opcoes = array( "" => "Erro na geracao" );
+}
+$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "CursoSerie();", false, "", "", false, $obrigatorio );
 
-    $opcoes = array( "" => "Selecione" );
-    if( class_exists( "clsPmieducarEscolaSerie" ) )
+$opcoes = array( "" => "Selecione" );
+if( class_exists( "clsPmieducarEscolaSerie" ) )
+{
+    $objTemp = new clsPmieducarEscolaSerie( $permissoes->getEscola( $this->pessoa_logada ) );
+    $lista = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ) );
+    if ( is_array( $lista ) && count( $lista ) )
     {
-        $objTemp = new clsPmieducarEscolaSerie( $permissoes->getEscola( $this->pessoa_logada ) );
-        $lista = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ) );
-        if ( is_array( $lista ) && count( $lista ) )
+        foreach ( $lista as $registro )
         {
-            foreach ( $lista as $registro )
-            {
-                $obj_ser = new clsPmieducarSerie( $registro["ref_cod_serie"] );
-                $lst_ser = $obj_ser->lista( null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1 );
-                if ( $lst_ser ) {
-                    foreach ( $lst_ser as $serie ) {
-                        if ( $editar )
-                            $opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
-                        else
-                            $opcoes[""] = "Selecione uma série";
-                    }
+            $obj_ser = new clsPmieducarSerie( $registro["ref_cod_serie"] );
+            $lst_ser = $obj_ser->lista( null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1 );
+            if ( $lst_ser ) {
+                foreach ( $lst_ser as $serie ) {
+                    if ( $editar )
+                        $opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
+                    else
+                        $opcoes[""] = "Selecione uma série";
                 }
             }
         }
     }
-    else
-    {
-        echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
-    }
-    $this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );*/
 }
-elseif ( $privilegio == 2 ) {
+else
+{
+    echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
+    $opcoes = array( "" => "Erro na geracao" );
+}
+$this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );*/
+} elseif ($privilegio == 2) {
 
     // foreign keys
 
-    include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-    $opcoes = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarEscola" ) ) {
-        $obj_escola = new clsPmieducarEscola( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
-        $lst_escola = $obj_escola->lista( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
-        if ( $lst_escola ) {
+    include('include/pmieducar/educar_pesquisa_instituicao_escola.php');
+    $opcoes = [ '' => 'Selecione' ];
+    if (class_exists('clsPmieducarEscola')) {
+        $obj_escola = new clsPmieducarEscola(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
+        $lst_escola = $obj_escola->lista(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
+        if ($lst_escola) {
             $cursos = '';
             $series = '';
-            foreach ( $lst_escola as $escola ) {
-                if ( class_exists( "clsPmieducarEscolaCurso" ) ) {
+            foreach ($lst_escola as $escola) {
+                if (class_exists('clsPmieducarEscolaCurso')) {
                     $objTemp = new clsPmieducarEscolaCurso();
-                    $lista   = $objTemp->lista( $escola["cod_escola"], null, null, null, null, null, null, null, 1 );
-                    $cursos .= " escola['_{$escola["cod_escola"]}'] = new Array();\n";
-                    if ( $lista ) {
-                        foreach ( $lista as $registro ) {
-                            if ( class_exists( "clsPmieducarCurso" ) ) {
-                                $objTemp = new clsPmieducarCurso( $registro["ref_cod_curso"] );
+                    $lista   = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
+                    $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
+                    if ($lista) {
+                        foreach ($lista as $registro) {
+                            if (class_exists('clsPmieducarCurso')) {
+                                $objTemp = new clsPmieducarCurso($registro['ref_cod_curso']);
                                 $detalhe = $objTemp->detalhe();
-                                if ( $editar )
-                                    $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
-                                else
-                                    $opcoes[""] = "Selecione um curso";
-                                $series .= " curso['_{$registro["ref_cod_curso"]}'] = new Array();\n";
-                                $cursos .= " escola['_{$registro["ref_cod_escola"]}'][escola['_{$registro["ref_cod_escola"]}'].length] = new Array( {$detalhe["cod_curso"]}, '{$detalhe["nm_curso"]}' );\n";
-                                if( class_exists( "clsPmieducarSerie" ) ) {
-                                    $objSe = new clsPmieducarSerie( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, 1 );
-                                    $listaSe = $objSe->lista( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, null, null, 1 );
-                                    if ( $listaSe ) {
-                                        foreach ( $listaSe as $registroSe ) {
-                                            $series .= " curso['_{$registro["ref_cod_curso"]}'][curso['_{$registro["ref_cod_curso"]}'].length] = new Array( {$registroSe["cod_serie"]}, '{$registroSe["nm_serie"]}' );\n";
+                                if ($editar) {
+                                    $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                                } else {
+                                    $opcoes[''] = 'Selecione um curso';
+                                }
+                                $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
+                                $cursos .= " escola['_{$registro['ref_cod_escola']}'][escola['_{$registro['ref_cod_escola']}'].length] = new Array( {$detalhe['cod_curso']}, '{$detalhe['nm_curso']}' );\n";
+                                if (class_exists('clsPmieducarSerie')) {
+                                    $objSe = new clsPmieducarSerie(null, null, null, $registro['ref_cod_curso'], null, null, null, null, null, null, 1);
+                                    $listaSe = $objSe->lista(null, null, null, $registro['ref_cod_curso'], null, null, null, null, null, null, null, null, 1);
+                                    if ($listaSe) {
+                                        foreach ($listaSe as $registroSe) {
+                                            $series .= " curso['_{$registro['ref_cod_curso']}'][curso['_{$registro['ref_cod_curso']}'].length] = new Array( {$registroSe['cod_serie']}, '{$registroSe['nm_serie']}' );\n";
                                         }
                                     }
-                                }
-                                else {
+                                } else {
                                     echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                                    $opcoes = array( "" => "Erro na geracao" );
+                                    $opcoes = [ '' => 'Erro na geracao' ];
                                 }
-                            }
-                            else {
+                            } else {
                                 echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                                $opcoes = array( "" => "Erro na geracao" );
+                                $opcoes = [ '' => 'Erro na geracao' ];
                             }
                         }
                         echo $script = "<script> var curso = new Array(); \n {$series}</script>\n";
                     }
-                }
-                else {
+                } else {
                     echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                    $opcoes = array( "" => "Erro na geracao" );
+                    $opcoes = [ '' => 'Erro na geracao' ];
                 }
             }
             echo "<script> var escola = new Array(); \n {$cursos}</script>\n";
         }
-    }
-    else {
+    } else {
         echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
+        $opcoes = [ '' => 'Erro na geracao' ];
     }
-    $this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "CursoSerie();", false, "", "", false, $obrigatorio );
+    $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, 'CursoSerie();', false, '', '', false, $obrigatorio);
 
-    $opcoes = array( "" => "Selecione" );
-    if( class_exists( "clsPmieducarEscolaSerie" ) )
-    {
-        $objTemp = new clsPmieducarEscolaSerie( $permissoes->getEscola( $this->pessoa_logada ) );
-        $lista = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ) );
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $obj_ser = new clsPmieducarSerie( $registro["ref_cod_serie"] );
-                $lst_ser = $obj_ser->lista( null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1 );
-                if ( $lst_ser ) {
-                    foreach ( $lst_ser as $serie ) {
-                        if ( $editar )
+    $opcoes = [ '' => 'Selecione' ];
+    if (class_exists('clsPmieducarEscolaSerie')) {
+        $objTemp = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada));
+        $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada));
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $obj_ser = new clsPmieducarSerie($registro['ref_cod_serie']);
+                $lst_ser = $obj_ser->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
+                if ($lst_ser) {
+                    foreach ($lst_ser as $serie) {
+                        if ($editar) {
                             $opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
-                        else
-                            $opcoes[""] = "Selecione uma série";
+                        } else {
+                            $opcoes[''] = 'Selecione uma série';
+                        }
                     }
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
+        $opcoes = [ '' => 'Erro na geracao' ];
     }
-    $this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
-}
-elseif ( $privilegio == 1 ) {
+    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes, $this->ref_ref_cod_serie, '', false, '', '', false, $obrigatorio);
+} elseif ($privilegio == 1) {
 
     // foreign keys
 
-    include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-    $opcoes = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarEscola" ) ) {
-        $obj_escola = new clsPmieducarEscola( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
-        $lst_escola = $obj_escola->lista( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
-        if ( $lst_escola ) {
+    include('include/pmieducar/educar_pesquisa_instituicao_escola.php');
+    $opcoes = [ '' => 'Selecione' ];
+    if (class_exists('clsPmieducarEscola')) {
+        $obj_escola = new clsPmieducarEscola(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
+        $lst_escola = $obj_escola->lista(null, null, null, $permissoes->getInstituicao($this->pessoa_logada), null, null, null, null, null, null, 1);
+        if ($lst_escola) {
             $cursos = '';
             $series = '';
-            foreach ( $lst_escola as $escola ) {
-                if ( class_exists( "clsPmieducarEscolaCurso" ) ) {
+            foreach ($lst_escola as $escola) {
+                if (class_exists('clsPmieducarEscolaCurso')) {
                     $objTemp = new clsPmieducarEscolaCurso();
-                    $lista   = $objTemp->lista( $escola["cod_escola"], null, null, null, null, null, null, null, 1 );
-                    $cursos .= " escola['_{$escola["cod_escola"]}'] = new Array();\n";
-                    if ( $lista ) {
-                        foreach ( $lista as $registro ) {
-                            if ( class_exists( "clsPmieducarCurso" ) ) {
-                                $objTemp = new clsPmieducarCurso( $registro["ref_cod_curso"] );
+                    $lista   = $objTemp->lista($escola['cod_escola'], null, null, null, null, null, null, null, 1);
+                    $cursos .= " escola['_{$escola['cod_escola']}'] = new Array();\n";
+                    if ($lista) {
+                        foreach ($lista as $registro) {
+                            if (class_exists('clsPmieducarCurso')) {
+                                $objTemp = new clsPmieducarCurso($registro['ref_cod_curso']);
                                 $detalhe = $objTemp->detalhe();
-                                $series .= " curso['_{$registro["ref_cod_curso"]}'] = new Array();\n";
-                                $cursos .= " escola['_{$registro["ref_cod_escola"]}'][escola['_{$registro["ref_cod_escola"]}'].length] = new Array( {$detalhe["cod_curso"]}, '{$detalhe["nm_curso"]}' );\n";
-                                if ( $editar )
-                                    $opcoes["{$registro["ref_cod_curso"]}"] = "{$detalhe["nm_curso"]}";
-                                else
-                                    $opcoes[""] = "Selecione um curso";
-                                if( class_exists( "clsPmieducarSerie" ) ) {
-                                    $objSe = new clsPmieducarSerie( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, 1 );
-                                    $listaSe = $objSe->lista( null, null, null, $registro["ref_cod_curso"], null, null, null, null, null, null, null, null, 1 );
-                                    if ( $listaSe ) {
-                                        foreach ( $listaSe as $registroSe ) {
-                                            $series .= " curso['_{$registro["ref_cod_curso"]}'][curso['_{$registro["ref_cod_curso"]}'].length] = new Array( {$registroSe["cod_serie"]}, '{$registroSe["nm_serie"]}' );\n";
+                                $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
+                                $cursos .= " escola['_{$registro['ref_cod_escola']}'][escola['_{$registro['ref_cod_escola']}'].length] = new Array( {$detalhe['cod_curso']}, '{$detalhe['nm_curso']}' );\n";
+                                if ($editar) {
+                                    $opcoes["{$registro['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
+                                } else {
+                                    $opcoes[''] = 'Selecione um curso';
+                                }
+                                if (class_exists('clsPmieducarSerie')) {
+                                    $objSe = new clsPmieducarSerie(null, null, null, $registro['ref_cod_curso'], null, null, null, null, null, null, 1);
+                                    $listaSe = $objSe->lista(null, null, null, $registro['ref_cod_curso'], null, null, null, null, null, null, null, null, 1);
+                                    if ($listaSe) {
+                                        foreach ($listaSe as $registroSe) {
+                                            $series .= " curso['_{$registro['ref_cod_curso']}'][curso['_{$registro['ref_cod_curso']}'].length] = new Array( {$registroSe['cod_serie']}, '{$registroSe['nm_serie']}' );\n";
                                         }
                                     }
-                                }
-                                else {
+                                } else {
                                     echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                                    $opcoes = array( "" => "Erro na geracao" );
+                                    $opcoes = [ '' => 'Erro na geracao' ];
                                 }
-                            }
-                            else {
+                            } else {
                                 echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                                $opcoes = array( "" => "Erro na geracao" );
+                                $opcoes = [ '' => 'Erro na geracao' ];
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-                    $opcoes = array( "" => "Erro na geracao" );
+                    $opcoes = [ '' => 'Erro na geracao' ];
                 }
             }
             echo "<script> var escola = new Array(); \n {$cursos}</script>\n";
             echo "<script> var curso = new Array(); \n {$series}</script>\n";
         }
-    }
-    else {
+    } else {
         echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
+        $opcoes = [ '' => 'Erro na geracao' ];
     }
-    $this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "CursoSerie();", false, "", "", false, $obrigatorio );
+    $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, 'CursoSerie();', false, '', '', false, $obrigatorio);
 
-    $opcoes = array( "" => "Selecione" );
-    if( class_exists( "clsPmieducarEscolaSerie" ) )
-    {
-        $objTemp = new clsPmieducarEscolaSerie( $permissoes->getEscola( $this->pessoa_logada ) );
-        $lista = $objTemp->lista( $permissoes->getEscola( $this->pessoa_logada ) );
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $obj_ser = new clsPmieducarSerie( $registro["ref_cod_serie"] );
-                $lst_ser = $obj_ser->lista( null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1 );
-                if ( $lst_ser ) {
-                    foreach ( $lst_ser as $serie ) {
-                        if ( $editar )
+    $opcoes = [ '' => 'Selecione' ];
+    if (class_exists('clsPmieducarEscolaSerie')) {
+        $objTemp = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada));
+        $lista = $objTemp->lista($permissoes->getEscola($this->pessoa_logada));
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $obj_ser = new clsPmieducarSerie($registro['ref_cod_serie']);
+                $lst_ser = $obj_ser->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
+                if ($lst_ser) {
+                    foreach ($lst_ser as $serie) {
+                        if ($editar) {
                             $opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
-                        else
-                            $opcoes[""] = "Selecione uma série";
+                        } else {
+                            $opcoes[''] = 'Selecione uma série';
+                        }
                     }
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
+        $opcoes = [ '' => 'Erro na geracao' ];
     }
-    $this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
+    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes, $this->ref_ref_cod_serie, '', false, '', '', false, $obrigatorio);
 }
 
 ?>
-<?php $scripts_js = "
+<?php $scripts_js = '
 <script>
 
-var ref_cod_escola = document.getElementById('ref_cod_escola');
-//var ref_curso        = document.getElementById('ref_cod_curso');
+var ref_cod_escola = document.getElementById(\'ref_cod_escola\');
+//var ref_curso        = document.getElementById(\'ref_cod_curso\');
 
 ref_cod_escola.onchange = function() { EscolaCurso();};
 
 function EscolaCurso()
 {
-    var codEscola  = document.getElementById( 'ref_cod_escola' ).value;
-    var campoCurso = document.getElementById( 'ref_cod_curso' );
+    var codEscola  = document.getElementById( \'ref_cod_escola\' ).value;
+    var campoCurso = document.getElementById( \'ref_cod_curso\' );
 
     campoCurso.length = 1;
     if ( !codEscola ) {
-        campoCurso.options[0].text = \"Selecione um Curso\";
+        campoCurso.options[0].text = "Selecione um Curso";
         return;
     }
 
     campoCurso.length = 1;
 
     try {
-        var tamanho = eval( \"escola['_\" + codEscola + \"'].length\" );
+        var tamanho = eval( "escola[\'_" + codEscola + "\'].length" );
         for ( var ct = 0 ; ct < tamanho ; ct++ ){
-            campoCurso.options[ct + 1] = new Option( eval(\"escola['_\" + codEscola + \"'][\" + ct + \"][1]\" ), eval( \"escola['_\" + codEscola + \"'][\" + ct + \"][0]\" ), false, false );
+            campoCurso.options[ct + 1] = new Option( eval("escola[\'_" + codEscola + "\'][" + ct + "][1]" ), eval( "escola[\'_" + codEscola + "\'][" + ct + "][0]" ), false, false );
         }
         if ( tamanho == 0 ) {
-            campoCurso.options[0].text = \"Escola sem curso\";
+            campoCurso.options[0].text = "Escola sem curso";
         }
         else {
-            campoCurso.options[0].text = \"Selecione um curso\";
+            campoCurso.options[0].text = "Selecione um curso";
         }
     }
     catch ( e ) {
@@ -440,27 +416,27 @@ function EscolaCurso()
 
 function CursoSerie()
 {
-    var codCurso   = document.getElementById( 'ref_cod_curso' ).value;
-    var campoSerie = document.getElementById( 'ref_ref_cod_serie' );
+    var codCurso   = document.getElementById( \'ref_cod_curso\' ).value;
+    var campoSerie = document.getElementById( \'ref_ref_cod_serie\' );
 
     campoSerie.length = 1;
     if ( !codCurso ) {
-        campoSerie.options[0].text = \"Selecione uma série\";
+        campoSerie.options[0].text = "Selecione uma série";
         return;
     }
 
     campoSerie.length = 1;
 
     try {
-        var tamanho = eval( \"curso['_\" + codCurso + \"'].length\" );;
+        var tamanho = eval( "curso[\'_" + codCurso + "\'].length" );;
         for ( var ct = 0 ; ct < tamanho ; ct++ ){
-            campoSerie.options[ct + 1] = new Option( eval(\"curso['_\" + codCurso + \"'][\" + ct + \"][1]\" ), eval( \"curso['_\" + codCurso + \"'][\" + ct + \"][0]\" ), false, false );
+            campoSerie.options[ct + 1] = new Option( eval("curso[\'_" + codCurso + "\'][" + ct + "][1]" ), eval( "curso[\'_" + codCurso + "\'][" + ct + "][0]" ), false, false );
         }
         if ( tamanho == 0 ) {
-            campoSerie.options[0].text = \"Curso sem série\";
+            campoSerie.options[0].text = "Curso sem série";
         }
         else {
-            campoSerie.options[0].text = \"Selecione uma serie\";
+            campoSerie.options[0].text = "Selecione uma serie";
         }
     }
     catch ( e ) {
@@ -468,7 +444,7 @@ function CursoSerie()
 }
 
 ref_curso.onchange = function(){CursoSerie()};
-</script>";
+</script>';
 ?>
 <?php/*
 if ( class_exists( "clsPmieducarCurso" ) ) {

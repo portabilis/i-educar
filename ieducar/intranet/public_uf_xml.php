@@ -22,18 +22,21 @@
  *
  * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package     Core
  * @subpackage  public
  * @subpackage  Enderecamento
  * @subpackage  Ajax
+ *
  * @since       Arquivo disponível desde a versão 1.0.0
+ *
  * @version     $Id$
  */
 
 require_once 'include/pessoa/clsUf.inc.php';
 
 // Id do país na tabela public.pais
-$id = isset($_GET['pais']) ? $_GET['pais'] : NULL;
+$id = isset($_GET['pais']) ? $_GET['pais'] : null;
 
 header('Content-type: text/xml; charset=UTF-8');
 
@@ -44,13 +47,16 @@ print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 print '<query>' . PHP_EOL;
 
 if ($id == strval(intval($id))) {
-  $uf = new clsUf();
-  $ufs = $uf->lista(NULL, NULL, $id, NULL, NULL, 'sigla_uf');
+    $uf = new clsUf();
+    $ufs = $uf->lista(null, null, $id, null, null, 'sigla_uf');
 
-  foreach ($ufs as $uf) {
-    print sprintf('  <estado sigla_uf="%s">%s</estado>' . PHP_EOL,
-      $uf['sigla_uf'], $uf['nome']);
-  }
+    foreach ($ufs as $uf) {
+        print sprintf(
+        '  <estado sigla_uf="%s">%s</estado>' . PHP_EOL,
+      $uf['sigla_uf'],
+        $uf['nome']
+    );
+    }
 }
 
 print '</query>';

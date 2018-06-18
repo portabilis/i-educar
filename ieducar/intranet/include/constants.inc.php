@@ -28,11 +28,10 @@
      * parametro passado em metodos lista para filtros por 'IS NULL campo'
      *
      */
-    define("IS_NULL","!-! is null !-!");
+    define('IS_NULL', '!-! is null !-!');
 
     /**
      * parametro passado em metodos lista para filtros por 'IS NOT NULL campo'
      *
      */
-    define("IS_NOT_NULL","!-! is not null !-!");
-?>
+    define('IS_NOT_NULL', '!-! is not null !-!');

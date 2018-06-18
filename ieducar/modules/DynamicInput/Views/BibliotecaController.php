@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -37,45 +42,54 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
  * CursoController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class BibliotecaController extends ApiCoreController
 {
+    protected function canGetBibliotecas()
+    {
+        return $this->validatesId('escola');
+    }
 
-  protected function canGetBibliotecas() {
-    return $this->validatesId('escola');
-  }
+    protected function getBibliotecas()
+    {
+        if ($this->canGetBibliotecas()) {
+            $escolaId = $this->getRequest()->escola_id;
 
-  protected function getBibliotecas() {
-    if ($this->canGetBibliotecas()) {
-      $escolaId = $this->getRequest()->escola_id;
-
-      $sql = "SELECT cod_biblioteca AS id,
+            $sql = 'SELECT cod_biblioteca AS id,
                      nm_biblioteca AS nome
                 FROM pmieducar.biblioteca
                WHERE ativo = 1
                  AND ref_cod_escola = $1
-               ORDER BY nm_biblioteca ASC";
+               ORDER BY nm_biblioteca ASC';
 
-      $bibliotecas = $this->fetchPreparedQuery($sql, $escolaId);
+            $bibliotecas = $this->fetchPreparedQuery($sql, $escolaId);
 
-      $options = array();
-      foreach ($bibliotecas as $biblioteca)
-        $options['__' . $biblioteca['id']] = strtoupper($biblioteca['nome']);
+            $options = [];
+            foreach ($bibliotecas as $biblioteca) {
+                $options['__' . $biblioteca['id']] = strtoupper($biblioteca['nome']);
+            }
 
-      return array('options' => $options);
+            return ['options' => $options];
+        }
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'bibliotecas'))
-      $this->appendResponse($this->getBibliotecas());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'bibliotecas')) {
+            $this->appendResponse($this->getBibliotecas());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 error_reporting(E_ALL);
-ini_set("display_errors", 1);
+ini_set('display_errors', 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -24,11 +24,16 @@ ini_set("display_errors", 1);
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
  * @subpackage  lib
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -36,35 +41,37 @@ require_once 'lib/Portabilis/Controller/ErrorCoreController.php';
 
 class UnexpectedController extends Portabilis_Controller_ErrorCoreController
 {
-  protected $_titulo = 'Erro inesperado';
+    protected $_titulo = 'Erro inesperado';
 
-  protected function setHeader() {
-    header("HTTP/1.1 500 Internal Server Error");
-  }
-
-  public function Gerar() {
-
-    if ($GLOBALS['coreExt']['Config']->modules->error->show_details) {
-      $detail  = "<br /><h3>Erro app</h3>{$this->getSession()->last_error_message}";
-      $detail .= "<br /><h3>Erro php</h3>{$this->getSession()->last_php_error_message}";
-      $detail .= "<br /><h3>Arquivo</h3>(linha: {$this->getSession()->last_php_error_line}) ";
-      $detail .= "{$this->getSession()->last_php_error_file}";
-
-      unset($this->getSession()->last_error_message);
-      unset($this->getSession()->last_php_error_message);
-      unset($this->getSession()->last_php_error_line);
-      unset($this->getSession()->last_php_error_file);
-
-      if (! $detail)
-        $detail = 'Sem detalhes do erro.';
-
-      $detail = "<h2>Detalhes:</h2>
-                  <p>$detail</p>";
+    protected function setHeader()
+    {
+        header('HTTP/1.1 500 Internal Server Error');
     }
-    else
-      $detail = '<p>Visualiza&ccedil;&atilde;o de detalhes do erro desativada.</p>';
 
-    echo "
+    public function Gerar()
+    {
+        if ($GLOBALS['coreExt']['Config']->modules->error->show_details) {
+            $detail  = "<br /><h3>Erro app</h3>{$this->getSession()->last_error_message}";
+            $detail .= "<br /><h3>Erro php</h3>{$this->getSession()->last_php_error_message}";
+            $detail .= "<br /><h3>Arquivo</h3>(linha: {$this->getSession()->last_php_error_line}) ";
+            $detail .= "{$this->getSession()->last_php_error_file}";
+
+            unset($this->getSession()->last_error_message);
+            unset($this->getSession()->last_php_error_message);
+            unset($this->getSession()->last_php_error_line);
+            unset($this->getSession()->last_php_error_file);
+
+            if (! $detail) {
+                $detail = 'Sem detalhes do erro.';
+            }
+
+            $detail = "<h2>Detalhes:</h2>
+                  <p>$detail</p>";
+        } else {
+            $detail = '<p>Visualiza&ccedil;&atilde;o de detalhes do erro desativada.</p>';
+        }
+
+        echo "
       <div id='error' class='small'>
         <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
         <div class='content'>
@@ -87,5 +94,5 @@ class UnexpectedController extends Portabilis_Controller_ErrorCoreController
 
         </div>
       </div>";
-  }
+    }
 }

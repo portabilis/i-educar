@@ -15,7 +15,6 @@ class MigraEtapaTurmaEducacensoParaEnturmacao extends AbstractMigration
                 AND etapa_educacenso2 is not null;
             ALTER TABLE pmieducar.turma DROP COLUMN etapa_educacenso2;
         ');
-
     }
 
     public function down()
@@ -24,6 +23,5 @@ class MigraEtapaTurmaEducacensoParaEnturmacao extends AbstractMigration
             ALTER TABLE pmieducar.turma ADD etapa_educacenso2 SMALLINT;
             ALTER TABLE pmieducar.matricula_turma DROP COLUMN etapa_educacenso;
         ');
-
     }
 }

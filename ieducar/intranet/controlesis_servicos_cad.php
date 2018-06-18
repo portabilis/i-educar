@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Serviços" );
-        $this->processoAp = "616";
+        $this->SetTitulo("{$this->_instituicao} Serviços");
+        $this->processoAp = '616';
     }
 }
 
@@ -45,159 +45,150 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_servicos;
-    var $ref_cod_funcionario_cad;
-    var $ref_cod_funcionario_exc;
-    var $url;
-    var $caminho;
-    var $imagem;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $title;
-    var $descricao;
+    public $cod_servicos;
+    public $ref_cod_funcionario_cad;
+    public $ref_cod_funcionario_exc;
+    public $url;
+    public $caminho;
+    public $imagem;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $title;
+    public $descricao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_servicos=$_GET["cod_servicos"];
+        $this->cod_servicos=$_GET['cod_servicos'];
 
-
-        if( is_numeric( $this->cod_servicos ) )
-        {
-
-            $obj = new clsPmicontrolesisservicos( $this->cod_servicos );
+        if (is_numeric($this->cod_servicos)) {
+            $obj = new clsPmicontrolesisservicos($this->cod_servicos);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
-                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
+                }
+                $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
+                $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
                 $this->fexcluir = true;
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
             $this->imagem = $this->caminho;
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "controlesis_servicos_det.php?cod_servicos={$registro["cod_servicos"]}" : "controlesis_servicos_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "controlesis_servicos_det.php?cod_servicos={$registro['cod_servicos']}" : 'controlesis_servicos_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_servicos", $this->cod_servicos );
-        $this->campoOculto( "imagem", $this->imagem );
+        $this->campoOculto('cod_servicos', $this->cod_servicos);
+        $this->campoOculto('imagem', $this->imagem);
 
         // text
-        $this->campoTexto( "url", "Url", $this->url, 30, 255, true );
-        $this->campoArquivo( "caminho", "Caminho", $this->caminho, 30);
-        $this->campoTexto( "title", "Title", $this->title, 30, 255, false );
-        $this->campoMemo( "descricao", "Descric&atilde;o", $this->descricao, 60, 10, false );
+        $this->campoTexto('url', 'Url', $this->url, 30, 255, true);
+        $this->campoArquivo('caminho', 'Caminho', $this->caminho, 30);
+        $this->campoTexto('title', 'Title', $this->title, 30, 255, false);
+        $this->campoMemo('descricao', 'Descric&atilde;o', $this->descricao, 60, 10, false);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : FALSE;
-        $diretorio = "imagens/";
-        if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name']))
-        {
+        $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : false;
+        $diretorio = 'imagens/';
+        if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name'])) {
             $this->caminho = $arquivo['name'];
-            $obj = new clsPmicontrolesisservicos( $this->cod_servicos, $this->pessoa_logada, null, $this->url, $this->caminho, null, null, 1, $this->title, $this->descricao );
+            $obj = new clsPmicontrolesisservicos($this->cod_servicos, $this->pessoa_logada, null, $this->url, $this->caminho, null, null, 1, $this->title, $this->descricao);
             $cadastrou = $obj->cadastra();
-            if( $cadastrou )
-            {
-                $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: controlesis_servicos_lst.php" );
+            if ($cadastrou) {
+                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                header('Location: controlesis_servicos_lst.php');
                 die();
+
                 return true;
             }
         }
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmicontrolesisservicos\nvalores obrigatorios\nis_numeric( $this->ref_cod_funcionario_cad )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        if($this->caminho['tmp_name'])
-        {
-            $diretorio = "imagens/";
+        if ($this->caminho['tmp_name']) {
+            $diretorio = 'imagens/';
             unlink("{$diretorio}{$this->imagem}");
-            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : FALSE;
-            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name']))
-            {
+            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : false;
+            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name'])) {
                 $this->caminho = $arquivo['name'];
             }
-        }
-        else
-        {
+        } else {
             $this->caminho = null;
         }
         $obj = new clsPmicontrolesisservicos($this->cod_servicos, null, $this->pessoa_logada, $this->url, $this->caminho, null, null, 1, $this->title, $this->descricao);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_servicos_lst.php" );
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: controlesis_servicos_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmicontrolesisservicos\nvalores obrigatorios\nif( is_numeric( $this->cod_servicos ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         //echo "$this->imagem";die();
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        if($this->caminho['tmp_name'])
-        {
-            $diretorio = "imagens/";
+        if ($this->caminho['tmp_name']) {
+            $diretorio = 'imagens/';
             unlink("{$diretorio}{$this->imagem}");
-            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : FALSE;
-            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name']))
-            {
+            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : false;
+            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name'])) {
                 $this->caminho = $arquivo['name'];
             }
-        }
-        else
-        {
+        } else {
             $this->caminho = null;
         }
         $obj = new clsPmicontrolesisservicos($this->cod_servicos, null, $this->pessoa_logada, $this->url, $this->caminho, null, null, 0, $this->title, $this->descricao);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_servicos_lst.php" );
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: controlesis_servicos_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmicontrolesisservicos\nvalores obrigatorios\nif( is_numeric( $this->cod_servicos ) )\n-->";
+
         return false;
     }
 }
@@ -207,7 +198,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

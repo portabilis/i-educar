@@ -34,13 +34,13 @@
 
 class clsPortalNotificacao
 {
-    var $cod_notificacao;
-    var $ref_cod_funcionario;
-    var $titulo;
-    var $conteudo;
-    var $data_hora_ativa;
-    var $url;
-    var $visualizacoes;
+    public $cod_notificacao;
+    public $ref_cod_funcionario;
+    public $titulo;
+    public $conteudo;
+    public $data_hora_ativa;
+    public $url;
+    public $visualizacoes;
 
     // propriedades padrao
 
@@ -49,57 +49,56 @@ class clsPortalNotificacao
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
@@ -114,69 +113,51 @@ class clsPortalNotificacao
      *
      * @return object
      */
-    function __construct( $cod_notificacao = null, $ref_cod_funcionario = null, $titulo = null, $conteudo = null, $data_hora_ativa = null, $url = null, $visualizacoes = null )
+    public function __construct($cod_notificacao = null, $ref_cod_funcionario = null, $titulo = null, $conteudo = null, $data_hora_ativa = null, $url = null, $visualizacoes = null)
     {
         $db = new clsBanco();
-        $this->_schema = "portal.";
+        $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}notificacao";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_notificacao, ref_cod_funcionario, titulo, conteudo, data_hora_ativa, url, visualizacoes";
+        $this->_campos_lista = $this->_todos_campos = 'cod_notificacao, ref_cod_funcionario, titulo, conteudo, data_hora_ativa, url, visualizacoes';
 
-        if( is_numeric( $ref_cod_funcionario ) )
-        {
-            if( class_exists( "clsFuncionario" ) )
-            {
-                $tmp_obj = new clsFuncionario( $ref_cod_funcionario );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_funcionario)) {
+            if (class_exists('clsFuncionario')) {
+                $tmp_obj = new clsFuncionario($ref_cod_funcionario);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_funcionario = $ref_cod_funcionario;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_funcionario = $ref_cod_funcionario;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_funcionario = $ref_cod_funcionario;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario}'")) {
                     $this->ref_cod_funcionario = $ref_cod_funcionario;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_notificacao ) )
-        {
+        if (is_numeric($cod_notificacao)) {
             $this->cod_notificacao = $cod_notificacao;
         }
-        if( is_string( $titulo ) )
-        {
+        if (is_string($titulo)) {
             $this->titulo = $titulo;
         }
-        if( is_string( $conteudo ) )
-        {
+        if (is_string($conteudo)) {
             $this->conteudo = $conteudo;
         }
-        if( is_string( $data_hora_ativa ) )
-        {
+        if (is_string($data_hora_ativa)) {
             $this->data_hora_ativa = $data_hora_ativa;
         }
-        if( is_string( $url ) )
-        {
+        if (is_string($url)) {
             $this->url = $url;
         }
-        if( is_numeric( $visualizacoes ) )
-        {
+        if (is_numeric($visualizacoes)) {
             $this->visualizacoes = $visualizacoes;
         }
-
     }
 
     /**
@@ -184,57 +165,51 @@ class clsPortalNotificacao
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_cod_funcionario ) && is_numeric( $this->visualizacoes ) )
-        {
+        if (is_numeric($this->ref_cod_funcionario) && is_numeric($this->visualizacoes)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_funcionario ) )
-            {
+            if (is_numeric($this->ref_cod_funcionario)) {
                 $campos .= "{$gruda}ref_cod_funcionario";
                 $valores .= "{$gruda}'{$this->ref_cod_funcionario}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->titulo ) )
-            {
+            if (is_string($this->titulo)) {
                 $campos .= "{$gruda}titulo";
                 $valores .= "{$gruda}'{$this->titulo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->conteudo ) )
-            {
+            if (is_string($this->conteudo)) {
                 $campos .= "{$gruda}conteudo";
                 $valores .= "{$gruda}'{$this->conteudo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_hora_ativa ) )
-            {
+            if (is_string($this->data_hora_ativa)) {
                 $campos .= "{$gruda}data_hora_ativa";
                 $valores .= "{$gruda}'{$this->data_hora_ativa}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->url ) )
-            {
+            if (is_string($this->url)) {
                 $campos .= "{$gruda}url";
                 $valores .= "{$gruda}'{$this->url}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->visualizacoes ) )
-            {
+            if (is_numeric($this->visualizacoes)) {
                 $campos .= "{$gruda}visualizacoes";
                 $valores .= "{$gruda}'{$this->visualizacoes}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return true;
         }
+
         return false;
     }
 
@@ -243,52 +218,43 @@ class clsPortalNotificacao
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-
         $db = new clsBanco();
-        $set = "";
+        $set = '';
 
-            if( is_numeric( $this->cod_notificacao ) )
-            {
-                $set .= "{$gruda}cod_notificacao = '{$this->cod_notificacao}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->ref_cod_funcionario ) )
-            {
-                $set .= "{$gruda}ref_cod_funcionario = '{$this->ref_cod_funcionario}'";
-                $gruda = ", ";
-            }
-            if( is_string( $this->titulo ) )
-            {
-                $set .= "{$gruda}titulo = '{$this->titulo}'";
-                $gruda = ", ";
-            }
-            if( is_string( $this->conteudo ) )
-            {
-                $set .= "{$gruda}conteudo = '{$this->conteudo}'";
-                $gruda = ", ";
-            }
-            if( is_string( $this->data_hora_ativa ) )
-            {
-                $set .= "{$gruda}data_hora_ativa = '{$this->data_hora_ativa}'";
-                $gruda = ", ";
-            }
-            if( is_string( $this->url ) )
-            {
-                $set .= "{$gruda}url = '{$this->url}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->visualizacoes ) )
-            {
-                $set .= "{$gruda}visualizacoes = '{$this->visualizacoes}'";
-                $gruda = ", ";
-            }
+        if (is_numeric($this->cod_notificacao)) {
+            $set .= "{$gruda}cod_notificacao = '{$this->cod_notificacao}'";
+            $gruda = ', ';
+        }
+        if (is_numeric($this->ref_cod_funcionario)) {
+            $set .= "{$gruda}ref_cod_funcionario = '{$this->ref_cod_funcionario}'";
+            $gruda = ', ';
+        }
+        if (is_string($this->titulo)) {
+            $set .= "{$gruda}titulo = '{$this->titulo}'";
+            $gruda = ', ';
+        }
+        if (is_string($this->conteudo)) {
+            $set .= "{$gruda}conteudo = '{$this->conteudo}'";
+            $gruda = ', ';
+        }
+        if (is_string($this->data_hora_ativa)) {
+            $set .= "{$gruda}data_hora_ativa = '{$this->data_hora_ativa}'";
+            $gruda = ', ';
+        }
+        if (is_string($this->url)) {
+            $set .= "{$gruda}url = '{$this->url}'";
+            $gruda = ', ';
+        }
+        if (is_numeric($this->visualizacoes)) {
+            $set .= "{$gruda}visualizacoes = '{$this->visualizacoes}'";
+            $gruda = ', ';
+        }
 
+        if ($set) {
+            $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_notificacao = '{$this->cod_notificacao}'");
 
-        if( $set )
-        {
-            $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_notificacao = '{$this->cod_notificacao}'" );
             return true;
         }
 
@@ -309,87 +275,73 @@ class clsPortalNotificacao
      *
      * @return array
      */
-    function lista( $int_cod_notificacao = null, $int_ref_cod_funcionario = null, $str_titulo = null, $str_conteudo = null, $date_data_hora_ativa_ini = null, $date_data_hora_ativa_fim = null, $str_url = null, $int_visualizacoes = null )
+    public function lista($int_cod_notificacao = null, $int_ref_cod_funcionario = null, $str_titulo = null, $str_conteudo = null, $date_data_hora_ativa_ini = null, $date_data_hora_ativa_fim = null, $str_url = null, $int_visualizacoes = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_notificacao ) )
-        {
+        if (is_numeric($int_cod_notificacao)) {
             $filtros .= "{$whereAnd} cod_notificacao = '{$int_cod_notificacao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_funcionario ) )
-        {
+        if (is_numeric($int_ref_cod_funcionario)) {
             $filtros .= "{$whereAnd} ref_cod_funcionario = '{$int_ref_cod_funcionario}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_titulo ) )
-        {
+        if (is_string($str_titulo)) {
             $filtros .= "{$whereAnd} titulo LIKE '%{$str_titulo}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_conteudo ) )
-        {
+        if (is_string($str_conteudo)) {
             $filtros .= "{$whereAnd} conteudo LIKE '%{$str_conteudo}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_hora_ativa_ini ) )
-        {
+        if (is_string($date_data_hora_ativa_ini)) {
             $filtros .= "{$whereAnd} data_hora_ativa >= '{$date_data_hora_ativa_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_hora_ativa_fim ) )
-        {
+        if (is_string($date_data_hora_ativa_fim)) {
             $filtros .= "{$whereAnd} data_hora_ativa <= '{$date_data_hora_ativa_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_url ) )
-        {
+        if (is_string($str_url)) {
             $filtros .= "{$whereAnd} url LIKE '%{$str_url}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_visualizacoes ) )
-        {
+        if (is_numeric($int_visualizacoes)) {
             $filtros .= "{$whereAnd} visualizacoes = '{$int_visualizacoes}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -398,15 +350,16 @@ class clsPortalNotificacao
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric($this->cod_notificacao))
-        {
+        if (is_numeric($this->cod_notificacao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_notificacao = '{$this->cod_notificacao}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_notificacao = '{$this->cod_notificacao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -415,15 +368,16 @@ class clsPortalNotificacao
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric($this->cod_notificacao))
-        {
+        if (is_numeric($this->cod_notificacao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_notificacao = '{$this->cod_notificacao}'" );
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_notificacao = '{$this->cod_notificacao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -432,7 +386,7 @@ class clsPortalNotificacao
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
 
         /*
@@ -442,8 +396,6 @@ class clsPortalNotificacao
         return true;
         */
 
-
-
         return false;
     }
 
@@ -452,7 +404,7 @@ class clsPortalNotificacao
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -462,7 +414,7 @@ class clsPortalNotificacao
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -472,7 +424,7 @@ class clsPortalNotificacao
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -483,18 +435,18 @@ class clsPortalNotificacao
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -502,13 +454,12 @@ class clsPortalNotificacao
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -518,14 +469,12 @@ class clsPortalNotificacao
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

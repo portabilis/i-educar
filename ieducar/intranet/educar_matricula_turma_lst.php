@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -37,150 +42,245 @@ require_once 'include/pmieducar/geral.inc.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
-    $this->processoAp = 578;
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
+        $this->processoAp = 578;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $titulo;
-  var $limite;
-  var $offset;
+    public $pessoa_logada;
+    public $titulo;
+    public $limite;
+    public $offset;
 
-  var $ref_cod_matricula;
-  var $ref_cod_turma;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
+    public $ref_cod_matricula;
+    public $ref_cod_turma;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-  var $ref_cod_serie;
-  var $ref_cod_escola;
-  var $ref_cod_turma_origem;
-  var $ref_cod_curso;
-  var $ref_cod_instituicao;
-  var $ano_letivo;
+    public $ref_cod_serie;
+    public $ref_cod_escola;
+    public $ref_cod_turma_origem;
+    public $ref_cod_curso;
+    public $ref_cod_instituicao;
+    public $ano_letivo;
 
-  var $sequencial;
+    public $sequencial;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'Selecione uma turma para enturmar ou remover a enturmação';
+        $this->titulo = 'Selecione uma turma para enturmar ou remover a enturmação';
 
-    $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
-    if (!$this->ref_cod_matricula) {
-      header('Location: educar_matricula_lst.php');
-      die;
-    }
+        if (!$this->ref_cod_matricula) {
+            header('Location: educar_matricula_lst.php');
+            die;
+        }
 
-    $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
-    $det_matricula = $obj_matricula->detalhe();
-    $this->ref_cod_curso = $det_matricula['ref_cod_curso'];
+        $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+        $det_matricula = $obj_matricula->detalhe();
+        $this->ref_cod_curso = $det_matricula['ref_cod_curso'];
 
-    $this->ref_cod_serie  = $det_matricula['ref_ref_cod_serie'];
-    $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
-    $this->ref_cod_turma  = $_GET['ref_cod_turma'];
-    $this->ano_letivo     = $_GET['ano_letivo'];
+        $this->ref_cod_serie  = $det_matricula['ref_ref_cod_serie'];
+        $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
+        $this->ref_cod_turma  = $_GET['ref_cod_turma'];
+        $this->ano_letivo     = $_GET['ano_letivo'];
 
-    
-
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Turma',
       'Enturmado'
+    ]);
+
+        // Busca dados da matricula
+        $obj_ref_cod_matricula = new clsPmieducarMatricula();
+        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+
+        $obj_aluno = new clsPmieducarAluno();
+        $det_aluno = array_shift($obj_aluno->lista(
+        $detalhe_aluno['ref_cod_aluno'],
+      null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1
     ));
 
-    // Busca dados da matricula
-    $obj_ref_cod_matricula = new clsPmieducarMatricula();
-    $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $obj_escola = new clsPmieducarEscola(
+        $this->ref_cod_escola,
+        null,
+        null,
+      null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1
+    );
+        $det_escola = $obj_escola->detalhe();
 
-    $obj_aluno = new clsPmieducarAluno();
-    $det_aluno = array_shift($obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1));
+        if ($det_escola['nome']) {
+            $this->campoRotulo('nm_escola', 'Escola', $det_escola['nome']);
+        }
 
-    $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-      $det_escola = $obj_escola->detalhe();
+        $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
-    if ($det_escola['nome']) {
-      $this->campoRotulo('nm_escola', 'Escola', $det_escola['nome']);
-    }
+        // Filtros de foreign keys
+        $opcoes = ['' => 'Selecione'];
 
-    $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
+        // Opções de turma
+        $objTemp = new clsPmieducarTurma();
+        $lista = $objTemp->lista3(
+        null,
+        null,
+        null,
+        $this->ref_cod_serie,
+      $this->ref_cod_escola,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      $this->ref_cod_curso,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        $this->ano_letivo
+    );
 
-    // Filtros de foreign keys
-    $opcoes = array('' => 'Selecione');
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes[$registro['cod_turma']] = $registro['nm_turma'];
+            }
 
-    // Opções de turma
-    $objTemp = new clsPmieducarTurma();
-    $lista = $objTemp->lista3(NULL, NULL, NULL, $this->ref_cod_serie,
-      $this->ref_cod_escola, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      $this->ref_cod_curso, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ano_letivo);
+            $this->exibirBotaoSubmit = false;
+        }
 
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $opcoes[$registro['cod_turma']] = $registro['nm_turma'];
-      }
+        #$this->campoLista('ref_cod_turma_', 'Turma', $opcoes, $this->ref_cod_turma);
 
-      $this->exibirBotaoSubmit = false;
+        // outros filtros
+        $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
+        $this->campoOculto('ref_cod_serie', '');
+        $this->campoOculto('ref_cod_turma', '');
+        $this->campoOculto('ref_cod_escola', '');
+        $this->campoOculto('ano_letivo', $this->ano_letivo);
 
-    }
-
-    #$this->campoLista('ref_cod_turma_', 'Turma', $opcoes, $this->ref_cod_turma);
-
-    // outros filtros
-    $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
-    $this->campoOculto('ref_cod_serie', '');
-    $this->campoOculto('ref_cod_turma', '');
-    $this->campoOculto('ref_cod_escola', '');
-    $this->campoOculto('ano_letivo', $this->ano_letivo);
-
-    // Paginador
-    $this->limite = 20;
-    $this->offset = ($_GET['pagina_' . $this->nome]) ?
+        // Paginador
+        $this->limite = 20;
+        $this->offset = ($_GET['pagina_' . $this->nome]) ?
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-    $obj_matricula_turma = new clsPmieducarTurma();
-    $obj_matricula_turma->setOrderby(' t.nm_turma ASC');
-    $obj_matricula_turma->setLimite($this->limite, $this->offset);
+        $obj_matricula_turma = new clsPmieducarTurma();
+        $obj_matricula_turma->setOrderby(' t.nm_turma ASC');
+        $obj_matricula_turma->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_matricula_turma->lista3($this->ref_cod_turma, NULL, NULL,
-      $this->ref_cod_serie,$this->ref_cod_escola, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL,1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL,$this->ref_cod_curso, NULL, NULL, NULL, NULL, NULL, NULL, TRUE, NULL, NULL, $this->ano_letivo);
+        $lista = $obj_matricula_turma->lista3(
+        $this->ref_cod_turma,
+        null,
+        null,
+      $this->ref_cod_serie,
+        $this->ref_cod_escola,
+        null,
+        null,
+        null,
+        null,
+        null,
+      null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      null,
+        $this->ref_cod_curso,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        true,
+        null,
+        null,
+        $this->ano_letivo
+    );
 
-    if (is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_curso) &&
+        if (is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_curso) &&
       is_numeric($this->ref_cod_escola)) {
-      $sql = "
+            $sql = "
 SELECT
   t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie,
   t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma,
@@ -197,71 +297,114 @@ WHERE
   AND t.ativo = '1'
   AND t.ref_ref_cod_escola = '{$this->ref_cod_escola}'";
 
-      $db = new clsBanco();
-      $db->Consulta($sql);
+            $db = new clsBanco();
+            $db->Consulta($sql);
 
-      $lista_aux = array();
-      while ($db->ProximoRegistro()) {
-        $lista_aux[] = $db->Tupla();
-      }
+            $lista_aux = [];
+            while ($db->ProximoRegistro()) {
+                $lista_aux[] = $db->Tupla();
+            }
 
-      if (is_array($lista_aux) && count($lista_aux)) {
-        if (is_array($lista) && count($lista)) {
-          $lista = array_merge($lista, $lista_aux);
-        } else {
-          $lista = $lista_aux;
+            if (is_array($lista_aux) && count($lista_aux)) {
+                if (is_array($lista) && count($lista)) {
+                    $lista = array_merge($lista, $lista_aux);
+                } else {
+                    $lista = $lista_aux;
+                }
+            }
         }
-      }
+        $total = $obj_matricula_turma->_total;
+
+        $enturmacoesMatricula = new clsPmieducarMatriculaTurma();
+        $enturmacoesMatricula = $enturmacoesMatricula->lista3(
+        $this->ref_cod_matricula,
+        null,
+        null,
+                                                         null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+                                                         null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+                                                         null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+                                                         null,
+        null,
+        $this->ano_letivo
+    );
+
+        $turmasThisSerie = $lista;
+        // lista turmas disponiveis para enturmacao, somente lista as turmas sem enturmacao
+        foreach ($turmasThisSerie as $turma) {
+            $turmaHasEnturmacao = false;
+            foreach ($enturmacoesMatricula as $enturmacao) {
+                if (! $turmaHasEnturmacao && $turma['cod_turma'] == $enturmacao['ref_cod_turma']) {
+                    $turmaHasEnturmacao = true;
+                }
+            }
+
+            if ($turmaHasEnturmacao) {
+                $enturmado = 'Sim';
+            } else {
+                $enturmado = 'Não';
+            }
+
+            $script = sprintf(
+          'onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\',\'%d\');"',
+                        $this->ref_cod_escola,
+          $turma['ref_ref_cod_serie'],
+                        $this->ref_cod_matricula,
+          $turma['cod_turma'],
+          $this->ano_letivo
+      );
+
+            $this->addLinhas([sprintf('<a href="#" %s>%s</a>', $script, $turma['nm_turma']), $enturmado]);
+        }
+
+        $this->addPaginador2(
+        'educar_matricula_turma_lst.php',
+        $total,
+        $_GET,
+        $this->nome,
+        $this->limite
+    );
+
+        $obj_permissoes = new clsPermissoes();
+
+        $this->array_botao[] = 'Voltar';
+        $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
+
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Enturmações da matrícula'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-    $total = $obj_matricula_turma->_total;
-
-    $enturmacoesMatricula = new clsPmieducarMatriculaTurma();
-    $enturmacoesMatricula = $enturmacoesMatricula->lista3($this->ref_cod_matricula, NULL, NULL,
-                                                         NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL,
-                                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                                                         NULL, NULL, $this->ano_letivo);
-
-    $turmasThisSerie = $lista;
-    // lista turmas disponiveis para enturmacao, somente lista as turmas sem enturmacao
-    foreach ($turmasThisSerie as $turma) {
-
-      $turmaHasEnturmacao = false;
-      foreach ($enturmacoesMatricula as $enturmacao) {
-        if(! $turmaHasEnturmacao && $turma['cod_turma'] == $enturmacao['ref_cod_turma'])
-          $turmaHasEnturmacao = true;
-      }
-
-      if($turmaHasEnturmacao) 
-        $enturmado = "Sim";
-      else
-        $enturmado = "Não";
-
-      $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\',\'%d\');"',
-                        $this->ref_cod_escola, $turma['ref_ref_cod_serie'],
-                        $this->ref_cod_matricula, $turma['cod_turma'], $this->ano_letivo);
-
-      $this->addLinhas(array(sprintf('<a href="#" %s>%s</a>', $script, $turma['nm_turma']), $enturmado));
-    }
-
-    $this->addPaginador2("educar_matricula_turma_lst.php", $total, $_GET,
-        $this->nome, $this->limite);
-
-    $obj_permissoes = new clsPermissoes();
-
-    $this->array_botao[] = 'Voltar';
-    $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
-
-    $this->largura = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Enturmações da matrícula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
 }
 
 // Instancia objeto de página

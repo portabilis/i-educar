@@ -24,89 +24,81 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
 //require_once ("include/clsBanco.inc.php");
 //require_once("include/clsLogradouro.inc.php");
-require_once("include/pmiacoes/geral.inc.php");
+require_once('include/pmiacoes/geral.inc.php');
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Noticias do Portal!" );
-        $this->processoAp = "551";
+        $this->SetTitulo("{$this->_instituicao} Noticias do Portal!");
+        $this->processoAp = '551';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
-        
     }
 }
 
 class miolo1 extends clsListagem
 {
-    
-    function Gerar()
+    public function Gerar()
     {
-
-        
         @session_start();
-        $_SESSION["campo"] = isset($_GET["campo"]) ? $_GET["campo"] : $_SESSION["campo"];
-        $this->__nome = "form1";
+        $_SESSION['campo'] = isset($_GET['campo']) ? $_GET['campo'] : $_SESSION['campo'];
+        $this->__nome = 'form1';
         @session_write_close();
-        
-        $this->titulo = "Categorias";
+
+        $this->titulo = 'Categorias';
 
         // Paginador
         $limite = 7;
-        $iniciolimit = ( $_GET["pagina_{$this->__nome}"] ) ? $_GET["pagina_{$this->__nome}"]*$limite-$limite: 0;
-        
+        $iniciolimit = ($_GET["pagina_{$this->__nome}"]) ? $_GET["pagina_{$this->__nome}"]*$limite-$limite: 0;
+
         //***
         // INICIO FILTROS
         //***
-        $nm_categoria = $_GET["nm_categoria"];
-        $this->campoTexto("titulo", "T&iacute;tulo", $_GET["titulo"], 40, 255);
-        
+        $nm_categoria = $_GET['nm_categoria'];
+        $this->campoTexto('titulo', 'T&iacute;tulo', $_GET['titulo'], 40, 255);
+
         //***
         // FIM FILTROS
         //***
 
-        $this->addCabecalhos( array("Data","T&iacute;tulo","Criador"));
-        
+        $this->addCabecalhos(['Data','T&iacute;tulo','Criador']);
+
         $db = new clsBanco();
-        if(!empty($_GET["titulo"]))
-            $where = " where n.titulo ilike '%{$_GET["titulo"]}%'";
-            
+        if (!empty($_GET['titulo'])) {
+            $where = " where n.titulo ilike '%{$_GET['titulo']}%'";
+        }
+
         $total = $db->CampoUnico("SELECT count(*) FROM not_portal n $where");
 
-            
-        $db->Consulta( "SELECT n.ref_ref_cod_pessoa_fj, cod_not_portal, n.data_noticia, n.titulo, n.descricao FROM not_portal n $where ORDER BY n.data_noticia DESC LIMIT $iniciolimit,$limite" );
+        $db->Consulta("SELECT n.ref_ref_cod_pessoa_fj, cod_not_portal, n.data_noticia, n.titulo, n.descricao FROM not_portal n $where ORDER BY n.data_noticia DESC LIMIT $iniciolimit,$limite");
         $objPessoa = new clsPessoaFisica();
-        while ($db->ProximoRegistro())
-        {
-            list ($cod_pessoa, $id_noticia, $data, $titulo, $descricao) = $db->Tupla();
-            list($nome) = $objPessoa->queryRapida($cod_pessoa, "nome");
-            $data = date('d/m/Y', strtotime(substr($data,0,19)));
+        while ($db->ProximoRegistro()) {
+            list($cod_pessoa, $id_noticia, $data, $titulo, $descricao) = $db->Tupla();
+            list($nome) = $objPessoa->queryRapida($cod_pessoa, 'nome');
+            $data = date('d/m/Y', strtotime(substr($data, 0, 19)));
             $campo = @$_GET['campo'];
-            if(strlen($titulo) >= 40)
-                $titulo = substr($titulo,0,40)."...";
-            $func = "javascript:enviar('{$_SESSION["campo"]}','{$id_noticia}','{$titulo}','div_dinamico_0')";
-            $this->addLinhas(array("<a href='javascript:void(0);' onclick=\"{$func}\">{$data}</a>","<a href='javascript:void(0);' onclick=\"{$func}\">{$titulo}</a>","<a href='javascript:void(0);' onclick=\"{$func}\">{$nome}</a>"));             
-
+            if (strlen($titulo) >= 40) {
+                $titulo = substr($titulo, 0, 40).'...';
+            }
+            $func = "javascript:enviar('{$_SESSION['campo']}','{$id_noticia}','{$titulo}','div_dinamico_0')";
+            $this->addLinhas(["<a href='javascript:void(0);' onclick=\"{$func}\">{$data}</a>","<a href='javascript:void(0);' onclick=\"{$func}\">{$titulo}</a>","<a href='javascript:void(0);' onclick=\"{$func}\">{$nome}</a>"]);
         }
-        $this->largura = "100%";
-        $this->addPaginador2( "acoes_pesquisa_noticia.php", $total, $_GET, $this->__nome, $limite );
-        
+        $this->largura = '100%';
+        $this->addPaginador2('acoes_pesquisa_noticia.php', $total, $_GET, $this->__nome, $limite);
+
         @session_write_close();
     }
-    
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new miolo1();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

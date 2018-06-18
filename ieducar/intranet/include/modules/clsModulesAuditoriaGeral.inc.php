@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Module
+ *
  * @since     07/2013
+ *
  * @version   $Id$
  */
 
@@ -35,140 +40,165 @@ require_once 'lib/Utils/SafeJson.php';
  * clsModulesAuditoriaGeral class.
  *
  * @author    Caroline Salib <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Module
+ *
  * @since     07/2013
+ *
  * @version   @@package_version@@
  */
 class clsModulesAuditoriaGeral
 {
-  const OPERACAO_INCLUSAO = 1;
-  const OPERACAO_ALTERACAO = 2;
-  const OPERACAO_EXCLUSAO = 3;
+    const OPERACAO_INCLUSAO = 1;
+    const OPERACAO_ALTERACAO = 2;
+    const OPERACAO_EXCLUSAO = 3;
 
-  var $_total;
-  var $_campos_lista;
-  var $_tabela;
+    public $_total;
+    public $_campos_lista;
+    public $_tabela;
 
-  var $usuario_id;
-  var $codigo;
-  var $rotina;
+    public $usuario_id;
+    public $codigo;
+    public $rotina;
 
-  var $_campo_order_by;
+    public $_campo_order_by;
 
-  function __construct($rotina, $usuario_id, $codigo = 'null'){
-    $this->_campos_lista = 'codigo,
+    public function __construct($rotina, $usuario_id, $codigo = 'null')
+    {
+        $this->_campos_lista = 'codigo,
                             usuario_id,
                             operacao,
                             rotina,
                             valor_novo,
                             valor_antigo,
                             data_hora';
-    $this->_tabela = 'modules.auditoria_geral';
+        $this->_tabela = 'modules.auditoria_geral';
 
-    $this->rotina = $rotina;
-    $this->usuario_id = $usuario_id;
-    $this->codigo = $codigo;
+        $this->rotina = $rotina;
+        $this->usuario_id = $usuario_id;
+        $this->codigo = $codigo;
 
-    // Seta usuário admin quando não houver usuário pois pode ser API/Novo educação
-    if (!$this->usuario_id) $this->usuario_id = 1;
-  }
-
-  function removeKeyNaoNumerica($dados) {
-    foreach ($dados as $key => $value) {
-      if (is_int($key)) {
-        unset($dados[$key]);
-      }
-    }
-    return $dados;
-  }
-
-  function removeRegistrosNulos($dados) {
-    foreach ($dados as $key => $value) {
-      if (is_null($value)) {
-        unset($dados[$key]);
-      }
-    }
-    return $dados;
-  }
-
-  function removeKeysDesnecessarias($dados) {
-    $keysDesnecessarias = array("ref_usuario_exc",
-                                "ref_usuario_cad",
-                                "data_cadastro",
-                                "data_exclusao");
-    foreach ($dados as $key => $value) {
-      if (in_array($key, $keysDesnecessarias)) {
-        unset($dados[$key]);
-      }
-    }
-    return $dados;
-  }
-
-  function converteArrayDadosParaJson($dados) {
-    $dados = $this->removeKeyNaoNumerica($dados);
-    $dados = $this->removeKeysDesnecessarias($dados);
-    $dados = SafeJson::encode($dados);
-    $dados = str_replace("'", "''", $dados);
-    return $dados;
-  }
-
-  function removeKeysDiferentes($dados, $keysEmComum) {
-    foreach ($dados as $key => $value) {
-      if (!array_key_exists($key, $keysEmComum)) {
-        unset($dados[$key]);
-      }
-    }
-    return $dados;
-  }
-
-  function removeKeysIguais($dados, $keysEmComum) {
-    foreach ($dados as $key => $value) {
-      if (array_key_exists($key, $keysEmComum)) {
-        unset($dados[$key]);
-      }
-    }
-    return $dados;
-  }
-
-  function keysComValuesIguais($array1, $array2) {
-    foreach ($array1 as $key => $value) {
-      if ($array1[$key] != $array2[$key]) {
-        unset($array1[$key]);
-      }
-    }
-    return $array1;
-  }
-
-  function insereAuditoria($operacao, $valorAntigo, $valorNovo) {
-    if ($operacao == self::OPERACAO_ALTERACAO) {
-      $keysEmComum = array_intersect_key($valorAntigo, $valorNovo);
-
-      $valorAntigo = $this->removeKeysDiferentes($valorAntigo, $keysEmComum);
-      $valorNovo = $this->removeKeysDiferentes($valorNovo, $keysEmComum);
-
-      $keysMesmoValor = $this->keysComValuesIguais($valorAntigo, $valorNovo);
-
-      $valorAntigo = $this->removeKeysIguais($valorAntigo, $keysMesmoValor);
-      $valorNovo = $this->removeKeysIguais($valorNovo, $keysMesmoValor);
+        // Seta usuário admin quando não houver usuário pois pode ser API/Novo educação
+        if (!$this->usuario_id) {
+            $this->usuario_id = 1;
+        }
     }
 
-    if (!$valorAntigo && !$valorNovo) return;
+    public function removeKeyNaoNumerica($dados)
+    {
+        foreach ($dados as $key => $value) {
+            if (is_int($key)) {
+                unset($dados[$key]);
+            }
+        }
 
-    if ($valorAntigo) {
-      $valorAntigo = "'".$this->converteArrayDadosParaJson($valorAntigo)."'";
-    } else {
-      $valorAntigo = 'NULL';
+        return $dados;
     }
 
-    if ($valorNovo){
-      $valorNovo = "'".$this->converteArrayDadosParaJson($valorNovo)."'";
-    } else {
-      $valorNovo = 'NULL';
+    public function removeRegistrosNulos($dados)
+    {
+        foreach ($dados as $key => $value) {
+            if (is_null($value)) {
+                unset($dados[$key]);
+            }
+        }
+
+        return $dados;
     }
 
-    $sql = "INSERT INTO modules.auditoria_geral (codigo,
+    public function removeKeysDesnecessarias($dados)
+    {
+        $keysDesnecessarias = ['ref_usuario_exc',
+                                'ref_usuario_cad',
+                                'data_cadastro',
+                                'data_exclusao'];
+        foreach ($dados as $key => $value) {
+            if (in_array($key, $keysDesnecessarias)) {
+                unset($dados[$key]);
+            }
+        }
+
+        return $dados;
+    }
+
+    public function converteArrayDadosParaJson($dados)
+    {
+        $dados = $this->removeKeyNaoNumerica($dados);
+        $dados = $this->removeKeysDesnecessarias($dados);
+        $dados = SafeJson::encode($dados);
+        $dados = str_replace('\'', '\'\'', $dados);
+
+        return $dados;
+    }
+
+    public function removeKeysDiferentes($dados, $keysEmComum)
+    {
+        foreach ($dados as $key => $value) {
+            if (!array_key_exists($key, $keysEmComum)) {
+                unset($dados[$key]);
+            }
+        }
+
+        return $dados;
+    }
+
+    public function removeKeysIguais($dados, $keysEmComum)
+    {
+        foreach ($dados as $key => $value) {
+            if (array_key_exists($key, $keysEmComum)) {
+                unset($dados[$key]);
+            }
+        }
+
+        return $dados;
+    }
+
+    public function keysComValuesIguais($array1, $array2)
+    {
+        foreach ($array1 as $key => $value) {
+            if ($array1[$key] != $array2[$key]) {
+                unset($array1[$key]);
+            }
+        }
+
+        return $array1;
+    }
+
+    public function insereAuditoria($operacao, $valorAntigo, $valorNovo)
+    {
+        if ($operacao == self::OPERACAO_ALTERACAO) {
+            $keysEmComum = array_intersect_key($valorAntigo, $valorNovo);
+
+            $valorAntigo = $this->removeKeysDiferentes($valorAntigo, $keysEmComum);
+            $valorNovo = $this->removeKeysDiferentes($valorNovo, $keysEmComum);
+
+            $keysMesmoValor = $this->keysComValuesIguais($valorAntigo, $valorNovo);
+
+            $valorAntigo = $this->removeKeysIguais($valorAntigo, $keysMesmoValor);
+            $valorNovo = $this->removeKeysIguais($valorNovo, $keysMesmoValor);
+        }
+
+        if (!$valorAntigo && !$valorNovo) {
+            return;
+        }
+
+        if ($valorAntigo) {
+            $valorAntigo = '\''.$this->converteArrayDadosParaJson($valorAntigo).'\'';
+        } else {
+            $valorAntigo = 'NULL';
+        }
+
+        if ($valorNovo) {
+            $valorNovo = '\''.$this->converteArrayDadosParaJson($valorNovo).'\'';
+        } else {
+            $valorNovo = 'NULL';
+        }
+
+        $sql = "INSERT INTO modules.auditoria_geral (codigo,
                                                  usuario_id,
                                                  operacao,
                                                  rotina,
@@ -183,118 +213,118 @@ class clsModulesAuditoriaGeral
                          {$valorNovo},
                          NOW())";
 
-       $db = new clsBanco();
-     $db->Consulta($sql);
-  }
-
-  public function inclusao($dados) {
-    $this->insereAuditoria(self::OPERACAO_INCLUSAO, NULL, $dados);
-  }
-
-  public function alteracao($valorAntigo, $valorNovo) {
-    $this->insereAuditoria(self::OPERACAO_ALTERACAO, $valorAntigo, $valorNovo);
-  }
-
-  public function exclusao($dados) {
-    $this->insereAuditoria(self::OPERACAO_EXCLUSAO, $dados, NULL);
-  }
-
-  function lista($rotina, $usuario, $dataInicial, $dataFinal) {
-    $filtros = "";
-
-    $whereAnd = " WHERE ";
-
-    if(is_string($rotina)) {
-      $filtros .= "{$whereAnd} rotina LIKE '%{$rotina}%'";
-      $whereAnd = " AND ";
+        $db = new clsBanco();
+        $db->Consulta($sql);
     }
 
-    if(is_string($usuario)) {
-      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+    public function inclusao($dados)
+    {
+        $this->insereAuditoria(self::OPERACAO_INCLUSAO, null, $dados);
+    }
+
+    public function alteracao($valorAntigo, $valorNovo)
+    {
+        $this->insereAuditoria(self::OPERACAO_ALTERACAO, $valorAntigo, $valorNovo);
+    }
+
+    public function exclusao($dados)
+    {
+        $this->insereAuditoria(self::OPERACAO_EXCLUSAO, $dados, null);
+    }
+
+    public function lista($rotina, $usuario, $dataInicial, $dataFinal)
+    {
+        $filtros = '';
+
+        $whereAnd = ' WHERE ';
+
+        if (is_string($rotina)) {
+            $filtros .= "{$whereAnd} rotina LIKE '%{$rotina}%'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($usuario)) {
+            $filtros .= "{$whereAnd} EXISTS (SELECT 1
                                          FROM portal.funcionario
                                         WHERE funcionario.ref_cod_pessoa_fj = auditoria_geral.usuario_id
                                           AND funcionario.matricula = '{$usuario}')";
-      $whereAnd = " AND ";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($dataInicial)) {
+            $filtros .= "{$whereAnd} data_hora::date >= '{$dataInicial}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($dataFinal)) {
+            $filtros .= "{$whereAnd} data_hora::date <= '{$dataFinal}'";
+            $whereAnd = ' AND ';
+        }
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} ";
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
     }
 
-    if(is_string($dataInicial)) {
-      $filtros .= "{$whereAnd} data_hora::date >= '{$dataInicial}'";
-      $whereAnd = " AND ";
-    }
-
-    if(is_string($dataFinal)) {
-      $filtros .= "{$whereAnd} data_hora::date <= '{$dataFinal}'";
-      $whereAnd = " AND ";
-    }
-
-    $db = new clsBanco();
-    $countCampos = count( explode( ",", $this->_campos_lista ) );
-    $resultado = array();
-
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} ";
-    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
-    $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
-
-    $db->Consulta( $sql );
-
-    if( $countCampos > 1 )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
-      while ( $db->ProximoRegistro() )
-      {
-        $tupla = $db->Tupla();
-
-        $tupla["_total"] = $this->_total;
-        $resultado[] = $tupla;
-      }
+        $this->_limite_quantidade = $intLimiteQtd;
+        $this->_limite_offset = $intLimiteOffset;
     }
-    else
+
+    public function getLimite()
     {
-      while ( $db->ProximoRegistro() )
-      {
-        $tupla = $db->Tupla();
-        $resultado[] = $tupla[$this->_campos_lista];
-      }
+        if (is_numeric($this->_limite_quantidade)) {
+            $retorno = " LIMIT {$this->_limite_quantidade}";
+            if (is_numeric($this->_limite_offset)) {
+                $retorno .= " OFFSET {$this->_limite_offset} ";
+            }
+
+            return $retorno;
+        }
+
+        return '';
     }
-    if( count( $resultado ) )
+
+    public function setOrderby($strNomeCampo)
     {
-      return $resultado;
+        if (is_string($strNomeCampo) && $strNomeCampo) {
+            $this->_campo_order_by = $strNomeCampo;
+        }
     }
-    return false;
-  }
 
-  function setLimite( $intLimiteQtd, $intLimiteOffset = null )
-  {
-    $this->_limite_quantidade = $intLimiteQtd;
-    $this->_limite_offset = $intLimiteOffset;
-  }
-
-  function getLimite()
-  {
-    if( is_numeric( $this->_limite_quantidade ) )
+    public function getOrderby()
     {
-      $retorno = " LIMIT {$this->_limite_quantidade}";
-      if( is_numeric( $this->_limite_offset ) )
-      {
-        $retorno .= " OFFSET {$this->_limite_offset} ";
-      }
-      return $retorno;
-    }
-    return "";
-  }
+        if (is_string($this->_campo_order_by)) {
+            return " ORDER BY {$this->_campo_order_by} ";
+        }
 
-  function setOrderby($strNomeCampo)
-  {
-    if (is_string($strNomeCampo) && $strNomeCampo ) {
-      $this->_campo_order_by = $strNomeCampo;
+        return '';
     }
-  }
-
-  function getOrderby()
-  {
-    if (is_string($this->_campo_order_by)) {
-      return " ORDER BY {$this->_campo_order_by} ";
-    }
-    return '';
-  }
 }

@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Include
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
  */
 
@@ -50,10 +55,9 @@ require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente){
-    header("Location: /404.html");
+if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
+    header('Location: /404.html');
 }
-
 
 /**
  * clsBase class.
@@ -61,30 +65,35 @@ if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente){
  * Provê uma API para criação de páginas HTML programaticamente.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Include
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsBase extends clsConfig
 {
-    var $titulo = 'Prefeitura Cobra Tecnologia';
-    var $clsForm = array();
-    var $bodyscript = NULL;
-    var $processoAp;
-    var $refresh = FALSE;
+    public $titulo = 'Prefeitura Cobra Tecnologia';
+    public $clsForm = [];
+    public $bodyscript = null;
+    public $processoAp;
+    public $refresh = false;
 
-    var $convidado = FALSE;
-    var $renderMenu = TRUE;
-    var $renderMenuSuspenso = TRUE;
-    var $renderBanner = TRUE;
-    var $estilos;
-    var $scripts;
+    public $convidado = false;
+    public $renderMenu = true;
+    public $renderMenuSuspenso = true;
+    public $renderBanner = true;
+    public $estilos;
+    public $scripts;
 
-    var $script_header;
-    var $script_footer;
-    var $prog_alert;
+    public $script_header;
+    public $script_footer;
+    public $prog_alert;
 
     public $configuracoes;
 
@@ -104,15 +113,14 @@ class clsBase extends clsConfig
 
         if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
             header('HTTP/1.1 503 Service Temporarily Unavailable');
-            header("Location: suspenso.php");
+            header('Location: suspenso.php');
 
             die();
         }
     }
 
-    function OpenTpl($template)
+    public function OpenTpl($template)
     {
-
         $prefix = 'nvp_';
         $file = $this->arrayConfig['strDirTemplates'] . $prefix . $template . '.tpl';
 
@@ -124,101 +132,100 @@ class clsBase extends clsConfig
         return $contents;
     }
 
-    function SetTitulo($titulo)
+    public function SetTitulo($titulo)
     {
         $this->titulo = $titulo;
     }
 
-    function AddForm($form)
+    public function AddForm($form)
     {
         $this->clsForm[] = $form;
     }
 
-    function MakeHeadHtml()
+    public function MakeHeadHtml()
     {
-
         $saida = $this->OpenTpl('htmlhead');
-        $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
-        $saida = str_replace("<!-- #&USER_ID&# -->", $_SESSION['id_pessoa'], $saida);
-        $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
+        $saida = str_replace('<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->', CORE_EXT_CONFIGURATION_ENV, $saida);
+        $saida = str_replace('<!-- #&USER_ID&# -->', $_SESSION['id_pessoa'], $saida);
+        $saida = str_replace('<!-- #&TITULO&# -->', $this->titulo, $saida);
 
         if ($this->refresh) {
-            $saida = str_replace("<!-- #&REFRESH&# -->", "<meta http-equiv='refresh' content='60'>", $saida);
+            $saida = str_replace('<!-- #&REFRESH&# -->', '<meta http-equiv=\'refresh\' content=\'60\'>', $saida);
         }
 
         if (is_array($this->estilos) && count($this->estilos)) {
             $estilos = '';
             foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='/intranet/styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+                $estilos .= "<link rel=stylesheet type='text/css' href='/intranet/styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . '\' />';
             }
-            $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
+            $saida = str_replace('<!-- #&ESTILO&# -->', $estilos, $saida);
         }
 
         if (is_array($this->scripts) && count($this->scripts)) {
             $estilos = '';
             foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
+                $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . '\' ></script>';
             }
-            $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
+            $saida = str_replace('<!-- #&SCRIPT&# -->', $scripts, $saida);
         }
 
         if ($this->bodyscript) {
-            $saida = str_replace("<!-- #&BODYSCRIPTS&# -->", $this->bodyscript, $saida);
+            $saida = str_replace('<!-- #&BODYSCRIPTS&# -->', $this->bodyscript, $saida);
         } else {
-            $saida = str_replace("<!-- #&BODYSCRIPTS&# -->", "", $saida);
+            $saida = str_replace('<!-- #&BODYSCRIPTS&# -->', '', $saida);
         }
 
         if ($this->script_header) {
-            $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", $this->script_header, $saida);
+            $saida = str_replace('<!-- #&SCRIPT_HEADER&# -->', $this->script_header, $saida);
         } else {
-            $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
+            $saida = str_replace('<!-- #&SCRIPT_HEADER&# -->', '', $saida);
         }
 
-        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
+        $saida = str_replace('<!-- #&GOOGLE_TAG_MANAGER_ID&# -->', $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
 
         // nome completo usuario
         // @TODO: jeito mais eficiente de usar estes dados, já que eles são
         //         usados em mais um método aqui...
         $nomePessoa = new clsPessoaFisica();
-        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
+        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), 'nome', 'email');
         $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
 
-        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
-        $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
-        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
+        $saida = str_replace('<!-- #&SLUG&# -->', $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
+        $saida = str_replace('<!-- #&USERLOGADO&# -->', trim($nomePessoa), $saida);
+        $saida = str_replace('<!-- #&USEREMAIL&# -->', trim($email), $saida);
 
         return $saida;
     }
 
-    function addEstilo($estilo_nome)
+    public function addEstilo($estilo_nome)
     {
         $this->estilos[$estilo_nome] = $estilo_nome;
     }
 
-    function addScript($script_nome)
+    public function addScript($script_nome)
     {
         $this->scripts[$script_nome] = $script_nome;
     }
 
-    function MakeFootHtml()
+    public function MakeFootHtml()
     {
         $saida = $this->OpenTpl('htmlfoot');
 
         if ($this->script_footer) {
-            $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", $this->script_footer, $saida);
+            $saida = str_replace('<!-- #&SCRIPT_FOOTER&# -->', $this->script_footer, $saida);
         } else {
-            $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", "", $saida);
+            $saida = str_replace('<!-- #&SCRIPT_FOOTER&# -->', '', $saida);
         }
 
         return $saida;
     }
 
-    function verificaPermissao()
+    public function verificaPermissao()
     {
         return $this->VerificaPermicao();
     }
 
-    function VerificaPermicao()
+    public function VerificaPermicao()
     {
         if ($this->processoAp) {
             $permite = true;
@@ -232,26 +239,26 @@ class clsBase extends clsConfig
                 }
             }
             if (!$permite) {
-                header("location: index.php?negado=1&err=1");
-                die("Acesso negado para este usu&acute;rio");
+                header('location: index.php?negado=1&err=1');
+                die('Acesso negado para este usu&acute;rio');
             }
         } else {
             if (!$this->VerificaPermicaoNumerico($this->processoAp)) {
-                header("location: index.php?negado=1&err=2");
-                die("Acesso negado para este usu&acute;rio");
+                header('location: index.php?negado=1&err=2');
+                die('Acesso negado para este usu&acute;rio');
             }
         }
 
-        return TRUE;
+        return true;
     }
 
-    function VerificaPermicaoNumerico($processo_ap)
+    public function VerificaPermicaoNumerico($processo_ap)
     {
         if (is_numeric($processo_ap)) {
-            $sempermissao = TRUE;
+            $sempermissao = true;
 
             if ($processo_ap == 0) {
-                $this->prog_alert .= "Processo AP == 0!";
+                $this->prog_alert .= 'Processo AP == 0!';
             }
 
             if ($processo_ap != 0) {
@@ -261,7 +268,7 @@ class clsBase extends clsConfig
                                 WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$this->currentUserId()}");
                 if ($this->db()->ProximoRegistro()) {
                     list($aui) = $this->db()->Tupla();
-                    $sempermissao = FALSE;
+                    $sempermissao = false;
                 }
 
                 // @todo A primeira consulta OK, verifica de forma simples de tem
@@ -276,16 +283,16 @@ class clsBase extends clsConfig
                                 LIMIT 1");
                 if ($this->db()->ProximoRegistro()) {
                     list($aui) = $this->db()->Tupla();
-                    $sempermissao = FALSE;
+                    $sempermissao = false;
                 }
 
                 if ($sempermissao) {
-                    $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-                    $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                    $pagina = $_SERVER["PHP_SELF"];
-                    $posts = "";
-                    $gets = "";
-                    $sessions = "";
+                    $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
+                    $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
+                    $pagina = $_SERVER['PHP_SELF'];
+                    $posts = '';
+                    $gets = '';
+                    $sessions = '';
 
                     foreach ($_POST as $key => $val) {
                         $posts .= " - $key: $val\n";
@@ -300,7 +307,7 @@ class clsBase extends clsConfig
                     }
 
                     $variaveis = "POST\n{$posts}GET\n{$gets}SESSION\n{$sessions}";
-                    $variaveis = Portabilis_String_Utils::toLatin1($variaveis, array('escape' => true));
+                    $variaveis = Portabilis_String_Utils::toLatin1($variaveis, ['escape' => true]);
 
                     if ($this->currentUserId()) {
                         $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('{$this->currentUserId()}', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
@@ -308,20 +315,22 @@ class clsBase extends clsConfig
                         $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES(NULL, '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
                     }
 
-                    return FALSE;
+                    return false;
                 }
             }
-            return TRUE;
+
+            return true;
         }
     }
 
-    function MakeMenu()
+    public function MakeMenu()
     {
-        $menu = $this->openTpl("htmlmenu");
+        $menu = $this->openTpl('htmlmenu');
         $menuObj = new clsMenu();
         $saida .= $this->buscaRapida();
-        $saida .= $menuObj->MakeMenu(null, $this->openTpl("htmllinhamenusubtitulo"));
-        $saida = str_replace("<!-- #&LINHAS&# -->", $saida, $menu);
+        $saida .= $menuObj->MakeMenu(null, $this->openTpl('htmllinhamenusubtitulo'));
+        $saida = str_replace('<!-- #&LINHAS&# -->', $saida, $menu);
+
         return $saida;
     }
 
@@ -329,24 +338,26 @@ class clsBase extends clsConfig
      * Cria o menu suspenso dos subsistemas Escola e Biblioteca.
      *
      * @todo Refatorar lógica do primeiro par if/else, duplicação
+     *
      * @return bool|string Retorna FALSE em caso de erro
      */
-    function makeMenuSuspenso()
+    public function makeMenuSuspenso()
     {
         // Usa helper de Url para pegar o path da requisição
         require_once 'CoreExt/View/Helper/UrlHelper.php';
 
-        $uri = explode('/', CoreExt_View_Helper_UrlHelper::url($_SERVER['REQUEST_URI'],
-            array(
+        $uri = explode('/', CoreExt_View_Helper_UrlHelper::url(
+            $_SERVER['REQUEST_URI'],
+            [
                 'components' => CoreExt_View_Helper_UrlHelper::URL_PATH
-            )
+            ]
         ));
 
         @session_start();
         $idpes = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $submenu = array();
+        $submenu = [];
         $menu_tutor = '';
 
         if ($this->processoAp) {
@@ -358,7 +369,7 @@ class clsBase extends clsConfig
                     $tupla = $this->db()->Tupla();
                     $submenu[] = $tupla['cod_menu_submenu'];
                 }
-                $where = implode(" OR ref_cod_menu_submenu = ", $submenu);
+                $where = implode(' OR ref_cod_menu_submenu = ', $submenu);
                 $where = "ref_cod_menu_submenu = $where";
                 $menu_tutor = $this->db()->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
             } else {
@@ -372,7 +383,7 @@ class clsBase extends clsConfig
                 $submenu[] = $tupla['cod_menu_submenu'];
             }
 
-            $where = implode(" OR ref_cod_menu_submenu = ", $submenu);
+            $where = implode(' OR ref_cod_menu_submenu = ', $submenu);
             $where = "ref_cod_menu_submenu = $where";
             $menu_tutor = $this->db()->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
         }
@@ -384,12 +395,12 @@ class clsBase extends clsConfig
 
             if ($lista_menu_suspenso) {
                 for ($i = 0, $loop = count($lista_menu_suspenso); $i < $loop; $i++) {
-                    $achou = FALSE;
+                    $achou = false;
 
                     if (!$lista_menu_suspenso[$i]['ref_cod_menu_submenu']) {
                         foreach ($lista_menu as $id => $menu) {
                             if ($menu['ref_cod_menu_pai'] == $lista_menu_suspenso[$i]['cod_menu']) {
-                                $achou = TRUE;
+                                $achou = true;
                             }
                         }
                         if (!$achou) {
@@ -438,88 +449,89 @@ class clsBase extends clsConfig
                     }
                 }
 
-                $saida .= "</script>";
+                $saida .= '</script>';
             }
 
-            $saida .= "<script type=\"text/javascript\">
-          setTimeout(\"setXY();\",150);
+            $saida .= '<script type="text/javascript">
+          setTimeout("setXY();",150);
           MontaMenu();
-        </script>";
+        </script>';
+
             return $saida;
         }
 
-        return FALSE;
+        return false;
     }
 
-    function DataAtual()
+    public function DataAtual()
     {
-        $retorno = "";
+        $retorno = '';
         switch (date('w')) {
-            case "0":
-                $retorno .= "Domingo";
+            case '0':
+                $retorno .= 'Domingo';
                 break;
-            case "1":
-                $retorno .= "Segunda-feira";
+            case '1':
+                $retorno .= 'Segunda-feira';
                 break;
-            case "2":
-                $retorno .= "Ter&ccedil;a-feira";
+            case '2':
+                $retorno .= 'Ter&ccedil;a-feira';
                 break;
-            case "3":
-                $retorno .= "Quarta-feira";
+            case '3':
+                $retorno .= 'Quarta-feira';
                 break;
-            case "4":
-                $retorno .= "Quinta-feira";
+            case '4':
+                $retorno .= 'Quinta-feira';
                 break;
-            case "5":
-                $retorno .= "Sexta-feira";
+            case '5':
+                $retorno .= 'Sexta-feira';
                 break;
-            case "6":
-                $retorno .= "S&aacute;bado";
+            case '6':
+                $retorno .= 'S&aacute;bado';
                 break;
         }
 
-        $retorno .= ", " . date('d') . " de ";
+        $retorno .= ', ' . date('d') . ' de ';
 
         switch (date('n')) {
-            case "1":
-                $retorno .= "janeiro de ";
+            case '1':
+                $retorno .= 'janeiro de ';
                 break;
-            case "2":
-                $retorno .= "fevereiro de ";
+            case '2':
+                $retorno .= 'fevereiro de ';
                 break;
-            case "3":
-                $retorno .= "mar&ccedil;o de ";
+            case '3':
+                $retorno .= 'mar&ccedil;o de ';
                 break;
-            case "4":
-                $retorno .= "abril de ";
+            case '4':
+                $retorno .= 'abril de ';
                 break;
-            case "5":
-                $retorno .= "maio de ";
+            case '5':
+                $retorno .= 'maio de ';
                 break;
-            case "6":
-                $retorno .= "junho de ";
+            case '6':
+                $retorno .= 'junho de ';
                 break;
-            case "7":
-                $retorno .= "julho de ";
+            case '7':
+                $retorno .= 'julho de ';
                 break;
-            case "8":
-                $retorno .= "agosto de ";
+            case '8':
+                $retorno .= 'agosto de ';
                 break;
-            case "9":
-                $retorno .= "setembro de ";
+            case '9':
+                $retorno .= 'setembro de ';
                 break;
-            case "10":
-                $retorno .= "outubro de ";
+            case '10':
+                $retorno .= 'outubro de ';
                 break;
-            case "11":
-                $retorno .= "novembro de ";
+            case '11':
+                $retorno .= 'novembro de ';
                 break;
-            case "12":
-                $retorno .= "dezembro de ";
+            case '12':
+                $retorno .= 'dezembro de ';
                 break;
         }
 
-        $retorno .= date('Y') . ".";
+        $retorno .= date('Y') . '.';
 
         return $retorno;
     }
@@ -528,7 +540,7 @@ class clsBase extends clsConfig
      * @see Core_Page_Controller_Abstract#getAppendedOutput()
      * @see Core_Page_Controller_Abstract#getPrependedOutput()
      */
-    function MakeBody()
+    public function MakeBody()
     {
         $corpo = '';
         foreach ($this->clsForm as $form) {
@@ -558,7 +570,7 @@ class clsBase extends clsConfig
 
         if ($this->renderBanner) {
             if ($this->renderMenu) {
-                $saida = $this->OpenTpl("htmlbody");
+                $saida = $this->OpenTpl('htmlbody');
             } /**
              * @todo Essa segunda condição não se torna verdadeira nunca, já que não
              *   existe uma condição binária entre $renderBanner e $renderMenu que
@@ -575,20 +587,20 @@ class clsBase extends clsConfig
              *   Caso não ocorra, remover a condicional e apagar o arquivo _sem_menu.
              */
             else {
-                $saida = $this->OpenTpl("htmlbody_sem_menu");
+                $saida = $this->OpenTpl('htmlbody_sem_menu');
             }
         } else {
-            $saida = $this->OpenTpl("htmlbodys");
+            $saida = $this->OpenTpl('htmlbodys');
         }
-        $saida = str_replace("<!-- #&DATA&# -->", $data, $saida);
+        $saida = str_replace('<!-- #&DATA&# -->', $data, $saida);
 
         if ($this->renderMenu) {
-            $saida = str_replace("<!-- #&MENU&# -->", $menu, $saida);
+            $saida = str_replace('<!-- #&MENU&# -->', $menu, $saida);
         }
 
         $menu_dinamico = $this->makeBanner();
 
-        $notificacao = "";
+        $notificacao = '';
         $this->db()->Consulta("SELECT cod_notificacao, titulo, conteudo, url FROM portal.notificacao WHERE ref_cod_funcionario = '{$this->currentUserId()}' AND data_hora_ativa < NOW()");
 
         if ($this->db()->numLinhas()) {
@@ -601,44 +613,45 @@ class clsBase extends clsConfig
         <div class=\"controle_fechar\" title=\"Fechar\" onclick=\"fecha_notificacao( {$cod_notificacao} );\">x</div>
         <center><strong>Notifica&ccedil;&atilde;o</strong></center>
         <b>T&iacute;tulo</b>: {$titulo}<br />
-        <b>Conte&uacute;do</b>: " . str_replace("\n", "<br>", $conteudo) . "<br />
-        </div>";
+        <b>Conte&uacute;do</b>: " . str_replace("\n", '<br>', $conteudo) . '<br />
+        </div>';
             }
-            $saida = str_replace("<!-- #&NOTIFICACOES&# -->", $notificacao, $saida);
+            $saida = str_replace('<!-- #&NOTIFICACOES&# -->', $notificacao, $saida);
             $this->db()->Consulta("UPDATE portal.notificacao SET visualizacoes = visualizacoes + 1 WHERE ref_cod_funcionario = '{$this->currentUserId()}' AND data_hora_ativa < NOW()");
-            $this->db()->Consulta("DELETE FROM portal.notificacao WHERE visualizacoes > 10");
+            $this->db()->Consulta('DELETE FROM portal.notificacao WHERE visualizacoes > 10');
         }
 
         // nome completo usuario
         $nomePessoa = new clsPessoaFisica();
-        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
-        $nomePessoa = ($nomePessoa) ? $nomePessoa : "<span style='color: #DD0000; '>Convidado</span>";
+        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), 'nome', 'email');
+        $nomePessoa = ($nomePessoa) ? $nomePessoa : '<span style=\'color: #DD0000; \'>Convidado</span>';
 
         // foto do usuario
         $objFoto = new clsCadastroFisicaFoto($this->currentUserId());
         $detalheFoto = $objFoto->detalhe();
-        $foto = $detalheFoto['caminho'] ? str_replace("http://", "https://", $detalheFoto['caminho']) : '/intranet/imagens/user-perfil.png';
+        $foto = $detalheFoto['caminho'] ? str_replace('http://', 'https://', $detalheFoto['caminho']) : '/intranet/imagens/user-perfil.png';
 
         // data ultimo acesso
         $ultimoAcesso = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
 
-        if ($ultimoAcesso)
-            $ultimoAcesso = date("d/m/Y H:i", strtotime(substr($ultimoAcesso, 0, 19)));
+        if ($ultimoAcesso) {
+            $ultimoAcesso = date('d/m/Y H:i', strtotime(substr($ultimoAcesso, 0, 19)));
+        }
 
         $this->checkUserExpirations();
 
         // substitui valores no template
-        $saida = str_replace("<!-- #&ULTIMOACESSO&# -->", $ultimoAcesso, $saida);
-        $saida = str_replace("<!-- #&USERLOGADO&# -->", $nomePessoa, $saida);
-        $saida = str_replace("<!-- #&USEREMAIL&# -->", $email, $saida);
-        $saida = str_replace("<!-- #&CORPO&# -->", $corpo, $saida);
-        $saida = str_replace("<!-- #&ANUNCIO&# -->", $menu_dinamico, $saida);
-        $saida = str_replace("<!-- #&FOTO&# -->", $foto, $saida);
+        $saida = str_replace('<!-- #&ULTIMOACESSO&# -->', $ultimoAcesso, $saida);
+        $saida = str_replace('<!-- #&USERLOGADO&# -->', $nomePessoa, $saida);
+        $saida = str_replace('<!-- #&USEREMAIL&# -->', $email, $saida);
+        $saida = str_replace('<!-- #&CORPO&# -->', $corpo, $saida);
+        $saida = str_replace('<!-- #&ANUNCIO&# -->', $menu_dinamico, $saida);
+        $saida = str_replace('<!-- #&FOTO&# -->', $foto, $saida);
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
 
-        $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $configuracoes["ieducar_internal_footer"], $saida);
+        $saida = str_replace('<!-- #&RODAPE_INTERNO&# -->', $configuracoes['ieducar_internal_footer'], $saida);
 
         // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
         // caso o host esteja atrás de um proxy)
@@ -653,37 +666,37 @@ class clsBase extends clsConfig
         $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
         $this->db()->Consulta($sql);
 
-        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/select2.full.min.js\"></script>";
-        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/pt-BR.js\"></script>";
-        $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"/intranet/scripts/select2/select2.min.css\" />";
+        $saida .= '<script type="text/javascript" src="/intranet/scripts/select2/select2.full.min.js"></script>';
+        $saida .= '<script type="text/javascript" src="/intranet/scripts/select2/pt-BR.js"></script>';
+        $saida .= '<link type="text/css" rel="stylesheet" href="/intranet/scripts/select2/select2.min.css" />';
 
         return $saida;
     }
 
-    function organiza($listaBanners)
+    public function organiza($listaBanners)
     {
         $aux_inicio = 0;
         $aux_fim = 0;
         foreach ($listaBanners as $ind => $banner) {
-            $aux_fim = $aux_inicio + $banner["prioridade"];
-            $banner["controle_inicio"] = $aux_inicio;
-            $banner["controle_fim"] = $aux_fim;
+            $aux_fim = $aux_inicio + $banner['prioridade'];
+            $banner['controle_inicio'] = $aux_inicio;
+            $banner['controle_fim'] = $aux_fim;
             $aux_inicio = $aux_fim + 1;
             $listaBanners[$ind] = $banner;
         }
 
-        return array($listaBanners, $aux_fim);
+        return [$listaBanners, $aux_fim];
     }
 
-    function makeBanner()
+    public function makeBanner()
     {
         $retorno = '';
-        $listaBanners = array();
-        $this->db()->Consulta("SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral_=1 ORDER BY prioridade, title");
+        $listaBanners = [];
+        $this->db()->Consulta('SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral_=1 ORDER BY prioridade, title');
 
         while ($this->db()->ProximoRegistro()) {
             list($caminho, $title, $prioridade, $link) = $this->db()->Tupla();
-            $listaBanners[] = array("titulo" => $title, "caminho" => $caminho, "prioridade" => $prioridade, "link" => $link, "controle_inicio" => 0, "controle_fim" => 0);
+            $listaBanners[] = ['titulo' => $title, 'caminho' => $caminho, 'prioridade' => $prioridade, 'link' => $link, 'controle_inicio' => 0, 'controle_fim' => 0];
         }
 
         list($listaBanners, $aux_fim) = $this->organiza($listaBanners);
@@ -693,7 +706,7 @@ class clsBase extends clsConfig
         while ($pregadas < $total_pregar) {
             $sorteio = rand(0, $aux_fim);
             foreach ($listaBanners as $ind => $banner) {
-                if ($banner["controle_inicio"] <= $sorteio && $banner["controle_fim"] >= $sorteio) {
+                if ($banner['controle_inicio'] <= $sorteio && $banner['controle_fim'] >= $sorteio) {
                     if ($pregadas == 0) {
                         $img = "<IMG style='margin-top: 170px;' src='/intranet/fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
 
@@ -714,52 +727,53 @@ class clsBase extends clsConfig
 
                     unset($listaBanners[$ind]);
                     $pregadas++;
-                    list ($listaBanners, $aux_fim) = $this->organiza($listaBanners);
+                    list($listaBanners, $aux_fim) = $this->organiza($listaBanners);
                     continue;
                 }
             }
         }
+
         return $retorno;
     }
 
-    function Formular()
+    public function Formular()
     {
-        return FALSE;
+        return false;
     }
 
     /**
      * @todo Verificar se funciona.
      */
-    function CadastraAcesso()
+    public function CadastraAcesso()
     {
         @session_start();
-        if (@$_SESSION['marcado'] != "private") {
+        if (@$_SESSION['marcado'] != 'private') {
             if (!$this->convidado) {
-                $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-                $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
+                $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
+                $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
                 $id_pessoa = $_SESSION['id_pessoa'];
 
-                $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
+                $logAcesso = new clsLogAcesso(false, $ip, $ip_de_rede, $id_pessoa);
                 $logAcesso->cadastra();
 
-                $_SESSION['marcado'] = "private";
+                $_SESSION['marcado'] = 'private';
             }
         }
         session_write_close();
     }
 
-    function MakeAll()
+    public function MakeAll()
     {
         try {
             $cronometro = new clsCronometro();
             $cronometro->marca('inicio');
-            $liberado = TRUE;
+            $liberado = true;
 
             $saida_geral = '';
 
             if ($this->convidado) {
                 @session_start();
-                $_SESSION['convidado'] = TRUE;
+                $_SESSION['convidado'] = true;
                 $_SESSION['id_pessoa'] = '0';
                 session_write_close();
             }
@@ -784,9 +798,9 @@ class clsBase extends clsConfig
 
                 $saida_geral .= $this->MakeFootHtml();
 
-                if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
+                if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION['tipo_menu'] == 1) {
                     if ($this->renderMenuSuspenso) {
-                        $saida_geral = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_geral);
+                        $saida_geral = str_replace('<!-- #&MENUSUSPENSO&# -->', $this->makeMenuSuspenso(), $saida_geral);
                     }
 
                     if ($_GET['suspenso'] == 1) {
@@ -809,7 +823,7 @@ class clsBase extends clsConfig
                 $controlador->Logar(true);
                 $referer = $_SERVER['HTTP_REFERER'];
 
-                header("Location: " . $referer, true, 302);
+                header('Location: ' . $referer, true, 302);
                 die();
             }
 
@@ -820,34 +834,34 @@ class clsBase extends clsConfig
             $tempoTotal += 0;
             $objConfig = new clsConfig();
 
-            if ($tempoTotal > $objConfig->arrayConfig["intSegundosProcessaPagina"]) {
-                $conteudo = "<table border=\"1\" width=\"100%\">";
-                $conteudo .= "<tr><td><b>Data</b>:</td><td>" . date("d/m/Y H:i:s", time()) . "</td></tr>";
-                $conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER["PHP_SELF"]}</td></tr>";
+            if ($tempoTotal > $objConfig->arrayConfig['intSegundosProcessaPagina']) {
+                $conteudo = '<table border="1" width="100%">';
+                $conteudo .= '<tr><td><b>Data</b>:</td><td>' . date('d/m/Y H:i:s', time()) . '</td></tr>';
+                $conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER['PHP_SELF']}</td></tr>";
                 $conteudo .= "<tr><td><b>Tempo de processamento</b>:</td><td>{$tempoTotal} segundos</td></tr>";
-                $conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig["intSegundosProcessaPagina"]} segundos</td></tr>";
+                $conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig['intSegundosProcessaPagina']} segundos</td></tr>";
                 $conteudo .= "<tr><td><b>URL get</b>:</td><td>{$_SERVER['QUERY_STRING']}</td></tr>";
-                $conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER["REQUEST_METHOD"]}</td></tr>";
+                $conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER['REQUEST_METHOD']}</td></tr>";
 
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                    $conteudo .= "<tr><td><b>POST vars</b>:</td><td>";
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $conteudo .= '<tr><td><b>POST vars</b>:</td><td>';
                     foreach ($_POST as $var => $val) {
                         $conteudo .= "{$var} => {$val}<br>";
                     }
-                    $conteudo .= "</td></tr>";
-                } elseif ($_SERVER["REQUEST_METHOD"] == "GET") {
-                    $conteudo .= "<tr><td><b>GET vars</b>:</td><td>";
+                    $conteudo .= '</td></tr>';
+                } elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
+                    $conteudo .= '<tr><td><b>GET vars</b>:</td><td>';
                     foreach ($_GET as $var => $val) {
                         $conteudo .= "{$var} => {$val}<br>";
                     }
-                    $conteudo .= "</td></tr>";
+                    $conteudo .= '</td></tr>';
                 }
 
                 if ($_SERVER['HTTP_REFERER']) {
-                    $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
+                    $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER['HTTP_REFERER']}</td></tr>";
                 }
 
-                $conteudo .= "</table>";
+                $conteudo .= '</table>';
 
                 (new Portabilis_Mailer)->sendMail(
                     $objConfig->arrayConfig['ArrStrEmailsAdministradores'],
@@ -866,50 +880,47 @@ class clsBase extends clsConfig
             $_SESSION['last_php_error_file'] = $lastError['file'];
             @session_write_close();
 
-            error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
+            error_log('Erro inesperado (pego em clsBase): ' . $e->getMessage());
             (new NotificationMailer)->unexpectedError($e->getMessage());
 
-            die("<script>document.location.href = '/module/Error/unexpected';</script>");
+            die('<script>document.location.href = \'/module/Error/unexpected\';</script>');
         }
     }
 
-    function setAlertaProgramacao($string)
+    public function setAlertaProgramacao($string)
     {
         if (is_string($string) && $string) {
             $this->prog_alert = $string;
         }
     }
 
-
-    function buscaRapida()
+    public function buscaRapida()
     {
+        $css .= '<link rel=stylesheet type=\'text/css\' href=\'/intranet/styles/buscaMenu.css?assets_version=' . Portabilis_Assets_Version::VERSION . '\' />';
+        $css .= '<link rel=stylesheet type=\'text/css\' href=\'/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=' . Portabilis_Assets_Version::VERSION . '\' />';
 
-        $css .= "<link rel=stylesheet type='text/css' href='/intranet/styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
-        $css .= "<link rel=stylesheet type='text/css' href='/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+        $js .= '<script type=\'text/javascript\' src=\'/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js\'></script>';
+        $js .= '<script type=\'text/javascript\' src=\'/modules/Portabilis/Assets/Javascripts/Utils.js\'></script>';
+        $js .= '<script type=\'text/javascript\' src=\'/intranet/scripts/buscaMenu.js?assets_version= ' . Portabilis_Assets_Version::VERSION . '\'></script>';
+        $js .= '<script type=\'text/javascript\' src=\'/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= ' . Portabilis_Assets_Version::VERSION . '\'></script>';
 
-        $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>";
-        $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Utils.js'></script>";
-        $js .= "<script type='text/javascript' src='/intranet/scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
-        $js .= "<script type='text/javascript' src='/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+        $titulo .= '<div title=\'Busca rápida\' class=\'title-busca-rapida\'>';
+        $titulo .= '<table width=\'168\' class=\'title active-section-title\' style=\'-moz-user-select: none;\'>';
+        $titulo .= '<tbody style=\'-moz-user-select: none;\'>';
+        $titulo .= '<tr style=\'-moz-user-select: none;\'>';
+        $titulo .= '<td style=\'-moz-user-select: none;\'>';
+        $titulo .= '<a style=\'outline:none;text-decoration:none;\'>Busca rápida</a>';
+        $titulo .= '</td>';
+        $titulo .= '</tr>';
+        $titulo .= '</tbody>';
+        $titulo .= '</table>';
+        $titulo .= '</div>';
 
-        $titulo .= "<div title='Busca rápida' class='title-busca-rapida'>";
-        $titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
-        $titulo .= "<tbody style='-moz-user-select: none;'>";
-        $titulo .= "<tr style='-moz-user-select: none;'>";
-        $titulo .= "<td style='-moz-user-select: none;'>";
-        $titulo .= "<a style='outline:none;text-decoration:none;'>Busca rápida</a>";
-        $titulo .= "</td>";
-        $titulo .= "</tr>";
-        $titulo .= "</tbody>";
-        $titulo .= "</table>";
-        $titulo .= "</div>";
-
-        $campoBusca .= "<ul class='menu'>";
-        $campoBusca .= "<li id='busca-menu'>";
-        $campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='busca-menu-input' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
-        $campoBusca .= "</li>";
-        $campoBusca .= "</ul>";
-
+        $campoBusca .= '<ul class=\'menu\'>';
+        $campoBusca .= '<li id=\'busca-menu\'>';
+        $campoBusca .= '<input class=\'geral ui-autocomplete-input\' type=\'text\' name=\'menu\' id=\'busca-menu-input\' size=50 maxlength=50 placeholder=\'Informe o nome do menu\' autocomplete=off>';
+        $campoBusca .= '</li>';
+        $campoBusca .= '</ul>';
 
         return $css . $js . $titulo . $campoBusca;
     }
@@ -920,11 +931,11 @@ class clsBase extends clsConfig
         $uri = $_SERVER['REQUEST_URI'];
         $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
 
-        if ($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1')
-            header("Location: /intranet/logof.php");
-
-        elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
-            header("Location: /module/Usuario/AlterarSenha");
+        if ($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1') {
+            header('Location: /intranet/logof.php');
+        } elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha') {
+            header('Location: /module/Usuario/AlterarSenha');
+        }
     }
 
     // wrappers for Portabilis_*Utils*

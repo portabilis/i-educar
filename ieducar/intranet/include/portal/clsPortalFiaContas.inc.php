@@ -5,17 +5,15 @@
 * Criado em 26/04/2007 17:09 pelo gerador automatico de classes
 */
 
-
-
 class clsPortalFiaContas
 {
-    var $cod_conta;
-    var $entidade;
-    var $num_convenio;
-    var $valor;
-    var $periodo_inicio;
-    var $periodo_final;
-    var $ano;
+    public $cod_conta;
+    public $entidade;
+    public $num_convenio;
+    public $valor;
+    public $periodo_inicio;
+    public $periodo_final;
+    public $ano;
 
     // propriedades padrao
 
@@ -24,61 +22,60 @@ class clsPortalFiaContas
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
-     * 
+     *
      * @param integer cod_conta
      * @param string entidade
      * @param integer num_convenio
@@ -89,45 +86,35 @@ class clsPortalFiaContas
      *
      * @return object
      */
-    function __construct( $cod_conta = null, $entidade = null, $num_convenio = null, $valor = null, $periodo_inicio = null, $periodo_final = null, $ano = null )
+    public function __construct($cod_conta = null, $entidade = null, $num_convenio = null, $valor = null, $periodo_inicio = null, $periodo_final = null, $ano = null)
     {
         $db = new clsBanco();
-        $this->_schema = "portal.";
+        $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}fia_contas";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_conta, entidade, num_convenio, valor, periodo_inicio, periodo_final, ano";
+        $this->_campos_lista = $this->_todos_campos = 'cod_conta, entidade, num_convenio, valor, periodo_inicio, periodo_final, ano';
 
-
-
-        if( is_numeric( $cod_conta ) )
-        {
+        if (is_numeric($cod_conta)) {
             $this->cod_conta = $cod_conta;
         }
-        if( is_string( $entidade ) )
-        {
+        if (is_string($entidade)) {
             $this->entidade = $entidade;
         }
-        if( is_numeric( $num_convenio ) )
-        {
+        if (is_numeric($num_convenio)) {
             $this->num_convenio = $num_convenio;
         }
-        if( is_string( $valor ) )
-        {
+        if (is_string($valor)) {
             $this->valor = $valor;
         }
-        if( is_string( $periodo_inicio ) )
-        {
+        if (is_string($periodo_inicio)) {
             $this->periodo_inicio = $periodo_inicio;
         }
-        if( is_string( $periodo_final ) )
-        {
+        if (is_string($periodo_final)) {
             $this->periodo_final = $periodo_final;
         }
-        if( is_numeric( $ano ) )
-        {
+        if (is_numeric($ano)) {
             $this->ano = $ano;
         }
-
     }
 
     /**
@@ -135,57 +122,51 @@ class clsPortalFiaContas
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_string( $this->entidade ) && is_numeric( $this->num_convenio ) && is_string( $this->valor ) && is_string( $this->periodo_inicio ) && is_string( $this->periodo_final ) )
-        {
+        if (is_string($this->entidade) && is_numeric($this->num_convenio) && is_string($this->valor) && is_string($this->periodo_inicio) && is_string($this->periodo_final)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_string( $this->entidade ) )
-            {
+            if (is_string($this->entidade)) {
                 $campos .= "{$gruda}entidade";
                 $valores .= "{$gruda}'{$this->entidade}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->num_convenio ) )
-            {
+            if (is_numeric($this->num_convenio)) {
                 $campos .= "{$gruda}num_convenio";
                 $valores .= "{$gruda}'{$this->num_convenio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->valor ) )
-            {
+            if (is_string($this->valor)) {
                 $campos .= "{$gruda}valor";
                 $valores .= "{$gruda}'{$this->valor}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->periodo_inicio ) )
-            {
+            if (is_string($this->periodo_inicio)) {
                 $campos .= "{$gruda}periodo_inicio";
                 $valores .= "{$gruda}'{$this->periodo_inicio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->periodo_final ) )
-            {
+            if (is_string($this->periodo_final)) {
                 $campos .= "{$gruda}periodo_final";
                 $valores .= "{$gruda}'{$this->periodo_final}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ano ) )
-            {
+            if (is_numeric($this->ano)) {
                 $campos .= "{$gruda}ano";
                 $valores .= "{$gruda}'{$this->ano}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_conta_seq");
+            return $db->InsertId("{$this->_tabela}_cod_conta_seq");
         }
+
         return false;
     }
 
@@ -194,58 +175,50 @@ class clsPortalFiaContas
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_conta ) )
-        {
-
+        if (is_numeric($this->cod_conta)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_string( $this->entidade ) )
-            {
+            if (is_string($this->entidade)) {
                 $set .= "{$gruda}entidade = '{$this->entidade}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->num_convenio ) )
-            {
+            if (is_numeric($this->num_convenio)) {
                 $set .= "{$gruda}num_convenio = '{$this->num_convenio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->valor ) )
-            {
+            if (is_string($this->valor)) {
                 $set .= "{$gruda}valor = '{$this->valor}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->periodo_inicio ) )
-            {
+            if (is_string($this->periodo_inicio)) {
                 $set .= "{$gruda}periodo_inicio = '{$this->periodo_inicio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->periodo_final ) )
-            {
+            if (is_string($this->periodo_final)) {
                 $set .= "{$gruda}periodo_final = '{$this->periodo_final}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ano ) )
-            {
+            if (is_numeric($this->ano)) {
                 $set .= "{$gruda}ano = '{$this->ano}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_conta = '{$this->cod_conta}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_conta = '{$this->cod_conta}'" );
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
-     * 
+     *
      * @param string str_entidade
      * @param integer int_num_convenio
      * @param string str_valor
@@ -257,92 +230,77 @@ class clsPortalFiaContas
      *
      * @return array
      */
-    function lista( $str_entidade = null, $int_num_convenio = null, $str_valor = null, $date_periodo_inicio_ini = null, $date_periodo_inicio_fim = null, $date_periodo_final_ini = null, $date_periodo_final_fim = null, $int_ano = null )
+    public function lista($str_entidade = null, $int_num_convenio = null, $str_valor = null, $date_periodo_inicio_ini = null, $date_periodo_inicio_fim = null, $date_periodo_final_ini = null, $date_periodo_final_fim = null, $int_ano = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_conta ) )
-        {
+        if (is_numeric($int_cod_conta)) {
             $filtros .= "{$whereAnd} cod_conta = '{$int_cod_conta}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_entidade ) )
-        {
+        if (is_string($str_entidade)) {
             $filtros .= "{$whereAnd} entidade LIKE '%{$str_entidade}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_num_convenio ) )
-        {
+        if (is_numeric($int_num_convenio)) {
             $filtros .= "{$whereAnd} num_convenio = '{$int_num_convenio}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_valor ) )
-        {
+        if (is_string($str_valor)) {
             $filtros .= "{$whereAnd} valor LIKE '%{$str_valor}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_periodo_inicio_ini ) )
-        {
+        if (is_string($date_periodo_inicio_ini)) {
             $filtros .= "{$whereAnd} periodo_inicio >= '{$date_periodo_inicio_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_periodo_inicio_fim ) )
-        {
+        if (is_string($date_periodo_inicio_fim)) {
             $filtros .= "{$whereAnd} periodo_inicio <= '{$date_periodo_inicio_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_periodo_final_ini ) )
-        {
+        if (is_string($date_periodo_final_ini)) {
             $filtros .= "{$whereAnd} periodo_final >= '{$date_periodo_final_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_periodo_final_fim ) )
-        {
+        if (is_string($date_periodo_final_fim)) {
             $filtros .= "{$whereAnd} periodo_final <= '{$date_periodo_final_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ano ) )
-        {
+        if (is_numeric($int_ano)) {
             $filtros .= "{$whereAnd} ano = '{$int_ano}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -351,16 +309,16 @@ class clsPortalFiaContas
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_conta ) )
-        {
-
+        if (is_numeric($this->cod_conta)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_conta = '{$this->cod_conta}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_conta = '{$this->cod_conta}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -369,18 +327,16 @@ class clsPortalFiaContas
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_conta ) )
-        {
-
+        if (is_numeric($this->cod_conta)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_conta = '{$this->cod_conta}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_conta = '{$this->cod_conta}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -389,17 +345,17 @@ class clsPortalFiaContas
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_conta ) )
-        {
+        if (is_numeric($this->cod_conta)) {
 
         //  delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_conta = '{$this->cod_conta}'" );
-        return true;
-        
+            $db = new clsBanco();
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_conta = '{$this->cod_conta}'");
+
+            return true;
         }
+
         return false;
     }
 
@@ -408,7 +364,7 @@ class clsPortalFiaContas
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -418,7 +374,7 @@ class clsPortalFiaContas
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -428,7 +384,7 @@ class clsPortalFiaContas
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -439,18 +395,18 @@ class clsPortalFiaContas
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -458,13 +414,12 @@ class clsPortalFiaContas
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -474,14 +429,12 @@ class clsPortalFiaContas
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

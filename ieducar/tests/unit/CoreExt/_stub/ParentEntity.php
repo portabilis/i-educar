@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,33 +40,38 @@ require_once 'CoreExt/Entity.php';
  * CoreExt_ParentEntityStub class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_ParentEntityStub extends CoreExt_Entity
 {
-  protected $_data = array(
-    'nome'  => NULL,
-    'filho' => NULL
-  );
+    protected $_data = [
+    'nome'  => null,
+    'filho' => null
+  ];
 
-  protected $_references = array(
-    'filho' => array(
-      'value' => NULL,
+    protected $_references = [
+    'filho' => [
+      'value' => null,
       'class' => 'CoreExt_ChildEntityDataMapperStub',
       'file'  => 'CoreExt/_stub/ChildEntityDataMapper.php',
-      'null'  => TRUE
-    )
-  );
+      'null'  => true
+    ]
+  ];
 
-  public function getDefaultValidatorCollection()
-  {
-    return array(
-      'filho' => new CoreExt_Validate_String(array('max' => 1))
-    );
-  }
+    public function getDefaultValidatorCollection()
+    {
+        return [
+      'filho' => new CoreExt_Validate_String(['max' => 1])
+    ];
+    }
 }

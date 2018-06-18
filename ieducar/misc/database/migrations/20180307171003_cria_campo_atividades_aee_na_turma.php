@@ -6,8 +6,8 @@ class CriaCampoAtividadesAeeNaTurma extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("ALTER TABLE pmieducar.turma ADD COLUMN atividades_aee INTEGER[];");
-        $this->execute("UPDATE pmieducar.turma
+        $this->execute('ALTER TABLE pmieducar.turma ADD COLUMN atividades_aee INTEGER[];');
+        $this->execute('UPDATE pmieducar.turma
                            SET atividades_aee = array_append(atividades_aee, 1)
                          WHERE aee_braille = 1;
                         
@@ -49,11 +49,11 @@ class CriaCampoAtividadesAeeNaTurma extends AbstractMigration
                         
                         UPDATE pmieducar.turma
                            SET atividades_aee = array_append(atividades_aee, 11)
-                         WHERE aee_autonomia = 1;");
+                         WHERE aee_autonomia = 1;');
     }
 
     public function down()
     {
-        $this->execute("ALTER TABLE pmieducar.turma DROP COLUMN atividades_aee;");
+        $this->execute('ALTER TABLE pmieducar.turma DROP COLUMN atividades_aee;');
     }
 }

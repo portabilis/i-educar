@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,30 +40,37 @@ require_once 'clsCalendario.inc.php';
  * ClsCalendarioTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Ied_Include
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @todo        Mover para diretório Ied
+ *
  * @version     @@package_version@@
  */
 class ClsCalendarioTest extends UnitBaseTest
 {
-  public function testGenerateFormValues()
-  {
-    $formValues = array(
+    public function testGenerateFormValues()
+    {
+        $formValues = [
       'formFieldKey' => 'formFieldValue'
-    );
+    ];
 
-    $calendario = new clsCalendario();
+        $calendario = new clsCalendario();
 
-    // Teste sem permissão de troca de ano
-    $html = $calendario->getCalendario(1, 2000, 'testGenerateFormValues', array(), $formValues);
+        // Teste sem permissão de troca de ano
+        $html = $calendario->getCalendario(1, 2000, 'testGenerateFormValues', [], $formValues);
 
-    $this->assertRegExp(
+        $this->assertRegExp(
       '/<input id="cal_formFieldKey" name="formFieldKey" type="hidden" value="formFieldValue" \/>/',
-      $html, '->getCalendario() gera campos extras de formulário.'
+      $html,
+        '->getCalendario() gera campos extras de formulário.'
     );
-  }
+    }
 }

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @since     Arquivo disponível desde a versão 1.2.0
+ *
  * @version   $Id$
  */
 
@@ -34,24 +39,29 @@ require_once 'CoreExt/Enum.php';
  * App_Model_ZonaLocalizacao class.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @since     Classe disponível desde a versão 1.2.0
+ *
  * @version   @@package_version@@
  */
 class App_Model_ZonaLocalizacao extends CoreExt_Enum
 {
-  const URBANA = 1;
-  const RURAL  = 2;
+    const URBANA = 1;
+    const RURAL  = 2;
 
-  protected $_data = array(
+    protected $_data = [
     self::URBANA => 'Urbana',
     self::RURAL  => 'Rural'
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

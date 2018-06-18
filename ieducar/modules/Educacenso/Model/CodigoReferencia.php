@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,33 +40,38 @@ require_once 'CoreExt/Entity.php';
  * Educacenso_Model_CodigoReferencia abstract class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 abstract class Educacenso_Model_CodigoReferencia extends CoreExt_Entity
 {
-  protected $_data = array(
-    'nomeInep'   => NULL,
-    'fonte'      => NULL,
-    'created_at' => NULL,
-    'updated_at' => NULL
-  );
+    protected $_data = [
+    'nomeInep'   => null,
+    'fonte'      => null,
+    'created_at' => null,
+    'updated_at' => null
+  ];
 
-  public function getDefaultValidatorCollection()
-  {
-    return array(
+    public function getDefaultValidatorCollection()
+    {
+        return [
       'nomeInep' => new CoreExt_Validate_String(),
       'fonte'    => new CoreExt_Validate_String()
-    );
-  }
+    ];
+    }
 
-  public function __construct(array $options = array())
-  {
-    parent::__construct($options);
-    unset($this->_data['id']);
-  }
+    public function __construct(array $options = [])
+    {
+        parent::__construct($options);
+        unset($this->_data['id']);
+    }
 }

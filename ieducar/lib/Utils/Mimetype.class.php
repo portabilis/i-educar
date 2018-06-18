@@ -71,44 +71,48 @@
  * @author   Jason Sheets <jsheets@shadonet.com>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @license  http://opensource.org/licenses/bsd-license.php  BSD License
+ *
  * @link     http://www.phpclasses.org/browse/file/2743.html  Código fonte original
+ *
  * @package  Core
+ *
  * @since    Classe disponível desde a versão 1.1.0
+ *
  * @todo     Verificar dual-licensing do arquivo
  * @todo     Substituir por fileinfo e adicionar dependência na aplicação
+ *
  * @version  $Id$
  */
 class Mimetype
 {
+    public function getType($filename)
+    {
+        $filename = basename($filename);
+        $filename = explode('.', $filename);
+        $filename = $filename[count($filename)-1];
 
-  public function getType($filename)
-  {
-    $filename = basename($filename);
-    $filename = explode('.', $filename);
-    $filename = $filename[count($filename)-1];
-
-    return $this->privFindType($filename);
-  }
-
-  protected function privFindType($ext)
-  {
-    $mimetypes = $this->privBuildMimeArray();
-
-    if (isset($mimetypes[$ext])) {
-      return $mimetypes[$ext];
+        return $this->privFindType($filename);
     }
-    else {
-      return FALSE;
-    }
-  }
 
-  protected function privBuildMimeArray() {
-    return array(
+    protected function privFindType($ext)
+    {
+        $mimetypes = $this->privBuildMimeArray();
+
+        if (isset($mimetypes[$ext])) {
+            return $mimetypes[$ext];
+        } else {
+            return false;
+        }
+    }
+
+    protected function privBuildMimeArray()
+    {
+        return [
       'doc' => 'application/msword',
       'odt' => 'application/vnd.oasis.opendocument.text',
       'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
       'pdf' => 'application/pdf',
       'xls' => 'application/vnd.ms-excel',
-    );
-  }
+    ];
+    }
 }

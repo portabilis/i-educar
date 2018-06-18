@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - N&iacute;vel Ensino" );
-        $this->processoAp = "571";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - N&iacute;vel Ensino");
+        $this->processoAp = '571';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -48,80 +48,75 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_nivel_ensino;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_nivel;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
+    public $cod_nivel_ensino;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_nivel;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_nivel_ensino=$_GET["cod_nivel_ensino"];
+        $this->cod_nivel_ensino=$_GET['cod_nivel_ensino'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 571, $this->pessoa_logada,3, "educar_nivel_ensino_lst.php" );
+        $obj_permissoes->permissao_cadastra(571, $this->pessoa_logada, 3, 'educar_nivel_ensino_lst.php');
 
-        if( is_numeric( $this->cod_nivel_ensino ) )
-        {
-
-            $obj = new clsPmieducarNivelEnsino( $this->cod_nivel_ensino );
+        if (is_numeric($this->cod_nivel_ensino)) {
+            $obj = new clsPmieducarNivelEnsino($this->cod_nivel_ensino);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir( 571, $this->pessoa_logada,3 );
-                $retorno = "Editar";
+                $this->fexcluir = $obj_permissoes->permissao_excluir(571, $this->pessoa_logada, 3);
+                $retorno = 'Editar';
             }
         }
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_nivel_ensino_det.php?cod_nivel_ensino={$registro["cod_nivel_ensino"]}" : "educar_nivel_ensino_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_nivel_ensino", $this->cod_nivel_ensino );
+        $this->campoOculto('cod_nivel_ensino', $this->cod_nivel_ensino);
 
         // foreign keys
-        if ($_GET['precisa_lista'])
-        {
+        if ($_GET['precisa_lista']) {
             $obrigatorio = true;
-            include("include/pmieducar/educar_campo_lista.php");
-        }
-        else 
-        {
-            $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
+            include('include/pmieducar/educar_campo_lista.php');
+        } else {
+            $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
         // text
-        $this->campoTexto( "nm_nivel", "N&iacute;vel Ensino", $this->nm_nivel, 30, 255, true );
-        $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
+        $this->campoTexto('nm_nivel', 'N&iacute;vel Ensino', $this->nm_nivel, 30, 255, true);
+        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $obj = new clsPmieducarNivelEnsino( null, null, $this->pessoa_logada, $this->nm_nivel, $this->descricao,null,null,1,$this->ref_cod_instituicao );
+        $obj = new clsPmieducarNivelEnsino(null, null, $this->pessoa_logada, $this->nm_nivel, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
 //          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 //          header( "Location: educar_nivel_ensino_lst.php" );
             echo "<script>
@@ -133,15 +128,17 @@ class indice extends clsCadastro
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarNivelEnsino\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_instituicao ) && is_string( $this->nm_nivel )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -162,7 +159,7 @@ class indice extends clsCadastro
         return false;*/
     }
 
-    function Excluir()
+    public function Excluir()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -189,7 +186,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
@@ -197,9 +194,8 @@ $pagina->MakeAll();
 <script>
 
 <?php
-if (!$_GET['ref_cod_instituicao'])
-{
-?>
+if (!$_GET['ref_cod_instituicao']) {
+    ?>
     Event.observe(window, 'load', Init, false);
     
     function Init() 

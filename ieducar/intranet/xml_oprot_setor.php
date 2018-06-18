@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -39,15 +44,15 @@ echo '<?xml version="1.0" encoding="5"?>' . "\n";
 echo '<query xmlns="sugestoes">' . "\n";
 
 if (isset($_GET['setor_pai'])) {
-  $obj = new clsSetor();
-  $lista = $obj->lista($_GET['setor_pai']);
+    $obj = new clsSetor();
+    $lista = $obj->lista($_GET['setor_pai']);
 
-  if ($lista) {
-    foreach ($lista as $linha)  {
-      echo '  <item>' . $linha['sgl_setor'] . '</item>' . "\n";
-      echo '  <item>' . $linha['cod_setor'] . '</item>' . "\n";
+    if ($lista) {
+        foreach ($lista as $linha) {
+            echo '  <item>' . $linha['sgl_setor'] . '</item>' . "\n";
+            echo '  <item>' . $linha['cod_setor'] . '</item>' . "\n";
+        }
     }
-  }
 }
 
 echo '</query>';

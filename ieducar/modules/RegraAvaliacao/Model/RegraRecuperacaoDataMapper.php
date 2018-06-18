@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       ?
+ *
  * @version     $Id$
  */
 
@@ -37,23 +42,28 @@ require_once 'App/Model/IedFinder.php';
  * RegraAvaliacao_Model_RegraRecuperacaoDataMapper class.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       ?
+ *
  * @version     @@package_version@@
  */
 class RegraAvaliacao_Model_RegraRecuperacaoDataMapper extends CoreExt_DataMapper
 {
-  protected $_entityClass = 'RegraAvaliacao_Model_RegraRecuperacao';
-  protected $_tableName   = 'regra_avaliacao_recuperacao';
-  protected $_tableSchema = 'modules';
+    protected $_entityClass = 'RegraAvaliacao_Model_RegraRecuperacao';
+    protected $_tableName   = 'regra_avaliacao_recuperacao';
+    protected $_tableSchema = 'modules';
 
-  protected $_attributeMap = array(
+    protected $_attributeMap = [
     'regraAvaliacao'       => 'regra_avaliacao_id',
     'etapasRecuperadas'    => 'etapas_recuperadas',
     'substituiMenorNota'   => 'substitui_menor_nota',
     'notaMaxima'            => 'nota_maxima'
-  );
+  ];
 }

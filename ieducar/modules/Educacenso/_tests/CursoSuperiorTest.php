@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,35 +40,40 @@ require_once 'Educacenso/Model/CursoSuperior.php';
  * Educacenso_Model_CursoSuperiorTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Educacenso_Model_CursoSuperiorTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new Educacenso_Model_CursoSuperior();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new Educacenso_Model_CursoSuperior();
+    }
 
-  public function testInstanciaDeAreaRetornaOValorDeNomeEmContextoDeImpressao()
-  {
-    $this->_entity->nome = 'Curso superior';
-    $this->assertEquals('Curso superior', $this->_entity->__toString());
-  }
+    public function testInstanciaDeAreaRetornaOValorDeNomeEmContextoDeImpressao()
+    {
+        $this->_entity->nome = 'Curso superior';
+        $this->assertEquals('Curso superior', $this->_entity->__toString());
+    }
 
-  public function testEntityValidators()
-  {
-    // Recupera os objetos CoreExt_Validate
-    $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_String',  $validators['curso']);
-    $this->assertType('CoreExt_Validate_String',  $validators['nome']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['classe']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['user']);
-  }
+    public function testEntityValidators()
+    {
+        // Recupera os objetos CoreExt_Validate
+        $validators = $this->_entity->getDefaultValidatorCollection();
+        $this->assertType('CoreExt_Validate_String', $validators['curso']);
+        $this->assertType('CoreExt_Validate_String', $validators['nome']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['classe']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['user']);
+    }
 }

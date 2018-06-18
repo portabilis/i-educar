@@ -24,72 +24,76 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once("include/clsBase.inc.php");
-require_once("include/clsDetalhe.inc.php");
-require_once("include/clsBanco.inc.php");
-require_once("include/pmieducar/geral.inc.php");
-require_once("include/pmieducar/clsPmieducarCategoriaObra.inc.php");
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
+require_once('include/pmieducar/clsPmieducarCategoriaObra.inc.php');
 
-class clsIndexBase extends clsBase{
-    function Formular(){
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Categoria Obras");
-        $this->processoAp = "598";
+class clsIndexBase extends clsBase
+{
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Categoria Obras");
+        $this->processoAp = '598';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
-class indice extends clsDetalhe{
+class indice extends clsDetalhe
+{
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $id;
-    var $descricao;
-    var $observacoes;
+    public $id;
+    public $descricao;
+    public $observacoes;
 
-    function Gerar(){
+    public function Gerar()
+    {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Categoria Obras - Detalhe";
+        $this->titulo = 'Categoria Obras - Detalhe';
 
-        $this->id = $_GET["id"];
+        $this->id = $_GET['id'];
 
         $tmp_obj = new clsPmieducarCategoriaObra($this->id);
         $registro = $tmp_obj->detalhe();
-        if(!$registro){
-            header( "location: educar_categoria_lst.php" );
+        if (!$registro) {
+            header('location: educar_categoria_lst.php');
             die();
         }
-        if($registro["id"]){
-            $this->addDetalhe(array("C&oacute;digo", "{$registro["id"]}"));
+        if ($registro['id']) {
+            $this->addDetalhe(['C&oacute;digo', "{$registro['id']}"]);
         }
-        if($registro["descricao"]){
-            $this->addDetalhe(array("Descri&ccedil;&atilde;o", "{$registro["descricao"]}"));
+        if ($registro['descricao']) {
+            $this->addDetalhe(['Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
         }
-        if($registro["observacoes"]){
-            $this->addDetalhe(array("Observa&ccedil;&otilde;es", "{$registro["observacoes"]}"));
+        if ($registro['observacoes']) {
+            $this->addDetalhe(['Observa&ccedil;&otilde;es', "{$registro['observacoes']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
-        if($obj_permissoes->permissao_cadastra(592, $this->pessoa_logada, 11)){
-            $this->url_novo = "educar_categoria_cad.php";
-            $this->url_editar = "educar_categoria_cad.php?id={$registro["id"]}";
+        if ($obj_permissoes->permissao_cadastra(592, $this->pessoa_logada, 11)) {
+            $this->url_novo = 'educar_categoria_cad.php';
+            $this->url_editar = "educar_categoria_cad.php?id={$registro['id']}";
         }
 
-        $this->url_cancelar = "educar_categoria_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'educar_categoria_lst.php';
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos(array($_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-                                              "educar_biblioteca_index.php" => "Biblioteca",
-                                                                         "" => "Listagem de categorias"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([$_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+                                              'educar_biblioteca_index.php' => 'Biblioteca',
+                                                                         '' => 'Listagem de categorias'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
@@ -98,7 +102,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

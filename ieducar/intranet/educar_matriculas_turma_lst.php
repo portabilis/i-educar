@@ -26,17 +26,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Matr&iacute;culas Turmas" );
-        $this->processoAp = "659";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Matr&iacute;culas Turmas");
+        $this->processoAp = '659';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -48,76 +48,75 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $ref_cod_turma;
-    var $ref_ref_cod_serie;
-    var $ref_cod_escola;
-    var $ref_ref_cod_escola;
-    var $ref_cod_instituicao;
-    var $ref_cod_curso;
+    public $ref_cod_turma;
+    public $ref_ref_cod_serie;
+    public $ref_cod_escola;
+    public $ref_ref_cod_escola;
+    public $ref_cod_instituicao;
+    public $ref_cod_curso;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Matr&iacute;culas Turma - Listagem";
+        $this->titulo = 'Matr&iacute;culas Turma - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-
-
-        $lista_busca = array(
-            "Ano",
-            "Turma",
-            "S&eacute;rie",
-            "Curso",
-            "Escola"
-        );
+        $lista_busca = [
+            'Ano',
+            'Turma',
+            'S&eacute;rie',
+            'Curso',
+            'Escola'
+        ];
 
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(array('ano', 'instituicao'),array('required' => TRUE));
-        $this->inputsHelper()->dynamic(array('escola', 'curso', 'serie', 'turma'),array('required' => FALSE));
+        $this->inputsHelper()->dynamic(['ano', 'instituicao'], ['required' => true]);
+        $this->inputsHelper()->dynamic(['escola', 'curso', 'serie', 'turma'], ['required' => false]);
 
-        if ( $this->ref_cod_escola )
-        {
+        if ($this->ref_cod_escola) {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;
         }
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_turma = new clsPmieducarTurma();
-        $obj_turma->setOrderby( "nm_turma ASC" );
-        $obj_turma->setLimite( $this->limite, $this->offset );
-        if (!$this->ano)
-            $this->ano = date (Y);
+        $obj_turma->setOrderby('nm_turma ASC');
+        $obj_turma->setLimite($this->limite, $this->offset);
+        if (!$this->ano) {
+            $this->ano = date(Y);
+        }
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $obj_turma->codUsuario = $this->pessoa_logada;
@@ -164,52 +163,49 @@ class indice extends clsListagem
         $total = $obj_turma->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-                if( class_exists( "clsPmieducarEscola" ) )
-                {
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_ref_cod_escola"] );
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                if (class_exists('clsPmieducarEscola')) {
+                    $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
                     $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $registro["nm_escola"] = $det_ref_cod_escola["nome"];
-                }
-                else
-                {
-                    $registro["ref_ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
+                    $registro['nm_escola'] = $det_ref_cod_escola['nome'];
+                } else {
+                    $registro['ref_ref_cod_escola'] = 'Erro na gera&ccedil;&atilde;o';
                     echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
                 }
 
-                $lista_busca = array(
-                    "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["ano"]}</a>",
-                    "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
-                );
+                $lista_busca = [
+                    "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['ano']}</a>",
+                    "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_turma']}</a>"
+                ];
 
-                if ($registro["ref_ref_cod_serie"])
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_serie"]}</a>";
-                else
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
+                if ($registro['ref_ref_cod_serie']) {
+                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_serie']}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">-</a>";
+                }
 
-                $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_curso"]}</a>";
+                $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_curso']}</a>";
 
-                if ($registro["ref_ref_cod_escola"])
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
-                else
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
+                if ($registro['ref_ref_cod_escola']) {
+                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_escola']}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">-</a>";
+                }
 
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2( "educar_matriculas_turma_lst.php", $total, $_GET, $this->nome, $this->limite );
-        $this->largura = "100%";
+        $this->addPaginador2('educar_matriculas_turma_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de turmas para enturma&ccedil;&otilde;es"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Listagem de turmas para enturma&ccedil;&otilde;es'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
@@ -217,7 +213,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

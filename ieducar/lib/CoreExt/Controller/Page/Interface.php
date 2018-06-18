@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -34,18 +39,25 @@ require_once 'CoreExt/Controller/Interface.php';
  * CoreExt_Controller_Page_Interface interface.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Interface disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface CoreExt_Controller_Page_Interface extends CoreExt_Controller_Interface
 {
-  /**
-   * Gera o código HTML para a requisição.
-   * @param  CoreExt_Controller_Page_Interface $instance
-   * @return string
-   */
-  public function generate(CoreExt_Controller_Page_Interface $instance);
+    /**
+     * Gera o código HTML para a requisição.
+     *
+     * @param CoreExt_Controller_Page_Interface $instance
+     *
+     * @return string
+     */
+    public function generate(CoreExt_Controller_Page_Interface $instance);
 }

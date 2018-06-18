@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,38 +41,43 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
  * Avaliacao_Model_ParecerDescritivoAluno class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Model_ParecerDescritivoAluno extends CoreExt_Entity
 {
-  protected $_data = array(
-    'matricula'         => NULL,
-    'parecerDescritivo' => NULL
-  );
+    protected $_data = [
+    'matricula'         => null,
+    'parecerDescritivo' => null
+  ];
 
-  protected $_references = array(
-    'parecerDescritivo' => array(
-      'value' => NULL,
+    protected $_references = [
+    'parecerDescritivo' => [
+      'value' => null,
       'class' => 'RegraAvaliacao_Model_TipoParecerDescritivo',
       'file'  => 'RegraAvaliacao/Model/TipoParecerDescritivo.php'
-    )
-  );
+    ]
+  ];
 
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
-  {
-    $parecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance();
+    /**
+     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     */
+    public function getDefaultValidatorCollection()
+    {
+        $parecer = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance();
 
-    return array(
-      'matricula'         => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'parecerDescritivo' => new CoreExt_Validate_Choice(array('choices' => $parecer->getKeys())),
-    );
-  }
+        return [
+      'matricula'         => new CoreExt_Validate_Numeric(['min' => 0]),
+      'parecerDescritivo' => new CoreExt_Validate_Choice(['choices' => $parecer->getKeys()]),
+    ];
+    }
 }

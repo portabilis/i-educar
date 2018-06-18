@@ -25,25 +25,24 @@
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     // arquivo que faz o require de todas as classes de otopic
-    require_once( "include/otopic/clsTopico.inc.php" ); 
-    require_once( "include/otopic/clsTopicoReuniao.inc.php" );  
-    require_once( "include/otopic/clsNotas.inc.php" );  
-    require_once( "include/otopic/clsGrupos.inc.php" ); 
-    require_once( "include/otopic/clsGrupoPessoa.inc.php" );    
-    require_once( "include/otopic/clsGrupoModerador.inc.php" ); 
-    require_once( "include/otopic/clsReuniao.inc.php" );    
-    require_once( "include/otopic/clsParticipante.inc.php" );   
-    require_once( "include/otopic/clsFuncionarioSu.inc.php" );  
-    require_once( "include/otopic/clsAtendimento.inc.php" );    
-    require_once( "include/otopic/clsAtendimentoPessoa.inc.php" );  
-    require_once( "include/otopic/clsPessoaAuxiliar.inc.php" ); 
-    require_once( "include/otopic/clsPessoaObservacao.inc.php" );   
-    require_once( "include/otopic/clsPessoaAuxiliarTelefone.inc.php" ); 
-    require_once( "include/otopic/clsSituacao.inc.php" );
-    
+    require_once('include/otopic/clsTopico.inc.php');
+    require_once('include/otopic/clsTopicoReuniao.inc.php');
+    require_once('include/otopic/clsNotas.inc.php');
+    require_once('include/otopic/clsGrupos.inc.php');
+    require_once('include/otopic/clsGrupoPessoa.inc.php');
+    require_once('include/otopic/clsGrupoModerador.inc.php');
+    require_once('include/otopic/clsReuniao.inc.php');
+    require_once('include/otopic/clsParticipante.inc.php');
+    require_once('include/otopic/clsFuncionarioSu.inc.php');
+    require_once('include/otopic/clsAtendimento.inc.php');
+    require_once('include/otopic/clsAtendimentoPessoa.inc.php');
+    require_once('include/otopic/clsPessoaAuxiliar.inc.php');
+    require_once('include/otopic/clsPessoaObservacao.inc.php');
+    require_once('include/otopic/clsPessoaAuxiliarTelefone.inc.php');
+    require_once('include/otopic/clsSituacao.inc.php');
+
     // includes de fora do otopic
-    require_once( "include/clsEmail.inc.php" ); 
-    require_once( "include/clsMenuFuncionario.inc.php" );   
-    require_once( "include/clsLogAcesso.inc.php" ); 
-    require_once( "include/Geral.inc.php" );
-?>
+    require_once('include/clsEmail.inc.php');
+    require_once('include/clsMenuFuncionario.inc.php');
+    require_once('include/clsLogAcesso.inc.php');
+    require_once('include/Geral.inc.php');

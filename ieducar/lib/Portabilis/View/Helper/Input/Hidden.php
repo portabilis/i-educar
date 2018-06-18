@@ -22,38 +22,48 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
-
 /**
  * Portabilis_View_Helper_Input_Hidden class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_Core
+{
+    public function hidden($attrName, $options = [])
+    {
+        $defaultOptions      = ['options' => [], 'objectName' => ''];
+        $options             = $this->mergeOptions($options, $defaultOptions);
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
 
-  public function hidden($attrName, $options = array()) {
-    $defaultOptions      = array('options' => array(), 'objectName' => '');
-    $options             = $this->mergeOptions($options, $defaultOptions);
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+        $defaultInputOptions = ['id'    => $options['objectName'] . $spacer . $attrName,
+                                 'value' => ''];
 
-    $defaultInputOptions = array('id'    => $options['objectName'] . $spacer . $attrName,
-                                 'value' => '');
+        $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
-
-    call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
-  }
+        call_user_func_array([$this->viewInstance, 'campoOculto'], $inputOptions);
+    }
 }

@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Idioma" );
-        $this->processoAp = "590";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Idioma");
+        $this->processoAp = '590';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -46,62 +46,57 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_acervo_idioma;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_idioma;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_acervo_idioma;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_idioma;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Idioma - Detalhe";
-        
+        $this->titulo = 'Idioma - Detalhe';
 
-        $this->cod_acervo_idioma=$_GET["cod_acervo_idioma"];
+        $this->cod_acervo_idioma=$_GET['cod_acervo_idioma'];
 
-        $tmp_obj = new clsPmieducarAcervoIdioma( $this->cod_acervo_idioma );
+        $tmp_obj = new clsPmieducarAcervoIdioma($this->cod_acervo_idioma);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: educar_acervo_idioma_lst.php" );
+        if (! $registro) {
+            header('location: educar_acervo_idioma_lst.php');
             die();
         }
 
-        if( $registro["cod_acervo_idioma"] )
-        {
-            $this->addDetalhe( array( "C&oacute;digo Idioma", "{$registro["cod_acervo_idioma"]}") );
+        if ($registro['cod_acervo_idioma']) {
+            $this->addDetalhe([ 'C&oacute;digo Idioma', "{$registro['cod_acervo_idioma']}"]);
         }
-        if( $registro["nm_idioma"] )
-        {
-            $this->addDetalhe( array( "Idioma", "{$registro["nm_idioma"]}") );
+        if ($registro['nm_idioma']) {
+            $this->addDetalhe([ 'Idioma', "{$registro['nm_idioma']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 590, $this->pessoa_logada, 11 ) )
-        {
-        $this->url_novo = "educar_acervo_idioma_cad.php";
-        $this->url_editar = "educar_acervo_idioma_cad.php?cod_acervo_idioma={$registro["cod_acervo_idioma"]}";
+        if ($obj_permissoes->permissao_cadastra(590, $this->pessoa_logada, 11)) {
+            $this->url_novo = 'educar_acervo_idioma_cad.php';
+            $this->url_editar = "educar_acervo_idioma_cad.php?cod_acervo_idioma={$registro['cod_acervo_idioma']}";
         }
 
-        $this->url_cancelar = "educar_acervo_idioma_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'educar_acervo_idioma_lst.php';
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do idioma"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_biblioteca_index.php'                  => 'Biblioteca',
+         ''                                  => 'Detalhe do idioma'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
@@ -110,7 +105,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

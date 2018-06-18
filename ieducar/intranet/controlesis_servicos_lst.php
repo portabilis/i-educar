@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Serviços" );
-        $this->processoAp = "616";
+        $this->SetTitulo("{$this->_instituicao} Serviços");
+        $this->processoAp = '616';
     }
 }
 
@@ -45,70 +45,68 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $cod_servicos;
-    var $ref_cod_funcionario_cad;
-    var $ref_cod_funcionario_exc;
-    var $url;
-    var $caminho;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $title;
-    var $descricao;
+    public $cod_servicos;
+    public $ref_cod_funcionario_cad;
+    public $ref_cod_funcionario_exc;
+    public $url;
+    public $caminho;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $title;
+    public $descricao;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Serviços - Listagem";
+        $this->titulo = 'Serviços - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        
+        $this->addCabecalhos([
 
-        $this->addCabecalhos( array(
-
-            "Title",
-            "Descric&atilde;o"
-        ) );
+            'Title',
+            'Descric&atilde;o'
+        ]);
 
         // Filtros de Foreign Keys
-        $this->campoTexto( "title", "Title", $this->title, 30, 255, false );
-
+        $this->campoTexto('title', 'Title', $this->title, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_servicos = new clsPmicontrolesisservicos();
-        $obj_servicos->setOrderby( "url ASC" );
-        $obj_servicos->setLimite( $this->limite, $this->offset );
+        $obj_servicos->setOrderby('url ASC');
+        $obj_servicos->setLimite($this->limite, $this->offset);
 
         $lista = $obj_servicos->lista(
 
@@ -119,24 +117,20 @@ class indice extends clsListagem
         $total = $obj_servicos->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 // muda os campos data
 
-
-
-                $this->addLinhas( array(
-                    "<a href=\"controlesis_servicos_det.php?cod_servicos={$registro["cod_servicos"]}\">{$registro["title"]}</a>",
-                    "<a href=\"controlesis_servicos_det.php?cod_servicos={$registro["cod_servicos"]}\">{$registro["descricao"]}</a>"
-                ) );
+                $this->addLinhas([
+                    "<a href=\"controlesis_servicos_det.php?cod_servicos={$registro['cod_servicos']}\">{$registro['title']}</a>",
+                    "<a href=\"controlesis_servicos_det.php?cod_servicos={$registro['cod_servicos']}\">{$registro['descricao']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "controlesis_servicos_lst.php", $total, $_GET, $this->nome, $this->limite );
-        $this->acao = "go(\"controlesis_servicos_cad.php\")";
-        $this->nome_acao = "Novo";
-        $this->largura = "100%";
+        $this->addPaginador2('controlesis_servicos_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->acao = 'go("controlesis_servicos_cad.php")';
+        $this->nome_acao = 'Novo';
+        $this->largura = '100%';
     }
 }
 // cria uma extensao da classe base
@@ -144,7 +138,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

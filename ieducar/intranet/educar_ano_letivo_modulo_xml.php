@@ -24,23 +24,21 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+    require_once('include/clsBanco.inc.php');
+    require_once('include/funcoes.inc.php');
 
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    if( is_numeric( $_GET["esc"] ) )
-    {
-
-        $ano = is_numeric($_GET['ano']) ? " AND ref_ano = {$_GET['ano']}" : "";
+    if (is_numeric($_GET['esc'])) {
+        $ano = is_numeric($_GET['ano']) ? " AND ref_ano = {$_GET['ano']}" : '';
 
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
         SELECT cod_modulo
                ,nm_tipo || ' - de ' || to_char(data_inicio,'dd/mm/yyyy') || ' até ' || to_char(data_fim,'dd/mm/yyyy')
                ,ref_ano
@@ -51,19 +49,16 @@
         WHERE modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
             AND modulo.ativo = 1
             {$ano}
-            AND ref_ref_cod_escola = '{$_GET["esc"]}'
+            AND ref_ref_cod_escola = '{$_GET['esc']}'
         ORDER BY
             data_inicio,data_fim ASC
         ");
 
-        if ($db->numLinhas())
-        {
-            while ( $db->ProximoRegistro() )
-            {
-                list( $cod, $nome, $ano,$sequencial ) = $db->Tupla();
+        if ($db->numLinhas()) {
+            while ($db->ProximoRegistro()) {
+                list($cod, $nome, $ano, $sequencial) = $db->Tupla();
                 echo "  <ano_letivo_modulo sequencial=\"{$sequencial}\" ano=\"{$ano}\" cod_modulo=\"{$cod}\">{$nome}</ano_letivo_modulo>\n";
             }
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

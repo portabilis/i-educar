@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -32,36 +37,46 @@
  * CoreExt_Controller_Dispatcher_Interface interface.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Interface disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface CoreExt_Controller_Dispatcher_Interface
 {
-  /**
-   * Setter.
-   * @param  CoreExt_Controller_Request_Interface $request
-   * @return CoreExt_Controller_Dispatcher_Interface Provê interface fluída
-   */
-  public function setRequest(CoreExt_Controller_Request_Interface $request);
+    /**
+     * Setter.
+     *
+     * @param CoreExt_Controller_Request_Interface $request
+     *
+     * @return CoreExt_Controller_Dispatcher_Interface Provê interface fluída
+     */
+    public function setRequest(CoreExt_Controller_Request_Interface $request);
 
-  /**
-   * Getter.
-   * @return CoreExt_Controller_Request_Interface
-   */
-  public function getRequest();
+    /**
+     * Getter.
+     *
+     * @return CoreExt_Controller_Request_Interface
+     */
+    public function getRequest();
 
-  /**
-   * Retorna uma string correspondendo a parte de controller de uma URL.
-   * @return string|NULL
-   */
-  public function getControllerName();
+    /**
+     * Retorna uma string correspondendo a parte de controller de uma URL.
+     *
+     * @return string|NULL
+     */
+    public function getControllerName();
 
-  /**
-   * Retorna uma string correspondendo a parte de action de uma URL.
-   * @return string|NULL
-   */
-  public function getActionName();
+    /**
+     * Retorna uma string correspondendo a parte de action de uma URL.
+     *
+     * @return string|NULL
+     */
+    public function getActionName();
 }

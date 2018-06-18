@@ -24,143 +24,120 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
-
+require_once('include/clsBanco.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsSetor
 {
-    var $codSetor;
-    var $refCodSetor;
-    var $refCodPessoaExc;
-    var $refCodPessoaCad;
-    var $nmSetor;
-    var $sglSetor;
-    var $dataCadastro;
-    var $dataExclusao;
-    var $ativo;
-    var $noPaco;
-    var $endereco;
-    var $tipo;
-    var $refIdpesResp;
-    var $nivel;
+    public $codSetor;
+    public $refCodSetor;
+    public $refCodPessoaExc;
+    public $refCodPessoaCad;
+    public $nmSetor;
+    public $sglSetor;
+    public $dataCadastro;
+    public $dataExclusao;
+    public $ativo;
+    public $noPaco;
+    public $endereco;
+    public $tipo;
+    public $refIdpesResp;
+    public $nivel;
 
-     //$codSetor, $refCodSetor, $refCodPessoaExc, $refCodPessoaCad, $nmSetor, $sglSetor, $dataCadastro, $dataExclusao, $ativo, $nivel
+    //$codSetor, $refCodSetor, $refCodPessoaExc, $refCodPessoaCad, $nmSetor, $sglSetor, $dataCadastro, $dataExclusao, $ativo, $nivel
 
-    var $camposLista;
-    var $todosCampos;
+    public $camposLista;
+    public $todosCampos;
 
-    var $tabela;
+    public $tabela;
 
-    var $_total;
+    public $_total;
 
     /**
      * Construtor
      *
      * @return Object
      */
-    function __construct( $intCodSetor = null, $intRefCodSetor = null, $intRefCodPessoaExc = null, $intRefCodPessoaCad = null, $strNmSetor = null, $strSglSetor = null, $strDataCadastro = null, $strDataExclusao = null, $intAtivo = null, $intNivel = null, $boolNoPaco = null, $strEndereco = null, $charTipo = null, $intRefIdpesResp = null )
+    public function __construct($intCodSetor = null, $intRefCodSetor = null, $intRefCodPessoaExc = null, $intRefCodPessoaCad = null, $strNmSetor = null, $strSglSetor = null, $strDataCadastro = null, $strDataExclusao = null, $intAtivo = null, $intNivel = null, $boolNoPaco = null, $strEndereco = null, $charTipo = null, $intRefIdpesResp = null)
     {
-        if(is_numeric($intCodSetor))
-        {
+        if (is_numeric($intCodSetor)) {
             $this->codSetor = $intCodSetor;
         }
 
-        if(is_numeric($intRefCodSetor))
-        {
+        if (is_numeric($intRefCodSetor)) {
             $objSetor = new clsSetor($intRefCodSetor);
 
-            if($objSetor->detalhe())
-            {
+            if ($objSetor->detalhe()) {
                 $this->refCodSetor = $intRefCodSetor;
             }
         }
 
-        if(is_numeric($intRefCodPessoaExc))
-        {
+        if (is_numeric($intRefCodPessoaExc)) {
             $objPessoa = new clsFuncionario($intRefCodPessoaExc);
 
-            if($objPessoa->detalhe())
-            {
+            if ($objPessoa->detalhe()) {
                 $this->refCodPessoaExc = $intRefCodPessoaExc;
             }
         }
 
-        if(is_numeric($intRefCodPessoaCad))
-        {
+        if (is_numeric($intRefCodPessoaCad)) {
             $objPessoa = new clsFuncionario($intRefCodPessoaCad);
 
-            if($objPessoa->detalhe())
-            {
+            if ($objPessoa->detalhe()) {
                 $this->refCodPessoaCad= $intRefCodPessoaCad;
             }
         }
 
-        if(is_string($strNmSetor))
-        {
+        if (is_string($strNmSetor)) {
             $this->nmSetor = $strNmSetor;
         }
 
-        if(is_string($strSglSetor))
-        {
+        if (is_string($strSglSetor)) {
             $this->sglSetor = $strSglSetor;
         }
 
-        if(is_string($strDataCadastro))
-        {
+        if (is_string($strDataCadastro)) {
             $this->dataCadastro = $strDataCadastro;
         }
 
-        if(is_string($strDataExclusao))
-        {
+        if (is_string($strDataExclusao)) {
             $this->dataExclusao = $strDataExclusao;
         }
 
-        if(is_numeric($intAtivo))
-        {
+        if (is_numeric($intAtivo)) {
             $this->ativo = $intAtivo;
         }
 
-        if(is_numeric($intNivel))
-        {
+        if (is_numeric($intNivel)) {
             $this->nivel = $intNivel;
         }
 
-        if( ! is_null( $boolNoPaco ) )
-        {
-            if( $boolNoPaco )
-            {
+        if (! is_null($boolNoPaco)) {
+            if ($boolNoPaco) {
                 $this->noPaco = 1;
-            }
-            else
-            {
+            } else {
                 $this->noPaco = 0;
             }
         }
 
-        if( is_string( $strEndereco ) )
-        {
+        if (is_string($strEndereco)) {
             $this->endereco = $strEndereco;
         }
 
-        if( is_string( $charTipo ) && strlen( $charTipo ) == 1 )
-        {
+        if (is_string($charTipo) && strlen($charTipo) == 1) {
             $this->tipo = $charTipo;
         }
 
-        if( is_numeric( $intRefIdpesResp ) )
-        {
-            $objPessoaFisica = new clsFuncionario( $intRefIdpesResp );
-            if( $objPessoaFisica->detalhe() )
-            {
+        if (is_numeric($intRefIdpesResp)) {
+            $objPessoaFisica = new clsFuncionario($intRefIdpesResp);
+            if ($objPessoaFisica->detalhe()) {
                 $this->refIdpesResp = $intRefIdpesResp;
             }
         }
 
-        $this->camposLista = $this->todosCampos = "cod_setor, ref_cod_setor, ref_cod_pessoa_exc, ref_cod_pessoa_cad, nm_setor, sgl_setor, data_cadastro, data_exclusao, ativo, nivel, ref_idpes_resp";
+        $this->camposLista = $this->todosCampos = 'cod_setor, ref_cod_setor, ref_cod_pessoa_exc, ref_cod_pessoa_cad, nm_setor, sgl_setor, data_cadastro, data_exclusao, ativo, nivel, ref_idpes_resp';
 
-        $this->tabela = "pmidrh.setor";
-
+        $this->tabela = 'pmidrh.setor';
     }
 
     /**
@@ -168,22 +145,19 @@ class clsSetor
      *
      * @return array
      */
-    function getNiveis( $intRefCodSetor )
+    public function getNiveis($intRefCodSetor)
     {
-        $niveis = array();
+        $niveis = [];
         $db = new clsBanco();
-        if( is_numeric( $intRefCodSetor ) )
-        {
-            do
-            {
+        if (is_numeric($intRefCodSetor)) {
+            do {
                 $db->Consulta("SELECT cod_setor, ref_cod_setor, nivel FROM {$this->tabela} WHERE cod_setor='{$intRefCodSetor}'");
-                if( $db->ProximoRegistro() )
-                {
-                    list( $codSetor, $codPai, $nivel ) = $db->Tupla();
+                if ($db->ProximoRegistro()) {
+                    list($codSetor, $codPai, $nivel) = $db->Tupla();
                     $niveis[$nivel] = $codSetor;
                 }
                 $intRefCodSetor = $codPai;
-            }while( ! is_null( $codPai ) );
+            } while (! is_null($codPai));
         }
 
         return $niveis;
@@ -194,32 +168,31 @@ class clsSetor
      *
      * @return string
      */
-    function getNomeFamilia( $intRefCodSetor, $separador = " &gt; ", $sigla = false )
+    public function getNomeFamilia($intRefCodSetor, $separador = ' &gt; ', $sigla = false)
     {
-        $campo = ( $sigla ) ? "sgl_setor":"nm_setor";
-        $nome = array();
-        $niveis = $this->getNiveis( $intRefCodSetor );
-        for ( $i = 0; $i < count( $niveis ); $i++ )
-        {
+        $campo = ($sigla) ? 'sgl_setor':'nm_setor';
+        $nome = [];
+        $niveis = $this->getNiveis($intRefCodSetor);
+        for ($i = 0; $i < count($niveis); $i++) {
             $objSetor = new clsSetor($niveis[$i]);
             $det = $objSetor->detalhe();
             $nome[] = $det[$campo];
         }
-        return implode( $separador, $nome );
+
+        return implode($separador, $nome);
     }
 
     /**
      * Função que retorna os setores abaixo
      *
      * @param int $ref_cod_setor
-     * @param int $status_ativo [opcional]
+     * @param int $status_ativo  [opcional]
      *
      * @return array
      */
-    function getNiveisParaBaixo($ref_cod_setor, $status_ativo = null)
+    public function getNiveisParaBaixo($ref_cod_setor, $status_ativo = null)
     {
-        if(is_numeric($status_ativo))
-        {
+        if (is_numeric($status_ativo)) {
             $ativo = "AND ativo = '$status_ativo'";
         }
         $db = new clsBanco();
@@ -267,16 +240,15 @@ class clsSetor
                       $ativo
                                               ");
 
-        $resultado = array();
-        while ( $db->ProximoRegistro() )
-        {
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $resultado[] = $tupla[0];
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -285,29 +257,23 @@ class clsSetor
      *
      * @return bool
      */
-    function contaNiveis($intRefCodSetor)
+    public function contaNiveis($intRefCodSetor)
     {
         $niveis = 0;
         $db = new clsBanco();
         $db->Consulta("SELECT ref_cod_setor FROM {$this->tabela} WHERE cod_setor='{$intRefCodSetor}'");
 
-        if( $db->ProximoRegistro() )
-        {
+        if ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
 
-            if(!is_null($tupla["ref_cod_setor"]))
-            {
+            if (!is_null($tupla['ref_cod_setor'])) {
                 $niveis++;
-                while(!is_null($tupla["ref_cod_setor"]) || $niveis<5)
-                {
-                    $db->Consulta("SELECT ref_cod_setor FROM {$this->tabela} WHERE cod_setor='{$tupla["ref_cod_setor"]}'");
-                    if( $db->ProximoRegistro() )
-                    {
+                while (!is_null($tupla['ref_cod_setor']) || $niveis<5) {
+                    $db->Consulta("SELECT ref_cod_setor FROM {$this->tabela} WHERE cod_setor='{$tupla['ref_cod_setor']}'");
+                    if ($db->ProximoRegistro()) {
                         $tupla = $db->Tupla();
                         $niveis++;
-                    }
-                    else
-                    {
+                    } else {
                         return false;
                     }
                 }
@@ -324,53 +290,48 @@ class clsSetor
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificações de campos obrigatorios para inserção
         //echo "{$this->refCodPessoaCad} && {$this->nmSetor} && {$this->sglSetor}";
-        if( $this->refCodPessoaCad && $this->nmSetor && $this->sglSetor )
-        {
-            $campos = "";
-            $valores= "";
+        if ($this->refCodPessoaCad && $this->nmSetor && $this->sglSetor) {
+            $campos = '';
+            $valores= '';
             $nivel = 0;
 
-            if($this->refCodSetor)
-            {
-                $campos .= ", ref_cod_setor";
+            if ($this->refCodSetor) {
+                $campos .= ', ref_cod_setor';
                 $valores .= ", {$this->refCodSetor}";
 
                 $nivel = $this->getNiveis($this->refCodSetor);
 
                 $nivel = $nivel ? count($nivel) : 1;
             }
-            if( is_numeric( $this->noPaco ) )
-            {
-                $campos .= ", no_paco";
+            if (is_numeric($this->noPaco)) {
+                $campos .= ', no_paco';
                 $valores .= ", '{$this->noPaco}'";
             }
-            if( is_string( $this->endereco ) )
-            {
-                $campos .= ", endereco";
+            if (is_string($this->endereco)) {
+                $campos .= ', endereco';
                 $valores .= ", '{$this->endereco}'";
             }
-            if( is_string( $this->tipo ) )
-            {
-                $campos .= ", tipo";
+            if (is_string($this->tipo)) {
+                $campos .= ', tipo';
                 $valores .= ", '{$this->tipo}'";
             }
-            if( is_numeric( $this->refIdpesResp ) )
-            {
-                $campos .= ", ref_idpes_resp";
+            if (is_numeric($this->refIdpesResp)) {
+                $campos .= ', ref_idpes_resp';
                 $valores .= ", '{$this->refCodPessoaCad}'";
             }
 
-            if($nivel < 5)
-            {
+            if ($nivel < 5) {
                 $db->Consulta("INSERT INTO {$this->tabela} ( ref_cod_pessoa_cad, nm_setor, sgl_setor, data_cadastro, nivel$campos ) VALUES ( '{$this->refCodPessoaCad}', '{$this->nmSetor}', '{$this->sglSetor}', NOW(), '{$nivel}'$valores )");
-                return $db->InsertId("pmidrh.setor_cod_setor_seq");
+
+                return $db->InsertId('pmidrh.setor_cod_setor_seq');
             }
         }
+
         return false;
     }
 
@@ -379,47 +340,42 @@ class clsSetor
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
         // verifica campos obrigatorios para edicao
-        if( $this->codSetor && $this->refCodPessoaCad && $this->nmSetor && $this->sglSetor && $this->ativo)
-        {
-            $setVir = "";
+        if ($this->codSetor && $this->refCodPessoaCad && $this->nmSetor && $this->sglSetor && $this->ativo) {
+            $setVir = '';
             $nivel = 0;
 
-            if($this->refCodSetor)
-            {
+            if ($this->refCodSetor) {
                 $setVir.= ", ref_cod_setor={$this->refCodSetor}";
 
                 $nivel = $this->getNiveis($this->refCodSetor);
 
                 $nivel = $nivel ? count($nivel) : 1;
             }
-            if( is_numeric( $this->noPaco ) )
-            {
+            if (is_numeric($this->noPaco)) {
                 $setVir= ", no_paco = '{$this->noPaco}'";
             }
-            if( is_string( $this->endereco ) )
-            {
+            if (is_string($this->endereco)) {
                 $setVir= ", endereco = '{$this->endereco}'";
             }
-            if( is_string( $this->tipo ) )
-            {
+            if (is_string($this->tipo)) {
                 $setVir= ", tipo = '{$this->tipo}'";
             }
-            if( is_numeric( $this->refIdpesResp ) )
-            {
+            if (is_numeric($this->refIdpesResp)) {
                 $setVir= ", ref_idpes_resp = '{$this->refIdpesResp}'";
             }
 
-            if($nivel < 5)
-            {
+            if ($nivel < 5) {
                 $db = new clsBanco();
                 //echo "UPDATE {$this->tabela} SET ref_cod_pessoa_cad='{$this->refCodPessoaCad}', nm_setor='{$this->nmSetor}', sgl_setor='{$this->sglSetor}', data_cadastro=NOW(),ativo='{$this->ativo}', nivel='{$nivel}'$setVir WHERE cod_setor='{$this->codSetor}'"; die();
-                $db->Consulta( "UPDATE {$this->tabela} SET ref_cod_pessoa_exc='{$this->refCodPessoaCad}', nm_setor='{$this->nmSetor}', sgl_setor='{$this->sglSetor}', data_cadastro=NOW(),ativo='{$this->ativo}', nivel='{$nivel}'$setVir WHERE cod_setor='{$this->codSetor}'");
+                $db->Consulta("UPDATE {$this->tabela} SET ref_cod_pessoa_exc='{$this->refCodPessoaCad}', nm_setor='{$this->nmSetor}', sgl_setor='{$this->sglSetor}', data_cadastro=NOW(),ativo='{$this->ativo}', nivel='{$nivel}'$setVir WHERE cod_setor='{$this->codSetor}'");
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -428,14 +384,15 @@ class clsSetor
      *
      * @return bool
      */
-    function exclui()
+    public function exclui()
     {
         // verifica se existe um ID definido para delecao
-        if( $this->codSetor && $this->refCodPessoaExc)
-        {
+        if ($this->codSetor && $this->refCodPessoaExc) {
             $this->ativo = 0;
+
             return $this->edita();
         }
+
         return false;
     }
 
@@ -444,32 +401,31 @@ class clsSetor
      *
      * @return Array
      */
-    function setCamposLista($strCampos)
+    public function setCamposLista($strCampos)
     {
         $this->camposLista = $strCampos;
     }
-
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define limites de retorno para o metodo lista
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -480,18 +436,18 @@ class clsSetor
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -499,7 +455,7 @@ class clsSetor
      *
      * @return void
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->camposLista = $this->todosCampos;
     }
@@ -509,169 +465,138 @@ class clsSetor
      *
      * @return Array
      */
-    function lista( $intRefCodSetor = null, $intRefCodPessoaExc = null, $intRefCodPessoaCad = null, $strNmSetor = null, $strSglSetor = null, $strDataCadastroIni = null, $strDataCadastroFim = null, $strDataExclusaoIni = null, $strDataExclusaoFim = null, $intAtivo = 1, $intNivel = null, $intLimiteIni = null, $intLimiteQtd = null, $strOrderBy = null, $intCodSetor = null, $boolNoPaco = null, $strEndereco = null, $charTipo = null, $intRefIdpesResp = null ,$strNotIn = null,$intCodSetor_ = null)
+    public function lista($intRefCodSetor = null, $intRefCodPessoaExc = null, $intRefCodPessoaCad = null, $strNmSetor = null, $strSglSetor = null, $strDataCadastroIni = null, $strDataCadastroFim = null, $strDataExclusaoIni = null, $strDataExclusaoFim = null, $intAtivo = 1, $intNivel = null, $intLimiteIni = null, $intLimiteQtd = null, $strOrderBy = null, $intCodSetor = null, $boolNoPaco = null, $strEndereco = null, $charTipo = null, $intRefIdpesResp = null, $strNotIn = null, $intCodSetor_ = null)
     {
         // verificacoes de filtros a serem usados
-        $where = "";
-        $and = "";
+        $where = '';
+        $and = '';
 
-        if( is_numeric( $intCodSetor_) )
-        {
+        if (is_numeric($intCodSetor_)) {
             $where .= " $and cod_setor = '{$intCodSetor_}'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_numeric( $intRefCodSetor) )
-        {
+        if (is_numeric($intRefCodSetor)) {
             $where .= " $and ref_cod_setor = '{$intRefCodSetor}'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_numeric( $intRefCodPessoaExc) )
-        {
+        if (is_numeric($intRefCodPessoaExc)) {
             $where .= " $and ref_cod_pessoa_exc = '$intRefCodPessoaExc'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_numeric( $intRefCodPessoaCad) )
-        {
+        if (is_numeric($intRefCodPessoaCad)) {
             $where .= " $and ref_cod_pessoa_cad = '$intRefCodPessoaCad'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_string( $strNmSetor) )
-        {
+        if (is_string($strNmSetor)) {
             $where .= " $and nm_setor ILIKE '%{$strNmSetor}%' ";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_string( $strSglSetor) )
-        {
+        if (is_string($strSglSetor)) {
             $where .= " $and sgl_setor ILIKE '%{$strSglSetor}%' ";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_string( $strDataCadastroIni) )
-        {
+        if (is_string($strDataCadastroIni)) {
             $where .= " $and data_cadastro >= '$strDataCadastroIni' ";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_string( $strDataCadastroFim) )
-        {
+        if (is_string($strDataCadastroFim)) {
             $where .= " $and data_cadastro <= '$strDataCadastroFim'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_string( $strDataExclusaoIni) )
-        {
+        if (is_string($strDataExclusaoIni)) {
             $where .= " $and data_exclusao >= '$strDataExclusaoIni' ";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_string( $strDataExclusaoFim) )
-        {
+        if (is_string($strDataExclusaoFim)) {
             $where .= " $and data_cadastro <= '$strDataExclusaoFim'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( is_numeric( $intAtivo) )
-        {
+        if (is_numeric($intAtivo)) {
             $where .= " $and ativo = '$intAtivo'";
-            $and = " AND ";
-        }
-        else
-        {
+            $and = ' AND ';
+        } else {
             $where .= " $and ativo = '1'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-
-        if( is_numeric( $intNivel) )
-        {
+        if (is_numeric($intNivel)) {
             $where .= " $and nivel = '$intNivel'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-
-        if( ! is_null( $boolNoPaco ) )
-        {
-            if( $boolNoPaco )
-            {
+        if (! is_null($boolNoPaco)) {
+            if ($boolNoPaco) {
                 $where .= " $and no_paco = '1'";
-            }
-            else
-            {
+            } else {
                 $where .= " $and no_paco = '0'";
             }
-            $and = " AND ";
+            $and = ' AND ';
         }
-        if( is_string( $charTipo ) )
-        {
+        if (is_string($charTipo)) {
             $where .= " $and tipo = '$charTipo'";
-            $and = " AND ";
+            $and = ' AND ';
         }
-        if( is_string( $strEndereco ) )
-        {
+        if (is_string($strEndereco)) {
             $where .= " $and endereco ILIKE '%$strEndereco%'";
-            $and = " AND ";
+            $and = ' AND ';
         }
-        if( is_numeric( $intRefIdpesResp ) )
-        {
+        if (is_numeric($intRefIdpesResp)) {
             $where .= " $and ref_idpes_resp = '$intRefIdpesResp'";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        if( !empty( $strNotIn ))
-        {
+        if (!empty($strNotIn)) {
             $where .= " $and cod_setor not in({$strNotIn})";
-            $and = " AND ";
+            $and = ' AND ';
         }
 
-        $orderBy = " ORDER BY nm_setor";
-        if( is_string( $strOrderBy ))
-        {
+        $orderBy = ' ORDER BY nm_setor';
+        if (is_string($strOrderBy)) {
             $orderBy = "ORDER BY $strOrderBy";
         }
 
-        if($where)
-        {
+        if ($where) {
             $where = " WHERE $where";
         }
 
-        if($int_limite_ini !== false && $int_limite_qtd)
-        {
+        if ($int_limite_ini !== false && $int_limite_qtd) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
-        }else{
+        } else {
             $limit = $this->getLimite();
         }
         $db = new clsBanco();
-        $this->_total = $total = $db->UnicoCampo( "SELECT COUNT(0) AS total FROM {$this->tabela} $where" );
+        $this->_total = $total = $db->UnicoCampo("SELECT COUNT(0) AS total FROM {$this->tabela} $where");
 
         //echo "SELECT ".$this->camposLista." FROM {$this->tabela} $where $orderBy $limit";die;
-        $db->Consulta( "SELECT ".$this->camposLista." FROM {$this->tabela} $where $orderBy $limit" );
+        $db->Consulta('SELECT '.$this->camposLista." FROM {$this->tabela} $where $orderBy $limit");
 
-        $resultado = array();
-        $countCampos = count( explode( ",", $this->camposLista ) );
+        $resultado = [];
+        $countCampos = count(explode(',', $this->camposLista));
 
-        while ( $db->ProximoRegistro() )
-        {
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
 
-            if($countCampos > 1 )
-            {
-                $tupla["total"] = $total;
+            if ($countCampos > 1) {
+                $tupla['total'] = $total;
                 $resultado[] = $tupla;
-            }
-            else
-            {
+            } else {
                 $resultado[] = $tupla["$this->camposLista"];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -680,15 +605,13 @@ class clsSetor
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->codSetor ) )
-        {
+        if (is_numeric($this->codSetor)) {
             $db = new clsBanco();
             //echo "SELECT {$this->todosCampos} FROM {$this->tabela} WHERE  cod_setor='{$this->codSetor}'";
-            $db->Consulta( "SELECT {$this->todosCampos} FROM {$this->tabela} WHERE  cod_setor='{$this->codSetor}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT {$this->todosCampos} FROM {$this->tabela} WHERE  cod_setor='{$this->codSetor}'");
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
                 $this->ativo = $tupla['ativo'];
@@ -696,7 +619,7 @@ class clsSetor
                 return $tupla;
             }
         }
+
         return false;
     }
 }
-?>

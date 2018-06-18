@@ -25,134 +25,124 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Banner!" );
-        $this->processoAp = "89";
+        $this->SetTitulo("{$this->_instituicao} Banner!");
+        $this->processoAp = '89';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $cod_portal_banner,
-        $ref_ref_cod_pessoa_fj,
-        $caminho,
-        $title,
-        $prioridade,
-        $link,
-        $lateral;
+    public $cod_portal_banner;
+    public $ref_ref_cod_pessoa_fj;
+    public $caminho;
+    public $title;
+    public $prioridade;
+    public $link;
+    public $lateral;
 
-    function Inicializar()
+    public function Inicializar()
     {
         @session_start();
         $id_pessoa = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $retorno = "Novo";
-         
-        if (@$_GET['cod_portal_banner'])
-        {
+        $retorno = 'Novo';
+
+        if (@$_GET['cod_portal_banner']) {
             $this->cod_portal_banner = @$_GET['cod_portal_banner'];
             $db = new clsBanco();
-            $db->Consulta( "SELECT cod_portal_banner, ref_ref_cod_pessoa_fj, caminho, title, prioridade, link, lateral FROM portal_banner WHERE cod_portal_banner={$this->cod_portal_banner}" );
-            if ($db->ProximoRegistro())
-            {
-                list($this->cod_portal_banner, $this->ref_ref_cod_pessoa_fj, $this->caminho, $this->title, $this->prioridade, $this->link, $this->lateral ) = $db->Tupla();
+            $db->Consulta("SELECT cod_portal_banner, ref_ref_cod_pessoa_fj, caminho, title, prioridade, link, lateral FROM portal_banner WHERE cod_portal_banner={$this->cod_portal_banner}");
+            if ($db->ProximoRegistro()) {
+                list($this->cod_portal_banner, $this->ref_ref_cod_pessoa_fj, $this->caminho, $this->title, $this->prioridade, $this->link, $this->lateral) = $db->Tupla();
                 $this->fexcluir = true;
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        
-        $this->url_cancelar = ($retorno == "Editar") ? "banner_det.php?cod_portal_banner=$this->cod_portal_banner" : "banner_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+
+        $this->url_cancelar = ($retorno == 'Editar') ? "banner_det.php?cod_portal_banner=$this->cod_portal_banner" : 'banner_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        
-        $this->campoOculto( "cod_portal_banner", $this->cod_portal_banner );
-        $this->campoTexto( "title", "Titulo", $this->title, "50", "100", true );
-        $this->campoTexto( "link", "Link", $this->link, "50", "100", false );
-        $this->campoTexto( "prioridade", "Prioridade",  $this->prioridade, "5", "4", false );
-        $this->campoArquivo("caminho", "Arquivo", $this->caminho, "50");
-        $opcoes = array( "Não", "Sim" );
-        $this->campoLista( "lateral", "Lateral", $opcoes, $this->lateral );
+        $this->campoOculto('cod_portal_banner', $this->cod_portal_banner);
+        $this->campoTexto('title', 'Titulo', $this->title, '50', '100', true);
+        $this->campoTexto('link', 'Link', $this->link, '50', '100', false);
+        $this->campoTexto('prioridade', 'Prioridade', $this->prioridade, '5', '4', false);
+        $this->campoArquivo('caminho', 'Arquivo', $this->caminho, '50');
+        $opcoes = [ 'Não', 'Sim' ];
+        $this->campoLista('lateral', 'Lateral', $opcoes, $this->lateral);
     }
 
-    function Novo() 
+    public function Novo()
     {
         global $HTTP_POST_FILES;
-        $caminho  = "";
+        $caminho  = '';
 
-        if ( !empty($HTTP_POST_FILES['caminho']['name']) )
-        {
-            $caminho .= date("Y-m-d")."-";
-            list($usec, $sec) = explode(" ", microtime());
+        if (!empty($HTTP_POST_FILES['caminho']['name'])) {
+            $caminho .= date('Y-m-d').'-';
+            list($usec, $sec) = explode(' ', microtime());
             $caminho .= substr(md5("{$usec}{$sec}"), 0, 8);
-            while (file_exists("fotos/imgs/{$caminho}"))
-            {
-                $caminho = $caminho . "a";
+            while (file_exists("fotos/imgs/{$caminho}")) {
+                $caminho = $caminho . 'a';
             }
-            $caminho .= ".jpg";
+            $caminho .= '.jpg';
             copy($HTTP_POST_FILES['caminho']['tmp_name'], "fotos/imgs/{$caminho}");
-        }
-        else
-        {
+        } else {
             return false;
         }
-            
+
         @session_start();
         $this->ref_ref_cod_pessoa_fj = @$_SESSION['id_pessoa'];
         session_write_close();
-        
+
         $db = new clsBanco();
-        $db->Consulta( "INSERT INTO portal_banner ( ref_ref_cod_pessoa_fj, caminho, title, prioridade, link, lateral ) VALUES ({$this->ref_ref_cod_pessoa_fj}, '{$caminho}', '{$this->title}', {$this->prioridade}, '{$this->link}', '{$this->lateral}')" );
-        echo "<script>document.location='banner_lst.php';</script>";
+        $db->Consulta("INSERT INTO portal_banner ( ref_ref_cod_pessoa_fj, caminho, title, prioridade, link, lateral ) VALUES ({$this->ref_ref_cod_pessoa_fj}, '{$caminho}', '{$this->title}', {$this->prioridade}, '{$this->link}', '{$this->lateral}')");
+        echo '<script>document.location=\'banner_lst.php\';</script>';
+
         return true;
     }
 
-    function Editar() 
+    public function Editar()
     {
         @session_start();
         $this->ref_ref_cod_pessoa_fj = @$_SESSION['id_pessoa'];
         session_write_close();
-        
+
         $db = new clsBanco();
-        $db->Consulta( "UPDATE portal_banner SET ref_ref_cod_pessoa_fj={$this->ref_ref_cod_pessoa_fj}, title='{$this->title}', prioridade={$this->prioridade}, link='{$this->link}', lateral='{$this->lateral}' WHERE cod_portal_banner={$this->cod_portal_banner}" );
-        echo "<script>document.location='banner_lst.php';</script>";
+        $db->Consulta("UPDATE portal_banner SET ref_ref_cod_pessoa_fj={$this->ref_ref_cod_pessoa_fj}, title='{$this->title}', prioridade={$this->prioridade}, link='{$this->link}', lateral='{$this->lateral}' WHERE cod_portal_banner={$this->cod_portal_banner}");
+        echo '<script>document.location=\'banner_lst.php\';</script>';
+
         return true;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         $db = new clsBanco();
         $db->Consulta("SELECT caminho FROM portal_banner WHERE cod_portal_banner = {$this->cod_portal_banner}");
         $db->ProximoRegistro();
-        list ($caminho) = $db->Tupla();
-        $db->Consulta( "DELETE FROM portal_banner WHERE cod_portal_banner = {$this->cod_portal_banner}" );
-        
+        list($caminho) = $db->Tupla();
+        $db->Consulta("DELETE FROM portal_banner WHERE cod_portal_banner = {$this->cod_portal_banner}");
+
         @unlink("fotos/imgs/{$caminho}");
-        echo "<script>document.location='banner_lst.php';</script>";            
+        echo '<script>document.location=\'banner_lst.php\';</script>';
     }
-
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

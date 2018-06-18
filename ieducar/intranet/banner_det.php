@@ -24,60 +24,55 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Banner" );
-        $this->processoAp = "89";
+        $this->SetTitulo("{$this->_instituicao} Banner");
+        $this->processoAp = '89';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe do Banner";
-        
+        $this->titulo = 'Detalhe do Banner';
 
         $cod_portal_banner = @$_GET['cod_portal_banner'];
 
         $objPessoa = new clsPessoaFisica();
-        
-        $db = new clsBanco();
-        $db->Consulta( "SELECT b.ref_ref_cod_pessoa_fj, b.cod_portal_banner, b.caminho, b.title, b.prioridade, b.link, b.lateral FROM portal_banner b WHERE b.cod_portal_banner={$cod_portal_banner}" );
-        if ($db->ProximoRegistro())
-        {
-            list ($cod_pessoa, $cod_portal_banner, $caminho, $title, $prioridade, $link, $lateral ) = $db->Tupla();
-            list ($nm_pessoa) = $objPessoa->queryRapida($cod_pessoa, "nome");
-            $this->addDetalhe( array("Responsável", $nm_pessoa) );
-            $this->addDetalhe( array("Title", $title) );
-            $this->addDetalhe( array("Prioridade", $prioridade) );
-            $this->addDetalhe( array("Link", $link) );
-            $lateral = ( $lateral ) ? "Sim": "Não";
-            $this->addDetalhe( array("Lateral", $lateral ) );
-            
-            $this->addDetalhe( array("Banner", "<img src='fotos/imgs/{$caminho}' title='{$title}' width=\"149\">") );
-        }
-        $this->url_novo = "banner_cad.php";
-        $this->url_editar = "banner_cad.php?cod_portal_banner=$cod_portal_banner";
-        $this->url_cancelar = "banner_lst.php";
 
-        $this->largura = "100%";
+        $db = new clsBanco();
+        $db->Consulta("SELECT b.ref_ref_cod_pessoa_fj, b.cod_portal_banner, b.caminho, b.title, b.prioridade, b.link, b.lateral FROM portal_banner b WHERE b.cod_portal_banner={$cod_portal_banner}");
+        if ($db->ProximoRegistro()) {
+            list($cod_pessoa, $cod_portal_banner, $caminho, $title, $prioridade, $link, $lateral) = $db->Tupla();
+            list($nm_pessoa) = $objPessoa->queryRapida($cod_pessoa, 'nome');
+            $this->addDetalhe(['Responsável', $nm_pessoa]);
+            $this->addDetalhe(['Title', $title]);
+            $this->addDetalhe(['Prioridade', $prioridade]);
+            $this->addDetalhe(['Link', $link]);
+            $lateral = ($lateral) ? 'Sim': 'Não';
+            $this->addDetalhe(['Lateral', $lateral ]);
+
+            $this->addDetalhe(['Banner', "<img src='fotos/imgs/{$caminho}' title='{$title}' width=\"149\">"]);
+        }
+        $this->url_novo = 'banner_cad.php';
+        $this->url_editar = "banner_cad.php?cod_portal_banner=$cod_portal_banner";
+        $this->url_cancelar = 'banner_lst.php';
+
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

@@ -30,16 +30,16 @@
 * Criado em 02/08/2006 14:41 pelo gerador automatico de classes
 */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 
 class clsPmieducarTurmaModulo
 {
-    var $ref_cod_turma;
-    var $ref_cod_modulo;
-    var $sequencial;
-    var $data_inicio;
-    var $data_fim;
-    var $dias_letivos;
+    public $ref_cod_turma;
+    public $ref_cod_modulo;
+    public $sequencial;
+    public $data_inicio;
+    public $data_fim;
+    public $dias_letivos;
 
     // propriedades padrao
 
@@ -48,146 +48,119 @@ class clsPmieducarTurmaModulo
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
      *
      * @return object
      */
-    function __construct( $ref_cod_turma = null, $ref_cod_modulo = null, $sequencial = null, $data_inicio = null, $data_fim = null, $dias_letivos = null)
+    public function __construct($ref_cod_turma = null, $ref_cod_modulo = null, $sequencial = null, $data_inicio = null, $data_fim = null, $dias_letivos = null)
     {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}turma_modulo";
 
-        $this->_campos_lista = $this->_todos_campos = "ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos";
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos';
 
-        if( is_numeric( $ref_cod_modulo ) )
-        {
-            if( class_exists( "clsPmieducarModulo" ) )
-            {
-                $tmp_obj = new clsPmieducarModulo( $ref_cod_modulo );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_modulo)) {
+            if (class_exists('clsPmieducarModulo')) {
+                $tmp_obj = new clsPmieducarModulo($ref_cod_modulo);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_modulo = $ref_cod_modulo;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_modulo = $ref_cod_modulo;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_modulo = $ref_cod_modulo;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.modulo WHERE cod_modulo = '{$ref_cod_modulo}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.modulo WHERE cod_modulo = '{$ref_cod_modulo}'")) {
                     $this->ref_cod_modulo = $ref_cod_modulo;
                 }
             }
         }
-        if( is_numeric( $ref_cod_turma ) )
-        {
-            if( class_exists( "clsPmieducarTurma" ) )
-            {
-                $tmp_obj = new clsPmieducarTurma( $ref_cod_turma );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_turma)) {
+            if (class_exists('clsPmieducarTurma')) {
+                $tmp_obj = new clsPmieducarTurma($ref_cod_turma);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_turma = $ref_cod_turma;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_turma = $ref_cod_turma;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_turma = $ref_cod_turma;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.turma WHERE cod_turma = '{$ref_cod_turma}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.turma WHERE cod_turma = '{$ref_cod_turma}'")) {
                     $this->ref_cod_turma = $ref_cod_turma;
                 }
             }
         }
 
-
-        if( is_numeric( $sequencial ) )
-        {
+        if (is_numeric($sequencial)) {
             $this->sequencial = $sequencial;
         }
-        if( is_string( $data_inicio ) )
-        {
+        if (is_string($data_inicio)) {
             $this->data_inicio = $data_inicio;
         }
-        if( is_string( $data_fim ) )
-        {
+        if (is_string($data_fim)) {
             $this->data_fim = $data_fim;
         }
-        if( is_numeric( $dias_letivos ) )
-        {
+        if (is_numeric($dias_letivos)) {
             $this->dias_letivos = $dias_letivos;
         }
-
     }
 
     /**
@@ -195,57 +168,51 @@ class clsPmieducarTurmaModulo
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) && is_string( $this->data_inicio ) && is_string( $this->data_fim ))
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial) && is_string($this->data_inicio) && is_string($this->data_fim)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_turma ) )
-            {
+            if (is_numeric($this->ref_cod_turma)) {
                 $campos .= "{$gruda}ref_cod_turma";
                 $valores .= "{$gruda}'{$this->ref_cod_turma}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_modulo ) )
-            {
+            if (is_numeric($this->ref_cod_modulo)) {
                 $campos .= "{$gruda}ref_cod_modulo";
                 $valores .= "{$gruda}'{$this->ref_cod_modulo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->sequencial ) )
-            {
+            if (is_numeric($this->sequencial)) {
                 $campos .= "{$gruda}sequencial";
                 $valores .= "{$gruda}'{$this->sequencial}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_inicio ) )
-            {
+            if (is_string($this->data_inicio)) {
                 $campos .= "{$gruda}data_inicio";
                 $valores .= "{$gruda}'{$this->data_inicio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_fim ) )
-            {
+            if (is_string($this->data_fim)) {
                 $campos .= "{$gruda}data_fim";
                 $valores .= "{$gruda}'{$this->data_fim}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->dias_letivos ) )
-            {
+            if (is_numeric($this->dias_letivos)) {
                 $campos .= "{$gruda}dias_letivos";
                 $valores .= "{$gruda}'{$this->dias_letivos}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return true;
         }
+
         return false;
     }
 
@@ -254,37 +221,32 @@ class clsPmieducarTurmaModulo
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) )
-        {
-
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_string( $this->data_inicio ) )
-            {
+            if (is_string($this->data_inicio)) {
                 $set .= "{$gruda}data_inicio = '{$this->data_inicio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_fim ) )
-            {
+            if (is_string($this->data_fim)) {
                 $set .= "{$gruda}data_fim = '{$this->data_fim}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->dias_letivos ) )
-            {
+            if (is_numeric($this->dias_letivos)) {
                 $set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'" );
                 return true;
             }
         }
+
         return false;
     }
 
@@ -293,88 +255,74 @@ class clsPmieducarTurmaModulo
      *
      * @return array
      */
-    function lista( $int_ref_cod_turma = null, $int_ref_cod_modulo = null, $int_sequencial = null, $date_data_inicio_ini = null, $date_data_inicio_fim = null, $date_data_fim_ini = null, $date_data_fim_fim = null, $dias_letivos = null)
+    public function lista($int_ref_cod_turma = null, $int_ref_cod_modulo = null, $int_sequencial = null, $date_data_inicio_ini = null, $date_data_inicio_fim = null, $date_data_fim_ini = null, $date_data_fim_fim = null, $dias_letivos = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_ref_cod_turma ) )
-        {
+        if (is_numeric($int_ref_cod_turma)) {
             $filtros .= "{$whereAnd} ref_cod_turma = '{$int_ref_cod_turma}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_modulo ) )
-        {
+        if (is_numeric($int_ref_cod_modulo)) {
             $filtros .= "{$whereAnd} ref_cod_modulo = '{$int_ref_cod_modulo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_sequencial ) )
-        {
+        if (is_numeric($int_sequencial)) {
             $filtros .= "{$whereAnd} sequencial = '{$int_sequencial}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_inicio_ini ) )
-        {
+        if (is_string($date_data_inicio_ini)) {
             $filtros .= "{$whereAnd} data_inicio >= '{$date_data_inicio_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_inicio_fim ) )
-        {
+        if (is_string($date_data_inicio_fim)) {
             $filtros .= "{$whereAnd} data_inicio <= '{$date_data_inicio_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_fim_ini ) )
-        {
+        if (is_string($date_data_fim_ini)) {
             $filtros .= "{$whereAnd} data_fim >= '{$date_data_fim_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_fim_fim ) )
-        {
+        if (is_string($date_data_fim_fim)) {
             $filtros .= "{$whereAnd} data_fim <= '{$date_data_fim_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $dias_letivos ) )
-        {
+        if (is_numeric($dias_letivos)) {
             $filtros .= "{$whereAnd} dias_letivos <= '{$dias_letivos}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
 //      echo  "<!-- $sql -->";
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -383,16 +331,16 @@ class clsPmieducarTurmaModulo
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) )
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -401,16 +349,16 @@ class clsPmieducarTurmaModulo
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) )
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -419,10 +367,9 @@ class clsPmieducarTurmaModulo
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) )
-        {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
 
         /*
             delete
@@ -430,22 +377,23 @@ class clsPmieducarTurmaModulo
         $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'" );
         return true;
         */
-
-
         }
+
         return false;
     }
 
     /**
      * Exclui todos os registros referentes a uma turma
      */
-    function  excluirTodos( $ref_cod_turma = null )
+    public function excluirTodos($ref_cod_turma = null)
     {
-        if ( is_numeric( $ref_cod_turma ) ) {
+        if (is_numeric($ref_cod_turma)) {
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$ref_cod_turma}'" );
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_turma = '{$ref_cod_turma}'");
+
             return true;
         }
+
         return false;
     }
 
@@ -454,7 +402,7 @@ class clsPmieducarTurmaModulo
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -464,7 +412,7 @@ class clsPmieducarTurmaModulo
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -474,7 +422,7 @@ class clsPmieducarTurmaModulo
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -485,18 +433,18 @@ class clsPmieducarTurmaModulo
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -504,13 +452,12 @@ class clsPmieducarTurmaModulo
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -520,13 +467,13 @@ class clsPmieducarTurmaModulo
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -534,16 +481,14 @@ class clsPmieducarTurmaModulo
      *
      * @return array
      */
-    function numModulo( $int_ref_sequencial, $int_disc_ref_ref_cod_serie, $int_disc_ref_ref_cod_escola, $arr_disc_ref_ref_cod_disciplina, $int_disc_ref_cod_turma, $int_ref_ref_cod_turma )
+    public function numModulo($int_ref_sequencial, $int_disc_ref_ref_cod_serie, $int_disc_ref_ref_cod_escola, $arr_disc_ref_ref_cod_disciplina, $int_disc_ref_cod_turma, $int_ref_ref_cod_turma)
     {
-        if ( is_numeric( $int_disc_ref_ref_cod_serie ) && is_numeric( $int_disc_ref_ref_cod_escola ) && is_array( $arr_disc_ref_ref_cod_disciplina ) && is_numeric( $int_disc_ref_cod_turma ) && is_numeric( $int_ref_ref_cod_turma ) )
-        {
+        if (is_numeric($int_disc_ref_ref_cod_serie) && is_numeric($int_disc_ref_ref_cod_escola) && is_array($arr_disc_ref_ref_cod_disciplina) && is_numeric($int_disc_ref_cod_turma) && is_numeric($int_ref_ref_cod_turma)) {
             $db  = new clsBanco();
-            $plus = "";
-            $sql  = "SELECT( ";
+            $plus = '';
+            $sql  = 'SELECT( ';
 
-            foreach ( $arr_disc_ref_ref_cod_disciplina as $cod )
-            {
+            foreach ($arr_disc_ref_ref_cod_disciplina as $cod) {
                 $sql .= "{$plus}( SELECT COUNT( cod_nota_aluno ) / ( ( SELECT CASE WHEN COUNT( 0 ) = 0
                                                                                 THEN 1
                                                                                 ELSE COUNT( 0 )
@@ -559,7 +504,7 @@ class clsPmieducarTurmaModulo
                                      AND ref_cod_escola     = {$int_disc_ref_ref_cod_escola}
                                      AND ativo              = 1
                                      AND ref_cod_disciplina = {$cod} )";
-                $plus = " + ";
+                $plus = ' + ';
             }
             $sql .= " ) / ( SELECT COUNT( ref_cod_disciplina )
                               FROM pmieducar.turma_disciplina
@@ -567,14 +512,13 @@ class clsPmieducarTurmaModulo
                                AND ref_cod_escola = {$int_disc_ref_ref_cod_escola}
                                AND ref_cod_serie  = {$int_disc_ref_ref_cod_serie} )";
 
-            $resultado = $db->CampoUnico( $sql );
-            if ( is_string( $resultado ) )
+            $resultado = $db->CampoUnico($sql);
+            if (is_string($resultado)) {
                 return $resultado;
-            else
+            } else {
                 return 'N';
-        }
-        else
-        {
+            }
+        } else {
             return false;
         }
     }
@@ -584,11 +528,9 @@ class clsPmieducarTurmaModulo
      *
      * @return array
      */
-    function fimAno( $int_ref_cod_turma, $int_qtd_modulo, $int_ref_cod_escola, $int_ref_cod_serie )
+    public function fimAno($int_ref_cod_turma, $int_qtd_modulo, $int_ref_cod_escola, $int_ref_cod_serie)
     {
-        if ( is_numeric( $int_ref_cod_turma ) && is_numeric( $int_qtd_modulo ) && is_numeric( $int_ref_cod_escola ) && is_numeric( $int_ref_cod_serie ) )
-        {
-
+        if (is_numeric($int_ref_cod_turma) && is_numeric($int_qtd_modulo) && is_numeric($int_ref_cod_escola) && is_numeric($int_ref_cod_serie)) {
             $db = new clsBanco();
 
             $sql = "SELECT CASE WHEN ( SELECT COUNT(0)
@@ -642,10 +584,8 @@ class clsPmieducarTurmaModulo
                                 ELSE 'N'
                                  END AS modulo";
 
-            return $db->CampoUnico( $sql );
-        }
-        else
-        {
+            return $db->CampoUnico($sql);
+        } else {
             return false;
         }
     }
@@ -669,4 +609,3 @@ class clsPmieducarTurmaModulo
         na.ref_ref_cod_turma = 5
     GROUP BY na.ref_ref_cod_matricula
 ) AS sub1 */
-?>

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package   Ied_Public
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -40,216 +45,272 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  * clsIndexBase class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Distrito');
-    $this->processoAp = 759;
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Distrito');
+        $this->processoAp = 759;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $__titulo;
-  var $__limite;
-  var $__offset;
+    public $pessoa_logada;
+    public $__titulo;
+    public $__limite;
+    public $__offset;
 
-  var $idmun;
-  var $geom;
-  var $idbai;
-  var $nome;
-  var $idpes_rev;
-  var $data_rev;
-  var $origem_gravacao;
-  var $idpes_cad;
-  var $data_cad;
-  var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
+    public $idmun;
+    public $geom;
+    public $idbai;
+    public $nome;
+    public $idpes_rev;
+    public $data_rev;
+    public $origem_gravacao;
+    public $idpes_cad;
+    public $data_cad;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
 
-  var $idpais;
-  var $sigla_uf;
+    public $idpais;
+    public $sigla_uf;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->__titulo = 'Distrito - Listagem';
+        $this->__titulo = 'Distrito - Listagem';
 
-    // Passa todos os valores obtidos no GET para atributos do objeto
-    foreach ($_GET as $var => $val) {
-      $this->$var = ($val === '') ? NULL : $val;
-    }
+        // Passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
+        $this->addBanner(
+        'imagens/nvp_top_intranet.jpg',
+      'imagens/nvp_vert_intranet.jpg',
+        'Intranet'
+    );
 
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Nome',
       'Município',
       'Estado',
       'Pais'
-    ));
+    ]);
 
-    // Filtros de Foreign Keys
-    $opcoes = array('' => 'Selecione');
+        // Filtros de Foreign Keys
+        $opcoes = ['' => 'Selecione'];
 
-    if (class_exists('clsPais')) {
-      $objTemp = new clsPais();
-      $lista = $objTemp->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
+        if (class_exists('clsPais')) {
+            $objTemp = new clsPais();
+            $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['idpais']] = $registro['nome'];
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['idpais']] = $registro['nome'];
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geração'];
         }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
-    }
 
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', FALSE, '',
-      '', FALSE, FALSE);
+        $this->campoLista(
+        'idpais',
+        'Pais',
+        $opcoes,
+        $this->idpais,
+        '',
+        false,
+        '',
+      '',
+        false,
+        false
+    );
 
-    $opcoes = array('' => 'Selecione');
+        $opcoes = ['' => 'Selecione'];
 
-    if (class_exists('clsUf')) {
-      if ($this->idpais) {
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista(FALSE, FALSE, $this->idpais, FALSE, FALSE,
-          'nome ASC');
+        if (class_exists('clsUf')) {
+            if ($this->idpais) {
+                $objTemp = new clsUf();
+                $lista = $objTemp->lista(
+            false,
+            false,
+            $this->idpais,
+            false,
+            false,
+          'nome ASC'
+        );
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['sigla_uf']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['sigla_uf']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geração'];
         }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
-    }
 
-    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', FALSE,
-      '', '', FALSE, FALSE);
+        $this->campoLista(
+        'sigla_uf',
+        'Estado',
+        $opcoes,
+        $this->sigla_uf,
+        '',
+        false,
+      '',
+        '',
+        false,
+        false
+    );
 
-    $opcoes = array('' => 'Selecione');
+        $opcoes = ['' => 'Selecione'];
 
-    if (class_exists('clsMunicipio')) {
-      if ($this->sigla_uf) {
-        $objTemp = new clsMunicipio();
-        $lista = $objTemp->lista(FALSE, $this->sigla_uf, FALSE, FALSE, FALSE,
-          FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
+        if (class_exists('clsMunicipio')) {
+            if ($this->sigla_uf) {
+                $objTemp = new clsMunicipio();
+                $lista = $objTemp->lista(
+            false,
+            $this->sigla_uf,
+            false,
+            false,
+            false,
+          false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            'nome ASC'
+        );
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['idmun']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['idmun']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsMunicipio nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geração'];
         }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsMunicipio nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
-    }
 
-    $this->campoLista('idmun', 'Município', $opcoes, $this->idmun, '', FALSE,
-      '', '', FALSE, FALSE);
+        $this->campoLista(
+        'idmun',
+        'Município',
+        $opcoes,
+        $this->idmun,
+        '',
+        false,
+      '',
+        '',
+        false,
+        false
+    );
 
-    // Outros filtros
-    $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, FALSE);
+        // Outros filtros
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, false);
 
-    // Paginador
-    $this->__limite = 20;
-    $this->__offset = ($_GET['pagina_' . $this->nome]) ?
+        // Paginador
+        $this->__limite = 20;
+        $this->__offset = ($_GET['pagina_' . $this->nome]) ?
       ($_GET['pagina_' . $this->nome] * $this->__limite - $this->__limite) : 0;
-    
-    $obj_distrito = new clsPublicDistrito();
-    $obj_distrito->setOrderby('nome ASC');
-    $obj_distrito->setLimite($this->__limite, $this->__offset);
 
-    $lista = $obj_distrito->lista(
+        $obj_distrito = new clsPublicDistrito();
+        $obj_distrito->setOrderby('nome ASC');
+        $obj_distrito->setLimite($this->__limite, $this->__offset);
+
+        $lista = $obj_distrito->lista(
       $this->idmun,
-      NULL,
+      null,
       $this->nome,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       $this->idpais,
       $this->sigla_uf
     );
 
-    $total = $obj_distrito->_total;
+        $total = $obj_distrito->_total;
 
-    // UrlHelper.
-    $url = CoreExt_View_Helper_UrlHelper::getInstance();
-    $options = array('query' => array('iddis' => NULL));
+        // UrlHelper.
+        $url = CoreExt_View_Helper_UrlHelper::getInstance();
+        $options = ['query' => ['iddis' => null]];
 
-    // Monta a lista.
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
+        // Monta a lista.
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $options['query']['iddis'] = $registro['iddis'];
 
-        $options['query']['iddis'] = $registro['iddis'];
-
-        $this->addLinhas(array(
+                $this->addLinhas([
           $url->l($registro['nome'], 'public_distrito_det.php', $options),
           $url->l($registro['nm_municipio'], 'public_distrito_det.php', $options),
           $url->l($registro['nm_estado'], 'public_distrito_det.php', $options),
           $url->l($registro['nm_pais'], 'public_distrito_det.php', $options)
-        ));
-      }
+        ]);
+            }
+        }
+
+        $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);
+
+        $obj_permissao = new clsPermissoes();
+
+        if ($obj_permissao->permissao_cadastra(759, $this->pessoa_logada, 7, null, true)) {
+            $this->acao      = 'go("public_distrito_cad.php")';
+            $this->nome_acao = 'Novo';
+        }
+
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''                                  => 'Listagem de distritos'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);  
-
-    $obj_permissao = new clsPermissoes();   
-
-    if($obj_permissao->permissao_cadastra(759, $this->pessoa_logada,7,null,true))
-    {
-      $this->acao      = 'go("public_distrito_cad.php")';
-      $this->nome_acao = 'Novo';
-    }
-
-    $this->largura = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""                                  => "Listagem de distritos"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
 }
 
 // Instancia objeto de página

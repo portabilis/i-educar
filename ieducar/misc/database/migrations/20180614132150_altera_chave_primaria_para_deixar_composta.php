@@ -4,7 +4,6 @@ use Phinx\Migration\AbstractMigration;
 
 class AlteraChavePrimariaParaDeixarComposta extends AbstractMigration
 {
-    
     public function up()
     {
         $this->execute('ALTER TABLE modules.parecer_geral

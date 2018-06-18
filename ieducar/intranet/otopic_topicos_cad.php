@@ -24,100 +24,88 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
-
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Pauta - Inserir Tópicos" );
-        $this->processoAp = "294";
+        $this->SetTitulo("{$this->_instituicao} i-Pauta - Inserir Tópicos");
+        $this->processoAp = '294';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $cod_topico;
-    var $cod_grupo;
-    var $assunto;
-    var $id_pessoa;
+    public $cod_topico;
+    public $cod_grupo;
+    public $assunto;
+    public $id_pessoa;
 
-    
-    function Inicializar()
+    public function Inicializar()
     {
         @session_start();
         $this->id_pessoa = $_SESSION['id_pessoa'];
         session_write_close();
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
         $this->cod_grupo = $_GET['cod_grupo'];
         $this->cod_topico = $_GET['cod_topico'];
-        
-        /* 
+
+        /*
             Verifica se o Usuï¿½rio atual estï¿½ cadastrado no grupo,
             caso nao esteja, redireciona para entrada
         */
-        $obj = new clsGrupoPessoa($this->id_pessoa ,$this->cod_grupo);
+        $obj = new clsGrupoPessoa($this->id_pessoa, $this->cod_grupo);
         $detalhe_pessoa = $obj->detalhe();
-        $obj = new clsGrupoModerador($this->id_pessoa ,$this->cod_grupo);
+        $obj = new clsGrupoModerador($this->id_pessoa, $this->cod_grupo);
         $detalhe_moderador = $obj->detalhe();
-        
-        if ($detalhe_moderador && $detalhe_pessoa['ativo']!= 1) 
-        {
-            if( $detalhe_moderador['ativo'] != 1)
-            {
+
+        if ($detalhe_moderador && $detalhe_pessoa['ativo']!= 1) {
+            if ($detalhe_moderador['ativo'] != 1) {
                 header("Location: otopic_meus_grupos_det2.php?cod_grupo=$cod_grupo");
                 die();
             }
-        }elseif($detalhe_pessoa['ativo']!= 1)
-        {
+        } elseif ($detalhe_pessoa['ativo']!= 1) {
             header("Location: otopic_meus_grupos_det2.php?cod_grupo=$cod_grupo");
             die();
         }
-        
-        if($this->cod_topico)
-        {
+
+        if ($this->cod_topico) {
             $obj = new clsTopico($this->cod_topico);
             $detalhe = $obj->detalhe();
-            if($detalhe)
-            {
-                $obj_moderador = new clsGrupoModerador($this->id_pessoa,$this->cod_grupo);
+            if ($detalhe) {
+                $obj_moderador = new clsGrupoModerador($this->id_pessoa, $this->cod_grupo);
                 $detalhe_moderador = $obj_moderador->detalhe();
-                if($detalhe['ref_idpes_cad'] != $this->id_pessoa && !$detalhe_moderador)
-                {
+                if ($detalhe['ref_idpes_cad'] != $this->id_pessoa && !$detalhe_moderador) {
                     header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo");
                     die();
                 }
                 $this->assunto = $detalhe['assunto'];
-                $retorno = "Editar";
+                $retorno = 'Editar';
                 $this->fexcluir = true;
-    
-            }else 
-            {                   
+            } else {
                 header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo");
                 die();
             }
         }
-        
-        $this->url_cancelar =  "otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo";
-        $this->nome_url_cancelar = "Cancelar";
 
+        $this->url_cancelar =  "otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo";
+        $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->campoOculto("id_pessoa",$this->id_pessoa);
-        $this->campoOculto("cod_grupo",$this->cod_grupo);
-        $this->campoOculto("cod_topico",$this->cod_topico);
-        $this->campoTexto("assunto","Asssunto",$this->assunto,50,255,true);
+        $this->campoOculto('id_pessoa', $this->id_pessoa);
+        $this->campoOculto('cod_grupo', $this->cod_grupo);
+        $this->campoOculto('cod_topico', $this->cod_topico);
+        $this->campoTexto('assunto', 'Asssunto', $this->assunto, 50, 255, true);
         //campoRadio( $nome, $campo, $valor, $default, $acao = "", $descricao="" )
         $objReuniao = new clsReuniao();
         $listaReuniao = $objReuniao->lista(false, $this->cod_grupo);
@@ -126,13 +114,10 @@ class indice extends clsCadastro
         print_r($listaReuniao);
         die();
         */
-        if($listaReuniao)
-        {
-            foreach ($listaReuniao AS $reuniao)
-            {
-                if($reuniao['data_inicio_real'] && !$reuniao['data_fim_real'])
-                {
-                    $listaReuniaoAndamento[$reuniao["cod_reuniao"]] = $reuniao["descricao"]; 
+        if ($listaReuniao) {
+            foreach ($listaReuniao as $reuniao) {
+                if ($reuniao['data_inicio_real'] && !$reuniao['data_fim_real']) {
+                    $listaReuniaoAndamento[$reuniao['cod_reuniao']] = $reuniao['descricao'];
                 }
             }
         }
@@ -141,26 +126,21 @@ class indice extends clsCadastro
         print_r($listaReuniaoAndamento);
         die();
         */
-        if($listaReuniaoAndamento)
-        {
-            $this->campoRotulo("rt1", "<b>Selecione a reuniÃ£oo na qual o novo tÃ³pico sera criado</b>", "");
-            $this->campoRadio( "radio", "Reuniï¿½es em andamento", $listaReuniaoAndamento, "" );
+        if ($listaReuniaoAndamento) {
+            $this->campoRotulo('rt1', '<b>Selecione a reuniÃ£oo na qual o novo tÃ³pico sera criado</b>', '');
+            $this->campoRadio('radio', 'Reuniï¿½es em andamento', $listaReuniaoAndamento, '');
         }
-        
     }
-    
-    
-    function Novo() 
+
+    public function Novo()
     {
-        $obj = new clsTopico(false,$this->id_pessoa,$this->cod_grupo,false,false,$this->assunto);
+        $obj = new clsTopico(false, $this->id_pessoa, $this->cod_grupo, false, false, $this->assunto);
         $cod_topico = $obj->cadastra();
-        if($cod_topico)
-        {
+        if ($cod_topico) {
             $obj_grupo = new clsGrupoModerador();
-            $lista = $obj_grupo->lista(false,$this->cod_grupo);
-            if($lista)
-            {
-                $grupo_pessoas = "";
+            $lista = $obj_grupo->lista(false, $this->cod_grupo);
+            if ($lista) {
+                $grupo_pessoas = '';
                 foreach ($lista as $moderador) {
                     $obj = $obj = new clsPessoaFisica($moderador['ref_ref_cod_pessoa_fj']);
                     $detalhe = $obj->detalhe();
@@ -176,66 +156,54 @@ class indice extends clsCadastro
             $corpo_email = "<br><table summary=\"\" border=0 cellspacing=3 cellpadding=3><tr><td colspan='2'  style=\"border-bottom: 2px solid #024492\"><span class='titulo'><br><br><b>Novo Tï¿½pico Sugerido</b></span><br>\n<br>\n";
             $corpo_email .= "<tr><td><b><br>Grupo: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>$nome_grupo</td></tr><br><tr><td><b><br>Membro: &nbsp;&nbsp;</td><td>$nome_criador</td></tr><br><tr><td><b><br>Assunto: &nbsp;&nbsp;</td><td>$this->assunto</td></tr></table>";
             $cabecalho = "From: PMI(itajai.com.br)\nReply-To: itajai.com.br";
-            $objEmail = new clsEmail( $grupo_pessoas, "[OpenTopic] - Novo Tï¿½pico", $corpo_email,"email_mailling_topic" );
+            $objEmail = new clsEmail($grupo_pessoas, '[OpenTopic] - Novo Tï¿½pico', $corpo_email, 'email_mailling_topic');
             $objEmail->envia();
-            
+
             $cod_reuniao = $this->radio;
-            if($cod_reuniao)
-            {
+            if ($cod_reuniao) {
                 $objTopicoReuniao = new clsTopicoReuniao($cod_topico, $cod_reuniao);
                 $objTopicoReuniao->cadastra();
             }
-            
-            if($_SESSION['pagina'])
-            {
+
+            if ($_SESSION['pagina']) {
                 header("Location: $_SESSION[pagina]");
                 die();
-            }
-            else 
-            {
+            } else {
                 header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo");
                 die();
             }
         }
+
         return false;
     }
 
-    function Editar() 
+    public function Editar()
     {
-        $obj = new clsTopico($this->cod_topico,$this->id_pessoa,$this->cod_grupo,false,false,$this->assunto);
-        if($obj->edita())
-        {
+        $obj = new clsTopico($this->cod_topico, $this->id_pessoa, $this->cod_grupo, false, false, $this->assunto);
+        if ($obj->edita()) {
             $cod_reuniao = $this->radio;
-            if($cod_reuniao)
-            {
+            if ($cod_reuniao) {
                 $objTopicoReuniao = new clsTopicoReuniao($this->cod_topico, $cod_reuniao);
                 $objTopicoReuniao->cadastra();
             }
             header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo");
             die();
-        }       
-
+        }
     }
 
-    function Excluir()
+    public function Excluir()
     {
-        $obj = new clsTopico($this->cod_topico,false,false,$this->id_pessoa,$this->cod_grupo,$this->assunto);
-        if($obj->exclui())
-        {
+        $obj = new clsTopico($this->cod_topico, false, false, $this->id_pessoa, $this->cod_grupo, $this->assunto);
+        if ($obj->exclui()) {
             header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo");
             die();
-        }       
-        
+        }
     }
-
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

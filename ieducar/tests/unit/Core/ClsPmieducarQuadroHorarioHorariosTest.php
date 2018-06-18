@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.0.2
+ *
  * @version     $Id$
  */
 
@@ -35,26 +40,31 @@ require_once 'include/pmieducar/clsPmieducarQuadroHorarioHorarios.inc.php';
  * ClsPmieducarQuadroHorarioHorariosTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.0.2
+ *
  * @version     @@package_version@@
  */
 class ClsPmieducarQuadroHorarioHorariosTest extends UnitBaseTest
 {
-  /**
-   * Testa o método substituir_servidor()
-   */
-  public function testSubstituirServidor()
-  {
-    $stub = $this->getMock('clsPmieducarQuadroHorarioHorarios');
+    /**
+     * Testa o método substituir_servidor()
+     */
+    public function testSubstituirServidor()
+    {
+        $stub = $this->getMock('clsPmieducarQuadroHorarioHorarios');
 
-    $stub->expects($this->any())
+        $stub->expects($this->any())
          ->method('substituir_servidor')
-         ->will($this->returnValue(TRUE));
+         ->will($this->returnValue(true));
 
-    $this->assertTrue($stub->substituir_servidor(1));
-  }
+        $this->assertTrue($stub->substituir_servidor(1));
+    }
 }

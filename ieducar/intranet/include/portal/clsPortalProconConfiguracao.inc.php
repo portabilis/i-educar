@@ -30,18 +30,18 @@
 * Criado em 08/02/2007 08:39 pelo gerador automatico de classes
 */
 
-require_once( "include/portal/geral.inc.php" );
+require_once('include/portal/geral.inc.php');
 
 class clsPortalProconConfiguracao
 {
-    var $cod_configuracao;
-    var $ref_funcionario_exc;
-    var $ref_funcionario_cad;
-    var $nome_responsavel;
-    var $cargo;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_configuracao;
+    public $ref_funcionario_exc;
+    public $ref_funcionario_cad;
+    public $nome_responsavel;
+    public $cargo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
     // propriedades padrao
 
@@ -50,61 +50,60 @@ class clsPortalProconConfiguracao
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
-     * 
+     *
      * @param integer cod_configuracao
      * @param integer ref_funcionario_exc
      * @param integer ref_funcionario_cad
@@ -116,97 +115,69 @@ class clsPortalProconConfiguracao
      *
      * @return object
      */
-    function __construct( $cod_configuracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $nome_responsavel = null, $cargo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    public function __construct($cod_configuracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $nome_responsavel = null, $cargo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
         $db = new clsBanco();
-        $this->_schema = "portal.";
+        $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}procon_configuracao";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_configuracao, ref_funcionario_exc, ref_funcionario_cad, nome_responsavel, cargo, data_cadastro, data_exclusao, ativo";
+        $this->_campos_lista = $this->_todos_campos = 'cod_configuracao, ref_funcionario_exc, ref_funcionario_cad, nome_responsavel, cargo, data_cadastro, data_exclusao, ativo';
 
-        if( is_numeric( $ref_funcionario_exc ) )
-        {
-            if( class_exists( "clsFuncionario" ) )
-            {
-                $tmp_obj = new clsFuncionario( $ref_funcionario_exc );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_funcionario_exc)) {
+            if (class_exists('clsFuncionario')) {
+                $tmp_obj = new clsFuncionario($ref_funcionario_exc);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_funcionario_exc = $ref_funcionario_exc;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_funcionario_exc = $ref_funcionario_exc;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_funcionario_exc = $ref_funcionario_exc;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_exc}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_exc}'")) {
                     $this->ref_funcionario_exc = $ref_funcionario_exc;
                 }
             }
         }
-        if( is_numeric( $ref_funcionario_cad ) )
-        {
-            if( class_exists( "clsFuncionario" ) )
-            {
-                $tmp_obj = new clsFuncionario( $ref_funcionario_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_funcionario_cad)) {
+            if (class_exists('clsFuncionario')) {
+                $tmp_obj = new clsFuncionario($ref_funcionario_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_funcionario_cad = $ref_funcionario_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_funcionario_cad = $ref_funcionario_cad;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_funcionario_cad = $ref_funcionario_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'")) {
                     $this->ref_funcionario_cad = $ref_funcionario_cad;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_configuracao ) )
-        {
+        if (is_numeric($cod_configuracao)) {
             $this->cod_configuracao = $cod_configuracao;
         }
-        if( is_string( $nome_responsavel ) )
-        {
+        if (is_string($nome_responsavel)) {
             $this->nome_responsavel = $nome_responsavel;
         }
-        if( is_string( $cargo ) )
-        {
+        if (is_string($cargo)) {
             $this->cargo = $cargo;
         }
-        if( is_string( $data_cadastro ) )
-        {
+        if (is_string($data_cadastro)) {
             $this->data_cadastro = $data_cadastro;
         }
-        if( is_string( $data_exclusao ) )
-        {
+        if (is_string($data_exclusao)) {
             $this->data_exclusao = $data_exclusao;
         }
-        if( ! is_null( $ativo ) )
-        {
+        if (! is_null($ativo)) {
             $this->ativo = $ativo;
         }
-
     }
 
     /**
@@ -214,45 +185,42 @@ class clsPortalProconConfiguracao
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_funcionario_cad ) && is_string( $this->nome_responsavel ) && is_string( $this->cargo ) )
-        {
+        if (is_numeric($this->ref_funcionario_cad) && is_string($this->nome_responsavel) && is_string($this->cargo)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_funcionario_cad ) )
-            {
+            if (is_numeric($this->ref_funcionario_cad)) {
                 $campos .= "{$gruda}ref_funcionario_cad";
                 $valores .= "{$gruda}'{$this->ref_funcionario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nome_responsavel ) )
-            {
+            if (is_string($this->nome_responsavel)) {
                 $campos .= "{$gruda}nome_responsavel";
                 $valores .= "{$gruda}'{$this->nome_responsavel}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->cargo ) )
-            {
+            if (is_string($this->cargo)) {
                 $campos .= "{$gruda}cargo";
                 $valores .= "{$gruda}'{$this->cargo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda = ", ";
+            $gruda = ', ';
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
-            $gruda = ", ";
+            $gruda = ', ';
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_configuracao_seq");
+            return $db->InsertId("{$this->_tabela}_cod_configuracao_seq");
         }
+
         return false;
     }
 
@@ -261,61 +229,53 @@ class clsPortalProconConfiguracao
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_configuracao ) && is_numeric( $this->ref_funcionario_exc ) )
-        {
-
+        if (is_numeric($this->cod_configuracao) && is_numeric($this->ref_funcionario_exc)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->ref_funcionario_exc ) )
-            {
+            if (is_numeric($this->ref_funcionario_exc)) {
                 $set .= "{$gruda}ref_funcionario_exc = '{$this->ref_funcionario_exc}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_funcionario_cad ) )
-            {
+            if (is_numeric($this->ref_funcionario_cad)) {
                 $set .= "{$gruda}ref_funcionario_cad = '{$this->ref_funcionario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nome_responsavel ) )
-            {
+            if (is_string($this->nome_responsavel)) {
                 $set .= "{$gruda}nome_responsavel = '{$this->nome_responsavel}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->cargo ) )
-            {
+            if (is_string($this->cargo)) {
                 $set .= "{$gruda}cargo = '{$this->cargo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_cadastro ) )
-            {
+            if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ", ";
-            if( ! is_null( $this->ativo ) )
-            {
-                $val = dbBool( $this->ativo ) ? "TRUE": "FALSE";
+            $gruda = ', ';
+            if (! is_null($this->ativo)) {
+                $val = dbBool($this->ativo) ? 'TRUE': 'FALSE';
                 $set .= "{$gruda}ativo = {$val}";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_configuracao = '{$this->cod_configuracao}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_configuracao = '{$this->cod_configuracao}'" );
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
-     * 
+     *
      * @param integer int_ref_funcionario_exc
      * @param integer int_ref_funcionario_cad
      * @param string str_nome_responsavel
@@ -328,104 +288,85 @@ class clsPortalProconConfiguracao
      *
      * @return array
      */
-    function lista( $int_ref_funcionario_exc = null, $int_ref_funcionario_cad = null, $str_nome_responsavel = null, $str_cargo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null )
+    public function lista($int_ref_funcionario_exc = null, $int_ref_funcionario_cad = null, $str_nome_responsavel = null, $str_cargo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_configuracao ) )
-        {
+        if (is_numeric($int_cod_configuracao)) {
             $filtros .= "{$whereAnd} cod_configuracao = '{$int_cod_configuracao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_funcionario_exc ) )
-        {
+        if (is_numeric($int_ref_funcionario_exc)) {
             $filtros .= "{$whereAnd} ref_funcionario_exc = '{$int_ref_funcionario_exc}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_funcionario_cad ) )
-        {
+        if (is_numeric($int_ref_funcionario_cad)) {
             $filtros .= "{$whereAnd} ref_funcionario_cad = '{$int_ref_funcionario_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nome_responsavel ) )
-        {
+        if (is_string($str_nome_responsavel)) {
             $filtros .= "{$whereAnd} nome_responsavel LIKE '%{$str_nome_responsavel}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_cargo ) )
-        {
+        if (is_string($str_cargo)) {
             $filtros .= "{$whereAnd} cargo LIKE '%{$str_cargo}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_ini ) )
-        {
+        if (is_string($date_data_cadastro_ini)) {
             $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_fim ) )
-        {
+        if (is_string($date_data_cadastro_fim)) {
             $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_ini ) )
-        {
+        if (is_string($date_data_exclusao_ini)) {
             $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_fim ) )
-        {
+        if (is_string($date_data_exclusao_fim)) {
             $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ! is_null( $bool_ativo ) )
-        {
-            if( dbBool( $bool_ativo ) )
-            {
+        if (! is_null($bool_ativo)) {
+            if (dbBool($bool_ativo)) {
                 $filtros .= "{$whereAnd} ativo = TRUE";
-            }
-            else
-            {
+            } else {
                 $filtros .= "{$whereAnd} ativo = FALSE";
             }
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -434,16 +375,16 @@ class clsPortalProconConfiguracao
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_configuracao ) )
-        {
-
+        if (is_numeric($this->cod_configuracao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_configuracao = '{$this->cod_configuracao}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_configuracao = '{$this->cod_configuracao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -452,18 +393,16 @@ class clsPortalProconConfiguracao
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_configuracao ) )
-        {
-
+        if (is_numeric($this->cod_configuracao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_configuracao = '{$this->cod_configuracao}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_configuracao = '{$this->cod_configuracao}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -472,10 +411,9 @@ class clsPortalProconConfiguracao
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_configuracao ) && is_numeric( $this->ref_funcionario_exc ) )
-        {
+        if (is_numeric($this->cod_configuracao) && is_numeric($this->ref_funcionario_exc)) {
 
         /*
             delete
@@ -484,9 +422,11 @@ class clsPortalProconConfiguracao
         return true;
         */
 
-        $this->ativo = 0;
+            $this->ativo = 0;
+
             return $this->edita();
         }
+
         return false;
     }
 
@@ -495,7 +435,7 @@ class clsPortalProconConfiguracao
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -505,7 +445,7 @@ class clsPortalProconConfiguracao
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -515,7 +455,7 @@ class clsPortalProconConfiguracao
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -526,18 +466,18 @@ class clsPortalProconConfiguracao
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -545,13 +485,12 @@ class clsPortalProconConfiguracao
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -561,14 +500,12 @@ class clsPortalProconConfiguracao
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -35,74 +40,78 @@ require_once 'intranet/include/clsBanco.inc.php';
 
 /**
  * Class ServidorController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class ServidorController extends ApiCoreController
 {
+    protected function searchOptions()
+    {
+        $escolaId = $this->getRequest()->escola_id ? $this->getRequest()->escola_id : 0;
 
-  protected function searchOptions() {
-    $escolaId = $this->getRequest()->escola_id ? $this->getRequest()->escola_id : 0;
-    return array('sqlParams'    => array($escolaId));
+        return ['sqlParams'    => [$escolaId]];
+    }
 
-  }
+    protected function formatResourceValue($resource)
+    {
+        $nome    = $this->toUtf8($resource['nome'], ['transform' => true]);
 
-  protected function formatResourceValue($resource) {
-    $nome    = $this->toUtf8($resource['nome'], array('transform' => true));
+        return $nome;
+    }
 
-    return $nome;
-  }
-
-  protected function canGetServidoresDisciplinasTurmas() {
-    return  $this->validatesPresenceOf('ano') &&
+    protected function canGetServidoresDisciplinasTurmas()
+    {
+        return  $this->validatesPresenceOf('ano') &&
             $this->validatesPresenceOf('instituicao_id');
-  }
+    }
 
-  protected function sqlsForNumericSearch() {
-
-    $sqls[] = "SELECT p.idpes as id, p.nome
+    protected function sqlsForNumericSearch()
+    {
+        $sqls[] = 'SELECT p.idpes as id, p.nome
                 FROM cadastro.pessoa p
                  LEFT JOIN cadastro.fisica f ON (p.idpes = f.idpes)
                  LEFT JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
                 INNER JOIN pmieducar.servidor s ON (s.cod_servidor = p.idpes)
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
-                WHERE p.idpes::varchar LIKE '%'||$1||'%'
+                WHERE p.idpes::varchar LIKE \'%\'||$1||\'%\'
                 AND (CASE WHEN $2 = 0 THEN
                       1 = 1
                     ELSE
                       sa.ref_cod_escola = $2
                     END)
-                LIMIT 15";
+                LIMIT 15';
 
-    return $sqls;
-  }
+        return $sqls;
+    }
 
-  protected function sqlsForStringSearch() {
-
-    $sqls[] = "SELECT p.idpes as id, p.nome
+    protected function sqlsForStringSearch()
+    {
+        $sqls[] = 'SELECT p.idpes as id, p.nome
                 FROM cadastro.pessoa p
                  LEFT JOIN cadastro.fisica f ON (p.idpes = f.idpes)
                  LEFT JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
                 INNER JOIN pmieducar.servidor s ON (s.cod_servidor = p.idpes)
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
-                WHERE p.nome ILIKE '%'||$1||'%'
+                WHERE p.nome ILIKE \'%\'||$1||\'%\'
                 AND (CASE WHEN $2 = 0 THEN
                       1 = 1
                     ELSE
                       sa.ref_cod_escola = $2
                     END)
-                LIMIT 15";
+                LIMIT 15';
 
-    return $sqls;
-  }
+        return $sqls;
+    }
 
-  protected function getServidoresDisciplinasTurmas() {
-    if($this->canGetServidoresDisciplinasTurmas()){
-      $instituicaoId = $this->getRequest()->instituicao_id;
-      $ano = $this->getRequest()->ano;
+    protected function getServidoresDisciplinasTurmas()
+    {
+        if ($this->canGetServidoresDisciplinasTurmas()) {
+            $instituicaoId = $this->getRequest()->instituicao_id;
+            $ano = $this->getRequest()->ano;
 
-      $sql = "SELECT pt.id as id,
+            $sql = 'SELECT pt.id as id,
                      s.cod_servidor as servidor_id,
                      p.nome as name,
                      pt.turma_id,
@@ -125,57 +134,60 @@ class ServidorController extends ApiCoreController
                                                                             AND ccae.componente_curricular_id = ptd.componente_curricular_id)
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
-              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id, ccae.tipo_nota, s.ativo";
+              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id, ccae.tipo_nota, s.ativo';
 
-      $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
+            $_servidores = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano]);
 
-      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at', 'ativo');
-      $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
-      $servidores = array();
-      $__servidores = array();
+            $attrs = ['id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at', 'ativo'];
+            $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
+            $servidores = [];
+            $__servidores = [];
 
-      foreach ($_servidores as $servidor) {
-        $__servidores[$servidor['id']]['id'] = $servidor['id'];
-        $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
-        $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
-        $__servidores[$servidor['id']]['updated_at'] = $servidor['updated_at'];
-        $__servidores[$servidor['id']]['ativo'] = $servidor['ativo'];
-        $__servidores[$servidor['id']]['disciplinas_turmas'][] = array(
+            foreach ($_servidores as $servidor) {
+                $__servidores[$servidor['id']]['id'] = $servidor['id'];
+                $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
+                $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
+                $__servidores[$servidor['id']]['updated_at'] = $servidor['updated_at'];
+                $__servidores[$servidor['id']]['ativo'] = $servidor['ativo'];
+                $__servidores[$servidor['id']]['disciplinas_turmas'][] = [
           'turma_id' => $servidor['turma_id'],
           'disciplina_id' => $servidor['disciplina_id'],
           'permite_lancar_faltas_componente' => $servidor['permite_lancar_faltas_componente'],
           'tipo_nota' => $servidor['tipo_nota']
-        );
-      }
+        ];
+            }
 
-      foreach ($__servidores as $servidor) {
-        $servidores[] = $servidor;
-      }
+            foreach ($__servidores as $servidor) {
+                $servidores[] = $servidor;
+            }
 
-      $attrs = array('id', 'name', 'disciplinas_turmas');
-      $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
+            $attrs = ['id', 'name', 'disciplinas_turmas'];
+            $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
 
-      return array('servidores' => $servidores);
+            return ['servidores' => $servidores];
+        }
     }
-  }
 
-    protected function getEscolaridade() {
+    protected function getEscolaridade()
+    {
         $idesco = $this->getRequest()->idesco;
-        $sql = "SELECT * FROM cadastro.escolaridade where idesco = $1 ";
-        $escolaridade = $this->fetchPreparedQuery($sql, array($idesco), TRUE, 'first-row');
+        $sql = 'SELECT * FROM cadastro.escolaridade where idesco = $1 ';
+        $escolaridade = $this->fetchPreparedQuery($sql, [$idesco], true, 'first-row');
         $escolaridade['descricao'] = Portabilis_String_Utils::toUtf8($escolaridade['descricao']);
-        return array('escolaridade' => $escolaridade);
+
+        return ['escolaridade' => $escolaridade];
     }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'servidor-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'escolaridade'))
-      $this->appendResponse($this->getEscolaridade());
-    elseif ($this->isRequestFor('get', 'servidores-disciplinas-turmas'))
-      $this->appendResponse($this->getServidoresDisciplinasTurmas());
-    else
-      $this->notImplementedOperationError();
-  }
-
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'servidor-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'escolaridade')) {
+            $this->appendResponse($this->getEscolaridade());
+        } elseif ($this->isRequestFor('get', 'servidores-disciplinas-turmas')) {
+            $this->appendResponse($this->getServidoresDisciplinasTurmas());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

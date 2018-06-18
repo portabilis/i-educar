@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,34 @@ require_once 'Educacenso/Model/Aluno.php';
  * Educacenso_Model_AlunoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Educacenso_Model_AlunoTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new Educacenso_Model_Aluno();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new Educacenso_Model_Aluno();
+    }
 
-  public function testEntityValidators()
-  {
-    // Recupera os objetos CoreExt_Validate
-    $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['aluno']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['alunoInep']);
-    $this->assertType('CoreExt_Validate_String',  $validators['nomeInep']);
-    $this->assertType('CoreExt_Validate_String',  $validators['fonte']);
-  }
+    public function testEntityValidators()
+    {
+        // Recupera os objetos CoreExt_Validate
+        $validators = $this->_entity->getDefaultValidatorCollection();
+        $this->assertType('CoreExt_Validate_Numeric', $validators['aluno']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['alunoInep']);
+        $this->assertType('CoreExt_Validate_String', $validators['nomeInep']);
+        $this->assertType('CoreExt_Validate_String', $validators['fonte']);
+    }
 }

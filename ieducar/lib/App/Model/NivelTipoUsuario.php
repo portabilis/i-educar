@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -34,28 +39,33 @@ require_once 'CoreExt/Enum.php';
  * App_Model_NivelTipoUsuario class.
  *
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class App_Model_NivelTipoUsuario extends CoreExt_Enum
 {
-  const POLI_INSTITUCIONAL = 1;
-  const INSTITUCIONAL      = 2;
-  const ESCOLA             = 4;
-  const BIBLIOTECA         = 8;
+    const POLI_INSTITUCIONAL = 1;
+    const INSTITUCIONAL      = 2;
+    const ESCOLA             = 4;
+    const BIBLIOTECA         = 8;
 
-  protected $_data = array(
+    protected $_data = [
     self::POLI_INSTITUCIONAL => 'Poli-institucional',
     self::INSTITUCIONAL      => 'Institucional',
     self::ESCOLA             => 'Escola',
     self::BIBLIOTECA         => 'Biblioteca'
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

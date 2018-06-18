@@ -34,6 +34,5 @@ class AdicionaIndicesEducacensoIes extends AbstractMigration
             DROP FUNCTION f_unaccent(text);
             DROP EXTENSION pg_trgm;
         ');
-
     }
 }

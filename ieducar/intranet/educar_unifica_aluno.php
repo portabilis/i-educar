@@ -21,14 +21,17 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Alan Felipe Farias <alan@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
-
-
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -39,91 +42,98 @@ require_once 'App/Date/Utils.php';
 
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
-
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de alunos');
-    $this->processoAp = "999847";
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de alunos');
+        $this->processoAp = '999847';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
-
 
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $tabela_alunos = array();
-  var $aluno_duplicado;
+    public $tabela_alunos = [];
+    public $aluno_duplicado;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
-      'index.php');
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        999847,
+        $this->pessoa_logada,
+        7,
+      'index.php'
+    );
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Unifica&ccedil;&atilde;o de alunos"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''        => 'Unifica&ccedil;&atilde;o de alunos'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    return $retorno;
-  }
-
-  function Gerar()
-  {
-
-      $this->inputsHelper()->dynamic('ano', array('required' => false, 'max_length' => 4));
-      $this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true));
-      $this->inputsHelper()->dynamic('escola',  array('required' =>  false, 'show-select' => true, 'value' => 0));
-      $this->inputsHelper()->simpleSearchAluno(null,array('label' => 'Aluno principal' ));
-      $this->campoTabelaInicio("tabela_alunos","",array("Aluno duplicado"),$this->tabela_alunos);
-      $this->campoTexto( "aluno_duplicado", "Aluno duplicado", $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus' );
-      $this->campoTabelaFim();
-
-  }
-
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
-      'index.php');
-
-    $cod_aluno_principal = $this->aluno_id;
-
-    if (!$cod_aluno_principal) return;
-
-    //Monta um array com o código dos alunos selecionados na tabela
-    foreach ($this->aluno_duplicado as $key => $value) {
-      $explode = explode(" ", $value);
-
-      if($explode[0] == $cod_aluno_principal){
-        $this->mensagem = 'Impossivel de unificar alunos iguais.<br />';
-        return false;
-      }
-
-      $cod_alunos[] = $explode[0];
+        return $retorno;
     }
 
-    $cod_alunos = implode(",", $cod_alunos);
+    public function Gerar()
+    {
+        $this->inputsHelper()->dynamic('ano', ['required' => false, 'max_length' => 4]);
+        $this->inputsHelper()->dynamic('instituicao', ['required' =>  false, 'show-select' => true]);
+        $this->inputsHelper()->dynamic('escola', ['required' =>  false, 'show-select' => true, 'value' => 0]);
+        $this->inputsHelper()->simpleSearchAluno(null, ['label' => 'Aluno principal' ]);
+        $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado'], $this->tabela_alunos);
+        $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoTabelaFim();
+    }
 
-    $db = new clsBanco();
-    $db->consulta("UPDATE pmieducar.historico_escolar
+    public function Novo()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        999847,
+        $this->pessoa_logada,
+        7,
+      'index.php'
+    );
+
+        $cod_aluno_principal = $this->aluno_id;
+
+        if (!$cod_aluno_principal) {
+            return;
+        }
+
+        //Monta um array com o código dos alunos selecionados na tabela
+        foreach ($this->aluno_duplicado as $key => $value) {
+            $explode = explode(' ', $value);
+
+            if ($explode[0] == $cod_aluno_principal) {
+                $this->mensagem = 'Impossivel de unificar alunos iguais.<br />';
+
+                return false;
+            }
+
+            $cod_alunos[] = $explode[0];
+        }
+
+        $cod_alunos = implode(',', $cod_alunos);
+
+        $db = new clsBanco();
+        $db->consulta("UPDATE pmieducar.historico_escolar
                       SET ref_cod_aluno = {$cod_aluno_principal},
                           sequencial = he.seq+he.max_seq
                       FROM
@@ -136,16 +146,14 @@ class indice extends clsCadastro
                          WHERE ref_cod_aluno IN ({$cod_alunos})) AS he
                       WHERE sequencial = he.seq
                         AND ref_cod_aluno = he.aluno");
-    $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$cod_alunos})");
-    $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$cod_alunos})");
+        $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$cod_alunos})");
+        $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$cod_alunos})");
 
-    $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
-    return true;
-  }
+        $this->mensagem = '<span>Alunos unificados com sucesso.</span>';
+
+        return true;
+    }
 }
-
-
-
 
 // Instancia objeto de página
 $pagina = new clsIndexBase();

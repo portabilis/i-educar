@@ -24,53 +24,47 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Menu!" );
-        $this->processoAp = "79";
+        $this->SetTitulo("{$this->_instituicao} Menu!");
+        $this->processoAp = '79';
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Menu ";
-        $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
-            
-        $this->addCabecalhos( array( "Nome") );
-        
-        
-        $db = new clsBanco();
-        $db->Consulta( "SELECT cod_menu_menu,nm_menu FROM menu_menu ORDER BY nm_menu" );
-        while ($db->ProximoRegistro())
-        {
-            list ($cod_menu, $nome, $ordem) = $db->Tupla();
+        $this->titulo = 'Menu ';
+        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-            $this->addLinhas( array("<a href='menu_menu_det.php?id_item=$cod_menu'><img src='imagens/noticia.jpg' border=0>$nome</a>") );
+        $this->addCabecalhos([ 'Nome']);
+
+        $db = new clsBanco();
+        $db->Consulta('SELECT cod_menu_menu,nm_menu FROM menu_menu ORDER BY nm_menu');
+        while ($db->ProximoRegistro()) {
+            list($cod_menu, $nome, $ordem) = $db->Tupla();
+
+            $this->addLinhas(["<a href='menu_menu_det.php?id_item=$cod_menu'><img src='imagens/noticia.jpg' border=0>$nome</a>"]);
         }
 
-        $this->acao = "go(\"menu_menu_cad.php\")";
-        $this->nome_acao = "Novo";
+        $this->acao = 'go("menu_menu_cad.php")';
+        $this->nome_acao = 'Novo';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

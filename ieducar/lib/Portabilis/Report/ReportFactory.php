@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -34,33 +39,41 @@ require_once 'lib/Portabilis/Array/Utils.php';
  * Portabilis_Report_ReportFactory class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 
 class Portabilis_Report_ReportFactory
 {
-
-  function __construct() {
+    public function __construct()
+    {
         $this->config   = $GLOBALS['coreExt']['Config'];
-        $this->settings = array();
+        $this->settings = [];
 
         $this->setSettings($this->config);
-  }
-
-  // wrapper for Portabilis_Array_Utils::merge
-  protected static function mergeOptions($options, $defaultOptions) {
-    return Portabilis_Array_Utils::merge($options, $defaultOptions);
-  }
-
-    function setSettings($config) {
-    throw new Exception("The method 'setSettings' from class Portabilis_Report_ReportFactory must be overridden!");
     }
 
-  function dumps($report, $options = array()) {
-    throw new Exception("The method 'dumps' from class Portabilis_Report_ReportFactory must be overridden!");
-  }
+    // wrapper for Portabilis_Array_Utils::merge
+    protected static function mergeOptions($options, $defaultOptions)
+    {
+        return Portabilis_Array_Utils::merge($options, $defaultOptions);
+    }
+
+    public function setSettings($config)
+    {
+        throw new Exception('The method \'setSettings\' from class Portabilis_Report_ReportFactory must be overridden!');
+    }
+
+    public function dumps($report, $options = [])
+    {
+        throw new Exception('The method \'dumps\' from class Portabilis_Report_ReportFactory must be overridden!');
+    }
 }

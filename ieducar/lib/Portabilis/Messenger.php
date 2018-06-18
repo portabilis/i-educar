@@ -21,82 +21,95 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
-
 
 /**
  * Portabilis_Messenger class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 
-class Portabilis_Messenger {
-
-  public function __construct() {
-    $this->_msgs = array();
-  }
-
-
-  public function append($msg, $type="error", $encodeToUtf8 = false, $ignoreIfHasMsgWithType = '') {
-    if (empty($ignoreIfHasMsgWithType) || ! $this->hasMsgWithType($ignoreIfHasMsgWithType)) {
-
-      if ($encodeToUtf8)
-        $msg = utf8_encode($msg);
-
-      $this->_msgs[] = array('msg' => $msg, 'type' => $type);
-    }
-  }
-
-
-  public function hasMsgWithType($type) {
-    $hasMsg = false;
-
-    foreach ($this->_msgs as $m){
-      if ($m['type'] == $type) {
-        $hasMsg = true;
-        break;
-      }
+class Portabilis_Messenger
+{
+    public function __construct()
+    {
+        $this->_msgs = [];
     }
 
-    return $hasMsg;
-  }
+    public function append($msg, $type='error', $encodeToUtf8 = false, $ignoreIfHasMsgWithType = '')
+    {
+        if (empty($ignoreIfHasMsgWithType) || ! $this->hasMsgWithType($ignoreIfHasMsgWithType)) {
+            if ($encodeToUtf8) {
+                $msg = utf8_encode($msg);
+            }
 
-
-  public function toHtml($tag = 'p') {
-    $msgs = '';
-
-    foreach($this->getMsgs() as $m)
-      $msgs .= "<$tag class='{$m['type']}'>{$m['msg']}</$tag>";
-
-    return $msgs;
-  }
-
-
-  public function getMsgs() {
-    $msgs = array();
-
-    // expoe explicitamente apenas as chaves 'msg' e 'type', evitando exposição
-    // indesejada de chaves adicionadas futuramente ao array $this->_msgs
-    foreach($this->_msgs as $m)
-      $msgs[] = array('msg' => $m['msg'], 'type' => $m['type']);
-
-    return $msgs;
-  }
-
-  // merge messages from another messenger with it self
-  public function merge($anotherMessenger) {
-    foreach($anotherMessenger->getMsgs() as $msg) {
-      $this->append($msg['msg'], $msg['type']);
+            $this->_msgs[] = ['msg' => $msg, 'type' => $type];
+        }
     }
-  }
+
+    public function hasMsgWithType($type)
+    {
+        $hasMsg = false;
+
+        foreach ($this->_msgs as $m) {
+            if ($m['type'] == $type) {
+                $hasMsg = true;
+                break;
+            }
+        }
+
+        return $hasMsg;
+    }
+
+    public function toHtml($tag = 'p')
+    {
+        $msgs = '';
+
+        foreach ($this->getMsgs() as $m) {
+            $msgs .= "<$tag class='{$m['type']}'>{$m['msg']}</$tag>";
+        }
+
+        return $msgs;
+    }
+
+    public function getMsgs()
+    {
+        $msgs = [];
+
+        // expoe explicitamente apenas as chaves 'msg' e 'type', evitando exposição
+        // indesejada de chaves adicionadas futuramente ao array $this->_msgs
+        foreach ($this->_msgs as $m) {
+            $msgs[] = ['msg' => $m['msg'], 'type' => $m['type']];
+        }
+
+        return $msgs;
+    }
+
+    // merge messages from another messenger with it self
+    public function merge($anotherMessenger)
+    {
+        foreach ($anotherMessenger->getMsgs() as $msg) {
+            $this->append($msg['msg'], $msg['type']);
+        }
+    }
 }

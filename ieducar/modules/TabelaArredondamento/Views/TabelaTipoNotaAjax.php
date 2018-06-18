@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     TabelaArredondamento
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -33,11 +38,11 @@ require_once dirname(__FILE__) . '/../../../includes/bootstrap.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 
-$tabelas = array();
+$tabelas = [];
 
 if (isset($_GET['tipoNota'])) {
-  $tabela = new TabelaArredondamento_Model_TabelaDataMapper();
-  $tabelas = $tabela->findAll(array(), array('tipoNota' => (int) $_GET['tipoNota']));
+    $tabela = new TabelaArredondamento_Model_TabelaDataMapper();
+    $tabelas = $tabela->findAll([], ['tipoNota' => (int) $_GET['tipoNota']]);
 }
 
 header('Content-type: text/xml');
@@ -45,7 +50,7 @@ header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 foreach ($tabelas as $tabela) {
-  echo sprintf('<tabela id="%d">%s</tabela>', $tabela->id, $tabela->nome);
+    echo sprintf('<tabela id="%d">%s</tabela>', $tabela->id, $tabela->nome);
 }
 
 echo '</query>';

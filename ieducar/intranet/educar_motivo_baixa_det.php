@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Baixa" );
-        $this->processoAp = "600";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Motivo Baixa");
+        $this->processoAp = '600';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -46,63 +46,58 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_motivo_baixa;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_motivo_baixa;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_motivo_baixa;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_motivo_baixa;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Motivo Baixa - Detalhe";
-        
+        $this->titulo = 'Motivo Baixa - Detalhe';
 
-        $this->cod_motivo_baixa=$_GET["cod_motivo_baixa"];
+        $this->cod_motivo_baixa=$_GET['cod_motivo_baixa'];
 
-        $tmp_obj = new clsPmieducarMotivoBaixa( $this->cod_motivo_baixa );
+        $tmp_obj = new clsPmieducarMotivoBaixa($this->cod_motivo_baixa);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: educar_motivo_baixa_lst.php" );
+        if (! $registro) {
+            header('location: educar_motivo_baixa_lst.php');
             die();
         }
 
-        if( $registro["nm_motivo_baixa"] )
-        {
-            $this->addDetalhe( array( "Motivo Baixa", "{$registro["nm_motivo_baixa"]}") );
+        if ($registro['nm_motivo_baixa']) {
+            $this->addDetalhe([ 'Motivo Baixa', "{$registro['nm_motivo_baixa']}"]);
         }
-        if( $registro["descricao"] )
-        {
-            $this->addDetalhe( array( "Descri&ccedil;&atilde;o", "{$registro["descricao"]}") );
+        if ($registro['descricao']) {
+            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 600, $this->pessoa_logada, 11 ) )
-        {
-            $this->url_novo = "educar_motivo_baixa_cad.php";
-            $this->url_editar = "educar_motivo_baixa_cad.php?cod_motivo_baixa={$registro["cod_motivo_baixa"]}";
+        if ($obj_permissoes->permissao_cadastra(600, $this->pessoa_logada, 11)) {
+            $this->url_novo = 'educar_motivo_baixa_cad.php';
+            $this->url_editar = "educar_motivo_baixa_cad.php?cod_motivo_baixa={$registro['cod_motivo_baixa']}";
         }
 
-        $this->url_cancelar = "educar_motivo_baixa_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'educar_motivo_baixa_lst.php';
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do motivo de baixa"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_biblioteca_index.php'                  => 'Biblioteca',
+         ''                                  => 'Detalhe do motivo de baixa'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
@@ -111,7 +106,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

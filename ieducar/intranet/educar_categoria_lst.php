@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once( "include/pmieducar/clsPmieducarCategoriaObra.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
+require_once('include/pmieducar/clsPmieducarCategoriaObra.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Categoria de obras" );
-        $this->processoAp = "598";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Categoria de obras");
+        $this->processoAp = '598';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -47,57 +47,57 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $id;
-    var $descricao;
-    var $observacoes;
+    public $id;
+    public $descricao;
+    public $observacoes;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Categoria de obras - Listagem";
+        $this->titulo = 'Categoria de obras - Listagem';
 
         //passa todos os valores obtidos no GET para atributos do objeto
-        foreach($_GET AS $var => $val){
-            $this->$var = ($val === "") ? null: $val;
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null: $val;
         }
 
         // outros Filtros
-        $this->campoTexto("descricao", "Descri&ccedil;&atilde;o", $this->descricao, 49, 255, false);
+        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 49, 255, false);
 
-        $this->addCabecalhos(array('Descri&ccedil;&atilde;o', 'Observa&ccedil;&otilde;es'));
+        $this->addCabecalhos(['Descri&ccedil;&atilde;o', 'Observa&ccedil;&otilde;es']);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-        
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+
         $obj_categoria_obra = new clsPmieducarCategoriaObra();
-        $obj_categoria_obra->setOrderby("descricao ASC");
+        $obj_categoria_obra->setOrderby('descricao ASC');
         $obj_categoria_obra->setLimite($this->limite, $this->offset);
 
         $lista = $obj_categoria_obra->lista($this->descricao);
@@ -105,28 +105,28 @@ class indice extends clsListagem
         $total = $obj_categoria_obra->_total;
 
         // monta a lista
-        if(is_array($lista) && count( $lista)){
-            foreach($lista AS $registro){
-                $this->addLinhas( array(
-                    "<a href=\"educar_categoria_obra_det.php?id={$registro["id"]}\">{$registro["descricao"]}</a>",
-                    "<a href=\"educar_categoria_obra_det.php?id={$registro["id"]}\">{$registro['observacoes']}</a>"
-                ));
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $this->addLinhas([
+                    "<a href=\"educar_categoria_obra_det.php?id={$registro['id']}\">{$registro['descricao']}</a>",
+                    "<a href=\"educar_categoria_obra_det.php?id={$registro['id']}\">{$registro['observacoes']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2("educar_categoria_lst.php", $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_categoria_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if($obj_permissoes->permissao_cadastra(592, $this->pessoa_logada, 11)){
-            $this->acao = "go(\"educar_categoria_cad.php\")";
-            $this->nome_acao = "Novo";
+        if ($obj_permissoes->permissao_cadastra(592, $this->pessoa_logada, 11)) {
+            $this->acao = 'go("educar_categoria_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array($_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-                                                  "educar_biblioteca_index.php" => "Biblioteca",
-                                                                             "" => "Listagem de categorias"));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao->entradaCaminhos([$_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+                                                  'educar_biblioteca_index.php' => 'Biblioteca',
+                                                                             '' => 'Listagem de categorias']);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
@@ -134,7 +134,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

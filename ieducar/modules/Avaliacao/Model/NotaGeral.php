@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,44 +41,49 @@ require_once 'Avaliacao/Model/Etapa.php';
  * Avaliacao_Model_NotaGeral class.
  *
  * @author      Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Model_NotaGeral extends Avaliacao_Model_Etapa
 {
-  protected $_data = array(
-    'notaAluno'               => NULL,
-    'nota'                    => NULL,
-    'notaArredondada'         => NULL
-  );
+    protected $_data = [
+    'notaAluno'               => null,
+    'nota'                    => null,
+    'notaArredondada'         => null
+  ];
 
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'nota' => 'numeric'
-  );
+  ];
 
-  protected $_references = array(
-    'notaAluno' => array(
-      'value' => NULL,
+    protected $_references = [
+    'notaAluno' => [
+      'value' => null,
       'class' => 'Avaliacao_Model_NotaAluno',
       'file'  => 'Avaliacao/Model/NotaAluno.php'
-    )
-  );
-  
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
-  {
-    // Aceita etapas de 0 a 10 + a string Rc
-    $etapas = range(0, 10, 1) + array('Rc');
+    ]
+  ];
 
-    return array(
-      'nota' => new CoreExt_Validate_Numeric(array('min' => 0, 'max' => 10)),
-      'notaArredondada'  => new CoreExt_Validate_String(array('max' => 5))
-    );
-  }
+    /**
+     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     */
+    public function getDefaultValidatorCollection()
+    {
+        // Aceita etapas de 0 a 10 + a string Rc
+        $etapas = range(0, 10, 1) + ['Rc'];
+
+        return [
+      'nota' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 10]),
+      'notaArredondada'  => new CoreExt_Validate_String(['max' => 5])
+    ];
+    }
 }

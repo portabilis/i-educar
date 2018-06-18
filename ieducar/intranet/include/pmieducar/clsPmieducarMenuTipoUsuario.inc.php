@@ -30,15 +30,15 @@
 * Criado em 23/06/2006 09:14 pelo gerador automatico de classes
 */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 
 class clsPmieducarMenuTipoUsuario
 {
-    var $ref_cod_tipo_usuario;
-    var $ref_cod_menu_submenu;
-    var $cadastra;
-    var $visualiza;
-    var $exclui;
+    public $ref_cod_tipo_usuario;
+    public $ref_cod_menu_submenu;
+    public $cadastra;
+    public $visualiza;
+    public $exclui;
 
     // propriedades padrao
 
@@ -47,144 +47,118 @@ class clsPmieducarMenuTipoUsuario
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
-    var $_todos_campos2;
+    public $_todos_campos;
+    public $_todos_campos2;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
      *
      * @return object
      */
-    function __construct( $ref_cod_tipo_usuario = null, $ref_cod_menu_submenu = null, $cadastra = null, $visualiza = null, $exclui = null )
+    public function __construct($ref_cod_tipo_usuario = null, $ref_cod_menu_submenu = null, $cadastra = null, $visualiza = null, $exclui = null)
     {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}menu_tipo_usuario";
 
-        $this->_campos_lista = $this->_todos_campos = "ref_cod_tipo_usuario, ref_cod_menu_submenu, cadastra, visualiza, exclui";
-        $this->_todos_campos2 = " mtu.ref_cod_tipo_usuario, mtu.ref_cod_menu_submenu, mtu.cadastra, mtu.visualiza, mtu.exclui";
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_tipo_usuario, ref_cod_menu_submenu, cadastra, visualiza, exclui';
+        $this->_todos_campos2 = ' mtu.ref_cod_tipo_usuario, mtu.ref_cod_menu_submenu, mtu.cadastra, mtu.visualiza, mtu.exclui';
 
-        if( is_numeric( $ref_cod_menu_submenu ) )
-        {
-            if( class_exists( "clsMenuSubmenu" ) )
-            {
-                $tmp_obj = new clsMenuSubmenu( $ref_cod_menu_submenu );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_menu_submenu)) {
+            if (class_exists('clsMenuSubmenu')) {
+                $tmp_obj = new clsMenuSubmenu($ref_cod_menu_submenu);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_menu_submenu = $ref_cod_menu_submenu;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_menu_submenu = $ref_cod_menu_submenu;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_menu_submenu = $ref_cod_menu_submenu;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM menu_submenu WHERE cod_menu_submenu = '{$ref_cod_menu_submenu}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM menu_submenu WHERE cod_menu_submenu = '{$ref_cod_menu_submenu}'")) {
                     $this->ref_cod_menu_submenu = $ref_cod_menu_submenu;
                 }
             }
         }
-        if( is_numeric( $ref_cod_tipo_usuario ) )
-        {
-            if( class_exists( "clsPmieducarTipoUsuario" ) )
-            {
-                $tmp_obj = new clsPmieducarTipoUsuario( $ref_cod_tipo_usuario );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_tipo_usuario)) {
+            if (class_exists('clsPmieducarTipoUsuario')) {
+                $tmp_obj = new clsPmieducarTipoUsuario($ref_cod_tipo_usuario);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.tipo_usuario WHERE cod_tipo_usuario = '{$ref_cod_tipo_usuario}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.tipo_usuario WHERE cod_tipo_usuario = '{$ref_cod_tipo_usuario}'")) {
                     $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
                 }
             }
         }
 
-
-        if( is_numeric( $cadastra ) )
-        {
+        if (is_numeric($cadastra)) {
             $this->cadastra = $cadastra;
         }
-        if( is_numeric( $visualiza ) )
-        {
+        if (is_numeric($visualiza)) {
             $this->visualiza = $visualiza;
         }
-        if( is_numeric( $exclui ) )
-        {
+        if (is_numeric($exclui)) {
             $this->exclui = $exclui;
         }
-
     }
 
     /**
@@ -192,51 +166,46 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( (int)$this->ref_cod_tipo_usuario ) && is_numeric( $this->ref_cod_menu_submenu ) && is_numeric( (int)$this->cadastra ) && is_numeric( (int)$this->visualiza ) && is_numeric( (int)$this->exclui ) )
-        {
+        if (is_numeric((int)$this->ref_cod_tipo_usuario) && is_numeric($this->ref_cod_menu_submenu) && is_numeric((int)$this->cadastra) && is_numeric((int)$this->visualiza) && is_numeric((int)$this->exclui)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_tipo_usuario ) )
-            {
+            if (is_numeric($this->ref_cod_tipo_usuario)) {
                 $campos .= "{$gruda}ref_cod_tipo_usuario";
                 $valores .= "{$gruda}'{$this->ref_cod_tipo_usuario}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_menu_submenu ) )
-            {
+            if (is_numeric($this->ref_cod_menu_submenu)) {
                 $campos .= "{$gruda}ref_cod_menu_submenu";
                 $valores .= "{$gruda}'{$this->ref_cod_menu_submenu}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->cadastra ) )
-            {
+            if (is_numeric($this->cadastra)) {
                 $campos .= "{$gruda}cadastra";
                 $valores .= "{$gruda}'{$this->cadastra}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->visualiza ) )
-            {
+            if (is_numeric($this->visualiza)) {
                 $campos .= "{$gruda}visualiza";
                 $valores .= "{$gruda}'{$this->visualiza}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->exclui ) )
-            {
+            if (is_numeric($this->exclui)) {
                 $campos .= "{$gruda}exclui";
                 $valores .= "{$gruda}'{$this->exclui}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return true;
         }
+
         return false;
     }
 
@@ -245,37 +214,32 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->ref_cod_tipo_usuario ) && is_numeric( $this->ref_cod_menu_submenu ) )
-        {
-
+        if (is_numeric($this->ref_cod_tipo_usuario) && is_numeric($this->ref_cod_menu_submenu)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->cadastra ) )
-            {
+            if (is_numeric($this->cadastra)) {
                 $set .= "{$gruda}cadastra = '{$this->cadastra}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->visualiza ) )
-            {
+            if (is_numeric($this->visualiza)) {
                 $set .= "{$gruda}visualiza = '{$this->visualiza}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->exclui ) )
-            {
+            if (is_numeric($this->exclui)) {
                 $set .= "{$gruda}exclui = '{$this->exclui}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'" );
                 return true;
             }
         }
+
         return false;
     }
 
@@ -284,69 +248,58 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return array
      */
-    function lista( $int_ref_cod_tipo_usuario = null, $int_ref_cod_menu_submenu = null, $int_cadastra = null, $int_visualiza = null, $int_exclui = null )
+    public function lista($int_ref_cod_tipo_usuario = null, $int_ref_cod_menu_submenu = null, $int_cadastra = null, $int_visualiza = null, $int_exclui = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
-        if( is_numeric( $int_ref_cod_tipo_usuario ) )
-        {
+        $whereAnd = ' WHERE ';
+        if (is_numeric($int_ref_cod_tipo_usuario)) {
             $filtros .= "{$whereAnd} ref_cod_tipo_usuario = '{$int_ref_cod_tipo_usuario}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_menu_submenu ) )
-        {
+        if (is_numeric($int_ref_cod_menu_submenu)) {
             $filtros .= "{$whereAnd} ref_cod_menu_submenu = '{$int_ref_cod_menu_submenu}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_cadastra ) )
-        {
+        if (is_numeric($int_cadastra)) {
             $filtros .= "{$whereAnd} cadastra = '{$int_cadastra}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_visualiza ) )
-        {
+        if (is_numeric($int_visualiza)) {
             $filtros .= "{$whereAnd} visualiza = '{$int_visualiza}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_exclui ) )
-        {
+        if (is_numeric($int_exclui)) {
             $filtros .= "{$whereAnd} exclui = '{$int_exclui}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
-        $db->Consulta( $sql );
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+        $db->Consulta($sql);
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -355,16 +308,16 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->ref_cod_tipo_usuario ) && is_numeric( $this->ref_cod_menu_submenu ) )
-        {
+        if (is_numeric($this->ref_cod_tipo_usuario) && is_numeric($this->ref_cod_menu_submenu)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -373,19 +326,19 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return array
      */
-    function detalhePorUsuario($cod_usuario, $ref_cod_menu_submenu)
+    public function detalhePorUsuario($cod_usuario, $ref_cod_menu_submenu)
     {
-        if( is_numeric( $cod_usuario ) && is_numeric( $ref_cod_menu_submenu ) )
-        {
-
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos2} FROM {$this->_tabela} mtu 
+        if (is_numeric($cod_usuario) && is_numeric($ref_cod_menu_submenu)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos2} FROM {$this->_tabela} mtu 
                                          INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
                                          INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
-                                         WHERE u.cod_usuario = {$cod_usuario} AND ref_cod_menu_submenu = '{$ref_cod_menu_submenu}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+                                         WHERE u.cod_usuario = {$cod_usuario} AND ref_cod_menu_submenu = '{$ref_cod_menu_submenu}'");
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -394,16 +347,16 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->ref_cod_tipo_usuario ) && is_numeric( $this->ref_cod_menu_submenu ) )
-        {
+        if (is_numeric($this->ref_cod_tipo_usuario) && is_numeric($this->ref_cod_menu_submenu)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -412,10 +365,9 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->ref_cod_tipo_usuario ) && is_numeric( $this->ref_cod_menu_submenu ) )
-        {
+        if (is_numeric($this->ref_cod_tipo_usuario) && is_numeric($this->ref_cod_menu_submenu)) {
 
         /*
             delete
@@ -423,9 +375,8 @@ class clsPmieducarMenuTipoUsuario
         $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}' AND ref_cod_menu_submenu = '{$this->ref_cod_menu_submenu}'" );
         return true;
         */
-
-
         }
+
         return false;
     }
 
@@ -434,7 +385,7 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -444,7 +395,7 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -454,7 +405,7 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -465,18 +416,18 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -484,13 +435,12 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -500,33 +450,29 @@ class clsPmieducarMenuTipoUsuario
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 
     /**
      * Exclui um registro
      *
      * @return bool
      */
-    function excluirTudo()
+    public function excluirTudo()
     {
-        if( is_numeric( $this->ref_cod_tipo_usuario ) )
-        {
+        if (is_numeric($this->ref_cod_tipo_usuario)) {
+            $db = new clsBanco();
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}'");
 
-
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_tipo_usuario = '{$this->ref_cod_tipo_usuario}'" );
-        return true;
-
+            return true;
         }
+
         return false;
     }
 }
-?>

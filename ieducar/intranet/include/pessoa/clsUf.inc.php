@@ -24,27 +24,25 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
-
+require_once('include/clsBanco.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsUf
 {
-    var $sigla_uf;
-    var $nome;
-    var $geom;
-    var $idpais;
+    public $sigla_uf;
+    public $nome;
+    public $geom;
+    public $idpais;
 
-
-    var $tabela;
-    var $schema = "public";
+    public $tabela;
+    public $schema = 'public';
 
     /**
      * Construtor
      *
      * @return Object:clsUf
      */
-    function __construct( $str_sigla_uf=false, $str_nome=false, $str_geom=false, $int_idpais=false )
+    public function __construct($str_sigla_uf=false, $str_nome=false, $str_geom=false, $int_idpais=false)
     {
         global $coreExt;
         $this->config = $coreExt['Config'];
@@ -54,12 +52,11 @@ class clsUf
         $this->geom = $str_geom;
 
         $objPais = new clsPais($int_idpais);
-        if($objPais->detalhe())
-        {
+        if ($objPais->detalhe()) {
             $this->idpais = $int_idpais;
         }
 
-        $this->tabela = "uf";
+        $this->tabela = 'uf';
     }
 
     /**
@@ -67,30 +64,28 @@ class clsUf
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificacoes de campos obrigatorios para insercao
-        if( is_string( $this->sigla_uf )  && is_string( $this->nome ) )
-        {
-            $campos = "";
-            $values = "";
+        if (is_string($this->sigla_uf)  && is_string($this->nome)) {
+            $campos = '';
+            $values = '';
 
-            if( is_string( $this->geom ) )
-            {
-                $campos .= ", geom";
+            if (is_string($this->geom)) {
+                $campos .= ', geom';
                 $values .= ", '{$this->geom}'";
             }
-            if( is_numeric( $this->idpais ) )
-            {
-                $campos .= ", idpais";
+            if (is_numeric($this->idpais)) {
+                $campos .= ', idpais';
                 $values .= ", '{$this->idpais}'";
             }
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( sigla_uf, nome$campos ) VALUES ( '{$this->sigla_uf}', '{$this->nome}'" );
+            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} ( sigla_uf, nome$campos ) VALUES ( '{$this->sigla_uf}', '{$this->nome}'");
 
             return true;
         }
+
         return false;
     }
 
@@ -99,35 +94,30 @@ class clsUf
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
         // verifica campos obrigatorios para edicao
-        if( is_string( $this->nome ) )
-        {
+        if (is_string($this->nome)) {
             $set = "SET nome = '{$this->nome}'";
 
-            if( is_string( $this->geom ) )
-            {
+            if (is_string($this->geom)) {
                 $set .= ", geom = '{$this->geom}'";
-            }
-            else
-            {
-                $set .= ", geom = NULL";
+            } else {
+                $set .= ', geom = NULL';
             }
 
-            if( is_numeric( $this->idpais ) )
-            {
+            if (is_numeric($this->idpais)) {
                 $set .= ", idpais = '{$this->idpais}'";
-            }
-            else
-            {
-                $set .= ", idpais = NULL";
+            } else {
+                $set .= ', idpais = NULL';
             }
 
             $db = new clsBanco();
-            $db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE idlog = '$this->idlog'" );
+            $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE idlog = '$this->idlog'");
+
             return true;
         }
+
         return false;
     }
 
@@ -136,111 +126,113 @@ class clsUf
      *
      * @return bool
      */
-    function exclui()
+    public function exclui()
     {
-        if(is_string($this->sigla_uf))
-        {
+        if (is_string($this->sigla_uf)) {
             $objCidade = new clsMunicipio();
-            $listaCidade = $objCidade->lista(false,$this->sigla_uf );
+            $listaCidade = $objCidade->lista(false, $this->sigla_uf);
 
-            if(!count($listaCidade))
-            {
+            if (!count($listaCidade)) {
                 $db = new clsBanco();
                 //$db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE sigla_uf={$this->sigla_uf}");
                 return true;
             }
+
             return false;
         }
+
         return false;
     }
 
-  /**
-   * Retorna um array com os registros da tabela public.uf
-   * @return array
-   */
-  public function lista($str_nome = FALSE, $str_geom = FALSE, $int_idpais = FALSE,
-    $int_limite_ini = FALSE, $int_limite_qtd = FALSE, $str_orderBy = 'sigla_uf ASC')
-  {
-    $whereAnd = 'WHERE ';
+    /**
+     * Retorna um array com os registros da tabela public.uf
+     *
+     * @return array
+     */
+    public function lista(
+      $str_nome = false,
+      $str_geom = false,
+      $int_idpais = false,
+    $int_limite_ini = false,
+      $int_limite_qtd = false,
+      $str_orderBy = 'sigla_uf ASC'
+  ) {
+        $whereAnd = 'WHERE ';
 
-    if (is_string($str_nome)) {
-      $where   .= "{$whereAnd}nome LIKE '%$str_nome%'";
-      $whereAnd = ' AND ';
+        if (is_string($str_nome)) {
+            $where   .= "{$whereAnd}nome LIKE '%$str_nome%'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($str_geom)) {
+            $where   .= "{$whereAnd}geom LIKE '%$str_geom%'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_idpais)) {
+            $where   .= "{$whereAnd}idpais = '$int_idpais'";
+            $whereAnd = ' AND ';
+        } else {
+            $idpais = $this->config->app->locale->country;
+            $where .= "{$whereAnd}idpais = '$idpais'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($str_orderBy) {
+            $orderBy = "ORDER BY $str_orderBy";
+        }
+
+        $limit = '';
+        if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
+            $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
+        }
+
+        $db = new clsBanco();
+        $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
+        $db->ProximoRegistro();
+
+        $total = $db->Campo('total');
+
+        $db->Consulta("SELECT sigla_uf, nome, geom, idpais FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+        $resultado = [];
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $tupla['idpais'] = new clsPais($tupla['idpais']);
+            $tupla['total']  = $total;
+            $resultado[] = $tupla;
+        }
+
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
     }
-
-    if (is_string($str_geom)) {
-      $where   .= "{$whereAnd}geom LIKE '%$str_geom%'";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_numeric($int_idpais)) {
-      $where   .= "{$whereAnd}idpais = '$int_idpais'";
-      $whereAnd = ' AND ';
-    }
-    else {
-      $idpais = $this->config->app->locale->country;
-      $where .= "{$whereAnd}idpais = '$idpais'";
-      $whereAnd = ' AND ';
-    }
-
-    if ($str_orderBy) {
-      $orderBy = "ORDER BY $str_orderBy";
-    }
-
-    $limit = '';
-    if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
-      $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
-    }
-
-    $db = new clsBanco();
-    $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
-    $db->ProximoRegistro();
-
-    $total = $db->Campo('total');
-
-    $db->Consulta("SELECT sigla_uf, nome, geom, idpais FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
-    $resultado = array();
-
-    while ($db->ProximoRegistro())
-    {
-      $tupla = $db->Tupla();
-      $tupla['idpais'] = new clsPais($tupla['idpais']);
-      $tupla['total']  = $total;
-      $resultado[] = $tupla;
-    }
-
-    if (count($resultado)) {
-      return $resultado;
-    }
-
-    return FALSE;
-  }
 
     /**
      * Retorna um array com os detalhes do objeto
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if($this->sigla_uf)
-        {
+        if ($this->sigla_uf) {
             $db = new clsBanco();
             $db->Consulta("SELECT sigla_uf, nome, geom, idpais FROM {$this->schema}.{$this->tabela} WHERE sigla_uf='{$this->sigla_uf}'");
-            if( $db->ProximoRegistro() )
-            {
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                $this->sigla_uf = $tupla["sigla_uf"];
-                $this->nome = $tupla["nome"];
-                $this->geom = $tupla["geom"];
-                $this->idpais = $tupla["idpais"];
-                $tupla["int_idpais"] = $tupla["idpais"];
-                $tupla["idpais"] = new clsPais(  $tupla["idpais"] );
+                $this->sigla_uf = $tupla['sigla_uf'];
+                $this->nome = $tupla['nome'];
+                $this->geom = $tupla['geom'];
+                $this->idpais = $tupla['idpais'];
+                $tupla['int_idpais'] = $tupla['idpais'];
+                $tupla['idpais'] = new clsPais($tupla['idpais']);
 
                 return $tupla;
             }
         }
+
         return false;
     }
 }
-?>

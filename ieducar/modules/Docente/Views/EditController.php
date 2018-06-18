@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Docente
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -40,152 +45,171 @@ require_once 'include/public/clsPublicUf.inc.php';
  * EditController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Docente
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
 {
-  protected $_dataMapper        = 'Docente_Model_LicenciaturaDataMapper';
-  protected $_titulo            = 'Cadastro de Curso Superior/Licenciatura';
-  protected $_processoAp        = 635;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_saveOption        = TRUE;
-  protected $_deleteOption      = TRUE;
+    protected $_dataMapper        = 'Docente_Model_LicenciaturaDataMapper';
+    protected $_titulo            = 'Cadastro de Curso Superior/Licenciatura';
+    protected $_processoAp        = 635;
+    protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
+    protected $_saveOption        = true;
+    protected $_deleteOption      = true;
 
-  protected $_formMap = array(
-    'servidor' => array(
+    protected $_formMap = [
+    'servidor' => [
       'label'  => '',
       'help'   => '',
       'entity' => 'servidor'
-    ),
-    'licenciatura' => array(
+    ],
+    'licenciatura' => [
       'label'  => 'Licenciatura',
       'help'   => '',
       'entity' => 'licenciatura'
-    ),
-    'curso' => array(
+    ],
+    'curso' => [
       'label'  => 'Curso',
       'help'   => '',
       'entity' => 'curso'
-    ),
-    'anoConclusao' => array(
+    ],
+    'anoConclusao' => [
       'label'  => 'Ano conclusão',
       'help'   => '',
       'entity' => 'anoConclusao'
-    ),
-    'ies' => array(
+    ],
+    'ies' => [
       'label'  => 'IES',
       'help'   => '',
       'entity' => 'ies'
-    ),
-    'user' => array(
+    ],
+    'user' => [
       'label'  => '',
       'help'   => '',
       'entity' => 'user'
-    ),
-    'created_at' => array(
+    ],
+    'created_at' => [
       'label'  => '',
       'help'   => '',
       'entity' => 'created_at'
-    )
-  );
+    ]
+  ];
 
-  protected function _preConstruct()
-  {
-    $params = array(
+    protected function _preConstruct()
+    {
+        $params = [
       'id'          => $this->getRequest()->id,
       'servidor'    => $this->getRequest()->servidor,
       'instituicao' => $this->getRequest()->instituicao
-    );
-    $this->setOptions(array('new_success_params'  => $params));
-    $this->setOptions(array('edit_success_params' => $params));
+    ];
+        $this->setOptions(['new_success_params'  => $params]);
+        $this->setOptions(['edit_success_params' => $params]);
 
-    unset($params['id']);
-    $this->setOptions(array('delete_success_params' => $params));
-  }
+        unset($params['id']);
+        $this->setOptions(['delete_success_params' => $params]);
+    }
 
-  /**
-   * @see clsCadastro#Gerar()
-   */
-  public function Gerar()
-  {
-    global $coreExt;
+    /**
+     * @see clsCadastro#Gerar()
+     */
+    public function Gerar()
+    {
+        global $coreExt;
 
-    $this->campoOculto('id', $this->getEntity()->id);
-    $this->campoOculto('servidor', $this->getRequest()->servidor);
+        $this->campoOculto('id', $this->getEntity()->id);
+        $this->campoOculto('servidor', $this->getRequest()->servidor);
 
-    $cursoSuperiorMapper = new Educacenso_Model_CursoSuperiorDataMapper();
-    $cursos = $cursoSuperiorMapper->findAll(array(), array(), array('id' => 'ASC', 'nome' => 'ASC'));
+        $cursoSuperiorMapper = new Educacenso_Model_CursoSuperiorDataMapper();
+        $cursos = $cursoSuperiorMapper->findAll([], [], ['id' => 'ASC', 'nome' => 'ASC']);
 
-    // Licenciatura
-    $licenciatura = $this->getEntity()->get('licenciatura') ?
+        // Licenciatura
+        $licenciatura = $this->getEntity()->get('licenciatura') ?
       $this->getEntity()->get('licenciatura') : 0;
 
-    $this->campoRadio('licenciatura', $this->_getLabel('licenciatura'),
-      array(1 => 'Sim', 0 => 'Não'), $licenciatura);
-
-    // Curso
-    $opcoes = array();
-    foreach ($cursos as $curso) {
-      $opcoes[$curso->id] = $curso->nome;
-    }
-
-    $this->campoLista(
-      'curso', $this->_getLabel('curso'), $opcoes, $this->getEntity()->get('curso')
+        $this->campoRadio(
+        'licenciatura',
+        $this->_getLabel('licenciatura'),
+      [1 => 'Sim', 0 => 'Não'],
+        $licenciatura
     );
 
-    // Ano conclusão
-    $opcoes = range(1960, date('Y'));
-    rsort($opcoes);
-    $opcoes = array_combine($opcoes, $opcoes);
-    $this->campoLista(
-      'anoConclusao', $this->_getLabel('anoConclusao'), $opcoes, $this->getEntity()->anoConclusao
+        // Curso
+        $opcoes = [];
+        foreach ($cursos as $curso) {
+            $opcoes[$curso->id] = $curso->nome;
+        }
+
+        $this->campoLista(
+      'curso',
+        $this->_getLabel('curso'),
+        $opcoes,
+        $this->getEntity()->get('curso')
     );
 
-    // UF da IES.
-    $ufs = new clsPublicUf();
-    $ufs = $ufs->lista();
+        // Ano conclusão
+        $opcoes = range(1960, date('Y'));
+        rsort($opcoes);
+        $opcoes = array_combine($opcoes, $opcoes);
+        $this->campoLista(
+      'anoConclusao',
+        $this->_getLabel('anoConclusao'),
+        $opcoes,
+        $this->getEntity()->anoConclusao
+    );
 
-    $opcoes = array();
-    foreach ($ufs as $uf) {
-      $opcoes[$uf['sigla_uf']] = $uf['sigla_uf'];
-    }
-    ksort($opcoes);
+        // UF da IES.
+        $ufs = new clsPublicUf();
+        $ufs = $ufs->lista();
 
-    // Caso não seja uma instância persistida, usa a UF do locale.
-    $uf = $this->getEntity()->ies->uf ?
+        $opcoes = [];
+        foreach ($ufs as $uf) {
+            $opcoes[$uf['sigla_uf']] = $uf['sigla_uf'];
+        }
+        ksort($opcoes);
+
+        // Caso não seja uma instância persistida, usa a UF do locale.
+        $uf = $this->getEntity()->ies->uf ?
       $this->getEntity()->ies->uf : $coreExt['Config']->app->locale->province;
 
-    $this->campoLista('uf', 'UF', $opcoes, $uf, 'getIes()');
+        $this->campoLista('uf', 'UF', $opcoes, $uf, 'getIes()');
 
-    // IES.
-    $opcoes = array();
-    $iesMapper = new Educacenso_Model_IesDataMapper();
-    $iesUf = $iesMapper->findAll(array(), array('uf' => $uf));
+        // IES.
+        $opcoes = [];
+        $iesMapper = new Educacenso_Model_IesDataMapper();
+        $iesUf = $iesMapper->findAll([], ['uf' => $uf]);
 
-    foreach ($iesUf as $ies) {
-      $opcoes[$ies->id] = $ies->nome;
-    }
+        foreach ($iesUf as $ies) {
+            $opcoes[$ies->id] = $ies->nome;
+        }
 
-    // Adiciona a instituição "Não cadastrada".
-    $ies = $iesMapper->find(array('ies' => 9999999));
-    $opcoes[$ies->id] = $ies->nome;
+        // Adiciona a instituição "Não cadastrada".
+        $ies = $iesMapper->find(['ies' => 9999999]);
+        $opcoes[$ies->id] = $ies->nome;
 
-    $this->campoLista(
-      'ies', $this->_getLabel('ies'), $opcoes, $this->getEntity()->ies->id
+        $this->campoLista(
+      'ies',
+        $this->_getLabel('ies'),
+        $opcoes,
+        $this->getEntity()->ies->id
     );
 
-    $this->url_cancelar = sprintf(
+        $this->url_cancelar = sprintf(
       'index?servidor=%d&instituicao=%d',
-      $this->getRequest()->servidor, $this->getRequest()->instituicao
+      $this->getRequest()->servidor,
+        $this->getRequest()->instituicao
     );
 
-    // Javascript para Ajax.
-    echo
+        // Javascript para Ajax.
+        echo
 <<<EOT
       <script type="text/javascript">
       function getIes()
@@ -223,12 +247,12 @@ class EditController extends Core_Controller_Page_EditController
       }
       </script>
 EOT;
-  }
+    }
 
-  public function Novo()
-  {
-    $_POST['user']       = $this->getOption('id_usuario');
-    $_POST['created_at'] = 'NOW()';
-    parent::Novo();
-  }
+    public function Novo()
+    {
+        $_POST['user']       = $this->getOption('id_usuario');
+        $_POST['created_at'] = 'NOW()';
+        parent::Novo();
+    }
 }

@@ -34,131 +34,135 @@ require_once 'vfsStream/vfsStream.php';
 require_once 'Utils/FileStream.class.php';
 require_once 'Utils/Mimetype.class.php';
 
-
 /**
  * FileStreamTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Utils
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class FileStreamTest extends UnitBaseTest
 {
-  protected $Mimetype = NULL;
+    protected $Mimetype = null;
 
-  protected function setUp()
-  {
-    $this->Mimetype = new Mimetype();
-  }
+    protected function setUp()
+    {
+        $this->Mimetype = new Mimetype();
+    }
 
-  protected function configVfs()
-  {
-    vfsStreamWrapper::register();
-    vfsStreamWrapper::setRoot(new vfsStreamDirectory('tmp'));
-  }
+    protected function configVfs()
+    {
+        vfsStreamWrapper::register();
+        vfsStreamWrapper::setRoot(new vfsStreamDirectory('tmp'));
+    }
 
-  public function testAllowedDirectory()
-  {
-    $directories = array('pdf', 'tmp');
+    public function testAllowedDirectory()
+    {
+        $directories = ['pdf', 'tmp'];
 
-    $fileStream = new FileStream($this->Mimetype, $directories);
-    $this->assertTrue($fileStream->isDirectoryAllowed('pdf'));
-  }
+        $fileStream = new FileStream($this->Mimetype, $directories);
+        $this->assertTrue($fileStream->isDirectoryAllowed('pdf'));
+    }
 
-  public function testDisallowedDirectory()
-  {
-    $fileStream = new FileStream($this->Mimetype);
-    $this->assertFalse($fileStream->isDirectoryAllowed('pdf'));
-  }
+    public function testDisallowedDirectory()
+    {
+        $fileStream = new FileStream($this->Mimetype);
+        $this->assertFalse($fileStream->isDirectoryAllowed('pdf'));
+    }
 
-  /**
-   * @expectedException Exception
-   */
-  public function testSetFileDirectoryDisallowed()
-  {
-    $filename = 'pdf/example.pdf';
-    $fileStream = new FileStream($this->Mimetype, array('tmp'));
-    $fileStream->setFilepath($filename);
-  }
+    /**
+     * @expectedException Exception
+     */
+    public function testSetFileDirectoryDisallowed()
+    {
+        $filename = 'pdf/example.pdf';
+        $fileStream = new FileStream($this->Mimetype, ['tmp']);
+        $fileStream->setFilepath($filename);
+    }
 
-  /**
-   * @expectedException Exception
-   */
-  public function testSetFileDirectoryAllowed()
-  {
-    $filename = 'tmp/example.pdf';
-    $fileStream = new FileStream($this->Mimetype, array('tmp'));
-    $fileStream->setFilepath($filename);
-  }
+    /**
+     * @expectedException Exception
+     */
+    public function testSetFileDirectoryAllowed()
+    {
+        $filename = 'tmp/example.pdf';
+        $fileStream = new FileStream($this->Mimetype, ['tmp']);
+        $fileStream->setFilepath($filename);
+    }
 
-  public function testSetFile()
-  {
-    $this->configVfs();
+    public function testSetFile()
+    {
+        $this->configVfs();
 
-    // Nome do arquivo
-    $filename = 'tmp/example.pdf';
+        // Nome do arquivo
+        $filename = 'tmp/example.pdf';
 
-    // Adiciona o schema vfs:// ao caminho do arquivo
-    $filepath = vfsStream::url($filename);
+        // Adiciona o schema vfs:// ao caminho do arquivo
+        $filepath = vfsStream::url($filename);
 
-    // Cria um novo arquivo no vfs
-    fopen($filepath, 'a+');
+        // Cria um novo arquivo no vfs
+        fopen($filepath, 'a+');
 
-    // Pega o nome do diretório e coloca em array
-    $directory = (array) vfsStream::url(vfsStreamWrapper::getRoot()->getName());
+        // Pega o nome do diretório e coloca em array
+        $directory = (array) vfsStream::url(vfsStreamWrapper::getRoot()->getName());
 
-    $fileStream = new FileStream($this->Mimetype, $directory);
-    $fileStream->setFilepath($filepath);
-  }
+        $fileStream = new FileStream($this->Mimetype, $directory);
+        $fileStream->setFilepath($filepath);
+    }
 
-  /**
-   * @expectedException Exception
-   */
-  public function testStreamFileExtensionNotSupported()
-  {
-    $this->configVfs();
-    $filename = 'tmp/example.dummy';
-    $filepath = vfsStream::url($filename);
-    fopen($filepath, 'a+');
-    $directory = (array) vfsStream::url(vfsStreamWrapper::getRoot()->getName());
+    /**
+     * @expectedException Exception
+     */
+    public function testStreamFileExtensionNotSupported()
+    {
+        $this->configVfs();
+        $filename = 'tmp/example.dummy';
+        $filepath = vfsStream::url($filename);
+        fopen($filepath, 'a+');
+        $directory = (array) vfsStream::url(vfsStreamWrapper::getRoot()->getName());
 
-    $stub = $this->getMock('Mimetype');
-    $stub->expects($this->once())
+        $stub = $this->getMock('Mimetype');
+        $stub->expects($this->once())
          ->method('getType')
-         ->will($this->returnValue(FALSE));
+         ->will($this->returnValue(false));
 
-    $fileStream = new FileStream($stub, $directory);
-    $fileStream->setFilepath($filepath);
+        $fileStream = new FileStream($stub, $directory);
+        $fileStream->setFilepath($filepath);
 
-    $fileStream->streamFile();
-  }
+        $fileStream->streamFile();
+    }
 
-  /**
-   * Tag disponível apenas no PHPUnit 3.4, ainda não disponível no pacote
-   * Pear PHPUnit-beta3. Note o uso do '@' para supressão das mensagens de
-   * erro.
-   *
-   * @outputBuffering enabled
-   */
-  public function testStreamFileExtensionSupported()
-  {
-    $this->configVfs();
-    $filename = 'tmp/example.pdf';
-    $filepath = vfsStream::url($filename);
-    fopen($filepath, 'a+');
-    $directory = (array) vfsStream::url(vfsStreamWrapper::getRoot()->getName());
+    /**
+     * Tag disponível apenas no PHPUnit 3.4, ainda não disponível no pacote
+     * Pear PHPUnit-beta3. Note o uso do '@' para supressão das mensagens de
+     * erro.
+     *
+     * @outputBuffering enabled
+     */
+    public function testStreamFileExtensionSupported()
+    {
+        $this->configVfs();
+        $filename = 'tmp/example.pdf';
+        $filepath = vfsStream::url($filename);
+        fopen($filepath, 'a+');
+        $directory = (array) vfsStream::url(vfsStreamWrapper::getRoot()->getName());
 
-    $stub = $this->getMock('Mimetype');
-    $stub->expects($this->once())
+        $stub = $this->getMock('Mimetype');
+        $stub->expects($this->once())
          ->method('getType')
          ->will($this->returnValue('application/pdf'));
 
-    $fileStream = new FileStream($stub, $directory);
-    $fileStream->setFilepath($filepath);
-    @$fileStream->streamFile();
-  }
+        $fileStream = new FileStream($stub, $directory);
+        $fileStream->setFilepath($filepath);
+        @$fileStream->streamFile();
+    }
 }

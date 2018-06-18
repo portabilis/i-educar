@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,42 +44,46 @@ require_once 'intranet/include/pmieducar/clsPmieducarAcervoAcervoAutor.inc.php';
 
 /**
  * Class AutorController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class AutorController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  protected function searchOptions() {
-    return array('namespace' => 'pmieducar', 'table' => 'acervo_autor', 'labelAttr' => 'nm_autor', 'idAttr' => 'cod_acervo_autor');
-  }
-
-  protected function formatResourceValue($resource) {
-    return $this->toUtf8($resource['name'], array('transform' => true));
-  }
-
-  protected function getAutor() {
-
-    $obj = new clsPmieducarAcervoAcervoAutor();
-    $arrayAutores;
-
-    foreach ($obj->listaAutoresPorObra($this->getRequest()->id) as $reg) {
-      $arrayAutores[] = array(
-        'id' => $reg['id'],
-        'text' => $reg['nome'],
-      );
+    protected function searchOptions()
+    {
+        return ['namespace' => 'pmieducar', 'table' => 'acervo_autor', 'labelAttr' => 'nm_autor', 'idAttr' => 'cod_acervo_autor'];
     }
 
+    protected function formatResourceValue($resource)
+    {
+        return $this->toUtf8($resource['name'], ['transform' => true]);
+    }
 
-    return array('autores' => $arrayAutores);
-  }
+    protected function getAutor()
+    {
+        $obj = new clsPmieducarAcervoAcervoAutor();
+        $arrayAutores;
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'autor-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'autor'))
-      $this->appendResponse($this->getAutor());
-    else
-      $this->notImplementedOperationError();
-  }
+        foreach ($obj->listaAutoresPorObra($this->getRequest()->id) as $reg) {
+            $arrayAutores[] = [
+        'id' => $reg['id'],
+        'text' => $reg['nome'],
+      ];
+        }
+
+        return ['autores' => $arrayAutores];
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'autor-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'autor')) {
+            $this->appendResponse($this->getAutor());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

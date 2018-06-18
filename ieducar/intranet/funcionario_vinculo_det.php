@@ -24,65 +24,58 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/time.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/time.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários" );
-        $this->processoAp = "190";
+        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários");
+        $this->processoAp = '190';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsDetalhe
 {
-    var $cod_usuario;
-    
-    function Gerar()
+    public $cod_usuario;
+
+    public function Gerar()
     {
-                
         @session_start();
         $this->cod_usuario = $_SESSION['id_pessoa'];
         session_write_close();
-        $this->titulo = "Detalhe do Vínculo";
-        
+        $this->titulo = 'Detalhe do Vínculo';
 
         // Pega o codigo do chamado
         $cod_func = @$_GET['cod_func'];
         $db = new clsBanco();
-        $db->Consulta( "SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo= '$cod_func' " );
-        if( $db->ProximoRegistro() )
-        {
+        $db->Consulta("SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo= '$cod_func' ");
+        if ($db->ProximoRegistro()) {
             list($nm_vinculo) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nm_vinculo ) );
-        }   
-        $this->url_novo = "funcionario_vinculo_cad.php";
+            $this->addDetalhe(['Nome', $nm_vinculo ]);
+        }
+        $this->url_novo = 'funcionario_vinculo_cad.php';
         $this->url_editar = "funcionario_vinculo_cad.php?cod_funcionario_vinculo={$cod_func}";
-        $this->url_cancelar = "funcionario_vinculo_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'funcionario_vinculo_lst.php';
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe do v&iacute;nculo"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         ''                                  => 'Detalhe do v&iacute;nculo'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

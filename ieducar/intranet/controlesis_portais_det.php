@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Portais" );
-        $this->processoAp = "615";
+        $this->SetTitulo("{$this->_instituicao} Portais");
+        $this->processoAp = '615';
     }
 }
 
@@ -45,60 +45,54 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_portais;
-    var $ref_cod_funcionario_cad;
-    var $ref_cod_funcionario_exc;
-    var $url;
-    var $caminho;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $title;
-    var $descricao;
+    public $cod_portais;
+    public $ref_cod_funcionario_cad;
+    public $ref_cod_funcionario_exc;
+    public $url;
+    public $caminho;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $title;
+    public $descricao;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Portais - Detalhe";
-        
+        $this->titulo = 'Portais - Detalhe';
 
-        $this->cod_portais=$_GET["cod_portais"];
+        $this->cod_portais=$_GET['cod_portais'];
 
-        $tmp_obj = new clsPmicontrolesisPortais( $this->cod_portais );
+        $tmp_obj = new clsPmicontrolesisPortais($this->cod_portais);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: controlesis_portais_lst.php" );
+        if (! $registro) {
+            header('location: controlesis_portais_lst.php');
             die();
         }
 
-        if( $registro["url"] )
-        {
-            $this->addDetalhe( array( "Url", "{$registro["url"]}") );
+        if ($registro['url']) {
+            $this->addDetalhe([ 'Url', "{$registro['url']}"]);
         }
-        if( $registro["caminho"] )
-        {
-            $this->addDetalhe( array( "Caminho", "<img src='imagens/{$registro["caminho"]}' alt='{$registro["title"]}'>") );
+        if ($registro['caminho']) {
+            $this->addDetalhe([ 'Caminho', "<img src='imagens/{$registro['caminho']}' alt='{$registro['title']}'>"]);
         }
-        if( $registro["title"] )
-        {
-            $this->addDetalhe( array( "Title", "{$registro["title"]}") );
+        if ($registro['title']) {
+            $this->addDetalhe([ 'Title', "{$registro['title']}"]);
         }
-        if( $registro["descricao"] )
-        {
-            $this->addDetalhe( array( "Descric&atilde;o", "{$registro["descricao"]}") );
+        if ($registro['descricao']) {
+            $this->addDetalhe([ 'Descric&atilde;o', "{$registro['descricao']}"]);
         }
 
-        $this->url_novo = "controlesis_portais_cad.php";
-        $this->url_editar = "controlesis_portais_cad.php?cod_portais={$registro["cod_portais"]}";
-        $this->url_cancelar = "controlesis_portais_lst.php";
-        $this->largura = "100%";
+        $this->url_novo = 'controlesis_portais_cad.php';
+        $this->url_editar = "controlesis_portais_cad.php?cod_portais={$registro['cod_portais']}";
+        $this->url_cancelar = 'controlesis_portais_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -107,7 +101,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

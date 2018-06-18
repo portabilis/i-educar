@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,33 +40,38 @@ require_once 'CoreExt/Entity.php';
  * CoreExt_EntityCompoundStub class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_EntityCompoundStub extends CoreExt_Entity
 {
-  protected $_data = array(
-    'pessoa' => NULL,
-    'curso'  => NULL,
-    'confirmado' => NULL
-  );
+    protected $_data = [
+    'pessoa' => null,
+    'curso'  => null,
+    'confirmado' => null
+  ];
 
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'confirmado' => 'bool'
-  );
+  ];
 
-  public function __construct($options = array())
-  {
-    parent::__construct($options);
-    unset($this->_data['id']);
-  }
+    public function __construct($options = [])
+    {
+        parent::__construct($options);
+        unset($this->_data['id']);
+    }
 
-  public function getDefaultValidatorCollection()
-  {
-    return array();
-  }
+    public function getDefaultValidatorCollection()
+    {
+        return [];
+    }
 }

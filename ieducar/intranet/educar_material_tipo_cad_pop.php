@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
-        $this->processoAp = "563";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico");
+        $this->processoAp = '563';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -48,22 +48,21 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_material_tipo;
-    var $ref_usuario_cad;
-    var $ref_usuario_exc;
-    var $nm_tipo;
-    var $desc_tipo;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
+    public $cod_material_tipo;
+    public $ref_usuario_cad;
+    public $ref_usuario_exc;
+    public $nm_tipo;
+    public $desc_tipo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
-
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
@@ -71,95 +70,87 @@ class indice extends clsCadastro
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        $obj_permissao->permissao_cadastra(563, $this->pessoa_logada,3,"educar_tipo_usuario_lst.php");
+        $obj_permissao->permissao_cadastra(563, $this->pessoa_logada, 3, 'educar_tipo_usuario_lst.php');
         //**
 
-        $this->cod_material_tipo=$_GET["cod_material_tipo"];
+        $this->cod_material_tipo=$_GET['cod_material_tipo'];
 
-
-        if( is_numeric( $this->cod_material_tipo ) )
-        {
-
-            $obj = new clsPmieducarMaterialTipo( $this->cod_material_tipo );
+        if (is_numeric($this->cod_material_tipo)) {
+            $obj = new clsPmieducarMaterialTipo($this->cod_material_tipo);
             $registro  = $obj->detalhe();
 
-
-            if( $registro )
-            {
+            if ($registro) {
 
                 /***ativacao de registro ***/
-    /*          if($_GET["ativar"] == "true")
-                {
-                    if( $registro["ativo"] == 0)
-                    {
-                        if(!$obj_permissao->permissao_excluir(563,$this->pessoa_logada))
-                        {
-                            echo "<script>alert('Usuário sem permissão para ativar material!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
-                            die;
-                        }
+                /*          if($_GET["ativar"] == "true")
+                            {
+                                if( $registro["ativo"] == 0)
+                                {
+                                    if(!$obj_permissao->permissao_excluir(563,$this->pessoa_logada))
+                                    {
+                                        echo "<script>alert('Usuário sem permissão para ativar material!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
+                                        die;
+                                    }
 
-                        $obj->ativo = 1;
-                        $obj->ref_usuario_exc =  $this->pessoa_logada;
-                        if($obj->edita())
-                            echo "<script>alert('Ativação realizada com sucesso'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
-                        else
-                            echo "<script>alert('Erro ao ativar material didático!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
-                    }
-                    else{
-                        echo "<script>alert('Tipo de material já se encontra ativo!'); document.location='educar_material_tipo_lst.php';</script>";
-                    }
-                }
-                */
+                                    $obj->ativo = 1;
+                                    $obj->ref_usuario_exc =  $this->pessoa_logada;
+                                    if($obj->edita())
+                                        echo "<script>alert('Ativação realizada com sucesso'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
+                                    else
+                                        echo "<script>alert('Erro ao ativar material didático!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
+                                }
+                                else{
+                                    echo "<script>alert('Tipo de material já se encontra ativo!'); document.location='educar_material_tipo_lst.php';</script>";
+                                }
+                            }
+                            */
                 /*if(!$registro["ativo"])
                     header( "Location: educar_material_tipo_lst.php" );
                 */
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
                 //** verificao de permissao para exclusao
-                $this->fexcluir = $obj_permissao->permissao_excluir(563,$this->pessoa_logada,3);
+                $this->fexcluir = $obj_permissao->permissao_excluir(563, $this->pessoa_logada, 3);
                 //**
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_material_tipo_det.php?cod_material_tipo={$registro["cod_material_tipo"]}" : "educar_material_tipo_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_material_tipo", $this->cod_material_tipo );
-        if ($_GET['precisa_lista'])
-        {
+        $this->campoOculto('cod_material_tipo', $this->cod_material_tipo);
+        if ($_GET['precisa_lista']) {
             // foreign keys
             $obrigatorio = true;
-            include("include/pmieducar/educar_campo_lista.php");
-        }
-        else
-        {
-            $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
+            include('include/pmieducar/educar_campo_lista.php');
+        } else {
+            $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
         // text
-        $this->campoTexto( "nm_tipo", "Material Didático", $this->nm_tipo, 40, 255, true );
-        $this->campoMemo( "desc_tipo", "Descrição", $this->desc_tipo, 38, 5, false );
+        $this->campoTexto('nm_tipo', 'Material Didático', $this->nm_tipo, 40, 255, true);
+        $this->campoMemo('desc_tipo', 'Descrição', $this->desc_tipo, 38, 5, false);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $obj = new clsPmieducarMaterialTipo( null,$this->pessoa_logada,null,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
+        $obj = new clsPmieducarMaterialTipo(null, $this->pessoa_logada, null, $this->nm_tipo, $this->desc_tipo, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             echo "<script>
                         if (parent.document.getElementById('ref_cod_material_tipo').disabled)
                             parent.document.getElementById('ref_cod_material_tipo').options[0] = new Option('Selecione um tipo de material', '', false, false);
@@ -171,15 +162,17 @@ class indice extends clsCadastro
 //          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 //          header( "Location: educar_material_tipo_lst.php" );
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarMaterialTipo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_instituicao ) && is_string( $this->nm_tipo ) \n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -200,7 +193,7 @@ class indice extends clsCadastro
         return false;*/
     }
 
-    function Excluir()
+    public function Excluir()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -227,7 +220,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
@@ -235,9 +228,8 @@ $pagina->MakeAll();
 <script>
 
 <?php
-if (!$_GET['precisa_lista'])
-{
-?>
+if (!$_GET['precisa_lista']) {
+    ?>
     Event.observe(window, 'load', Init, false);
 
     function Init()

@@ -26,115 +26,114 @@
  *
  * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package  Core
+ *
  * @since    Arquivo disponível desde a versão 1.0.0
+ *
  * @version  $Id$
  */
 
-$desvio_diretorio = "";
+$desvio_diretorio = '';
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 
-
 class clsIndex extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
-    $this->processoAp   = "0";
-    $this->renderBanner = FALSE;
-    $this->renderMenu   = FALSE;
-    $this->renderMenuSuspenso = FALSE;
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
+        $this->processoAp   = '0';
+        $this->renderBanner = false;
+        $this->renderMenu   = false;
+        $this->renderMenuSuspenso = false;
+    }
 }
 
 class indice extends clsCadastro
 {
+    public $p_cod_pessoa_fj;
+    public $f_senha;
+    public $f_senha2;
 
-  public $p_cod_pessoa_fj;
-  public $f_senha;
-  public $f_senha2;
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
+        @session_start();
+        $this->p_cod_pessoa_fj = @$_SESSION['id_pessoa'];
+        @session_write_close();
 
-  public function Inicializar()
-  {
-    $retorno = "Novo";
+        $objPessoa = new clsPessoaFj();
 
-    @session_start();
-    $this->p_cod_pessoa_fj = @$_SESSION['id_pessoa'];
-    @session_write_close();
+        $db = new clsBanco();
+        $db->Consulta("SELECT f.senha FROM funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
 
-    $objPessoa = new clsPessoaFj();
+        if ($db->ProximoRegistro()) {
+            list($this->f_senha) = $db->Tupla();
+        }
 
-    $db = new clsBanco();
-    $db->Consulta("SELECT f.senha FROM funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
+        $this->acao_enviar = 'acao2()';
 
-    if ($db->ProximoRegistro()) {
-      list($this->f_senha) = $db->Tupla();
+        return $retorno;
     }
 
-    $this->acao_enviar = "acao2()";
-    return $retorno;
-  }
+    public function null2empityStr($vars)
+    {
+        foreach ($vars as $key => $valor) {
+            $valor .= '';
+            if ($valor == 'NULL') {
+                $vars[$key] = '';
+            }
+        }
 
-
-  public function null2empityStr( $vars )
-  {
-    foreach ($vars as $key => $valor) {
-      $valor .= "";
-      if ($valor == "NULL") {
-        $vars[$key] = "";
-      }
+        return $vars;
     }
 
-    return $vars;
-  }
+    public function Gerar()
+    {
+        @session_start();
+        $this->campoOculto('p_cod_pessoa_fj', $this->p_cod_pessoa_fj);
+        $this->cod_pessoa_fj = $this->p_cod_pessoa_fj;
 
-
-  public function Gerar()
-  {
-    @session_start();
-    $this->campoOculto("p_cod_pessoa_fj", $this->p_cod_pessoa_fj);
-    $this->cod_pessoa_fj = $this->p_cod_pessoa_fj;
-
-    if (empty($_SESSION['convidado'])) {
-      $this->campoRotulo("", "<strong>Informações</strong>", "<strong>Sua senha expirará em alguns dias, por favor cadastre uma nova senha com no mínimo 8 caracteres e diferente da senha anterior</strong>");
-      $this->campoSenha("f_senha", "Senha", "", TRUE, "A sua nova senha deverá conter pelo menos oito caracteres");
-      $this->campoSenha("f_senha2", "Redigite a Senha", $this->f_senha2, TRUE);
+        if (empty($_SESSION['convidado'])) {
+            $this->campoRotulo('', '<strong>Informações</strong>', '<strong>Sua senha expirará em alguns dias, por favor cadastre uma nova senha com no mínimo 8 caracteres e diferente da senha anterior</strong>');
+            $this->campoSenha('f_senha', 'Senha', '', true, 'A sua nova senha deverá conter pelo menos oito caracteres');
+            $this->campoSenha('f_senha2', 'Redigite a Senha', $this->f_senha2, true);
+        }
     }
-  }
 
+    public function Novo()
+    {
+        @session_start();
+        $pessoaFj = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  public function Novo()
-  {
-    @session_start();
-    $pessoaFj = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $sql = "SELECT ref_cod_pessoa_fj FROM funcionario WHERE md5('{$this->f_senha}') = senha AND ref_cod_pessoa_fj = {$this->p_cod_pessoa_fj}";
+        $db = new clsBanco();
+        $senha_igual = $db->CampoUnico($sql);
 
-    $sql = "SELECT ref_cod_pessoa_fj FROM funcionario WHERE md5('{$this->f_senha}') = senha AND ref_cod_pessoa_fj = {$this->p_cod_pessoa_fj}";
-    $db = new clsBanco();
-    $senha_igual = $db->CampoUnico($sql);
-
-    if ($this->f_senha && !$senha_igual) {
-      $sql_funcionario = "UPDATE funcionario SET senha=md5('{$this->f_senha}'), data_troca_senha = NOW(), tempo_expira_senha = 30 WHERE ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}";
-      $db->Consulta( $sql_funcionario );
-      echo "
+        if ($this->f_senha && !$senha_igual) {
+            $sql_funcionario = "UPDATE funcionario SET senha=md5('{$this->f_senha}'), data_troca_senha = NOW(), tempo_expira_senha = 30 WHERE ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}";
+            $db->Consulta($sql_funcionario);
+            echo '
         <script>
-          window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
-          window.parent.location = 'index.php';
-        </script>";
+          window.parent.fechaExpansivel(\'div_dinamico_\'+(parent.DOM_divs.length-1));
+          window.parent.location = \'index.php\';
+        </script>';
 
-      return TRUE;
+            return true;
+        }
+
+        $this->mensagem .= 'A sua nova senha deverá ser diferente da anterior';
+
+        return false;
     }
 
-    $this->mensagem .= "A sua nova senha deverá ser diferente da anterior";
-
-    return FALSE;
-  }
-
-
-  public function Editar() {}
+    public function Editar()
+    {
+    }
 }
 
 $pagina = new clsIndex();

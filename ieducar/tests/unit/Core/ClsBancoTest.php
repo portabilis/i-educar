@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.0.1
+ *
  * @version     $Id$
  */
 
@@ -35,81 +40,87 @@ require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
  * clsBancoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.0.1
+ *
  * @todo        Subclassificar classe como IntegrationBaseTest
+ *
  * @version     @@package_version@@
  */
 class ClsBancoTest extends UnitBaseTest
 {
-  public function testDoCountFromObj()
-  {
-    $db = new clsBanco();
-    $db->Conecta();
+    public function testDoCountFromObj()
+    {
+        $db = new clsBanco();
+        $db->Conecta();
 
-    $obj = new clsPmieducarClienteSuspensao();
-    $this->assertNotEquals(TRUE, is_null($db->doCountFromObj($obj)));
-  }
+        $obj = new clsPmieducarClienteSuspensao();
+        $this->assertNotEquals(true, is_null($db->doCountFromObj($obj)));
+    }
 
-  public function testConexao()
-  {
-    $db = new clsBanco();
-    $db->Conecta();
+    public function testConexao()
+    {
+        $db = new clsBanco();
+        $db->Conecta();
 
-    $this->assertTrue((bool) $db->bLink_ID);
-  }
+        $this->assertTrue((bool) $db->bLink_ID);
+    }
 
-  public function testFormatacaoDeValoresBooleanos()
-  {
-    $data = array(
+    public function testFormatacaoDeValoresBooleanos()
+    {
+        $data = [
       'id' => 1,
-      'hasChild' => TRUE
-    );
+      'hasChild' => true
+    ];
 
-    $db = new clsBanco();
-    $formatted = $db->formatValues($data);
-    $this->assertSame('t', $formatted['hasChild']);
+        $db = new clsBanco();
+        $formatted = $db->formatValues($data);
+        $this->assertSame('t', $formatted['hasChild']);
 
-    $data['hasChild'] = FALSE;
-    $formatted = $db->formatValues($data);
-    $this->assertSame('f', $formatted['hasChild']);
-  }
+        $data['hasChild'] = false;
+        $formatted = $db->formatValues($data);
+        $this->assertSame('f', $formatted['hasChild']);
+    }
 
-  public function testOpcaoDeLancamentoDeExcecaoEFalsePorPadrao()
-  {
-    $db = new clsBanco();
-    $this->assertFalse($db->getThrowException());
-  }
+    public function testOpcaoDeLancamentoDeExcecaoEFalsePorPadrao()
+    {
+        $db = new clsBanco();
+        $this->assertFalse($db->getThrowException());
+    }
 
-  public function testConfiguracaoDeOpcaoDeLancamentoDeExcecao()
-  {
-    $db = new clsBanco();
-    $db->setThrowException(TRUE);
-    $this->assertTrue($db->getThrowException());
-  }
+    public function testConfiguracaoDeOpcaoDeLancamentoDeExcecao()
+    {
+        $db = new clsBanco();
+        $db->setThrowException(true);
+        $this->assertTrue($db->getThrowException());
+    }
 
-  public function testFetchTipoArrayDeResultadosDeUmaQuery()
-  {
-    $db = new clsBanco();
+    public function testFetchTipoArrayDeResultadosDeUmaQuery()
+    {
+        $db = new clsBanco();
 
-    $db->Consulta("SELECT spcname, spcowner, spclocation, spcacl FROM pg_tablespace");
-    $row = $db->ProximoRegistro();
-    $row = $db->Tupla();
-    $this->assertNotNull($row[0]);
-    $this->assertNotNull($row['spcname']);
-  }
+        $db->Consulta('SELECT spcname, spcowner, spclocation, spcacl FROM pg_tablespace');
+        $row = $db->ProximoRegistro();
+        $row = $db->Tupla();
+        $this->assertNotNull($row[0]);
+        $this->assertNotNull($row['spcname']);
+    }
 
-  public function testFetchTipoAssocDeResultadosDeUmaQuery()
-  {
-    $db = new clsBanco(array('fetchMode' => clsBanco::FETCH_ASSOC));
+    public function testFetchTipoAssocDeResultadosDeUmaQuery()
+    {
+        $db = new clsBanco(['fetchMode' => clsBanco::FETCH_ASSOC]);
 
-    $db->Consulta("SELECT spcname, spcowner, spclocation, spcacl FROM pg_tablespace");
-    $row = $db->ProximoRegistro();
-    $row = $db->Tupla();
-    $this->assertFalse(array_key_exists(0, $row));
-    $this->assertNotNull($row['spcname']);
-  }
+        $db->Consulta('SELECT spcname, spcowner, spclocation, spcacl FROM pg_tablespace');
+        $row = $db->ProximoRegistro();
+        $row = $db->Tupla();
+        $this->assertFalse(array_key_exists(0, $row));
+        $this->assertNotNull($row['spcname']);
+    }
 }

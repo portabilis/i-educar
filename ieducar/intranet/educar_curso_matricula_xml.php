@@ -24,20 +24,19 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+    require_once('include/clsBanco.inc.php');
+    require_once('include/funcoes.inc.php');
 
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    if( is_numeric( $_GET["alu"] ) && is_numeric( $_GET["ins"] ) )
-    {
+    if (is_numeric($_GET['alu']) && is_numeric($_GET['ins'])) {
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
         SELECT
             m.cod_matricula
             , m.ref_cod_curso
@@ -46,19 +45,18 @@
             pmieducar.matricula m
             , pmieducar.curso c
         WHERE
-            m.ref_cod_aluno = '{$_GET["alu"]}'
+            m.ref_cod_aluno = '{$_GET['alu']}'
             AND m.ultima_matricula = 1
             AND m.ativo = 1
             AND m.ref_cod_curso = c.cod_curso
-            AND c.ref_cod_instituicao = '{$_GET["ins"]}'
+            AND c.ref_cod_instituicao = '{$_GET['ins']}'
         ORDER BY
             m.cod_matricula ASC
         ");
 
         // caso o aluno nao tenha nenhuma matricula em determinada instituicao
-        if (!$db->numLinhas())
-        {
-            $db->Consulta( "
+        if (!$db->numLinhas()) {
+            $db->Consulta("
             SELECT
                 cod_curso
                 , nm_curso
@@ -67,7 +65,7 @@
             WHERE
                 padrao_ano_escolar = 0
                 AND ativo = 1
-                AND ref_cod_instituicao = '{$_GET["ins"]}'
+                AND ref_cod_instituicao = '{$_GET['ins']}'
                 AND NOT EXISTS
                 (
                     SELECT
@@ -82,29 +80,23 @@
                 nm_curso ASC
             ");
 
-            if ($db->numLinhas())
-            {
-                while ( $db->ProximoRegistro() )
-                {
-                    list( $cod, $nome ) = $db->Tupla();
+            if ($db->numLinhas()) {
+                while ($db->ProximoRegistro()) {
+                    list($cod, $nome) = $db->Tupla();
                     echo "  <curso cod_curso=\"{$cod}\">{$nome}</curso>\n";
                 }
             }
         } // caso o aluno tenha matricula(s) em determinada instituicao
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
-                list( $matricula, $curso, $padrao_ano_escolar ) = $db->Tupla();
+        else {
+            while ($db->ProximoRegistro()) {
+                list($matricula, $curso, $padrao_ano_escolar) = $db->Tupla();
 
-                if ( $padrao_ano_escolar == 0 )
-                {
+                if ($padrao_ano_escolar == 0) {
                     $cursos_matriculado[] = $curso;
                 }
             }
 //          echo "<pre>"; print_r($cursos_matriculado); die();
-            if (is_array($cursos_matriculado))
-            {
+            if (is_array($cursos_matriculado)) {
                 $sql = "
                 SELECT
                     cod_curso
@@ -114,7 +106,7 @@
                 WHERE
                     padrao_ano_escolar = 0
                     AND ativo = 1
-                    AND ref_cod_instituicao = '{$_GET["ins"]}'
+                    AND ref_cod_instituicao = '{$_GET['ins']}'
                     AND NOT EXISTS
                     (
                         SELECT
@@ -126,27 +118,24 @@
                             AND ativo = 1
                     )";
 
-                if (is_array($cursos_matriculado))
-                {
-                    foreach ($cursos_matriculado as $cursos)
+                if (is_array($cursos_matriculado)) {
+                    foreach ($cursos_matriculado as $cursos) {
                         $sql .= " AND cod_curso != '{$cursos}' ";
+                    }
                 }
 
-                $sql .= "
+                $sql .= '
                 ORDER BY
-                    nm_curso ASC ";
+                    nm_curso ASC ';
 
-                $db->Consulta( $sql );
-                if ($db->numLinhas())
-                {
-                    while ( $db->ProximoRegistro() )
-                    {
-                        list( $cod, $nome ) = $db->Tupla();
+                $db->Consulta($sql);
+                if ($db->numLinhas()) {
+                    while ($db->ProximoRegistro()) {
+                        list($cod, $nome) = $db->Tupla();
                         echo "  <curso cod_curso=\"{$cod}\">{$nome}</curso>\n";
                     }
                 }
             }
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

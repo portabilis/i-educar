@@ -22,50 +22,63 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_DataInicial class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_Helper_DynamicInput_Core {
-  protected function inputValue($value = null) {
-    if (! $value && $this->viewInstance->data_inicial)
-      $value = $this->viewInstance->data_inicial;
-    else
-      $value = date('01/m/Y');
+class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_Helper_DynamicInput_Core
+{
+    protected function inputValue($value = null)
+    {
+        if (! $value && $this->viewInstance->data_inicial) {
+            $value = $this->viewInstance->data_inicial;
+        } else {
+            $value = date('01/m/Y');
+        }
 
-    return $value;
-  }
+        return $value;
+    }
 
-  public function dataInicial($options = array()) {
-    $defaultOptions       = array('options' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
+    public function dataInicial($options = [])
+    {
+        $defaultOptions       = ['options' => []];
+        $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'data_inicial',
+        $defaultInputOptions = ['id'         => 'data_inicial',
                                  'label'      => 'Data inicial',
                                  'value'      => $this->inputValue($options['options']['value']),
                                  'required'   => true,
                                  'label_hint' => '',
                                  'inline'     => false,
                                  'callback'   => false,
-                                 'disabled'   => false);
+                                 'disabled'   => false];
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
-  }
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        call_user_func_array([$this->viewInstance, 'campoData'], $inputOptions);
+    }
 }

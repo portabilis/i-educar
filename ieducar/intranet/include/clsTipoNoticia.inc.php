@@ -24,21 +24,19 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once("include/clsBanco.inc.php");
+require_once('include/clsBanco.inc.php');
 
 class clsTipoNoticia
 {
-    function lista($strTipoNoticia)
+    public function lista($strTipoNoticia)
     {
         $db = new clsBanco();
         $db->Consulta("select np.* from not_portal np, not_portal_tipo npt, not_tipo nt WHERE nt.nm_tipo = '{$strTipoNoticia}' AND nt.cod_not_tipo = npt.ref_cod_not_tipo AND npt.ref_cod_not_portal = np.cod_not_portal");
-        while ( $db->ProximoRegistro() ) {
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $resultado[] = $tupla;
         }
+
         return $resultado;
     }
 }
-
-
-?>

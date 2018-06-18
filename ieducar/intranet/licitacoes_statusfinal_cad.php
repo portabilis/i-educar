@@ -24,117 +24,109 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
-        $this->processoAp = "138";
+        $this->SetTitulo("{$this->_instituicao} Licita&ccedil;&otilde;es!");
+        $this->processoAp = '138';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $cod_status;
-    var $nm_final;
+    public $cod_status;
+    public $nm_final;
 
-    function Inicializar()
+    public function Inicializar()
     {
         @session_start();
         $this->id_pessoa = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $retorno = "Novo";
-        
-        if (@$_GET['cod'])
-        {
+        $retorno = 'Novo';
+
+        if (@$_GET['cod']) {
             $this->fexcluir = true;
             $this->cod_status = @$_GET['cod'];
             $db = new clsBanco();
-            $db->Consulta( "SELECT nm_final FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$this->cod_status}'" );
-            if ($db->ProximoRegistro())
-            {
-                list( $this->nm_final ) = $db->Tupla();
+            $db->Consulta("SELECT nm_final FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$this->cod_status}'");
+            if ($db->ProximoRegistro()) {
+                list($this->nm_final) = $db->Tupla();
             }
-            $retorno = "Editar";
+            $retorno = 'Editar';
         }
 
-        $this->url_cancelar = "licitacoes_statusfinal_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = 'licitacoes_statusfinal_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->campoOculto( "cod", $this->cod_status );
-        $this->campoTexto( "nm_final", "Nome", $this->nm_final, 30, 30, true );
+        $this->campoOculto('cod', $this->cod_status);
+        $this->campoTexto('nm_final', 'Nome', $this->nm_final, 30, 30, true);
     }
 
-    function Novo() 
+    public function Novo()
     {
-        $this->nm_final = $_POST["nm_final"];
+        $this->nm_final = $_POST['nm_final'];
         $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM compras_final_pregao WHERE nm_final = '{$this->nm_final}'" );
-        if( ! $db->Num_Linhas() )
-        {
-            $db->Consulta( "INSERT INTO compras_final_pregao (nm_final) VALUES ('{$this->nm_final}')" );
-            echo "<script>document.location.href='licitacoes_statusfinal_lst.php';</script>";
+        $db->Consulta("SELECT 1 FROM compras_final_pregao WHERE nm_final = '{$this->nm_final}'");
+        if (! $db->Num_Linhas()) {
+            $db->Consulta("INSERT INTO compras_final_pregao (nm_final) VALUES ('{$this->nm_final}')");
+            echo '<script>document.location.href=\'licitacoes_statusfinal_lst.php\';</script>';
+
             return true;
+        } else {
+            $this->mensagem = 'Já existe um status de finalização com este nome';
         }
-        else 
-        {
-            $this->mensagem = "Já existe um status de finalização com este nome";
-        }
+
         return false;
     }
 
-    function Editar() 
+    public function Editar()
     {
-        $this->nm_final = $_POST["nm_final"];
-        $this->cod_status = $_POST["cod"];
+        $this->nm_final = $_POST['nm_final'];
+        $this->cod_status = $_POST['cod'];
         $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$_POST["cod"]}'" );
-        if( $db->Num_Linhas() )
-        {
-            $db->Consulta( "UPDATE compras_final_pregao SET nm_final = '{$this->nm_final}' WHERE cod_compras_final_pregao = '{$this->cod_status}'" );
-            header( "location: licitacoes_statusfinal_lst.php" );
+        $db->Consulta("SELECT 1 FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$_POST['cod']}'");
+        if ($db->Num_Linhas()) {
+            $db->Consulta("UPDATE compras_final_pregao SET nm_final = '{$this->nm_final}' WHERE cod_compras_final_pregao = '{$this->cod_status}'");
+            header('location: licitacoes_statusfinal_lst.php');
+
             return true;
+        } else {
+            $this->mensagem = 'Não foi possivel encontrar este status de finalizacao';
         }
-        else 
-        {
-            $this->mensagem = "Não foi possivel encontrar este status de finalizacao";
-        }
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$_POST["cod"]}'" );
-        if( $db->Num_Linhas() )
-        {
-            $db->Consulta( "DELETE FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$_POST["cod"]}'" );
-            header( "location: licitacoes_statusfinal_lst.php" );
+        $db->Consulta("SELECT 1 FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$_POST['cod']}'");
+        if ($db->Num_Linhas()) {
+            $db->Consulta("DELETE FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$_POST['cod']}'");
+            header('location: licitacoes_statusfinal_lst.php');
+
             return true;
         }
+
         return false;
     }
-
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

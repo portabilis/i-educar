@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -43,78 +48,84 @@ require_once 'intranet/include/funcoes.inc.php';
 
 /**
  * Class PessoaController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class PessoaController extends ApiCoreController
 {
+    protected function canGet()
+    {
+        $can = true;
 
-  protected function canGet() {
-    $can = true;
+        if (! $this->getRequest()->id && ! $this->getRequest()->cpf) {
+            $can = false;
+            $this->messenger->append('É necessário receber uma variavel \'id\' ou \'cpf\'');
+        } elseif ($this->getRequest()->id) {
+            $can = $this->validatesResourceId();
+        }
 
-    if (! $this->getRequest()->id && ! $this->getRequest()->cpf) {
-      $can = false;
-      $this->messenger->append("É necessário receber uma variavel 'id' ou 'cpf'");
+        return $can;
     }
 
-    elseif ($this->getRequest()->id)
-      $can = $this->validatesResourceId();
+    // validators
 
-    return $can;
-  }
+    // overwrite api core validator
+    protected function validatesResourceId()
+    {
+        $existenceOptions = ['schema_name' => 'cadastro', 'field_name' => 'idpes'];
 
-  // validators
-
-  // overwrite api core validator
-  protected function validatesResourceId() {
-    $existenceOptions = array('schema_name' => 'cadastro', 'field_name' => 'idpes');
-
-    return  $this->validatesPresenceOf('id') &&
+        return  $this->validatesPresenceOf('id') &&
             $this->validatesExistenceOf('fisica', $this->getRequest()->id, $existenceOptions);
-  }
+    }
 
+    // load resources
 
-  // load resources
+    protected function tryLoadAlunoId($pessoaId)
+    {
+        $sql = 'select cod_aluno as id from pmieducar.aluno where ref_idpes = $1';
+        $id  = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
 
-  protected function tryLoadAlunoId($pessoaId) {
-    $sql = "select cod_aluno as id from pmieducar.aluno where ref_idpes = $1";
-    $id  = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
+        // caso um array vazio seja retornado, seta resultado como null,
+        // evitando erro em loadDetails
+        if (empty($id)) {
+            $id = null;
+        }
 
-    // caso um array vazio seja retornado, seta resultado como null,
-    // evitando erro em loadDetails
-    if (empty($id))
-      $id = null;
+        return $id;
+    }
 
-    return $id;
-  }
+    protected function loadPessoa($id = null)
+    {
+        $sql            = 'select idpes as id, nome from cadastro.pessoa where idpes = $1';
 
-  protected function loadPessoa($id = null) {
-    $sql            = "select idpes as id, nome from cadastro.pessoa where idpes = $1";
+        $pessoa         = $this->fetchPreparedQuery($sql, $id, false, 'first-row');
+        $pessoa['nome'] = $this->toUtf8($pessoa['nome'], ['transform' => true]);
 
-    $pessoa         = $this->fetchPreparedQuery($sql, $id, false, 'first-row');
-    $pessoa['nome'] = $this->toUtf8($pessoa['nome'], array('transform' => true));
+        return $pessoa;
+    }
 
-    return $pessoa;
-  }
+    protected function loadPessoaByCpf($cpf = null)
+    {
+        $cpf = preg_replace('/[^0-9]/', '', (string)$cpf);
 
-  protected function loadPessoaByCpf($cpf = null) {
-    $cpf = preg_replace('/[^0-9]/', '', (string)$cpf);
+        if (! $cpf) {
+            throw new Exception('CPF deve conter caracteres numéricos');
+        }
 
-    if (! $cpf)
-      throw new Exception("CPF deve conter caracteres numéricos");
+        $sql            = 'select pessoa.idpes as id, nome from cadastro.pessoa, fisica
+                       where fisica.idpes = pessoa.idpes and cpf = $1 limit 1';
 
-    $sql            = "select pessoa.idpes as id, nome from cadastro.pessoa, fisica
-                       where fisica.idpes = pessoa.idpes and cpf = $1 limit 1";
+        $pessoa         = $this->fetchPreparedQuery($sql, $cpf, false, 'first-row');
+        $pessoa['nome'] = $this->toUtf8($pessoa['nome'], ['transform' => true]);
 
-    $pessoa         = $this->fetchPreparedQuery($sql, $cpf, false, 'first-row');
-    $pessoa['nome'] = $this->toUtf8($pessoa['nome'], array('transform' => true));
+        return $pessoa;
+    }
 
-    return $pessoa;
-  }
+    protected function loadDetails($pessoaId = null)
+    {
+        $alunoId = $this->tryLoadAlunoId($pessoaId);
 
-  protected function loadDetails($pessoaId = null) {
-    $alunoId = $this->tryLoadAlunoId($pessoaId);
-
-    $sql = "SELECT cpf, data_nasc as data_nascimento, idpes_pai as pai_id, ref_cod_religiao as religiao_id,
+        $sql = 'SELECT cpf, data_nasc as data_nascimento, idpes_pai as pai_id, ref_cod_religiao as religiao_id,
             idpes_mae as mae_id, idpes_responsavel as responsavel_id,
             ideciv as estadocivil, sexo, nis_pis_pasep,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
@@ -197,465 +208,481 @@ class PessoaController extends ApiCoreController
 
              (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog
             from cadastro.fisica
-            where idpes = $2";
+            where idpes = $2';
 
-    $details = $this->fetchPreparedQuery($sql, array($alunoId, $pessoaId), false, 'first-row');
+        $details = $this->fetchPreparedQuery($sql, [$alunoId, $pessoaId], false, 'first-row');
 
-    $details['possui_documento'] = !(is_null($details['rg']) && is_null($details['cpf'])
+        $details['possui_documento'] = !(is_null($details['rg']) && is_null($details['cpf'])
                                       && is_null($details['nis_pis_pasep']) && is_null($details['num_termo'])
                                         && is_null($details['certidao_nascimento'])
-                                         && is_null($details['certidao_casamento']) );
+                                         && is_null($details['certidao_casamento']));
 
-    $attrs   = array('cpf', 'rg', 'data_nascimento', 'religiao_id', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
+        $attrs   = ['cpf', 'rg', 'data_nascimento', 'religiao_id', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro','tipo_cert_civil', 'num_termo', 'num_livro',
                        'num_folha', 'certidao_nascimento', 'certidao_casamento', 'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
                        'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'ddd_fone_fixo', 'fone_fixo', 'fone_mov', 'ddd_fone_mov',
                        'pais_origem_id', 'tipo_nacionalidade', 'zona_localizacao_censo', 'pais_origem_nome',
-                    'cor_raca', 'uf_emissao_rg', 'orgao_emissao_rg');
-    $details = Portabilis_Array_Utils::filter($details, $attrs);
+                    'cor_raca', 'uf_emissao_rg', 'orgao_emissao_rg'];
+        $details = Portabilis_Array_Utils::filter($details, $attrs);
 
-    $details['aluno_id']         = $alunoId;
-    $details['nome_mae']         = $this->toUtf8($details['nome_mae'], array('transform' => true));
-    $details['nome_pai']         = $this->toUtf8($details['nome_pai'], array('transform' => true));
-    $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], array('transform' => true));
-    $details['cep']              = int2CEP($details['cep']);
+        $details['aluno_id']         = $alunoId;
+        $details['nome_mae']         = $this->toUtf8($details['nome_mae'], ['transform' => true]);
+        $details['nome_pai']         = $this->toUtf8($details['nome_pai'], ['transform' => true]);
+        $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], ['transform' => true]);
+        $details['cep']              = int2CEP($details['cep']);
 
-    $details['num_termo']                  = $this->toUtf8($details['num_termo']);
-    $details['num_folha']                  = $this->toUtf8($details['num_folha']);
-    $details['num_livro']                  = $this->toUtf8($details['num_livro']);
-    $details['certidao_casamento']         = $this->toUtf8($details['certidao_casamento']);
-    $details['certidao_nascimento']        = $this->toUtf8($details['certidao_nascimento']);
+        $details['num_termo']                  = $this->toUtf8($details['num_termo']);
+        $details['num_folha']                  = $this->toUtf8($details['num_folha']);
+        $details['num_livro']                  = $this->toUtf8($details['num_livro']);
+        $details['certidao_casamento']         = $this->toUtf8($details['certidao_casamento']);
+        $details['certidao_nascimento']        = $this->toUtf8($details['certidao_nascimento']);
 
-    $details['distrito']                   = $this->toUtf8($details['distrito']);
-    $details['logradouro']                 = $this->toUtf8($details['logradouro']);
-    $detaihandleGetPersonls['complemento'] = $this->toUtf8($details['complemento']);
-    $details['ddd_fone_fixo']              = $this->toUtf8($details['ddd_fone_fixo']);
-    $details['fone_fixo']                  = $this->toUtf8($details['fone_fixo']);
-    $details['ddd_fone_mov']               = $this->toUtf8($details['ddd_fone_mov']);
-    $details['fone_mov']                   = $this->toUtf8($details['fone_mov']);
-    $details['falecido']                   = $this->toUtf8($details['falecido']);
+        $details['distrito']                   = $this->toUtf8($details['distrito']);
+        $details['logradouro']                 = $this->toUtf8($details['logradouro']);
+        $detaihandleGetPersonls['complemento'] = $this->toUtf8($details['complemento']);
+        $details['ddd_fone_fixo']              = $this->toUtf8($details['ddd_fone_fixo']);
+        $details['fone_fixo']                  = $this->toUtf8($details['fone_fixo']);
+        $details['ddd_fone_mov']               = $this->toUtf8($details['ddd_fone_mov']);
+        $details['fone_mov']                   = $this->toUtf8($details['fone_mov']);
+        $details['falecido']                   = $this->toUtf8($details['falecido']);
 
-    $details['pais_origem_nome']           = $this->toUtf8($details['pais_origem_nome']);
+        $details['pais_origem_nome']           = $this->toUtf8($details['pais_origem_nome']);
 
-    if($details['idmun']){
+        if ($details['idmun']) {
+            $_sql = ' SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ';
 
-      $_sql = " SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ";
+            $mun = $this->fetchPreparedQuery($_sql, $details['idmun'], false, 'first-row');
 
-      $mun = $this->fetchPreparedQuery($_sql, $details['idmun'], false, 'first-row');
+            $details['municipio'] = $this->toUtf8($mun['nome']);
 
-      $details['municipio'] = $this->toUtf8($mun['nome']);
+            $details['sigla_uf'] = $mun['sigla_uf'];
+        }
 
-      $details['sigla_uf'] = $mun['sigla_uf'];
+        if ($details['idmun_nascimento']) {
+            $_sql = ' SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ';
 
+            $mun = $this->fetchPreparedQuery($_sql, $details['idmun_nascimento'], false, 'first-row');
+
+            $details['municipio_nascimento'] = $this->toUtf8($mun['nome']);
+
+            $details['sigla_uf_nascimento'] = $mun['sigla_uf'];
+        }
+
+        if ($details['pai_id']) {
+            $_sql = ' SELECT ideciv as estadocivil, sexo FROM cadastro.fisica WHERE idpes = $1; ';
+
+            $pai = $this->fetchPreparedQuery($_sql, $details['pai_id'], false, 'first-row');
+
+            $paiDetails['estadocivil'] = $pai['estadocivil'];
+
+            $paiDetails['sexo'] = $pai['sexo'];
+
+            $details['pai_details'] = $paiDetails;
+        }
+
+        if ($details['mae_id']) {
+            $_sql = ' SELECT ideciv as estadocivil, sexo FROM cadastro.fisica WHERE idpes = $1; ';
+
+            $mae = $this->fetchPreparedQuery($_sql, $details['mae_id'], false, 'first-row');
+
+            $maeDetails['estadocivil'] = $mae['estadocivil'];
+
+            $maeDetails['sexo'] = $mae['sexo'];
+
+            $details['mae_details'] = $maeDetails;
+        }
+
+        $details['data_nascimento']  = Portabilis_Date_Utils::pgSQLToBr($details['data_nascimento']);
+
+        return $details;
     }
 
+    protected function loadPessoaParent()
+    {
+        if ($this->getRequest()->id) {
+            $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido FROM cadastro.fisica WHERE idpes = $1; ';
 
+            $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
 
-    if ($details['idmun_nascimento']){
+            $details['data_nascimento'] = Portabilis_Date_Utils::pgSQLToBr($details['data_nasc']);
 
-      $_sql = " SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ";
+            $details['nome'] = Portabilis_String_Utils::toUtf8($details['nome']);
 
-      $mun = $this->fetchPreparedQuery($_sql, $details['idmun_nascimento'], false, 'first-row');
+            $details['id'] = $this->getRequest()->id;
 
-      $details['municipio_nascimento'] = $this->toUtf8($mun['nome']);
+            $details['falecido'] = dbBool($details['falecido']);
 
-      $details['sigla_uf_nascimento'] = $mun['sigla_uf'];
-
+            return $details;
+        } else {
+            return '';
+        }
     }
 
-    if ($details['pai_id']){
+    protected function loadDeficiencias($pessoaId)
+    {
+        $sql = 'select cod_deficiencia as id, nm_deficiencia as nome from cadastro.fisica_deficiencia,
+            cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1';
 
-      $_sql = " SELECT ideciv as estadocivil, sexo FROM cadastro.fisica WHERE idpes = $1; ";
+        $deficiencias = $this->fetchPreparedQuery($sql, $pessoaId, false);
 
-      $pai = $this->fetchPreparedQuery($_sql, $details['pai_id'], false, 'first-row');
+        // transforma array de arrays em array chave valor
+        $_deficiencias = [];
 
-      $paiDetails['estadocivil'] = $pai['estadocivil'];
+        foreach ($deficiencias as $deficiencia) {
+            $nome = $this->toUtf8($deficiencia['nome'], ['transform' => true]);
+            $_deficiencias[$deficiencia['id']] = $nome;
+        }
 
-      $paiDetails['sexo'] = $pai['sexo'];
-
-      $details['pai_details'] = $paiDetails;
-
+        return $_deficiencias;
     }
 
-    if ($details['mae_id']){
+    protected function loadRg($pessoaId)
+    {
+        $sql = 'select rg from cadastro.documento where idpes = $1';
+        $rg  = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
 
-      $_sql = " SELECT ideciv as estadocivil, sexo FROM cadastro.fisica WHERE idpes = $1; ";
+        // caso um array vazio seja retornado, seta resultado como null
+        if (empty($rg)) {
+            $rg = null;
+        }
 
-      $mae = $this->fetchPreparedQuery($_sql, $details['mae_id'], false, 'first-row');
-
-      $maeDetails['estadocivil'] = $mae['estadocivil'];
-
-      $maeDetails['sexo'] = $mae['sexo'];
-
-      $details['mae_details'] = $maeDetails;
-
+        return $rg;
     }
 
-    $details['data_nascimento']  = Portabilis_Date_Utils::pgSQLToBr($details['data_nascimento']);
+    protected function loadDataNascimento($pessoaId)
+    {
+        $sql        = 'select data_nasc from cadastro.fisica where idpes = $1';
+        $nascimento = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
 
-    return $details;
-  }
+        // caso um array vazio seja retornado, seta resultado como null
+        if (empty($nascimento)) {
+            $nascimento = null;
+        }
 
-  protected function loadPessoaParent(){
-    if ($this->getRequest()->id){
-      $_sql = " SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido FROM cadastro.fisica WHERE idpes = $1; ";
-
-      $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
-
-      $details['data_nascimento'] = Portabilis_Date_Utils::pgSQLToBr($details['data_nasc']);
-
-      $details['nome'] = Portabilis_String_Utils::toUtf8($details['nome']);
-
-      $details['id'] = $this->getRequest()->id;
-
-      $details['falecido'] = dbBool($details['falecido']);
-
-      return $details;
-    }else
-      return '';
-  }
-
-  protected function loadDeficiencias($pessoaId) {
-    $sql = "select cod_deficiencia as id, nm_deficiencia as nome from cadastro.fisica_deficiencia,
-            cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1";
-
-    $deficiencias = $this->fetchPreparedQuery($sql, $pessoaId, false);
-
-    // transforma array de arrays em array chave valor
-    $_deficiencias = array();
-
-    foreach ($deficiencias as $deficiencia) {
-      $nome = $this->toUtf8($deficiencia['nome'], array('transform' => true));
-      $_deficiencias[$deficiencia['id']] = $nome;
+        return $nascimento;
     }
 
-    return $_deficiencias;
-  }
+    // search
 
-  protected function loadRg($pessoaId) {
-    $sql = "select rg from cadastro.documento where idpes = $1";
-    $rg  = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
+    protected function searchOptions()
+    {
+        return ['namespace' => 'cadastro', 'idAttr' => 'idpes'];
+    }
 
-    // caso um array vazio seja retornado, seta resultado como null
-    if (empty($rg))
-      $rg = null;
+    protected function sqlsForNumericSearch()
+    {
+        $sqls = [];
 
-    return $rg;
-  }
+        // search by idpes or cpf
+        $sqls[] = 'select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa,
+               cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and (pessoa.idpes::varchar like $1||\'%\' or
+               trim(leading \'0\' from fisica.cpf::varchar) like trim(leading \'0\' from $1)||\'%\' or
+               fisica.cpf::varchar like $1||\'%\') order by id limit 15';
 
-  protected function loadDataNascimento($pessoaId) {
-    $sql        = "select data_nasc from cadastro.fisica where idpes = $1";
-    $nascimento = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');
-
-    // caso um array vazio seja retornado, seta resultado como null
-    if (empty($nascimento))
-      $nascimento = null;
-
-    return $nascimento;
-  }
-
-
-  // search
-
-  protected function searchOptions() {
-    return array('namespace' => 'cadastro', 'idAttr' => 'idpes');
-  }
-
-  protected function sqlsForNumericSearch() {
-    $sqls = array();
-
-    // search by idpes or cpf
-    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa,
-               cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and (pessoa.idpes::varchar like $1||'%' or
-               trim(leading '0' from fisica.cpf::varchar) like trim(leading '0' from $1)||'%' or
-               fisica.cpf::varchar like $1||'%') order by id limit 15";
-
-    // search by rg
-    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento,
+        // search by rg
+        $sqls[] = 'select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento,
                cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and
-               pessoa.idpes = documento.idpes and ((documento.rg like $1||'%') or
-               trim(leading '0' from documento.rg) like trim(leading '0' from $1)||'%') order by id limit 15";
+               pessoa.idpes = documento.idpes and ((documento.rg like $1||\'%\') or
+               trim(leading \'0\' from documento.rg) like trim(leading \'0\' from $1)||\'%\') order by id limit 15';
 
-    return $sqls;
-  }
-
-  // subscreve formatResourceValue para adicionar o rg da pessoa, ao final do valor,
-  // "<id_pessoa> - <nome_pessoa> (RG: <rg>)", ex: "1 - Lucas D'Avila (RG: 1234567)"
-  protected function formatResourceValue($resource) {
-    $nome       = $this->toUtf8($resource['name'], array('transform' => true));
-    $rg         = $this->loadRg($resource['id']);
-    $nascimento = $this->loadDataNascimento($resource['id']);
-
-    // Quando informado, inclui detalhes extra sobre a pessoa, como RG e Data nascimento.
-    $details = array();
-
-    if ($nascimento)
-      $details[] = 'Nascimento: ' . Portabilis_Date_Utils::pgSQLToBr($nascimento);
-
-    if ($rg)
-      $details[] = "RG: $rg";
-
-    $details = $details ? ' (' . implode(', ', $details) . ')' : '';
-
-    return $resource['id'] . " - $nome$details";
-  }
-
-  // api responders
-
-  protected function get() {
-    $pessoa = array();
-
-    if ($this->canGet()) {
-
-      if ($this->getRequest()->id)
-        $pessoa  = $this->loadPessoa($this->getRequest()->id);
-      else
-        $pessoa  = $this->loadPessoaByCpf($this->getRequest()->cpf);
-
-      $attrs   = array('id', 'nome');
-      $pessoa  = Portabilis_Array_Utils::filter($pessoa, $attrs);
-
-      $details = $this->loadDetails($pessoa['id']);
-      $pessoa  = Portabilis_Array_Utils::merge($pessoa, $details);
-
-      $pessoa['deficiencias'] = $this->loadDeficiencias($pessoa['id']);
+        return $sqls;
     }
 
-    return $pessoa;
-  }
+    // subscreve formatResourceValue para adicionar o rg da pessoa, ao final do valor,
+    // "<id_pessoa> - <nome_pessoa> (RG: <rg>)", ex: "1 - Lucas D'Avila (RG: 1234567)"
+    protected function formatResourceValue($resource)
+    {
+        $nome       = $this->toUtf8($resource['name'], ['transform' => true]);
+        $rg         = $this->loadRg($resource['id']);
+        $nascimento = $this->loadDataNascimento($resource['id']);
 
+        // Quando informado, inclui detalhes extra sobre a pessoa, como RG e Data nascimento.
+        $details = [];
 
-  protected function post(){
+        if ($nascimento) {
+            $details[] = 'Nascimento: ' . Portabilis_Date_Utils::pgSQLToBr($nascimento);
+        }
 
-    $pessoaId = $this->getRequest()->pessoa_id;
+        if ($rg) {
+            $details[] = "RG: $rg";
+        }
 
-    $pessoaId = $this->createOrUpdatePessoa($pessoaId);
-    $this->createOrUpdatePessoaFisica($pessoaId);
+        $details = $details ? ' (' . implode(', ', $details) . ')' : '';
 
-    $this->appendResponse('pessoa_id', $pessoaId);
-  }
-
-  protected function createOrUpdatePessoa($pessoaId = null) {
-    $pessoa        = new clsPessoa_();
-    $pessoa->idpes = $pessoaId;
-    $pessoa->nome  = Portabilis_String_Utils::toLatin1($this->getRequest()->nome);
-
-    $sql = "select 1 from cadastro.pessoa WHERE idpes = $1 limit 1";
-
-    if (! $pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
-      $pessoa->tipo      = 'F';
-      $pessoa->idpes_cad = $this->currentUserId();
-      $pessoaId          = $pessoa->cadastra();
-    }
-    else {
-      $pessoa->idpes_rev = $this->currentUserId();
-      $pessoa->data_rev  = date('Y-m-d H:i:s', time());
-      $pessoa->edita();
+        return $resource['id'] . " - $nome$details";
     }
 
-    return $pessoaId;
-  }
+    // api responders
 
-  protected function createOrUpdatePessoaFisica($pessoaId) {
+    protected function get()
+    {
+        $pessoa = [];
 
-    $fisica                     = new clsFisica();
-    $fisica->idpes              = $pessoaId;
-    $fisica->data_nasc          = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc);
-    $fisica->sexo               = $this->getRequest()->sexo;
-    $fisica->ref_cod_sistema    = 'NULL';
-    $fisica->ideciv             = $this->getRequest()->estadocivil;
-    //$fisica->idpes_pai          = "NULL";
-    //$fisica->idpes_mae          = "NULL";
-    $fisica->idmun_nascimento   = $this->getRequest()->naturalidade;
-    $ddd_fone_fixo              = $this->getRequest()->ddd_telefone_1;
-    $fone_fixo                  = $this->getRequest()->telefone_1;
-    $ddd_fone_mov               = $this->getRequest()->ddd_telefone_mov;
-    $fone_mov                   = $this->getRequest()->telefone_mov;
-    $fisica->falecido           = $this->getRequest()->falecido == "true";
-    $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
-    $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
-    $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
+        if ($this->canGet()) {
+            if ($this->getRequest()->id) {
+                $pessoa  = $this->loadPessoa($this->getRequest()->id);
+            } else {
+                $pessoa  = $this->loadPessoaByCpf($this->getRequest()->cpf);
+            }
 
-    $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
+            $attrs   = ['id', 'nome'];
+            $pessoa  = Portabilis_Array_Utils::filter($pessoa, $attrs);
 
-    if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
-      $fisica->cadastra();
-    else
-      $fisica->edita();
+            $details = $this->loadDetails($pessoa['id']);
+            $pessoa  = Portabilis_Array_Utils::merge($pessoa, $details);
 
-    $raca = new clsCadastroFisicaRaca($pessoaId, $this->getRequest()->cor_raca);
-    if ($raca->existe()) {
-        $this->getRequest()->cor_raca ? $raca->edita() : $raca->excluir();
-    } elseif ($this->getRequest()->cor_raca) {
-        $raca->cadastra();
+            $pessoa['deficiencias'] = $this->loadDeficiencias($pessoa['id']);
+        }
+
+        return $pessoa;
     }
 
-    if ($fone_fixo || $fone_fixo == ''){
-      $ddd_fixo = $ddd_fone_fixo;
-      $fone_fixo = $fone_fixo;
-      $telefone = new clsPessoaTelefone($fisica->idpes, 1, $fone_fixo, $ddd_fixo);
-      $telefone->cadastra();
-    }
-    if ($fone_mov || $fone_mov == ''){
-      $ddd_mov = $ddd_fone_mov;
-      $fone_mov = $fone_mov;
-      $telefone = new clsPessoaTelefone($fisica->idpes, 2, $fone_mov, $ddd_mov);
-      $telefone->cadastra();
+    protected function post()
+    {
+        $pessoaId = $this->getRequest()->pessoa_id;
+
+        $pessoaId = $this->createOrUpdatePessoa($pessoaId);
+        $this->createOrUpdatePessoaFisica($pessoaId);
+
+        $this->appendResponse('pessoa_id', $pessoaId);
     }
 
+    protected function createOrUpdatePessoa($pessoaId = null)
+    {
+        $pessoa        = new clsPessoa_();
+        $pessoa->idpes = $pessoaId;
+        $pessoa->nome  = Portabilis_String_Utils::toLatin1($this->getRequest()->nome);
 
-  }
-//select fone from fone_pessoa where fone_pessoa.idpes = 18664 AND fone_pessoa.tipo = 1
-  protected function _createOrUpdatePessoaEndereco($pessoaId) {
+        $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
 
-    $cep = idFederal2Int($this->getRequest()->cep);
+        if (! $pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
+            $pessoa->tipo      = 'F';
+            $pessoa->idpes_cad = $this->currentUserId();
+            $pessoaId          = $pessoa->cadastra();
+        } else {
+            $pessoa->idpes_rev = $this->currentUserId();
+            $pessoa->data_rev  = date('Y-m-d H:i:s', time());
+            $pessoa->edita();
+        }
 
-    $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
+        return $pessoaId;
+    }
 
-    if (! $objCepLogradouro->existe())
-      $objCepLogradouro->cadastra();
+    protected function createOrUpdatePessoaFisica($pessoaId)
+    {
+        $fisica                     = new clsFisica();
+        $fisica->idpes              = $pessoaId;
+        $fisica->data_nasc          = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc);
+        $fisica->sexo               = $this->getRequest()->sexo;
+        $fisica->ref_cod_sistema    = 'NULL';
+        $fisica->ideciv             = $this->getRequest()->estadocivil;
+        //$fisica->idpes_pai          = "NULL";
+        //$fisica->idpes_mae          = "NULL";
+        $fisica->idmun_nascimento   = $this->getRequest()->naturalidade;
+        $ddd_fone_fixo              = $this->getRequest()->ddd_telefone_1;
+        $fone_fixo                  = $this->getRequest()->telefone_1;
+        $ddd_fone_mov               = $this->getRequest()->ddd_telefone_mov;
+        $fone_mov                   = $this->getRequest()->telefone_mov;
+        $fisica->falecido           = $this->getRequest()->falecido == 'true';
+        $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
+        $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
+        $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
 
-    $objCepLogradouroBairro = new ClsCepLogradouroBairro();
-    $objCepLogradouroBairro->cep = $cep;
-    $objCepLogradouroBairro->idbai = $this->getRequest()->bairro_id;
-    $objCepLogradouroBairro->idlog = $this->getRequest()->logradouro_id;
+        $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 
-    if (! $objCepLogradouroBairro->existe())
-      $objCepLogradouroBairro->cadastra();
+        if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
+            $fisica->cadastra();
+        } else {
+            $fisica->edita();
+        }
 
-    $endereco = new clsPessoaEndereco(
+        $raca = new clsCadastroFisicaRaca($pessoaId, $this->getRequest()->cor_raca);
+        if ($raca->existe()) {
+            $this->getRequest()->cor_raca ? $raca->edita() : $raca->excluir();
+        } elseif ($this->getRequest()->cor_raca) {
+            $raca->cadastra();
+        }
+
+        if ($fone_fixo || $fone_fixo == '') {
+            $ddd_fixo = $ddd_fone_fixo;
+            $fone_fixo = $fone_fixo;
+            $telefone = new clsPessoaTelefone($fisica->idpes, 1, $fone_fixo, $ddd_fixo);
+            $telefone->cadastra();
+        }
+        if ($fone_mov || $fone_mov == '') {
+            $ddd_mov = $ddd_fone_mov;
+            $fone_mov = $fone_mov;
+            $telefone = new clsPessoaTelefone($fisica->idpes, 2, $fone_mov, $ddd_mov);
+            $telefone->cadastra();
+        }
+    }
+    //select fone from fone_pessoa where fone_pessoa.idpes = 18664 AND fone_pessoa.tipo = 1
+    protected function _createOrUpdatePessoaEndereco($pessoaId)
+    {
+        $cep = idFederal2Int($this->getRequest()->cep);
+
+        $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
+
+        if (! $objCepLogradouro->existe()) {
+            $objCepLogradouro->cadastra();
+        }
+
+        $objCepLogradouroBairro = new ClsCepLogradouroBairro();
+        $objCepLogradouroBairro->cep = $cep;
+        $objCepLogradouroBairro->idbai = $this->getRequest()->bairro_id;
+        $objCepLogradouroBairro->idlog = $this->getRequest()->logradouro_id;
+
+        if (! $objCepLogradouroBairro->existe()) {
+            $objCepLogradouroBairro->cadastra();
+        }
+
+        $endereco = new clsPessoaEndereco(
       $this->getRequest()->pessoa_id,
       $cep,
       $this->getRequest()->logradouro_id,
       $this->getRequest()->bairro_id,
       $this->getRequest()->numero,
       Portabilis_String_Utils::toLatin1($this->getRequest()->complemento),
-      FALSE,
+      false,
       Portabilis_String_Utils::toLatin1($this->getRequest()->letra),
       Portabilis_String_Utils::toLatin1($this->getRequest()->bloco),
       $this->getRequest()->apartamento,
       $this->getRequest()->andar
     );
 
-    // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
-    // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
-    $endereco->exclui();
-    $endereco->cadastra();
-  }
-
-  protected function createOrUpdateEndereco() {
-
-    $pessoaId = $this->getRequest()->pessoa_id;
-
-    if ($this->getRequest()->cep && is_numeric($this->getRequest()->bairro_id) && is_numeric($this->getRequest()->logradouro_id))
-      $this->_createOrUpdatePessoaEndereco($pessoaId);
-    else if($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)){
-
-      if (!is_numeric($this->getRequest()->bairro_id)){
-        if ($this->canCreateBairro())
-          $this->getRequest()->bairro_id = $this->createBairro();
-        else
-          return;
-      }
-
-      if (!is_numeric($this->getRequest()->logradouro_id)){
-        if($this->canCreateLogradouro())
-          $this->getRequest()->logradouro_id = $this->createLogradouro();
-        else
-          return;
-      }
-
-      $this->_createOrUpdatePessoaEndereco($pessoaId);
-
-    }else{
-      $endereco = new clsPessoaEndereco($pessoaId);
-      $endereco->exclui();
+        // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
+        // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
+        $endereco->exclui();
+        $endereco->cadastra();
     }
 
-  }
+    protected function createOrUpdateEndereco()
+    {
+        $pessoaId = $this->getRequest()->pessoa_id;
 
-  protected function getInep($servidorId) {
+        if ($this->getRequest()->cep && is_numeric($this->getRequest()->bairro_id) && is_numeric($this->getRequest()->logradouro_id)) {
+            $this->_createOrUpdatePessoaEndereco($pessoaId);
+        } elseif ($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)) {
+            if (!is_numeric($this->getRequest()->bairro_id)) {
+                if ($this->canCreateBairro()) {
+                    $this->getRequest()->bairro_id = $this->createBairro();
+                } else {
+                    return;
+                }
+            }
 
-    $sql = "SELECT cod_docente_inep FROM modules.educacenso_cod_docente WHERE cod_servidor = $1";
-    return Portabilis_Utils_Database::selectField($sql, array('params' => array($servidorId)));
-  }
+            if (!is_numeric($this->getRequest()->logradouro_id)) {
+                if ($this->canCreateLogradouro()) {
+                    $this->getRequest()->logradouro_id = $this->createLogradouro();
+                } else {
+                    return;
+                }
+            }
 
-  protected function getInfoServidor(){
-    $servidorId = $this->getRequest()->servidor_id;
-    $_servidor['inep'] = $this->getInep($servidorId);
-    $_servidor['deficiencias'] = $this->loadDeficiencias($servidorId);
+            $this->_createOrUpdatePessoaEndereco($pessoaId);
+        } else {
+            $endereco = new clsPessoaEndereco($pessoaId);
+            $endereco->exclui();
+        }
+    }
 
-    return $_servidor;
-  }
+    protected function getInep($servidorId)
+    {
+        $sql = 'SELECT cod_docente_inep FROM modules.educacenso_cod_docente WHERE cod_servidor = $1';
 
-  protected function canCreateBairro(){
-    return !empty($this->getRequest()->bairro) && !empty($this->getRequest()->zona_localizacao);
-  }
+        return Portabilis_Utils_Database::selectField($sql, ['params' => [$servidorId]]);
+    }
 
-  protected function canCreateLogradouro(){
-    return !empty($this->getRequest()->logradouro) && !empty($this->getRequest()->idtlog);
-  }
+    protected function getInfoServidor()
+    {
+        $servidorId = $this->getRequest()->servidor_id;
+        $_servidor['inep'] = $this->getInep($servidorId);
+        $_servidor['deficiencias'] = $this->loadDeficiencias($servidorId);
 
-  protected function createBairro(){
+        return $_servidor;
+    }
 
-    $objBairro = new clsBairro(null,$this->getRequest()->municipio_id,null,Portabilis_String_Utils::toLatin1($this->getRequest()->bairro), $this->currentUserId());
-    $objBairro->zona_localizacao = $this->getRequest()->zona_localizacao;
-    $objBairro->iddis = $this->getRequest()->distrito_id;
+    protected function canCreateBairro()
+    {
+        return !empty($this->getRequest()->bairro) && !empty($this->getRequest()->zona_localizacao);
+    }
 
-    return $objBairro->cadastra();
-  }
+    protected function canCreateLogradouro()
+    {
+        return !empty($this->getRequest()->logradouro) && !empty($this->getRequest()->idtlog);
+    }
 
-  protected function createLogradouro(){
-    $objLogradouro = new clsLogradouro(null,$this->getRequest()->idtlog, Portabilis_String_Utils::toLatin1($this->getRequest()->logradouro), $this->getRequest()->municipio_id,
-                                           null, 'S', $this->currentUserId());
-    return $objLogradouro->cadastra();
-  }
+    protected function createBairro()
+    {
+        $objBairro = new clsBairro(null, $this->getRequest()->municipio_id, null, Portabilis_String_Utils::toLatin1($this->getRequest()->bairro), $this->currentUserId());
+        $objBairro->zona_localizacao = $this->getRequest()->zona_localizacao;
+        $objBairro->iddis = $this->getRequest()->distrito_id;
 
-  protected function reativarPessoa() {
-    $var1 = $this->getRequest()->id;
+        return $objBairro->cadastra();
+    }
 
-    $sql = "UPDATE cadastro.fisica SET ativo = 1 WHERE idpes = $var1";
+    protected function createLogradouro()
+    {
+        $objLogradouro = new clsLogradouro(
+        null,
+        $this->getRequest()->idtlog,
+        Portabilis_String_Utils::toLatin1($this->getRequest()->logradouro),
+        $this->getRequest()->municipio_id,
+                                           null,
+        'S',
+        $this->currentUserId()
+    );
 
-    $fisica = $this->fetchPreparedQuery($sql);
+        return $objLogradouro->cadastra();
+    }
 
-    return $fisica;
-  }
+    protected function reativarPessoa()
+    {
+        $var1 = $this->getRequest()->id;
 
-  public function Gerar() {
+        $sql = "UPDATE cadastro.fisica SET ativo = 1 WHERE idpes = $var1";
 
-    if ($this->isRequestFor('get', 'pessoa-search'))
-      $this->appendResponse($this->search());
+        $fisica = $this->fetchPreparedQuery($sql);
 
-    elseif ($this->isRequestFor('get', 'pessoa'))
-      $this->appendResponse($this->get());
-    elseif ($this->isRequestFor('post', 'pessoa'))
-      $this->appendResponse($this->post());
-    elseif ($this->isRequestFor('get', 'info-servidor'))
-      $this->appendResponse($this->getInfoServidor());
-    elseif ($this->isRequestFor('post', 'pessoa-endereco'))
-      $this->appendResponse($this->createOrUpdateEndereco());
-    elseif ($this->isRequestFor('get', 'pessoa-parent'))
-      $this->appendResponse($this->loadPessoaParent());
-    elseif ($this->isRequestFor('get', 'reativarPessoa'))
-      $this->appendResponse($this->reativarPessoa());
-    else
-      $this->notImplementedOperationError();
-  }
+        return $fisica;
+    }
 
-  protected function sqlsForStringSearch() {
-    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'pessoa-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'pessoa')) {
+            $this->appendResponse($this->get());
+        } elseif ($this->isRequestFor('post', 'pessoa')) {
+            $this->appendResponse($this->post());
+        } elseif ($this->isRequestFor('get', 'info-servidor')) {
+            $this->appendResponse($this->getInfoServidor());
+        } elseif ($this->isRequestFor('post', 'pessoa-endereco')) {
+            $this->appendResponse($this->createOrUpdateEndereco());
+        } elseif ($this->isRequestFor('get', 'pessoa-parent')) {
+            $this->appendResponse($this->loadPessoaParent());
+        } elseif ($this->isRequestFor('get', 'reativarPessoa')) {
+            $this->appendResponse($this->reativarPessoa());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 
-    // $namespace     = $searchOptions['namespace'];
-    // $table         = $searchOptions['table'];
-    // $idAttr        = $searchOptions['idAttr'];
-    // $labelAttr     = $searchOptions['labelAttr'];
+    protected function sqlsForStringSearch()
+    {
+        $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
 
-    // $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
-    // $selectFields                    = join(', ', $searchOptions['selectFields']);
+        // $namespace     = $searchOptions['namespace'];
+        // $table         = $searchOptions['table'];
+        // $idAttr        = $searchOptions['idAttr'];
+        // $labelAttr     = $searchOptions['labelAttr'];
 
-     return "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-            where fisica.ativo = 1 and lower((pessoa.nome)) like '%'||lower(($1))||'%' order by id, name limit 15";
-    // return "select distinct $selectFields from $namespace.$table
+        // $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
+        // $selectFields                    = join(', ', $searchOptions['selectFields']);
+
+        return 'select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
+            where fisica.ativo = 1 and lower((pessoa.nome)) like \'%\'||lower(($1))||\'%\' order by id, name limit 15';
+        // return "select distinct $selectFields from $namespace.$table
     //         where lower(($labelAttr)) like '%'||lower(($1))||'%' order by $labelAttr limit 15";
-  }
+    }
 }

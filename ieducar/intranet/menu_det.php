@@ -24,54 +24,48 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Menu" );
-        $this->processoAp = "35";
+        $this->SetTitulo("{$this->_instituicao} Menu");
+        $this->processoAp = '35';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe de Menu";
-        
+        $this->titulo = 'Detalhe de Menu';
 
         $id_item = @$_GET['id_item'];
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT cat.nm_menu, sub.cod_menu_submenu, sub.cod_sistema, sub.nm_submenu, sub.arquivo, sub.title FROM menu_submenu AS sub, menu_menu AS cat WHERE cod_menu_submenu={$id_item} AND cod_menu_menu = ref_cod_menu_menu" );
-        if ($db->ProximoRegistro())
-        {
-            list ( $categoria, $id_item, $id_sistema, $nome, $arquivo, $alt) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nome) );
-            $this->addDetalhe( array("Categoria", $categoria) );
-            $this->addDetalhe( array("Arquivo", $arquivo) );
-            $this->addDetalhe( array("Title", $alt) );
-            if ($id_sistema == '2')
-            {
+        $db->Consulta("SELECT cat.nm_menu, sub.cod_menu_submenu, sub.cod_sistema, sub.nm_submenu, sub.arquivo, sub.title FROM menu_submenu AS sub, menu_menu AS cat WHERE cod_menu_submenu={$id_item} AND cod_menu_menu = ref_cod_menu_menu");
+        if ($db->ProximoRegistro()) {
+            list($categoria, $id_item, $id_sistema, $nome, $arquivo, $alt) = $db->Tupla();
+            $this->addDetalhe(['Nome', $nome]);
+            $this->addDetalhe(['Categoria', $categoria]);
+            $this->addDetalhe(['Arquivo', $arquivo]);
+            $this->addDetalhe(['Title', $alt]);
+            if ($id_sistema == '2') {
                 $objPessoa = new clsPessoaFisica();
                 $objPessoaFj = new clsPessoaFj();
                 $dba = new clsBanco();
                 //$dba->Consulta( "SELECT nm_pessoa FROM pessoa_fj WHERE cod_pessoa_fj in (SELECT ref_ref_cod_pessoa_fj FROM menu_funcionario WHERE ref_cod_menu_submenu in ({$id_item}, 0)) ORDER BY nm_pessoa" );
-                $lista_id = array();
-                $dba->Consulta ( "SELECT ref_ref_cod_pessoa_fj FROM menu_funcionario WHERE ref_cod_menu_submenu in ({$id_item}, 0)" );
-                while ($dba->ProximoRegistro())
-                {
+                $lista_id = [];
+                $dba->Consulta("SELECT ref_ref_cod_pessoa_fj FROM menu_funcionario WHERE ref_cod_menu_submenu in ({$id_item}, 0)");
+                while ($dba->ProximoRegistro()) {
                     list($cod) = $dba->Tupla();
-                    $lista_id[] = $cod; 
+                    $lista_id[] = $cod;
                 }
-                if( count( $lista_id ) )
-                {
+                if (count($lista_id)) {
                     $pessoas = $objPessoaFj->lista(false, false, false, false, $lista_id);
                 }
                 /*
@@ -82,32 +76,26 @@ class indice extends clsDetalhe
                     $this->addDetalhe( array("Autorizados", "{$nome_}") );
                 }
                 */
-                if( count( $pessoas ) )
-                {
-                    foreach ($pessoas as $pessoa)
-                    {
+                if (count($pessoas)) {
+                    foreach ($pessoas as $pessoa) {
                         //print_r( $pessoa );
                         //list($nome_) = $objPessoa->queryRapida($pessoa["idpes"], "nome");
-                        $this->addDetalhe( array("Autorizados", "{$pessoa["nome"]}") );
+                        $this->addDetalhe(['Autorizados', "{$pessoa['nome']}"]);
                     }
                 }
             }
-
         }
-        $this->url_novo = "menu_cad.php";
+        $this->url_novo = 'menu_cad.php';
         $this->url_editar = "menu_cad.php?id_item={$id_item}";
-        $this->url_cancelar = "menu_lst.php";
+        $this->url_cancelar = 'menu_lst.php';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

@@ -23,11 +23,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   TransporteEscolar
  * @subpackage  Modules
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
@@ -35,120 +40,116 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
 class MotoristaController extends Portabilis_Controller_Page_EditController
 {
-  protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'i-Educar - Motoristas';
+    protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
+    protected $_titulo     = 'i-Educar - Motoristas';
 
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-  protected $_processoAp        = 21236;
-  protected $_deleteOption      = true;
+    protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
+    protected $_processoAp        = 21236;
+    protected $_deleteOption      = true;
 
-  protected $_formMap    = array(
-    'id' => array(
+    protected $_formMap    = [
+    'id' => [
       'label'  => 'Código do motorista',
       'help'   => '',
-    ),
+    ],
 
-    'pessoa' => array(
+    'pessoa' => [
       'label'  => 'Pessoa',
       'help'   => '',
-    ),
+    ],
 
-    'cnh' => array(
+    'cnh' => [
       'label'  => 'CNH',
       'help'   => '',
-    ),
+    ],
 
-    'tipo_cnh' =>array(
+    'tipo_cnh' =>[
       'label'  => 'Categoria CNH',
       'help'   => '',
-    ),
+    ],
 
-    'dt_habilitacao' =>array(
+    'dt_habilitacao' =>[
       'label'  => 'Data da habilitação',
       'help'   => '',
-    ),
+    ],
 
-    'vencimento_cnh' =>array(
+    'vencimento_cnh' =>[
       'label'  => 'Vencimento da habilitação',
       'help'   => '',
-    ),
+    ],
 
-    'ref_cod_empresa_transporte_escolar' =>array(
+    'ref_cod_empresa_transporte_escolar' =>[
       'label'  => 'Empresa',
       'help'   => '',
-    ),
+    ],
 
-    'observacao' =>array(
+    'observacao' =>[
       'label'  => 'Observações',
       'help'   => '',
-    )
+    ]
 
-  );
+  ];
 
+    protected function _preConstruct()
+    {
+        $this->_options = $this->mergeOptions(['edit_success' => '/intranet/transporte_motorista_lst.php','delete_success' => '/intranet/transporte_motorista_lst.php'], $this->_options);
+        $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_transporte_escolar_index.php'                  => 'Transporte escolar',
+         ''        => "$nomeMenu motorista"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 
-  protected function _preConstruct()
-  {
-    $this->_options = $this->mergeOptions(array('edit_success' => '/intranet/transporte_motorista_lst.php','delete_success' => '/intranet/transporte_motorista_lst.php'), $this->_options);
-    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
-         ""        => "$nomeMenu motorista"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
+    protected function _initNovo()
+    {
+        return false;
+    }
 
+    protected function _initEditar()
+    {
+        return false;
+    }
 
-  protected function _initNovo() {
-    return false;
-  }
+    public function Gerar()
+    {
+        $this->url_cancelar = '/intranet/transporte_motorista_lst.php';
 
+        // Código do Motorista
+        $options = ['label'    => $this->_getLabel('id'), 'disabled' => true,
+                     'required' => false, 'size' => 25];
+        $this->inputsHelper()->integer('id', $options);
 
-  protected function _initEditar() {
-    return false;
-  }
+        // nome
+        $options = ['label' => $this->_getLabel('pessoa'), 'size' => 50];
+        $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
+        //número da CNH
+        $options = ['label' => $this->_getLabel('cnh'), 'max_length' => 15, 'size' => 15, 'placeholder' => Portabilis_String_Utils::toLatin1('Número da CNH'), 'required' => false];
+        $this->inputsHelper()->integer('cnh', $options);
 
-  public function Gerar()
-  {
-    $this->url_cancelar = '/intranet/transporte_motorista_lst.php';
+        //Categoria da CNH
+        $options = ['label' => $this->_getLabel('tipo_cnh'), 'max_length' => 2, 'size' => 1, 'placeholder' => '', 'required' => false];
+        $this->inputsHelper()->text('tipo_cnh', $options);
 
-    // Código do Motorista
-    $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
-                     'required' => false, 'size' => 25);
-    $this->inputsHelper()->integer('id', $options);
+        // Vencimento
+        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('dt_habilitacao')), 'required' => false, 'size' => 10, 'placeholder' => ''];
+        $this->inputsHelper()->date('dt_habilitacao', $options);
 
-    // nome
-    $options = array('label' => $this->_getLabel('pessoa'), 'size' => 50);
-    $this->inputsHelper()->simpleSearchPessoa('nome', $options);
+        // Habilitação
+        $options = ['label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('vencimento_cnh')), 'required' => false, 'size' => 10,'placeholder' => ''];
+        $this->inputsHelper()->date('vencimento_cnh', $options);
 
-    //número da CNH
-    $options = array('label' => $this->_getLabel('cnh'), 'max_length' => 15, 'size' => 15, 'placeholder' => Portabilis_String_Utils::toLatin1('Número da CNH'), 'required' => false);
-    $this->inputsHelper()->integer('cnh',$options);
+        // Codigo da empresa
+        $options       = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ref_cod_empresa_transporte_escolar')), 'required'   => true];
+        $this->inputsHelper()->simpleSearchEmpresa('ref_cod_empresa_transporte_escolarf', $options);
 
-    //Categoria da CNH
-    $options = array('label' => $this->_getLabel('tipo_cnh'), 'max_length' => 2, 'size' => 1, 'placeholder' => '', 'required' => false);
-    $this->inputsHelper()->text('tipo_cnh',$options);    
+        // observações
+        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 255];
+        $this->inputsHelper()->textArea('observacao', $options);
 
-    // Vencimento
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('dt_habilitacao')), 'required' => false, 'size' => 10, 'placeholder' => '');
-    $this->inputsHelper()->date('dt_habilitacao',$options);
-
-    // Habilitação
-    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('vencimento_cnh')), 'required' => false, 'size' => 10,'placeholder' => '');
-    $this->inputsHelper()->date('vencimento_cnh',$options);  
-
-    // Codigo da empresa
-    $options       = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ref_cod_empresa_transporte_escolar')), 'required'   => true);  
-    $this->inputsHelper()->simpleSearchEmpresa('ref_cod_empresa_transporte_escolarf', $options);
-
-    // observações    
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
-    $this->inputsHelper()->textArea('observacao', $options);
-
-    $this->loadResourceAssets($this->getDispatcher());
-  }
-
+        $this->loadResourceAssets($this->getDispatcher());
+    }
 }
-?>

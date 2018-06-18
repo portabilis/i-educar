@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Tests
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,19 +42,25 @@ require_once 'functional/AllTests.php';
  * Arquivo de definição de suíte para o projeto.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Tests
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class AllTests
 {
-  public static function suite()
-  {
-    $suite = new PHPUnit_Framework_TestSuite('Suíte de testes do projeto (unitários e funcionais)');
-    $suite->addTest(Unit_AllTests::suite());
-    $suite->addTest(Functional_AllTests::suite());
-    return $suite;
-  }
+    public static function suite()
+    {
+        $suite = new PHPUnit_Framework_TestSuite('Suíte de testes do projeto (unitários e funcionais)');
+        $suite->addTest(Unit_AllTests::suite());
+        $suite->addTest(Functional_AllTests::suite());
+
+        return $suite;
+    }
 }

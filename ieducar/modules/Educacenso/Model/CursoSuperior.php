@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,36 +40,41 @@ require_once 'CoreExt/Entity.php';
  * Educacenso_Model_CursoSuperior class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Educacenso
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Educacenso_Model_CursoSuperior extends CoreExt_Entity
 {
-  protected $_data = array(
-    'curso'      => NULL,
-    'nome'       => NULL,
-    'classe'     => NULL,
-    'user'       => NULL,
-    'created_at' => NULL,
-    'updated_at' => NULL
-  );
+    protected $_data = [
+    'curso'      => null,
+    'nome'       => null,
+    'classe'     => null,
+    'user'       => null,
+    'created_at' => null,
+    'updated_at' => null
+  ];
 
-  public function getDefaultValidatorCollection()
-  {
-    return array(
-      'curso'  => new CoreExt_Validate_String(array('min' => 0)),
-      'nome'   => new CoreExt_Validate_String(array('min' => 1)),
-      'classe' => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'user'   => new CoreExt_Validate_Numeric(array('min' => 0))
-    );
-  }
+    public function getDefaultValidatorCollection()
+    {
+        return [
+      'curso'  => new CoreExt_Validate_String(['min' => 0]),
+      'nome'   => new CoreExt_Validate_String(['min' => 1]),
+      'classe' => new CoreExt_Validate_Numeric(['min' => 0]),
+      'user'   => new CoreExt_Validate_Numeric(['min' => 0])
+    ];
+    }
 
-  public function __toString()
-  {
-    return $this->nome;
-  }
+    public function __toString()
+    {
+        return $this->nome;
+    }
 }

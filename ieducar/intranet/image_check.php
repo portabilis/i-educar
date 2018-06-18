@@ -21,74 +21,85 @@
  * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Api
  * @subpackage  Modules
+ *
  * @since       Arquivo disponÃ­vel desde a versÃ£o ?
+ *
  * @version     $Id$
  */
 
-class PictureController {
+class PictureController
+{
+    public $imageFile;
+    public $errorMessage;
+    public $maxWidth;
+    public $maxHeight;
+    public $maxSize;
+    public $suportedExtensions;
+    public $imageName;
 
-    var $imageFile;
-    var $errorMessage;
-    var $maxWidth;
-    var $maxHeight;
-    var $maxSize;
-    var $suportedExtensions;
-    var $imageName;
+    public function __construct(
+        $imageFile,
+        $maxWidth = null,
+        $maxHeight = null,
+        $maxSize = null,
+                             $suportedExtensions = null
+    ) {
+        $this->imageFile = $imageFile;
 
-    function __construct($imageFile, $maxWidth = NULL, $maxHeight = NULL, $maxSize = NULL,
-                             $suportedExtensions = NULL){
-
-        
-       $this->imageFile = $imageFile;
-       
-
-        if ($maxWidth!=null)
+        if ($maxWidth!=null) {
             $this->maxWidth = $maxWidth;
-        else
+        } else {
             $this->maxWidth = 500;
+        }
 
-        if ($maxHeight!=null)
+        if ($maxHeight!=null) {
             $this->maxHeight = $maxHeight;
-        else
+        } else {
             $this->maxHeight = 500;
+        }
 
-        if ($maxSize!=null)
+        if ($maxSize!=null) {
             $this->maxSize = $maxSize;
-        else
+        } else {
             $this->maxSize = 150*1024;
+        }
 
-        if ($suportedExtensions != null)
+        if ($suportedExtensions != null) {
             $this->suportedExtensions = $suportedExtensions;
-        else
-            $this->suportedExtensions = array('jpeg','jpg','gif','png');
+        } else {
+            $this->suportedExtensions = ['jpeg','jpg','gif','png'];
+        }
     }
 
     /**
     * Envia imagem caso seja vÃ¡lida e retorna caminho
     *
     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+    *
     * @return String
     */
-    function sendPicture($imageName){
-
+    public function sendPicture($imageName)
+    {
         $this->imageName = $imageName;
-        $tmp = $this->imageFile["tmp_name"];
+        $tmp = $this->imageFile['tmp_name'];
         include('s3_config.php');
         //Rename image name.
 
-        $actual_image_name = $directory.$this->imageName; 
-        if($s3->putObjectFile($tmp, $bucket , $actual_image_name, S3::ACL_PUBLIC_READ) )
-        {
-                                                
+        $actual_image_name = $directory.$this->imageName;
+        if ($s3->putObjectFile($tmp, $bucket, $actual_image_name, S3::ACL_PUBLIC_READ)) {
             $s3file='http://'.$bucket.'.s3.amazonaws.com/'.$actual_image_name;
+
             return $s3file;
-        }
-        else{
-            $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
+        } else {
+            $this->errorMessage = 'Ocorreu um erro no servidor ao enviar foto. Tente novamente.';
+
             return '';
         }
     }
@@ -97,64 +108,63 @@ class PictureController {
     * Verifica se a imagem Ã© vÃ¡lida
     *
     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+    *
     * @return boolean
     */
-    function validatePicture(){
-
+    public function validatePicture()
+    {
         $msg='';
 
-        $name = $this->imageFile["name"];
-        $size = $this->imageFile["size"];
+        $name = $this->imageFile['name'];
+        $size = $this->imageFile['size'];
         $ext = $this->getExtension($name);
 
-
-        if(strlen($name) > 0)
-        {
+        if (strlen($name) > 0) {
             // File format validation
-            if(in_array($ext,$this->suportedExtensions))
-            {
+            if (in_array($ext, $this->suportedExtensions)) {
                 // File size validation
-                if($size < $this->maxSize){
-                    return true;   
-                }
-                else{
-                    $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.";
+                if ($size < $this->maxSize) {
+                    return true;
+                } else {
+                    $this->errorMessage = 'O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.';
+
                     return false;
                 }
-            }
-            else{
-                $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um formato diferente daqueles permitidos.";
+            } else {
+                $this->errorMessage = 'O cadastro n&atilde;o pode ser realizado, a foto possui um formato diferente daqueles permitidos.';
+
                 return false;
             }
-        }
-        else{
-            $this->errorMessage = "Selecione uma imagem."; 
+        } else {
+            $this->errorMessage = 'Selecione uma imagem.';
+
             return false;
         }
-        $this->errorMessage = "Imagem inv&aacute;lida."; 
+        $this->errorMessage = 'Imagem inv&aacute;lida.';
+
         return false;
     }
     /**
     * Retorna a mensagem de erro
     *
     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+    *
     * @return String
     */
-    function getErrorMessage(){
+    public function getErrorMessage()
+    {
         return $this->errorMessage;
     }
 
-
-    function getExtension($name) 
+    public function getExtension($name)
     {
-        $i = strrpos($name,".");
-        if (!$i)
-          return "";
+        $i = strrpos($name, '.');
+        if (!$i) {
+            return '';
+        }
         $l = strlen($name) - $i;
-        $ext = substr($name,$i+1,$l);
+        $ext = substr($name, $i+1, $l);
 
         return $ext;
     }
 }
-
-?>

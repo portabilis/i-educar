@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -35,106 +40,119 @@ require_once 'include/clsListagem.inc.php';
  * clsIndex class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Listagem de Ruas');
-    $this->processoAp         = 0;
-    $this->renderMenu         = FALSE;
-    $this->renderMenuSuspenso = FALSE;
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Listagem de Ruas');
+        $this->processoAp         = 0;
+        $this->renderMenu         = false;
+        $this->renderMenuSuspenso = false;
+    }
 }
 
 /**
  * miolo1 class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class miolo1 extends clsListagem
 {
-  var $funcao_js = 'cv_libera_campos(\'cep_\', \'ref_sigla_uf_\', \'cidade\', \'nm_bairro\', \'ref_idtlog\', \'nm_logradouro\', \'isEnderecoExterno\', \'zona_localizacao\')';
+    public $funcao_js = 'cv_libera_campos(\'cep_\', \'ref_sigla_uf_\', \'cidade\', \'nm_bairro\', \'ref_idtlog\', \'nm_logradouro\', \'isEnderecoExterno\', \'zona_localizacao\')';
 
-  function Gerar()
-  {
-    global $coreExt;
+    public function Gerar()
+    {
+        global $coreExt;
 
-    @session_start();
-    $_SESSION['campo1']  = $_GET['campo1']  ? $_GET['campo1']  : $_SESSION['campo1'];
-    $_SESSION['campo2']  = $_GET['campo2']  ? $_GET['campo2']  : $_SESSION['campo2'];
-    $_SESSION['campo3']  = $_GET['campo3']  ? $_GET['campo3']  : $_SESSION['campo3'];
-    $_SESSION['campo4']  = $_GET['campo4']  ? $_GET['campo4']  : $_SESSION['campo4'];
-    $_SESSION['campo5']  = $_GET['campo5']  ? $_GET['campo5']  : $_SESSION['campo5'];
-    $_SESSION['campo6']  = $_GET['campo6']  ? $_GET['campo6']  : $_SESSION['campo6'];
-    $_SESSION['campo7']  = $_GET['campo7']  ? $_GET['campo7']  : $_SESSION['campo7'];
-    $_SESSION['campo8']  = $_GET['campo8']  ? $_GET['campo8']  : $_SESSION['campo8'];
-    $_SESSION['campo9']  = $_GET['campo9']  ? $_GET['campo9']  : $_SESSION['campo9'];
-    $_SESSION['campo10'] = $_GET['campo10'] ? $_GET['campo10'] : $_SESSION['campo10'];
-    $_SESSION['campo11'] = $_GET['campo11'] ? $_GET['campo11'] : $_SESSION['campo11'];
-    $_SESSION['campo12'] = $_GET['campo12'] ? $_GET['campo12'] : $_SESSION['campo12'];
-    $_SESSION['campo13'] = $_GET['campo13'] ? $_GET['campo13'] : $_SESSION['campo13'];
-    $_SESSION['campo14'] = $_GET['campo14'] ? $_GET['campo14'] : $_SESSION['campo14'];
+        @session_start();
+        $_SESSION['campo1']  = $_GET['campo1']  ? $_GET['campo1']  : $_SESSION['campo1'];
+        $_SESSION['campo2']  = $_GET['campo2']  ? $_GET['campo2']  : $_SESSION['campo2'];
+        $_SESSION['campo3']  = $_GET['campo3']  ? $_GET['campo3']  : $_SESSION['campo3'];
+        $_SESSION['campo4']  = $_GET['campo4']  ? $_GET['campo4']  : $_SESSION['campo4'];
+        $_SESSION['campo5']  = $_GET['campo5']  ? $_GET['campo5']  : $_SESSION['campo5'];
+        $_SESSION['campo6']  = $_GET['campo6']  ? $_GET['campo6']  : $_SESSION['campo6'];
+        $_SESSION['campo7']  = $_GET['campo7']  ? $_GET['campo7']  : $_SESSION['campo7'];
+        $_SESSION['campo8']  = $_GET['campo8']  ? $_GET['campo8']  : $_SESSION['campo8'];
+        $_SESSION['campo9']  = $_GET['campo9']  ? $_GET['campo9']  : $_SESSION['campo9'];
+        $_SESSION['campo10'] = $_GET['campo10'] ? $_GET['campo10'] : $_SESSION['campo10'];
+        $_SESSION['campo11'] = $_GET['campo11'] ? $_GET['campo11'] : $_SESSION['campo11'];
+        $_SESSION['campo12'] = $_GET['campo12'] ? $_GET['campo12'] : $_SESSION['campo12'];
+        $_SESSION['campo13'] = $_GET['campo13'] ? $_GET['campo13'] : $_SESSION['campo13'];
+        $_SESSION['campo14'] = $_GET['campo14'] ? $_GET['campo14'] : $_SESSION['campo14'];
 
-    $this->nome = 'form1';
+        $this->nome = 'form1';
 
-    $this->funcao_js = sprintf(
+        $this->funcao_js = sprintf(
       'cv_libera_campos(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')',
-      $_SESSION['campo10'], $_SESSION['campo11'], $_SESSION['campo7'],
-      $_SESSION['campo1'], $_SESSION['campo12'], $_SESSION['campo4'],
-      $_SESSION['campo9'], $_SESSION['campo14']
+      $_SESSION['campo10'],
+        $_SESSION['campo11'],
+        $_SESSION['campo7'],
+      $_SESSION['campo1'],
+        $_SESSION['campo12'],
+        $_SESSION['campo4'],
+      $_SESSION['campo9'],
+        $_SESSION['campo14']
     );
 
-    $this->titulo = 'Endereço';
+        $this->titulo = 'Endereço';
 
-    // Paginador
-    $limite = 7;
-    $iniciolimit = $_GET['pagina_' . $this->nome] ?
+        // Paginador
+        $limite = 7;
+        $iniciolimit = $_GET['pagina_' . $this->nome] ?
       ($_GET['pagina_' . $this->nome] * $limite - $limite) : 0;
 
-    // Filtros
-    $this->campoTexto('nm_bairro', 'Bairro', $_GET['nm_bairro'], 40, 255);
-    $this->campoCep('nr_cep', 'CEP', $_GET['nr_cep']);
-    $this->campoTexto('nm_logradouro', 'Logradouro', $_GET['nm_logradouro'], 50, 255);
-    $this->campoTexto('cidade', 'Cidade', $_GET['cidade'], 60, 60);
+        // Filtros
+        $this->campoTexto('nm_bairro', 'Bairro', $_GET['nm_bairro'], 40, 255);
+        $this->campoCep('nr_cep', 'CEP', $_GET['nr_cep']);
+        $this->campoTexto('nm_logradouro', 'Logradouro', $_GET['nm_logradouro'], 50, 255);
+        $this->campoTexto('cidade', 'Cidade', $_GET['cidade'], 60, 60);
 
-    // uf
+        // uf
 
-    $defaultProvince = isset($_GET['ref_sigla_uf']) ? $_GET['ref_sigla_uf'] : $coreExt['Config']->app->locale->province;
+        $defaultProvince = isset($_GET['ref_sigla_uf']) ? $_GET['ref_sigla_uf'] : $coreExt['Config']->app->locale->province;
 
-    $options = array(
+        $options = [
       'required' => false,
       'label'    => 'Estado',
       'value'    => $defaultProvince
-    );
+    ];
 
-    $helperOptions = array(
+        $helperOptions = [
       'attrName' => 'ref_sigla_uf'
-    );
+    ];
 
-    $this->inputsHelper()->uf($options, $helperOptions);
+        $this->inputsHelper()->uf($options, $helperOptions);
 
+        $this->addCabecalhos(['Bairro', 'CEP', 'Logradouro', 'UF', 'Cidade']);
 
-    $this->addCabecalhos(array('Bairro', 'CEP', 'Logradouro', 'UF', 'Cidade'));
+        // consulta dados
 
-
-    // consulta dados
-
-    $pre_select = '
+        $pre_select = '
       SELECT
         c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao ';
 
-    $select = '
+        $select = '
       FROM
         urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
         public.municipio m, public.uf u, urbano.tipo_logradouro t
@@ -146,105 +164,132 @@ class miolo1 extends clsListagem
         l.idtlog = t.idtlog AND
         m.sigla_uf = u.sigla_uf';
 
-    $params = array();
+        $params = [];
 
-    if (isset($_GET['nr_cep']))
-      $params['c.cep'] = idFederal2int($_GET['nr_cep']);
+        if (isset($_GET['nr_cep'])) {
+            $params['c.cep'] = idFederal2int($_GET['nr_cep']);
+        }
 
-    if (isset($_GET['nm_bairro']))
-      $params['b.nome'] = $_GET['nm_bairro'];
+        if (isset($_GET['nm_bairro'])) {
+            $params['b.nome'] = $_GET['nm_bairro'];
+        }
 
-    if (isset($_GET['nm_logradouro']))
-      $params['l.nome'] = $_GET['nm_logradouro'];
+        if (isset($_GET['nm_logradouro'])) {
+            $params['l.nome'] = $_GET['nm_logradouro'];
+        }
 
-    if (isset($_GET['ref_sigla_uf']))
-      $params['u.sigla_uf'] = $_GET['ref_sigla_uf'];
+        if (isset($_GET['ref_sigla_uf'])) {
+            $params['u.sigla_uf'] = $_GET['ref_sigla_uf'];
+        }
 
-    if (isset($_GET['cidade']))
-      $params['m.nome'] = $_GET['cidade'];
+        if (isset($_GET['cidade'])) {
+            $params['m.nome'] = $_GET['cidade'];
+        }
 
-    $paramCount = 1;
+        $paramCount = 1;
 
-    foreach ($params as $name => $value) {
-      $select .= " AND $name::varchar ILIKE '%'||\$$paramCount||'%'";
-      $paramCount++;
-    }
+        foreach ($params as $name => $value) {
+            $select .= " AND $name::varchar ILIKE '%'||\$$paramCount||'%'";
+            $paramCount++;
+        }
 
-    $total  = Portabilis_Utils_Database::selectField(' SELECT COUNT(0) '.$select, array('params' => array_values($params)));
+        $total  = Portabilis_Utils_Database::selectField(' SELECT COUNT(0) '.$select, ['params' => array_values($params)]);
 
-    $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
+        $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
 
-    $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, array('params' => array_values($params)));
+        $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, ['params' => array_values($params)]);
 
+        foreach ($result as $record) {
+            list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona) = $record;
 
-    foreach ($result as $record) {
-      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona) = $record;
+            $cidade     = addslashes($cidade);
 
-      $cidade     = addslashes($cidade);
+            $logradouro = new clsLogradouro($idlog);
+            $logradouro = $logradouro->detalhe();
+            $logradouro = addslashes($logradouro['nome']);
 
-      $logradouro = new clsLogradouro($idlog);
-      $logradouro = $logradouro->detalhe();
-      $logradouro = addslashes($logradouro['nome']);
+            $bairro     = new clsBairro($idbai);
+            $bairro     = $bairro->detalhe();
+            $bairro     = addslashes($bairro['nome']);
 
-      $bairro     = new clsBairro($idbai);
-      $bairro     = $bairro->detalhe();
-      $bairro     = addslashes($bairro['nome']);
+            $cep2  = int2CEP($cep);
+            $s_end = '0';
 
-      $cep2  = int2CEP($cep);
-      $s_end = '0';
-
-      $url = sprintf(
+            $url = sprintf(
         '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
-        $_SESSION['campo1'], $bairro, $_SESSION['campo2'],
-        $idbai, $_SESSION['campo3'], $cep,
-        $_SESSION['campo4'], $logradouro,
-        $_SESSION['campo5'], $idlog,
-        $_SESSION['campo6'], $uf, $_SESSION['campo7'], $cidade,
-        $_SESSION['campo8'], $tipoLogradouroId, $_SESSION['campo9'], $s_end,
-        $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $uf,
-        $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
-        $_SESSION['campo14'], $zona
+        $_SESSION['campo1'],
+          $bairro,
+          $_SESSION['campo2'],
+        $idbai,
+          $_SESSION['campo3'],
+          $cep,
+        $_SESSION['campo4'],
+          $logradouro,
+        $_SESSION['campo5'],
+          $idlog,
+        $_SESSION['campo6'],
+          $uf,
+          $_SESSION['campo7'],
+          $cidade,
+        $_SESSION['campo8'],
+          $tipoLogradouroId,
+          $_SESSION['campo9'],
+          $s_end,
+        $_SESSION['campo10'],
+          $cep2,
+          $_SESSION['campo11'],
+          $uf,
+        $_SESSION['campo12'],
+          $_SESSION['campo13'],
+          $id_mun,
+        $_SESSION['campo14'],
+          $zona
       );
 
-      $this->addLinhas(array(
+            $this->addLinhas([
         sprintf($url, $bairro),
         sprintf($url, $cep2),
         sprintf($url, $logradouro),
         sprintf($url, $uf),
         sprintf($url, $cidade)
-      ));
+      ]);
+        }
+
+        $this->largura = '100%';
+        $this->addPaginador2(
+        'educar_pesquisa_cep_log_bairro.php',
+        $total,
+        $_GET,
+      $this->nome,
+        $limite
+    );
+
+        /*
+            if ($_GET['param']) {
+              $this->rodape = '
+                <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
+                  <tr width="100%">
+                    <td>
+                      <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo Endereço</a> ]</div>
+                    </td>
+                  </tr>
+                </table>';
+            }
+            else {
+              $this->rodape = sprintf('
+                <table border="0" cellspacing="0" cellpadding="0" width="100%%" align="center">
+                  <tr width="100%%">
+                    <td>
+                      <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo Endereço</a> ]</div>
+                    </td>
+                  </tr>
+                </table>',
+                $this->funcao_js
+              );
+            }*/
+
+        @session_write_close();
     }
-
-    $this->largura = '100%';
-    $this->addPaginador2('educar_pesquisa_cep_log_bairro.php', $total, $_GET,
-      $this->nome, $limite);
-
-/*
-    if ($_GET['param']) {
-      $this->rodape = '
-        <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
-          <tr width="100%">
-            <td>
-              <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo Endereço</a> ]</div>
-            </td>
-          </tr>
-        </table>';
-    }
-    else {
-      $this->rodape = sprintf('
-        <table border="0" cellspacing="0" cellpadding="0" width="100%%" align="center">
-          <tr width="100%%">
-            <td>
-              <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo Endereço</a> ]</div>
-            </td>
-          </tr>
-        </table>',
-        $this->funcao_js
-      );
-    }*/
-
-    @session_write_close();
-  }
 }
 
 // Instancia objeto de página

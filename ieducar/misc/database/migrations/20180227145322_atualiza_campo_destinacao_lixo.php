@@ -6,7 +6,7 @@ class AtualizaCampoDestinacaoLixo extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("UPDATE pmieducar.escola
+        $this->execute('UPDATE pmieducar.escola
                            SET destinacao_lixo = array_append(destinacao_lixo, 1)
                          WHERE lixo_coleta_periodica = 1;
                     
@@ -28,11 +28,12 @@ class AtualizaCampoDestinacaoLixo extends AbstractMigration
                          
                          UPDATE pmieducar.escola
                            SET destinacao_lixo = array_append(destinacao_lixo, 6)
-                         WHERE lixo_outros = 1;");
+                         WHERE lixo_outros = 1;');
     }
 
-    public function down(){
-        $this->execute("UPDATE pmieducar.escola
-                           SET destinacao_lixo = NULL");
+    public function down()
+    {
+        $this->execute('UPDATE pmieducar.escola
+                           SET destinacao_lixo = NULL');
     }
 }

@@ -24,65 +24,59 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/pmicontrolesis/Geral.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/pmicontrolesis/Geral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Tutor Menu" );
-        $this->processoAp = "445";
+        $this->SetTitulo("{$this->_instituicao} Tutor Menu");
+        $this->processoAp = '445';
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
-            $id_pessoa = $_SESSION['id_pessoa'];
+        $id_pessoa = $_SESSION['id_pessoa'];
         @session_write_close();
-        
-        $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet",false );
-        $this->addCabecalhos( array( "Nome Tutor Menu") );
+
+        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet', false);
+        $this->addCabecalhos([ 'Nome Tutor Menu']);
 
         // Filtros de Busca
-        $this->campoTexto("tutormenu","Nome Tutor Menu","",50,255);
+        $this->campoTexto('tutormenu', 'Nome Tutor Menu', '', 50, 255);
         //$this->campoTexto("unidade","Unidade","",30,255);
-        
-        
+
         // Paginador
         $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-        
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+
         $obj_menu = new clsTutormenu();
-        $lista_menu = $obj_menu->lista(false,false,false, "nm_tutormenu ASC");
-        if($lista_menu)
-        {
-            foreach ($lista_menu as $menu) 
-            {
-                $this->addLinhas(array("<img src='imagens/noticia.jpg' border=0> <a href='tutormenu_det.php?cod_tutormenu={$menu['cod_tutormenu']}'>{$menu['nm_tutormenu']}</a>"));
+        $lista_menu = $obj_menu->lista(false, false, false, 'nm_tutormenu ASC');
+        if ($lista_menu) {
+            foreach ($lista_menu as $menu) {
+                $this->addLinhas(["<img src='imagens/noticia.jpg' border=0> <a href='tutormenu_det.php?cod_tutormenu={$menu['cod_tutormenu']}'>{$menu['nm_tutormenu']}</a>"]);
             }
         }
-        
+
         // Paginador
-        $this->addPaginador2( "tutormenu_lst.php", $total, $_GET, $this->nome, $limite );
-        
-        
-        $this->acao = "go(\"tutormenu_cad.php\")";
-        $this->nome_acao = "Novo";          
-        
+        $this->addPaginador2('tutormenu_lst.php', $total, $_GET, $this->nome, $limite);
+
+        $this->acao = 'go("tutormenu_cad.php")';
+        $this->nome_acao = 'Novo';
+
         // Define Largura da Página
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>

@@ -24,104 +24,97 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
-
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsFuncionarioSu
 {
-    var $ref_ref_cod_pessoa_fj;
-    
-    var $schema = "pmiotopic";
-    var $tabela = "funcionario_su";
+    public $ref_ref_cod_pessoa_fj;
+
+    public $schema = 'pmiotopic';
+    public $tabela = 'funcionario_su';
 
     /**
      * Construtor
      *
      * @return Object
      */
-    function __construct( $int_ref_ref_cod_pessoa_fj = false )
+    public function __construct($int_ref_ref_cod_pessoa_fj = false)
     {
-        if(is_numeric($int_ref_ref_cod_pessoa_fj))
-        {
+        if (is_numeric($int_ref_ref_cod_pessoa_fj)) {
             $this->ref_ref_cod_pessoa_fj = $int_ref_ref_cod_pessoa_fj;
         }
     }
-    
+
     /**
      * Funï¿½ï¿½o que cadastra um novo registro com os valores atuais
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificações de campos obrigatorios para inserï¿½ï¿½o
-        if( $this->ref_ref_cod_pessoa_fj )
-        {
+        if ($this->ref_ref_cod_pessoa_fj) {
             $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} ( ref_ref_cod_pessoa_fj ) VALUES ( '$this->ref_ref_cod_pessoa_fj' )");
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * Remove o registro atual
      *
      * @return bool
      */
-    function exclui()
+    public function exclui()
     {
         $db = new clsBanco();
         $db->Consulta("DELETE FROM $this->schema.$this->tabela ");
     }
-    
-    
-    function detalhe()
+
+    public function detalhe()
     {
-        if($this->ref_ref_cod_pessoa_fj)
-        {
+        if ($this->ref_ref_cod_pessoa_fj) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT ref_ref_cod_pessoa_fj FROM {$this->schema}.{$this->tabela} WHERE ref_ref_cod_pessoa_fj = $this->ref_ref_cod_pessoa_fj" );
-            $resultado = array();
-            if ( $db->ProximoRegistro() ) 
-            {
+            $db->Consulta("SELECT ref_ref_cod_pessoa_fj FROM {$this->schema}.{$this->tabela} WHERE ref_ref_cod_pessoa_fj = $this->ref_ref_cod_pessoa_fj");
+            $resultado = [];
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
+
                 return  $tupla;
             }
         }
+
         return false;
     }
-    
+
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
      * @return Array
      */
-    function lista( $int_limite_ini = false, $int_limite_qtd = false)
+    public function lista($int_limite_ini = false, $int_limite_qtd = false)
     {
-        
-        if($int_limite_ini !== false && $int_limite_qtd)
-        {
+        if ($int_limite_ini !== false && $int_limite_qtd) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
-        
+
         $db = new clsBanco();
-        $total = $db->UnicoCampo( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} " );
-        $db->Consulta( "SELECT ref_ref_cod_pessoa_fj FROM {$this->schema}.{$this->tabela} $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() ) 
-        {
+        $total = $db->UnicoCampo("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} ");
+        $db->Consulta("SELECT ref_ref_cod_pessoa_fj FROM {$this->schema}.{$this->tabela} $limit");
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla["total"] = $total;
+            $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
-    } 
-    
+    }
 }
-?>

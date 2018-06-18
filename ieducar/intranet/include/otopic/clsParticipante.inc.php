@@ -24,203 +24,185 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
-
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsParticipante
 {
-    var $ref_ref_idpes;
-    var $ref_ref_cod_grupos;
-    var $ref_cod_reuniao;
-    var $sequencial;
-    var $data_chegada;
-    var $data_saida;
-    
-    var $schema = "pmiotopic";
-    var $tabela = "participante";
+    public $ref_ref_idpes;
+    public $ref_ref_cod_grupos;
+    public $ref_cod_reuniao;
+    public $sequencial;
+    public $data_chegada;
+    public $data_saida;
+
+    public $schema = 'pmiotopic';
+    public $tabela = 'participante';
 
     /**
      * Construtor
      *
      * @return Object
      */
-    function __construct( $int_ref_ref_idpes = false, $int_ref_ref_cod_grupos = false, $int_ref_cod_reuniao = false, $int_sequencial = false, $date_data_chegada = false, $date_data_saida = false )
+    public function __construct($int_ref_ref_idpes = false, $int_ref_ref_cod_grupos = false, $int_ref_cod_reuniao = false, $int_sequencial = false, $date_data_chegada = false, $date_data_saida = false)
     {
-        if(is_numeric($int_ref_ref_idpes))
-        {
+        if (is_numeric($int_ref_ref_idpes)) {
             $objFuncionario = new clsPessoaFisica($int_ref_ref_idpes);
-            if($objFuncionario->detalhe())
-            {
-               $this->ref_ref_idpes = $int_ref_ref_idpes;
+            if ($objFuncionario->detalhe()) {
+                $this->ref_ref_idpes = $int_ref_ref_idpes;
             }
         }
-        
-        if(is_numeric($int_ref_ref_cod_grupos))
-        {
+
+        if (is_numeric($int_ref_ref_cod_grupos)) {
             $objGrupos = new clsGrupos($int_ref_ref_cod_grupos);
-            if($objGrupos->detalhe())
-            {
-               $this->ref_ref_cod_grupos = $int_ref_ref_cod_grupos;
+            if ($objGrupos->detalhe()) {
+                $this->ref_ref_cod_grupos = $int_ref_ref_cod_grupos;
             }
         }
-        
-        if(is_numeric($int_ref_cod_reuniao))
-        {
+
+        if (is_numeric($int_ref_cod_reuniao)) {
             $obj= new clsReuniao($int_ref_cod_reuniao);
-            if($obj->detalhe())
-            {
-               $this->ref_cod_reuniao = $int_ref_cod_reuniao;
+            if ($obj->detalhe()) {
+                $this->ref_cod_reuniao = $int_ref_cod_reuniao;
             }
         }
         $this->data_chegada = is_string($date_data_chegada) ? $date_data_chegada : false;
         $this->data_saida = is_string($date_data_saida) ? $date_data_saida: false;
         $this->sequencial = is_numeric($int_sequencial) ? $int_sequencial : false;
     }
-    
+
     /**
      * Função que cadastra um novo registro com os valores atuais
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificações de campos obrigatorios para inserï¿½ï¿½o
-        if( $this->ref_ref_idpes && $this->ref_ref_cod_grupos && $this->ref_cod_reuniao && $this->data_chegada)
-        {
-            $campos = "";
-            $valores = "";
-            
+        if ($this->ref_ref_idpes && $this->ref_ref_cod_grupos && $this->ref_cod_reuniao && $this->data_chegada) {
+            $campos = '';
+            $valores = '';
+
             $this->sequencial = $db->UnicoCampo("SELECT MAX(sequencial) as seq FROM $this->schema.$this->tabela WHERE ref_ref_cod_grupos = $this->ref_ref_cod_grupos AND ref_ref_idpes = $this->ref_ref_idpes AND ref_cod_reuniao = $this->ref_cod_reuniao GROUP BY ref_cod_reuniao, ref_ref_idpes, ref_ref_cod_grupos");
-            if($this->sequencial)
-            {
+            if ($this->sequencial) {
                 $this->sequencial++;
-            }else 
-            {
+            } else {
                 $this->sequencial = 1;
             }
-            
-            if($this->data_saida)
-            {
-                $campos .= ", data_saida";
+
+            if ($this->data_saida) {
+                $campos .= ', data_saida';
                 $valores .= ", '$this->data_saida'";
             }
             $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} ( ref_ref_idpes, ref_ref_cod_grupos, ref_cod_reuniao, sequencial, data_chegada$campos ) VALUES ( '$this->ref_ref_idpes', '{$this->ref_ref_cod_grupos}', '$this->ref_cod_reuniao', '{$this->sequencial}', '$this->data_chegada'$valores )");
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * Edita o registro atual
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
 
         // verifica campos obrigatorios para edicao
-        if( $this->ref_ref_idpes && $this->ref_ref_cod_grupos && $this->ref_cod_reuniao && $this->sequencial && $this->data_saida)
-        {
+        if ($this->ref_ref_idpes && $this->ref_ref_cod_grupos && $this->ref_cod_reuniao && $this->sequencial && $this->data_saida) {
             $db = new clsBanco();
-            $db->Consulta( "UPDATE {$this->schema}.{$this->tabela} SET  data_saida = '{$this->data_saida}' WHERE ref_ref_idpes = '{$this->ref_ref_idpes}' AND ref_ref_cod_grupos = '{$this->ref_ref_cod_grupos}' AND sequencial = '$this->sequencial' AND ref_cod_reuniao = '$this->ref_cod_reuniao' ");
+            $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET  data_saida = '{$this->data_saida}' WHERE ref_ref_idpes = '{$this->ref_ref_idpes}' AND ref_ref_cod_grupos = '{$this->ref_ref_cod_grupos}' AND sequencial = '$this->sequencial' AND ref_cod_reuniao = '$this->ref_cod_reuniao' ");
+
             return true;
-        } 
+        }
+
         return false;
     }
-    
+
     /**
      * Remove o registro atual
      *
      * @return bool
      */
-    function exclui( )
+    public function exclui()
     {
-        
     }
-    
+
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
      * @return Array
      */
-    function lista( $int_ref_ref_idpes = false, $int_ref_ref_cod_grupos = false, $int_ref_cod_reuniao = false, $int_limite_ini = false, $int_limite_qtd = false, $str_order_by = false )
+    public function lista($int_ref_ref_idpes = false, $int_ref_ref_cod_grupos = false, $int_ref_cod_reuniao = false, $int_limite_ini = false, $int_limite_qtd = false, $str_order_by = false)
     {
         // verificacoes de filtros a serem usados
-        $where = "";
-        $and = "";
-        
-        if( is_numeric( $int_ref_ref_idpes) )
-        {
+        $where = '';
+        $and = '';
+
+        if (is_numeric($int_ref_ref_idpes)) {
             $where .= " $and ref_ref_idpes = '$int_ref_ref_idpes'";
-            $and = " AND ";
-        }       
-        
-        if( is_numeric( $int_ref_ref_cod_grupos) )
-        {
+            $and = ' AND ';
+        }
+
+        if (is_numeric($int_ref_ref_cod_grupos)) {
             $where .= " $and ref_ref_cod_grupos = '$int_ref_ref_cod_grupos'";
-            $and = " AND ";
-        }       
-        
-        if( is_numeric( $int_ref_cod_reuniao) )
-        {
+            $and = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_reuniao)) {
             $where .= " $and ref_cod_reuniao = '$int_ref_cod_reuniao'";
-            $and = " AND ";
-        }       
-                
-        $orderBy = "";
-        if( is_string( $str_order_by))
-        {
+            $and = ' AND ';
+        }
+
+        $orderBy = '';
+        if (is_string($str_order_by)) {
             $orderBy = "ORDER BY $str_order_by";
         }
-        
-        if($where)
-        {
+
+        if ($where) {
             $where = " WHERE $where";
         }
-        
-        if($int_limite_ini && $int_limite_qtd)
-        {
+
+        if ($int_limite_ini && $int_limite_qtd) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
-        
+
         $db = new clsBanco();
-        $total = $db->UnicoCampo( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
-        $db->Consulta( "SELECT ref_ref_idpes, ref_ref_cod_grupos, sequencial, ref_cod_reuniao, data_chegada, data_saida FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() ) 
-        {
+        $total = $db->UnicoCampo("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
+        $db->Consulta("SELECT ref_ref_idpes, ref_ref_cod_grupos, sequencial, ref_cod_reuniao, data_chegada, data_saida FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla["total"] = $total;
+            $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
-    } 
-    
+    }
+
     /**
      * Retorna um array com os detalhes do objeto
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-
-        if( $this->ref_ref_idpes && $this->ref_ref_cod_grupos && $this->ref_cod_reuniao && $this->sequencial )
-        {
+        if ($this->ref_ref_idpes && $this->ref_ref_cod_grupos && $this->ref_cod_reuniao && $this->sequencial) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT ref_ref_idpes, ref_ref_cod_grupos, sequencial, ref_cod_reuniao, data_chegada, data_saida  FROM {$this->schema}.{$this->tabela} WHERE ref_ref_idpes = '{$this->ref_ref_idpes}' AND ref_ref_cod_grupos = '{$this->ref_ref_cod_grupos}' AND sequencial = '$this->sequencial' AND ref_cod_reuniao = '$this->ref_cod_reuniao' " );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT ref_ref_idpes, ref_ref_cod_grupos, sequencial, ref_cod_reuniao, data_chegada, data_saida  FROM {$this->schema}.{$this->tabela} WHERE ref_ref_idpes = '{$this->ref_ref_idpes}' AND ref_ref_cod_grupos = '{$this->ref_ref_cod_grupos}' AND sequencial = '$this->sequencial' AND ref_cod_reuniao = '$this->ref_cod_reuniao' ");
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
+
                 return $tupla;
             }
         }
+
         return false;
     }
 }
-?>

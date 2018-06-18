@@ -24,85 +24,84 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Opção Menu" );
-        $this->processoAp = "475";
+        $this->SetTitulo("{$this->_instituicao} Opção Menu");
+        $this->processoAp = '475';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsCadastro
 {
-    var $idpes,
-        $tipo_menu;
-        
-    function Inicializar()
+    public $idpes;
+    public $tipo_menu;
+
+    public function Inicializar()
     {
-        $retorno = "Editar";
+        $retorno = 'Editar';
 
         @session_start();
-         $this->idpes = $_SESSION['id_pessoa'];
+        $this->idpes = $_SESSION['id_pessoa'];
         @session_write_close();
-        
-        if($this->idpes)
-        {
+
+        if ($this->idpes) {
             $db = new clsBanco();
             $this->tipo_menu = $db->UnicoCampo("SELECT tipo_menu FROM funcionario WHERE ref_cod_pessoa_fj = '$this->idpes'");
         }
-        $this->url_cancelar = "opcao_menu_det.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = 'opcao_menu_det.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "{$nomeMenu} prefer&ecirc;ncia"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         ''        => "{$nomeMenu} prefer&ecirc;ncia"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        $opcao = array("0"=>"Menu Padrão","1"=> "Menu Suspenso");
-        $this->campoRadio("tipo_menu","Tipo do Menu",$opcao,$this->tipo_menu);
-        $this->campoOculto("idpes",$this->idpes);
+        $opcao = ['0'=>'Menu Padrão','1'=> 'Menu Suspenso'];
+        $this->campoRadio('tipo_menu', 'Tipo do Menu', $opcao, $this->tipo_menu);
+        $this->campoOculto('idpes', $this->idpes);
     }
 
-    function Novo() 
+    public function Novo()
     {
         return false;
     }
 
-    function Editar() 
+    public function Editar()
     {
         $db = new clsBanco();
         $db->Consulta("UPDATE funcionario SET tipo_menu='$this->tipo_menu' WHERE ref_cod_pessoa_fj = '$this->idpes' ");
-        
+
         @session_start();
         $_SESSION['tipo_menu'] = $this->tipo_menu;
         @session_write_close();
-        
-        header("Location: opcao_menu_det.php");
+
+        header('Location: opcao_menu_det.php');
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         return true;
     }
-
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-?>

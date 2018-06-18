@@ -21,11 +21,14 @@
  *
  * @author      Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package     Core
  * @subpackage  urbano
  * @subpackage  Enderecamento
  * @subpackage  Logradouro
+ *
  * @since       Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ *
  * @version     $Id$
  */
 require_once 'include/clsBase.inc.php';
@@ -46,264 +49,341 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Cep Logradouro');
-    $this->processoAp = '758';
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Cep Logradouro');
+        $this->processoAp = '758';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
-  var $idlog;
-  var $nroini;
-  var $nrofin;
-  var $idpes_rev;
-  var $data_rev;
-  var $origem_gravacao;
-  var $idpes_cad;
-  var $data_cad;
-  var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
-  var $idpais;
-  var $sigla_uf;
-  var $idmun;
-  var $tab_cep = array();
-  var $cep;
-  var $idbai;
-  var $retorno;
+    public $pessoa_logada;
+    public $idlog;
+    public $nroini;
+    public $nrofin;
+    public $idpes_rev;
+    public $data_rev;
+    public $origem_gravacao;
+    public $idpes_cad;
+    public $data_cad;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
+    public $idpais;
+    public $sigla_uf;
+    public $idmun;
+    public $tab_cep = [];
+    public $cep;
+    public $idbai;
+    public $retorno;
 
-  function Inicializar()
-  {
-    $this->retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-    $this->idlog = $_GET['idlog'];
-    if (is_numeric($this->idlog)) {
-      $obj_cep_logradouro = new clsUrbanoCepLogradouro();
-      $lst_cep_logradouro = $obj_cep_logradouro->lista(NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idlog);
-      if ($lst_cep_logradouro) {
-        $registro = $lst_cep_logradouro[0];
-      }
-      if ($registro) {
-        foreach ($registro as $campo => $val) {
-          $this->$campo = $val;
+    public function Inicializar()
+    {
+        $this->retorno = 'Novo';
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+        $this->idlog = $_GET['idlog'];
+        if (is_numeric($this->idlog)) {
+            $obj_cep_logradouro = new clsUrbanoCepLogradouro();
+            $lst_cep_logradouro = $obj_cep_logradouro->lista(
+          null,
+          null,
+          null,
+          null,
+        null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          $this->idlog
+      );
+            if ($lst_cep_logradouro) {
+                $registro = $lst_cep_logradouro[0];
+            }
+            if ($registro) {
+                foreach ($registro as $campo => $val) {
+                    $this->$campo = $val;
+                }
+                $this->retorno = 'Editar';
+                // CEP
+                $this->tab_cep = $this->getListCepBairro();
+            }
+        } else {
+            $this->tab_cep[] = [];
         }
-        $this->retorno = 'Editar';
-        // CEP
-        $this->tab_cep = $this->getListCepBairro();
-      }
-    }
-    else {
-      $this->tab_cep[] = array();
-    }
-    $this->url_cancelar = $this->retorno == 'Editar' ?
+        $this->url_cancelar = $this->retorno == 'Editar' ?
       'urbano_cep_logradouro_det.php?idlog=' . $registro['idlog'] :
       'urbano_cep_logradouro_lst.php';
-    $this->nome_url_cancelar = 'Cancelar';
-    $nomeMenu = $this->retorno == "Editar" ? $this->retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "{$nomeMenu} CEP"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-    return $this->retorno;
-  }
-  function Gerar()
-  {
+        $this->nome_url_cancelar = 'Cancelar';
+        $nomeMenu = $this->retorno == 'Editar' ? $this->retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''        => "{$nomeMenu} CEP"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    $habilitaCampo = ($this->retorno == 'Editar');
-
-    // foreign keys
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPais')) {
-      $objTemp = new clsPais();
-      $lista = $objTemp->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['idpais']] = $registro['nome'];
-        }
-      }
+        return $this->retorno;
     }
-    else {
-      echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', FALSE, '','', $habilitaCampo);
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsUf')) {
-      if ($this->idpais) {
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista(FALSE, FALSE, $this->idpais, FALSE, FALSE, 'nome ASC');
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['sigla_uf']] = $registro['nome'];
-          }
-        }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
-    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', FALSE, '','', $habilitaCampo);
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsMunicipio')) {
-      if ($this->sigla_uf) {
-        $objTemp = new clsMunicipio();
-        $lista = $objTemp->lista(FALSE, $this->sigla_uf, FALSE, FALSE, FALSE,
-          FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['idmun']] = $registro['nome'];
-          }
-        }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
-    $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun, '', FALSE, '','', $habilitaCampo);
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsLogradouro')) {
-      if ($this->idmun) {
-        $objTemp = new clsLogradouro();
-        $lista = $objTemp->lista(FALSE, FALSE, $this->idmun, FALSE, FALSE,
-          FALSE, FALSE, 'nome ASC');
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['idlog']] = $registro['nome'];
-          }
-        }
-      }
-    }
-    else
+    public function Gerar()
     {
-      echo '<!--\nErro\nClasse clsLogradouro nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
-    $this->campoLista('idlog', 'Logradouro', $opcoes, $this->idlog, '', FALSE, '','', $habilitaCampo);
+        $habilitaCampo = ($this->retorno == 'Editar');
 
-    // Tabela CEP
-    $this->campoTabelaInicio('tab_cep', 'Tabela de CEP', array('CEP', 'Bairro'), $this->tab_cep, 400);
-    $opcoes_bairro = array('' => 'Selecione');
-    if ($this->idmun) {
-      $obj_bairro = new clsBairro();
-      $lst_bairro = $obj_bairro->lista($this->idmun, FALSE, FALSE, FALSE, FALSE,
-        'nome ASC');
-      if ($lst_bairro) {
-        foreach ($lst_bairro as $campo) {
-          $opcoes_bairro[$campo['idbai']] = $campo['nome'];
+        // foreign keys
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsPais')) {
+            $objTemp = new clsPais();
+            $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['idpais']] = $registro['nome'];
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    }
-    $this->campoCep('cep', 'CEP', $this->cep, true);
-    $this->campoLista('idbai', 'Bairro', $opcoes_bairro, $this->idbai);
-    $this->campoTabelaFim();
+        $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', false, '', '', $habilitaCampo);
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsUf')) {
+            if ($this->idpais) {
+                $objTemp = new clsUf();
+                $lista = $objTemp->lista(false, false, $this->idpais, false, false, 'nome ASC');
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['sigla_uf']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
+        }
+        $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', false, '', '', $habilitaCampo);
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsMunicipio')) {
+            if ($this->sigla_uf) {
+                $objTemp = new clsMunicipio();
+                $lista = $objTemp->lista(
+            false,
+            $this->sigla_uf,
+            false,
+            false,
+            false,
+          false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            'nome ASC'
+        );
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['idmun']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
+        }
+        $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun, '', false, '', '', $habilitaCampo);
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsLogradouro')) {
+            if ($this->idmun) {
+                $objTemp = new clsLogradouro();
+                $lista = $objTemp->lista(
+            false,
+            false,
+            $this->idmun,
+            false,
+            false,
+          false,
+            false,
+            'nome ASC'
+        );
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['idlog']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsLogradouro nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
+        }
+        $this->campoLista('idlog', 'Logradouro', $opcoes, $this->idlog, '', false, '', '', $habilitaCampo);
 
-    $scripts = array(
+        // Tabela CEP
+        $this->campoTabelaInicio('tab_cep', 'Tabela de CEP', ['CEP', 'Bairro'], $this->tab_cep, 400);
+        $opcoes_bairro = ['' => 'Selecione'];
+        if ($this->idmun) {
+            $obj_bairro = new clsBairro();
+            $lst_bairro = $obj_bairro->lista(
+          $this->idmun,
+          false,
+          false,
+          false,
+          false,
+        'nome ASC'
+      );
+            if ($lst_bairro) {
+                foreach ($lst_bairro as $campo) {
+                    $opcoes_bairro[$campo['idbai']] = $campo['nome'];
+                }
+            }
+        }
+        $this->campoCep('cep', 'CEP', $this->cep, true);
+        $this->campoLista('idbai', 'Bairro', $opcoes_bairro, $this->idbai);
+        $this->campoTabelaFim();
+
+        $scripts = [
       '/modules/Portabilis/Assets/Javascripts/Utils.js',
       '/modules/Portabilis/Assets/Javascripts/ClientApi.js'
+    ];
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+    public function Novo()
+    {
+        $this->Editar();
+    }
+    public function Editar()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
+
+        $this->idlog = !$this->idlog ? $_GET['idlog'] : $this->idlog;
+
+        $tab_cep_aux = $this->getListCepBairro();
+
+        if (($this->idbai[0] != '') && ($this->cep[0] != '')) {
+            foreach ($this->cep as $id => $cep) {
+                $cep = idFederal2int($cep);
+                $obj = new clsUrbanoCepLogradouro(
+            $cep,
+            $this->idlog,
+            null,
+            null,
+            null,
+          null,
+            'U',
+            $this->pessoa_logada,
+            null,
+            'I',
+            null,
+            9
+        );
+                if (!$obj->existe()) {
+                    if (!$obj->cadastra()) {
+                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                        echo "<!--\nErro ao editar clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
+                        return false;
+                    }
+                }
+                $obj_cep_log_bairro = new clsUrbanoCepLogradouroBairro(
+            $this->idlog,
+          $cep,
+            $this->idbai[$id],
+            null,
+            null,
+            'U',
+            $this->pessoa_logada,
+            null,
+          'I',
+            null,
+            9
+        );
+
+                if (!$obj_cep_log_bairro->existe()) {
+                    if ($id >= count($tab_cep_aux)) {
+                        if (!$obj_cep_log_bairro->cadastra()) {
+                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
+                            return false;
+                        }
+                    } else {
+                        $cepOld = idFederal2int($tab_cep_aux[$id][0]);
+                        $bairroOld = $tab_cep_aux[$id][1];
+                        if (!$obj_cep_log_bairro->editaCepBairro($cepOld, $bairroOld)) {
+                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
+                            return false;
+                        }
+                    }
+                }
+            }
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: urbano_cep_logradouro_lst.php');
+            die();
+        } else {
+            header('Location: urbano_cep_logradouro_lst.php');
+            die();
+        }
+    }
+    public function Excluir()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
+        $obj = new clsUrbanoCepLogradouro(
+        $this->cep,
+        $this->idlog,
+        $this->nroini,
+      $this->nrofin,
+        $this->idpes_rev,
+        $this->data_rev,
+        $this->origem_gravacao,
+      $this->idpes_cad,
+        $this->data_cad,
+        $this->operacao,
+        $this->idsis_rev,
+        $this->idsis_cad
     );
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-  }
-  function Novo()
-  {
-    $this->Editar();
-  }
-  function Editar()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    $this->idlog = !$this->idlog ? $_GET['idlog'] : $this->idlog;
-
-    $tab_cep_aux = $this->getListCepBairro();
-
-    if (($this->idbai[0] != '') && ($this->cep[0] != '')) {
-      foreach ($this->cep as $id => $cep) {
-        $cep = idFederal2int($cep);
-        $obj = new clsUrbanoCepLogradouro($cep, $this->idlog, NULL, NULL, NULL,
-          NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9);
-        if (!$obj->existe()) {
-          if (!$obj->cadastra()) {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            echo "<!--\nErro ao editar clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( $this->pessoa_logada ) )\n-->";
-            return FALSE;
-          }
+        $excluiu = $obj->excluir();
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: urbano_cep_logradouro_lst.php');
+            die();
         }
-        $obj_cep_log_bairro = new clsUrbanoCepLogradouroBairro($this->idlog,
-          $cep, $this->idbai[$id], NULL, NULL, 'U', $this->pessoa_logada, NULL,
-          'I', NULL, 9);
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        echo "<!--\nErro ao excluir clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $this->cep ) && is_numeric( $this->idlog ) )\n-->";
 
-        if (!$obj_cep_log_bairro->existe()) {
-          if ($id >= count($tab_cep_aux)){
-            if (!$obj_cep_log_bairro->cadastra()) {
-              $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-              echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
-              return FALSE;
+        return false;
+    }
+    public function getListCepBairro()
+    {
+        $tab_cep = [];
+
+        $obj_cep_logradouro_bairro = new clsCepLogradouroBairro();
+        $lst_cep_logradouro_bairro = $obj_cep_logradouro_bairro->lista(
+        $this->idlog,
+      false,
+        false,
+        'cep ASC'
+    );
+        if ($lst_cep_logradouro_bairro) {
+            foreach ($lst_cep_logradouro_bairro as $cep) {
+                $tab_cep[] = [int2CEP($cep['cep']->cep), $cep['idbai']->idbai];
             }
-          } else {
-            $cepOld = idFederal2int($tab_cep_aux[$id][0]);
-            $bairroOld = $tab_cep_aux[$id][1];
-            if (!$obj_cep_log_bairro->editaCepBairro($cepOld, $bairroOld)) {
-              $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-              echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
-              return FALSE;
-            }
-          }
         }
-      }
-      $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-      header('Location: urbano_cep_logradouro_lst.php');
-      die();
-    }
-    else {
-      header('Location: urbano_cep_logradouro_lst.php');
-      die();
-    }
-  }
-  function Excluir()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-    $obj = new clsUrbanoCepLogradouro($this->cep, $this->idlog, $this->nroini,
-      $this->nrofin, $this->idpes_rev, $this->data_rev, $this->origem_gravacao,
-      $this->idpes_cad, $this->data_cad, $this->operacao, $this->idsis_rev, $this->idsis_cad);
-    $excluiu = $obj->excluir();
-    if ($excluiu) {
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: urbano_cep_logradouro_lst.php');
-      die();
-    }
-    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao excluir clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $this->cep ) && is_numeric( $this->idlog ) )\n-->";
-    return FALSE;
-  }
-  function getListCepBairro()
-  {
-    $tab_cep = array();
 
-    $obj_cep_logradouro_bairro = new clsCepLogradouroBairro();
-    $lst_cep_logradouro_bairro = $obj_cep_logradouro_bairro->lista($this->idlog,
-      FALSE, FALSE, 'cep ASC');
-    if ($lst_cep_logradouro_bairro) {
-      foreach ($lst_cep_logradouro_bairro as $cep) {
-        $tab_cep[] = array(int2CEP($cep['cep']->cep), $cep['idbai']->idbai);
-      }
+        return $tab_cep;
     }
-    return $tab_cep;
-  }
 }
 // Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();

@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,54 +40,65 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * Portabilis_View_Helper_DynamicInput_CoreSelect class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Input_Core
+{
+    protected function inputName()
+    {
+        return parent::inputName() . '_id';
+    }
 
-  protected function inputName() {
-    return parent::inputName() . '_id';
-  }
-
-  public function select($options = array()) {
-    // this helper options
-    $defaultOptions = array('id'         => null,
+    public function select($options = [])
+    {
+        // this helper options
+        $defaultOptions = ['id'         => null,
                             'objectName' => '',
                             'attrName'   => $this->inputName(),
-                            'resources'  => array(),
-                            'options'    => array());
+                            'resources'  => [],
+                            'options'    => []];
 
-    $defaultOptions            = $this->mergeOptions($this->defaultOptions(), $defaultOptions);
-    $this->options             = $this->mergeOptions($options, $defaultOptions);
-    $this->options['options']  = $this->mergeOptions($this->options['options'], $defaultOptions['options']);
+        $defaultOptions            = $this->mergeOptions($this->defaultOptions(), $defaultOptions);
+        $this->options             = $this->mergeOptions($options, $defaultOptions);
+        $this->options['options']  = $this->mergeOptions($this->options['options'], $defaultOptions['options']);
 
-    // select options
+        // select options
 
-    $defaultInputOptions = array('label'     => Portabilis_String_Utils::humanize($this->inputName()),
+        $defaultInputOptions = ['label'     => Portabilis_String_Utils::humanize($this->inputName()),
                                  'value'     => $this->inputValue($this->options['id']),
-                                 'resources' => $this->inputOptions($this->options));
+                                 'resources' => $this->inputOptions($this->options)];
 
-    $inputOptions  = $this->mergeOptions($this->options['options'], $defaultInputOptions);
-    $helperOptions = array('objectName' => $this->options['objectName']);
+        $inputOptions  = $this->mergeOptions($this->options['options'], $defaultInputOptions);
+        $helperOptions = ['objectName' => $this->options['objectName']];
 
-    // input
-    $this->inputsHelper()->select($this->options['attrName'], $inputOptions, $helperOptions);
-  }
+        // input
+        $this->inputsHelper()->select($this->options['attrName'], $inputOptions, $helperOptions);
+    }
 
-  // subscrever no child caso deseje carregar mais opções do banco de dados antes de carregar a página,
-  // ou deixar apenas com a opção padrão e carregar via ajax
-  protected function inputOptions($options) {
-    return $this->insertOption(null,
-                               "Selecione um(a) " . Portabilis_String_Utils::humanize($this->inputName()),
-                               $resources);
-  }
+    // subscrever no child caso deseje carregar mais opções do banco de dados antes de carregar a página,
+    // ou deixar apenas com a opção padrão e carregar via ajax
+    protected function inputOptions($options)
+    {
+        return $this->insertOption(
+        null,
+                               'Selecione um(a) ' . Portabilis_String_Utils::humanize($this->inputName()),
+                               $resources
+    );
+    }
 
-  // overwrite this method in childrens to set additional default options, to be merged with received options,
-  // and pass to select helper
-  protected function defaultOptions() {
-    return array();
-  }
+    // overwrite this method in childrens to set additional default options, to be merged with received options,
+    // and pass to select helper
+    protected function defaultOptions()
+    {
+        return [];
+    }
 }

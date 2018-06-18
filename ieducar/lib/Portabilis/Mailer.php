@@ -2,8 +2,8 @@
 
 require_once 'vendor/autoload.php';
 
-class Portabilis_Mailer {
-
+class Portabilis_Mailer
+{
     public $config = [];
 
     protected $transport;

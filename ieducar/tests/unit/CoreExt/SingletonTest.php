@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Enum
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,31 +41,36 @@ require_once 'CoreExt/_stub/SingletonIncomplete.php';
  * CoreExt_SingletonTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Singleton
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_SingletonTest extends UnitBaseTest
 {
-  public function testInstanciaESingleton()
-  {
-    $instance1 = CoreExt_SingletonStub::getInstance();
-    $oid1 = spl_object_hash($instance1);
+    public function testInstanciaESingleton()
+    {
+        $instance1 = CoreExt_SingletonStub::getInstance();
+        $oid1 = spl_object_hash($instance1);
 
-    $instance2 = CoreExt_SingletonStub::getInstance();
-    $oid2 = spl_object_hash($instance2);
+        $instance2 = CoreExt_SingletonStub::getInstance();
+        $oid2 = spl_object_hash($instance2);
 
-    $this->assertSame($oid1, $oid2);
-  }
+        $this->assertSame($oid1, $oid2);
+    }
 
-  /**
-   * @expectedException CoreExt_Exception
-   */
-  public function testClasseQueNaoImplementaMetodoLancaExcecao()
-  {
-    $instance1 = CoreExt_SingletonIncompleteStub::getInstance();
-  }
+    /**
+     * @expectedException CoreExt_Exception
+     */
+    public function testClasseQueNaoImplementaMetodoLancaExcecao()
+    {
+        $instance1 = CoreExt_SingletonIncompleteStub::getInstance();
+    }
 }

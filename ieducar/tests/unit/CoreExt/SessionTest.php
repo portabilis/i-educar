@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Locale
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -38,115 +43,120 @@ require_once 'CoreExt/Session.php';
  * erros "headers sent") e confiando na classe CoreExt_Session_Storage_Default.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Session
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_SessionTest extends UnitBaseTest
 {
-  protected $_session = NULL;
+    protected $_session = null;
 
-  protected function setUp()
-  {
-    $_SESSION = array();
-    $this->_session = new CoreExt_Session(array('session_auto_start' => FALSE));
-  }
+    protected function setUp()
+    {
+        $_SESSION = [];
+        $this->_session = new CoreExt_Session(['session_auto_start' => false]);
+    }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
-  public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
-  {
-    $this->_session->setOptions(array('foo' => 'bar'));
-  }
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
+    {
+        $this->_session->setOptions(['foo' => 'bar']);
+    }
 
-  public function testInstanciaTemSessionInstanciaStorageDefaultPorPadrao()
-  {
-    $this->assertType('CoreExt_Session_Storage_Default', $this->_session->getSessionStorage());
-  }
+    public function testInstanciaTemSessionInstanciaStorageDefaultPorPadrao()
+    {
+        $this->assertType('CoreExt_Session_Storage_Default', $this->_session->getSessionStorage());
+    }
 
-  public function testInstanciaESubclasseDeArrayAccess()
-  {
-    $this->assertType('ArrayAccess', $this->_session);
-  }
+    public function testInstanciaESubclasseDeArrayAccess()
+    {
+        $this->assertType('ArrayAccess', $this->_session);
+    }
 
-  public function testInstanciaESubclasseDeCountable()
-  {
-    $this->assertType('Countable', $this->_session);
-  }
+    public function testInstanciaESubclasseDeCountable()
+    {
+        $this->assertType('Countable', $this->_session);
+    }
 
-  public function testInstanciaESubclasseDeIterator()
-  {
-    $this->assertType('Iterator', $this->_session);
-  }
+    public function testInstanciaESubclasseDeIterator()
+    {
+        $this->assertType('Iterator', $this->_session);
+    }
 
-  /**
-   * @backupGlobals disabled
-   */
-  public function testArrayAccess()
-  {
-    $this->assertNull($this->_session['foo'], '[foo] is not null');
+    /**
+     * @backupGlobals disabled
+     */
+    public function testArrayAccess()
+    {
+        $this->assertNull($this->_session['foo'], '[foo] is not null');
 
-    $this->_session['bar'] = 'foo';
-    $this->assertEquals('foo', $this->_session['bar'], '[bar] != foo');
+        $this->_session['bar'] = 'foo';
+        $this->assertEquals('foo', $this->_session['bar'], '[bar] != foo');
 
-    //$this->_session->offsetUnset('bar');
-    unset($this->_session['bar']);
-    $this->assertNull($this->_session['bar'], '[bar] not unset');
-  }
+        //$this->_session->offsetUnset('bar');
+        unset($this->_session['bar']);
+        $this->assertNull($this->_session['bar'], '[bar] not unset');
+    }
 
-  /**
-   * @backupGlobals disabled
-   * @depends testArrayAccess
-   */
-  public function testCountable()
-  {
-    $this->assertEquals(0, count($this->_session));
+    /**
+     * @backupGlobals disabled
+     * @depends testArrayAccess
+     */
+    public function testCountable()
+    {
+        $this->assertEquals(0, count($this->_session));
 
-    $this->_session['foo'] = 'bar';
-    $this->assertEquals(1, count($this->_session));
-  }
+        $this->_session['foo'] = 'bar';
+        $this->assertEquals(1, count($this->_session));
+    }
 
-  /**
-   * @backupGlobals enabled
-   */
-  public function testOverload()
-  {
-    $this->assertNull($this->_session->foo, '->foo is not null');
+    /**
+     * @backupGlobals enabled
+     */
+    public function testOverload()
+    {
+        $this->assertNull($this->_session->foo, '->foo is not null');
 
-    $this->_session->bar = 'foo';
-    $this->assertEquals('foo', $this->_session->bar, '->bar != foo');
+        $this->_session->bar = 'foo';
+        $this->assertEquals('foo', $this->_session->bar, '->bar != foo');
 
-    unset($this->_session->bar);
-    $this->assertNull($this->_session->bar, '->bar not unset');
-  }
+        unset($this->_session->bar);
+        $this->assertNull($this->_session->bar, '->bar not unset');
+    }
 
-  /**
-   * Como CoreExt_Session_Abstract::offsetSet() converte a chave em string,
-   * podemos acessá-los de forma dinâmica na forma $session->$key em um
-   * iterador foreach, por exemplo.
-   */
-  public function testIterator()
-  {
-    $expected = array(
+    /**
+     * Como CoreExt_Session_Abstract::offsetSet() converte a chave em string,
+     * podemos acessá-los de forma dinâmica na forma $session->$key em um
+     * iterador foreach, por exemplo.
+     */
+    public function testIterator()
+    {
+        $expected = [
       1 => 'bar1', 2 => 'bar2', 3 => 'bar3'
-    );
+    ];
 
-    $this->_session[1] = 'bar1';
-    $this->_session[2] = 'bar2';
+        $this->_session[1] = 'bar1';
+        $this->_session[2] = 'bar2';
 
-    foreach ($this->_session as $key => $val) {
-      $this->assertEquals($expected[$key], $val, sprintf('$expected[%s] != %s', $key, $val));
-      $this->assertEquals($this->_session->$key, $val, sprintf('$session->%s != %s', $key, $val));
+        foreach ($this->_session as $key => $val) {
+            $this->assertEquals($expected[$key], $val, sprintf('$expected[%s] != %s', $key, $val));
+            $this->assertEquals($this->_session->$key, $val, sprintf('$session->%s != %s', $key, $val));
+        }
+
+        $this->_session[3] = 'bar3';
+        foreach ($this->_session as $key => $val) {
+            $this->assertEquals($expected[$key], $val, sprintf('$expected[%s] != %s', $key, $val));
+            $this->assertEquals($this->_session->$key, $val, sprintf('$session->%s != %s', $key, $val));
+        }
     }
-
-    $this->_session[3] = 'bar3';
-    foreach ($this->_session as $key => $val) {
-      $this->assertEquals($expected[$key], $val, sprintf('$expected[%s] != %s', $key, $val));
-      $this->assertEquals($this->_session->$key, $val, sprintf('$session->%s != %s', $key, $val));
-    }
-  }
 }

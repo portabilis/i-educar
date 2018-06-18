@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Imagem
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -38,61 +43,69 @@ require_once 'include/imagem/clsPortalImagem.inc.php';
  * clsIndex class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Imagem
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . 'Banco de Imagens');
-    $this->processoAp = '473';
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . 'Banco de Imagens');
+        $this->processoAp = '473';
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Imagem
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
 {
-  function Gerar()
-  {
-    $this->titulo = 'Detalhe da Imagem';
-    
+    public function Gerar()
+    {
+        $this->titulo = 'Detalhe da Imagem';
 
-    $cod_imagem = $_GET['cod_imagem'];
+        $cod_imagem = $_GET['cod_imagem'];
 
-    $objimagem = new clsPortalImagem($cod_imagem);
-    $detalheImagem = $objimagem->detalhe();
-    $objimagemTipo = new clsPortalImagemTipo($detalheImagem['ref_cod_imagem_tipo']);
-    $detalheImagemTipo = $objimagemTipo->detalhe();
+        $objimagem = new clsPortalImagem($cod_imagem);
+        $detalheImagem = $objimagem->detalhe();
+        $objimagemTipo = new clsPortalImagemTipo($detalheImagem['ref_cod_imagem_tipo']);
+        $detalheImagemTipo = $objimagemTipo->detalhe();
 
-    $this->addDetalhe(array('Tipo da Imagem', $detalheImagemTipo['nm_tipo']));
-    $this->addDetalhe(array('Nome', $detalheImagem['nm_imagem']));
-    $this->addDetalhe(array('Imagem', "<img src='banco_imagens/{$detalheImagem['caminho']}' alt='{$detalheImagem['nm_imagem']}' title='{$detalheImagem['nm_imagem']}'>"));
-    $this->addDetalhe(array('Extensão', $detalheImagem['extensao']));
-    $this->addDetalhe(array('Largura', $detalheImagem['largura']));
-    $this->addDetalhe(array('Altura', $detalheImagem['altura']));
-    $this->addDetalhe(array('Data de Cadastro', dataFromPgToBr($detalheImagem['data_cadastro']) ));
+        $this->addDetalhe(['Tipo da Imagem', $detalheImagemTipo['nm_tipo']]);
+        $this->addDetalhe(['Nome', $detalheImagem['nm_imagem']]);
+        $this->addDetalhe(['Imagem', "<img src='banco_imagens/{$detalheImagem['caminho']}' alt='{$detalheImagem['nm_imagem']}' title='{$detalheImagem['nm_imagem']}'>"]);
+        $this->addDetalhe(['Extensão', $detalheImagem['extensao']]);
+        $this->addDetalhe(['Largura', $detalheImagem['largura']]);
+        $this->addDetalhe(['Altura', $detalheImagem['altura']]);
+        $this->addDetalhe(['Data de Cadastro', dataFromPgToBr($detalheImagem['data_cadastro']) ]);
 
-    $this->url_novo     = 'imagem_cad.php';
-    $this->url_editar   = 'imagem_cad.php?cod_imagem=' . $cod_imagem;
-    $this->url_cancelar = 'imagem_lst.php';
+        $this->url_novo     = 'imagem_cad.php';
+        $this->url_editar   = 'imagem_cad.php?cod_imagem=' . $cod_imagem;
+        $this->url_cancelar = 'imagem_lst.php';
 
-    $this->largura = "100%";
-  }
+        $this->largura = '100%';
+    }
 }
-
 
 // Instancia objeto de página
 $pagina = new clsIndex();

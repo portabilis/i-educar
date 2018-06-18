@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Docente
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -36,84 +41,95 @@ require_once 'Docente/Model/LicenciaturaDataMapper.php';
  * IndexController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Docente
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class IndexController extends Core_Controller_Page_ListController
 {
-  protected $_dataMapper = 'Docente_Model_LicenciaturaDataMapper';
-  protected $_titulo     = 'Listagem de licenciaturas do servidor';
-  protected $_processoAp = 635;
+    protected $_dataMapper = 'Docente_Model_LicenciaturaDataMapper';
+    protected $_titulo     = 'Listagem de licenciaturas do servidor';
+    protected $_processoAp = 635;
 
-  protected $_tableMap = array(
+    protected $_tableMap = [
     'Licenciatura'     => 'licenciatura',
     'Curso'            => 'curso',
     'Ano de conclusão' => 'anoConclusao',
     'IES'              => 'ies'
-  );
+  ];
 
-  public function getEntries()
-  {
-    return $this->getDataMapper()->findAll(
-      array(), array('servidor' => $this->getRequest()->servidor), array('anoConclusao' => 'ASC')
+    public function getEntries()
+    {
+        return $this->getDataMapper()->findAll(
+      [],
+        ['servidor' => $this->getRequest()->servidor],
+        ['anoConclusao' => 'ASC']
     );
-  }
+    }
 
-  public function setAcao()
-  {
-    $this->acao = sprintf(
+    public function setAcao()
+    {
+        $this->acao = sprintf(
       'go("edit?servidor=%d&instituicao=%d")',
-      $this->getRequest()->servidor, $this->getRequest()->instituicao
+      $this->getRequest()->servidor,
+        $this->getRequest()->instituicao
     );
 
-    $this->nome_acao = 'Novo';
-  }
+        $this->nome_acao = 'Novo';
+    }
 
-  public function Gerar()
-  {
-    $headers = $this->getTableMap();
+    public function Gerar()
+    {
+        $headers = $this->getTableMap();
 
-    $this->addCabecalhos(array_keys($headers));
+        $this->addCabecalhos(array_keys($headers));
 
-    $entries = $this->getEntries();
+        $entries = $this->getEntries();
 
-    // Paginador
-    $this->limite = 20;
-    $this->offset = ($_GET['pagina_' . $this->nome]) ?
+        // Paginador
+        $this->limite = 20;
+        $this->offset = ($_GET['pagina_' . $this->nome]) ?
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
       : 0;
 
-    foreach ($entries as $entry) {
-      $item = array();
-      $data = $entry->toArray();
-      $options = array('query' => array(
+        foreach ($entries as $entry) {
+            $item = [];
+            $data = $entry->toArray();
+            $options = ['query' => [
         'id'          => $entry->id,
         'servidor'    => $entry->servidor,
         'instituicao' => $this->getRequest()->instituicao
-      ));
+      ]];
 
-      foreach ($headers as $label => $attr) {
-        $item[] = CoreExt_View_Helper_UrlHelper::l(
-          $entry->$attr, 'view', $options
+            foreach ($headers as $label => $attr) {
+                $item[] = CoreExt_View_Helper_UrlHelper::l(
+          $entry->$attr,
+            'view',
+            $options
         );
-      }
+            }
 
-      $this->addLinhas($item);
-    }
+            $this->addLinhas($item);
+        }
 
-    $this->addPaginador2("", count($entries), $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('', count($entries), $_GET, $this->nome, $this->limite);
 
-    $this->setAcao();
+        $this->setAcao();
 
-    $this->acao_voltar = sprintf(
+        $this->acao_voltar = sprintf(
       'go("/intranet/educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d")',
-      $this->getRequest()->servidor, $this->getRequest()->instituicao
+      $this->getRequest()->servidor,
+        $this->getRequest()->instituicao
     );
 
-    $this->largura = "100%";
-  }
+        $this->largura = '100%';
+    }
 }

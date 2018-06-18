@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,18 +40,24 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
  * Portabilis_View_Helper_DynamicInput_SituacaoMatricula class.
  *
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_SituacaoMatricula extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_SituacaoMatricula extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
-
-    $resources = array(1 => 'Aprovado',
+        $resources = [1 => 'Aprovado',
                        2 => 'Reprovado',
                        3 => 'Cursando',
                        4 => 'Transferido',
@@ -57,16 +68,18 @@ class Portabilis_View_Helper_DynamicInput_SituacaoMatricula extends Portabilis_V
                        12 => 'Aprovado com dependência',
                        13 => 'Aprovado pelo conselho',
                        14 => 'Reprovado por faltas',
-                       15 => 'Falecido');
+                       15 => 'Falecido'];
 
-    return $this->insertOption(10, "Todas", $resources);
-  }
+        return $this->insertOption(10, 'Todas', $resources);
+    }
 
-  protected function defaultOptions(){
-    return array('options' => array('label' => 'Situação'));
-  }
+    protected function defaultOptions()
+    {
+        return ['options' => ['label' => 'Situação']];
+    }
 
-  public function situacaoMatricula($options = array()) {
-    parent::select($options);
-  }
+    public function situacaoMatricula($options = [])
+    {
+        parent::select($options);
+    }
 }

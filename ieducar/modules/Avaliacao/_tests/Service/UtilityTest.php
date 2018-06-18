@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,142 +40,147 @@ require_once 'Avaliacao/_tests/Service/TestCommon.php';
  * Avaliacao_Service_UtilityTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 {
-  public function testArredondaNotaLancaExcecaoSeParametroNaoForInstanciaDeAvaliacaomodelnotacomponenteOuNumerico()
-  {
-    $service = $this->_getServiceInstance();
+    public function testArredondaNotaLancaExcecaoSeParametroNaoForInstanciaDeAvaliacaomodelnotacomponenteOuNumerico()
+    {
+        $service = $this->_getServiceInstance();
 
-    try {
-      $service->arredondaNota(new Avaliacao_Model_NotaComponente());
-      $this->fail('O valor "instância Avaliacao_Model_NotaComponente()" deveria '
+        try {
+            $service->arredondaNota(new Avaliacao_Model_NotaComponente());
+            $this->fail('O valor "instância Avaliacao_Model_NotaComponente()" deveria '
                   . 'ter causado um exceção pois o atributo "nota" é NULL por padrão.');
-    }
-    catch (CoreExt_Exception_InvalidArgumentException $e) {
+        } catch (CoreExt_Exception_InvalidArgumentException $e) {
+        }
+
+        try {
+            $service->arredondaNota('abc 7.5');
+            $this->fail('O valor "abc 7.5" deveria ter causado um exceção.');
+        } catch (CoreExt_Exception_InvalidArgumentException $e) {
+        }
     }
 
-    try {
-      $service->arredondaNota('abc 7.5');
-      $this->fail('O valor "abc 7.5" deveria ter causado um exceção.');
+    public function testArredondaNotaNumerica()
+    {
+        $service = $this->_getServiceInstance();
+        $this->assertEquals(5, $service->arredondaNota(5.5));
     }
-    catch (CoreExt_Exception_InvalidArgumentException $e) {
-    }
-  }
 
-  public function testArredondaNotaNumerica()
-  {
-    $service = $this->_getServiceInstance();
-    $this->assertEquals(5, $service->arredondaNota(5.5));
-  }
-
-  public function testArredondaNotaConceitual()
-  {
-    // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
-    $data = array(
+    public function testArredondaNotaConceitual()
+    {
+        // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
+        $data = [
       'tabelaArredondamento' => 1,
-      'nome'                 => NULL,
-      'descricao'            => NULL,
+      'nome'                 => null,
+      'descricao'            => null,
       'valorMinimo'          => -1,
       'valorMaximo'          => 0
-    );
+    ];
 
-    $tabelaValores = array();
+        $tabelaValores = [];
 
-    // I
-    $tabelaValores[0] = new TabelaArredondamento_Model_TabelaValor($data);
-    $tabelaValores[0]->nome        = 'I';
-    $tabelaValores[0]->descricao   = 'Incompleto';
-    $tabelaValores[0]->valorMinimo = 0;
-    $tabelaValores[0]->valorMaximo = 5.50;
+        // I
+        $tabelaValores[0] = new TabelaArredondamento_Model_TabelaValor($data);
+        $tabelaValores[0]->nome        = 'I';
+        $tabelaValores[0]->descricao   = 'Incompleto';
+        $tabelaValores[0]->valorMinimo = 0;
+        $tabelaValores[0]->valorMaximo = 5.50;
 
-    // S
-    $tabelaValores[1] = new TabelaArredondamento_Model_TabelaValor($data);
-    $tabelaValores[1]->nome        = 'S';
-    $tabelaValores[1]->descricao   = 'Suficiente';
-    $tabelaValores[1]->valorMinimo = 5.51;
-    $tabelaValores[1]->valorMaximo = 8;
+        // S
+        $tabelaValores[1] = new TabelaArredondamento_Model_TabelaValor($data);
+        $tabelaValores[1]->nome        = 'S';
+        $tabelaValores[1]->descricao   = 'Suficiente';
+        $tabelaValores[1]->valorMinimo = 5.51;
+        $tabelaValores[1]->valorMaximo = 8;
 
-    // O
-    $tabelaValores[2] = new TabelaArredondamento_Model_TabelaValor($data);
-    $tabelaValores[2]->nome        = 'O';
-    $tabelaValores[2]->descricao   = 'Ótimo';
-    $tabelaValores[2]->valorMinimo = 8.01;
-    $tabelaValores[2]->valorMaximo = 10.0;
+        // O
+        $tabelaValores[2] = new TabelaArredondamento_Model_TabelaValor($data);
+        $tabelaValores[2]->nome        = 'O';
+        $tabelaValores[2]->descricao   = 'Ótimo';
+        $tabelaValores[2]->valorMinimo = 8.01;
+        $tabelaValores[2]->valorMaximo = 10.0;
 
-    $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
-    $mock->expects($this->any())
+        $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
+        $mock->expects($this->any())
          ->method('findAll')
          ->will($this->returnValue($tabelaValores));
 
-    $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
-    $tabelaDataMapper->setTabelaValorDataMapper($mock);
+        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
+        $tabelaDataMapper->setTabelaValorDataMapper($mock);
 
-    $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Conceituais'));
-    $tabela->setDataMapper($tabelaDataMapper);
+        $tabela = new TabelaArredondamento_Model_Tabela(['nome' => 'Conceituais']);
+        $tabela->setDataMapper($tabelaDataMapper);
 
-    $this->_setRegraOption('tabelaArredondamento', $tabela);
+        $this->_setRegraOption('tabelaArredondamento', $tabela);
 
-    $service = $this->_getServiceInstance();
-    $this->assertEquals('I', $service->arredondaNota(5.49));
-    $this->assertEquals('S', $service->arredondaNota(6.50));
-    $this->assertEquals('O', $service->arredondaNota(9.15));
-  }
+        $service = $this->_getServiceInstance();
+        $this->assertEquals('I', $service->arredondaNota(5.49));
+        $this->assertEquals('S', $service->arredondaNota(6.50));
+        $this->assertEquals('O', $service->arredondaNota(9.15));
+    }
 
-  public function testPreverNotaParaRecuperacao()
-  {
-    // Define as notas do aluno
-    $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+    public function testPreverNotaParaRecuperacao()
+    {
+        // Define as notas do aluno
+        $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
-    $notas = array(
-      new Avaliacao_Model_NotaComponente(array(
+        $notas = [
+      new Avaliacao_Model_NotaComponente([
         'componenteCurricular' => 1,
         'nota'                 => 4,
         'etapa'                => 1
-      )),
-      new Avaliacao_Model_NotaComponente(array(
+      ]),
+      new Avaliacao_Model_NotaComponente([
         'componenteCurricular' => 1,
         'nota'                 => 4,
         'etapa'                => 2
-      )),
-      new Avaliacao_Model_NotaComponente(array(
+      ]),
+      new Avaliacao_Model_NotaComponente([
         'componenteCurricular' => 1,
         'nota'                 => 4,
         'etapa'                => 3
-      )),
-      new Avaliacao_Model_NotaComponente(array(
+      ]),
+      new Avaliacao_Model_NotaComponente([
         'componenteCurricular' => 1,
         'nota'                 => 4,
         'etapa'                => 4
-      )),
-    );
+      ]),
+    ];
 
-    // Configura mock para Avaliacao_Model_NotaComponenteDataMapper
-    $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
+        // Configura mock para Avaliacao_Model_NotaComponenteDataMapper
+        $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
 
-    $mock->expects($this->at(0))
+        $mock->expects($this->at(0))
          ->method('findAll')
-         ->with(array(), array('notaAluno' => $notaAluno->id), array('etapa' => 'ASC'))
+         ->with([], ['notaAluno' => $notaAluno->id], ['etapa' => 'ASC'])
          ->will($this->returnValue($notas));
 
-    $this->_setNotaComponenteDataMapperMock($mock);
+        $this->_setNotaComponenteDataMapperMock($mock);
 
-    $service = $this->_getServiceInstance();
+        $service = $this->_getServiceInstance();
 
-    $expected = new TabelaArredondamento_Model_TabelaValor(array(
+        $expected = new TabelaArredondamento_Model_TabelaValor([
       'nome'        => 10,
       'valorMinimo' => 9,
       'valorMaximo' => 10
-    ));
+    ]);
 
-    $ret = $service->preverNotaRecuperacao(1);
-    $this->assertEquals(array($expected->nome, $expected->valorMinimo, $expected->valorMaximo),
-                        array($ret->nome, $ret->valorMinimo, $ret->valorMaximo));
-  }
+        $ret = $service->preverNotaRecuperacao(1);
+        $this->assertEquals(
+        [$expected->nome, $expected->valorMinimo, $expected->valorMaximo],
+                        [$ret->nome, $ret->valorMinimo, $ret->valorMaximo]
+    );
+    }
 }

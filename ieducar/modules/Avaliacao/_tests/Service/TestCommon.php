@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -122,50 +127,56 @@ require_once 'Avaliacao/Service/Boletim.php';
  * configuração para cada método de teste.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 {
-  /**
-   * Array com as diretrizes de configuração para uso nas dependências de
-   * Avaliacao_Service_Boletim.
-   * @var array
-   */
-  protected $_config = array();
+    /**
+     * Array com as diretrizes de configuração para uso nas dependências de
+     * Avaliacao_Service_Boletim.
+     *
+     * @var array
+     */
+    protected $_config = [];
 
-  /**
-   * @var RegraAvaliacao_Model_RegraDataMapper
-   */
-  protected $_regraDataMapperMock = NULL;
+    /**
+     * @var RegraAvaliacao_Model_RegraDataMapper
+     */
+    protected $_regraDataMapperMock = null;
 
-  /**
-   * Opções de configuração para RegraAvaliacao_Model_RegraDataMapper. Por
-   * padrão, a regra terá:
-   *
-   * - Identificador "1"
-   * - Nome "Regra geral"
-   * - Tipo de nota numérica
-   * - Progressão continuada
-   * - Presença por componente
-   * - Nenhum parecer descritivo
-   * - Média para promoção de "6"
-   * - Tabela de arredondamento com valores de 0 a 10
-   * - Fórmula de média aritmética simples (Soma etapas / Qtde etapas)
-   * - Fórmula de recuperação ponderada (Soma etapas x 0.6 + Recuperação x 0.4)
-   * - Porcentagem de presença mínima de "75%"
-   *
-   * Para alterar algum desses valores, basta usar o método
-   * _setRegraOption($key, $value) onde $key é a chave do array e $value o valor
-   * a ser usado.
-   *
-   * @var array
-   */
-  protected $_regraOptions = array(
+    /**
+     * Opções de configuração para RegraAvaliacao_Model_RegraDataMapper. Por
+     * padrão, a regra terá:
+     *
+     * - Identificador "1"
+     * - Nome "Regra geral"
+     * - Tipo de nota numérica
+     * - Progressão continuada
+     * - Presença por componente
+     * - Nenhum parecer descritivo
+     * - Média para promoção de "6"
+     * - Tabela de arredondamento com valores de 0 a 10
+     * - Fórmula de média aritmética simples (Soma etapas / Qtde etapas)
+     * - Fórmula de recuperação ponderada (Soma etapas x 0.6 + Recuperação x 0.4)
+     * - Porcentagem de presença mínima de "75%"
+     *
+     * Para alterar algum desses valores, basta usar o método
+     * _setRegraOption($key, $value) onde $key é a chave do array e $value o valor
+     * a ser usado.
+     *
+     * @var array
+     */
+    protected $_regraOptions = [
     'id'                   => 1,
     'nome'                 => 'Regra geral',
     'tipoNota'             => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
@@ -173,35 +184,35 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     'tipoPresenca'         => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
     'parecerDescritivo'    => RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM,
     'media'                => 6,
-    'tabelaArredondamento' => NULL,
-    'formulaMedia'         => NULL,
-    'formulaRecuperacao'   => NULL,
+    'tabelaArredondamento' => null,
+    'formulaMedia'         => null,
+    'formulaRecuperacao'   => null,
     'porcentagemPresenca'  => 75
-  );
+  ];
 
-  protected $_componenteDataMapperMock = NULL;
+    protected $_componenteDataMapperMock = null;
 
-  protected $_componenteTurmaDataMapperMock = NULL;
+    protected $_componenteTurmaDataMapperMock = null;
 
-  protected $_notaAlunoDataMapperMock = NULL;
+    protected $_notaAlunoDataMapperMock = null;
 
-  protected $_notaComponenteDataMapperMock = NULL;
+    protected $_notaComponenteDataMapperMock = null;
 
-  protected $_notaComponenteMediaDataMapperMock = NULL;
+    protected $_notaComponenteMediaDataMapperMock = null;
 
-  protected $_faltaAlunoDataMapperMock = NULL;
+    protected $_faltaAlunoDataMapperMock = null;
 
-  protected $_faltaAbstractDataMapperMock = NULL;
+    protected $_faltaAbstractDataMapperMock = null;
 
-  protected $_parecerDescritivoAlunoDataMapperMock = NULL;
+    protected $_parecerDescritivoAlunoDataMapperMock = null;
 
-  protected $_parecerDescritivoAbstractDataMapperMock = NULL;
+    protected $_parecerDescritivoAbstractDataMapperMock = null;
 
-  protected function setUp()
-  {
-    // Armazena valores de configuração para serem usados nas diferentes
-    // instâncias de objetos legados e novos
-    $this->_setConfigOptions('usuario', array('cod_usuario' => 1))
+    protected function setUp()
+    {
+        // Armazena valores de configuração para serem usados nas diferentes
+        // instâncias de objetos legados e novos
+        $this->_setConfigOptions('usuario', ['cod_usuario' => 1])
          ->_setConfigOptions('matricula', $this->_getMatricula())
          ->_setConfigOptions('matriculaTurma', $this->_getMatriculaTurma())
          ->_setConfigOptions('serie', $this->_getSerie())
@@ -217,16 +228,16 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
          ->_setConfigOptions('faltaAluno', $this->_getFaltaAluno())
          ->_setConfigOptions('parecerDescritivoAluno', $this->_getParecerDescritivoAluno());
 
-    // Configura atributos de RegraAvaliacao_Model_Regra
-    $this->_setRegraOption('formulaMedia', $this->_setUpFormulaMedia())
+        // Configura atributos de RegraAvaliacao_Model_Regra
+        $this->_setRegraOption('formulaMedia', $this->_setUpFormulaMedia())
          ->_setRegraOption('formulaRecuperacao', $this->_setUpFormulaRecuperacao())
          ->_setRegraOption('tabelaArredondamento', $this->_setUpTabelaArredondamento());
-  }
+    }
 
-  protected function _getServiceInstance()
-  {
-    // Configura mappers das dependências de Avalilacao_Service_Boletim
-    $mappers = array(
+    protected function _getServiceInstance()
+    {
+        // Configura mappers das dependências de Avalilacao_Service_Boletim
+        $mappers = [
       'RegraDataMapper'                     => $this->_getRegraDataMapperMock(),
       'ComponenteDataMapper'                => $this->_getComponenteDataMapperMock(),
       'ComponenteTurmaDataMapper'           => $this->_getComponenteTurmaDataMapperMock(),
@@ -237,12 +248,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'FaltaAbstractDataMapper'             => $this->_getFaltaAbstractDataMapperMock(),
       'ParecerDescritivoAlunoDataMapper'    => $this->_getParecerDescritivoAlunoDataMapperMock(),
       'ParecerDescritivoAbstractDataMapper' => $this->_getParecerDescritivoAbstractDataMapperMock(),
-    );
+    ];
 
-    $this->_setConfigOptions('mappers', $mappers);
+        $this->_setConfigOptions('mappers', $mappers);
 
-    // Cria os mocks das classes legadas
-    $this->_setUpMatriculaMock()
+        // Cria os mocks das classes legadas
+        $this->_setUpMatriculaMock()
          ->_setUpMatriculaTurmaMock()
          ->_setUpCursoMock()
          ->_setUpSerieMock()
@@ -252,17 +263,18 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
          ->_setUpEscolaSerieDisciplinaMock()
          ->_setUpDispensaDisciplinaMock();
 
-    // Instancia o service
-    return new Avaliacao_Service_Boletim($this->_getServiceOptions());
-  }
+        // Instancia o service
+        return new Avaliacao_Service_Boletim($this->_getServiceOptions());
+    }
 
-  /**
-   * Getter. Retorna o array de opções para a inicialização do service.
-   * @return array
-   */
-  protected function _getServiceOptions()
-  {
-    return array(
+    /**
+     * Getter. Retorna o array de opções para a inicialização do service.
+     *
+     * @return array
+     */
+    protected function _getServiceOptions()
+    {
+        return [
       'matricula'                           => $this->_getConfigOption('matricula', 'cod_matricula'),
       'usuario'                             => $this->_getConfigOption('usuario', 'cod_usuario'),
       'RegraDataMapper'                     => $this->_getConfigOption('mappers', 'RegraDataMapper'),
@@ -275,783 +287,827 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'FaltaAbstractDataMapper'             => $this->_getConfigOption('mappers', 'FaltaAbstractDataMapper'),
       'ParecerDescritivoAlunoDataMapper'    => $this->_getConfigOption('mappers', 'ParecerDescritivoAlunoDataMapper'),
       'ParecerDescritivoAbstractDataMapper' => $this->_getConfigOption('mappers', 'ParecerDescritivoAbstractDataMapper'),
-    );
-  }
-
-  /**
-   * Setter.
-   *
-   * @param string $namespace
-   * @param array $data
-   * @return Avaliacao_Service_TestCommon
-   */
-  protected function _setConfigOptions($namespace, array $data)
-  {
-    $namespace = strtolower($namespace);
-
-    $this->_config[$namespace] = array();
-
-    // Chama _setConfigOption() para não sobrescrever opções já configuradas
-    foreach ($data as $key => $value) {
-      $this->_setConfigOption($namespace, $key, $value);
+    ];
     }
 
-    return $this;
-  }
+    /**
+     * Setter.
+     *
+     * @param string $namespace
+     * @param array  $data
+     *
+     * @return Avaliacao_Service_TestCommon
+     */
+    protected function _setConfigOptions($namespace, array $data)
+    {
+        $namespace = strtolower($namespace);
 
-  /**
-   * Getter.
-   *
-   * @param string $namespace
-   * @return mixed
-   */
-  protected function _getConfigOptions($namespace)
-  {
-    $namespace = strtolower($namespace);
+        $this->_config[$namespace] = [];
 
-    if (!isset($this->_config[$namespace])) {
-      throw new Exception('_getConfigOption namespace');
+        // Chama _setConfigOption() para não sobrescrever opções já configuradas
+        foreach ($data as $key => $value) {
+            $this->_setConfigOption($namespace, $key, $value);
+        }
+
+        return $this;
     }
 
-    return $this->_config[$namespace];
-  }
+    /**
+     * Getter.
+     *
+     * @param string $namespace
+     *
+     * @return mixed
+     */
+    protected function _getConfigOptions($namespace)
+    {
+        $namespace = strtolower($namespace);
 
-  /**
-   * Setter.
-   *
-   * @param string $namespace
-   * @param string $key
-   * @param mixed $value
-   * @return Avaliacao_Service_TestCommon
-   */
-  protected function _setConfigOption($namespace, $key, $value)
-  {
-    $namespace = strtolower($namespace);
+        if (!isset($this->_config[$namespace])) {
+            throw new Exception('_getConfigOption namespace');
+        }
 
-    if (!isset($this->_config[$namespace])) {
-      $this->_config[$namespace] = array();
+        return $this->_config[$namespace];
     }
 
-    $this->_config[$namespace][$key] = $value;
-    return $this;
-  }
+    /**
+     * Setter.
+     *
+     * @param string $namespace
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return Avaliacao_Service_TestCommon
+     */
+    protected function _setConfigOption($namespace, $key, $value)
+    {
+        $namespace = strtolower($namespace);
 
-  /**
-   * Getter.
-   *
-   * @param string $namespace
-   * @param string $key
-   * @return mixed
-   */
-  protected function _getConfigOption($namespace, $key)
-  {
-    $namespace = strtolower($namespace);
+        if (!isset($this->_config[$namespace])) {
+            $this->_config[$namespace] = [];
+        }
 
-    if (!isset($this->_config[$namespace])) {
-      throw new Exception('_getConfigOption namespace');
+        $this->_config[$namespace][$key] = $value;
+
+        return $this;
     }
 
-    if (!isset($this->_config[$namespace][$key])) {
-      throw new Exception('_getConfigOption option name: ' . $key);
+    /**
+     * Getter.
+     *
+     * @param string $namespace
+     * @param string $key
+     *
+     * @return mixed
+     */
+    protected function _getConfigOption($namespace, $key)
+    {
+        $namespace = strtolower($namespace);
+
+        if (!isset($this->_config[$namespace])) {
+            throw new Exception('_getConfigOption namespace');
+        }
+
+        if (!isset($this->_config[$namespace][$key])) {
+            throw new Exception('_getConfigOption option name: ' . $key);
+        }
+
+        return $this->_config[$namespace][$key];
     }
 
-    return $this->_config[$namespace][$key];
-  }
-
-  /**
-   * @return array
-   */
-  protected function _getMatricula()
-  {
-    return array(
+    /**
+     * @return array
+     */
+    protected function _getMatricula()
+    {
+        return [
       'cod_matricula'      => 1,
       'ref_cod_curso'      => 1,
       'ref_ref_cod_serie'  => 1,
       'ref_ref_cod_escola' => 1,
       'aprovado'           => 1
-    );
-  }
+    ];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getMatriculaTurma()
-  {
-    return array(
+    /**
+     * @return array
+     */
+    protected function _getMatriculaTurma()
+    {
+        return [
       'ref_cod_matricula' => 1,
       'ref_cod_turma'     => 1
-    );
-  }
+    ];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getSerie()
-  {
-    return array(
+    /**
+     * @return array
+     */
+    protected function _getSerie()
+    {
+        return [
       'regra_avaliacao_id' => 1,
       'carga_horaria'      => 800
-    );
-  }
+    ];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getCurso()
-  {
-    return array(
+    /**
+     * @return array
+     */
+    protected function _getCurso()
+    {
+        return [
       'carga_horaria'      => 800 * 9,
       'hora_falta'         => (50 / 60),
       'padrao_ano_escolar' => 1
-    );
-  }
+    ];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getEscolaAnoLetivo()
-  {
-    return array(array(
+    /**
+     * @return array
+     */
+    protected function _getEscolaAnoLetivo()
+    {
+        return [[
       'ref_cod_escola' => 1,
       'ano' => 2009,
       'andamento' => 1,
       'ativo' => 1
-    ));
-  }
+    ]];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getAnoLetivoModulo()
-  {
-    return array(
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1, 'ref_cod_modulo' => 1),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2, 'ref_cod_modulo' => 1),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3, 'ref_cod_modulo' => 1),
-      array('ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4, 'ref_cod_modulo' => 1)
-    );
-  }
+    /**
+     * @return array
+     */
+    protected function _getAnoLetivoModulo()
+    {
+        return [
+      ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1, 'ref_cod_modulo' => 1],
+      ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2, 'ref_cod_modulo' => 1],
+      ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3, 'ref_cod_modulo' => 1],
+      ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4, 'ref_cod_modulo' => 1]
+    ];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getModulo()
-  {
-    return array(
+    /**
+     * @return array
+     */
+    protected function _getModulo()
+    {
+        return [
       'cod_modulo' => 1, 'nm_tipo' => 'Bimestre'
-    );
-  }
+    ];
+    }
 
-  /**
-   * Retorna um array com as possíveis etapas a serem cursadas.
-   * @return array
-   * @todo Condicionar o retorno de 'Rc' caso exista recuperação na Regra
-   */
-  protected function _getEtapasPossiveis()
-  {
-    $etapas = count($this->_getConfigOptions('anoLetivoModulo'));
-    return array_merge(range(1, $etapas, 1), array('Rc'));
-  }
+    /**
+     * Retorna um array com as possíveis etapas a serem cursadas.
+     *
+     * @return array
+     *
+     * @todo Condicionar o retorno de 'Rc' caso exista recuperação na Regra
+     */
+    protected function _getEtapasPossiveis()
+    {
+        $etapas = count($this->_getConfigOptions('anoLetivoModulo'));
 
-  /**
-   * @return array
-   */
-  protected function _getComponentesTurma()
-  {
-    return array();
-  }
+        return array_merge(range(1, $etapas, 1), ['Rc']);
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getEscolaSerieDisciplina()
-  {
-    return array(
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 1, 'carga_horaria' => 250),
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 2, 'carga_horaria' => 250),
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 3, 'carga_horaria' => 150),
-      array('ref_cod_serie' => 1, 'ref_cod_disciplina' => 4, 'carga_horaria' => 150),
-    );
-  }
+    /**
+     * @return array
+     */
+    protected function _getComponentesTurma()
+    {
+        return [];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getDispensaDisciplina()
-  {
-    return array();
-  }
+    /**
+     * @return array
+     */
+    protected function _getEscolaSerieDisciplina()
+    {
+        return [
+      ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 1, 'carga_horaria' => 250],
+      ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 2, 'carga_horaria' => 250],
+      ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 3, 'carga_horaria' => 150],
+      ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 4, 'carga_horaria' => 150],
+    ];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getComponenteCurricular()
-  {
-    return array(
+    /**
+     * @return array
+     */
+    protected function _getDispensaDisciplina()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    protected function _getComponenteCurricular()
+    {
+        return [
       1 => new ComponenteCurricular_Model_Componente(
-        array('id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100)
+        ['id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100]
       ),
       2 => new ComponenteCurricular_Model_Componente(
-        array('id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100)
+        ['id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100]
       ),
       3 => new ComponenteCurricular_Model_Componente(
-        array('id' => 3, 'nome' => 'Ciências', 'cargaHoraria' => 60)
+        ['id' => 3, 'nome' => 'Ciências', 'cargaHoraria' => 60]
       ),
       4 => new ComponenteCurricular_Model_Componente(
-        array('id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60)
+        ['id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60]
       )
-    );
-  }
+    ];
+    }
 
-  /**
-   * Retorna os componentes cursados pelo aluno.
-   * @return array
-   */
-  protected function _getComponentesCursados()
-  {
-    return array_diff(
+    /**
+     * Retorna os componentes cursados pelo aluno.
+     *
+     * @return array
+     */
+    protected function _getComponentesCursados()
+    {
+        return array_diff(
       array_keys($this->_getComponenteCurricular()),
       array_keys($this->_getDispensaDisciplina())
     );
-  }
+    }
 
-  /**
-   * @return Avaliacao_Model_NotaAluno
-   */
-  protected function _getNotaAluno()
-  {
-    $matricula = $this->_getConfigOption('matricula', 'cod_matricula');
+    /**
+     * @return Avaliacao_Model_NotaAluno
+     */
+    protected function _getNotaAluno()
+    {
+        $matricula = $this->_getConfigOption('matricula', 'cod_matricula');
 
-    return array('instance' => new Avaliacao_Model_NotaAluno(array(
+        return ['instance' => new Avaliacao_Model_NotaAluno([
       'id'        => 1,
       'matricula' => $matricula
-    )));
-  }
+    ])];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getFaltaAluno()
-  {
-    $matricula = $this->_getConfigOption('matricula', 'cod_matricula');
+    /**
+     * @return array
+     */
+    protected function _getFaltaAluno()
+    {
+        $matricula = $this->_getConfigOption('matricula', 'cod_matricula');
 
-    return array('instance' => new Avaliacao_Model_FaltaAluno(array(
+        return ['instance' => new Avaliacao_Model_FaltaAluno([
       'id'        => 1,
       'matricula' => $matricula,
       'tipoFalta' => $this->_getRegraOption('tipoPresenca')
-    )));
-  }
+    ])];
+    }
 
-  /**
-   * @return array
-   */
-  protected function _getParecerDescritivoAluno()
-  {
-    $matricula = $this->_getConfigOption('matricula', 'cod_matricula');
+    /**
+     * @return array
+     */
+    protected function _getParecerDescritivoAluno()
+    {
+        $matricula = $this->_getConfigOption('matricula', 'cod_matricula');
 
-    return array('instance' => new Avaliacao_Model_ParecerDescritivoAluno(array(
+        return ['instance' => new Avaliacao_Model_ParecerDescritivoAluno([
       'id'                => 1,
       'matricula'         => $matricula,
       'parecerDescritivo' => $this->_getRegraOption('parecerDescritivo')
-    )));
-  }
+    ])];
+    }
 
-  /**
-   * @return clsPmieducarMatricula
-   */
-  protected function _setUpMatriculaMock()
-  {
-    $mock = $this->getCleanMock('clsPmieducarMatricula');
+    /**
+     * @return clsPmieducarMatricula
+     */
+    protected function _setUpMatriculaMock()
+    {
+        $mock = $this->getCleanMock('clsPmieducarMatricula');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
               ->method('detalhe')
               ->will($this->returnValue($this->_getConfigOptions('matricula')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarMatricula',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarMatricula',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarMatriculaTurma
-   */
-  protected function _setUpMatriculaTurmaMock()
-  {
-    $mock = $this->getCleanMock('clsPmieducarMatriculaTurma');
+    /**
+     * @return clsPmieducarMatriculaTurma
+     */
+    protected function _setUpMatriculaTurmaMock()
+    {
+        $mock = $this->getCleanMock('clsPmieducarMatriculaTurma');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
         ->method('lista')
         ->with(1)
         ->will($this->returnValue($this->_getConfigOptions('matriculaTurma')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarMatriculaTurma',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarMatriculaTurma',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarSerie
-   */
-  protected function _setUpSerieMock()
-  {
-    $mock = $this->getCleanMock('clsPmieducarSerie');
+    /**
+     * @return clsPmieducarSerie
+     */
+    protected function _setUpSerieMock()
+    {
+        $mock = $this->getCleanMock('clsPmieducarSerie');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
          ->method('detalhe')
          ->will($this->returnValue($this->_getConfigOptions('serie')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarSerie',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarSerie',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarCurso
-   */
-  protected function _setUpCursoMock()
-  {
-    $mock = $this->getCleanMock('clsPmieducarCurso');
+    /**
+     * @return clsPmieducarCurso
+     */
+    protected function _setUpCursoMock()
+    {
+        $mock = $this->getCleanMock('clsPmieducarCurso');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
          ->method('detalhe')
          ->will($this->returnValue($this->_getConfigOptions('curso')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarCurso',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarCurso',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarEscolaAnoLetivo
-   */
-  protected function _setUpEscolaAnoLetivo()
-  {
-    $mock = $this->getCleanMock('clsPmieducarEscolaAnoLetivo');
+    /**
+     * @return clsPmieducarEscolaAnoLetivo
+     */
+    protected function _setUpEscolaAnoLetivo()
+    {
+        $mock = $this->getCleanMock('clsPmieducarEscolaAnoLetivo');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
          ->method('lista')
-         ->with(1, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1)
+         ->with(1, null, null, null, 1, null, null, null, null, 1)
          ->will($this->returnValue($this->_getConfigOptions('escolaAnoLetivo')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarEscolaAnoLetivo',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarEscolaAnoLetivo',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarAnoLetivoModulo
-   */
-  protected function _setUpAnoLetivoModulo()
-  {
-    $mock = $this->getCleanMock('clsPmieducarAnoLetivoModulo');
+    /**
+     * @return clsPmieducarAnoLetivoModulo
+     */
+    protected function _setUpAnoLetivoModulo()
+    {
+        $mock = $this->getCleanMock('clsPmieducarAnoLetivoModulo');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
          ->method('lista')
          ->with(2009, 1)
          ->will($this->returnValue($this->_getConfigOptions('anoLetivoModulo')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarAnoLetivoModulo',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarAnoLetivoModulo',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarModulo
-   */
-  protected function _setUpModulo()
-  {
-    $mock = $this->getCleanMock('clsPmieducarModulo');
+    /**
+     * @return clsPmieducarModulo
+     */
+    protected function _setUpModulo()
+    {
+        $mock = $this->getCleanMock('clsPmieducarModulo');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
          ->method('detalhe')
          ->will($this->returnValue($this->_getConfigOptions('modulo')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarModulo', $mock, NULL, TRUE);
+        CoreExt_Entity::addClassToStorage('clsPmieducarModulo', $mock, null, true);
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarEscolaSerieDisciplina
-   */
-  protected function _setUpEscolaSerieDisciplinaMock()
-  {
-    $mock = $this->getCleanMock('clsPmieducarEscolaSerieDisciplina');
+    /**
+     * @return clsPmieducarEscolaSerieDisciplina
+     */
+    protected function _setUpEscolaSerieDisciplinaMock()
+    {
+        $mock = $this->getCleanMock('clsPmieducarEscolaSerieDisciplina');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
          ->method('lista')
          ->will($this->returnValue($this->_getConfigOptions('escolaSerieDisciplina')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarEscolaSerieDisciplina',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return clsPmieducarDispensaDisciplina
-   */
-  protected function _setUpDispensaDisciplinaMock()
-  {
-    $mock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
+    /**
+     * @return clsPmieducarDispensaDisciplina
+     */
+    protected function _setUpDispensaDisciplinaMock()
+    {
+        $mock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
 
-    $mock->expects($this->any())
+        $mock->expects($this->any())
          ->method('lista')
          ->will($this->returnValue($this->_getConfigOptions('dispensaDisciplina')));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarDispensaDisciplina',
-      $mock, NULL, TRUE
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarDispensaDisciplina',
+      $mock,
+        null,
+        true
     );
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Configura e retorna um mock de RegraAvaliacaoDataMapper que retorna uma
-   * instância de RegraAvaliacao_Model_Regra configurada de acordo com as
-   * opções do array $_regraOptions.
-   *
-   * @return RegraAvaliacao_Model_RegraDataMapper
-   */
-  protected function _getRegraDataMapperMock()
-  {
-    $regraAvaliacao = new RegraAvaliacao_Model_Regra($this->_regraOptions);
+    /**
+     * Configura e retorna um mock de RegraAvaliacaoDataMapper que retorna uma
+     * instância de RegraAvaliacao_Model_Regra configurada de acordo com as
+     * opções do array $_regraOptions.
+     *
+     * @return RegraAvaliacao_Model_RegraDataMapper
+     */
+    protected function _getRegraDataMapperMock()
+    {
+        $regraAvaliacao = new RegraAvaliacao_Model_Regra($this->_regraOptions);
 
-    $mock = $this->getCleanMock('RegraAvaliacao_Model_RegraDataMapper');
-    $mock->expects($this->any())
+        $mock = $this->getCleanMock('RegraAvaliacao_Model_RegraDataMapper');
+        $mock->expects($this->any())
          ->method('find')
          ->with(1)
          ->will($this->returnValue($regraAvaliacao));
 
-    return $mock;
-  }
-
-  /**
-   * Configura uma das opções a serem passadas durante a instanciação de
-   * RegraAvaliacao_Model_Regra.
-   *
-   * @param string $key
-   * @param mixed $value
-   */
-  protected function _setRegraOption($key, $value)
-  {
-    if (!array_key_exists($key, $this->_regraOptions)) {
-      require_once 'CoreExt/Exception/InvalidArgumentException.php';
-      throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
+        return $mock;
     }
 
-    $this->_regraOptions[$key] = $value;
-    return $this;
-  }
+    /**
+     * Configura uma das opções a serem passadas durante a instanciação de
+     * RegraAvaliacao_Model_Regra.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    protected function _setRegraOption($key, $value)
+    {
+        if (!array_key_exists($key, $this->_regraOptions)) {
+            require_once 'CoreExt/Exception/InvalidArgumentException.php';
+            throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
+        }
 
-  /**
-   * Getter.
-   *
-   * @param string $key
-   * @return mixed
-   */
-  protected function _getRegraOption($key)
-  {
-    if (!array_key_exists($key, $this->_regraOptions)) {
-      require_once 'CoreExt/Exception/InvalidArgumentException.php';
-      throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
+        $this->_regraOptions[$key] = $value;
+
+        return $this;
     }
 
-    return $this->_regraOptions[$key];
-  }
+    /**
+     * Getter.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    protected function _getRegraOption($key)
+    {
+        if (!array_key_exists($key, $this->_regraOptions)) {
+            require_once 'CoreExt/Exception/InvalidArgumentException.php';
+            throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
+        }
 
-  /**
-   * @return FormulaMedia_Model_Formula
-   */
-  protected function _setUpFormulaMedia()
-  {
-    return new FormulaMedia_Model_Formula(array(
+        return $this->_regraOptions[$key];
+    }
+
+    /**
+     * @return FormulaMedia_Model_Formula
+     */
+    protected function _setUpFormulaMedia()
+    {
+        return new FormulaMedia_Model_Formula([
       'id'           => 1,
       'nome'         => 'Média aritmética',
       'formulaMedia' => 'Se / Et',
       'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_FINAL
-    ));
-  }
+    ]);
+    }
 
-  /**
-   * @return FormulaMedia_Model_Formula
-   */
-  protected function _setUpFormulaRecuperacao()
-  {
-    return new FormulaMedia_Model_Formula(array(
+    /**
+     * @return FormulaMedia_Model_Formula
+     */
+    protected function _setUpFormulaRecuperacao()
+    {
+        return new FormulaMedia_Model_Formula([
       'id'           => 1,
       'nome'         => 'Média ponderada',
       'formulaMedia' => '(Se / Et * 0.6) + (Rc * 0.4)',
       'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO
-    ));
-  }
-
-  /**
-   * @return TabelaArredondamento_Model_Tabela
-   */
-  protected function _setUpTabelaArredondamento()
-  {
-    // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
-    $data = array(
-      'tabelaArredondamento' => 1,
-      'nome'                 => NULL,
-      'descricao'            => NULL,
-      'valorMinimo'          => -1,
-      'valorMaximo'          => 0
-    );
-
-    $tabelaValores = array();
-
-    for ($i = 0; $i <= 10; $i++) {
-      $data['nome'] = $i;
-      $data['valorMinimo'] += 1;
-      $data['valorMaximo'] += 1;
-
-      if ($i == 10) {
-        $data['valorMinimo'] = 9;
-        $data['valorMaximo'] = 10;
-      }
-
-      $tabelaValores[$i] = new TabelaArredondamento_Model_TabelaValor($data);
+    ]);
     }
 
-    $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
-    $mock->expects($this->any())
+    /**
+     * @return TabelaArredondamento_Model_Tabela
+     */
+    protected function _setUpTabelaArredondamento()
+    {
+        // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
+        $data = [
+      'tabelaArredondamento' => 1,
+      'nome'                 => null,
+      'descricao'            => null,
+      'valorMinimo'          => -1,
+      'valorMaximo'          => 0
+    ];
+
+        $tabelaValores = [];
+
+        for ($i = 0; $i <= 10; $i++) {
+            $data['nome'] = $i;
+            $data['valorMinimo'] += 1;
+            $data['valorMaximo'] += 1;
+
+            if ($i == 10) {
+                $data['valorMinimo'] = 9;
+                $data['valorMaximo'] = 10;
+            }
+
+            $tabelaValores[$i] = new TabelaArredondamento_Model_TabelaValor($data);
+        }
+
+        $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
+        $mock->expects($this->any())
          ->method('findAll')
          ->will($this->returnValue($tabelaValores));
 
-    $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
-    $tabelaDataMapper->setTabelaValorDataMapper($mock);
+        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
+        $tabelaDataMapper->setTabelaValorDataMapper($mock);
 
-    $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Numéricas'));
-    $tabela->setDataMapper($tabelaDataMapper);
+        $tabela = new TabelaArredondamento_Model_Tabela(['nome' => 'Numéricas']);
+        $tabela->setDataMapper($tabelaDataMapper);
 
-    return $tabela;
-  }
+        return $tabela;
+    }
 
-  protected function _setComponenteDataMapperMock(ComponenteCurricular_Model_ComponenteDataMapper $mapper)
-  {
-    $this->_componenteDataMapperMock = $mapper;
-    return $this;
-  }
+    protected function _setComponenteDataMapperMock(ComponenteCurricular_Model_ComponenteDataMapper $mapper)
+    {
+        $this->_componenteDataMapperMock = $mapper;
 
-  protected function _getComponenteDataMapperMock()
-  {
-    if (is_null($this->_componenteDataMapperMock)) {
-      $componentes = $this->_getConfigOptions('componenteCurricular');
+        return $this;
+    }
 
-      // Mock para ComponenteCurricular_Model_ComponenteDataMapper
-      $mock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
-      $mock->expects($this->any())
+    protected function _getComponenteDataMapperMock()
+    {
+        if (is_null($this->_componenteDataMapperMock)) {
+            $componentes = $this->_getConfigOptions('componenteCurricular');
+
+            // Mock para ComponenteCurricular_Model_ComponenteDataMapper
+            $mock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
+            $mock->expects($this->any())
            ->method('findComponenteCurricularAnoEscolar')
            ->will(new PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($componentes));
 
-      $this->_setComponenteDataMapperMock($mock);
+            $this->_setComponenteDataMapperMock($mock);
+        }
+
+        return $this->_componenteDataMapperMock;
     }
 
-    return $this->_componenteDataMapperMock;
-  }
+    protected function _setComponenteTurmaDataMapperMock(ComponenteCurricular_Model_TurmaDataMapper $mapper)
+    {
+        $this->_componenteTurmaDataMapperMock = $mapper;
 
-  protected function _setComponenteTurmaDataMapperMock(ComponenteCurricular_Model_TurmaDataMapper $mapper)
-  {
-    $this->_componenteTurmaDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getComponenteTurmaDataMapperMock()
-  {
-    if (is_null($this->_componenteTurmaDataMapperMock)) {
-      $componentes = $this->_getConfigOptions('componentesTurma');
+    protected function _getComponenteTurmaDataMapperMock()
+    {
+        if (is_null($this->_componenteTurmaDataMapperMock)) {
+            $componentes = $this->_getConfigOptions('componentesTurma');
 
-      // Mock para ComponenteCurricular_Model_TurmaDataMapper
-      $mock = $this->getCleanMock('ComponenteCurricular_Model_TurmaDataMapper');
-      $mock->expects($this->any())
+            // Mock para ComponenteCurricular_Model_TurmaDataMapper
+            $mock = $this->getCleanMock('ComponenteCurricular_Model_TurmaDataMapper');
+            $mock->expects($this->any())
            ->method('findAll')
            ->will(new PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($componentes));
 
-      $this->_setComponenteTurmaDataMapperMock($mock);
+            $this->_setComponenteTurmaDataMapperMock($mock);
+        }
+
+        return $this->_componenteTurmaDataMapperMock;
     }
 
-    return $this->_componenteTurmaDataMapperMock;
-  }
+    protected function _setNotaAlunoDataMapperMock(Avaliacao_Model_NotaAlunoDataMapper $mapper = null)
+    {
+        $this->_notaAlunoDataMapperMock = $mapper;
 
-  protected function _setNotaAlunoDataMapperMock(Avaliacao_Model_NotaAlunoDataMapper $mapper = NULL)
-  {
-    $this->_notaAlunoDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getNotaAlunoDataMapperMock()
-  {
-    if (is_null($this->_notaAlunoDataMapperMock)) {
-      $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+    protected function _getNotaAlunoDataMapperMock()
+    {
+        if (is_null($this->_notaAlunoDataMapperMock)) {
+            $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
-      $mock = $this->getCleanMock('Avaliacao_Model_NotaAlunoDataMapper');
-      $mock->expects($this->at(0))
+            $mock = $this->getCleanMock('Avaliacao_Model_NotaAlunoDataMapper');
+            $mock->expects($this->at(0))
            ->method('findAll')
-           ->with(array(), array('matricula' => $notaAluno->matricula))
-           ->will($this->returnValue(array($notaAluno)));
+           ->with([], ['matricula' => $notaAluno->matricula])
+           ->will($this->returnValue([$notaAluno]));
 
-      $this->_setNotaAlunoDataMapperMock($mock);
+            $this->_setNotaAlunoDataMapperMock($mock);
+        }
+
+        return $this->_notaAlunoDataMapperMock;
     }
 
-    return $this->_notaAlunoDataMapperMock;
-  }
+    protected function _setNotaComponenteDataMapperMock(Avaliacao_Model_NotaComponenteDataMapper $mapper)
+    {
+        $this->_notaComponenteDataMapperMock = $mapper;
 
-  protected function _setNotaComponenteDataMapperMock(Avaliacao_Model_NotaComponenteDataMapper $mapper)
-  {
-    $this->_notaComponenteDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getNotaComponenteDataMapperMock()
-  {
-    if (is_null($this->_notaComponenteDataMapperMock)) {
-      $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
-      $mock->expects($this->at(0))
+    protected function _getNotaComponenteDataMapperMock()
+    {
+        if (is_null($this->_notaComponenteDataMapperMock)) {
+            $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
+            $mock->expects($this->at(0))
            ->method('findAll')
-           ->with(array(), array('notaAluno' => $this->_getConfigOption('matricula', 'cod_matricula')), array('etapa' => 'ASC'))
-           ->will($this->returnValue(array()));
+           ->with([], ['notaAluno' => $this->_getConfigOption('matricula', 'cod_matricula')], ['etapa' => 'ASC'])
+           ->will($this->returnValue([]));
 
-      $this->_setNotaComponenteDataMapperMock($mock);
+            $this->_setNotaComponenteDataMapperMock($mock);
+        }
+
+        return $this->_notaComponenteDataMapperMock;
     }
 
-    return $this->_notaComponenteDataMapperMock;
-  }
+    protected function _setNotaComponenteMediaDataMapperMock(Avaliacao_Model_NotaComponenteMediaDataMapper $mapper)
+    {
+        $this->_notaComponenteMediaDataMapperMock = $mapper;
 
-  protected function _setNotaComponenteMediaDataMapperMock(Avaliacao_Model_NotaComponenteMediaDataMapper $mapper)
-  {
-    $this->_notaComponenteMediaDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getNotaComponenteMediaDataMapperMock()
-  {
-    if (is_null($this->_notaComponenteMediaDataMapperMock)) {
-      $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+    protected function _getNotaComponenteMediaDataMapperMock()
+    {
+        if (is_null($this->_notaComponenteMediaDataMapperMock)) {
+            $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
-      $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteMediaDataMapper');
-      $mock->expects($this->at(0))
+            $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteMediaDataMapper');
+            $mock->expects($this->at(0))
            ->method('findAll')
-           ->with(array(), array('notaAluno' => $notaAluno->id))
-           ->will($this->returnValue(array()));
+           ->with([], ['notaAluno' => $notaAluno->id])
+           ->will($this->returnValue([]));
 
-      $this->_setNotaComponenteMediaDataMapperMock($mock);
+            $this->_setNotaComponenteMediaDataMapperMock($mock);
+        }
+
+        return $this->_notaComponenteMediaDataMapperMock;
     }
 
-    return $this->_notaComponenteMediaDataMapperMock;
-  }
+    protected function _setFaltaAlunoDataMapperMock(Avaliacao_Model_FaltaAlunoDataMapper $mapper = null)
+    {
+        $this->_faltaAlunoDataMapperMock = $mapper;
 
-  protected function _setFaltaAlunoDataMapperMock(Avaliacao_Model_FaltaAlunoDataMapper $mapper = NULL)
-  {
-    $this->_faltaAlunoDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getFaltaAlunoDataMapperMock()
-  {
-    if (is_null($this->_faltaAlunoDataMapperMock)) {
-      $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+    protected function _getFaltaAlunoDataMapperMock()
+    {
+        if (is_null($this->_faltaAlunoDataMapperMock)) {
+            $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-      $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
-      $mock->expects($this->at(0))
+            $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
+            $mock->expects($this->at(0))
            ->method('findAll')
-           ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
-           ->will($this->returnValue(array($faltaAluno)));
+           ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
+           ->will($this->returnValue([$faltaAluno]));
 
-      $this->_setFaltaAlunoDataMapperMock($mock);
+            $this->_setFaltaAlunoDataMapperMock($mock);
+        }
+
+        return $this->_faltaAlunoDataMapperMock;
     }
 
-    return $this->_faltaAlunoDataMapperMock;
-  }
+    protected function _setFaltaAbstractDataMapperMock(Avaliacao_Model_FaltaAbstractDataMapper $mapper)
+    {
+        $this->_faltaAbstractDataMapperMock = $mapper;
 
-  protected function _setFaltaAbstractDataMapperMock(Avaliacao_Model_FaltaAbstractDataMapper $mapper)
-  {
-    $this->_faltaAbstractDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getFaltaAbstractDataMapperMock()
-  {
-    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+    protected function _getFaltaAbstractDataMapperMock()
+    {
+        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-    if (is_null($this->_faltaAbstractDataMapperMock)) {
-      $mock = $this->getCleanMock('Avaliacao_Model_FaltaAbstractDataMapper');
-      $mock->expects($this->at(0))
+        if (is_null($this->_faltaAbstractDataMapperMock)) {
+            $mock = $this->getCleanMock('Avaliacao_Model_FaltaAbstractDataMapper');
+            $mock->expects($this->at(0))
            ->method('findAll')
-           ->with(array(), array('faltaAluno' => $faltaAluno->id), array('etapa' => 'ASC'))
-           ->will($this->returnValue(array()));
+           ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
+           ->will($this->returnValue([]));
 
-      $this->_setFaltaAbstractDataMapperMock($mock);
+            $this->_setFaltaAbstractDataMapperMock($mock);
+        }
+
+        return $this->_faltaAbstractDataMapperMock;
     }
 
-    return $this->_faltaAbstractDataMapperMock;
-  }
+    protected function _setParecerDescritivoAlunoDataMapperMock(Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper)
+    {
+        $this->_parecerDescritivoAlunoDataMapperMock = $mapper;
 
-  protected function _setParecerDescritivoAlunoDataMapperMock(Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper)
-  {
-    $this->_parecerDescritivoAlunoDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getParecerDescritivoAlunoDataMapperMock()
-  {
-    if (is_null($this->_parecerDescritivoAlunoDataMapperMock)) {
-      $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
+    protected function _getParecerDescritivoAlunoDataMapperMock()
+    {
+        if (is_null($this->_parecerDescritivoAlunoDataMapperMock)) {
+            $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
 
-      $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAlunoDataMapper');
+            $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAlunoDataMapper');
 
-      if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
-        $matcher = $this->at(0);
+            if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+                $matcher = $this->at(0);
 
-        $mock->expects($matcher)
+                $mock->expects($matcher)
              ->method('findAll')
-             ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
-             ->will($this->returnValue(array($parecerAluno)));
-      }
+             ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
+             ->will($this->returnValue([$parecerAluno]));
+            }
 
-      $this->_setParecerDescritivoAlunoDataMapperMock($mock);
+            $this->_setParecerDescritivoAlunoDataMapperMock($mock);
+        }
+
+        return $this->_parecerDescritivoAlunoDataMapperMock;
     }
 
-    return $this->_parecerDescritivoAlunoDataMapperMock;
-  }
+    protected function _setParecerDescritivoAbstractDataMapperMock(Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper)
+    {
+        $this->_parecerDescritivoAbstractDataMapperMock = $mapper;
 
-  protected function _setParecerDescritivoAbstractDataMapperMock(Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper)
-  {
-    $this->_parecerDescritivoAbstractDataMapperMock = $mapper;
-    return $this;
-  }
+        return $this;
+    }
 
-  protected function _getParecerDescritivoAbstractDataMapperMock()
-  {
-    if (is_null($this->_parecerDescritivoAbstractDataMapperMock)) {
-      $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
+    protected function _getParecerDescritivoAbstractDataMapperMock()
+    {
+        if (is_null($this->_parecerDescritivoAbstractDataMapperMock)) {
+            $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
 
-      $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAbstractDataMapper');
+            $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAbstractDataMapper');
 
-      if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
-        $mock->expects($this->at(0))
+            if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+                $mock->expects($this->at(0))
            ->method('findAll')
-           ->with(array(), array('parecerDescritivoAluno' => $parecerAluno->id), array('etapa' => 'ASC'))
-           ->will($this->returnValue(array()));
-      }
+           ->with([], ['parecerDescritivoAluno' => $parecerAluno->id], ['etapa' => 'ASC'])
+           ->will($this->returnValue([]));
+            }
 
-      $this->_setParecerDescritivoAbstractDataMapperMock($mock);
+            $this->_setParecerDescritivoAbstractDataMapperMock($mock);
+        }
+
+        return $this->_parecerDescritivoAbstractDataMapperMock;
     }
-
-    return $this->_parecerDescritivoAbstractDataMapperMock;
-  }
 }

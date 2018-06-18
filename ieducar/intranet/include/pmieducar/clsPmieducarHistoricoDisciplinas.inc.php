@@ -30,19 +30,19 @@
 * Criado em 11/08/2006 17:43 pelo gerador automatico de classes
 */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 
 class clsPmieducarHistoricoDisciplinas
 {
-    var $sequencial;
-    var $ref_ref_cod_aluno;
-    var $ref_sequencial;
-    var $nm_disciplina;
-    var $nota;
-    var $faltas;
-    var $ordenamento;
-    var $carga_horaria_disciplina;
-    var $dependencia;
+    public $sequencial;
+    public $ref_ref_cod_aluno;
+    public $ref_sequencial;
+    public $nm_disciplina;
+    public $nota;
+    public $faltas;
+    public $ordenamento;
+    public $carga_horaria_disciplina;
+    public $dependencia;
 
     // propriedades padrao
 
@@ -51,126 +51,108 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
      *
      * @return object
      */
-    function __construct( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null, $carga_horaria_disciplina = null, $dependencia = false)
+    public function __construct($sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null, $carga_horaria_disciplina = null, $dependencia = false)
     {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}historico_disciplinas";
 
-        $this->_campos_lista = $this->_todos_campos = "sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas, ordenamento, carga_horaria_disciplina, dependencia";
+        $this->_campos_lista = $this->_todos_campos = 'sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas, ordenamento, carga_horaria_disciplina, dependencia';
 
-        if( is_numeric( $ref_ref_cod_aluno ) && is_numeric( $ref_sequencial ) )
-        {
-            if( class_exists( "clsPmieducarHistoricoEscolar" ) )
-            {
-                $tmp_obj = new clsPmieducarHistoricoEscolar( $ref_ref_cod_aluno, $ref_sequencial );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_ref_cod_aluno) && is_numeric($ref_sequencial)) {
+            if (class_exists('clsPmieducarHistoricoEscolar')) {
+                $tmp_obj = new clsPmieducarHistoricoEscolar($ref_ref_cod_aluno, $ref_sequencial);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
+                        $this->ref_sequencial = $ref_sequencial;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
                         $this->ref_sequencial = $ref_sequencial;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
-                        $this->ref_sequencial = $ref_sequencial;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.historico_escolar WHERE ref_cod_aluno = '{$ref_ref_cod_aluno}' AND sequencial = '{$ref_sequencial}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.historico_escolar WHERE ref_cod_aluno = '{$ref_ref_cod_aluno}' AND sequencial = '{$ref_sequencial}'")) {
                     $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
                     $this->ref_sequencial = $ref_sequencial;
                 }
             }
         }
 
-
-        if( is_numeric( $sequencial ) )
-        {
+        if (is_numeric($sequencial)) {
             $this->sequencial = $sequencial;
         }
-        if( is_string( $nm_disciplina ) )
-        {
+        if (is_string($nm_disciplina)) {
             $this->nm_disciplina = $nm_disciplina;
         }
-        if( is_string( $nota ) )
-        {
+        if (is_string($nota)) {
             $this->nota = $nota;
         }
-        if( is_numeric( $faltas ) )
-        {
+        if (is_numeric($faltas)) {
             $this->faltas = $faltas;
         }
-        if( is_numeric( $ordenamento ) )
-        {
+        if (is_numeric($ordenamento)) {
             $this->ordenamento = $ordenamento;
         }
-        if( is_numeric( $carga_horaria_disciplina ) )
-        {
+        if (is_numeric($carga_horaria_disciplina)) {
             $this->carga_horaria_disciplina = $carga_horaria_disciplina;
         }
         if (is_bool($dependencia)) {
@@ -183,15 +165,14 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_ref_cod_aluno ) && is_numeric( $this->ref_sequencial ) && is_string( $this->nm_disciplina ) && is_string( $this->nota ) )
-        {
+        if (is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial) && is_string($this->nm_disciplina) && is_string($this->nota)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
             /*if( is_numeric( $this->sequencial ) )
             {
@@ -199,62 +180,55 @@ class clsPmieducarHistoricoDisciplinas
                 $valores .= "{$gruda}'{$this->sequencial}'";
                 $gruda = ", ";
             }*/
-            if( is_numeric( $this->ref_ref_cod_aluno ) )
-            {
+            if (is_numeric($this->ref_ref_cod_aluno)) {
                 $campos .= "{$gruda}ref_ref_cod_aluno";
                 $valores .= "{$gruda}'{$this->ref_ref_cod_aluno}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_sequencial ) )
-            {
+            if (is_numeric($this->ref_sequencial)) {
                 $campos .= "{$gruda}ref_sequencial";
                 $valores .= "{$gruda}'{$this->ref_sequencial}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nm_disciplina ) )
-            {
+            if (is_string($this->nm_disciplina)) {
                 $campos .= "{$gruda}nm_disciplina";
                 $valores .= "{$gruda}'{$this->nm_disciplina}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nota ) )
-            {
+            if (is_string($this->nota)) {
                 $campos .= "{$gruda}nota";
                 $valores .= "{$gruda}'{$this->nota}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->faltas ) )
-            {
+            if (is_numeric($this->faltas)) {
                 $campos .= "{$gruda}faltas";
                 $valores .= "{$gruda}'{$this->faltas}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ordenamento ) )
-            {
+            if (is_numeric($this->ordenamento)) {
                 $campos .= "{$gruda}ordenamento";
                 $valores .= "{$gruda}'{$this->ordenamento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->carga_horaria_disciplina ) )
-            {
+            if (is_numeric($this->carga_horaria_disciplina)) {
                 $campos .= "{$gruda}carga_horaria_disciplina";
                 $valores .= "{$gruda}'{$this->carga_horaria_disciplina}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if($this->dependencia)
-            {
+            if ($this->dependencia) {
                 $campos .= "{$gruda}dependencia";
-                $valores .= "{$gruda}TRUE";
-                $gruda = ", ";
+                $valores .= "{$gruda}true";
+                $gruda = ', ';
             }
 
-            $sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) + 1 FROM {$this->_tabela} WHERE ref_ref_cod_aluno = {$this->ref_ref_cod_aluno} AND ref_sequencial = {$this->ref_sequencial}" );
+            $sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) + 1 FROM {$this->_tabela} WHERE ref_ref_cod_aluno = {$this->ref_ref_cod_aluno} AND ref_sequencial = {$this->ref_sequencial}");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( sequencial, $campos ) VALUES( $sequencial, $valores )" );
+            $db->Consulta("INSERT INTO {$this->_tabela} ( sequencial, $campos ) VALUES( $sequencial, $valores )");
 
 //          $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return true;
         }
+
         return false;
     }
 
@@ -263,51 +237,44 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->sequencial ) && is_numeric( $this->ref_ref_cod_aluno ) && is_numeric( $this->ref_sequencial ) )
-        {
-
+        if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_string( $this->nm_disciplina ) )
-            {
+            if (is_string($this->nm_disciplina)) {
                 $set .= "{$gruda}nm_disciplina = '{$this->nm_disciplina}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nota ) )
-            {
+            if (is_string($this->nota)) {
                 $set .= "{$gruda}nota = '{$this->nota}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->faltas ) )
-            {
+            if (is_numeric($this->faltas)) {
                 $set .= "{$gruda}faltas = '{$this->faltas}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ordenamento ) )
-            {
+            if (is_numeric($this->ordenamento)) {
                 $set .= "{$gruda}ordenamento = '{$this->ordenamento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->carga_horaria_disciplina ) )
-            {
+            if (is_numeric($this->carga_horaria_disciplina)) {
                 $set .= "{$gruda}carga_horaria_disciplina = '{$this->carga_horaria_disciplina}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if($this->dependencia)
-            {
+            if ($this->dependencia) {
                 $set .= "{$gruda}dependencia = TRUE";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'" );
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'");
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -316,91 +283,77 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return array
      */
-    function lista( $int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null, $int_ordenamento = null, $int_carga_horaria_disciplina = null, $bool_dependencia = false)
+    public function lista($int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null, $int_ordenamento = null, $int_carga_horaria_disciplina = null, $bool_dependencia = false)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_sequencial ) )
-        {
+        if (is_numeric($int_sequencial)) {
             $filtros .= "{$whereAnd} sequencial = '{$int_sequencial}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_aluno ) )
-        {
+        if (is_numeric($int_ref_ref_cod_aluno)) {
             $filtros .= "{$whereAnd} ref_ref_cod_aluno = '{$int_ref_ref_cod_aluno}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_sequencial ) )
-        {
+        if (is_numeric($int_ref_sequencial)) {
             $filtros .= "{$whereAnd} ref_sequencial = '{$int_ref_sequencial}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nm_disciplina ) )
-        {
+        if (is_string($str_nm_disciplina)) {
             $filtros .= "{$whereAnd} nm_disciplina LIKE '%{$str_nm_disciplina}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nota ) )
-        {
+        if (is_string($str_nota)) {
             $filtros .= "{$whereAnd} nota LIKE '%{$str_nota}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_faltas ) )
-        {
+        if (is_numeric($int_faltas)) {
             $filtros .= "{$whereAnd} faltas = '{$int_faltas}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ordenamento ) )
-        {
+        if (is_numeric($int_ordenamento)) {
             $filtros .= "{$whereAnd} ordenamento = '{$int_ordenamento}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_carga_horaria_disciplina ) )
-        {
+        if (is_numeric($int_carga_horaria_disciplina)) {
             $filtros .= "{$whereAnd} carga_horaria_disciplina = '{$int_carga_horaria_disciplina}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if($bool_dependencia)
-        {
+        if ($bool_dependencia) {
             $filtros .= "{$whereAnd} dependencia = TRUE";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -409,16 +362,16 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->sequencial ) && is_numeric( $this->ref_ref_cod_aluno ) && is_numeric( $this->ref_sequencial ) )
-        {
+        if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -427,16 +380,16 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->sequencial ) && is_numeric( $this->ref_ref_cod_aluno ) && is_numeric( $this->ref_sequencial ) )
-        {
+        if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -445,10 +398,9 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->sequencial ) && is_numeric( $this->ref_ref_cod_aluno ) && is_numeric( $this->ref_sequencial ) )
-        {
+        if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
 
         /*
             delete
@@ -456,22 +408,23 @@ class clsPmieducarHistoricoDisciplinas
         $db->Consulta( "DELETE FROM {$this->_tabela} WHERE sequencial = '{$this->sequencial}' AND ref_ref_cod_aluno = '{$this->ref_ref_cod_aluno}' AND ref_sequencial = '{$this->ref_sequencial}'" );
         return true;
         */
-
-
         }
+
         return false;
     }
 
     /**
      * Exclui todos os registros referentes a um historico do aluno
      */
-    function  excluirTodos( $ref_cod_aluno, $ref_sequencial )
+    public function excluirTodos($ref_cod_aluno, $ref_sequencial)
     {
-        if ( is_numeric( $ref_cod_aluno ) && is_numeric( $ref_sequencial ) ) {
+        if (is_numeric($ref_cod_aluno) && is_numeric($ref_sequencial)) {
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_ref_cod_aluno = '{$ref_cod_aluno}' AND ref_sequencial = '{$ref_sequencial}'" );
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_aluno = '{$ref_cod_aluno}' AND ref_sequencial = '{$ref_sequencial}'");
+
             return true;
         }
+
         return false;
     }
 
@@ -480,7 +433,7 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -490,7 +443,7 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -500,7 +453,7 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -511,18 +464,18 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -530,13 +483,12 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -546,25 +498,24 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
+
+        return '';
     }
 
-    function getMaxSequencial( $ref_cod_aluno )
+    public function getMaxSequencial($ref_cod_aluno)
     {
-        if( is_numeric( $ref_cod_aluno ) )
-        {
+        if (is_numeric($ref_cod_aluno)) {
             $db = new clsBanco();
-            $sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM {$this->_tabela} WHERE ref_cod_aluno = {$ref_cod_aluno}" );
+            $sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM {$this->_tabela} WHERE ref_cod_aluno = {$ref_cod_aluno}");
+
             return $sequencial;
         }
+
         return false;
     }
-
 }
-?>

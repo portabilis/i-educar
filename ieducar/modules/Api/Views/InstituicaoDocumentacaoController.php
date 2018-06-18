@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -38,60 +43,62 @@ require_once 'intranet/include/clsBanco.inc.php';
 
 /**
  * Class InstituicaoDocumentacaoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class InstituicaoDocumentacaoController extends ApiCoreController
 {
+    protected function insertDocuments()
+    {
+        $var1 = $this->getRequest()->instituicao_id;
+        $var2 = $this->getRequest()->titulo_documento;
+        $var3 = $this->getRequest()->url_documento;
+        $var4 = $this->getRequest()->ref_usuario_cad;
+        $var5 = $this->getRequest()->ref_cod_escola;
 
-  protected function insertDocuments() {
+        $sql = "INSERT INTO pmieducar.instituicao_documentacao (instituicao_id, titulo_documento, url_documento, ref_usuario_cad, ref_cod_escola) VALUES ($var1, '$var2', '$var3', $var4, $var5)";
+        $this->fetchPreparedQuery($sql);
 
-    $var1 = $this->getRequest()->instituicao_id;
-    $var2 = $this->getRequest()->titulo_documento;
-    $var3 = $this->getRequest()->url_documento;
-    $var4 = $this->getRequest()->ref_usuario_cad;
-    $var5 = $this->getRequest()->ref_cod_escola;
+        $sql = "SELECT MAX(id) FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1";
 
-    $sql = "INSERT INTO pmieducar.instituicao_documentacao (instituicao_id, titulo_documento, url_documento, ref_usuario_cad, ref_cod_escola) VALUES ($var1, '$var2', '$var3', $var4, $var5)";
-    $this->fetchPreparedQuery($sql);
+        $novoId = $this->fetchPreparedQuery($sql);
 
-    $sql = "SELECT MAX(id) FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1";
+        return ['id' => $novoId[0][0]];
+    }
 
-    $novoId = $this->fetchPreparedQuery($sql);
+    protected function getDocuments()
+    {
+        $var1 = $this->getRequest()->instituicao_id;
 
-    return array('id' => $novoId[0][0]);
-  }
+        $sql = "SELECT * FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1 ORDER BY id DESC";
 
-  protected function getDocuments() {
+        $instituicao = $this->fetchPreparedQuery($sql);
 
-    $var1 = $this->getRequest()->instituicao_id;
+        $attrs = ['id', 'titulo_documento', 'url_documento', 'ref_usuario_cad', 'ref_cod_escola'];
+        $instituicao = Portabilis_Array_Utils::filterSet($instituicao, $attrs);
 
-    $sql = "SELECT * FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1 ORDER BY id DESC";
+        return ['documentos' => $instituicao];
+    }
 
-    $instituicao = $this->fetchPreparedQuery($sql);
+    protected function deleteDocuments()
+    {
+        $var1 = $this->getRequest()->id;
 
-    $attrs = array('id', 'titulo_documento', 'url_documento', 'ref_usuario_cad', 'ref_cod_escola');
-    $instituicao = Portabilis_Array_Utils::filterSet($instituicao, $attrs);
+        $sql = "DELETE FROM pmieducar.instituicao_documentacao WHERE id = $var1";
 
-    return array('documentos' => $instituicao);
-  }
+        $instituicao = $this->fetchPreparedQuery($sql);
 
-  protected function deleteDocuments() {
+        return $instituicao;
+    }
 
-    $var1 = $this->getRequest()->id;
-
-    $sql = "DELETE FROM pmieducar.instituicao_documentacao WHERE id = $var1";
-
-    $instituicao = $this->fetchPreparedQuery($sql);
-
-    return $instituicao;
-  }
-
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'insertDocuments'))
-      $this->appendResponse($this->insertDocuments());
-    elseif ($this->isRequestFor('get', 'getDocuments'))
-      $this->appendResponse($this->getDocuments());
-    elseif ($this->isRequestFor('get', 'deleteDocuments'))
-      $this->appendResponse($this->deleteDocuments());
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'insertDocuments')) {
+            $this->appendResponse($this->insertDocuments());
+        } elseif ($this->isRequestFor('get', 'getDocuments')) {
+            $this->appendResponse($this->getDocuments());
+        } elseif ($this->isRequestFor('get', 'deleteDocuments')) {
+            $this->appendResponse($this->deleteDocuments());
+        }
+    }
 }

@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Cliente" );
-        $this->processoAp = "596";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo Cliente");
+        $this->processoAp = '596';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -47,79 +47,75 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_cliente_tipo;
-    var $ref_cod_biblioteca;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_tipo;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
-    var $ref_cod_escola;
+    public $cod_cliente_tipo;
+    public $ref_cod_biblioteca;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_tipo;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
+    public $ref_cod_escola;
 
-    var $ref_cod_exemplar_tipo;
-    var $dias_emprestimo;
+    public $ref_cod_exemplar_tipo;
+    public $dias_emprestimo;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_cliente_tipo=$_GET["cod_cliente_tipo"];
+        $this->cod_cliente_tipo=$_GET['cod_cliente_tipo'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 596, $this->pessoa_logada, 11,  "educar_cliente_tipo_lst.php" );
+        $obj_permissoes->permissao_cadastra(596, $this->pessoa_logada, 11, 'educar_cliente_tipo_lst.php');
 
-        if( is_numeric( $this->cod_cliente_tipo ) )
-        {
-
-            $obj = new clsPmieducarClienteTipo( $this->cod_cliente_tipo );
+        if (is_numeric($this->cod_cliente_tipo)) {
+            $obj = new clsPmieducarClienteTipo($this->cod_cliente_tipo);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
                 $obj_biblioteca = new clsPmieducarBiblioteca($this->ref_cod_biblioteca);
                 $obj_det = $obj_biblioteca->detalhe();
-                $this->ref_cod_instituicao = $obj_det["ref_cod_instituicao"];
-                $this->ref_cod_escola = $obj_det["ref_cod_escola"];
+                $this->ref_cod_instituicao = $obj_det['ref_cod_instituicao'];
+                $this->ref_cod_escola = $obj_det['ref_cod_escola'];
 
-                if( $obj_permissoes->permissao_excluir( 596, $this->pessoa_logada, 11 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(596, $this->pessoa_logada, 11)) {
                     $this->fexcluir = true;
                 }
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_tipo_det.php?cod_cliente_tipo={$registro["cod_cliente_tipo"]}" : "educar_cliente_tipo_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_cliente_tipo_det.php?cod_cliente_tipo={$registro['cod_cliente_tipo']}" : 'educar_cliente_tipo_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} tipo de cliente"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_biblioteca_index.php'                  => 'Biblioteca',
+         ''        => "{$nomeMenu} tipo de cliente"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_cliente_tipo", $this->cod_cliente_tipo );
+        $this->campoOculto('cod_cliente_tipo', $this->cod_cliente_tipo);
 
-        if ($this->cod_cliente_tipo)
-        {
+        if ($this->cod_cliente_tipo) {
             $instituicao_desabilitado = true;
             $escola_desabilitado = true;
             $biblioteca_desabilitado = true;
@@ -131,21 +127,19 @@ class indice extends clsCadastro
         $get_biblioteca = 1;
         $instituicao_obrigatorio = true;
         $biblioteca_obrigatorio = true;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto( "nm_tipo", "Tipo Cliente", $this->nm_tipo, 30, 255, true );
-        $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
+        $this->campoTexto('nm_tipo', 'Tipo Cliente', $this->nm_tipo, 30, 255, true);
+        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
 
         //-----------------------INICIO EXEMPLAR TIPO------------------------//
 
-        if( class_exists( "clsPmieducarExemplarTipo" ) )
-        {
-            $opcoes = array( "" => "Selecione" );
+        if (class_exists('clsPmieducarExemplarTipo')) {
+            $opcoes = [ '' => 'Selecione' ];
             //$todos_tipos_exemplares = "tipo_exemplar = new Array();\n";
             $script .= "var editar_ = 0;\n";
-            if($_GET['cod_cliente_tipo'])
-            {
+            if ($_GET['cod_cliente_tipo']) {
                 $script .= "editar_ = {$_GET['cod_cliente_tipo']};\n";
             }
             /*$objTemp = new clsPmieducarExemplarTipo();
@@ -173,173 +167,161 @@ class indice extends clsCadastro
             */
             echo "<script>{$script}</script>";
 
-
             // se o caso é EDITAR
-            if ($this->ref_cod_biblioteca)
-            {
+            if ($this->ref_cod_biblioteca) {
                 $objTemp = new clsPmieducarExemplarTipo();
-                $objTemp->setOrderby("nm_tipo ASC");
-                $lista = $objTemp->lista(null,$this->ref_cod_biblioteca,null,null,null,null,null,null,null,null,1);
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
+                $objTemp->setOrderby('nm_tipo ASC');
+                $lista = $objTemp->lista(null, $this->ref_cod_biblioteca, null, null, null, null, null, null, null, null, 1);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
                         $opcoes["{$registro['cod_exemplar_tipo']}"] = "{$registro['nm_tipo']}";
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarExemplarTipo n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
+            $opcoes = [ '' => 'Erro na gera&ccedil;&atilde;o' ];
         }
-        $this->campoRotulo( "div_exemplares", "Tipo Exemplar", "<div id='exemplares'></div>" );
-        $this->acao_enviar = "Valida();";
+        $this->campoRotulo('div_exemplares', 'Tipo Exemplar', '<div id=\'exemplares\'></div>');
+        $this->acao_enviar = 'Valida();';
         //-----------------------FIM EXEMPLAR TIPO------------------------//
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 596, $this->pessoa_logada, 11,  "educar_cliente_tipo_lst.php" );
+        $obj_permissoes->permissao_cadastra(596, $this->pessoa_logada, 11, 'educar_cliente_tipo_lst.php');
 
-        $array_tipos = array();
-        foreach ( $_POST AS $key => $exemplar_tipo )
-        {
-            if(substr($key, 0, 5) == "tipo_")
-            {
+        $array_tipos = [];
+        foreach ($_POST as $key => $exemplar_tipo) {
+            if (substr($key, 0, 5) == 'tipo_') {
                 $array_tipos[substr($key, 5)] = $exemplar_tipo;
             }
         }
 
-        $obj = new clsPmieducarClienteTipo( null, $this->ref_cod_biblioteca, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1 );
+        $obj = new clsPmieducarClienteTipo(null, $this->ref_cod_biblioteca, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1);
         $this->cod_cliente_tipo = $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-      $obj->cod_cliente_tipo = $this->cod_cliente_tipo;
-      $cliente_tipo = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("cliente_tipo", $this->pessoa_logada, $this->cod_cliente_tipo);
-      $auditoria->inclusao($cliente_tipo);
+        if ($cadastrou) {
+            $obj->cod_cliente_tipo = $this->cod_cliente_tipo;
+            $cliente_tipo = $obj->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('cliente_tipo', $this->pessoa_logada, $this->cod_cliente_tipo);
+            $auditoria->inclusao($cliente_tipo);
 
-        //-----------------------CADASTRA EXEMPLAR TIPO------------------------//
-            if ($array_tipos)
-            {
-                foreach ( $array_tipos AS $exemplar_tipo => $dias_emprestimo )
-                {
-                    $obj = new clsPmieducarClienteTipoExemplarTipo( $cadastrou, $exemplar_tipo, $dias_emprestimo );
+            //-----------------------CADASTRA EXEMPLAR TIPO------------------------//
+            if ($array_tipos) {
+                foreach ($array_tipos as $exemplar_tipo => $dias_emprestimo) {
+                    $obj = new clsPmieducarClienteTipoExemplarTipo($cadastrou, $exemplar_tipo, $dias_emprestimo);
                     $cadastrou2  = $obj->cadastra();
-                    if ( !$cadastrou2 )
-                    {
-                        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+                    if (!$cadastrou2) {
+                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
                         echo "<!--\nErro ao cadastrar clsPmieducarClienteTipoExemplarTipo\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$exemplar_tipo} ) && is_numeric( {$dias_emprestimo} )\n-->";
+
                         return false;
                     }
                 }
             }
-        //-----------------------FIM CADASTRA EXEMPLAR TIPO------------------------//
+            //-----------------------FIM CADASTRA EXEMPLAR TIPO------------------------//
 
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_cliente_tipo_lst.php" );
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_cliente_tipo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarClienteTipo\nvalores obrigatorios\nis_numeric( $this->ref_cod_biblioteca ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 596, $this->pessoa_logada, 11,  "educar_cliente_tipo_lst.php" );
+        $obj_permissoes->permissao_cadastra(596, $this->pessoa_logada, 11, 'educar_cliente_tipo_lst.php');
 
-        $array_tipos = array();
-        foreach ( $_POST AS $key => $exemplar_tipo )
-        {
-            if(substr($key, 0, 5) == "tipo_")
-            {
+        $array_tipos = [];
+        foreach ($_POST as $key => $exemplar_tipo) {
+            if (substr($key, 0, 5) == 'tipo_') {
                 $array_tipos[substr($key, 5)] = $exemplar_tipo;
             }
         }
 
         $obj = new clsPmieducarClienteTipo($this->cod_cliente_tipo, $this->ref_cod_biblioteca, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1);
-    $detalheAntigo = $obj->detalhe();
+        $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
-        if( $editou )
-        {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("cliente_tipo", $this->pessoa_logada, $this->cod_cliente_tipo);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
+        if ($editou) {
+            $detalheAtual = $obj->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('cliente_tipo', $this->pessoa_logada, $this->cod_cliente_tipo);
+            $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
-        //-----------------------EDITA EXEMPLAR TIPO------------------------//
-            if ($array_tipos)
-            {
-                foreach ( $array_tipos AS $exemplar_tipo => $dias_emprestimo )
-                {
-                    $obj = new clsPmieducarClienteTipoExemplarTipo( $this->cod_cliente_tipo, $exemplar_tipo, $dias_emprestimo );
+            //-----------------------EDITA EXEMPLAR TIPO------------------------//
+            if ($array_tipos) {
+                foreach ($array_tipos as $exemplar_tipo => $dias_emprestimo) {
+                    $obj = new clsPmieducarClienteTipoExemplarTipo($this->cod_cliente_tipo, $exemplar_tipo, $dias_emprestimo);
 
-          if($obj->existe() == false)
-                    $result = $obj->cadastra();
-          else
-                    $result = $obj->edita();
+                    if ($obj->existe() == false) {
+                        $result = $obj->cadastra();
+                    } else {
+                        $result = $obj->edita();
+                    }
 
-                    if (! $result)
-                    {
-                        $this->mensagem = "Aparentemente ocorreu um erro ao gravar os dias de emprestimo.<br>";
+                    if (! $result) {
+                        $this->mensagem = 'Aparentemente ocorreu um erro ao gravar os dias de emprestimo.<br>';
+
                         return false;
                     }
                 }
             }
 
-        //-----------------------FIM EDITA EXEMPLAR TIPO------------------------//
+            //-----------------------FIM EDITA EXEMPLAR TIPO------------------------//
 
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_tipo_lst.php" );
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_cliente_tipo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarClienteTipo\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente_tipo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 596, $this->pessoa_logada, 11,  "educar_cliente_tipo_lst.php" );
-
+        $obj_permissoes->permissao_excluir(596, $this->pessoa_logada, 11, 'educar_cliente_tipo_lst.php');
 
         $obj = new clsPmieducarClienteTipo($this->cod_cliente_tipo, null, $this->pessoa_logada, null, null, null, null, null, 0);
-    $detalhe = $obj->detalhe();
+        $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-
-      $auditoria = new clsModulesAuditoriaGeral("cliente_tipo", $this->pessoa_logada, $this->cod_cliente_tipo);
-      $auditoria->exclusao($detalhe);
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_tipo_lst.php" );
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('cliente_tipo', $this->pessoa_logada, $this->cod_cliente_tipo);
+            $auditoria->exclusao($detalhe);
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_cliente_tipo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarClienteTipo\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente_tipo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }
@@ -349,7 +331,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

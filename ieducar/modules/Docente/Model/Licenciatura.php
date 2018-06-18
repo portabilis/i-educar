@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Docente
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,46 +40,51 @@ require_once 'CoreExt/Entity.php';
  * Docente_Model_Licenciatura class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Docente
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Docente_Model_Licenciatura extends CoreExt_Entity
 {
-  protected $_data = array(
-    'servidor'     => NULL,
-    'licenciatura' => NULL,
-    'curso'        => NULL,
-    'anoConclusao' => NULL,
-    'ies'          => NULL,
-    'user'         => NULL,
-    'created_at'   => NULL,
-    'updated_at'   => NULL
-  );
+    protected $_data = [
+    'servidor'     => null,
+    'licenciatura' => null,
+    'curso'        => null,
+    'anoConclusao' => null,
+    'ies'          => null,
+    'user'         => null,
+    'created_at'   => null,
+    'updated_at'   => null
+  ];
 
-  protected $_references = array(
-    'licenciatura' => array(
-      'value' => NULL,
+    protected $_references = [
+    'licenciatura' => [
+      'value' => null,
       'class' => 'App_Model_SimNao',
       'file'  => 'App/Model/SimNao.php'
-    ),
-    'ies' => array(
-      'value' => NULL,
+    ],
+    'ies' => [
+      'value' => null,
       'class' => 'Educacenso_Model_IesDataMapper',
       'file'  => 'Educacenso/Model/IesDataMapper.php'
-    ),
-    'curso' => array(
-      'value' => NULL,
+    ],
+    'curso' => [
+      'value' => null,
       'class' => 'Educacenso_Model_CursoSuperiorDataMapper',
       'file'  => 'Educacenso/Model/CursoSuperiorDataMapper.php'
-    )
-  );
+    ]
+  ];
 
-  public function getDefaultValidatorCollection()
-  {
-    return array();
-  }
+    public function getDefaultValidatorCollection()
+    {
+        return [];
+    }
 }

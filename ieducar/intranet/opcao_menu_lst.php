@@ -24,53 +24,50 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Opção Menu" );
-        $this->processoAp = "475";
+        $this->SetTitulo("{$this->_instituicao} Opção Menu");
+        $this->processoAp = '475';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $idpes = $_SESSION['id_pessoa'];
         @session_write_close();
-        
-        $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet",false );
 
-        $this->addCabecalhos( array( "Preferências", "Valor Atual" ) );
+        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet', false);
 
-                
+        $this->addCabecalhos([ 'Preferências', 'Valor Atual' ]);
+
         $db = new clsBanco();
         $tipo_menu = $db->UnicoCampo("SELECT tipo_menu FROM funcionario WHERE ref_cod_pessoa_fj = '$idpes'");
-        $opcao = array("0"=>"Menu Padrão","1"=> "Menu Suspenso");   
-        $this->addLinhas( array("<a href='opcao_menu_det.php'><img src='imagens/noticia.jpg' border=0>Tipo Menu</a>",$opcao[$tipo_menu]) );
-        
-        // Define Largura da Pï¿½gina
-        $this->largura = "100%";
+        $opcao = ['0'=>'Menu Padrão','1'=> 'Menu Suspenso'];
+        $this->addLinhas(['<a href=\'opcao_menu_det.php\'><img src=\'imagens/noticia.jpg\' border=0>Tipo Menu</a>',$opcao[$tipo_menu]]);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Prefer&ecirc;ncias"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        // Define Largura da Pï¿½gina
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         ''                                  => 'Prefer&ecirc;ncias'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>

@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -37,41 +42,49 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchEtapacurso class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_MultipleSearchEtapacurso extends Portabilis_View_Helper_Input_MultipleSearch {
+class Portabilis_View_Helper_Input_Resource_MultipleSearchEtapacurso extends Portabilis_View_Helper_Input_MultipleSearch
+{
+    protected function getOptions($resources)
+    {
+        if (empty($resources)) {
+            $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT * FROM modules.etapas_educacenso');
+            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
+        }
 
-  protected function getOptions($resources) {
-    if (empty($resources)) {
-      $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT * FROM modules.etapas_educacenso');
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
+        return $this->insertOption(null, '', $resources);
     }
 
-    return $this->insertOption(null, '', $resources);
-  }
-
-  public function multipleSearchEtapacurso($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'etapacurso',
+    public function multipleSearchEtapacurso($attrName, $options = [])
+    {
+        $defaultOptions = ['objectName'    => 'etapacurso',
                             'apiController' => 'Etapacurso',
-                            'apiResource'   => 'etapacurso-search');
+                            'apiResource'   => 'etapacurso-search'];
 
-    $options                         = $this->mergeOptions($options, $defaultOptions);
-    $options['options']['resources'] = $this->getOptions($options['options']['resources']);
+        $options                         = $this->mergeOptions($options, $defaultOptions);
+        $options['options']['resources'] = $this->getOptions($options['options']['resources']);
 
-    $this->placeholderJs($options);
+        $this->placeholderJs($options);
 
-    parent::multipleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::multipleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function placeholderJs($options) {
-    $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
-    $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
+    protected function placeholderJs($options)
+    {
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
+        $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione as etapas');";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+    }
 }

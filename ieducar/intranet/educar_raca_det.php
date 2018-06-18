@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Ra&ccedil;a" );
-        $this->processoAp = "678";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Ra&ccedil;a");
+        $this->processoAp = '678';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -46,34 +46,32 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_raca;
-    var $idpes_exc;
-    var $idpes_cad;
-    var $nm_raca;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $pessoa_logada;
+    public $cod_raca;
+    public $idpes_exc;
+    public $idpes_cad;
+    public $nm_raca;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $pessoa_logada;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Ra&ccedil;a - Detalhe";
+        $this->titulo = 'Ra&ccedil;a - Detalhe';
 
+        $this->cod_raca=$_GET['cod_raca'];
 
-        $this->cod_raca=$_GET["cod_raca"];
-
-        $tmp_obj = new clsCadastroRaca( $this->cod_raca );
+        $tmp_obj = new clsCadastroRaca($this->cod_raca);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: educar_raca_lst.php" );
+        if (! $registro) {
+            header('location: educar_raca_lst.php');
             die();
         }
 
@@ -101,7 +99,6 @@ class indice extends clsDetalhe
             echo "<!--\nErro\nClasse nao existente: clsCadastroFisica\n-->";
         }*/
 
-
         /*if( $registro["cod_raca"] )
         {
             $this->addDetalhe( array( "Raca", "{$registro["cod_raca"]}") );
@@ -114,27 +111,25 @@ class indice extends clsDetalhe
         {
             $this->addDetalhe( array( "Idpes Cad", "{$registro["idpes_cad"]}") );
         }*/
-        if( $registro["nm_raca"] )
-        {
-            $this->addDetalhe( array( "Ra&ccedil;a", "{$registro["nm_raca"]}") );
+        if ($registro['nm_raca']) {
+            $this->addDetalhe([ 'Ra&ccedil;a', "{$registro['nm_raca']}"]);
         }
 
         $obj_permissao = new clsPermissoes();
-        if( $obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 7) )
-        {
-            $this->url_novo = "educar_raca_cad.php";
-            $this->url_editar = "educar_raca_cad.php?cod_raca={$registro["cod_raca"]}";
+        if ($obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 7)) {
+            $this->url_novo = 'educar_raca_cad.php';
+            $this->url_editar = "educar_raca_cad.php?cod_raca={$registro['cod_raca']}";
         }
 
-        $this->url_cancelar = "educar_raca_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'educar_raca_lst.php';
+        $this->largura = '100%';
 
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_pessoas_index.php"          => "Pessoas",
-             ""                                  => "Detalhe da ra&ccedil;a"
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_pessoas_index.php'          => 'Pessoas',
+             ''                                  => 'Detalhe da ra&ccedil;a'
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
     }
 }
@@ -144,7 +139,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

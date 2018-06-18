@@ -6,7 +6,7 @@ class AtualizaCampoAbastecimentoEnergia extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("UPDATE pmieducar.escola
+        $this->execute('UPDATE pmieducar.escola
                            SET abastecimento_energia = array_append(abastecimento_energia, 1)
                          WHERE energia_rede_publica = 1;
                     
@@ -20,11 +20,12 @@ class AtualizaCampoAbastecimentoEnergia extends AbstractMigration
                     
                         UPDATE pmieducar.escola
                            SET abastecimento_energia = array_append(abastecimento_energia, 4)
-                         WHERE energia_inexistente = 1;");
+                         WHERE energia_inexistente = 1;');
     }
 
-    public function down(){
-        $this->execute("UPDATE pmieducar.escola
-                           SET abastecimento_energia = NULL");
+    public function down()
+    {
+        $this->execute('UPDATE pmieducar.escola
+                           SET abastecimento_energia = NULL');
     }
 }

@@ -22,35 +22,45 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
-
 /**
  * Portabilis_View_Helper_Input_Checkbox class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input_Core
+{
+    public function checkbox($attrName, $options = [])
+    {
+        $defaultOptions = ['options' => [], 'objectName' => ''];
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-  public function checkbox($attrName, $options = array()) {
-    $defaultOptions = array('options' => array(), 'objectName' => '');
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
 
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
-
-    $defaultInputOptions = array(
+        $defaultInputOptions = [
       'id'         => $options['objectName'] . $spacer . $attrName,
       'label'      => ucwords($attrName),
       'value'      => '',
@@ -58,17 +68,17 @@ class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input
       'inline'     => false,
       'script'     => 'fixupCheckboxValue(this)',
       'disabled'   => false
-    );
+    ];
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    // fixup para enviar um valor, junto ao param do checkbox.
-    $js = "var fixupCheckboxValue = function(input) {
-      var \$this = \$j(input);
-      \$this.val(\$this.is(':checked') ? 'on' : '');
-    }";
+        // fixup para enviar um valor, junto ao param do checkbox.
+        $js = 'var fixupCheckboxValue = function(input) {
+      var $this = $j(input);
+      $this.val($this.is(\':checked\') ? \'on\' : \'\');
+    }';
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
-    call_user_func_array(array($this->viewInstance, 'campoCheck'), $inputOptions);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
+        call_user_func_array([$this->viewInstance, 'campoCheck'], $inputOptions);
+    }
 }

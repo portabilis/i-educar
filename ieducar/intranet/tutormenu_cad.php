@@ -24,86 +24,85 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/pmibee/beeGeral.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/pmibee/beeGeral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Tutor Menu" );
-        $this->processoAp = "445";
+        $this->SetTitulo("{$this->_instituicao} Tutor Menu");
+        $this->processoAp = '445';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $cod_tutormenu,
-        $nm_tutormenu;
-        
-    function Inicializar()
+    public $cod_tutormenu;
+    public $nm_tutormenu;
+
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        
+
         $this->cod_tutormenu = $_GET['cod_tutormenu'];
-        
-        if($this->cod_tutormenu)
-        {
+
+        if ($this->cod_tutormenu) {
             $obj = new clsTutormenu($this->cod_tutormenu);
             $detalhe  = $obj->detalhe();
             $this->nm_tutormenu = $detalhe['nm_tutormenu'];
-            $this->fexcluir = true;     
-            $retorno = "Editar";
+            $this->fexcluir = true;
+            $retorno = 'Editar';
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "tutormenu_det.php?cod_tutormenu={$this->cod_tutormenu}" : "menu_suspenso_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "tutormenu_det.php?cod_tutormenu={$this->cod_tutormenu}" : 'menu_suspenso_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->campoOculto( "cod_tutormenu", $this->cod_tutormenu);
-        $this->campoTexto("nm_tutormenu", "Nome", $this->nm_tutormenu,30,255,true);
+        $this->campoOculto('cod_tutormenu', $this->cod_tutormenu);
+        $this->campoTexto('nm_tutormenu', 'Nome', $this->nm_tutormenu, 30, 255, true);
     }
 
-    function Novo() 
+    public function Novo()
     {
         $obj = new clsTutormenu(false, $this->nm_tutormenu);
-        if($obj->cadastra())
-        {
-            header("Location: menu_suspenso_lst.php");
+        if ($obj->cadastra()) {
+            header('Location: menu_suspenso_lst.php');
         }
+
         return false;
     }
 
-    function Editar() 
+    public function Editar()
     {
         $obj = new clsTutormenu($this->cod_tutormenu, $this->nm_tutormenu);
 
-        if($obj->edita())
-        {
-            header("Location: menu_suspenso_lst.php");
+        if ($obj->edita()) {
+            header('Location: menu_suspenso_lst.php');
         }
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         $obj = new clsTutormenu($this->cod_tutormenu);
         $obj->exclui();
-        header("Location: menu_suspenso_lst.php");
+        header('Location: menu_suspenso_lst.php');
+
         return true;
     }
-
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-?>

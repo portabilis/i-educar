@@ -22,43 +22,53 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_Input_Resource_Uf class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 
-class Portabilis_View_Helper_Input_Resource_Uf extends Portabilis_View_Helper_Input_CoreSelect {
+class Portabilis_View_Helper_Input_Resource_Uf extends Portabilis_View_Helper_Input_CoreSelect
+{
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
+        if (empty($options['resources'])) {
+            $resources = new clsUf();
+            $resources = $resources->lista();
+            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'sigla_uf', 'sigla_uf');
+        }
 
-    if (empty($options['resources'])) {
-      $resources = new clsUf();
-      $resources = $resources->lista();
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'sigla_uf', 'sigla_uf');
+        return $this->insertOption(null, 'Estado', $resources);
     }
 
-    return $this->insertOption(null, "Estado", $resources);
-  }
-
-
-  public function uf($options = array()) {
-    parent::select($options);
-  }
+    public function uf($options = [])
+    {
+        parent::select($options);
+    }
 }

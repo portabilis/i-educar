@@ -30,15 +30,15 @@
 * Criado em 26/06/2006 16:19 pelo gerador automatico de classes
 */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 
 class clsPmieducarServidorCurso
 {
-    var $cod_servidor_curso;
-    var $ref_cod_formacao;
-    var $data_conclusao;
-    var $data_registro;
-    var $diplomas_registros;
+    public $cod_servidor_curso;
+    public $ref_cod_formacao;
+    public $data_conclusao;
+    public $data_registro;
+    public $diplomas_registros;
 
     // propriedades padrao
 
@@ -47,118 +47,101 @@ class clsPmieducarServidorCurso
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
      *
      * @return object
      */
-    function __construct( $cod_servidor_curso = null, $ref_cod_formacao = null, $data_conclusao = null, $data_registro = null, $diplomas_registros = null )
+    public function __construct($cod_servidor_curso = null, $ref_cod_formacao = null, $data_conclusao = null, $data_registro = null, $diplomas_registros = null)
     {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_curso";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_servidor_curso, ref_cod_formacao, data_conclusao, data_registro, diplomas_registros";
+        $this->_campos_lista = $this->_todos_campos = 'cod_servidor_curso, ref_cod_formacao, data_conclusao, data_registro, diplomas_registros';
 
-        if( is_numeric( $ref_cod_formacao ) )
-        {
-            if( class_exists( "clsPmieducarServidorFormacao" ) )
-            {
-                $tmp_obj = new clsPmieducarServidorFormacao( $ref_cod_formacao );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_formacao)) {
+            if (class_exists('clsPmieducarServidorFormacao')) {
+                $tmp_obj = new clsPmieducarServidorFormacao($ref_cod_formacao);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_formacao = $ref_cod_formacao;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_formacao = $ref_cod_formacao;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_formacao = $ref_cod_formacao;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.servidor_formacao WHERE cod_formacao = '{$ref_cod_formacao}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor_formacao WHERE cod_formacao = '{$ref_cod_formacao}'")) {
                     $this->ref_cod_formacao = $ref_cod_formacao;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_servidor_curso ) )
-        {
+        if (is_numeric($cod_servidor_curso)) {
             $this->cod_servidor_curso = $cod_servidor_curso;
         }
-        if( is_string( $data_conclusao ) )
-        {
+        if (is_string($data_conclusao)) {
             $this->data_conclusao = $data_conclusao;
         }
-        if( is_string( $data_registro ) )
-        {
+        if (is_string($data_registro)) {
             $this->data_registro = $data_registro;
         }
-        if( is_string( $diplomas_registros ) )
-        {
+        if (is_string($diplomas_registros)) {
             $this->diplomas_registros = $diplomas_registros;
         }
-
     }
 
     /**
@@ -166,43 +149,40 @@ class clsPmieducarServidorCurso
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_cod_formacao ) && is_string( $this->data_conclusao ) )
-        {
+        if (is_numeric($this->ref_cod_formacao) && is_string($this->data_conclusao)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_formacao ) )
-            {
+            if (is_numeric($this->ref_cod_formacao)) {
                 $campos .= "{$gruda}ref_cod_formacao";
                 $valores .= "{$gruda}'{$this->ref_cod_formacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_conclusao ) )
-            {
+            if (is_string($this->data_conclusao)) {
                 $campos .= "{$gruda}data_conclusao";
                 $valores .= "{$gruda}'{$this->data_conclusao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_registro ) )
-            {
+            if (is_string($this->data_registro)) {
                 $campos .= "{$gruda}data_registro";
                 $valores .= "{$gruda}'{$this->data_registro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->diplomas_registros ) )
-            {
+            if (is_string($this->diplomas_registros)) {
                 $campos .= "{$gruda}diplomas_registros";
                 $valores .= "{$gruda}'{$this->diplomas_registros}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_servidor_curso_seq");
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
+            return $db->InsertId("{$this->_tabela}_cod_servidor_curso_seq");
         }
+
         return false;
     }
 
@@ -211,42 +191,36 @@ class clsPmieducarServidorCurso
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_servidor_curso ) )
-        {
-
+        if (is_numeric($this->cod_servidor_curso)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->ref_cod_formacao ) )
-            {
+            if (is_numeric($this->ref_cod_formacao)) {
                 $set .= "{$gruda}ref_cod_formacao = '{$this->ref_cod_formacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_conclusao ) )
-            {
+            if (is_string($this->data_conclusao)) {
                 $set .= "{$gruda}data_conclusao = '{$this->data_conclusao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_registro ) )
-            {
+            if (is_string($this->data_registro)) {
                 $set .= "{$gruda}data_registro = '{$this->data_registro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->diplomas_registros ) )
-            {
+            if (is_string($this->diplomas_registros)) {
                 $set .= "{$gruda}diplomas_registros = '{$this->diplomas_registros}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_servidor_curso = '{$this->cod_servidor_curso}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_servidor_curso = '{$this->cod_servidor_curso}'" );
                 return true;
             }
         }
+
         return false;
     }
 
@@ -255,82 +229,69 @@ class clsPmieducarServidorCurso
      *
      * @return array
      */
-    function lista( $int_cod_servidor_curso = null, $int_ref_cod_formacao = null, $date_data_conclusao_ini = null, $date_data_conclusao_fim = null, $date_data_registro_ini = null, $date_data_registro_fim = null, $str_diplomas_registros = null )
+    public function lista($int_cod_servidor_curso = null, $int_ref_cod_formacao = null, $date_data_conclusao_ini = null, $date_data_conclusao_fim = null, $date_data_registro_ini = null, $date_data_registro_fim = null, $str_diplomas_registros = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_servidor_curso ) )
-        {
+        if (is_numeric($int_cod_servidor_curso)) {
             $filtros .= "{$whereAnd} cod_servidor_curso = '{$int_cod_servidor_curso}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_formacao ) )
-        {
+        if (is_numeric($int_ref_cod_formacao)) {
             $filtros .= "{$whereAnd} ref_cod_formacao = '{$int_ref_cod_formacao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_conclusao_ini ) )
-        {
+        if (is_string($date_data_conclusao_ini)) {
             $filtros .= "{$whereAnd} data_conclusao >= '{$date_data_conclusao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_conclusao_fim ) )
-        {
+        if (is_string($date_data_conclusao_fim)) {
             $filtros .= "{$whereAnd} data_conclusao <= '{$date_data_conclusao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_registro_ini ) )
-        {
+        if (is_string($date_data_registro_ini)) {
             $filtros .= "{$whereAnd} data_registro >= '{$date_data_registro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_registro_fim ) )
-        {
+        if (is_string($date_data_registro_fim)) {
             $filtros .= "{$whereAnd} data_registro <= '{$date_data_registro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_diplomas_registros ) )
-        {
+        if (is_string($str_diplomas_registros)) {
             $filtros .= "{$whereAnd} diplomas_registros LIKE '%{$str_diplomas_registros}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -339,22 +300,22 @@ class clsPmieducarServidorCurso
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_servidor_curso ) )
-        {
+        if (is_numeric($this->cod_servidor_curso)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_servidor_curso = '{$this->cod_servidor_curso}'");
+            $db->ProximoRegistro();
 
+            return $db->Tupla();
+        } elseif ($this->ref_cod_formacao) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_servidor_curso = '{$this->cod_servidor_curso}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_formacao = '{$this->ref_cod_formacao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
-        elseif ( $this->ref_cod_formacao ) {
-            $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_formacao = '{$this->ref_cod_formacao}'" );
-            $db->ProximoRegistro();
-            return $db->Tupla();
-        }
+
         return false;
     }
 
@@ -363,16 +324,16 @@ class clsPmieducarServidorCurso
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_servidor_curso ) )
-        {
+        if (is_numeric($this->cod_servidor_curso)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_servidor_curso = '{$this->cod_servidor_curso}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_servidor_curso = '{$this->cod_servidor_curso}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -381,10 +342,9 @@ class clsPmieducarServidorCurso
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_servidor_curso ) )
-        {
+        if (is_numeric($this->cod_servidor_curso)) {
 
         /*
             delete
@@ -392,9 +352,8 @@ class clsPmieducarServidorCurso
         $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_servidor_curso = '{$this->cod_servidor_curso}'" );
         return true;
         */
-
-
         }
+
         return false;
     }
 
@@ -403,7 +362,7 @@ class clsPmieducarServidorCurso
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -413,7 +372,7 @@ class clsPmieducarServidorCurso
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -423,7 +382,7 @@ class clsPmieducarServidorCurso
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -434,18 +393,18 @@ class clsPmieducarServidorCurso
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -453,13 +412,12 @@ class clsPmieducarServidorCurso
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -469,14 +427,12 @@ class clsPmieducarServidorCurso
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

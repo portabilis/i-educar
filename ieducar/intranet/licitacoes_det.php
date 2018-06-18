@@ -24,61 +24,54 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es" );
-        $this->processoAp = "29";
+        $this->SetTitulo("{$this->_instituicao} Licita&ccedil;&otilde;es");
+        $this->processoAp = '29';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe da licita&ccedil;&atilde;o";
-        
+        $this->titulo = 'Detalhe da licita&ccedil;&atilde;o';
 
         $id_licitacao = @$_GET['id_licitacao'];
 
         $objPessoa = new clsPessoaFisica();
         $db = new clsBanco();
-        $db->Consulta( "SELECT l.ref_ref_cod_pessoa_fj, m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes={$id_licitacao}" );
-        if ($db->ProximoRegistro())
-        {
+        $db->Consulta("SELECT l.ref_ref_cod_pessoa_fj, m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes={$id_licitacao}");
+        if ($db->ProximoRegistro()) {
             //list ($nm, $numero, $objeto, $data_c, $hora) = $db->Tupla();
-            list ( $cod_pessoa, $nm, $numero, $objeto, $data_c, $hora ) = $db->Tupla();
-            list ( $nome ) = $objPessoa->queryRapida($cod_pessoa, "nome");
-            $hora = date('H:i', strtotime(substr($data_c,0,19)));
-            $data_c= date('d/m/Y', strtotime(substr($data_c,0,19) ));
+            list($cod_pessoa, $nm, $numero, $objeto, $data_c, $hora) = $db->Tupla();
+            list($nome) = $objPessoa->queryRapida($cod_pessoa, 'nome');
+            $hora = date('H:i', strtotime(substr($data_c, 0, 19)));
+            $data_c= date('d/m/Y', strtotime(substr($data_c, 0, 19)));
 
-            $this->addDetalhe( array("Modalidade", $nm." ".$numero) );
-            $this->addDetalhe( array("Objeto", $objeto) );
-            $this->addDetalhe( array("Data", "{$data_c}") );
-            $this->addDetalhe( array("Hora", $hora) );
-
+            $this->addDetalhe(['Modalidade', $nm.' '.$numero]);
+            $this->addDetalhe(['Objeto', $objeto]);
+            $this->addDetalhe(['Data', "{$data_c}"]);
+            $this->addDetalhe(['Hora', $hora]);
         }
-        $this->url_novo = "licitacoes_cad.php";
+        $this->url_novo = 'licitacoes_cad.php';
         $this->url_editar = "licitacoes_cad.php?id_licitacao=$id_licitacao";
-        $this->url_cancelar = "licitacoes_lst.php";
+        $this->url_cancelar = 'licitacoes_lst.php';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

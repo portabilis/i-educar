@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -37,133 +42,161 @@ require_once 'include/pmieducar/geral.inc.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Ano Letivo');
-    $this->processoAp = 561;
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Ano Letivo');
+        $this->processoAp = 561;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $ref_cod_escola;
-  var $ano;
-  var $ref_usuario_cad;
-  var $ref_usuario_exc;
-  var $andamento;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
+    public $ref_cod_escola;
+    public $ano;
+    public $ref_usuario_cad;
+    public $ref_usuario_exc;
+    public $andamento;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $this->ano            = $_GET['ano'];
-    $this->ref_cod_escola = $_GET['cod_escola'];
+        $this->ano            = $_GET['ano'];
+        $this->ref_cod_escola = $_GET['cod_escola'];
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7,
-      'educar_escola_lst.php');
-
-    $this->nome_url_sucesso  = 'Continuar';
-    $this->url_cancelar      = 'educar_escola_det.php?cod_escola=' . $this->ref_cod_escola;
-
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Definição do ano letivo"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-
-    $this->nome_url_cancelar = 'Cancelar';
-
-    return $retorno;
-  }
-
-  function Gerar()
-  {
-    // Primary keys
-    $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
-    $this->campoOculto('ano', $this->ano);
-
-    $obj_anos = new clsPmieducarEscolaAnoLetivo();
-    $lista_ano = $obj_anos->lista($this->ref_cod_escola, NULL, NULL, NULL, 2,
-      NULL, NULL, NULL, NULL, 1);
-
-    $ano_array = array();
-
-    if ($lista_ano) {
-      foreach ($lista_ano as $ano) {
-        $ano_array[$ano['ano']] = $ano['ano'];
-      }
-    }
-
-    $ano_atual = date('Y');
-
-    // Foreign keys
-    $opcoes = array('' => 'Selecione');
-    $lim = 5;
-
-    for ($i = 0; $i < $lim; $i++) {
-      $ano = $ano_atual + $i;
-
-      if (! key_exists($ano,$ano_array)) {
-        $opcoes[$ano] = $ano;
-      }
-      else {
-        $lim++;
-      }
-    }
-
-    $this->campoLista('ano', 'Ano', $opcoes, $this->ano);
-  }
-
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7,
-      'educar_escola_lst.php');
-
-    $url = sprintf(
-      'educar_ano_letivo_modulo_cad.php?ref_cod_escola=%s&ano=%s',
-      $this->ref_cod_escola, $this->ano
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        561,
+        $this->pessoa_logada,
+        7,
+      'educar_escola_lst.php'
     );
 
-    header('Location: ' . $url);
-    die();
-  }
+        $this->nome_url_sucesso  = 'Continuar';
+        $this->url_cancelar      = 'educar_escola_det.php?cod_escola=' . $this->ref_cod_escola;
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Definição do ano letivo'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->nome_url_cancelar = 'Cancelar';
+
+        return $retorno;
+    }
+
+    public function Gerar()
+    {
+        // Primary keys
+        $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+        $this->campoOculto('ano', $this->ano);
+
+        $obj_anos = new clsPmieducarEscolaAnoLetivo();
+        $lista_ano = $obj_anos->lista(
+        $this->ref_cod_escola,
+        null,
+        null,
+        null,
+        2,
+      null,
+        null,
+        null,
+        null,
+        1
+    );
+
+        $ano_array = [];
+
+        if ($lista_ano) {
+            foreach ($lista_ano as $ano) {
+                $ano_array[$ano['ano']] = $ano['ano'];
+            }
+        }
+
+        $ano_atual = date('Y');
+
+        // Foreign keys
+        $opcoes = ['' => 'Selecione'];
+        $lim = 5;
+
+        for ($i = 0; $i < $lim; $i++) {
+            $ano = $ano_atual + $i;
+
+            if (! key_exists($ano, $ano_array)) {
+                $opcoes[$ano] = $ano;
+            } else {
+                $lim++;
+            }
+        }
+
+        $this->campoLista('ano', 'Ano', $opcoes, $this->ano);
+    }
+
+    public function Novo()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        561,
+        $this->pessoa_logada,
+        7,
+      'educar_escola_lst.php'
+    );
+
+        $url = sprintf(
+      'educar_ano_letivo_modulo_cad.php?ref_cod_escola=%s&ano=%s',
+      $this->ref_cod_escola,
+        $this->ano
+    );
+
+        header('Location: ' . $url);
+        die();
+    }
 }
 
 // Instancia objeto de página

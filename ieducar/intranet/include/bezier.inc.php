@@ -27,15 +27,15 @@
 
 class Bezier
 {
-    var $p0;
-    var $p1;
-    var $p2;
-    var $p3;
+    public $p0;
+    public $p1;
+    public $p2;
+    public $p3;
 
-    var $curve_points = array();
-    var $curve_length = 0;
+    public $curve_points = [];
+    public $curve_length = 0;
 
-    function __construct($p0, $p1, $p2, $p3, $steps)
+    public function __construct($p0, $p1, $p2, $p3, $steps)
     {
         $this->p0 = $p0;
         $this->p1 = $p1;
@@ -47,19 +47,20 @@ class Bezier
     }
 
     // Evaluates an individual point on the curve using brute force
-    function get_curve_point($t)
+    public function get_curve_point($t)
     {
         $point['x'] = (pow(1-$t, 3) * $this->p0['x']) + (3*$t*pow(1-$t, 2)*$this->p1['x']) + (3*pow($t, 2)*(1-$t)*$this->p2['x']) + (pow($t, 3)*$this->p3['x']);
         $point['y'] = (pow(1-$t, 3) * $this->p0['y']) + (3*$t*pow(1-$t, 2)*$this->p1['y']) + (3*pow($t, 2)*(1-$t)*$this->p2['y']) + (pow($t, 3)*$this->p3['y']);
+
         return $point;
     }
 
-    function get_curve_points()
+    public function get_curve_points()
     {
         return $this->curve_points;
     }
 
-    function get_curve_length()
+    public function get_curve_length()
     {
         return $this->curve_length;
     }
@@ -67,15 +68,13 @@ class Bezier
     // An approximation to the curve length.  As with everything else,
     // if the underlying step size is small enough, this should give
     // a very accurate result
-    function calculate_curve_length()
+    public function calculate_curve_length()
     {
         $this->curve_length = 0;
 
         $first = true;
-        foreach ($this->curve_points as $t=>$point)
-        {
-            if ($first)
-            {
+        foreach ($this->curve_points as $t=>$point) {
+            if ($first) {
                 $last_x = $point['x'];
                 $last_y = $point['y'];
                 $first = false;
@@ -96,7 +95,7 @@ class Bezier
     //
     // Considering the alternatives, this should serve most
     // purposes just fine.
-    function get_reparameterized_curve_points($steps)
+    public function get_reparameterized_curve_points($steps)
     {
         // set new step size
         // subtract the teeny-weeny number to try to account for
@@ -111,45 +110,34 @@ class Bezier
         // loop over each new step
         $s = 0;
         $t = 0;
-        while ($s++ <= $steps)
-        {
+        while ($s++ <= $steps) {
             // loop until we find the segment that contains $s
-            while (isset($this->curve_segments[$t]))
-            {
+            while (isset($this->curve_segments[$t])) {
                 $segment = $this->curve_segments[$t];
                 // did we pass $s?
-                if (($t_point + $segment) >= $s_point)
-                {
+                if (($t_point + $segment) >= $s_point) {
                     // prevent division by zero
-                    if ($segment == 0)
-                    {
+                    if ($segment == 0) {
                         $fraction = 1;
-                    }
-                    else
-                    {
+                    } else {
                         $fraction = ($s_point - $t_point)/$segment;
                     }
 
                     $this_point = $this->curve_points[$t];
-                    if (! isset($this->curve_points[$t-1]))
-                    {
+                    if (! isset($this->curve_points[$t-1])) {
                         $last_point = $this_point;
-                    }
-                    else
-                    {
+                    } else {
                         $last_point = $this->curve_points[$t-1];
                     }
                     // if the step size of the original parameter ($t) is small enough, this
                     // should be pretty accurate
                     $new_x = $last_point['x'] + ($this_point['x'] - $last_point['x']) * $fraction;
                     $new_y = $last_point['y'] + ($this_point['y'] - $last_point['y']) * $fraction;
-                    $points[] = array(  'x'=>$new_x,
-                                        'y'=>$new_y);
+                    $points[] = [  'x'=>$new_x,
+                                        'y'=>$new_y];
 
                     break;
-                }
-                else
-                {
+                } else {
                     // Only increment if we didn't find a point on the last iteration.
                     // This is so that if two new points fall inside one of the old ones
                     // it still works.  This is a bad idea, though, cuz it means the ratio is low
@@ -166,18 +154,18 @@ class Bezier
 
     // Uses forward differencing to calculate the curve points using
     // a constant parameter step size
-    function calculate_curve_points($steps)
+    public function calculate_curve_points($steps)
     {
-        $this->curve_points = array();
+        $this->curve_points = [];
 
         $dt = 1 / $steps;
-    
+
         $pre1 = 3*$dt;
         $pre2 = 3*$dt*$dt;
         $pre3 = $dt*$dt*$dt;
         $pre4 = 6*$dt*$dt;
         $pre5 = 6*$dt*$dt*$dt;
-    
+
         $coef1['x'] = $this->p0['x'] - (2*$this->p1['x']) + $this->p2['x'];
         $coef1['y'] = $this->p0['y'] - (2*$this->p1['y']) + $this->p2['y'];
         $coef2['x'] = (3 * ($this->p1['x'] - $this->p2['x'])) - $this->p0['x'] + $this->p3['x'];
@@ -195,21 +183,18 @@ class Bezier
         $dddf['x'] = $coef2['x']*$pre5;
         $dddf['y'] = $coef2['y']*$pre5;
 
-        for ($i=0; $i<=$steps; $i++)
-        {
+        for ($i=0; $i<=$steps; $i++) {
             $this->curve_points[$i]['x'] = $f['x'];
             $this->curve_points[$i]['y'] = $f['y'];
-    
+
             $f['x'] += $df['x'];
             $f['y'] += $df['y'];
-    
+
             $df['x'] += $ddf['x'];
             $df['y'] += $ddf['y'];
-    
+
             $ddf['x'] += $dddf['x'];
             $ddf['y'] += $dddf['y'];
         }
     }
 }
-
-?>

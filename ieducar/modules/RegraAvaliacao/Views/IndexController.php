@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,19 +41,24 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
  * IndexController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class IndexController extends Core_Controller_Page_ListController
 {
-  protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
-  protected $_titulo     = 'Listagem de regras de avaliação';
-  protected $_processoAp = 947;
-  protected $_tableMap   = array(
+    protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
+    protected $_titulo     = 'Listagem de regras de avaliação';
+    protected $_processoAp = 947;
+    protected $_tableMap   = [
     'Nome' => 'nome',
     'Sistema de nota' => 'tipoNota',
     'Progressão' => 'tipoProgressao',
@@ -57,21 +67,21 @@ class IndexController extends Core_Controller_Page_ListController
     'Fórmula média' => 'formulaMedia',
     'Fórmula recuperação' => 'formulaRecuperacao',
     'Recuperação paralela' => 'tipoRecuperacaoParalela'
-  );
+  ];
 
-  protected function _preRender(){
+    protected function _preRender()
+    {
+        parent::_preRender();
 
-    parent::_preRender();
+        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+        $localizacao = new LocalizacaoSistema();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de regras de avalia&ccedil;&otilde;es"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Listagem de regras de avalia&ccedil;&otilde;es'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }

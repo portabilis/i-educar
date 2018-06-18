@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -38,19 +43,23 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 /**
  * Class MenuController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class MenuController extends ApiCoreController
 {
-  private function getCurrentUser(){
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-    return $this->pessoa_logada;
-  }
-  protected function sqlsForNumericSearch() {
-    $usuario = $this->getCurrentUser();
-    $sqls[] =
+    private function getCurrentUser()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        return $this->pessoa_logada;
+    }
+    protected function sqlsForNumericSearch()
+    {
+        $usuario = $this->getCurrentUser();
+        $sqls[] =
               "select arquivo as id,
                       nm_submenu as name
                  from portal.menu_submenu as ms
@@ -64,12 +73,13 @@ class MenuController extends ApiCoreController
                       u.cod_usuario = '{$usuario}'
                       limit 15";
 
-    return $sqls;
-  }
+        return $sqls;
+    }
 
-  protected function sqlsForStringSearch() {
-    $usuario = $this->getCurrentUser();
-    $sqls[] =
+    protected function sqlsForStringSearch()
+    {
+        $usuario = $this->getCurrentUser();
+        $sqls[] =
             "select arquivo as id,
                     nm_submenu as name
                from portal.menu_submenu as ms
@@ -83,17 +93,20 @@ class MenuController extends ApiCoreController
                     u.cod_usuario = '{$usuario}'
               limit 15";
 
-    return $sqls;
-  }
+        return $sqls;
+    }
 
-  protected function formatResourceValue($resource) {
-    return $this->toUtf8($resource['name']);
-  }
+    protected function formatResourceValue($resource)
+    {
+        return $this->toUtf8($resource['name']);
+    }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'menu-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'menu-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

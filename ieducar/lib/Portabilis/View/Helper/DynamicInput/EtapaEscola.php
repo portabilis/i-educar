@@ -22,48 +22,61 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_Etapa class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_EtapaEscola extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_EtapaEscola extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
 
   // subscreve para não acrescentar '_id' no final
-  protected function inputName() {
-    return 'etapa';
-  }
+    protected function inputName()
+    {
+        return 'etapa';
+    }
 
-  protected function inputOptions($options) {
-    $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $escolaId      = $this->getEscolaId($options['escolaId']);
-    $ano           = $this->viewInstance->ano;
-    $userId        = $this->getCurrentUserId();
+    protected function inputOptions($options)
+    {
+        $resources     = $options['resources'];
+        $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
+        $escolaId      = $this->getEscolaId($options['escolaId']);
+        $ano           = $this->viewInstance->ano;
+        $userId        = $this->getCurrentUserId();
 
-    if ($escolaId && empty($resources))
-      $resources = App_Model_IedFinder::getEtapasEscola($ano, $escolaId);
+        if ($escolaId && empty($resources)) {
+            $resources = App_Model_IedFinder::getEtapasEscola($ano, $escolaId);
+        }
 
+        return $this->insertOption(null, 'Selecione uma etapa', $resources);
+    }
 
-    return $this->insertOption(null, "Selecione uma etapa", $resources);
-  }
-
-  public function etapaEscola($options = array()) {
-    parent::select($options);
-  }
+    public function etapaEscola($options = [])
+    {
+        parent::select($options);
+    }
 }

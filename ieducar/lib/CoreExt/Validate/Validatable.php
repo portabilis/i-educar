@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Validate
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -41,37 +46,45 @@ require_once 'CoreExt/Validate/Numeric.php';
  * mecanismo simples e efetivo de validação.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Validate
+ *
  * @since     Interface disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface CoreExt_Validate_Validatable
 {
-  /**
-   * Retorna TRUE caso a propriedade seja válida.
-   *
-   * @param  string $key
-   * @return bool
-   */
-  public function isValid($key = '');
+    /**
+     * Retorna TRUE caso a propriedade seja válida.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function isValid($key = '');
 
-  /**
-   * Configura um CoreExt_Validate_Interface para uma propriedade da classe.
-   *
-   * @param  string $key
-   * @param  CoreExt_Validate_Interface $validator
-   * @return CoreExt_Validate_Validatable Provê interface fluída
-   */
-  public function setValidator($key, CoreExt_Validate_Interface $validator);
+    /**
+     * Configura um CoreExt_Validate_Interface para uma propriedade da classe.
+     *
+     * @param string                     $key
+     * @param CoreExt_Validate_Interface $validator
+     *
+     * @return CoreExt_Validate_Validatable Provê interface fluída
+     */
+    public function setValidator($key, CoreExt_Validate_Interface $validator);
 
-  /**
-   * Retorna a instância CoreExt_Validate_Interface para uma propriedade da
-   * classe ou NULL caso nenhum validador esteja atribuído.
-   *
-   * @param  string $key
-   * @return CoreExt_Validate_Interface|NULL
-   */
-  public function getValidator($key);
+    /**
+     * Retorna a instância CoreExt_Validate_Interface para uma propriedade da
+     * classe ou NULL caso nenhum validador esteja atribuído.
+     *
+     * @param string $key
+     *
+     * @return CoreExt_Validate_Interface|NULL
+     */
+    public function getValidator($key);
 }

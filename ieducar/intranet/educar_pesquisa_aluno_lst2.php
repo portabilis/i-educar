@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Pesquisa Aluno" );
-        $this->processoAp = "578";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Pesquisa Aluno");
+        $this->processoAp = '578';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -48,28 +48,28 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
     //var $cod_aluno;
     //var $ref_idpes_responsavel;
@@ -84,113 +84,111 @@ class indice extends clsListagem
     var $ativo;
     */
 
-    var $nome_aluno;
-    var $cpf_aluno;
-    var $nome_responsavel;
-    var $cpf_responsavel;
-    
-    var $campo1;
-    var $campo3;
-    var $campo4;
-    
-    function Gerar()
+    public $nome_aluno;
+    public $cpf_aluno;
+    public $nome_responsavel;
+    public $cpf_responsavel;
+
+    public $campo1;
+    public $campo3;
+    public $campo4;
+
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Aluno - Listagem";
-        
-         // passa todos os valores obtidos no GET para atributos do objeto
-        foreach( $_GET AS $var => $val ){
-            $this->$var = ( $val === "" ) ? null: $val;
+        $this->titulo = 'Aluno - Listagem';
 
+        // passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null: $val;
         }
-                
-        $this->addCabecalhos( array(
-            "Nome",
-            "CPF",
-            "Nome Respons&aacute;vel",
-            "CPF Respons&aacute;vel"
-        ) );
 
-        $this->campoOculto("campo1", $this->campo1);
-        $this->campoOculto("campo3", $this->campo3);
-        $this->campoOculto("campo4", $this->campo4);
-        
-        $this->campoTexto("nome_aluno","Nome do Aluno",$this->nome_aluno,20,255,false);
-        $this->campoCpf("cpf_aluno","CPF do Aluno",$this->cpf_aluno,false);
-        $this->campoTexto("nome_responsavel","Nome do Respons&aacute;vel",$this->nome_responsavel,20,false);
-        $this->campoCpf("cpf_responsavel","CPF do Respons&aacute;vel",$this->cpf_responsavel,false);
-        
+        $this->addCabecalhos([
+            'Nome',
+            'CPF',
+            'Nome Respons&aacute;vel',
+            'CPF Respons&aacute;vel'
+        ]);
+
+        $this->campoOculto('campo1', $this->campo1);
+        $this->campoOculto('campo3', $this->campo3);
+        $this->campoOculto('campo4', $this->campo4);
+
+        $this->campoTexto('nome_aluno', 'Nome do Aluno', $this->nome_aluno, 20, 255, false);
+        $this->campoCpf('cpf_aluno', 'CPF do Aluno', $this->cpf_aluno, false);
+        $this->campoTexto('nome_responsavel', 'Nome do Respons&aacute;vel', $this->nome_responsavel, 20, false);
+        $this->campoCpf('cpf_responsavel', 'CPF do Respons&aacute;vel', $this->cpf_responsavel, false);
+
         // Paginador
         $this->limite = 10;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_aluno = new clsPmieducarAlunoCMF();
-        $obj_aluno->setLimite( $this->limite, $this->offset );
-        $lista_aluno = $obj_aluno->lista($this->nome_aluno,idFederal2int($this->cpf_aluno),$this->nome_responsavel,idFederal2int($this->cpf_responsavel));
+        $obj_aluno->setLimite($this->limite, $this->offset);
+        $lista_aluno = $obj_aluno->lista($this->nome_aluno, idFederal2int($this->cpf_aluno), $this->nome_responsavel, idFederal2int($this->cpf_responsavel));
         $total = $obj_aluno->_total;
 
-        if($lista_aluno)
-        {
-            foreach ($lista_aluno as $registro)
-            {
-                if($registro["cpf_aluno"])
-                    $registro["cpf_aluno_"] = int2CPF($registro["cpf_aluno"]);
+        if ($lista_aluno) {
+            foreach ($lista_aluno as $registro) {
+                if ($registro['cpf_aluno']) {
+                    $registro['cpf_aluno_'] = int2CPF($registro['cpf_aluno']);
+                }
 
-                if($registro["cpf_responsavel"])
-                    $registro["cpf_responsavel_"] = int2CPF($registro["cpf_responsavel"]);
+                if ($registro['cpf_responsavel']) {
+                    $registro['cpf_responsavel_'] = int2CPF($registro['cpf_responsavel']);
+                }
 //                      $script = " onclick=\"addVal1('{$_GET['campo3']}','{$registro['cpf_aluno']}'); addVal1('{$_GET['campo1']}','{$registro['cod_aluno']}');  addVal1('{$_SESSION['campo4']}','{$registro['cpf_aluno_']}'); fecha();\"";
-                        $script = " onclick=\"addVal1('{$this->campo3}','{$registro['cpf_aluno']}'); addVal1('{$this->campo1}','{$registro['cod_aluno']}');  addVal1('{$this->campo4}','{$registro['cpf_aluno_']}'); fecha();\"";
-                $obj_det = "";
-                $obj_cpf_det = "";
-                if($registro["idpes_responsavel"])
-                {
-                    $obj_resp = new clsPessoa_($registro["idpes_responsavel"]);
+                $script = " onclick=\"addVal1('{$this->campo3}','{$registro['cpf_aluno']}'); addVal1('{$this->campo1}','{$registro['cod_aluno']}');  addVal1('{$this->campo4}','{$registro['cpf_aluno_']}'); fecha();\"";
+                $obj_det = '';
+                $obj_cpf_det = '';
+                if ($registro['idpes_responsavel']) {
+                    $obj_resp = new clsPessoa_($registro['idpes_responsavel']);
                     $obj_det = $obj_resp->detalhe();
 
-                    $obj_cpf = new clsFisica($registro["idpes_responsavel"]);
+                    $obj_cpf = new clsFisica($registro['idpes_responsavel']);
                     $obj_cpf_det = $obj_cpf->detalhe();
-                    if($obj_cpf_det["cpf"])
-                        $obj_cpf_det["cpf"] = int2IdFederal($obj_cpf_det["cpf"]);
+                    if ($obj_cpf_det['cpf']) {
+                        $obj_cpf_det['cpf'] = int2IdFederal($obj_cpf_det['cpf']);
+                    }
                 }
-                $this->addLinhas( array(
-                    "<a href=\"javascript:void( 0 );\" $script>{$registro["nome_aluno"]}</a>",
-                    "<a href=\"javascript:void( 0 );\" $script>{$registro["cpf_aluno_"]}</a>",
-                    "<a href=\"javascript:void( 0 );\" $script>{$obj_det["nome"]}</a>",
-                    "<a href=\"javascript:void( 0 );\" $script>{$obj_cpf_det["cpf"]}</a>"
-                ) );
+                $this->addLinhas([
+                    "<a href=\"javascript:void( 0 );\" $script>{$registro['nome_aluno']}</a>",
+                    "<a href=\"javascript:void( 0 );\" $script>{$registro['cpf_aluno_']}</a>",
+                    "<a href=\"javascript:void( 0 );\" $script>{$obj_det['nome']}</a>",
+                    "<a href=\"javascript:void( 0 );\" $script>{$obj_cpf_det['cpf']}</a>"
+                ]);
             }
-
         }
 
-        $this->addPaginador2( "educar_pesquisa_aluno_lst2.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2('educar_pesquisa_aluno_lst2.php', $total, $_GET, $this->nome, $this->limite);
 
         //verifica se foi realizado pesquisa
-        if(isset($_GET["nome_aluno"]) || isset($_GET["nome_responsavel"]) || isset($_GET["cpf_aluno"]) || isset($_GET["cpf_responsavel"]) )
+        if (isset($_GET['nome_aluno']) || isset($_GET['nome_responsavel']) || isset($_GET['cpf_aluno']) || isset($_GET['cpf_responsavel'])) {
             $ok = true;
+        }
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        if($obj_permissao->permissao_cadastra(578, $this->pessoa_logada,7) && $ok)
-        {
-            $this->acao = "window.parent.document.getElementById(\"cpf_\").disabled = true;
-                           window.parent.document.getElementById(\"cpf_\").value = \"\";
-                           window.parent.document.getElementById(\"cpf_2\").disabled = true; 
-                           window.parent.document.getElementById(\"cpf_2\").value = \"\"; 
-                           window.parent.document.getElementById(\"ref_idpes\").value = \"\"; 
-                           window.parent.document.getElementById(\"cpf\").value = \"\";
-                           window.parent.document.getElementById(\"cpf\").disabled = true;
-                           window.parent.document.getElementById(\"cpf\").value = \"\";
-                           window.parent.document.getElementById(\"bloqueado\").value = \"0\";
+        if ($obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7) && $ok) {
+            $this->acao = 'window.parent.document.getElementById("cpf_").disabled = true;
+                           window.parent.document.getElementById("cpf_").value = "";
+                           window.parent.document.getElementById("cpf_2").disabled = true; 
+                           window.parent.document.getElementById("cpf_2").value = ""; 
+                           window.parent.document.getElementById("ref_idpes").value = ""; 
+                           window.parent.document.getElementById("cpf").value = "";
+                           window.parent.document.getElementById("cpf").disabled = true;
+                           window.parent.document.getElementById("cpf").value = "";
+                           window.parent.document.getElementById("bloqueado").value = "0";
                            window.parent.passaPagina();
-                           fecha1();";
-            $this->nome_acao = "Novo";
+                           fecha1();';
+            $this->nome_acao = 'Novo';
         }
         //**
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 // cria uma extensao da classe base
@@ -198,7 +196,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

@@ -22,9 +22,12 @@
  *
  * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package     Core
  * @subpackage  ReservaVaga
+ *
  * @since       Arquivo disponível desde a versão 1.0.0
+ *
  * @version     $Id$
  */
 
@@ -35,136 +38,181 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-  function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
-    $this->processoAp = '639';
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
+        $this->processoAp = '639';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-  /**
-   * Referência a usuário da sessão
-   * @var int
-   */
-  var $pessoa_logada = NULL;
+    /**
+     * Referência a usuário da sessão
+     *
+     * @var int
+     */
+    public $pessoa_logada = null;
 
-  var $ref_cod_escola;
-  var $ref_cod_serie;
-  var $ref_cod_aluno;
-  var $nm_aluno;
-  var $nm_aluno_;
+    public $ref_cod_escola;
+    public $ref_cod_serie;
+    public $ref_cod_aluno;
+    public $nm_aluno;
+    public $nm_aluno_;
 
-  var $ref_cod_instituicao;
-  var $ref_cod_curso;
+    public $ref_cod_instituicao;
+    public $ref_cod_curso;
 
-  var $passo;
+    public $passo;
 
-  var $nm_aluno_ext;
-  var $cpf_responsavel;
-  var $tipo_aluno;
+    public $nm_aluno_ext;
+    public $cpf_responsavel;
+    public $tipo_aluno;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->ref_cod_serie  = $_GET['ref_cod_serie'];
-    $this->ref_cod_escola = $_GET['ref_cod_escola'];
+        $this->ref_cod_serie  = $_GET['ref_cod_serie'];
+        $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(639, $this->pessoa_logada, 7,
-      'educar_reserva_vaga_lst.php');
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        639,
+        $this->pessoa_logada,
+        7,
+      'educar_reserva_vaga_lst.php'
+    );
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} reserva de vaga"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''        => "{$nomeMenu} reserva de vaga"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    return $retorno;
-  }
-
-  function Gerar()
-  {
-    if ($this->ref_cod_aluno) {
-      $obj_reserva_vaga = new clsPmieducarReservaVaga();
-      $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, NULL, NULL, NULL, NULL,
-        $this->ref_cod_aluno, NULL, NULL, NULL, NULL, 1);
-
-      // Verifica se o aluno já possui reserva alguma reserva ativa no sistema
-      if (is_array($lst_reserva_vaga)) {
-        echo "
-          <script type='text/javascript'>
-            alert('Aluno já possui reserva de vaga!\\nNão é possivel realizar a reserva.');
-            window.location = 'educar_reserva_vaga_lst.php';
-          </script>";
-        die();
-      }
-
-      echo "
-        <script type='text/javascript'>
-          alert('A reserva do aluno permanecerá ativa por apenas 2 dias!');
-        </script>";
+        return $retorno;
     }
 
-    $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
-    $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+    public function Gerar()
+    {
+        if ($this->ref_cod_aluno) {
+            $obj_reserva_vaga = new clsPmieducarReservaVaga();
+            $lst_reserva_vaga = $obj_reserva_vaga->lista(
+          null,
+          null,
+          null,
+          null,
+          null,
+        $this->ref_cod_aluno,
+          null,
+          null,
+          null,
+          null,
+          1
+      );
 
-    $this->nm_aluno = $this->nm_aluno_;
+            // Verifica se o aluno já possui reserva alguma reserva ativa no sistema
+            if (is_array($lst_reserva_vaga)) {
+                echo '
+          <script type=\'text/javascript\'>
+            alert(\'Aluno já possui reserva de vaga!\\nNão é possivel realizar a reserva.\');
+            window.location = \'educar_reserva_vaga_lst.php\';
+          </script>';
+                die();
+            }
 
-    $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, FALSE,
-      FALSE, FALSE, '', "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/><span style='padding-left:20px;'><input type='button' value='Aluno externo' onclick='showAlunoExt(true);' class='botaolistagem'></span>",
-      '', '', TRUE);
+            echo '
+        <script type=\'text/javascript\'>
+          alert(\'A reserva do aluno permanecerá ativa por apenas 2 dias!\');
+        </script>';
+        }
 
-    $this->campoOculto('nm_aluno_', $this->nm_aluno_);
-    $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+        $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
+        $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
 
-    $this->campoOculto('tipo_aluno', 'i');
+        $this->nm_aluno = $this->nm_aluno_;
 
-    $this->campoTexto('nm_aluno_ext', 'Nome aluno', $this->nm_aluno_ext, 50, 255, FALSE);
-    $this->campoCpf('cpf_responsavel', 'CPF respons&aacute;vel',
-      $this->cpf_responsavel, FALSE, "<span style='padding-left:20px;'><input type='button' value='Aluno interno' onclick='showAlunoExt(false);' class='botaolistagem'></span>");
+        $this->campoTexto(
+        'nm_aluno',
+        'Aluno',
+        $this->nm_aluno,
+        30,
+        255,
+        false,
+      false,
+        false,
+        '',
+        "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/><span style='padding-left:20px;'><input type='button' value='Aluno externo' onclick='showAlunoExt(true);' class='botaolistagem'></span>",
+      '',
+        '',
+        true
+    );
 
-    $this->campoOculto('passo', 1);
+        $this->campoOculto('nm_aluno_', $this->nm_aluno_);
+        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
-    $this->acao_enviar = 'acao2()';
+        $this->campoOculto('tipo_aluno', 'i');
 
-    $this->url_cancelar = 'educar_reserva_vaga_lst.php';
-    $this->nome_url_cancelar = 'Cancelar';
-  }
+        $this->campoTexto('nm_aluno_ext', 'Nome aluno', $this->nm_aluno_ext, 50, 255, false);
+        $this->campoCpf(
+        'cpf_responsavel',
+        'CPF respons&aacute;vel',
+      $this->cpf_responsavel,
+        false,
+        '<span style=\'padding-left:20px;\'><input type=\'button\' value=\'Aluno interno\' onclick=\'showAlunoExt(false);\' class=\'botaolistagem\'></span>'
+    );
 
-  function Novo()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        $this->campoOculto('passo', 1);
 
-    if ($this->passo == 2) {
-      return true;
+        $this->acao_enviar = 'acao2()';
+
+        $this->url_cancelar = 'educar_reserva_vaga_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
     }
 
-    $obj_reserva_vaga = new clsPmieducarReservaVaga(NULL, $this->ref_cod_escola,
-      $this->ref_cod_serie, NULL, $this->pessoa_logada, $this->ref_cod_aluno, NULL,
-      NULL, 1, $this->nm_aluno_ext, idFederal2int($this->cpf_responsavel));
+    public function Novo()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $cadastrou = $obj_reserva_vaga->cadastra();
+        if ($this->passo == 2) {
+            return true;
+        }
 
-    if ($cadastrou) {
-      $this->mensagem .= 'Reserva de Vaga efetuada com sucesso.<br>';
-      header('Location: educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
-      die();
+        $obj_reserva_vaga = new clsPmieducarReservaVaga(
+        null,
+        $this->ref_cod_escola,
+      $this->ref_cod_serie,
+        null,
+        $this->pessoa_logada,
+        $this->ref_cod_aluno,
+        null,
+      null,
+        1,
+        $this->nm_aluno_ext,
+        idFederal2int($this->cpf_responsavel)
+    );
+
+        $cadastrou = $obj_reserva_vaga->cadastra();
+
+        if ($cadastrou) {
+            $this->mensagem .= 'Reserva de Vaga efetuada com sucesso.<br>';
+            header('Location: educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
+            die();
+        }
+
+        $this->mensagem = 'Reserva de Vaga n&atilde;o realizada.<br>';
+
+        return false;
     }
-
-    $this->mensagem = 'Reserva de Vaga n&atilde;o realizada.<br>';
-    return FALSE;
-  }
 }
 
 // Instancia objeto de página

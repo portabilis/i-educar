@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/public/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/public/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Munic&iacute;pio" );
-        $this->processoAp = "755";
+        $this->SetTitulo("{$this->_instituicao} Munic&iacute;pio");
+        $this->processoAp = '755';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -46,123 +46,110 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $__titulo;
+    public $__titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $__limite;
+    public $__limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $__offset;
+    public $__offset;
 
-    var $idmun;
-    var $nome;
-    var $sigla_uf;
-    var $area_km2;
-    var $idmreg;
-    var $idasmun;
-    var $cod_ibge;
-    var $geom;
-    var $tipo;
-    var $idmun_pai;
-    var $idpes_rev;
-    var $idpes_cad;
-    var $data_rev;
-    var $data_cad;
-    var $origem_gravacao;
-    var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
-    
-    var $idpais;
+    public $idmun;
+    public $nome;
+    public $sigla_uf;
+    public $area_km2;
+    public $idmreg;
+    public $idasmun;
+    public $cod_ibge;
+    public $geom;
+    public $tipo;
+    public $idmun_pai;
+    public $idpes_rev;
+    public $idpes_cad;
+    public $data_rev;
+    public $data_cad;
+    public $origem_gravacao;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
 
-    function Gerar()
+    public $idpais;
+
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->__titulo = "Munic&iacute;pio - Listagem";
+        $this->__titulo = 'Munic&iacute;pio - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        
-
-        $this->addCabecalhos( array(
-            "Nome",
-            "Estado"
-        ) );
+        $this->addCabecalhos([
+            'Nome',
+            'Estado'
+        ]);
 
         // Filtros de Foreign Keys
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPais" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsPais')) {
             $objTemp = new clsPais();
-            $lista = $objTemp->lista( false, false, false, false, false, "nome ASC" );
-            if ( is_array( $lista ) && count( $lista ) ) 
-            {
-                foreach ( $lista as $registro ) 
-                {
+            $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "idpais", "Pais", $opcoes, $this->idpais, "", false, "", "", false, false );
+        $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', false, '', '', false, false);
 
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsUf" ) )
-        {
-            if( $this->idpais ) 
-            {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsUf')) {
+            if ($this->idpais) {
                 $objTemp = new clsUf();
-                $lista = $objTemp->lista( false, false, $this->idpais, false, false, "nome ASC" );
-                if ( is_array( $lista ) && count( $lista ) ) 
-                {
-                    foreach ( $lista as $registro ) 
-                    {
+                $lista = $objTemp->lista(false, false, $this->idpais, false, false, 'nome ASC');
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
                         $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "sigla_uf", "Estado", $opcoes, $this->sigla_uf, "", false, "", "", false, false );
+        $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', false, '', '', false, false);
 
         // outros Filtros
-        $this->campoTexto( "nome", "Nome", $this->nome, 30, 60, false );
-
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, false);
 
         // Paginador
         $this->__limite = 20;
-        $this->__offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
+        $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
 
         $obj_municipio = new clsPublicMunicipio();
-        $obj_municipio->setOrderby( "nome ASC" );
-        $obj_municipio->setLimite( $this->__limite, $this->__offset );
+        $obj_municipio->setOrderby('nome ASC');
+        $obj_municipio->setLimite($this->__limite, $this->__offset);
 
         $lista = $obj_municipio->lista(
             $this->nome,
@@ -172,48 +159,42 @@ class indice extends clsListagem
         $total = $obj_municipio->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 // pega detalhes de foreign_keys
-                if( class_exists( "clsUf" ) )
-                {
-                    $obj_sigla_uf = new clsUf( $registro["sigla_uf"] );
+                if (class_exists('clsUf')) {
+                    $obj_sigla_uf = new clsUf($registro['sigla_uf']);
                     $det_sigla_uf = $obj_sigla_uf->detalhe();
-                    $registro["sigla_uf"] = $det_sigla_uf["nome"];
-                }
-                else
-                {
-                    $registro["sigla_uf"] = "Erro na geracao";
+                    $registro['sigla_uf'] = $det_sigla_uf['nome'];
+                } else {
+                    $registro['sigla_uf'] = 'Erro na geracao';
                     echo "<!--\nErro\nClasse nao existente: clsUf\n-->";
                 }
 
-                $this->addLinhas( array(
-                    "<a href=\"public_municipio_det.php?idmun={$registro["idmun"]}\">{$registro["nome"]}</a>",
-                    "<a href=\"public_municipio_det.php?idmun={$registro["idmun"]}\">{$registro["sigla_uf"]}</a>"
-                ) );
+                $this->addLinhas([
+                    "<a href=\"public_municipio_det.php?idmun={$registro['idmun']}\">{$registro['nome']}</a>",
+                    "<a href=\"public_municipio_det.php?idmun={$registro['idmun']}\">{$registro['sigla_uf']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "public_municipio_lst.php", $total, $_GET, $this->nome, $this->__limite );
+        $this->addPaginador2('public_municipio_lst.php', $total, $_GET, $this->nome, $this->__limite);
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
         $obj_permissao = new clsPermissoes();
 
-        if($obj_permissao->permissao_cadastra(755, $this->pessoa_logada,7,null,true))
-        {
-            $this->acao = "go(\"public_municipio_cad.php\")";
-            $this->nome_acao = "Novo";
+        if ($obj_permissao->permissao_cadastra(755, $this->pessoa_logada, 7, null, true)) {
+            $this->acao = 'go("public_municipio_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_enderecamento_index.php"    => "Endereçamento",
-             ""                                  => "Listagem de munic&iacute;pios"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_enderecamento_index.php'    => 'Endereçamento',
+             ''                                  => 'Listagem de munic&iacute;pios'
+        ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
@@ -221,7 +202,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

@@ -2,6 +2,7 @@
 /**
  *
  * @author  Prefeitura Municipal de Itajaí
+ *
  * @version SVN: $Id$
  *
  * Pacote: i-PLB Software Público Livre e Brasileiro
@@ -33,10 +34,10 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Servidores - Motivo Afastamento" );
-        $this->processoAp = "633";
+        $this->SetTitulo("{$this->_instituicao} Servidores - Motivo Afastamento");
+        $this->processoAp = '633';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -48,183 +49,196 @@ class indice extends clsCadastro
      *
      * @var int
      */
-  public $pessoa_logada = NULL;
+    public $pessoa_logada = null;
 
-  public
-    $cod_motivo_afastamento = NULL,
-    $ref_usuario_exc        = NULL,
-    $ref_usuario_cad        = NULL,
-    $nm_motivo              = NULL,
-    $descricao              = NULL,
-    $data_cadastro          = NULL,
-    $data_exclusao          = NULL,
-    $ativo                  = NULL,
-    $ref_cod_instituicao    = NULL;
+    public $cod_motivo_afastamento = null;
+    public $ref_usuario_exc        = null;
+    public $ref_usuario_cad        = null;
+    public $nm_motivo              = null;
+    public $descricao              = null;
+    public $data_cadastro          = null;
+    public $data_exclusao          = null;
+    public $ativo                  = null;
+    public $ref_cod_instituicao    = null;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_motivo_afastamento = $_GET["cod_motivo_afastamento"];
+        $this->cod_motivo_afastamento = $_GET['cod_motivo_afastamento'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 633, $this->pessoa_logada, 7,  "educar_motivo_afastamento_lst.php" );
+        $obj_permissoes->permissao_cadastra(633, $this->pessoa_logada, 7, 'educar_motivo_afastamento_lst.php');
 
-        if( is_numeric( $this->cod_motivo_afastamento ) )
-        {
-
-            $obj = new clsPmieducarMotivoAfastamento( $this->cod_motivo_afastamento );
+        if (is_numeric($this->cod_motivo_afastamento)) {
+            $obj = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento);
             $registro  = $obj->detalhe();
 
-            if( $registro )
-            {
-              foreach( $registro AS $campo => $val )    // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {    // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                $obj_escola = new clsPmieducarEscola( $this->ref_cod_escola );
+                $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
                 $det_escola = $obj_escola->detalhe();
                 $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
-                if( $obj_permissoes->permissao_excluir( 633, $this->pessoa_logada, 7 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(633, $this->pessoa_logada, 7)) {
                     $this->fexcluir = true;
                 }
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
                 $this->ref_cod_instituicao = $registro['ref_cod_instituicao'];
             }
         }
 
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro["cod_motivo_afastamento"]}" : "educar_motivo_afastamento_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}" : 'educar_motivo_afastamento_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"                  => "Servidores",
-         ""        => "{$nomeMenu} motivo de afastamento"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_servidores_index.php'                  => 'Servidores',
+         ''        => "{$nomeMenu} motivo de afastamento"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_motivo_afastamento", $this->cod_motivo_afastamento );
+        $this->campoOculto('cod_motivo_afastamento', $this->cod_motivo_afastamento);
 
         // foreign keys
         $obrigatorio = true;
         $get_escola = false;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto( "nm_motivo", "Motivo de Afastamento", $this->nm_motivo, 30, 255, true );
-        $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
+        $this->campoTexto('nm_motivo', 'Motivo de Afastamento', $this->nm_motivo, 30, 255, true);
+        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 633, $this->pessoa_logada, 7,  "educar_motivo_afastamento_lst.php" );
+        $obj_permissoes->permissao_cadastra(633, $this->pessoa_logada, 7, 'educar_motivo_afastamento_lst.php');
 
-
-        $obj = new clsPmieducarMotivoAfastamento( null, null, $this->pessoa_logada, $this->nm_motivo, $this->descricao, null, null, 1, $this->ref_cod_instituicao );
+        $obj = new clsPmieducarMotivoAfastamento(null, null, $this->pessoa_logada, $this->nm_motivo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             $motivoAfastamento = new clsPmieducarMotivoAfastamento($cadastrou);
             $motivoAfastamento = $motivoAfastamento->detalhe();
 
-            $auditoria = new clsModulesAuditoriaGeral("motivo_afastamento", $this->pessoa_logada, $cadastrou);
+            $auditoria = new clsModulesAuditoriaGeral('motivo_afastamento', $this->pessoa_logada, $cadastrou);
             $auditoria->inclusao($motivoAfastamento);
 
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_motivo_afastamento_lst.php" );
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_motivo_afastamento_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarMotivoAfastamento\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_motivo ) && is_numeric( $this->ref_cod_instituicao )\n-->";
+
         return false;
     }
 
+    public function Editar()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        633,
+        $this->pessoa_logada,
+        7,
+      'educar_motivo_afastamento_lst.php'
+    );
 
-  public function Editar() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        $motivoAfastamento = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento);
+        $motivoAfastamentoAntes = $motivoAfastamento->detalhe();
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(633, $this->pessoa_logada, 7,
-      'educar_motivo_afastamento_lst.php');
+        $obj = new clsPmieducarMotivoAfastamento(
+        $this->cod_motivo_afastamento,
+      $this->pessoa_logada,
+        null,
+        $this->nm_motivo,
+        $this->descricao,
+        null,
+      null,
+        1,
+        $this->ref_cod_instituicao
+    );
 
-    $motivoAfastamento = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento);
-    $motivoAfastamentoAntes = $motivoAfastamento->detalhe();
+        $editou = $obj->edita();
+        if ($editou) {
+            $motivoAfastamentoDepois = $motivoAfastamento->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('motivo_afastamento', $this->pessoa_logada, $this->cod_motivo_afastamento);
+            $auditoria->alteracao($motivoAfastamentoAntes, $motivoAfastamentoDepois);
 
-    $obj = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento,
-      $this->pessoa_logada, NULL, $this->nm_motivo, $this->descricao, NULL,
-      NULL, 1, $this->ref_cod_instituicao);
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_motivo_afastamento_lst.php');
+            die();
+        }
 
-    $editou = $obj->edita();
-    if ($editou) {
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
-        $motivoAfastamentoDepois = $motivoAfastamento->detalhe();
-        $auditoria = new clsModulesAuditoriaGeral("motivo_afastamento", $this->pessoa_logada, $this->cod_motivo_afastamento);
-        $auditoria->alteracao($motivoAfastamentoAntes, $motivoAfastamentoDepois);
-
-        $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-        header('Location: educar_motivo_afastamento_lst.php');
-        die();
+        return false;
     }
 
-    $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-    return FALSE;
-  }
-
-
-
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 633, $this->pessoa_logada, 7,  "educar_motivo_afastamento_lst.php" );
+        $obj_permissoes->permissao_excluir(633, $this->pessoa_logada, 7, 'educar_motivo_afastamento_lst.php');
 
-
-        $obj = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento,
-          $this->pessoa_logada, NULL, $this->nm_motivo, $this->descricao, NULL,
-          NULL, 0, $this->ref_cod_instituicao);
+        $obj = new clsPmieducarMotivoAfastamento(
+            $this->cod_motivo_afastamento,
+          $this->pessoa_logada,
+            null,
+            $this->nm_motivo,
+            $this->descricao,
+            null,
+          null,
+            0,
+            $this->ref_cod_instituicao
+        );
 
         $motivoAfastamento = $obj->detalhe();
 
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $auditoria = new clsModulesAuditoriaGeral("motivo_afastamento", $this->pessoa_logada, $this->cod_motivo_afastamento);
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('motivo_afastamento', $this->pessoa_logada, $this->cod_motivo_afastamento);
             $auditoria->exclusao($motivoAfastamento);
 
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_motivo_afastamento_lst.php" );
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_motivo_afastamento_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarMotivoAfastamento\nvalores obrigatorios\nif( is_numeric( $this->cod_motivo_afastamento ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }
@@ -234,7 +248,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

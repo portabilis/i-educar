@@ -24,59 +24,57 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Fotos!" );
-        $this->processoAp = "0";
+        $this->SetTitulo("{$this->_instituicao} Fotos!");
+        $this->processoAp = '0';
         $this->renderMenu = false;
     }
 }
 
 class indice extends clsListagem
-{   
-    function Gerar()
+{
+    public function Gerar()
     {
         @session_start();
-    
-        $_SESSION["campo"] = isset($_GET["campo"]) ? $_GET["campo"] : $_SESSION["campo"];
-        
-        $_SESSION["campo1"] = isset($_GET["campo1"]) ? $_GET["campo1"] : $_SESSION["campo1"];
-        $_SESSION["campo2"] = isset($_GET["campo2"]) ? $_GET["campo2"] : $_SESSION["campo2"];
-        $_SESSION["campo3"] = isset($_GET["campo3"]) ? $_GET["campo3"] : $_SESSION["campo3"];
-        $this->nome = "form1";
-        
-        $this->titulo = "Fotos";
 
-        
-        $this->addCabecalhos( array("Selecionar", "Data", "T&iacute;tulo", "Criador") );
-        
-        
+        $_SESSION['campo'] = isset($_GET['campo']) ? $_GET['campo'] : $_SESSION['campo'];
+
+        $_SESSION['campo1'] = isset($_GET['campo1']) ? $_GET['campo1'] : $_SESSION['campo1'];
+        $_SESSION['campo2'] = isset($_GET['campo2']) ? $_GET['campo2'] : $_SESSION['campo2'];
+        $_SESSION['campo3'] = isset($_GET['campo3']) ? $_GET['campo3'] : $_SESSION['campo3'];
+        $this->nome = 'form1';
+
+        $this->titulo = 'Fotos';
+
+        $this->addCabecalhos(['Selecionar', 'Data', 'T&iacute;tulo', 'Criador']);
+
         //***
         // INICIO FILTROS
         //***
-        $this->campoTexto("titulo", "T&iacute;tulo", $_GET["titulo"], 40, 255);
-        
+        $this->campoTexto('titulo', 'T&iacute;tulo', $_GET['titulo'], 40, 255);
+
         //***
         // FIM FILTROS
         //***
-        
+
         $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-        
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+
         $objPessoa = new clsPessoaFisica();
         $db = new clsBanco();
-        
-        if(!empty($_GET["titulo"]))
-            $where = " and f.titulo ilike '%{$_GET["titulo"]}%' ";
-                    
+
+        if (!empty($_GET['titulo'])) {
+            $where = " and f.titulo ilike '%{$_GET['titulo']}%' ";
+        }
+
         $total = $db->CampoUnico("SELECT COUNT(0) FROM foto_portal f,cadastro.pessoa p WHERE f.ref_ref_cod_pessoa_fj = p.idpes AND ref_cod_foto_secao=1 {$where}");
         $db->Consulta("SELECT f.ref_ref_cod_pessoa_fj, 
                               f.ref_cod_credito, 
@@ -92,31 +90,29 @@ class indice extends clsListagem
                         {$where}            
                      ORDER BY f.data_foto DESC
                         LIMIT $iniciolimit,$limite");
-        
-        while ($db->ProximoRegistro())
-        {
-            list ( $cod_pessoa, $cod_credito, $id_foto, $data, $titulo, $descricao, $caminho, $nome) = $db->Tupla();
-            $campo = @$_SESSION["campo"];
-            
-            $campo3 = @$_SESSION["campo3"]; 
-            
-            if(strpos($campo3,"acoes") == 1){
-                $onclick = "javascript:enviar(\"{$_SESSION["campo1"]}\",\"{$id_foto}\",\"{$titulo}\",\"div_dinamico_0\")";
-            }else{
+
+        while ($db->ProximoRegistro()) {
+            list($cod_pessoa, $cod_credito, $id_foto, $data, $titulo, $descricao, $caminho, $nome) = $db->Tupla();
+            $campo = @$_SESSION['campo'];
+
+            $campo3 = @$_SESSION['campo3'];
+
+            if (strpos($campo3, 'acoes') == 1) {
+                $onclick = "javascript:enviar(\"{$_SESSION['campo1']}\",\"{$id_foto}\",\"{$titulo}\",\"div_dinamico_0\")";
+            } else {
                 $onclick = "javascript:retorna(\"{$this->nome}\", \"{$campo}\", \"{$id_foto}\");";
             }
-            $this->addLinhas( array("<center><a href='javascript:void(0);' onclick='$onclick'><img src='fotos/small/{$caminho}' border=0></a></center>", $data, $titulo, $nome." ".$sobrenome) );
+            $this->addLinhas(["<center><a href='javascript:void(0);' onclick='$onclick'><img src='fotos/small/{$caminho}' border=0></a></center>", $data, $titulo, $nome.' '.$sobrenome]);
         }
-        $this->addPaginador2( "add_fotos.php", $total, $_GET, $this->nome, $limite );
-        $this->largura = "100%";
+        $this->addPaginador2('add_fotos.php', $total, $_GET, $this->nome, $limite);
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

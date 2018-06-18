@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Acontecimento" );
-        $this->processoAp = "605";
+        $this->SetTitulo("{$this->_instituicao} Acontecimento");
+        $this->processoAp = '605';
     }
 }
 
@@ -46,111 +46,95 @@ class indice extends clsDetalhe
      * @var int
      */
 
-    var $cod_acontecimento;
-    var $ref_cod_tipo_acontecimento;
-    var $ref_cod_funcionario_cad;
-    var $ref_cod_funcionario_exc;
-    var $titulo;
-    var $descricao;
-    var $dt_inicio;
-    var $dt_fim;
-    var $hr_inicio;
-    var $hr_fim;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_acontecimento;
+    public $ref_cod_tipo_acontecimento;
+    public $ref_cod_funcionario_cad;
+    public $ref_cod_funcionario_exc;
+    public $titulo;
+    public $descricao;
+    public $dt_inicio;
+    public $dt_fim;
+    public $hr_inicio;
+    public $hr_fim;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Acontecimento - Detalhe";
-        
+        $this->titulo = 'Acontecimento - Detalhe';
 
-        $this->cod_acontecimento=$_GET["cod_acontecimento"];
+        $this->cod_acontecimento=$_GET['cod_acontecimento'];
 
-        $tmp_obj = new clsPmicontrolesisAcontecimento( $this->cod_acontecimento );
+        $tmp_obj = new clsPmicontrolesisAcontecimento($this->cod_acontecimento);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: controlesis_acontecimento_lst.php" );
+        if (! $registro) {
+            header('location: controlesis_acontecimento_lst.php');
             die();
         }
 
-        if( class_exists( "clsPmicontrolesisTipoAcontecimento" ) )
-        {
-            $obj_ref_cod_tipo_acontecimento = new clsPmicontrolesisTipoAcontecimento( $registro["ref_cod_tipo_acontecimento"] );
+        if (class_exists('clsPmicontrolesisTipoAcontecimento')) {
+            $obj_ref_cod_tipo_acontecimento = new clsPmicontrolesisTipoAcontecimento($registro['ref_cod_tipo_acontecimento']);
             $det_ref_cod_tipo_acontecimento = $obj_ref_cod_tipo_acontecimento->detalhe();
-            $registro["ref_cod_tipo_acontecimento"] = $det_ref_cod_tipo_acontecimento["nm_tipo"];
-        }
-        else
-        {
-            $registro["ref_cod_tipo_acontecimento"] = "Erro na geracao";
+            $registro['ref_cod_tipo_acontecimento'] = $det_ref_cod_tipo_acontecimento['nm_tipo'];
+        } else {
+            $registro['ref_cod_tipo_acontecimento'] = 'Erro na geracao';
             echo "<!--\nErro\nClasse nao existente: clsPmicontrolesisTipoAcontecimento\n-->";
         }
 
-        if( $registro["ref_cod_tipo_acontecimento"] )
-        {
-            $this->addDetalhe( array( "Tipo Acontecimento", "{$registro["ref_cod_tipo_acontecimento"]}") );
+        if ($registro['ref_cod_tipo_acontecimento']) {
+            $this->addDetalhe([ 'Tipo Acontecimento', "{$registro['ref_cod_tipo_acontecimento']}"]);
         }
 
-        if( $registro["titulo"] )
-        {
-            $this->addDetalhe( array( "Titulo", "{$registro["titulo"]}") );
+        if ($registro['titulo']) {
+            $this->addDetalhe([ 'Titulo', "{$registro['titulo']}"]);
         }
-        if( $registro["descricao"] )
-        {
-            $this->addDetalhe( array( "Descric&atilde;o", "<div style='text-align:justify'>{$registro["descricao"]}</div>") );
+        if ($registro['descricao']) {
+            $this->addDetalhe([ 'Descric&atilde;o', "<div style='text-align:justify'>{$registro['descricao']}</div>"]);
         }
-        if( $registro["local"] )
-        {
-            $this->addDetalhe( array( "Local", "{$registro["local"]}") );
+        if ($registro['local']) {
+            $this->addDetalhe([ 'Local', "{$registro['local']}"]);
         }
-        if( $registro["contato"] )
-        {
-            $this->addDetalhe( array( "Contato", "{$registro["contato"]}") );
+        if ($registro['contato']) {
+            $this->addDetalhe([ 'Contato', "{$registro['contato']}"]);
         }
-        if( $registro["link"] )
-        {
-            $this->addDetalhe( array( "Link", "{$registro["link"]}") );
+        if ($registro['link']) {
+            $this->addDetalhe([ 'Link', "{$registro['link']}"]);
         }
-        if( $registro["dt_inicio"] )
-        {
-            $this->addDetalhe( array( "Dt Inicio", substr(dataFromPgToBr( $registro["dt_inicio"], "d/m/Y H:i" ), 0, 10) ) );
+        if ($registro['dt_inicio']) {
+            $this->addDetalhe([ 'Dt Inicio', substr(dataFromPgToBr($registro['dt_inicio'], 'd/m/Y H:i'), 0, 10) ]);
         }
-        if( $registro["dt_fim"] )
-        {
-            $this->addDetalhe( array( "Dt Fim", substr(dataFromPgToBr( $registro["dt_fim"], "d/m/Y H:i" ), 0, 10) ) );
+        if ($registro['dt_fim']) {
+            $this->addDetalhe([ 'Dt Fim', substr(dataFromPgToBr($registro['dt_fim'], 'd/m/Y H:i'), 0, 10) ]);
         }
-        if( $registro["hr_inicio"] )
-        {
-            $this->addDetalhe( array( "Hr Inicio", substr($registro["hr_inicio"], 0, 5) ) );
+        if ($registro['hr_inicio']) {
+            $this->addDetalhe([ 'Hr Inicio', substr($registro['hr_inicio'], 0, 5) ]);
         }
-        if( $registro["hr_fim"] )
-        {
-            $this->addDetalhe( array( "Hr Fim", substr($registro["hr_fim"], 0, 5)) );
+        if ($registro['hr_fim']) {
+            $this->addDetalhe([ 'Hr Fim', substr($registro['hr_fim'], 0, 5)]);
         }
-        
+
         $db = new clsBanco();
-        $db->Consulta( "SELECT ref_cod_foto_evento FROM pmicontrolesis.foto_vinc n WHERE ref_cod_acontecimento={$this->cod_acontecimento}" );
+        $db->Consulta("SELECT ref_cod_foto_evento FROM pmicontrolesis.foto_vinc n WHERE ref_cod_acontecimento={$this->cod_acontecimento}");
 
-        while($db->ProximoRegistro())
-        {
+        while ($db->ProximoRegistro()) {
             list($cod) = $db->Tupla();
             $dba = new clsBanco();
-            $dba->Consulta( "SELECT titulo, caminho, altura, largura FROM pmicontrolesis.foto_evento WHERE cod_foto_evento={$cod}" );
+            $dba->Consulta("SELECT titulo, caminho, altura, largura FROM pmicontrolesis.foto_evento WHERE cod_foto_evento={$cod}");
             $dba->ProximoRegistro();
-            list ($titulo,$caminho,$altura,$largura) = $dba->Tupla();
-            $this->addDetalhe( array("Fotos Vinculadas", "<a href='#' onclick='javascript:openfoto(\"$titulo\",\"$caminho\",$altura,$largura)'><img src='fotos/small/{$caminho}' border='0'></a>") );
+            list($titulo, $caminho, $altura, $largura) = $dba->Tupla();
+            $this->addDetalhe(['Fotos Vinculadas', "<a href='#' onclick='javascript:openfoto(\"$titulo\",\"$caminho\",$altura,$largura)'><img src='fotos/small/{$caminho}' border='0'></a>"]);
         }
 
-        $this->url_novo = "controlesis_acontecimento_cad.php";
-        $this->url_editar = "controlesis_acontecimento_cad.php?cod_acontecimento={$registro["cod_acontecimento"]}";
-        $this->url_cancelar = "controlesis_acontecimento_lst.php";
-        $this->largura = "100%";
+        $this->url_novo = 'controlesis_acontecimento_cad.php';
+        $this->url_editar = "controlesis_acontecimento_cad.php?cod_acontecimento={$registro['cod_acontecimento']}";
+        $this->url_cancelar = 'controlesis_acontecimento_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -159,7 +143,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

@@ -25,64 +25,55 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
-
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Pauta - Finalizar" );
-        $this->processoAp = "294";
+        $this->SetTitulo("{$this->_instituicao} i-Pauta - Finalizar");
+        $this->processoAp = '294';
     }
 }
 
 class indice
 {
-
-    function RenderHTML()
+    public function RenderHTML()
     {
         @session_start();
         $id_pessoa = $_SESSION['id_pessoa'];
         @session_write_close();
-        
+
         $cod_grupo = $_GET['cod_grupo'];
         $cod_reuniao = $_GET['cod_reuniao'];
-        
-        $data = date("Y-m-d H:i:s", time());
-        
+
+        $data = date('Y-m-d H:i:s', time());
+
         $obj = new clsParticipante();
-        $lista_participantes = $obj->lista(false,false,$cod_reuniao);
-        if($lista_participantes)
-        {
+        $lista_participantes = $obj->lista(false, false, $cod_reuniao);
+        if ($lista_participantes) {
             foreach ($lista_participantes as $participantes) {
-                if(!$participantes['data_saida'])
-                {
-                    $data_saida = date("Y-m-d H:i:s",time());
-                    $obj = new clsParticipante($participantes['ref_ref_idpes'],$participantes['ref_ref_cod_grupos'],$participantes['ref_cod_reuniao'],$participantes['sequencial'],false,$data_saida);
+                if (!$participantes['data_saida']) {
+                    $data_saida = date('Y-m-d H:i:s', time());
+                    $obj = new clsParticipante($participantes['ref_ref_idpes'], $participantes['ref_ref_cod_grupos'], $participantes['ref_cod_reuniao'], $participantes['sequencial'], false, $data_saida);
                     $obj->edita();
                 }
             }
         }
-        $obj = new clsReuniao($cod_reuniao,false,false,false,false,false,false,false,$data);
+        $obj = new clsReuniao($cod_reuniao, false, false, false, false, false, false, false, $data);
         $obj->edita();
-        
+
         header("Location: otopic_reunioes_det.php?cod_reuniao=$cod_reuniao&cod_grupo=$cod_grupo");
         die();
     }
 }
 
-
-
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>
