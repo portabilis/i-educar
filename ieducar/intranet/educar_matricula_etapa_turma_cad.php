@@ -1,9 +1,9 @@
 <?php
 
-require_once "include/clsBase.inc.php";
-require_once "include/clsCadastro.inc.php";
-require_once "include/clsBanco.inc.php";
-require_once "include/pmieducar/geral.inc.php";
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/App/Model/Educacenso.php';
 
@@ -12,8 +12,8 @@ class clsIndexBase extends clsBase
     public function Formular()
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Etapa do aluno");
-        $this->processoAp = "578";
-        $this->addEstilo("localizacaoSistema");
+        $this->processoAp = '578';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -25,7 +25,7 @@ class indice extends clsCadastro
 
     public function Formular()
     {
-        $this->nome_url_cancelar = "Voltar";
+        $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
         $this->montaLocalizacao();
     }
@@ -36,45 +36,77 @@ class indice extends clsCadastro
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_matricula = $_GET["ref_cod_matricula"];
-        $this->ref_cod_aluno = $_GET["ref_cod_aluno"];
+        $this->cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
         $this->validaPermissao();
         $this->validaParametros();
+
         return 'Editar';
     }
 
     public function Gerar()
     {
-        $this->campoOculto("cod_matricula", $this->cod_matricula);
-        $this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
+        $this->campoOculto('cod_matricula', $this->cod_matricula);
+        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
         $obj_aluno = new clsPmieducarAluno();
         $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno["nome_aluno"];
-            $this->campoRotulo("nm_aluno", "Aluno", $this->nm_aluno);
+            $this->nm_aluno = $det_aluno['nome_aluno'];
+            $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
         }
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista(
-            $this->cod_matricula, null, null,
-            null, null, null, null, null, 1, null, null, null,
-            null, null, null, null, null, null, null, null, false,
-            null, null, null, false, false, false, null, null,
-            false, null, false, false, false, null, true
+            $this->cod_matricula,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            false,
+            false,
+            false,
+            null,
+            null,
+            false,
+            null,
+            false,
+            false,
+            false,
+            null,
+            true
         );
 
         $todasEtapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
 
         foreach ($enturmacoes as $enturmacao) {
-            $etapasEducacenso = $this->array_filter_key($todasEtapasEducacenso,
-                function ($value) use ($enturmacao)
-                {
+            $etapasEducacenso = $this->array_filter_key(
+                $todasEtapasEducacenso,
+                function ($value) use ($enturmacao) {
                     return in_array($value, App_Model_Educacenso::etapasDaTurma($enturmacao['etapa_ensino']));
                 }
             );
-            $etapasEducacenso = array(0 => 'Nenhuma') + $etapasEducacenso;
+            $etapasEducacenso = [0 => 'Nenhuma'] + $etapasEducacenso;
 
             $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa do aluno na turma: {$enturmacao['nm_turma']}", $etapasEducacenso, $enturmacao['etapa_educacenso'], '', false, '', '', false, false);
         }
@@ -100,18 +132,19 @@ class indice extends clsCadastro
             $obj->edita();
         }
 
-        $this->mensagem .= "Etapas atualizadas com sucesso.<br>";
+        $this->mensagem .= 'Etapas atualizadas com sucesso.<br>';
+
         return true;
     }
 
     private function montaLocalizacao()
     {
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "Etapa do aluno",
-        ));
+        $localizacao->entradaCaminhos([
+            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
+            'educar_index.php' => 'Escola',
+            '' => 'Etapa do aluno',
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
     }
 
@@ -129,7 +162,6 @@ class indice extends clsCadastro
         if (!$det_matricula) {
             header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
-
     }
 
     /**
@@ -143,6 +175,7 @@ class indice extends clsCadastro
     public function array_filter_key(array $array, $callback)
     {
         $matchedKeys = array_filter(array_keys($array), $callback);
+
         return array_intersect_key($array, array_flip($matchedKeys));
     }
 }

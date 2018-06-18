@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,43 +41,48 @@ require_once 'CoreExt/_stub/ChildEntityDataMapper.php';
  * CoreExt_DataMapper_LazyLoadIntegrationTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
 {
-  /**
-   * Cria as tabelas parent e child.
-   */
-  public function __construct()
-  {
-    parent::__construct();
-    CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
-    CoreExt_ParentEntityDataMapperStub::createTable($this->getDbAdapter());
-    CoreExt_ChildEntityDataMapperStub::createTable($this->getDbAdapter());
-  }
+    /**
+     * Cria as tabelas parent e child.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
+        CoreExt_ParentEntityDataMapperStub::createTable($this->getDbAdapter());
+        CoreExt_ChildEntityDataMapperStub::createTable($this->getDbAdapter());
+    }
 
-  public function setUp()
-  {
-    parent::setUp();
-    CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
-  }
+    public function setUp()
+    {
+        parent::setUp();
+        CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
+    }
 
-  public function getDataSet()
-  {
-    return $this->createXMLDataSet($this->getFixture('parent-child.xml'));
-  }
+    public function getDataSet()
+    {
+        return $this->createXMLDataSet($this->getFixture('parent-child.xml'));
+    }
 
-  public function testRecuperaTodosOsRegistros()
-  {
-    $mapper = new CoreExt_ParentEntityDataMapperStub();
-    $found = $mapper->findAll();
+    public function testRecuperaTodosOsRegistros()
+    {
+        $mapper = new CoreExt_ParentEntityDataMapperStub();
+        $found = $mapper->findAll();
 
-    $this->assertTablesEqual(
+        $this->assertTablesEqual(
       $this->getDataSet()
            ->getTable('parent'),
       $this->getConnection()
@@ -80,111 +90,116 @@ class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
            ->getTable('parent')
     );
 
-    $this->assertTablesEqual(
+        $this->assertTablesEqual(
       $this->getDataSet()
            ->getTable('child'),
       $this->getConnection()
            ->createDataSet()
            ->getTable('child')
     );
-  }
+    }
 
-  public function testLazyLoadUsandoDefinicaoDeDataMapper()
-  {
-    $definition = array(
+    public function testLazyLoadUsandoDefinicaoDeDataMapper()
+    {
+        $definition = [
       'class' => 'CoreExt_ChildEntityDataMapperStub',
       'file'  => 'CoreExt/_stub/ChildEntityDataMapper.php'
+    ];
+
+        $parentMapper = new CoreExt_ParentEntityDataMapperStub();
+        $parent = $parentMapper->find(1);
+        $parent->setReference('filho', $definition);
+
+        $this->assertEquals(1, $parent->filho->id);
+        $this->assertEquals('Antunes Jr.', $parent->filho->nome);
+    }
+
+    /**
+     * Uma referência NULL para CoreExt_Enum retorna NULL logo no início da
+     * lógica de CoreExt_Entity::_loadReference().
+     *
+     * @group CoreExt_Entity
+     */
+    public function testLazyLoadUsandoDefinicaoDeEnumComReferenciaNula()
+    {
+        $child = new CoreExt_ChildEntityStub(
+      ['id' => 3, 'sexo' => 1, 'tipoSanguineo' => null]
     );
+        $this->assertNull($child->tipoSanguineo);
+    }
 
-    $parentMapper = new CoreExt_ParentEntityDataMapperStub();
-    $parent = $parentMapper->find(1);
-    $parent->setReference('filho', $definition);
-
-    $this->assertEquals(1, $parent->filho->id);
-    $this->assertEquals('Antunes Jr.', $parent->filho->nome);
-  }
-
-  /**
-   * Uma referência NULL para CoreExt_Enum retorna NULL logo no início da
-   * lógica de CoreExt_Entity::_loadReference().
-   * @group CoreExt_Entity
-   */
-  public function testLazyLoadUsandoDefinicaoDeEnumComReferenciaNula()
-  {
-    $child = new CoreExt_ChildEntityStub(
-      array('id' => 3, 'sexo' => 1, 'tipoSanguineo' => NULL)
+    /**
+     * Referência 0 é perfeitamente válido para um CoreExt_Enum. Se não existir o
+     * offset no Enum, retorna NULL
+     *
+     * @group CoreExt_Entity
+     */
+    public function testLazyLoadUsandoDefinicaoDeEnumComReferenciaZero()
+    {
+        $child = new CoreExt_ChildEntityStub(
+      ['id' => 3, 'sexo' => 1, 'tipoSanguineo' => 0]
     );
-    $this->assertNull($child->tipoSanguineo);
-  }
+        $this->assertNull($child->tipoSanguineo);
+    }
 
-  /**
-   * Referência 0 é perfeitamente válido para um CoreExt_Enum. Se não existir o
-   * offset no Enum, retorna NULL
-   * @group CoreExt_Entity
-   */
-  public function testLazyLoadUsandoDefinicaoDeEnumComReferenciaZero()
-  {
-    $child = new CoreExt_ChildEntityStub(
-      array('id' => 3, 'sexo' => 1, 'tipoSanguineo' => 0)
+    /**
+     * Uma referência NULL é válida para as referências que explicitam a chave
+     * null = TRUE.
+     *
+     * @group CoreExt_Entity
+     */
+    public function testLazyLoadUsandoDefinicaoDeDataMapperComReferenciaNula()
+    {
+        $parent = new CoreExt_ParentEntityStub(
+      ['id' => 3, 'nome' => 'Paul M.', 'filho' => null]
     );
-    $this->assertNull($child->tipoSanguineo);
-  }
+        $this->assertNull($parent->filho);
+    }
 
-  /**
-   * Uma referência NULL é válida para as referências que explicitam a chave
-   * null = TRUE.
-   * @group CoreExt_Entity
-   */
-  public function testLazyLoadUsandoDefinicaoDeDataMapperComReferenciaNula()
-  {
-    $parent = new CoreExt_ParentEntityStub(
-      array('id' => 3, 'nome' => 'Paul M.', 'filho' => NULL)
+    /**
+     * Referência 0 em DataMapper força o retorno de NULL. Isso é feito em
+     * razão do HTML não suportar um valor NULL e por conta dos validadores
+     * client-side legados do i-Educar não considerarem "" (string vazia) um
+     * valor válido para submit.
+     *
+     * @group CoreExt_Entity
+     */
+    public function testLazyLoadUsandoDefinicaoDeDataMapperComReferenciaZero()
+    {
+        $parent = new CoreExt_ParentEntityStub(
+      ['id' => 3, 'nome' => 'Paul M.', 'filho' => 0]
     );
-    $this->assertNull($parent->filho);
-  }
+        $this->assertNull($parent->filho);
+    }
 
-  /**
-   * Referência 0 em DataMapper força o retorno de NULL. Isso é feito em
-   * razão do HTML não suportar um valor NULL e por conta dos validadores
-   * client-side legados do i-Educar não considerarem "" (string vazia) um
-   * valor válido para submit.
-   * @group CoreExt_Entity
-   */
-  public function testLazyLoadUsandoDefinicaoDeDataMapperComReferenciaZero()
-  {
-    $parent = new CoreExt_ParentEntityStub(
-      array('id' => 3, 'nome' => 'Paul M.', 'filho' => 0)
-    );
-    $this->assertNull($parent->filho);
-  }
+    public function testInsereRegistros()
+    {
+        $child = new CoreExt_ChildEntityStub(['nome' => 'Nascimento Jr.']);
+        $childMapper = new CoreExt_ChildEntityDataMapperStub();
+        $childMapper->save($child);
 
-  public function testInsereRegistros()
-  {
-    $child = new CoreExt_ChildEntityStub(array('nome' => 'Nascimento Jr.'));
-    $childMapper = new CoreExt_ChildEntityDataMapperStub();
-    $childMapper->save($child);
+        $parent = new CoreExt_ParentEntityStub(['nome' => 'Fernando Nascimento', 'filho' => 3]);
+        $parentMapper = new CoreExt_ParentEntityDataMapperStub();
+        $parentMapper->save($parent);
 
-    $parent = new CoreExt_ParentEntityStub(array('nome' => 'Fernando Nascimento', 'filho' => 3));
-    $parentMapper = new CoreExt_ParentEntityDataMapperStub();
-    $parentMapper->save($parent);
+        $parent = $parentMapper->find(3);
+        $child  = $childMapper->find(3);
 
-    $parent = $parentMapper->find(3);
-    $child  = $childMapper->find(3);
+        $this->assertEquals($child, $parent->filho);
+    }
 
-    $this->assertEquals($child, $parent->filho);
-  }
-
-  /**
-   * Testa se um CoreExt_Entity retornado por um CoreExt_DataMapper configura
-   * a reference e o atributo, com um valor referência e a instância,
-   * respectivamente.
-   * @group Overload
-   */
-  public function testRegistroRecuperadoConfiguraReferenceParaLazyLoadPosterior()
-  {
-    $parentMapper = new CoreExt_ParentEntityDataMapperStub();
-    $parent = $parentMapper->find(1);
-    $this->assertEquals(1, $parent->get('filho'));
-    $this->assertType('CoreExt_ChildEntityStub', $parent->filho);
-  }
+    /**
+     * Testa se um CoreExt_Entity retornado por um CoreExt_DataMapper configura
+     * a reference e o atributo, com um valor referência e a instância,
+     * respectivamente.
+     *
+     * @group Overload
+     */
+    public function testRegistroRecuperadoConfiguraReferenceParaLazyLoadPosterior()
+    {
+        $parentMapper = new CoreExt_ParentEntityDataMapperStub();
+        $parent = $parentMapper->find(1);
+        $this->assertEquals(1, $parent->get('filho'));
+        $this->assertType('CoreExt_ChildEntityStub', $parent->filho);
+    }
 }

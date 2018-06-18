@@ -24,17 +24,16 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+    require_once('include/clsBanco.inc.php');
+    require_once('include/funcoes.inc.php');
 
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
-    if( is_numeric( $_GET["ser"]  ) )
-    {
+    if (is_numeric($_GET['ser'])) {
         $db = new clsBanco();
         $consulta = "SELECT ref_cod_servidor
                             ,ref_ref_cod_instituicao
@@ -45,15 +44,12 @@
                       GROUP BY ref_cod_servidor,ref_ref_cod_instituicao
                         ";
 
-        $db->Consulta( $consulta );
-        while ( $db->ProximoRegistro() )
-        {
-            list( $ref_cod_servidor,$ref_cod_instituicao,$horas ) = $db->Tupla();
-                if($_GET['ser_dif'] != $serie){
-                    echo "  <servidor ref_cod_servidor=\"{$ref_cod_servidor}\" ref_cod_instituicao=\"{$ref_cod_instituicao}\">{$horas}</servidor>\n";
-
-                }
+        $db->Consulta($consulta);
+        while ($db->ProximoRegistro()) {
+            list($ref_cod_servidor, $ref_cod_instituicao, $horas) = $db->Tupla();
+            if ($_GET['ser_dif'] != $serie) {
+                echo "  <servidor ref_cod_servidor=\"{$ref_cod_servidor}\" ref_cod_instituicao=\"{$ref_cod_instituicao}\">{$horas}</servidor>\n";
+            }
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

@@ -30,15 +30,15 @@
 * Criado em 12/02/2007 15:36 pelo gerador automatico de classes
 */
 
-require_once( "include/public/geral.inc.php" );
+require_once('include/public/geral.inc.php');
 
 class clsPublicUf
 {
-    var $sigla_uf;
-    var $nome;
-    var $geom;
-    var $idpais;
-    var $cod_ibge;
+    public $sigla_uf;
+    public $nome;
+    public $geom;
+    public $idpais;
+    public $cod_ibge;
 
     // propriedades padrao
 
@@ -47,57 +47,56 @@ class clsPublicUf
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
@@ -109,61 +108,45 @@ class clsPublicUf
      *
      * @return object
      */
-    function __construct( $sigla_uf = null, $nome = null, $geom = null, $idpais = null, $cod_ibge = null )
+    public function __construct($sigla_uf = null, $nome = null, $geom = null, $idpais = null, $cod_ibge = null)
     {
         $db = new clsBanco();
-        $this->_schema = "public.";
+        $this->_schema = 'public.';
         $this->_tabela = "{$this->_schema}uf";
 
-        $this->_campos_lista = $this->_todos_campos = "uf.sigla_uf, uf.nome, uf.geom, uf.idpais, uf.cod_ibge ";
+        $this->_campos_lista = $this->_todos_campos = 'uf.sigla_uf, uf.nome, uf.geom, uf.idpais, uf.cod_ibge ';
 
-        if( is_numeric( $idpais ) )
-        {
-            if( class_exists( "clsPais" ) )
-            {
-                $tmp_obj = new clsPais( $idpais );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($idpais)) {
+            if (class_exists('clsPais')) {
+                $tmp_obj = new clsPais($idpais);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->idpais = $idpais;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->idpais = $idpais;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idpais = $idpais;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pais WHERE idpais = '{$idpais}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pais WHERE idpais = '{$idpais}'")) {
                     $this->idpais = $idpais;
                 }
             }
         }
 
-
-        if( is_string( $sigla_uf ) )
-        {
+        if (is_string($sigla_uf)) {
             $this->sigla_uf = $sigla_uf;
         }
-        if( is_string( $nome ) )
-        {
+        if (is_string($nome)) {
             $this->nome = $nome;
         }
-        if( is_string( $geom ) )
-        {
+        if (is_string($geom)) {
             $this->geom = $geom;
         }
-        if( is_numeric($cod_ibge) )
-        {
+        if (is_numeric($cod_ibge)) {
             $this->cod_ibge = $cod_ibge;
         }
-
     }
 
     /**
@@ -171,51 +154,46 @@ class clsPublicUf
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_string( $this->sigla_uf ) && is_string( $this->nome ) && is_numeric( $this->idpais ) )
-        {
+        if (is_string($this->sigla_uf) && is_string($this->nome) && is_numeric($this->idpais)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_string( $this->sigla_uf ) )
-            {
+            if (is_string($this->sigla_uf)) {
                 $campos .= "{$gruda}sigla_uf";
                 $valores .= "{$gruda}'{$this->sigla_uf}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nome ) )
-            {
+            if (is_string($this->nome)) {
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'" . addslashes($this->nome) . "'";
-                $gruda = ", ";
+                $valores .= "{$gruda}'" . addslashes($this->nome) . '\'';
+                $gruda = ', ';
             }
-            if( is_string( $this->geom ) )
-            {
+            if (is_string($this->geom)) {
                 $campos .= "{$gruda}geom";
                 $valores .= "{$gruda}'{$this->geom}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idpais ) )
-            {
+            if (is_numeric($this->idpais)) {
                 $campos .= "{$gruda}idpais";
                 $valores .= "{$gruda}'{$this->idpais}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->cod_ibge ) )
-            {
+            if (is_numeric($this->cod_ibge)) {
                 $campos .= "{$gruda}cod_ibge";
                 $valores .= "{$gruda}'{$this->cod_ibge}'";
-                $gruda = ", ";
-            }           
+                $gruda = ', ';
+            }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return $this->sigla_uf;
         }
+
         return false;
     }
 
@@ -224,42 +202,36 @@ class clsPublicUf
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_string( $this->sigla_uf ) )
-        {
-
+        if (is_string($this->sigla_uf)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_string( $this->nome ) )
-            {
-                $set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
-                $gruda = ", ";
+            if (is_string($this->nome)) {
+                $set .= "{$gruda}nome = '" . addslashes($this->nome) . '\'';
+                $gruda = ', ';
             }
-            if( is_string( $this->geom ) )
-            {
+            if (is_string($this->geom)) {
                 $set .= "{$gruda}geom = '{$this->geom}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idpais ) )
-            {
+            if (is_numeric($this->idpais)) {
                 $set .= "{$gruda}idpais = '{$this->idpais}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->cod_ibge ) )
-            {
+            if (is_numeric($this->cod_ibge)) {
                 $set .= "{$gruda}cod_ibge = '{$this->cod_ibge}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE sigla_uf = '{$this->sigla_uf}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE sigla_uf = '{$this->sigla_uf}'" );
                 return true;
             }
         }
+
         return false;
     }
 
@@ -272,67 +244,57 @@ class clsPublicUf
      *
      * @return array
      */
-    function lista( $str_nome = null, $str_geom = null, $int_idpais = null, $str_sigla_uf = null )
+    public function lista($str_nome = null, $str_geom = null, $int_idpais = null, $str_sigla_uf = null)
     {
         $sql = "SELECT {$this->_campos_lista}, p.nome AS nm_pais FROM {$this->_tabela} uf, public.pais p ";
-        $whereAnd = " AND ";
+        $whereAnd = ' AND ';
 
-        $filtros = " WHERE uf.idpais = p.idpais";
+        $filtros = ' WHERE uf.idpais = p.idpais';
 
-        if( is_string( $str_sigla_uf ) )
-        {
+        if (is_string($str_sigla_uf)) {
             $filtros .= "{$whereAnd} uf.sigla_uf LIKE '%{$str_sigla_uf}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nome ) )
-        {
-            $filtros .= "{$whereAnd} uf.nome LIKE E'%" . addslashes($str_nome) . "%'";
-            $whereAnd = " AND ";
+        if (is_string($str_nome)) {
+            $filtros .= "{$whereAnd} uf.nome LIKE E'%" . addslashes($str_nome) . '%\'';
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_geom ) )
-        {
+        if (is_string($str_geom)) {
             $filtros .= "{$whereAnd} uf.geom LIKE '%{$str_geom}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idpais ) )
-        {
+        if (is_numeric($int_idpais)) {
             $filtros .= "{$whereAnd} uf.idpais = '{$int_idpais}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} uf, public.pais p {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} uf, public.pais p {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -341,16 +303,16 @@ class clsPublicUf
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_string( $this->sigla_uf ) )
-        {
-
+        if (is_string($this->sigla_uf)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} uf WHERE uf.sigla_uf = '{$this->sigla_uf}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} uf WHERE uf.sigla_uf = '{$this->sigla_uf}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -359,18 +321,16 @@ class clsPublicUf
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_string( $this->sigla_uf ) )
-        {
-
+        if (is_string($this->sigla_uf)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE sigla_uf = '{$this->sigla_uf}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE sigla_uf = '{$this->sigla_uf}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -379,15 +339,16 @@ class clsPublicUf
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_string( $this->sigla_uf ) )
-        {
+        if (is_string($this->sigla_uf)) {
 //          delete
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE sigla_uf = '{$this->sigla_uf}'" );
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE sigla_uf = '{$this->sigla_uf}'");
+
             return true;
         }
+
         return false;
     }
 
@@ -396,7 +357,7 @@ class clsPublicUf
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -406,7 +367,7 @@ class clsPublicUf
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -416,7 +377,7 @@ class clsPublicUf
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -427,18 +388,18 @@ class clsPublicUf
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -446,13 +407,12 @@ class clsPublicUf
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -462,23 +422,23 @@ class clsPublicUf
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
+
+        return '';
     }
 
-    function verificaDuplicidade($sigla_uf){
-    $db = new clsBanco();
-    $sql = "SELECT sigla_uf
+    public function verificaDuplicidade($sigla_uf)
+    {
+        $db = new clsBanco();
+        $sql = "SELECT sigla_uf
               FROM public.uf
               WHERE sigla_uf = '{$this->sigla_uf}'";
-    $db->Consulta($sql);
-    return $db->ProximoRegistro();
-    }
+        $db->Consulta($sql);
 
+        return $db->ProximoRegistro();
+    }
 }
-?>

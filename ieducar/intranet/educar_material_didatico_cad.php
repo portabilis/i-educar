@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Material Did&aacute;tico" );
-        $this->processoAp = "569";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Material Did&aacute;tico");
+        $this->processoAp = '569';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -46,76 +46,74 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_material_didatico;
-    var $ref_cod_instituicao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_cod_material_tipo;
-    var $nm_material;
-    var $desc_material;
-    var $custo_unitario;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_material_didatico;
+    public $ref_cod_instituicao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_material_tipo;
+    public $nm_material;
+    public $desc_material;
+    public $custo_unitario;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
     //var $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_material_didatico=$_GET["cod_material_didatico"];
+        $this->cod_material_didatico=$_GET['cod_material_didatico'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 569, $this->pessoa_logada,3, "educar_material_didatico_lst.php" );
+        $obj_permissoes->permissao_cadastra(569, $this->pessoa_logada, 3, 'educar_material_didatico_lst.php');
 
-        if( is_numeric( $this->cod_material_didatico ) )
-        {
-
-            $obj = new clsPmieducarMaterialDidatico( $this->cod_material_didatico );
+        if (is_numeric($this->cod_material_didatico)) {
+            $obj = new clsPmieducarMaterialDidatico($this->cod_material_didatico);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir( 569, $this->pessoa_logada,3 );
-                $retorno = "Editar";
+                $this->fexcluir = $obj_permissoes->permissao_excluir(569, $this->pessoa_logada, 3);
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_material_didatico_det.php?cod_material_didatico={$registro["cod_material_didatico"]}" : "educar_material_didatico_lst.php";
-        
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_material_didatico_det.php?cod_material_didatico={$registro['cod_material_didatico']}" : 'educar_material_didatico_lst.php';
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} material did&aacute;tico"             
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => "{$nomeMenu} material did&aacute;tico"
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
 
-        $this->nome_url_cancelar = "Cancelar";
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_material_didatico", $this->cod_material_didatico );
+        $this->campoOculto('cod_material_didatico', $this->cod_material_didatico);
 
         $obrigatorio = true;
         // Filtros de Foreign Keys
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
 
         // Filtros de Foreign Keys
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarMaterialTipo" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarMaterialTipo')) {
             /*$todos_tipos_materiais = "tipo_material = new Array();\n";
             $objTemp = new clsPmieducarMaterialTipo();
             $objTemp->setOrderby('nm_tipo ASC');
@@ -130,114 +128,107 @@ class indice extends clsCadastro
             echo "<script>{$todos_tipos_materiais}</script>";*/
 
             // EDITAR
-            if ($this->ref_cod_instituicao)
-            {
+            if ($this->ref_cod_instituicao) {
                 $objTemp = new clsPmieducarMaterialTipo();
                 $objTemp->setOrderby('nm_tipo ASC');
-                $lista = $objTemp->lista( null,null,null,null,null,null,null,1,$this->ref_cod_instituicao );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
                         $opcoes["{$registro['cod_material_tipo']}"] = "{$registro['nm_tipo']}";
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarMaterialTipo n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
+            $opcoes = [ '' => 'Erro na gera&ccedil;&atilde;o' ];
         }
-        
+
         /*************************COLOCADO*********************************/
-        $script = "javascript:showExpansivelIframe(520, 250, 'educar_material_tipo_cad_pop.php');";
-        if ($this->ref_cod_instituicao)// && $this->ref_cod_escola   && $this->ref_cod_curso)
-        {
+        $script = 'javascript:showExpansivelIframe(520, 250, \'educar_material_tipo_cad_pop.php\');';
+        if ($this->ref_cod_instituicao) {// && $this->ref_cod_escola   && $this->ref_cod_curso)
             $script = "<img id='img_tipo_material' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 //          $this->campoLista( "ref_ref_cod_serie", "Série", $opcoes_serie, $this->ref_cod_serie, "", false, "", $script, true);
-        }
-        else
-        {
+        } else {
             $script = "<img id='img_tipo_material' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-            
         }
         /*************************COLOCADO*********************************/
-        $this->campoLista( "ref_cod_material_tipo", "Tipo de Material", $opcoes, $this->ref_cod_material_tipo, "", false, "", $script );
+        $this->campoLista('ref_cod_material_tipo', 'Tipo de Material', $opcoes, $this->ref_cod_material_tipo, '', false, '', $script);
 
         // text
-        $this->campoTexto( "nm_material", "Material", $this->nm_material, 30, 255, true );
-        $this->campoMemo( "desc_material", "Descri&ccedil;&atilde;o", $this->desc_material, 60, 5, false );
-        $this->campoMonetario( "custo_unitario", "Custo Unit&aacute;rio", $this->custo_unitario, 10, 10, true );
-
+        $this->campoTexto('nm_material', 'Material', $this->nm_material, 30, 255, true);
+        $this->campoMemo('desc_material', 'Descri&ccedil;&atilde;o', $this->desc_material, 60, 5, false);
+        $this->campoMonetario('custo_unitario', 'Custo Unit&aacute;rio', $this->custo_unitario, 10, 10, true);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->custo_unitario = str_replace(".","",$this->custo_unitario);
-        $this->custo_unitario = str_replace(",",".",$this->custo_unitario);
+        $this->custo_unitario = str_replace('.', '', $this->custo_unitario);
+        $this->custo_unitario = str_replace(',', '.', $this->custo_unitario);
 
-        $obj = new clsPmieducarMaterialDidatico( null, $this->ref_cod_instituicao, null, $this->pessoa_logada, $this->ref_cod_material_tipo, $this->nm_material, $this->desc_material, $this->custo_unitario, null, null, 1 );
+        $obj = new clsPmieducarMaterialDidatico(null, $this->ref_cod_instituicao, null, $this->pessoa_logada, $this->ref_cod_material_tipo, $this->nm_material, $this->desc_material, $this->custo_unitario, null, null, 1);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_material_didatico_lst.php" );
+        if ($cadastrou) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_material_didatico_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarMaterialDidatico\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_material_tipo ) && is_string( $this->nm_material ) && is_numeric( $this->custo_unitario )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->custo_unitario = str_replace(".","",$this->custo_unitario);
-        $this->custo_unitario = str_replace(",",".",$this->custo_unitario);
+        $this->custo_unitario = str_replace('.', '', $this->custo_unitario);
+        $this->custo_unitario = str_replace(',', '.', $this->custo_unitario);
 
-        $obj = new clsPmieducarMaterialDidatico( $this->cod_material_didatico, $this->ref_cod_instituicao, $this->pessoa_logada, null, $this->ref_cod_material_tipo, $this->nm_material, $this->desc_material, $this->custo_unitario,null,null,1 );
+        $obj = new clsPmieducarMaterialDidatico($this->cod_material_didatico, $this->ref_cod_instituicao, $this->pessoa_logada, null, $this->ref_cod_material_tipo, $this->nm_material, $this->desc_material, $this->custo_unitario, null, null, 1);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_material_didatico_lst.php" );
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_material_didatico_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarMaterialDidatico\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_material_didatico ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj = new clsPmieducarMaterialDidatico($this->cod_material_didatico, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_material_didatico_lst.php" );
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_material_didatico_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarMaterialDidatico\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_material_didatico ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }
@@ -247,7 +238,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

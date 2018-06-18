@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,55 +40,62 @@ require_once 'CoreExt/Controller/Dispatcher/Strategy/Interface.php';
  * CoreExt_Controller_Dispatcher_Strategy_FrontStrategy class.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class CoreExt_Controller_Dispatcher_Strategy_FrontStrategy
-  extends CoreExt_Controller_Dispatcher_Abstract
-  implements CoreExt_Controller_Dispatcher_Strategy_Interface
+class CoreExt_Controller_Dispatcher_Strategy_FrontStrategy extends CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Strategy_Interface
 {
-  /**
-   * Instância de CoreExt_Controller_Interface.
-   * @var CoreExt_Controller_Interface
-   */
-  protected $_controller = NULL;
+    /**
+     * Instância de CoreExt_Controller_Interface.
+     *
+     * @var CoreExt_Controller_Interface
+     */
+    protected $_controller = null;
 
-  /**
-   * Construtor.
-   * @see CoreExt_Controller_Strategy_Interface#__construct($controller)
-   */
-  public function __construct(CoreExt_Controller_Interface $controller)
-  {
-    $this->setController($controller);
-  }
+    /**
+     * Construtor.
+     *
+     * @see CoreExt_Controller_Strategy_Interface#__construct($controller)
+     */
+    public function __construct(CoreExt_Controller_Interface $controller)
+    {
+        $this->setController($controller);
+    }
 
-  /**
-   * @see CoreExt_Controller_Strategy_Interface#setController($controller)
-   */
-  public function setController(CoreExt_Controller_Interface $controller)
-  {
-    $this->_controller = $controller;
-    return $this;
-  }
+    /**
+     * @see CoreExt_Controller_Strategy_Interface#setController($controller)
+     */
+    public function setController(CoreExt_Controller_Interface $controller)
+    {
+        $this->_controller = $controller;
 
-  /**
-   * @see CoreExt_Controller_Strategy_Interface#getController()
-   */
-  public function getController()
-  {
-    return $this->_controller;
-  }
+        return $this;
+    }
 
-  /**
-   * Não implementado.
-   * @see CoreExt_Controller_Strategy_Interface#dispatch()
-   */
-  public function dispatch()
-  {
-    require_once 'CoreExt/Controller/Dispatcher/Exception.php';
-    throw new CoreExt_Controller_Dispatcher_Exception('Método CoreExt_Controller_Strategy_FrontStrategy::dispatch() não implementado.');
-  }
+    /**
+     * @see CoreExt_Controller_Strategy_Interface#getController()
+     */
+    public function getController()
+    {
+        return $this->_controller;
+    }
+
+    /**
+     * Não implementado.
+     *
+     * @see CoreExt_Controller_Strategy_Interface#dispatch()
+     */
+    public function dispatch()
+    {
+        require_once 'CoreExt/Controller/Dispatcher/Exception.php';
+        throw new CoreExt_Controller_Dispatcher_Exception('Método CoreExt_Controller_Strategy_FrontStrategy::dispatch() não implementado.');
+    }
 }

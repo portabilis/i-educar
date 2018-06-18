@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,25 +40,30 @@ require_once 'CoreExt/Enum.php';
  * RegraAvaliacao_Model_TipoPresenca class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class RegraAvaliacao_Model_TipoPresenca extends CoreExt_Enum
 {
-  const GERAL = 1;
-  const POR_COMPONENTE = 2;
+    const GERAL = 1;
+    const POR_COMPONENTE = 2;
 
-  protected $_data = array(
+    protected $_data = [
     self::GERAL => 'Apura falta no geral (unificada)',
     self::POR_COMPONENTE => 'Apura falta por componente curricular',
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

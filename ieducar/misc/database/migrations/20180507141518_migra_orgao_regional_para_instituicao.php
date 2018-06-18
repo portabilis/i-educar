@@ -20,6 +20,5 @@ class MigraOrgaoRegionalParaInstituicao extends AbstractMigration
             ALTER TABLE pmieducar.escola ADD orgao_regional INTEGER;
             ALTER TABLE pmieducar.instituicao DROP COLUMN orgao_regional;
         ');
-
     }
 }

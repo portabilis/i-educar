@@ -30,21 +30,21 @@
 * Criado em 27/03/2007 15:21 pelo gerador automatico de classes
 */
 
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsPmicontrolesisSoftwareAlteracao
 {
-    var $cod_software_alteracao;
-    var $ref_funcionario_exc;
-    var $ref_funcionario_cad;
-    var $ref_cod_software;
-    var $motivo;
-    var $tipo;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $script_banco;
+    public $cod_software_alteracao;
+    public $ref_funcionario_exc;
+    public $ref_funcionario_cad;
+    public $ref_cod_software;
+    public $motivo;
+    public $tipo;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $script_banco;
 
     // propriedades padrao
 
@@ -53,57 +53,56 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
@@ -122,133 +121,93 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return object
      */
-    function __construct( $cod_software_alteracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $ref_cod_software = null, $motivo = null, $tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $script_banco = null )
+    public function __construct($cod_software_alteracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $ref_cod_software = null, $motivo = null, $tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $script_banco = null)
     {
         $db = new clsBanco();
-        $this->_schema = "pmicontrolesis.";
+        $this->_schema = 'pmicontrolesis.';
         $this->_tabela = "{$this->_schema}software_alteracao";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_software_alteracao, ref_funcionario_exc, ref_funcionario_cad, ref_cod_software, motivo, tipo, descricao, data_cadastro, data_exclusao, ativo, script_banco";
+        $this->_campos_lista = $this->_todos_campos = 'cod_software_alteracao, ref_funcionario_exc, ref_funcionario_cad, ref_cod_software, motivo, tipo, descricao, data_cadastro, data_exclusao, ativo, script_banco';
 
-        if( is_numeric( $ref_funcionario_exc ) )
-        {
-            if( class_exists( "clsFuncionario" ) )
-            {
-                $tmp_obj = new clsFuncionario( $ref_funcionario_exc );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_funcionario_exc)) {
+            if (class_exists('clsFuncionario')) {
+                $tmp_obj = new clsFuncionario($ref_funcionario_exc);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_funcionario_exc = $ref_funcionario_exc;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_funcionario_exc = $ref_funcionario_exc;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_funcionario_exc = $ref_funcionario_exc;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_exc}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_exc}'")) {
                     $this->ref_funcionario_exc = $ref_funcionario_exc;
                 }
             }
         }
-        if( is_numeric( $ref_funcionario_cad ) )
-        {
-            if( class_exists( "clsFuncionario" ) )
-            {
-                $tmp_obj = new clsFuncionario( $ref_funcionario_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_funcionario_cad)) {
+            if (class_exists('clsFuncionario')) {
+                $tmp_obj = new clsFuncionario($ref_funcionario_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_funcionario_cad = $ref_funcionario_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_funcionario_cad = $ref_funcionario_cad;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_funcionario_cad = $ref_funcionario_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'")) {
                     $this->ref_funcionario_cad = $ref_funcionario_cad;
                 }
             }
         }
-        if( is_numeric( $ref_cod_software ) )
-        {
-            if( class_exists( "clsPmicontrolesisSoftware" ) )
-            {
-                $tmp_obj = new clsPmicontrolesisSoftware( $ref_cod_software );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_software)) {
+            if (class_exists('clsPmicontrolesisSoftware')) {
+                $tmp_obj = new clsPmicontrolesisSoftware($ref_cod_software);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_software = $ref_cod_software;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_software = $ref_cod_software;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_software = $ref_cod_software;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmicontrolesis.software WHERE cod_software = '{$ref_cod_software}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmicontrolesis.software WHERE cod_software = '{$ref_cod_software}'")) {
                     $this->ref_cod_software = $ref_cod_software;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_software_alteracao ) )
-        {
+        if (is_numeric($cod_software_alteracao)) {
             $this->cod_software_alteracao = $cod_software_alteracao;
         }
-        if( is_string( $motivo ) )
-        {
+        if (is_string($motivo)) {
             $this->motivo = $motivo;
         }
-        if( is_string( $tipo ) )
-        {
+        if (is_string($tipo)) {
             $this->tipo = $tipo;
         }
-        if( is_string( $descricao ) )
-        {
+        if (is_string($descricao)) {
             $this->descricao = $descricao;
         }
-        if( is_string( $data_cadastro ) )
-        {
+        if (is_string($data_cadastro)) {
             $this->data_cadastro = $data_cadastro;
         }
-        if( is_string( $data_exclusao ) )
-        {
+        if (is_string($data_exclusao)) {
             $this->data_exclusao = $data_exclusao;
         }
-        if( ! is_null( $ativo ) )
-        {
+        if (! is_null($ativo)) {
             $this->ativo = $ativo;
         }
-        if( is_string( $script_banco ) )
-        {
+        if (is_string($script_banco)) {
             $this->script_banco = $script_banco;
         }
-
     }
 
     /**
@@ -256,63 +215,57 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_funcionario_cad ) && is_numeric( $this->ref_cod_software ) && is_string( $this->motivo ) && is_string( $this->tipo ) && is_string( $this->descricao ) && is_string( $this->script_banco ) )
-        {
+        if (is_numeric($this->ref_funcionario_cad) && is_numeric($this->ref_cod_software) && is_string($this->motivo) && is_string($this->tipo) && is_string($this->descricao) && is_string($this->script_banco)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_funcionario_cad ) )
-            {
+            if (is_numeric($this->ref_funcionario_cad)) {
                 $campos .= "{$gruda}ref_funcionario_cad";
                 $valores .= "{$gruda}'{$this->ref_funcionario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_software ) )
-            {
+            if (is_numeric($this->ref_cod_software)) {
                 $campos .= "{$gruda}ref_cod_software";
                 $valores .= "{$gruda}'{$this->ref_cod_software}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->motivo ) )
-            {
+            if (is_string($this->motivo)) {
                 $campos .= "{$gruda}motivo";
                 $valores .= "{$gruda}'{$this->motivo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->tipo ) )
-            {
+            if (is_string($this->tipo)) {
                 $campos .= "{$gruda}tipo";
                 $valores .= "{$gruda}'{$this->tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->descricao ) )
-            {
+            if (is_string($this->descricao)) {
                 $campos .= "{$gruda}descricao";
                 $valores .= "{$gruda}'{$this->descricao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda = ", ";
+            $gruda = ', ';
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
-            $gruda = ", ";
-            if( is_string( $this->script_banco ) )
-            {
+            $gruda = ', ';
+            if (is_string($this->script_banco)) {
                 $campos .= "{$gruda}script_banco";
                 $valores .= "{$gruda}'{$this->script_banco}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_software_alteracao_seq");
+            return $db->InsertId("{$this->_tabela}_cod_software_alteracao_seq");
         }
+
         return false;
     }
 
@@ -321,70 +274,59 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_software_alteracao ) && is_numeric( $this->ref_funcionario_exc ) )
-        {
-
+        if (is_numeric($this->cod_software_alteracao) && is_numeric($this->ref_funcionario_exc)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->ref_funcionario_exc ) )
-            {
+            if (is_numeric($this->ref_funcionario_exc)) {
                 $set .= "{$gruda}ref_funcionario_exc = '{$this->ref_funcionario_exc}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_funcionario_cad ) )
-            {
+            if (is_numeric($this->ref_funcionario_cad)) {
                 $set .= "{$gruda}ref_funcionario_cad = '{$this->ref_funcionario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_software ) )
-            {
+            if (is_numeric($this->ref_cod_software)) {
                 $set .= "{$gruda}ref_cod_software = '{$this->ref_cod_software}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->motivo ) )
-            {
+            if (is_string($this->motivo)) {
                 $set .= "{$gruda}motivo = '{$this->motivo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->tipo ) )
-            {
+            if (is_string($this->tipo)) {
                 $set .= "{$gruda}tipo = '{$this->tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->descricao ) )
-            {
+            if (is_string($this->descricao)) {
                 $set .= "{$gruda}descricao = '{$this->descricao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_cadastro ) )
-            {
+            if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ", ";
-            if( ! is_null( $this->ativo ) )
-            {
-                $val = dbBool( $this->ativo ) ? "TRUE": "FALSE";
+            $gruda = ', ';
+            if (! is_null($this->ativo)) {
+                $val = dbBool($this->ativo) ? 'TRUE': 'FALSE';
                 $set .= "{$gruda}ativo = {$val}";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->script_banco ) )
-            {
+            if (is_string($this->script_banco)) {
                 $set .= "{$gruda}script_banco = '{$this->script_banco}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_software_alteracao = '{$this->cod_software_alteracao}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_software_alteracao = '{$this->cod_software_alteracao}'" );
                 return true;
             }
         }
+
         return false;
     }
 
@@ -406,119 +348,97 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return array
      */
-    function lista( $int_ref_funcionario_exc = null, $int_ref_funcionario_cad = null, $int_ref_cod_software = null, $str_motivo = null, $str_tipo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null, $str_script_banco = null )
+    public function lista($int_ref_funcionario_exc = null, $int_ref_funcionario_cad = null, $int_ref_cod_software = null, $str_motivo = null, $str_tipo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null, $str_script_banco = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_software_alteracao ) )
-        {
+        if (is_numeric($int_cod_software_alteracao)) {
             $filtros .= "{$whereAnd} cod_software_alteracao = '{$int_cod_software_alteracao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_funcionario_exc ) )
-        {
+        if (is_numeric($int_ref_funcionario_exc)) {
             $filtros .= "{$whereAnd} ref_funcionario_exc = '{$int_ref_funcionario_exc}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_funcionario_cad ) )
-        {
+        if (is_numeric($int_ref_funcionario_cad)) {
             $filtros .= "{$whereAnd} ref_funcionario_cad = '{$int_ref_funcionario_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_software ) )
-        {
+        if (is_numeric($int_ref_cod_software)) {
             $filtros .= "{$whereAnd} ref_cod_software = '{$int_ref_cod_software}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_motivo ) )
-        {
+        if (is_string($str_motivo)) {
             $filtros .= "{$whereAnd} motivo LIKE '%{$str_motivo}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_tipo ) )
-        {
+        if (is_string($str_tipo)) {
             $filtros .= "{$whereAnd} tipo LIKE '%{$str_tipo}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_descricao ) )
-        {
+        if (is_string($str_descricao)) {
             $filtros .= "{$whereAnd} descricao LIKE '%{$str_descricao}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_ini ) )
-        {
+        if (is_string($date_data_cadastro_ini)) {
             $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_fim ) )
-        {
+        if (is_string($date_data_cadastro_fim)) {
             $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_ini ) )
-        {
+        if (is_string($date_data_exclusao_ini)) {
             $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_fim ) )
-        {
+        if (is_string($date_data_exclusao_fim)) {
             $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ! is_null( $bool_ativo ) )
-        {
-            if( dbBool( $bool_ativo ) )
-            {
+        if (! is_null($bool_ativo)) {
+            if (dbBool($bool_ativo)) {
                 $filtros .= "{$whereAnd} ativo = TRUE";
-            }
-            else
-            {
+            } else {
                 $filtros .= "{$whereAnd} ativo = FALSE";
             }
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_script_banco ) )
-        {
+        if (is_string($str_script_banco)) {
             $filtros .= "{$whereAnd} script_banco LIKE '%{$str_script_banco}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -527,16 +447,16 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_software_alteracao ) )
-        {
-
+        if (is_numeric($this->cod_software_alteracao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_software_alteracao = '{$this->cod_software_alteracao}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_software_alteracao = '{$this->cod_software_alteracao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -545,18 +465,16 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_software_alteracao ) )
-        {
-
+        if (is_numeric($this->cod_software_alteracao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_software_alteracao = '{$this->cod_software_alteracao}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_software_alteracao = '{$this->cod_software_alteracao}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -565,10 +483,9 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_software_alteracao ) && is_numeric( $this->ref_funcionario_exc ) )
-        {
+        if (is_numeric($this->cod_software_alteracao) && is_numeric($this->ref_funcionario_exc)) {
 
         /*
             delete
@@ -577,9 +494,11 @@ class clsPmicontrolesisSoftwareAlteracao
         return true;
         */
 
-        $this->ativo = 0;
+            $this->ativo = 0;
+
             return $this->edita();
         }
+
         return false;
     }
 
@@ -588,7 +507,7 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -598,7 +517,7 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -608,7 +527,7 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -619,18 +538,18 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -638,13 +557,12 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -654,14 +572,12 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

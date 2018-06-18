@@ -24,189 +24,177 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
-
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsAtendimentoPessoa
 {
-    var $ref_cod_atendimento;
-    var $ref_ref_cod_pessoa_fj;
-    var $master;
-    
-    var $tabela = "pmiotopic.atendimento_pessoa";
+    public $ref_cod_atendimento;
+    public $ref_ref_cod_pessoa_fj;
+    public $master;
+
+    public $tabela = 'pmiotopic.atendimento_pessoa';
 
     /**
      * Construtor
      *
      * @return Object
      */
-    function __construct( $int_ref_cod_atendimento = false, $int_ref_ref_cod_pessoa_fj = false, $int_master = false )
+    public function __construct($int_ref_cod_atendimento = false, $int_ref_ref_cod_pessoa_fj = false, $int_master = false)
     {
-        if(is_numeric($int_ref_cod_atendimento))
-        {
+        if (is_numeric($int_ref_cod_atendimento)) {
             $this->ref_cod_atendimento = $int_ref_cod_atendimento;
         }
-        
-        if(is_numeric($int_ref_ref_cod_pessoa_fj))
-        {
+
+        if (is_numeric($int_ref_ref_cod_pessoa_fj)) {
             $this->ref_ref_cod_pessoa_fj = $int_ref_ref_cod_pessoa_fj;
         }
-        if($int_master == 0 || $int_master == 1)
-        {
+        if ($int_master == 0 || $int_master == 1) {
             $this->master = $int_master;
         }
     }
-    
+
     /**
      * Função que cadastra um novo registro com os valores atuais
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificações de campos obrigatorios para inserï¿½ï¿½o
-        if( $this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj && $this->master!==false )
-        {
+        if ($this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj && $this->master!==false) {
             $db->Consulta("INSERT INTO {$this->tabela} ( ref_cod_atendimento, ref_ref_cod_pessoa_fj, master ) VALUES ( '$this->ref_cod_atendimento', '{$this->ref_ref_cod_pessoa_fj}', '{$this->master}')");
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * Edita o registro atual
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
 
         // verifica campos obrigatorios para edicao
-        if( $this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj && $this->master )
-        {
+        if ($this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj && $this->master) {
             $db = new clsBanco();
-            $db->Consulta( "UPDATE {$this->tabela} SET master = '{$this->master}' WHERE ref_cod_atendimento = {$this->ref_cod_atendimento} AND ref_ref_cod_pessoa_fj={$this->ref_ref_cod_pessoa_fj}");
+            $db->Consulta("UPDATE {$this->tabela} SET master = '{$this->master}' WHERE ref_cod_atendimento = {$this->ref_cod_atendimento} AND ref_ref_cod_pessoa_fj={$this->ref_ref_cod_pessoa_fj}");
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * Remove o registro atual
      *
      * @return bool
      */
-    function exclui()
+    public function exclui()
     {
-        if( $this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj )
-        {
+        if ($this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj) {
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->tabela} WHERE ref_cod_atendimento = {$this->ref_cod_atendimento} AND ref_ref_cod_pessoa_fj={$this->ref_ref_cod_pessoa_fj}");
-                    
+
             return true;
         }
+
         return false;
     }
-    
-    function excluiTodos()
+
+    public function excluiTodos()
     {
-        if( $this->ref_cod_atendimento )
-        {
+        if ($this->ref_cod_atendimento) {
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->tabela} WHERE ref_cod_atendimento = {$this->ref_cod_atendimento} AND master={$this->master}");
-                    
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
      * @return Array
      */
-    function lista( $int_ref_cod_atendimento = false, $int_ref_ref_cod_pessoa_fj = false, $int_master = false, $int_limite_ini = false, $int_limite_qtd = false, $str_order_by = false)
+    public function lista($int_ref_cod_atendimento = false, $int_ref_ref_cod_pessoa_fj = false, $int_master = false, $int_limite_ini = false, $int_limite_qtd = false, $str_order_by = false)
     {
         // verificacoes de filtros a serem usados
-        $where = "";
-        $and = "";
-        
-        if( is_numeric( $int_ref_cod_atendimento) )
-        {
+        $where = '';
+        $and = '';
+
+        if (is_numeric($int_ref_cod_atendimento)) {
             $where .= " $and ref_cod_atendimento = '$int_ref_cod_atendimento'";
-            $and = " AND ";
-        }       
-        
-        if( is_numeric( $int_ref_ref_cod_pessoa_fj) )
-        {
+            $and = ' AND ';
+        }
+
+        if (is_numeric($int_ref_ref_cod_pessoa_fj)) {
             $where .= " $and ref_ref_cod_pessoa_fj = '$int_ref_ref_cod_pessoa_fj'";
-            $and = " AND ";
-        }       
-        
-        if( $int_master==0 || $int_master==1)
-        {
-            if(is_numeric($int_master))
-            {
+            $and = ' AND ';
+        }
+
+        if ($int_master==0 || $int_master==1) {
+            if (is_numeric($int_master)) {
                 $where .= " $and master = '$int_master'";
-                $and = " AND ";
+                $and = ' AND ';
             }
         }
-        
-        $orderBy = "";
-        if( is_string( $str_order_by))
-        {
+
+        $orderBy = '';
+        if (is_string($str_order_by)) {
             $orderBy = "ORDER BY $str_order_by";
         }
-        
-        if($where)
-        {
+
+        if ($where) {
             $where = " WHERE $where";
         }
-        if($int_limite_ini !== false && $int_limite_qtd)
-        {
+        if ($int_limite_ini !== false && $int_limite_qtd) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
-        
+
         $db = new clsBanco();
-        $total = $db->UnicoCampo( "SELECT COUNT(0) AS total FROM {$this->tabela} $where" );
+        $total = $db->UnicoCampo("SELECT COUNT(0) AS total FROM {$this->tabela} $where");
         //echo ( "SELECT ref_cod_atendimento, ref_ref_cod_pessoa_fj, master FROM {$this->tabela} $where $orderBy $limit" );
         //die();
-        $db->Consulta( "SELECT ref_cod_atendimento, ref_ref_cod_pessoa_fj, master FROM {$this->tabela} $where $orderBy $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() ) 
-        {
+        $db->Consulta("SELECT ref_cod_atendimento, ref_ref_cod_pessoa_fj, master FROM {$this->tabela} $where $orderBy $limit");
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla["total"] = $total;
+            $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
-    } 
-    
+    }
+
     /**
      * Retorna um array com os detalhes do objeto
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( $this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj )
-        {
+        if ($this->ref_cod_atendimento && $this->ref_ref_cod_pessoa_fj) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT ref_cod_atendimento, ref_ref_cod_pessoa_fj, master FROM {$this->tabela} WHERE  ref_cod_atendimento = '{$this->ref_cod_atendimento}' AND ref_ref_cod_pessoa_fj = '{$this->ref_ref_cod_pessoa_fj}' " );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT ref_cod_atendimento, ref_ref_cod_pessoa_fj, master FROM {$this->tabela} WHERE  ref_cod_atendimento = '{$this->ref_cod_atendimento}' AND ref_ref_cod_pessoa_fj = '{$this->ref_ref_cod_pessoa_fj}' ");
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                
+
                 return $tupla;
             }
         }
+
         return false;
     }
 }
-?>

@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -36,34 +41,41 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
 /**
  * Class IesController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class IesController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  protected function searchOptions() {
-    return array('namespace' => 'modules', 'table' => 'educacenso_ies', 'idAttr' => 'id');
-  }
+    protected function searchOptions()
+    {
+        return ['namespace' => 'modules', 'table' => 'educacenso_ies', 'idAttr' => 'id'];
+    }
 
-  protected function formatResourceValue($resource) {
-    return $resource['ies_id'] . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
-  }
+    protected function formatResourceValue($resource)
+    {
+        return $resource['ies_id'] . ' - ' . $this->toUtf8($resource['name'], ['transform' => true]);
+    }
 
-  protected function sqlsForNumericSearch() {
-    return "select id, ies_id, nome as name from modules.educacenso_ies
-            where ies_id::varchar like $1||'%' order by ies_id limit 15";
-  }
+    protected function sqlsForNumericSearch()
+    {
+        return 'select id, ies_id, nome as name from modules.educacenso_ies
+            where ies_id::varchar like $1||\'%\' order by ies_id limit 15';
+    }
 
-  protected function sqlsForStringSearch() {
-    return "select id, ies_id, nome as name from modules.educacenso_ies
-            where f_unaccent(nome) ilike f_unaccent('%'||$1||'%') order by name limit 15";
-  }
+    protected function sqlsForStringSearch()
+    {
+        return 'select id, ies_id, nome as name from modules.educacenso_ies
+            where f_unaccent(nome) ilike f_unaccent(\'%\'||$1||\'%\') order by name limit 15';
+    }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'ies-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'ies-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

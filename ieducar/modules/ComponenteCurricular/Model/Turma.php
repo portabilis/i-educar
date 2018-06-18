@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,56 +40,63 @@ require_once 'CoreExt/Entity.php';
  * ComponenteCurricular_Model_Turma class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class ComponenteCurricular_Model_Turma extends CoreExt_Entity
 {
-  protected $_data = array(
-    'componenteCurricular' => NULL,
-    'anoEscolar'           => NULL,
-    'escola'               => NULL,
-    'turma'                => NULL,
-    'cargaHoraria'         => NULL,
-    'docenteVinculado'     => NULL,
-    'etapasEspecificas'    => NULL,
-    'etapasUtilizadas'     => NULL
-  );
+    protected $_data = [
+    'componenteCurricular' => null,
+    'anoEscolar'           => null,
+    'escola'               => null,
+    'turma'                => null,
+    'cargaHoraria'         => null,
+    'docenteVinculado'     => null,
+    'etapasEspecificas'    => null,
+    'etapasUtilizadas'     => null
+  ];
 
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'cargaHoraria' => 'numeric',
     'docenteVinculado' => 'numeric'
-  );
+  ];
 
-  protected $_references = array(
-    'componenteCurricular' => array(
-      'value' => NULL,
+    protected $_references = [
+    'componenteCurricular' => [
+      'value' => null,
       'class' => 'ComponenteCurricular_Model_ComponenteDataMapper',
       'file'  => 'ComponenteCurricular/Model/ComponenteDataMapper.php'
-    )
-  );
+    ]
+  ];
 
-  /**
-   * Construtor. Remove o campo identidade já que usa uma chave composta.
-   * @see CoreExt_Entity#__construct($options = array())
-   */
-  public function __construct($options = array()) {
-    parent::__construct($options);
-    unset($this->_data['id']);
-  }
+    /**
+     * Construtor. Remove o campo identidade já que usa uma chave composta.
+     *
+     * @see CoreExt_Entity#__construct($options = array())
+     */
+    public function __construct($options = [])
+    {
+        parent::__construct($options);
+        unset($this->_data['id']);
+    }
 
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
-  {
-    return array(
-      'cargaHoraria' => new CoreExt_Validate_Numeric(array('required' => FALSE)),
-      'docenteVinculado' => new CoreExt_Validate_Numeric(array('required' => FALSE))
-    );
-  }
+    /**
+     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     */
+    public function getDefaultValidatorCollection()
+    {
+        return [
+      'cargaHoraria' => new CoreExt_Validate_Numeric(['required' => false]),
+      'docenteVinculado' => new CoreExt_Validate_Numeric(['required' => false])
+    ];
+    }
 }

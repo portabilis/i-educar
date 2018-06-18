@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o" );
-        $this->processoAp = "602";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o");
+        $this->processoAp = '602';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -46,84 +46,82 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $cod_situacao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_situacao;
-    var $permite_emprestimo;
-    var $descricao;
-    var $situacao_padrao;
-    var $situacao_emprestada;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_biblioteca;
+    public $cod_situacao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_situacao;
+    public $permite_emprestimo;
+    public $descricao;
+    public $situacao_padrao;
+    public $situacao_emprestada;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_biblioteca;
 
-    var $ref_cod_instituicao;
-    var $ref_cod_escola;
+    public $ref_cod_instituicao;
+    public $ref_cod_escola;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Situa&ccedil;&atilde;o - Listagem";
+        $this->titulo = 'Situa&ccedil;&atilde;o - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        
-
-        $lista_busca = array(
-            "Situa&ccedil;&atilde;o",
-            "Permite Empr&eacute;stimo"
-        );
+        $lista_busca = [
+            'Situa&ccedil;&atilde;o',
+            'Permite Empr&eacute;stimo'
+        ];
 
         // Filtros de Foreign Keys
         $get_escola = true;
         $get_biblioteca = true;
-        $get_cabecalho = "lista_busca";
-        include("include/pmieducar/educar_campo_lista.php");
+        $get_cabecalho = 'lista_busca';
+        include('include/pmieducar/educar_campo_lista.php');
 
         $this->addCabecalhos($lista_busca);
 
         // outros Filtros
-        $this->campoTexto( "nm_situacao", "Situa&ccedil;&atilde;o", $this->nm_situacao, 30, 255, false );
-        $opcoes = array("" => "Selecione", 1 => "n&atilde;o", 2 => "sim" );
-        $this->campoLista( "permite_emprestimo", "Permite Empr&eacute;stimo", $opcoes, $this->permite_emprestimo, null,null,null,null,null,false);
-
+        $this->campoTexto('nm_situacao', 'Situa&ccedil;&atilde;o', $this->nm_situacao, 30, 255, false);
+        $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim' ];
+        $this->campoLista('permite_emprestimo', 'Permite Empr&eacute;stimo', $opcoes, $this->permite_emprestimo, null, null, null, null, null, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_situacao = new clsPmieducarSituacao();
-        $obj_situacao->setOrderby( "nm_situacao ASC" );
-        $obj_situacao->setLimite( $this->limite, $this->offset );
+        $obj_situacao->setOrderby('nm_situacao ASC');
+        $obj_situacao->setLimite($this->limite, $this->offset);
 
         $lista = $obj_situacao->lista(
             null,
@@ -147,76 +145,72 @@ class indice extends clsListagem
         $total = $obj_situacao->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarBiblioteca" ) )
-                {
-                    $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
+                if (class_exists('clsPmieducarBiblioteca')) {
+                    $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca($registro['ref_cod_biblioteca']);
                     $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
-                    $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-                    $registro["ref_cod_instituicao"] = $det_ref_cod_biblioteca["ref_cod_instituicao"];
-                    $registro["ref_cod_escola"] = $det_ref_cod_biblioteca["ref_cod_escola"];
-                    if( $registro["ref_cod_instituicao"] )
-                    {
-                        $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                    $registro['ref_cod_biblioteca'] = $det_ref_cod_biblioteca['nm_biblioteca'];
+                    $registro['ref_cod_instituicao'] = $det_ref_cod_biblioteca['ref_cod_instituicao'];
+                    $registro['ref_cod_escola'] = $det_ref_cod_biblioteca['ref_cod_escola'];
+                    if ($registro['ref_cod_instituicao']) {
+                        $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                        $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
+                        $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
                     }
-                    if( $registro["ref_cod_escola"] )
-                    {
+                    if ($registro['ref_cod_escola']) {
                         $obj_ref_cod_escola = new clsPmieducarEscola();
-                        $det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro["ref_cod_escola"]));
-                        $registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
+                        $det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro['ref_cod_escola']));
+                        $registro['ref_cod_escola'] = $det_ref_cod_escola['nome'];
                     }
-                }
-                else
-                {
-                    $registro["ref_cod_biblioteca"] = "Erro na geracao";
+                } else {
+                    $registro['ref_cod_biblioteca'] = 'Erro na geracao';
                     echo "<!--\nErro\nClasse nao existente: clsPmieducarBiblioteca\n-->";
                 }
 
-                if ($registro["permite_emprestimo"] == 1)
-                    $registro["permite_emprestimo"] = "n&atilde;o";
-                else if ($registro["permite_emprestimo"] == 2)
-                    $registro["permite_emprestimo"] = "sim";
+                if ($registro['permite_emprestimo'] == 1) {
+                    $registro['permite_emprestimo'] = 'n&atilde;o';
+                } elseif ($registro['permite_emprestimo'] == 2) {
+                    $registro['permite_emprestimo'] = 'sim';
+                }
 
-                $lista_busca = array(
-                    "<a href=\"educar_situacao_det.php?cod_situacao={$registro["cod_situacao"]}\">{$registro["nm_situacao"]}</a>",
-                    "<a href=\"educar_situacao_det.php?cod_situacao={$registro["cod_situacao"]}\">{$registro["permite_emprestimo"]}</a>"
-                );
+                $lista_busca = [
+                    "<a href=\"educar_situacao_det.php?cod_situacao={$registro['cod_situacao']}\">{$registro['nm_situacao']}</a>",
+                    "<a href=\"educar_situacao_det.php?cod_situacao={$registro['cod_situacao']}\">{$registro['permite_emprestimo']}</a>"
+                ];
 
-                if ($qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8))
-                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro["cod_situacao"]}\">{$registro["ref_cod_biblioteca"]}</a>";
-                else if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4)
-                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro["cod_situacao"]}\">{$registro["ref_cod_biblioteca"]}</a>";
-                if ($nivel_usuario == 1 || $nivel_usuario == 2)
-                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro["cod_situacao"]}\">{$registro["ref_cod_escola"]}</a>";
-                if ($nivel_usuario == 1)
-                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro["cod_situacao"]}\">{$registro["ref_cod_instituicao"]}</a>";
+                if ($qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8)) {
+                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro['cod_situacao']}\">{$registro['ref_cod_biblioteca']}</a>";
+                } elseif ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4) {
+                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro['cod_situacao']}\">{$registro['ref_cod_biblioteca']}</a>";
+                }
+                if ($nivel_usuario == 1 || $nivel_usuario == 2) {
+                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro['cod_situacao']}\">{$registro['ref_cod_escola']}</a>";
+                }
+                if ($nivel_usuario == 1) {
+                    $lista_busca[] = "<a href=\"educar_situacao_det.php?cod_situacao={$registro['cod_situacao']}\">{$registro['ref_cod_instituicao']}</a>";
+                }
 
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2( "educar_situacao_lst.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2('educar_situacao_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 602, $this->pessoa_logada, 11 ) )
-        {
-            $this->acao = "go(\"educar_situacao_cad.php\")";
-            $this->nome_acao = "Novo";
+        if ($obj_permissoes->permissao_cadastra(602, $this->pessoa_logada, 11)) {
+            $this->acao = 'go("educar_situacao_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de situa&ccedil;&otilde;es"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_biblioteca_index.php'                  => 'Biblioteca',
+         ''                                  => 'Listagem de situa&ccedil;&otilde;es'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
@@ -224,7 +218,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

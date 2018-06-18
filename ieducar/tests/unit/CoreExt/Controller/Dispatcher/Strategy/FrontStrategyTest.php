@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Controller
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,41 +41,46 @@ require_once 'CoreExt/Controller/Dispatcher/Strategy/FrontStrategy.php';
  * CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Controller
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends UnitBaseTest
 {
-  protected $_frontController = NULL;
-  protected $_pageStrategy = NULL;
+    protected $_frontController = null;
+    protected $_pageStrategy = null;
 
-  public function __construct()
-  {
-    $this->_path = realpath(dirname(__FILE__) . '/../../_stub');
-  }
+    public function __construct()
+    {
+        $this->_path = realpath(dirname(__FILE__) . '/../../_stub');
+    }
 
-  protected function setUp()
-  {
-    $this->_frontController = CoreExt_Controller_Front::getInstance();
-    $this->_frontController->setOptions(array('basepath' => $this->_path, 'controller_type' => CoreExt_Controller_Front::CONTROLLER_FRONT));
-    $this->_pageStrategy = new CoreExt_Controller_Dispatcher_Strategy_FrontStrategy($this->_frontController);
-  }
+    protected function setUp()
+    {
+        $this->_frontController = CoreExt_Controller_Front::getInstance();
+        $this->_frontController->setOptions(['basepath' => $this->_path, 'controller_type' => CoreExt_Controller_Front::CONTROLLER_FRONT]);
+        $this->_pageStrategy = new CoreExt_Controller_Dispatcher_Strategy_FrontStrategy($this->_frontController);
+    }
 
-  /**
-   * @expectedException CoreExt_Controller_Dispatcher_Exception
-   */
-  public function testRequisicaoAControllerNaoExistenteLancaExcecao()
-  {
-    $_SERVER['REQUEST_URI'] = 'http://www.example.com/PageController/view';
-    $this->_pageStrategy->dispatch();
-  }
+    /**
+     * @expectedException CoreExt_Controller_Dispatcher_Exception
+     */
+    public function testRequisicaoAControllerNaoExistenteLancaExcecao()
+    {
+        $_SERVER['REQUEST_URI'] = 'http://www.example.com/PageController/view';
+        $this->_pageStrategy->dispatch();
+    }
 
-  public function testControllerConfiguradoCorretamente()
-  {
-    $this->assertSame($this->_frontController, $this->_pageStrategy->getController());
-  }
+    public function testControllerConfiguradoCorretamente()
+    {
+        $this->assertSame($this->_frontController, $this->_pageStrategy->getController());
+    }
 }

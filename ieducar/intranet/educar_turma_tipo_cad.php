@@ -24,19 +24,19 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
+require_once('include/modules/clsModulesAuditoriaGeral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Turma Tipo" );
-        $this->processoAp = "570";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Turma Tipo");
+        $this->processoAp = '570';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -47,110 +47,110 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_turma_tipo;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_tipo;
-    var $sgl_tipo;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
-    var $ref_cod_escola;
+    public $cod_turma_tipo;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_tipo;
+    public $sgl_tipo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
+    public $ref_cod_escola;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_turma_tipo=$_GET["cod_turma_tipo"];
+        $this->cod_turma_tipo=$_GET['cod_turma_tipo'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 570, $this->pessoa_logada,7, "educar_turma_tipo_lst.php" );
+        $obj_permissoes->permissao_cadastra(570, $this->pessoa_logada, 7, 'educar_turma_tipo_lst.php');
 
-        if( is_numeric( $this->cod_turma_tipo ) )
-        {
-
-            $obj = new clsPmieducarTurmaTipo( $this->cod_turma_tipo );
+        if (is_numeric($this->cod_turma_tipo)) {
+            $obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
                 //$obj_ref_cod_escola = new clsPmieducarEscola( $this->ref_cod_escola );
                 //$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 //$this->ref_cod_instituicao = $det_ref_cod_escola["ref_cod_instituicao"];
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir( 570, $this->pessoa_logada,7 );
-                $retorno = "Editar";
+                $this->fexcluir = $obj_permissoes->permissao_excluir(570, $this->pessoa_logada, 7);
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_turma_tipo_det.php?cod_turma_tipo={$registro["cod_turma_tipo"]}" : "educar_turma_tipo_lst.php";
-        
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Novo";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_turma_tipo_det.php?cod_turma_tipo={$registro['cod_turma_tipo']}" : 'educar_turma_tipo_lst.php';
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Novo';
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "Início",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de turma"
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
+             'educar_index.php'                  => 'Escola',
+             ''        => "{$nomeMenu} tipo de turma"
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
 
-        $this->nome_url_cancelar = "Cancelar";
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_turma_tipo", $this->cod_turma_tipo );
+        $this->campoOculto('cod_turma_tipo', $this->cod_turma_tipo);
 
         $obrigatorio = true;
         // foreign keys
         $get_escola = false;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto( "nm_tipo", "Turma Tipo", $this->nm_tipo, 30, 255, true );
-        $this->campoTexto( "sgl_tipo", "Sigla", $this->sgl_tipo, 15, 15, true );
+        $this->campoTexto('nm_tipo', 'Turma Tipo', $this->nm_tipo, 30, 255, true);
+        $this->campoTexto('sgl_tipo', 'Sigla', $this->sgl_tipo, 15, 15, true);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $obj = new clsPmieducarTurmaTipo( null, null, $this->pessoa_logada, $this->nm_tipo, $this->sgl_tipo, null, null, 1, $this->ref_cod_instituicao );
+        $obj = new clsPmieducarTurmaTipo(null, null, $this->pessoa_logada, $this->nm_tipo, $this->sgl_tipo, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             $turmaTipo = new clsPmieducarTurmaTipo($cadastrou);
             $turmaTipo = $turmaTipo->detalhe();
 
-            $auditoria = new clsModulesAuditoriaGeral("turma_tipo", $this->pessoa_logada, $cadastrou);
+            $auditoria = new clsModulesAuditoriaGeral('turma_tipo', $this->pessoa_logada, $cadastrou);
             $auditoria->inclusao($turmaTipo);
 
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_turma_tipo_lst.php" );
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_turma_tipo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarTurmaTipo\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo ) && is_string( $this->sgl_tipo )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $turmaTipoDetalhe = new clsPmieducarTurmaTipo($this->cod_turma_tipo);
@@ -158,45 +158,47 @@ class indice extends clsCadastro
 
         $obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo, $this->pessoa_logada, null, $this->nm_tipo, $this->sgl_tipo, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
-        if( $editou )
-        {
+        if ($editou) {
             $turmaTipoDetalheDepois = $turmaTipoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("turma_tipo", $this->pessoa_logada, $this->cod_turma_tipo);
+            $auditoria = new clsModulesAuditoriaGeral('turma_tipo', $this->pessoa_logada, $this->cod_turma_tipo);
             $auditoria->alteracao($turmaTipoDetalheAntes, $turmaTipoDetalheDepois);
 
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_turma_tipo_lst.php" );
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_turma_tipo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarTurmaTipo\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_turma_tipo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
         $turmaTipo = $obj->detalhe();
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $auditoria = new clsModulesAuditoriaGeral("turma_tipo", $this->pessoa_logada, $this->cod_turma_tipo);
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('turma_tipo', $this->pessoa_logada, $this->cod_turma_tipo);
             $auditoria->exclusao($turmaTipo);
 
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_turma_tipo_lst.php" );
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_turma_tipo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarTurmaTipo\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_turma_tipo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }
@@ -206,7 +208,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

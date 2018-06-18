@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller das Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -41,69 +46,77 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  * clsIndexBase class.
  *
  * @author    Lucas Schmoeller das Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Vínculo Turma');
-    $this->processoAp = 635;
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Vínculo Turma');
+        $this->processoAp = 635;
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Lucas Schmoeller das Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $titulo;
-  var $limite;
-  var $offset;
+    public $pessoa_logada;
+    public $titulo;
+    public $limite;
+    public $offset;
 
-  var $id;
-  var $ano;
-  var $servidor_id;
-  var $funcao_exercida;
-  var $tipo_vinculo;
-  
-  var $ref_cod_instituicao;
-  var $ref_cod_escola;
-  var $ref_cod_curso;
-  var $ref_cod_serie;
-  var $ref_cod_turma;
+    public $id;
+    public $ano;
+    public $servidor_id;
+    public $funcao_exercida;
+    public $tipo_vinculo;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public $ref_cod_instituicao;
+    public $ref_cod_escola;
+    public $ref_cod_curso;
+    public $ref_cod_serie;
+    public $ref_cod_turma;
 
-    $this->servidor_id    = $_GET['ref_cod_servidor'];
-    $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'Servidor Vínculo Turma - Listagem';
+        $this->servidor_id    = $_GET['ref_cod_servidor'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-    // passa todos os valores obtidos no GET para atributos do objeto
-    foreach( $_GET AS $var => $val ) {
-      $this->$var = ($val === '') ? NULL : $val;
-    }
+        $this->titulo = 'Servidor Vínculo Turma - Listagem';
 
-    
+        // passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Ano',
       'Escola',
       'Curso',
@@ -111,51 +124,51 @@ class indice extends clsListagem
       'Turma',
       'Função exercida',
       'Tipo de vínculo'
-    ));
+    ]);
 
-    $this->campoOculto('ref_cod_servidor', $this->servidor_id);
+        $this->campoOculto('ref_cod_servidor', $this->servidor_id);
 
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao','escola','curso','serie', 'turma'), array('required' => false));
+        $this->inputsHelper()->dynamic(['ano', 'instituicao','escola','curso','serie', 'turma'], ['required' => false]);
 
-    $resources_funcao = array(  null => 'Selecione',
+        $resources_funcao = [  null => 'Selecione',
                                 1    => 'Docente',
                                 2    => 'Auxiliar/Assistente educacional',
                                 3    => 'Profissional/Monitor de atividade complementar',
                                 4    => 'Tradutor Intérprete de LIBRAS',
                                 5    => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
-                                6    => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD');
+                                6    => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD'];
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
-    $this->inputsHelper()->select('funcao_exercida', $options);   
+        $options = ['label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida];
+        $this->inputsHelper()->select('funcao_exercida', $options);
 
-    $resources_tipo = array(  null => 'Nenhum',
+        $resources_tipo = [  null => 'Nenhum',
                               1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estável'),
                               2    => Portabilis_String_Utils::toLatin1('Contrato temporário'),
                               3    => 'Contrato terceirizado',
-                              4    => 'Contrato CLT');
+                              4    => 'Contrato CLT'];
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo);
-    $this->inputsHelper()->select('tipo_vinculo', $options);
+        $options = ['label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo];
+        $this->inputsHelper()->select('tipo_vinculo', $options);
 
-    // Paginador
-    $this->limite = 20;
-    $this->offset = ($_GET['pagina_' . $this->nome]) ?
+        // Paginador
+        $this->limite = 20;
+        $this->offset = ($_GET['pagina_' . $this->nome]) ?
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-    $obj_vinculo = new clsModulesProfessorTurma();
+        $obj_vinculo = new clsModulesProfessorTurma();
 
-    if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
-      $obj_vinculo->codUsuario = $this->pessoa_logada;
-    }
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+            $obj_vinculo->codUsuario = $this->pessoa_logada;
+        }
 
-    $obj_vinculo->setOrderby(' nm_escola, nm_curso, nm_serie, nm_turma ASC');
-    $obj_vinculo->setLimite($this->limite, $this->offset);
+        $obj_vinculo->setOrderby(' nm_escola, nm_curso, nm_serie, nm_turma ASC');
+        $obj_vinculo->setLimite($this->limite, $this->offset);
 
-    if (! isset($this->tipo)) {
-      $this->tipo = NULL;
-    }
+        if (! isset($this->tipo)) {
+            $this->tipo = null;
+        }
 
-    $lista = $obj_vinculo->lista(
+        $lista = $obj_vinculo->lista(
       $this->servidor_id,
       $this->ref_cod_instituicao,
       $this->ano,
@@ -167,22 +180,21 @@ class indice extends clsListagem
       $this->tipo_vinculo
     );
 
-    $total = $obj_vinculo->_total;
+        $total = $obj_vinculo->_total;
 
-    // UrlHelper
-    $url  = CoreExt_View_Helper_UrlHelper::getInstance();
-    $path = 'educar_servidor_vinculo_turma_det.php';
+        // UrlHelper
+        $url  = CoreExt_View_Helper_UrlHelper::getInstance();
+        $path = 'educar_servidor_vinculo_turma_det.php';
 
-    // Monta a lista
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-
-        $options = array(
-          'query' => array(
+        // Monta a lista
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $options = [
+          'query' => [
             'id' => $registro['id']
-        ));
+        ]];
 
-        $this->addLinhas(array(
+                $this->addLinhas([
           $url->l($registro['ano'], $path, $options),
           $url->l($registro['nm_escola'], $path, $options),
           $url->l($registro['nm_curso'], $path, $options),
@@ -190,37 +202,39 @@ class indice extends clsListagem
           $url->l($registro['nm_turma'], $path, $options),
           $url->l($resources_funcao[$registro['funcao_exercida']], $path, $options),
           $url->l($resources_tipo[$registro['tipo_vinculo']], $path, $options)
-        ));
-      }
-    }
+        ]);
+            }
+        }
 
-    $this->addPaginador2('educar_servidor_vinculo_turma_lst.php', $total, $_GET, $this->nome, $this->limite);
-    $obj_permissoes = new clsPermissoes();
+        $this->addPaginador2('educar_servidor_vinculo_turma_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-      $this->array_botao[]     = 'Novo';
-      $this->array_botao_url[] = sprintf(
+        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+            $this->array_botao[]     = 'Novo';
+            $this->array_botao_url[] = sprintf(
         'educar_servidor_vinculo_turma_cad.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-        $this->servidor_id, $this->ref_cod_instituicao
+        $this->servidor_id,
+          $this->ref_cod_instituicao
       );
-    }
+        }
 
-    $this->array_botao[]     = 'Voltar';
-    $this->array_botao_url[] = sprintf(
+        $this->array_botao[]     = 'Voltar';
+        $this->array_botao_url[] = sprintf(
       'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
-      $this->servidor_id, $this->ref_cod_instituicao
+      $this->servidor_id,
+        $this->ref_cod_instituicao
     );
 
-    $this->largura = '100%';
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Vincular servidor à turmas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());   
-  }
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
+         'educar_servidores_index.php'       => 'Servidores',
+         ''                                  => 'Vincular servidor à turmas'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }
 
 // Instancia objeto de página

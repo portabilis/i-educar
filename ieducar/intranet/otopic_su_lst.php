@@ -24,72 +24,62 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Pauta - Super Usuários!" );
-        $this->processoAp = "335";
+        $this->SetTitulo("{$this->_instituicao} i-Pauta - Super Usuários!");
+        $this->processoAp = '335';
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Super Usuários";
-        
-        
-        $this->addCabecalhos( array( "Nome") );
-        
+        $this->titulo = 'Super Usuários';
+
+        $this->addCabecalhos([ 'Nome']);
+
         // Paginador
         $limite = 20;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
         $obj = new clsFuncionarioSu();
         $lista = $obj->lista();
         $novo = true;
-        if($lista)
-        {   
-            foreach ($lista AS $cod) 
-            {
+        if ($lista) {
+            foreach ($lista as $cod) {
                 $cod = $cod['ref_ref_cod_pessoa_fj'];
                 $novo =false;
                 $obj = new clsPessoaFisica($cod);
                 $detalhe = $obj->detalhe();
-                $this->addLinhas( array($detalhe['nome']) );
+                $this->addLinhas([$detalhe['nome']]);
             }
         }
 
-        if($novo)
-        {
-            $this->acao = "go(\"otopic_su_cad.php\")";
-            $this->nome_acao = "Novo";
-        }else 
-        {
-
-            $this->acao = "go(\"otopic_su_det.php\")";
-            $this->nome_acao = "Editar";
+        if ($novo) {
+            $this->acao = 'go("otopic_su_cad.php")';
+            $this->nome_acao = 'Novo';
+        } else {
+            $this->acao = 'go("otopic_su_det.php")';
+            $this->nome_acao = 'Editar';
         }
-        
-        $this->largura = "100%";
-        $this->addPaginador2( "otopic_grupos_lst.php", $total, $_GET, $this->nome, $limite );
+
+        $this->largura = '100%';
+        $this->addPaginador2('otopic_grupos_lst.php', $total, $_GET, $this->nome, $limite);
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

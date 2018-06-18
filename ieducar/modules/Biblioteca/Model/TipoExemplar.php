@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -40,57 +45,59 @@ require_once 'CoreExt/Validate/Email.php';
  * ComponenteCurricular_Model_Componente class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Biblioteca_Model_TipoExemplar extends CoreExt_Entity
 {
-  protected $_data = array(
-    'cod_exemplar_tipo'  => NULL,
-    'ref_cod_biblioteca' => NULL,
-    'ref_usuario_exc'    => NULL,
-    'ref_usuario_cad'    => NULL,
-    'nm_tipo'            => NULL,
-    'descricao'          => NULL,
-    'data_cadastro'      => NULL,
-    'data_exclusao'      => NULL,
-    'ativo'              => NULL
-  );
+    protected $_data = [
+    'cod_exemplar_tipo'  => null,
+    'ref_cod_biblioteca' => null,
+    'ref_usuario_exc'    => null,
+    'ref_usuario_cad'    => null,
+    'nm_tipo'            => null,
+    'descricao'          => null,
+    'data_cadastro'      => null,
+    'data_exclusao'      => null,
+    'ativo'              => null
+  ];
 
-
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'nm_tipo' => 'string'
-  );
+  ];
 
+    protected $_references = [
+  ];
 
-  protected $_references = array(
-  );
+    public function getDataMapper()
+    {
+        if (is_null($this->_dataMapper)) {
+            require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
+            $this->setDataMapper(new Biblioteca_Model_TipoExemplarDataMapper());
+        }
 
-
-  public function getDataMapper()
-  {
-    if (is_null($this->_dataMapper)) {
-      require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
-      $this->setDataMapper(new Biblioteca_Model_TipoExemplarDataMapper());
+        return parent::getDataMapper();
     }
-    return parent::getDataMapper();
-  }
 
+    public function getDefaultValidatorCollection()
+    {
+        return [];
+    }
 
-  public function getDefaultValidatorCollection()
-  {
-    return array();
-  }
+    protected function _createIdentityField()
+    {
+        $id = ['cod_exemplar_tipo' => null];
+        $this->_data = array_merge($id, $this->_data);
 
-
-  protected function _createIdentityField()
-  {
-    $id = array('cod_exemplar_tipo' => NULL);
-    $this->_data = array_merge($id, $this->_data);
-    return $this;
-  }
+        return $this;
+    }
 }

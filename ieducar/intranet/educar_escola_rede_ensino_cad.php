@@ -24,19 +24,19 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
+require_once('include/modules/clsModulesAuditoriaGeral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Rede Ensino" );
-        $this->processoAp = "647";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Escola Rede Ensino");
+        $this->processoAp = '647';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -47,161 +47,159 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_escola_rede_ensino;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_rede;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
+    public $cod_escola_rede_ensino;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_rede;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_escola_rede_ensino=$_GET["cod_escola_rede_ensino"];
+        $this->cod_escola_rede_ensino=$_GET['cod_escola_rede_ensino'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 647, $this->pessoa_logada, 3,  "educar_escola_rede_ensino_lst.php" );
+        $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-        if( is_numeric( $this->cod_escola_rede_ensino ) )
-        {
-
-            $obj = new clsPmieducarEscolaRedeEnsino( $this->cod_escola_rede_ensino );
+        if (is_numeric($this->cod_escola_rede_ensino)) {
+            $obj = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                if( $obj_permissoes->permissao_excluir( 647, $this->pessoa_logada, 3 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(647, $this->pessoa_logada, 3)) {
                     $this->fexcluir = true;
                 }
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_rede_ensino_det.php?cod_escola_rede_ensino={$registro["cod_escola_rede_ensino"]}" : "educar_escola_rede_ensino_lst.php";
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_rede_ensino_det.php?cod_escola_rede_ensino={$registro['cod_escola_rede_ensino']}" : 'educar_escola_rede_ensino_lst.php';
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} rede de ensino"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
-        $this->nome_url_cancelar = "Cancelar";
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => "{$nomeMenu} rede de ensino"
+        ]);
+        $this->enviaLocalizacao($localizacao->montar());
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_escola_rede_ensino", $this->cod_escola_rede_ensino );
+        $this->campoOculto('cod_escola_rede_ensino', $this->cod_escola_rede_ensino);
 
         // Filtros de Foreign Keys
         $obrigatorio = true;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto( "nm_rede", "Rede Ensino", $this->nm_rede, 30, 255, true );
+        $this->campoTexto('nm_rede', 'Rede Ensino', $this->nm_rede, 30, 255, true);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 647, $this->pessoa_logada, 3,  "educar_escola_rede_ensino_lst.php" );
+        $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-
-        $obj = new clsPmieducarEscolaRedeEnsino( null,null,$this->pessoa_logada,$this->nm_rede,null,null,1,$this->ref_cod_instituicao );
+        $obj = new clsPmieducarEscolaRedeEnsino(null, null, $this->pessoa_logada, $this->nm_rede, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             $escolaRedeEnsino = new clsPmieducarEscolaRedeEnsino($cadastrou);
             $escolaRedeEnsino = $escolaRedeEnsino->detalhe();
 
-            $auditoria = new clsModulesAuditoriaGeral("escola_rede_ensino", $this->pessoa_logada, $cadastrou);
+            $auditoria = new clsModulesAuditoriaGeral('escola_rede_ensino', $this->pessoa_logada, $cadastrou);
             $auditoria->inclusao($escolaRedeEnsino);
 
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_escola_rede_ensino_lst.php" );
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_escola_rede_ensino_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarEscolaRedeEnsino\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_rede )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $escolaRedeEnsinoDetalhe = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino);
         $escolaRedeEnsinoDetalheAntes = $escolaRedeEnsinoDetalhe->detalhe();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 647, $this->pessoa_logada, 3,  "educar_escola_rede_ensino_lst.php" );
+        $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-
-        $obj = new clsPmieducarEscolaRedeEnsino( $this->cod_escola_rede_ensino,$this->pessoa_logada,null,$this->nm_rede,null,null,1,$this->ref_cod_instituicao );
+        $obj = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino, $this->pessoa_logada, null, $this->nm_rede, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
-        if( $editou )
-        {
+        if ($editou) {
             $escolaRedeEnsinoDetalheDepois = $escolaRedeEnsinoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("escola_rede_ensino", $this->pessoa_logada, $this->cod_escola_rede_ensino);
+            $auditoria = new clsModulesAuditoriaGeral('escola_rede_ensino', $this->pessoa_logada, $this->cod_escola_rede_ensino);
             $auditoria->alteracao($escolaRedeEnsinoDetalheAntes, $escolaRedeEnsinoDetalheDepois);
 
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_escola_rede_ensino_lst.php" );
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_escola_rede_ensino_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarEscolaRedeEnsino\nvalores obrigatorios\nif( is_numeric( $this->cod_escola_rede_ensino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 647, $this->pessoa_logada, 3,  "educar_escola_rede_ensino_lst.php" );
+        $obj_permissoes->permissao_excluir(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-
-        $obj = new clsPmieducarEscolaRedeEnsino( $this->cod_escola_rede_ensino,$this->pessoa_logada,null,null,null,null,0 );
+        $obj = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino, $this->pessoa_logada, null, null, null, null, 0);
         $escolaRedeEnsino = $obj->detalhe();
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $auditoria = new clsModulesAuditoriaGeral("escola_rede_ensino", $this->pessoa_logada, $this->cod_escola_rede_ensino);
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('escola_rede_ensino', $this->pessoa_logada, $this->cod_escola_rede_ensino);
             $auditoria->exclusao($escolaRedeEnsino);
 
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_escola_rede_ensino_lst.php" );
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_escola_rede_ensino_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarEscolaRedeEnsino\nvalores obrigatorios\nif( is_numeric( $this->cod_escola_rede_ensino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }
@@ -211,7 +209,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

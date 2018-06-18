@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -40,29 +45,29 @@ require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
 class PromocaoController extends Portabilis_Controller_Page_ListController
 {
-  protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-  protected $_titulo     = 'Lan&ccedil;amento por turma';
-  protected $_processoAp = 644;
-  protected $_formMap    = array();
+    protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
+    protected $_titulo     = 'Lan&ccedil;amento por turma';
+    protected $_processoAp = 644;
+    protected $_formMap    = [];
 
-  public function Gerar() {
-    $this->inputsHelper()->dynamic('ano', array('id' => 'ano'));
-    $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));
-    $this->inputsHelper()->dynamic('escola', array('id' => 'escola', 'required' => false));
-    $this->inputsHelper()->dynamic('curso', array('id' => 'curso', 'required' => false));
-    $this->inputsHelper()->dynamic('serie', array('id' => 'serie', 'required' => false));
-    $this->inputsHelper()->dynamic('turma', array('id' => 'turma', 'required' => false));
-    $this->inputsHelper()->dynamic('situacaoMatricula', array('id' => 'matricula', 'value' => 10, 'required' => false));
+    public function Gerar()
+    {
+        $this->inputsHelper()->dynamic('ano', ['id' => 'ano']);
+        $this->inputsHelper()->dynamic('instituicao', ['id' => 'instituicao_id']);
+        $this->inputsHelper()->dynamic('escola', ['id' => 'escola', 'required' => false]);
+        $this->inputsHelper()->dynamic('curso', ['id' => 'curso', 'required' => false]);
+        $this->inputsHelper()->dynamic('serie', ['id' => 'serie', 'required' => false]);
+        $this->inputsHelper()->dynamic('turma', ['id' => 'turma', 'required' => false]);
+        $this->inputsHelper()->dynamic('situacaoMatricula', ['id' => 'matricula', 'value' => 10, 'required' => false]);
 
-    $this->loadResourceAssets($this->getDispatcher());
+        $this->loadResourceAssets($this->getDispatcher());
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"    => "Configurações",
-         ""                                  => "Atualização de matrículas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_configuracoes_index.php'    => 'Configurações',
+         ''                                  => 'Atualização de matrículas'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }
-?>

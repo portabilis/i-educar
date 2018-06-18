@@ -30,17 +30,17 @@
 * Criado em 02/03/2007 16:05 pelo gerador automatico de classes
 */
 
-require_once( "include/portal/geral.inc.php" );
+require_once('include/portal/geral.inc.php');
 
 class clsPortalPortalPlanta
 {
-    var $cod_planta;
-    var $local_plantio;
-    var $data;
-    var $observacao;
-    var $nm_planta;
-    var $nm_cientifico;
-    var $ativo;
+    public $cod_planta;
+    public $local_plantio;
+    public $data;
+    public $observacao;
+    public $nm_planta;
+    public $nm_cientifico;
+    public $ativo;
 
     // propriedades padrao
 
@@ -49,61 +49,60 @@ class clsPortalPortalPlanta
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
-     * 
+     *
      * @param integer cod_planta
      * @param string local_plantio
      * @param string data
@@ -114,45 +113,35 @@ class clsPortalPortalPlanta
      *
      * @return object
      */
-    function __construct( $cod_planta = null, $local_plantio = null, $data = null, $observacao = null, $nm_planta = null, $nm_cientifico = null, $ativo = null )
+    public function __construct($cod_planta = null, $local_plantio = null, $data = null, $observacao = null, $nm_planta = null, $nm_cientifico = null, $ativo = null)
     {
         $db = new clsBanco();
-        $this->_schema = "portal.";
+        $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}portal_planta";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_planta, local_plantio, data, observacao, nm_planta, nm_cientifico, ativo";
+        $this->_campos_lista = $this->_todos_campos = 'cod_planta, local_plantio, data, observacao, nm_planta, nm_cientifico, ativo';
 
-
-
-        if( is_numeric( $cod_planta ) )
-        {
+        if (is_numeric($cod_planta)) {
             $this->cod_planta = $cod_planta;
         }
-        if( is_string( $local_plantio ) )
-        {
+        if (is_string($local_plantio)) {
             $this->local_plantio = $local_plantio;
         }
-        if( is_string( $data ) )
-        {
+        if (is_string($data)) {
             $this->data = $data;
         }
-        if( is_string( $observacao ) )
-        {
+        if (is_string($observacao)) {
             $this->observacao = $observacao;
         }
-        if( is_string( $nm_planta ) )
-        {
+        if (is_string($nm_planta)) {
             $this->nm_planta = $nm_planta;
         }
-        if( is_string( $nm_cientifico ) )
-        {
+        if (is_string($nm_cientifico)) {
             $this->nm_cientifico = $nm_cientifico;
         }
-        if( is_numeric( $ativo ) )
-        {
+        if (is_numeric($ativo)) {
             $this->ativo = $ativo;
         }
-
     }
 
     /**
@@ -160,54 +149,49 @@ class clsPortalPortalPlanta
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_string( $this->local_plantio ) && is_string( $this->data ) && is_string( $this->observacao ) && is_string( $this->nm_planta ) )
-        {
+        if (is_string($this->local_plantio) && is_string($this->data) && is_string($this->observacao) && is_string($this->nm_planta)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_string( $this->local_plantio ) )
-            {
+            if (is_string($this->local_plantio)) {
                 $campos .= "{$gruda}local_plantio";
                 $valores .= "{$gruda}'{$this->local_plantio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data ) )
-            {
+            if (is_string($this->data)) {
                 $campos .= "{$gruda}data";
                 $valores .= "{$gruda}'{$this->data}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->observacao ) )
-            {
+            if (is_string($this->observacao)) {
                 $campos .= "{$gruda}observacao";
                 $valores .= "{$gruda}'{$this->observacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nm_planta ) )
-            {
+            if (is_string($this->nm_planta)) {
                 $campos .= "{$gruda}nm_planta";
                 $valores .= "{$gruda}'{$this->nm_planta}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nm_cientifico ) )
-            {
+            if (is_string($this->nm_cientifico)) {
                 $campos .= "{$gruda}nm_cientifico";
                 $valores .= "{$gruda}'{$this->nm_cientifico}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
-            $gruda = ", ";
+            $gruda = ', ';
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_planta_seq");
+            return $db->InsertId("{$this->_tabela}_cod_planta_seq");
         }
+
         return false;
     }
 
@@ -216,58 +200,50 @@ class clsPortalPortalPlanta
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_planta ) )
-        {
-
+        if (is_numeric($this->cod_planta)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_string( $this->local_plantio ) )
-            {
+            if (is_string($this->local_plantio)) {
                 $set .= "{$gruda}local_plantio = '{$this->local_plantio}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data ) )
-            {
+            if (is_string($this->data)) {
                 $set .= "{$gruda}data = '{$this->data}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->observacao ) )
-            {
+            if (is_string($this->observacao)) {
                 $set .= "{$gruda}observacao = '{$this->observacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nm_planta ) )
-            {
+            if (is_string($this->nm_planta)) {
                 $set .= "{$gruda}nm_planta = '{$this->nm_planta}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nm_cientifico ) )
-            {
+            if (is_string($this->nm_cientifico)) {
                 $set .= "{$gruda}nm_cientifico = '{$this->nm_cientifico}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ativo ) )
-            {
+            if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_planta = '{$this->cod_planta}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_planta = '{$this->cod_planta}'" );
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
-     * 
+     *
      * @param string str_local_plantio
      * @param string str_data
      * @param string str_observacao
@@ -277,87 +253,72 @@ class clsPortalPortalPlanta
      *
      * @return array
      */
-    function lista( $str_local_plantio = null, $str_data = null, $str_observacao = null, $str_nm_planta = null, $str_nm_cientifico = null, $int_ativo = null )
+    public function lista($str_local_plantio = null, $str_data = null, $str_observacao = null, $str_nm_planta = null, $str_nm_cientifico = null, $int_ativo = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_planta ) )
-        {
+        if (is_numeric($int_cod_planta)) {
             $filtros .= "{$whereAnd} cod_planta = '{$int_cod_planta}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_local_plantio ) )
-        {
+        if (is_string($str_local_plantio)) {
             $filtros .= "{$whereAnd} local_plantio LIKE '%{$str_local_plantio}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_data ) )
-        {
+        if (is_string($str_data)) {
             $filtros .= "{$whereAnd} data LIKE '%{$str_data}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_observacao ) )
-        {
+        if (is_string($str_observacao)) {
             $filtros .= "{$whereAnd} observacao LIKE '%{$str_observacao}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nm_planta ) )
-        {
+        if (is_string($str_nm_planta)) {
             $filtros .= "{$whereAnd} nm_planta LIKE '%{$str_nm_planta}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nm_cientifico ) )
-        {
+        if (is_string($str_nm_cientifico)) {
             $filtros .= "{$whereAnd} nm_cientifico LIKE '%{$str_nm_cientifico}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_null( $int_ativo ) || $int_ativo )
-        {
+        if (is_null($int_ativo) || $int_ativo) {
             $filtros .= "{$whereAnd} ativo = '1'";
-            $whereAnd = " AND ";
-        }
-        else
-        {
+            $whereAnd = ' AND ';
+        } else {
             $filtros .= "{$whereAnd} ativo = '0'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -366,16 +327,16 @@ class clsPortalPortalPlanta
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_planta ) )
-        {
-
+        if (is_numeric($this->cod_planta)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_planta = '{$this->cod_planta}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_planta = '{$this->cod_planta}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -384,18 +345,16 @@ class clsPortalPortalPlanta
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_planta ) )
-        {
-
+        if (is_numeric($this->cod_planta)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_planta = '{$this->cod_planta}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_planta = '{$this->cod_planta}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -404,10 +363,9 @@ class clsPortalPortalPlanta
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_planta ) )
-        {
+        if (is_numeric($this->cod_planta)) {
 
         /*
             delete
@@ -416,9 +374,11 @@ class clsPortalPortalPlanta
         return true;
         */
 
-        $this->ativo = 0;
+            $this->ativo = 0;
+
             return $this->edita();
         }
+
         return false;
     }
 
@@ -427,7 +387,7 @@ class clsPortalPortalPlanta
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -437,7 +397,7 @@ class clsPortalPortalPlanta
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -447,7 +407,7 @@ class clsPortalPortalPlanta
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -458,18 +418,18 @@ class clsPortalPortalPlanta
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -477,13 +437,12 @@ class clsPortalPortalPlanta
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -493,14 +452,12 @@ class clsPortalPortalPlanta
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

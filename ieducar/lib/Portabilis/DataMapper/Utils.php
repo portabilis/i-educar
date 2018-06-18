@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -32,13 +37,19 @@
  * Portabilis_DataMapper_Utils class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_DataMapper_Utils {
+class Portabilis_DataMapper_Utils
+{
 
   /*
     this method returns a data mapper loaded by module_package and model_name, eg:
@@ -51,17 +62,18 @@ class Portabilis_DataMapper_Utils {
     $resources = $resourceDataMapper->findAll($columns, $where, $orderBy, $addColumnIdIfNotSet = false);
 
   */
-  public function getDataMapperFor($packageName, $modelName){
-    $dataMapperClassName = ucfirst($packageName) . "_Model_" . ucfirst($modelName) . "DataMapper";
-    $classPath           = str_replace('_', '/', $dataMapperClassName) . '.php';
+    public function getDataMapperFor($packageName, $modelName)
+    {
+        $dataMapperClassName = ucfirst($packageName) . '_Model_' . ucfirst($modelName) . 'DataMapper';
+        $classPath           = str_replace('_', '/', $dataMapperClassName) . '.php';
 
-    // don't raise any error if the file to be included not exists or it already included.
-    include_once $classPath;
+        // don't raise any error if the file to be included not exists or it already included.
+        include_once $classPath;
 
-    if (! class_exists($dataMapperClassName))
-      throw new CoreExt_Exception("Class '$dataMapperClassName' not found in path $classPath.");
+        if (! class_exists($dataMapperClassName)) {
+            throw new CoreExt_Exception("Class '$dataMapperClassName' not found in path $classPath.");
+        }
 
-    return new $dataMapperClassName();
-  }
-
+        return new $dataMapperClassName();
+    }
 }

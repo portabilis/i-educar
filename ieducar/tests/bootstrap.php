@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Tests
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -40,12 +45,12 @@ $root = realpath(dirname(__FILE__) . '/../');
 
 // Adiciona os diretórios tests/unit, tests/functional, tests/, ./ e intranet/
 // ao include_path.
-$paths = array();
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, 'tests', 'unit'));
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, 'tests', 'functional'));
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, 'tests'));
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, '.'));
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, 'intranet'));
+$paths = [];
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, 'tests', 'unit']);
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, 'tests', 'functional']);
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, 'tests']);
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, '.']);
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, 'intranet']);
 
 // Configura o include_path.
 set_include_path(join(PATH_SEPARATOR, $paths) . PATH_SEPARATOR . get_include_path());

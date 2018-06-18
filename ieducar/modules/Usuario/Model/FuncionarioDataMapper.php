@@ -7,11 +7,16 @@ require_once 'Usuario/Model/Funcionario.php';
  * Usuario_Model_FuncionarioDataMapper class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Usuario
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
@@ -20,7 +25,7 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
     protected $_tableName   = 'funcionario';
     protected $_tableSchema = 'portal';
 
-    protected $_attributeMap = array(
+    protected $_attributeMap = [
         'ref_cod_pessoa_fj'             => 'ref_cod_pessoa_fj',
         'matricula'                     => 'matricula',
         'senha'                         => 'senha',
@@ -48,9 +53,9 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
         'matricula_interna'             => 'matricula_interna',
         'receber_novidades'             => 'receber_novidades',
         'atualizou_cadastro'            => 'atualizou_cadastro',
-    );
+    ];
 
-    protected $_primaryKey = array(
+    protected $_primaryKey = [
         'ref_cod_pessoa_fj' => 'ref_cod_pessoa_fj'
-    );
+    ];
 }

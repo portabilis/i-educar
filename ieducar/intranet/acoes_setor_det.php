@@ -24,57 +24,51 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmiacoes/geral.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmiacoes/geral.inc.php');
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Detalhe de setores" );
-        $this->processoAp = "553";
+        $this->SetTitulo("{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Detalhe de setores");
+        $this->processoAp = '553';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe";
-        
+        $this->titulo = 'Detalhe';
 
         $setor = @$_GET['cod_setor'];
         $objSetor = new clsSetor();
         $niveis = $objSetor->getNiveis($setor);
-        $strNivel = "";
-        $gruda = "";
+        $strNivel = '';
+        $gruda = '';
         sort($niveis);
-        if($niveis)         
-        {
-            foreach ($niveis as $nivel) 
-            {
+        if ($niveis) {
+            foreach ($niveis as $nivel) {
                 $objSetor = new clsSetor($nivel);
                 $detalhe = $objSetor->detalhe();
                 $strNivel .= " $gruda {$detalhe['sgl_setor']}";
-                $gruda = ">";
+                $gruda = '>';
             }
         }
-        $this->addDetalhe( array("Secretaria", $strNivel) );
+        $this->addDetalhe(['Secretaria', $strNivel]);
 
-        $this->url_novo = "acoes_setor_cad.php";
+        $this->url_novo = 'acoes_setor_cad.php';
         $this->url_editar = "acoes_setor_cad.php?cod_setor={$setor}";
-        $this->url_cancelar = "acoes_setor_lst.php";
+        $this->url_cancelar = 'acoes_setor_lst.php';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>

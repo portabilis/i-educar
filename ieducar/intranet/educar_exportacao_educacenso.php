@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -34,103 +39,109 @@ require_once 'include/clsCadastro.inc.php';
 
 /**
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
-    $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
+        $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $ano;
-  var $ref_cod_instituicao;
-  var $segunda_fase = false;
+    public $ano;
+    public $ref_cod_instituicao;
+    public $segunda_fase = false;
 
-  function Inicializar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Inicializar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $this->segunda_fase = ($_REQUEST['fase2'] == 1);
+        $this->segunda_fase = ($_REQUEST['fase2'] == 1);
 
-    $codigoMenu = ($this->segunda_fase ? 9998845 : 846);
+        $codigoMenu = ($this->segunda_fase ? 9998845 : 846);
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra($codigoMenu, $this->pessoa_logada, 7,
-      'educar_index.php');
-    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        $codigoMenu,
+        $this->pessoa_logada,
+        7,
+      'educar_index.php'
+    );
+        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
+        $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_educacenso_index.php"       => "Educacenso",
-         ""                                  => $nomeTela
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_educacenso_index.php'       => 'Educacenso',
+         ''                                  => $nomeTela
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    $exportacao = $_POST["exportacao"];
+        $exportacao = $_POST['exportacao'];
 
-    if ($exportacao) {
-      $converted_to_iso88591 = utf8_decode($exportacao);
+        if ($exportacao) {
+            $converted_to_iso88591 = utf8_decode($exportacao);
 
-      header('Content-type: text/plain');
-      header('Content-Length: ' . strlen($converted_to_iso88591));
-      header('Content-Disposition: attachment; filename=exportacao.txt');
-      echo $converted_to_iso88591;
-      die();
+            header('Content-type: text/plain');
+            header('Content-Length: ' . strlen($converted_to_iso88591));
+            header('Content-Disposition: attachment; filename=exportacao.txt');
+            echo $converted_to_iso88591;
+            die();
+        }
+
+        $this->acao_enviar      = 'acaoExportar();';
+
+        return 'Nova exportação';
     }
 
-    $this->acao_enviar      = "acaoExportar();";
+    public function Gerar()
+    {
+        $fase2 = $_REQUEST['fase2'];
 
-    return 'Nova exportação';
-  }
+        $dicaCampoData = 'dd/mm/aaaa';
 
-  function Gerar()
-  {
-    $fase2 = $_REQUEST['fase2'];
+        if ($fase2 == 1) {
+            $dicaCampoData = 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).';
+            $this->campoOculto('fase2', 'true');
+        }
 
-    $dicaCampoData = 'dd/mm/aaaa';
+        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
 
-    if ($fase2 == 1) {
-      $dicaCampoData = 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).';
-      $this->campoOculto("fase2", "true");
-    }
-
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-
-    $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
+        $this->inputsHelper()->date('data_ini', ['label' => 'Data início',
                                                  'value' => $this->data_ini,
-                                                 'dica' => $dicaCampoData));
-    $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
+                                                 'dica' => $dicaCampoData]);
+        $this->inputsHelper()->date('data_fim', ['label' => 'Data fim',
                                                  'value' => $this->data_fim,
-                                                 'dica' => $dicaCampoData));
-    if (!empty($this->data_ini) && !empty($this->data_fim) && !empty($this->ref_cod_escola)) {
-        Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
+                                                 'dica' => $dicaCampoData]);
+        if (!empty($this->data_ini) && !empty($this->data_fim) && !empty($this->ref_cod_escola)) {
+            Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
+        }
     }
 
-  }
-
-  function Novo()
-  {
-
-    return false;
-  }
-
+    public function Novo()
+    {
+        return false;
+    }
 }
 // Instancia objeto de página
 $pagina = new clsIndexBase();

@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,34 @@ require_once 'CoreExt/Enum.php';
  * RegraAvaliacao_Model_TipoProgressao class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class RegraAvaliacao_Model_TipoProgressao extends CoreExt_Enum
 {
-  const CONTINUADA = 1;
-  const NAO_CONTINUADA_MEDIA_PRESENCA = 2;
-  const NAO_CONTINUADA_SOMENTE_MEDIA = 3;
-  const NAO_CONTINUADA_MANUAL = 4;
+    const CONTINUADA = 1;
+    const NAO_CONTINUADA_MEDIA_PRESENCA = 2;
+    const NAO_CONTINUADA_SOMENTE_MEDIA = 3;
+    const NAO_CONTINUADA_MANUAL = 4;
 
-  protected $_data = array(
+    protected $_data = [
     self::CONTINUADA => 'Continuada',
     self::NAO_CONTINUADA_MEDIA_PRESENCA => 'Não-continuada: média e presença',
     self::NAO_CONTINUADA_SOMENTE_MEDIA => 'Não-continuada: somente média',
     self::NAO_CONTINUADA_MANUAL => 'Não-continuada manual'
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

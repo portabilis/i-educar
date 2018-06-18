@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -34,64 +39,72 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
 class AlterarEmailController extends Portabilis_Controller_Page_EditController
 {
-  protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-  protected $_titulo     = 'Alterar e-mail';
-  protected $_processoAp = 0;
+    protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
+    protected $_titulo     = 'Alterar e-mail';
+    protected $_processoAp = 0;
 
-  protected $backwardCompatibility = true;
+    protected $backwardCompatibility = true;
 
-  protected $_formMap    = array(
-    'matricula' => array(
+    protected $_formMap    = [
+    'matricula' => [
       'label'  => 'Matr&iacute;cula',
       'help'   => '',
-    ),
-    'email' => array(
+    ],
+    'email' => [
       'label'  => 'E-mail',
       'help'   => 'E-mail utilizado para recuperar sua senha.',
-    ),
-  );
+    ],
+  ];
 
+    protected function _preConstruct()
+    {
+        $this->_options = $this->mergeOptions(['edit_success' => 'intranet/index.php'], $this->_options);
+    }
 
-  protected function _preConstruct()
-  {
-    $this->_options = $this->mergeOptions(array('edit_success' => 'intranet/index.php'), $this->_options);
-  }
+    // this controller always edit an existing resource
+    protected function _initNovo()
+    {
+        return false;
+    }
 
+    protected function _initEditar()
+    {
+        $this->setEntity($this->getDataMapper()->find($this->getOption('id_usuario')));
 
-  // this controller always edit an existing resource
-  protected function _initNovo() {
-    return false;
-  }
+        return true;
+    }
 
+    public function Gerar()
+    {
+        $validEmail = filter_var($this->getEntity()->email, FILTER_VALIDATE_EMAIL) == true;
 
-  protected function _initEditar() {
-    $this->setEntity($this->getDataMapper()->find($this->getOption('id_usuario')));
-    return true;
-  }
+        if (empty($this->getRequest()->email) &&  ! $validEmail) {
+            $this->messenger()->append('Por favor informe um e-mail v&aacute;lido, para ser usado caso voc&ecirc; esque&ccedil;a sua senha.');
+        }
 
+        $this->campoRotulo('matricula', $this->_getLabel('matricula'), $this->getEntity()->matricula);
+        $this->campoTexto(
+        'email',
+        $this->_getLabel('email'),
+        $this->getEntity()->email,
+      50,
+        50,
+        true,
+        false,
+        false,
+        $this->_getHelp('email')
+    );
 
-  public function Gerar()
-  {
-    $validEmail = filter_var($this->getEntity()->email, FILTER_VALIDATE_EMAIL) == true;
+        $this->url_cancelar = '/intranet/index.php';
 
-    if (empty($this->getRequest()->email) &&  ! $validEmail)
-      $this->messenger()->append("Por favor informe um e-mail v&aacute;lido, para ser usado caso voc&ecirc; esque&ccedil;a sua senha.");
+        if (! $validEmail) {
+            $this->nome_url_cancelar = 'Deixar para depois';
+        }
+    }
 
-    $this->campoRotulo('matricula', $this->_getLabel('matricula'), $this->getEntity()->matricula);
-    $this->campoTexto('email', $this->_getLabel('email'), $this->getEntity()->email,
-      50, 50, TRUE, FALSE, FALSE, $this->_getHelp('email'));
-
-    $this->url_cancelar = '/intranet/index.php';
-
-    if (! $validEmail)
-      $this->nome_url_cancelar = 'Deixar para depois';
-  }
-
-
-  public function save()
-  {
-    $this->getEntity()->setOptions(array('email' => $_POST['email']));
-    $this->getDataMapper()->save($this->getEntity());
-  }
+    public function save()
+    {
+        $this->getEntity()->setOptions(['email' => $_POST['email']]);
+        $this->getDataMapper()->save($this->getEntity());
+    }
 }
-?>

@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,134 +40,139 @@ require_once 'Avaliacao/_tests/Service/ParecerDescritivoCommon.php';
  * Avaliacao_Service_ParecerDescritivoGeralEtapaTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Service_ParecerDescritivoCommon
 {
-  protected function setUp()
-  {
-    $this->_setRegraOption('parecerDescritivo', RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL);
-    parent::setUp();
-  }
+    protected function setUp()
+    {
+        $this->_setRegraOption('parecerDescritivo', RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL);
+        parent::setUp();
+    }
 
-  protected function _getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
-  {
-    return new Avaliacao_Model_ParecerDescritivoGeral(array(
+    protected function _getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
+    {
+        return new Avaliacao_Model_ParecerDescritivoGeral([
       'parecer' => 'Ok.'
-    ));
-  }
+    ]);
+    }
 
-  protected function _getTestAdicionaParecerNoBoletim()
-  {
-    return new Avaliacao_Model_ParecerDescritivoGeral(array(
+    protected function _getTestAdicionaParecerNoBoletim()
+    {
+        return new Avaliacao_Model_ParecerDescritivoGeral([
       'parecer' => 'N/D.'
-    ));
-  }
+    ]);
+    }
 
-  protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstancias()
-  {
-    return array(
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+    protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstancias()
+    {
+        return [
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'parecer' => 'N/D.',
         'etapa'   => 2
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'parecer' => 'N/D.',
         'etapa'   => 3
-      ))
-    );
-  }
+      ])
+    ];
+    }
 
-  protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstanciasJaLancadas()
-  {
-    return array(
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+    protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstanciasJaLancadas()
+    {
+        return [
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'id'      => 1,
         'parecer' => 'N/D.',
         'etapa'   => 1
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'id'      => 1,
         'parecer' => 'N/D.',
         'etapa'   => 2
-      ))
-    );
-  }
+      ])
+    ];
+    }
 
-  protected function _getTestSalvarPareceresNoBoletimInstanciasDePareceres()
-  {
-    return array(
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+    protected function _getTestSalvarPareceresNoBoletimInstanciasDePareceres()
+    {
+        return [
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'etapa'   => 1,
         'parecer' => 'N/D.'
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'etapa'   => 2,
         'parecer' => 'N/D.'
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'etapa'   => 3,
         'parecer' => 'N/D.'
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'etapa'   => 4,
         'parecer' => 'N/D.'
-      ))
-    );
-  }
+      ])
+    ];
+    }
 
-  protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstancias()
-  {
-    return array(
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+    protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstancias()
+    {
+        return [
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'parecer' => 'N/D.',
         'etapa'   => 4
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'parecer' => 'N/D.',
-      ))
-    );
-  }
+      ])
+    ];
+    }
 
-  protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstanciasLancadas()
-  {
-    return array(
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+    protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstanciasLancadas()
+    {
+        return [
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'id'      => 1,
         'parecer' => 'N/D.',
         'etapa'   => 2
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'id'      => 2,
         'parecer' => 'N/D.',
         'etapa'   => 2
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'id'      => 3,
         'parecer' => 'N/D.',
         'etapa'   => 3
-      )),
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
+      ]),
+      new Avaliacao_Model_ParecerDescritivoGeral([
         'id'      => 4,
         'parecer' => 'N/D.',
         'etapa'   => 4
-      )),
-    );
-  }
+      ]),
+    ];
+    }
 
-  protected function _testAdicionaParecerNoBoletimVerificaValidadores(Avaliacao_Model_ParecerDescritivoAbstract $parecer)
-  {
-    $this->assertEquals(1, $parecer->etapa);
-    $this->assertEquals('N/D.', $parecer->parecer);
+    protected function _testAdicionaParecerNoBoletimVerificaValidadores(Avaliacao_Model_ParecerDescritivoAbstract $parecer)
+    {
+        $this->assertEquals(1, $parecer->etapa);
+        $this->assertEquals('N/D.', $parecer->parecer);
 
-    $validators = $parecer->getValidatorCollection();
+        $validators = $parecer->getValidatorCollection();
 
-    $this->assertEquals($this->_getEtapasPossiveisParecer(), $validators['etapa']->getOption('choices'));
-    $this->assertFalse(isset($validators['componenteCurricular']));
-  }
+        $this->assertEquals($this->_getEtapasPossiveisParecer(), $validators['etapa']->getOption('choices'));
+        $this->assertFalse(isset($validators['componenteCurricular']));
+    }
 }

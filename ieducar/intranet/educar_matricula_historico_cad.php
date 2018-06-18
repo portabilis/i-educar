@@ -24,88 +24,89 @@
   * 02111-1307, USA.                           *
   *                                    *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once( "App/Model/MatriculaSituacao.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
+require_once('App/Model/MatriculaSituacao.php');
 
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo( "{$this->_instituicao} i-Educar - Bloqueio do ano letivo" );
-    $this->processoAp = "21251";
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Bloqueio do ano letivo");
+        $this->processoAp = '21251';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-  /**
-   * Referencia pega da session para o idpes do usuario atual
-   *
-   * @var int
-   */
-  var $pessoa_logada;
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    public $pessoa_logada;
 
-  var $ref_cod_matricula;
-  var $ref_cod_turma;
-  var $sequencial;
+    public $ref_cod_matricula;
+    public $ref_cod_turma;
+    public $sequencial;
 
-  function Inicializar()
-  {
-    $retorno = "Editar";
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Inicializar()
+    {
+        $retorno = 'Editar';
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $this->ref_cod_matricula=$_GET["ref_cod_matricula"];
-    $this->ref_cod_turma=$_GET["ref_cod_turma"];
-    $this->sequencial=$_GET["sequencial"];
+        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
+        $this->ref_cod_turma=$_GET['ref_cod_turma'];
+        $this->sequencial=$_GET['sequencial'];
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada,3, "educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
-    $this->fexcluir = $obj_permissoes->permissao_excluir(578,$this->pessoa_logada,3);
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 3, 'educar_matricula_historico_lst.php?ref_cod_matricula='.$this->ref_cod_matricula);
+        $this->fexcluir = $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 3);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Histórico de enturmações da matrícula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-    $this->url_cancelar = "educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula;
-    return $retorno;
-  }
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Histórico de enturmações da matrícula'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+        $this->url_cancelar = 'educar_matricula_historico_lst.php?ref_cod_matricula='.$this->ref_cod_matricula;
 
-  function Gerar()
-  {
-    $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
-    $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
+        return $retorno;
+    }
 
-    $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula);
-    $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
-    $enturmacao->ref_cod_turma = $this->ref_cod_turma;
-    $enturmacao->sequencial = $this->sequencial;
-    $enturmacao = $enturmacao->detalhe();
+    public function Gerar()
+    {
+        $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
+        $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
 
-    $matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
-    $matricula = $matricula->detalhe();
+        $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula);
+        $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
+        $enturmacao->ref_cod_turma = $this->ref_cod_turma;
+        $enturmacao->sequencial = $this->sequencial;
+        $enturmacao = $enturmacao->detalhe();
 
-    $instituicao = new clsPmieducarInstituicao($matricula['ref_cod_instituicao']);
-    $instituicao = $instituicao->detalhe();
+        $matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+        $matricula = $matricula->detalhe();
 
-    $escola = new clsPmieducarEscola($matricula['ref_ref_cod_escola']);
-    $escola = $escola->detalhe();
+        $instituicao = new clsPmieducarInstituicao($matricula['ref_cod_instituicao']);
+        $instituicao = $instituicao->detalhe();
 
-    $this->campoRotulo('ano', 'Ano', $matricula['ano']);
-    $this->campoRotulo('nm_instituicao', 'Instituição', $instituicao['nm_instituicao']);
-    $this->campoRotulo('nm_escola', 'Escola', $escola['nome']);
-    $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $enturmacao['nome']);
-    $this->campoRotulo('sequencial', 'Sequencial', $enturmacao['sequencial']);
+        $escola = new clsPmieducarEscola($matricula['ref_ref_cod_escola']);
+        $escola = $escola->detalhe();
 
-    switch ($matricula['aprovado']) {
+        $this->campoRotulo('ano', 'Ano', $matricula['ano']);
+        $this->campoRotulo('nm_instituicao', 'Instituição', $instituicao['nm_instituicao']);
+        $this->campoRotulo('nm_escola', 'Escola', $escola['nome']);
+        $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $enturmacao['nome']);
+        $this->campoRotulo('sequencial', 'Sequencial', $enturmacao['sequencial']);
+
+        switch ($matricula['aprovado']) {
       case 1:
         $situacao = 'Aprovado';
         break;
@@ -140,52 +141,54 @@ class indice extends clsCadastro
         $situacao = '';
         break;
     }
-    $this->campoRotulo('situacao', 'Situação', $situacao);
+        $this->campoRotulo('situacao', 'Situação', $situacao);
 
-    $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => ''));
-    $this->inputsHelper()->date('data_exclusao', array('label' => 'Data de saí­da', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => false));
-  }
-
-  function Editar()
-  {
-    @session_start();
-     $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $enturmacao = new clsPmieducarMatriculaTurma();
-    $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
-    $enturmacao->ref_cod_turma = $this->ref_cod_turma;
-    $enturmacao->sequencial = $this->sequencial;
-    $enturmacao->ref_usuario_exc = $this->pessoa_logada;
-    $enturmacao->data_enturmacao = dataToBanco($this->data_enturmacao);
-    $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
-
-    $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
-
-    $matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
-    $matricula = $matricula->detalhe();
-    $dataSaidaMatricula = "";
-    if($matricula['data_cancel']){
-      $dataSaidaMatricula = date("Y-m-d", strtotime($matricula['data_cancel']));
+        $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => '']);
+        $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saí­da', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => false]);
     }
 
-    //echo $enturmacao->data_exclusao . "<br>";
-    //echo $dataSaidaMatricula;
-    //die();
+    public function Editar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $seqUltimaEnturmacao = $enturmacao->getUltimaEnturmacao($this->ref_cod_matricula);
+        $enturmacao = new clsPmieducarMatriculaTurma();
+        $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
+        $enturmacao->ref_cod_turma = $this->ref_cod_turma;
+        $enturmacao->sequencial = $this->sequencial;
+        $enturmacao->ref_usuario_exc = $this->pessoa_logada;
+        $enturmacao->data_enturmacao = dataToBanco($this->data_enturmacao);
+        $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
 
-    if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
-      $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser anterior a data de enturma&ccedil;&atilde;o.";
-      return false;
-    }
+        $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
 
-   if ($dataSaidaEnturmacaoAnterior && ($enturmacao->data_enturmacao < $dataSaidaEnturmacaoAnterior)) {
-      $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de enturma&ccedil;&atilde;o n&atilde;o pode ser anterior a data de sa&iacute;da da enturma&ccedil;&atilde;o antecessora.";
-      return false;
-    }
+        $matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+        $matricula = $matricula->detalhe();
+        $dataSaidaMatricula = '';
+        if ($matricula['data_cancel']) {
+            $dataSaidaMatricula = date('Y-m-d', strtotime($matricula['data_cancel']));
+        }
 
-    if ($dataSaidaMatricula &&
+        //echo $enturmacao->data_exclusao . "<br>";
+        //echo $dataSaidaMatricula;
+        //die();
+
+        $seqUltimaEnturmacao = $enturmacao->getUltimaEnturmacao($this->ref_cod_matricula);
+
+        if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
+            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser anterior a data de enturma&ccedil;&atilde;o.';
+
+            return false;
+        }
+
+        if ($dataSaidaEnturmacaoAnterior && ($enturmacao->data_enturmacao < $dataSaidaEnturmacaoAnterior)) {
+            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de enturma&ccedil;&atilde;o n&atilde;o pode ser anterior a data de sa&iacute;da da enturma&ccedil;&atilde;o antecessora.';
+
+            return false;
+        }
+
+        if ($dataSaidaMatricula &&
 
         ($enturmacao->data_exclusao > $dataSaidaMatricula) &&
 
@@ -195,56 +198,80 @@ class indice extends clsCadastro
          ($this->sequencial == $seqUltimaEnturmacao)
 
         ) {
+            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser posterior a data de sa&iacute;da da matricula.';
 
-      $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser posterior a data de sa&iacute;da da matricula.";
-      return false;
+            return false;
+        }
+
+        $editou = $enturmacao->edita();
+        if ($editou) {
+            if (is_null($dataSaidaMatricula) || empty($dataSaidaMatricula)) {
+                $dataSaidaMatricula = $enturmacao->data_exclusao;
+
+                $matricula_get = new clsPmieducarMatricula(
+            $this->ref_cod_matricula,
+            null,
+            null,
+            null,
+            null,
+            $matricula['ref_usuario_cad'],
+            $matricula['ref_cod_aluno'],
+            $matricula['aprovado'],
+                                                   null,
+            null,
+            null,
+            $matricula['ano'],
+            $matricula['ultima_matricula'],
+            null,
+            null,
+            null,
+            null,
+            $matricula['ref_cod_curso'],
+            null,
+            null,
+                                                   null,
+            $dataSaidaMatricula,
+            null
+        );
+                $matricula_get->edita();
+            }
+
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_matricula_historico_lst.php?ref_cod_matricula='.$this->ref_cod_matricula);
+            die();
+
+            return true;
+        }
+
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+
+        return false;
     }
 
-    $editou = $enturmacao->edita();
-    if( $editou )
+    public function Excluir()
     {
-      if(is_null($dataSaidaMatricula) || empty($dataSaidaMatricula)){
-        $dataSaidaMatricula = $enturmacao->data_exclusao;
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-        $matricula_get = new clsPmieducarMatricula($this->ref_cod_matricula, NULL, NULL, NULL, NULL, $matricula['ref_usuario_cad'], $matricula['ref_cod_aluno'], $matricula['aprovado'],
-                                                   NULL, NULL, NULL, $matricula['ano'], $matricula['ultima_matricula'], NULL, NULL, NULL, NULL, $matricula['ref_cod_curso'], NULL, NULL,
-                                                   NULL, $dataSaidaMatricula, NULL);
-        $matricula_get->edita();
-      }
+        $enturmacao = new clsPmieducarMatriculaTurma();
+        $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
+        $enturmacao->ref_cod_turma = $this->ref_cod_turma;
+        $enturmacao->sequencial = $this->sequencial;
+        $enturmacao->ref_usuario_exc = $this->pessoa_logada;
+        $excluiu = $enturmacao->excluir();
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_matricula_historico_lst.php?ref_cod_matricula='.$this->ref_cod_matricula);
+            die();
 
-      $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header( "Location: educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
-      die();
-      return true;
+            return true;
+        }
+
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+
+        return false;
     }
-
-    $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-    return false;
-  }
-
-  function Excluir()
-  {
-    @session_start();
-     $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $enturmacao = new clsPmieducarMatriculaTurma();
-    $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
-    $enturmacao->ref_cod_turma = $this->ref_cod_turma;
-    $enturmacao->sequencial = $this->sequencial;
-    $enturmacao->ref_usuario_exc = $this->pessoa_logada;
-    $excluiu = $enturmacao->excluir();
-    if( $excluiu )
-    {
-      $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header( "Location: educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
-      die();
-      return true;
-    }
-
-    $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-    return false;
-  }
 }
 
 // cria uma extensao da classe base
@@ -252,7 +279,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

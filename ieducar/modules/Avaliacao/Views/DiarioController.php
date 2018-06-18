@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -40,60 +45,65 @@ require_once 'Portabilis/Business/Professor.php';
  * DiarioController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
-  protected $_titulo     = 'Lan&ccedil;amento por turma';
-  protected $_processoAp = 642;
+    protected $_titulo     = 'Lan&ccedil;amento por turma';
+    protected $_processoAp = 642;
 
-  public function Gerar() {
+    public function Gerar()
+    {
+        $userId        = Portabilis_Utils_User::currentUserId();
+        $componenteRequired = $isProfessor   = Portabilis_Business_Professor::isProfessor(false, $userId);
 
-    $userId        = Portabilis_Utils_User::currentUserId();
-    $componenteRequired = $isProfessor   = Portabilis_Business_Professor::isProfessor(false, $userId);
+        $this->inputsHelper()->input('ano');
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa']);
+        $this->inputsHelper()->dynamic(['componenteCurricularForDiario'], ['required' => $componenteRequired]);
+        $this->inputsHelper()->dynamic(['matricula'], ['required' => false ]);
 
-    $this->inputsHelper()->input('ano');
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
-    $this->inputsHelper()->dynamic(array('componenteCurricularForDiario'), array('required' => $componenteRequired));
-    $this->inputsHelper()->dynamic(array('matricula'), array('required' => FALSE ));
+        $navegacaoTab = ['1' => 'Horizontal(padr&atilde;o)',
+                          '2' => 'Vertical',];
 
-    $navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
-                          '2' => 'Vertical',);
-                             
-    $options      = array('label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
+        $options      = ['label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
                           'resources' => $navegacaoTab,
                           'required'  => false,
                           'inline'    => true,
-                          'value'     => $navegacaoTab[1]);
+                          'value'     => $navegacaoTab[1]];
 
-    $this->inputsHelper()->select('navegacao_tab', $options);
+        $this->inputsHelper()->select('navegacao_tab', $options);
 
-    $this->inputsHelper()->hidden('mostrar_botao_replicar_todos', array('value' => $teste = $GLOBALS['coreExt']['Config']->app->faltas_notas->mostrar_botao_replicar));
+        $this->inputsHelper()->hidden('mostrar_botao_replicar_todos', ['value' => $teste = $GLOBALS['coreExt']['Config']->app->faltas_notas->mostrar_botao_replicar]);
 
-    $this->loadResourceAssets($this->getDispatcher());
-  }
+        $this->loadResourceAssets($this->getDispatcher());
+    }
 
-  protected function _preRender(){
+    protected function _preRender()
+    {
+        parent::_preRender();
 
-    parent::_preRender();
+        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+        $localizacao = new LocalizacaoSistema();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Lan&ccedil;amento de notas"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }  
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Lan&ccedil;amento de notas'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar(), true);
+    }
 }
 ?>
 

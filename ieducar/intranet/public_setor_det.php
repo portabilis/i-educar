@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package   Ied_Public
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -38,83 +43,91 @@ require_once 'include/public/clsPublicSetorBai.inc.php';
  * clsIndexBase class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Setor');
-    $this->processoAp = 760;
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Setor');
+        $this->processoAp = 760;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
 {
-  var $titulo;
+    public $titulo;
 
-  var $idsetorbai;
-  var $nome;
+    public $idsetorbai;
+    public $nome;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    $this->titulo = 'Setor - Detalhe';
-
-    $this->idsetorbai = $_GET['idsetorbai'];
-
-    $tmp_obj = new clsPublicSetorBai($this->idsetorbai);
-    $det_setor_bai = $tmp_obj->detalhe();
-
-    if (! $det_setor_bai) {
-      header('Location: public_setor_lst.php');
-      die();
-    }
-    else {
-      $registro = $det_setor_bai;
-    }
-
-    if ($registro['nome']) {
-      $this->addDetalhe(array('Setor', $registro['nome']));
-    }
-
-    $obj_permissao = new clsPermissoes();
-
-    if($obj_permissao->permissao_cadastra(760, $this->pessoa_logada,7,null,true))
+    public function Gerar()
     {
-      $this->url_novo   = 'public_setor_cad.php';
-      $this->url_editar = 'public_setor_cad.php?idsetorbai=' . $registro['idsetorbai'];
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
+
+        $this->titulo = 'Setor - Detalhe';
+
+        $this->idsetorbai = $_GET['idsetorbai'];
+
+        $tmp_obj = new clsPublicSetorBai($this->idsetorbai);
+        $det_setor_bai = $tmp_obj->detalhe();
+
+        if (! $det_setor_bai) {
+            header('Location: public_setor_lst.php');
+            die();
+        } else {
+            $registro = $det_setor_bai;
+        }
+
+        if ($registro['nome']) {
+            $this->addDetalhe(['Setor', $registro['nome']]);
+        }
+
+        $obj_permissao = new clsPermissoes();
+
+        if ($obj_permissao->permissao_cadastra(760, $this->pessoa_logada, 7, null, true)) {
+            $this->url_novo   = 'public_setor_cad.php';
+            $this->url_editar = 'public_setor_cad.php?idsetorbai=' . $registro['idsetorbai'];
+        }
+
+        $this->url_cancelar = 'public_setor_lst.php';
+        $this->largura      = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''                                  => 'Detalhe do setor'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->url_cancelar = 'public_setor_lst.php';
-    $this->largura      = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""                                  => "Detalhe do setor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
 }
 
 // Instancia objeto de página

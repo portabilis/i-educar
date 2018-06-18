@@ -14,8 +14,8 @@ class clsIndexBase extends clsBase
     public function Formular()
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
-        $this->processoAp = "561";
-        $this->addEstilo("localizacaoSistema");
+        $this->processoAp = '561';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -174,55 +174,54 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
 
-        $this->cod_escola = $_GET["cod_escola"];
+        $this->cod_escola = $_GET['cod_escola'];
 
         $this->sem_cnpj = false;
 
         // cadastro Novo sem CNPJ
-        if (is_numeric($_POST["sem_cnpj"]) && !$this->cod_escola) {
+        if (is_numeric($_POST['sem_cnpj']) && !$this->cod_escola) {
             $this->sem_cnpj = true;
-            $retorno = "Novo";
+            $retorno = 'Novo';
         } // cadastro Novo com CNPJ
-        elseif ($_POST["cnpj"]) {
+        elseif ($_POST['cnpj']) {
             $this->com_cnpj = true;
             $obj_juridica = new clsPessoaJuridica();
-            $lst_juridica = $obj_juridica->lista(idFederal2int($_POST["cnpj"]));
+            $lst_juridica = $obj_juridica->lista(idFederal2int($_POST['cnpj']));
             // caso exista o CNPJ na BD
             if (is_array($lst_juridica)) {
-                $retorno = "Editar";
+                $retorno = 'Editar';
                 $det_juridica = array_shift($lst_juridica);
-                $this->ref_idpes = $det_juridica["idpes"];
+                $this->ref_idpes = $det_juridica['idpes'];
                 $obj = new clsPmieducarEscola();
                 $lst_escola = $obj->lista(null, null, null, null, null, null, $this->ref_idpes, null, null, null, 1);
                 if (is_array($lst_escola)) {
                     $registro = array_shift($lst_escola);
-                    $this->cod_escola = $registro["cod_escola"];
+                    $this->cod_escola = $registro['cod_escola'];
                 }
             } // caso nao exista o CNPJ
             else {
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         } // cadastro Editar
-        if (is_numeric($this->cod_escola) && !$_POST["passou"]) {
+        if (is_numeric($this->cod_escola) && !$_POST['passou']) {
             $obj = new clsPmieducarEscola($this->cod_escola);
             $registro = $obj->detalhe();
 
-            if ($registro["ref_idpes"]) {
+            if ($registro['ref_idpes']) {
                 $this->com_cnpj = true;
             } else {
                 $this->sem_cnpj = true;
             }
 
             if ($registro) {
-
                 foreach ($registro as $campo => $val) {
                     // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -242,14 +241,14 @@ class indice extends clsCadastro
                 $this->fantasia = $registro['nome'];
                 $objJuridica = new clsPessoaJuridica($this->ref_idpes);
                 $det = $objJuridica->detalhe();
-                $this->cnpj = int2CNPJ($det["cnpj"]);
+                $this->cnpj = int2CNPJ($det['cnpj']);
                 $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
-                $retorno = "Editar";
+                $retorno = 'Editar';
 
-                if ($registro["tipo_cadastro"] == 1) {
+                if ($registro['tipo_cadastro'] == 1) {
                     $objJuridica = new clsPessoaJuridica(false, idFederal2int($this->cnpj));
                     $det = $objJuridica->detalhe();
-                    $objPessoa = new clsPessoaFj($det["idpes"]);
+                    $objPessoa = new clsPessoaFj($det['idpes']);
                     list($this->endereco,
                         $this->cep,
                         $this->ref_bairro,
@@ -273,31 +272,33 @@ class indice extends clsCadastro
                         $this->sigla_uf,
                         $this->complemento,
                         $this->numero,
-                        $this->andar) = $objPessoa->queryRapida($det["idpes"],
-                        "endereco",
-                        "cep",
-                        "bairro",
-                        "ddd_1",
-                        "fone_1",
-                        "ddd_2",
-                        "fone_2",
-                        "ddd_mov",
-                        "fone_mov",
-                        "ddd_fax",
-                        "fone_fax",
-                        "email",
-                        "url",
-                        "tipo",
-                        "cidade",
-                        "bairro",
-                        "logradouro",
-                        "idlog",
-                        "idbai",
-                        "idtlog",
-                        "sigla_uf",
-                        "complemento",
-                        "numero",
-                        "andar");
+                        $this->andar) = $objPessoa->queryRapida(
+                            $det['idpes'],
+                        'endereco',
+                        'cep',
+                        'bairro',
+                        'ddd_1',
+                        'fone_1',
+                        'ddd_2',
+                        'fone_2',
+                        'ddd_mov',
+                        'fone_mov',
+                        'ddd_fax',
+                        'fone_fax',
+                        'email',
+                        'url',
+                        'tipo',
+                        'cidade',
+                        'bairro',
+                        'logradouro',
+                        'idlog',
+                        'idbai',
+                        'idtlog',
+                        'sigla_uf',
+                        'complemento',
+                        'numero',
+                        'andar'
+                        );
                 } else {
                     $objEscolaComplemento = new clsPmieducarEscolaComplemento($this->cod_escola);
                     $detComplemento = $objEscolaComplemento->detalhe();
@@ -315,10 +316,10 @@ class indice extends clsCadastro
                     $this->p_telefone_fax = $this->fax;
                 }
             }
-        } elseif ($_POST['cnpj'] && !$_POST["passou"]) {
+        } elseif ($_POST['cnpj'] && !$_POST['passou']) {
             $objJuridica = new clsPessoaJuridica(false, idFederal2int($_POST['cnpj']));
             $det = $objJuridica->detalhe();
-            $objPessoa = new clsPessoaFj($det["idpes"]);
+            $objPessoa = new clsPessoaFj($det['idpes']);
             list($this->endereco,
                 $this->cep,
                 $this->ref_bairro,
@@ -342,31 +343,33 @@ class indice extends clsCadastro
                 $this->sigla_uf,
                 $this->complemento,
                 $this->numero,
-                $this->andar) = $objPessoa->queryRapida($det["idpes"],
-                "endereco",
-                "cep",
-                "bairro",
-                "ddd_1",
-                "fone_1",
-                "ddd_2",
-                "fone_2",
-                "ddd_mov",
-                "fone_mov",
-                "ddd_fax",
-                "fone_fax",
-                "email",
-                "url",
-                "tipo",
-                "cidade",
-                "bairro",
-                "logradouro",
-                "idlog",
-                "idbai",
-                "idtlog",
-                "sigla_uf",
-                "complemento",
-                "numero",
-                "andar");
+                $this->andar) = $objPessoa->queryRapida(
+                    $det['idpes'],
+                'endereco',
+                'cep',
+                'bairro',
+                'ddd_1',
+                'fone_1',
+                'ddd_2',
+                'fone_2',
+                'ddd_mov',
+                'fone_mov',
+                'ddd_fax',
+                'fone_fax',
+                'email',
+                'url',
+                'tipo',
+                'cidade',
+                'bairro',
+                'logradouro',
+                'idlog',
+                'idbai',
+                'idtlog',
+                'sigla_uf',
+                'complemento',
+                'numero',
+                'andar'
+                );
         }
 
         if ($this->cnpj_mantenedora_principal) {
@@ -374,48 +377,49 @@ class indice extends clsCadastro
         }
 
         if (is_string($this->abastecimento_agua)) {
-            $this->abastecimento_agua = explode(',', str_replace(array('{', "}"), '', $this->abastecimento_agua));
+            $this->abastecimento_agua = explode(',', str_replace(['{', '}'], '', $this->abastecimento_agua));
         }
 
         if (is_string($this->abastecimento_energia)) {
-            $this->abastecimento_energia = explode(',', str_replace(array('{', "}"), '', $this->abastecimento_energia));
+            $this->abastecimento_energia = explode(',', str_replace(['{', '}'], '', $this->abastecimento_energia));
         }
 
         if (is_string($this->esgoto_sanitario)) {
-            $this->esgoto_sanitario = explode(',', str_replace(array('{', "}"), '', $this->esgoto_sanitario));
+            $this->esgoto_sanitario = explode(',', str_replace(['{', '}'], '', $this->esgoto_sanitario));
         }
 
         if (is_string($this->destinacao_lixo)) {
-            $this->destinacao_lixo = explode(',', str_replace(array('{', "}"), '', $this->destinacao_lixo));
+            $this->destinacao_lixo = explode(',', str_replace(['{', '}'], '', $this->destinacao_lixo));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
-            $this->mantenedora_escola_privada = explode(',', str_replace(array('{', "}"), '', $this->mantenedora_escola_privada));
+            $this->mantenedora_escola_privada = explode(',', str_replace(['{', '}'], '', $this->mantenedora_escola_privada));
         }
 
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_det.php?cod_escola={$registro['cod_escola']}" : 'educar_escola_lst.php';
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "{$nomeMenu} escola",
-        ));
+        $localizacao->entradaCaminhos([
+            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
+            'educar_index.php' => 'Escola',
+            '' => "{$nomeMenu} escola",
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
-        $this->nome_url_cancelar = "Cancelar";
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
     public function Gerar()
     {
         // assets
-        $scripts = array(
+        $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Cadastro/Assets/Javascripts/Escola.js',
-        );
+        ];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-        $styles = array('/modules/Cadastro/Assets/Stylesheets/Escola.css');
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/Escola.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $obj_permissoes = new clsPermissoes();
@@ -429,19 +433,19 @@ class indice extends clsCadastro
             $parametros->setSubmit(1);
             $parametros->setPessoa('J');
             $parametros->setPessoaCampo('sem_cnpj');
-            $parametros->setPessoaNovo("S");
-            $parametros->setPessoaCPF("N");
+            $parametros->setPessoaNovo('S');
+            $parametros->setPessoaCPF('N');
             $parametros->setPessoaTela('window');
-            $this->campoOculto("sem_cnpj", "");
+            $this->campoOculto('sem_cnpj', '');
             $parametros->setCodSistema(13);
-            $parametros->adicionaCampoTexto("cnpj", "cnpj");
-            $this->campoCnpjPesq("cnpj", "CNPJ", $this->cnpj, "pesquisa_pessoa_lst.php", $parametros->serializaCampos(), true);
+            $parametros->adicionaCampoTexto('cnpj', 'cnpj');
+            $this->campoCnpjPesq('cnpj', 'CNPJ', $this->cnpj, 'pesquisa_pessoa_lst.php', $parametros->serializaCampos(), true);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
-            $this->array_botao = array("Continuar", "Cancelar");
-            $this->array_botao_url_script = array("obj = document.getElementById('cnpj');if(obj.value != '' ) { acao(); } else { acao(); }", "go('educar_escola_lst.php');");
+            $this->array_botao = ['Continuar', 'Cancelar'];
+            $this->array_botao_url_script = ['obj = document.getElementById(\'cnpj\');if(obj.value != \'\' ) { acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
-            $this->inputsHelper()->integer('escola_inep_id', array('label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números'));
+            $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
             if ($_POST) {
                 foreach ($_POST as $campo => $val) {
@@ -452,47 +456,47 @@ class indice extends clsCadastro
             }
 
             if ($this->sem_cnpj) {
-                $this->campoOculto("sem_cnpj", $this->sem_cnpj);
-                $this->p_ddd_telefone_1 = ($this->p_ddd_telefone_1 == null) ? "" : $this->p_ddd_telefone_1;
-                $this->p_ddd_telefone_fax = ($this->p_ddd_telefone_fax == null) ? "" : $this->p_ddd_telefone_fax;
+                $this->campoOculto('sem_cnpj', $this->sem_cnpj);
+                $this->p_ddd_telefone_1 = ($this->p_ddd_telefone_1 == null) ? '' : $this->p_ddd_telefone_1;
+                $this->p_ddd_telefone_fax = ($this->p_ddd_telefone_fax == null) ? '' : $this->p_ddd_telefone_fax;
 
                 if ($this->ref_idpes) {
                     $objTemp = new clsPessoaJuridica($this->ref_idpes);
                     $detalhe = $objTemp->detalhe();
                 }
-                $this->campoOculto("cod_escola", $this->cod_escola);
-                $this->campoTexto("fantasia", "Escola", $this->fantasia, 30, 255, true);
-                $this->campoTexto("sigla", "Sigla", $this->sigla, 30, 255, true);
+                $this->campoOculto('cod_escola', $this->cod_escola);
+                $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
+                $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 255, true);
                 $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
                 if ($nivel == 1) {
-                    $cabecalhos[] = "Instituicao";
+                    $cabecalhos[] = 'Instituicao';
                     $objInstituicao = new clsPmieducarInstituicao();
-                    $opcoes = array("" => "Selecione");
-                    $objInstituicao->setOrderby("nm_instituicao ASC");
+                    $opcoes = ['' => 'Selecione'];
+                    $objInstituicao->setOrderby('nm_instituicao ASC');
                     $lista = $objInstituicao->lista();
 
                     if (is_array($lista)) {
                         foreach ($lista as $linha) {
-                            $opcoes[$linha["cod_instituicao"]] = $linha["nm_instituicao"];
+                            $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                         }
                     }
 
-                    $this->campoLista("ref_cod_instituicao", "Instituição", $opcoes, $this->ref_cod_instituicao);
+                    $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
                 } else {
                     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
                     if ($this->ref_cod_instituicao) {
-                        $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
+                        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
                     } else {
-                        die("Usuário não é do nivel poli-institucional e não possui uma instituição");
+                        die('Usuário não é do nivel poli-institucional e não possui uma instituição');
                     }
                 }
 
-                $opcoes = array("" => "Selecione");
-                if (class_exists("clsPmieducarEscolaRedeEnsino")) {
+                $opcoes = ['' => 'Selecione'];
+                if (class_exists('clsPmieducarEscolaRedeEnsino')) {
                     // EDITAR
-                    $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
+                    $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
 
                     if ($this->ref_cod_instituicao) {
                         $objTemp = new clsPmieducarEscolaRedeEnsino();
@@ -510,20 +514,20 @@ class indice extends clsCadastro
                     }
                 } else {
                     echo "<!--\nErro\nClasse clsPmieducarEscolaRedeEnsino nao encontrada\n-->";
-                    $opcoes = array("" => "Erro na geracao");
+                    $opcoes = ['' => 'Erro na geracao'];
                 }
 
-                $this->campoLista("ref_cod_escola_rede_ensino", "Rede Ensino", $opcoes, $this->ref_cod_escola_rede_ensino, "", false, "", $script);
+                $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
                 $zonas = $zonas->getEnums();
 
-                $options = array(
+                $options = [
                     'label' => 'Zona localização',
                     'value' => $this->zona_localizacao,
                     'resources' => $zonas,
                     'required' => true,
-                );
+                ];
 
                 $this->inputsHelper()->select('zona_localizacao', $options);
 
@@ -531,21 +535,21 @@ class indice extends clsCadastro
                     $this->cep = int2CEP($this->cep);
                 }
 
-                $this->campoCep("cep", "CEP", $this->cep, true, "-", false, false);
-                $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true);
-                $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "20", true);
-                $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true);
-                $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false);
-                $this->campoNumero("numero", "Número", $this->numero, "6", "6", true);
-                $this->campoTexto("p_ddd_telefone_1", "DDD Telefone 1", $this->p_ddd_telefone_1, "2", "2", false);
-                $this->campoTexto("p_telefone_1", "Telefone 1", $this->p_telefone_1, "10", "15", false);
-                $this->campoTexto("p_ddd_telefone_fax", "DDD Fax", $this->p_ddd_telefone_fax, "2", "2", false);
-                $this->campoTexto("p_telefone_fax", "Fax", $this->p_telefone_fax, "10", "15", false);
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoCep('cep', 'CEP', $this->cep, true, '-', false, false);
+                $this->campoTexto('cidade', 'Cidade', $this->cidade, '50', '255', true);
+                $this->campoTexto('bairro', 'Bairro', $this->bairro, '50', '20', true);
+                $this->campoTexto('logradouro', 'Logradouro', $this->logradouro, '50', '255', true);
+                $this->campoTexto('complemento', 'Complemento', $this->complemento, '22', '20', false);
+                $this->campoNumero('numero', 'Número', $this->numero, '6', '6', true);
+                $this->campoTexto('p_ddd_telefone_1', 'DDD Telefone 1', $this->p_ddd_telefone_1, '2', '2', false);
+                $this->campoTexto('p_telefone_1', 'Telefone 1', $this->p_telefone_1, '10', '15', false);
+                $this->campoTexto('p_ddd_telefone_fax', 'DDD Fax', $this->p_ddd_telefone_fax, '2', '2', false);
+                $this->campoTexto('p_telefone_fax', 'Fax', $this->p_telefone_fax, '10', '15', false);
+                $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '255', false);
             }
 
             if ($this->com_cnpj) {
-                $this->campoOculto("com_cnpj", $this->com_cnpj);
+                $this->campoOculto('com_cnpj', $this->com_cnpj);
 
                 if (!$this->cod_escola) {
                     $this->cnpj = urldecode($_POST['cnpj']);
@@ -555,10 +559,10 @@ class indice extends clsCadastro
 
                 $objJuridica = new clsPessoaJuridica(false, idFederal2int($this->cnpj));
                 $det = $objJuridica->detalhe();
-                $this->ref_idpes = $det["idpes"];
+                $this->ref_idpes = $det['idpes'];
 
                 if (!$this->fantasia) {
-                    $this->fantasia = $det["fantasia"];
+                    $this->fantasia = $det['fantasia'];
                 }
 
                 if ($this->passou) {
@@ -566,42 +570,42 @@ class indice extends clsCadastro
                     $this->cnpj = int2IdFederal($this->cnpj);
                 }
 
-                $this->campoRotulo("cnpj_", "CNPJ", $this->cnpj);
-                $this->campoOculto("cnpj", idFederal2int($this->cnpj));
-                $this->campoOculto("ref_idpes", $this->ref_idpes);
-                $this->campoOculto("cod_escola", $this->cod_escola);
-                $this->campoTexto("fantasia", "Escola", $this->fantasia, 30, 255, true);
-                $this->campoTexto("sigla", "Sigla", $this->sigla, 30, 20, true);
+                $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
+                $this->campoOculto('cnpj', idFederal2int($this->cnpj));
+                $this->campoOculto('ref_idpes', $this->ref_idpes);
+                $this->campoOculto('cod_escola', $this->cod_escola);
+                $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
+                $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 20, true);
                 $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
                 if ($nivel == 1) {
-                    $cabecalhos[] = "Instituicao";
+                    $cabecalhos[] = 'Instituicao';
                     $objInstituicao = new clsPmieducarInstituicao();
-                    $opcoes = array("" => "Selecione");
-                    $objInstituicao->setOrderby("nm_instituicao ASC");
+                    $opcoes = ['' => 'Selecione'];
+                    $objInstituicao->setOrderby('nm_instituicao ASC');
                     $lista = $objInstituicao->lista();
 
                     if (is_array($lista)) {
                         foreach ($lista as $linha) {
-                            $opcoes[$linha["cod_instituicao"]] = $linha["nm_instituicao"];
+                            $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                         }
                     }
 
-                    $this->campoLista("ref_cod_instituicao", "Instituicao", $opcoes, $this->ref_cod_instituicao);
+                    $this->campoLista('ref_cod_instituicao', 'Instituicao', $opcoes, $this->ref_cod_instituicao);
                 } else {
                     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
                     if ($this->ref_cod_instituicao) {
-                        $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
+                        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
                     } else {
-                        die("Usuário não é do nivel poli-institucional e não possui uma instituição");
+                        die('Usuário não é do nivel poli-institucional e não possui uma instituição');
                     }
                 }
 
-                $opcoes = array("" => "Selecione");
-                if (class_exists("clsPmieducarEscolaRedeEnsino")) {
+                $opcoes = ['' => 'Selecione'];
+                if (class_exists('clsPmieducarEscolaRedeEnsino')) {
                     // EDITAR
-                    $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
+                    $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
                     if ($this->ref_cod_instituicao) {
                         $objTemp = new clsPmieducarEscolaRedeEnsino();
                         $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
@@ -618,28 +622,28 @@ class indice extends clsCadastro
                     }
                 } else {
                     echo "<!--\nErro\nClasse clsPmieducarEscolaRedeEnsino nao encontrada\n-->";
-                    $opcoes = array("" => "Erro na geracao");
+                    $opcoes = ['' => 'Erro na geracao'];
                 }
 
-                $this->campoLista("ref_cod_escola_rede_ensino", "Rede Ensino", $opcoes, $this->ref_cod_escola_rede_ensino, "", false, "", $script);
-                $opcoes = array("" => "Selecione");
+                $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
+                $opcoes = ['' => 'Selecione'];
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
                 $zonas = $zonas->getEnums();
 
-                $options = array(
+                $options = [
                     'label' => 'Zona localização',
                     'value' => $this->zona_localizacao,
                     'resources' => $zonas,
                     'required' => true,
-                );
+                ];
 
                 $this->inputsHelper()->select('zona_localizacao', $options);
 
                 // Detalhes do Endereco
                 $objUf = new clsUf();
                 $listauf = $objUf->lista();
-                $listaEstado = array("" => "Selecione");
+                $listaEstado = ['' => 'Selecione'];
 
                 if ($listauf) {
                     foreach ($listauf as $uf) {
@@ -649,7 +653,7 @@ class indice extends clsCadastro
 
                 $objTipoLog = new clsTipoLogradouro();
                 $listaTipoLog = $objTipoLog->lista();
-                $listaTLog = array("" => "Selecione");
+                $listaTLog = ['' => 'Selecione'];
 
                 if ($listaTipoLog) {
                     foreach ($listaTipoLog as $tipoLog) {
@@ -657,40 +661,40 @@ class indice extends clsCadastro
                     }
                 }
 
-                $this->campoOculto("isEnderecoExterno", $this->isEnderecoExterno);
-                $this->campoOculto("cep_", $this->cep_);
-                $this->campoOculto("sigla_uf_", $this->sigla_uf_);
-                $this->campoOculto("cidade_", $this->cidade_);
-                $this->campoOculto("bairro_", $this->bairro_);
-                $this->campoOculto("idbai", $this->idbai);
-                $this->campoOculto("logradouro_", $this->logradouro_);
-                $this->campoOculto("idlog", $this->idlog);
-                $this->campoOculto("idtlog_", $this->idtlog_);
+                $this->campoOculto('isEnderecoExterno', $this->isEnderecoExterno);
+                $this->campoOculto('cep_', $this->cep_);
+                $this->campoOculto('sigla_uf_', $this->sigla_uf_);
+                $this->campoOculto('cidade_', $this->cidade_);
+                $this->campoOculto('bairro_', $this->bairro_);
+                $this->campoOculto('idbai', $this->idbai);
+                $this->campoOculto('logradouro_', $this->logradouro_);
+                $this->campoOculto('idlog', $this->idlog);
+                $this->campoOculto('idtlog_', $this->idtlog_);
                 $disabled = $this->isEnderecoExterno ? false : true;
 
                 if ($this->idlog && $this->idbai && $this->cep && $this->ref_idpes) {
-                    $this->campoOculto("cep_", $this->cep);
+                    $this->campoOculto('cep_', $this->cep);
                     $this->cep_ = int2CEP($this->cep);
-                    $this->campoCep("cep", "CEP", $this->cep_, true, "-", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">", $disabled);
-                    $this->campoLista("sigla_uf", "Estado", $listaEstado, $this->sigla_uf, false, false, false, false, true, true);
-                    $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true, false, false, "", "", "", "onKeyUp", true);
-                    $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "255", true, false, false, "", "", "", "onKeyUp", true);
-                    $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, true, true);
-                    $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", true);
-                    $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false);
-                    $this->campoNumero("numero", "Número", $this->numero, "6", "6", false);
-                    $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
+                    $this->campoCep('cep', 'CEP', $this->cep_, true, '-', "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">", $disabled);
+                    $this->campoLista('sigla_uf', 'Estado', $listaEstado, $this->sigla_uf, false, false, false, false, true, true);
+                    $this->campoTexto('cidade', 'Cidade', $this->cidade, '50', '255', true, false, false, '', '', '', 'onKeyUp', true);
+                    $this->campoTexto('bairro', 'Bairro', $this->bairro, '50', '255', true, false, false, '', '', '', 'onKeyUp', true);
+                    $this->campoLista('idtlog', 'Tipo Logradouro', $listaTLog, $this->idtlog, false, false, false, false, true, true);
+                    $this->campoTexto('logradouro', 'Logradouro', $this->logradouro, '50', '255', true, false, false, '', '', '', 'onKeyUp', true);
+                    $this->campoTexto('complemento', 'Complemento', $this->complemento, '22', '20', false, false);
+                    $this->campoNumero('numero', 'Número', $this->numero, '6', '6', false);
+                    $this->campoNumero('andar', 'Andar', $this->andar, '2', '2', false);
                 } elseif ($this->ref_idpes && $this->cep) {
                     $this->cep = (is_numeric($this->cep)) ? int2CEP($this->cep) : $this->cep;
-                    $this->campoCep("cep", "CEP", $this->cep, true, "-", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">");
-                    $this->campoLista("sigla_uf", "Estado", $listaEstado, $this->sigla_uf, "", false, "", "", false, true);
-                    $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "255", true, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, "", false, "", "", false, true);
-                    $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoNumero("numero", "Número", $this->numero, 6, 6, false, "", "");
-                    $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
+                    $this->campoCep('cep', 'CEP', $this->cep, true, '-', "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">");
+                    $this->campoLista('sigla_uf', 'Estado', $listaEstado, $this->sigla_uf, '', false, '', '', false, true);
+                    $this->campoTexto('cidade', 'Cidade', $this->cidade, '50', '255', true, false, false, '', '', '', 'onKeyUp', false);
+                    $this->campoTexto('bairro', 'Bairro', $this->bairro, '50', '255', true, false, false, '', '', '', 'onKeyUp', false);
+                    $this->campoLista('idtlog', 'Tipo Logradouro', $listaTLog, $this->idtlog, '', false, '', '', false, true);
+                    $this->campoTexto('logradouro', 'Logradouro', $this->logradouro, '50', '255', true, false, false, '', '', '', 'onKeyUp', false);
+                    $this->campoTexto('complemento', 'Complemento', $this->complemento, '22', '20', false, false, false, '', '', '', 'onKeyUp', false);
+                    $this->campoNumero('numero', 'Número', $this->numero, 6, 6, false, '', '');
+                    $this->campoNumero('andar', 'Andar', $this->andar, '2', '2', false);
                 } else {
                     if (!$this->isEnderecoExterno) {
                         $obj_bairro = new clsBairro($this->idbai);
@@ -698,20 +702,20 @@ class indice extends clsCadastro
                         $obj_bairro_det = $obj_bairro->detalhe();
 
                         if ($obj_bairro_det) {
-                            $this->bairro = $obj_bairro_det["nome"];
+                            $this->bairro = $obj_bairro_det['nome'];
                         }
 
                         $obj_log = new clsLogradouro($this->idlog);
                         $obj_log_det = $obj_log->detalhe();
 
                         if ($obj_log_det) {
-                            $this->logradouro = $obj_log_det["nome"];
-                            $this->idtlog = $obj_log_det["idtlog"]->idtlog;
-                            $obj_mun = new clsMunicipio($obj_log_det["idmun"]);
+                            $this->logradouro = $obj_log_det['nome'];
+                            $this->idtlog = $obj_log_det['idtlog']->idtlog;
+                            $obj_mun = new clsMunicipio($obj_log_det['idmun']);
                             $det_mun = $obj_mun->detalhe();
 
                             if ($det_mun) {
-                                $this->cidade = strtoupper(ucfirst(strtolower($det_mun["nome"])));
+                                $this->cidade = strtoupper(ucfirst(strtolower($det_mun['nome'])));
                             }
 
                             $this->sigla_uf = $this->sigla_uf_ = $det_mun['sigla_uf']->sigla_uf;
@@ -720,85 +724,85 @@ class indice extends clsCadastro
                         $this->cep_ = $this->cep;
                     }
 
-                    $this->campoCep("cep", "CEP", $this->cep_, true, "-", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">", $disabled);
-                    $this->campoLista("sigla_uf", "Estado", $listaEstado, $this->sigla_uf, false, false, false, false, $disabled, true);
-                    $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true, false, false, "", "", "", "", $disabled, true);
-                    $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "20", true, false, false, "", "", "", "", $disabled, true);
-                    $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, $disabled, true);
-                    $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "", $disabled, true);
-                    $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false, false);
-                    $this->campoNumero("numero", "N&uacute;mero", $this->numero, "6", "6", false);
-                    $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
+                    $this->campoCep('cep', 'CEP', $this->cep_, true, '-', "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">", $disabled);
+                    $this->campoLista('sigla_uf', 'Estado', $listaEstado, $this->sigla_uf, false, false, false, false, $disabled, true);
+                    $this->campoTexto('cidade', 'Cidade', $this->cidade, '50', '255', true, false, false, '', '', '', '', $disabled, true);
+                    $this->campoTexto('bairro', 'Bairro', $this->bairro, '50', '20', true, false, false, '', '', '', '', $disabled, true);
+                    $this->campoLista('idtlog', 'Tipo Logradouro', $listaTLog, $this->idtlog, false, false, false, false, $disabled, true);
+                    $this->campoTexto('logradouro', 'Logradouro', $this->logradouro, '50', '255', true, false, false, '', '', '', '', $disabled, true);
+                    $this->campoTexto('complemento', 'Complemento', $this->complemento, '22', '20', false, false, false);
+                    $this->campoNumero('numero', 'N&uacute;mero', $this->numero, '6', '6', false);
+                    $this->campoNumero('andar', 'Andar', $this->andar, '2', '2', false);
                 }
 
-                $this->campoTexto("p_http", "Site", $this->p_http, "50", "255", false);
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoTexto('p_http', 'Site', $this->p_http, '50', '255', false);
+                $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '255', false);
                 $this->inputTelefone('1', 'Telefone 1');
                 $this->inputTelefone('2', 'Telefone 2');
                 $this->inputTelefone('mov', 'Celular');
                 $this->inputTelefone('fax', 'Fax');
                 $this->passou = true;
-                $this->campoOculto("passou", $this->passou);
+                $this->campoOculto('passou', $this->passou);
             }
-            $this->inputsHelper()->numeric('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
-            $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
-            $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
-            $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
+            $this->inputsHelper()->numeric('latitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-']);
+            $this->inputsHelper()->numeric('longitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-']);
+            $this->campoCheck('bloquear_lancamento_diario_anos_letivos_encerrados', 'Bloquear lançamento no diário para anos letivos encerrados', $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+            $this->campoCheck('utiliza_regra_diferenciada', 'Utiliza regra diferenciada', dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
-            $resources = array(1 => 'Em atividade',
+            $resources = [1 => 'Em atividade',
                 2 => 'Paralisada',
-                3 => 'Extinta');
-            $options = array('label' => 'Situação de funcionamento', 'resources' => $resources, 'value' => $this->situacao_funcionamento);
+                3 => 'Extinta'];
+            $options = ['label' => 'Situação de funcionamento', 'resources' => $resources, 'value' => $this->situacao_funcionamento];
             $this->inputsHelper()->select('situacao_funcionamento', $options);
 
-            $resources = array(3 => 'Municipal',
+            $resources = [3 => 'Municipal',
                 1 => 'Federal',
                 2 => 'Estadual',
-                4 => 'Privada');
-            $options = array('label' => 'Dependência administrativa', 'resources' => $resources, 'value' => $this->dependencia_administrativa);
+                4 => 'Privada'];
+            $options = ['label' => 'Dependência administrativa', 'resources' => $resources, 'value' => $this->dependencia_administrativa];
             $this->inputsHelper()->select('dependencia_administrativa', $options);
 
-            $resources = array(0 => 'Não',
+            $resources = [0 => 'Não',
                 1 => 'Sim',
-                2 => 'Em tramitação');
-            $options = array('label' => 'Regulamentação/ Autorização no conselho ou órgão público de educação', 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70);
+                2 => 'Em tramitação'];
+            $options = ['label' => 'Regulamentação/ Autorização no conselho ou órgão público de educação', 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70];
             $this->inputsHelper()->select('regulamentacao', $options);
 
-            $options = array('label' => 'Ato de criação', 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
+            $options = ['label' => 'Ato de criação', 'value' => $this->ato_criacao, 'size' => 70, 'required' => false];
             $this->inputsHelper()->text('ato_criacao', $options);
 
-            $options = array('label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
+            $options = ['label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false];
             $this->inputsHelper()->text('ato_autorizativo', $options);
 
-            $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
-            $helperOptions = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
-            $options = array('label' => 'Gestor escolar',
+            $hiddenInputOptions = ['options' => ['value' => $this->gestor_id]];
+            $helperOptions = ['objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions];
+            $options = ['label' => 'Gestor escolar',
                 'required' => $obrigarCamposCenso,
-                'size' => 50);
+                'size' => 50];
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
-            $hiddenInputOptions = array('options' => array('value' => $this->secretario_id));
-            $helperOptions = array('objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions);
-            $options = array('label' => 'Secretário escolar',
+            $hiddenInputOptions = ['options' => ['value' => $this->secretario_id]];
+            $helperOptions = ['objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions];
+            $options = ['label' => 'Secretário escolar',
                 'size' => 50,
-                'required' => false);
+                'required' => false];
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
-            $resources = array(1 => 'Diretor',
-                2 => 'Outro cargo');
-            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
+            $resources = [1 => 'Diretor',
+                2 => 'Outro cargo'];
+            $options = ['label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => $obrigarCamposCenso, 'size' => 50];
             $this->inputsHelper()->select('cargo_gestor', $options);
 
-            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
+            $options = ['label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50];
 
             $this->inputsHelper()->text('email_gestor', $options);
 
-            if ($_POST["escola_curso"]) {
-                $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
+            if ($_POST['escola_curso']) {
+                $this->escola_curso = unserialize(urldecode($_POST['escola_curso']));
             }
 
-            if ($_POST["escola_curso_autorizacao"]) {
-                $this->escola_curso_autorizacao = unserialize(urldecode($_POST["escola_curso_autorizacao"]));
+            if ($_POST['escola_curso_autorizacao']) {
+                $this->escola_curso_autorizacao = unserialize(urldecode($_POST['escola_curso_autorizacao']));
             }
 
             if (is_numeric($this->cod_escola) && !$_POST) {
@@ -806,24 +810,24 @@ class indice extends clsCadastro
                 $registros = $obj->lista($this->cod_escola);
                 if ($registros) {
                     foreach ($registros as $campo) {
-                        $this->escola_curso[$campo["ref_cod_curso"]] = $campo["ref_cod_curso"];
-                        $this->escola_curso_autorizacao[$campo["ref_cod_curso"]] = $campo["autorizacao"];
+                        $this->escola_curso[$campo['ref_cod_curso']] = $campo['ref_cod_curso'];
+                        $this->escola_curso_autorizacao[$campo['ref_cod_curso']] = $campo['autorizacao'];
                     }
                 }
             }
 
-            if ($_POST["ref_cod_curso"]) {
-                $this->escola_curso[$_POST["ref_cod_curso"]] = $_POST["ref_cod_curso"];
+            if ($_POST['ref_cod_curso']) {
+                $this->escola_curso[$_POST['ref_cod_curso']] = $_POST['ref_cod_curso'];
 
                 if ($this->autorizacao) {
-                    $this->escola_curso_autorizacao[$_POST["ref_cod_curso"]] = $this->autorizacao;
+                    $this->escola_curso_autorizacao[$_POST['ref_cod_curso']] = $this->autorizacao;
                 }
 
                 unset($this->ref_cod_curso);
             }
 
             $this->campoQuebra();
-            $this->campoOculto("excluir_curso", "");
+            $this->campoOculto('excluir_curso', '');
             unset($aux);
 
             if ($this->escola_curso) {
@@ -835,10 +839,10 @@ class indice extends clsCadastro
                     } else {
                         $obj_curso = new clsPmieducarCurso($curso);
                         $obj_curso_det = $obj_curso->detalhe();
-                        $nm_curso = $obj_curso_det["nm_curso"];
+                        $nm_curso = $obj_curso_det['nm_curso'];
                         $nm_autorizacao = $this->escola_curso_autorizacao[$curso];
-                        $this->campoTextoInv("ref_cod_curso_{$curso}", "", $nm_curso, 50, 255, false, false, true);
-                        $this->campoTextoInv("autorizacao_{$curso}", "", $nm_autorizacao, 20, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
+                        $this->campoTextoInv("ref_cod_curso_{$curso}", '', $nm_curso, 50, 255, false, false, true);
+                        $this->campoTextoInv("autorizacao_{$curso}", '', $nm_autorizacao, 20, 255, false, false, false, '', "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
                         $aux[$curso] = $curso;
                         $aux_autorizacao[$curso] = $nm_autorizacao;
                     }
@@ -849,15 +853,15 @@ class indice extends clsCadastro
                 $this->escola_curso_autorizacao = $aux_autorizacao;
             }
 
-            $this->campoOculto("escola_curso", serialize($this->escola_curso));
-            $this->campoOculto("escola_curso_autorizacao", serialize($this->escola_curso_autorizacao));
-            $opcoes = array("" => "Selecione");
+            $this->campoOculto('escola_curso', serialize($this->escola_curso));
+            $this->campoOculto('escola_curso_autorizacao', serialize($this->escola_curso_autorizacao));
+            $opcoes = ['' => 'Selecione'];
 
-            if (class_exists("clsPmieducarCurso")) {
+            if (class_exists('clsPmieducarCurso')) {
                 // EDITAR
                 if ($this->cod_escola || $this->ref_cod_instituicao) {
                     $objTemp = new clsPmieducarCurso();
-                    $objTemp->setOrderby("nm_curso");
+                    $objTemp->setOrderby('nm_curso');
                     $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
 
                     if (is_array($lista) && count($lista)) {
@@ -868,21 +872,21 @@ class indice extends clsCadastro
                 }
             } else {
                 echo "<!--\nErro\nClasse clsPmieducarCurso não encontrada\n-->";
-                $opcoes = array("" => "Erro na geração");
+                $opcoes = ['' => 'Erro na geração'];
             }
 
             if ($aux) {
-                $this->campoLista("ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "", false, "", "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", false, false);
-                $this->campoTexto("autorizacao", "Autorização", "", 30, 255, false);
+                $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, '', false, '', "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", false, false);
+                $this->campoTexto('autorizacao', 'Autorização', '', 30, 255, false);
             } else {
-                $this->campoLista("ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "", false, "", "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-                $this->campoTexto("autorizacao", "Autorização", "", 30, 255, false);
+                $this->campoLista('ref_cod_curso', 'Curso', $opcoes, $this->ref_cod_curso, '', false, '', "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+                $this->campoTexto('autorizacao', 'Autorização', '', 30, 255, false);
             }
 
-            $this->campoOculto("incluir_curso", "");
+            $this->campoOculto('incluir_curso', '');
             $this->campoQuebra();
 
-            $resources = array(NULL => 'Selecione',
+            $resources = [null => 'Selecione',
                 3 => 'Prédio escolar',
                 4 => 'Templo/Igreja',
                 5 => 'Sala de empresa',
@@ -891,296 +895,296 @@ class indice extends clsCadastro
                 8 => 'Galpão/rancho/paiol/barracão',
                 9 => 'Unidade de atendimento socioeducativa',
                 10 => 'Unidade prisional',
-                11 => 'Outros');
+                11 => 'Outros'];
 
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
             $disabled = $this->local_funcionamento != 3;
-            $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso);
+            $options = ['label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso];
             $this->inputsHelper()->select('local_funcionamento', $options);
 
-            $resources = array(NULL => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
-                3 => 'Cedido');
-            $options = array('disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
+                3 => 'Cedido'];
+            $options = ['disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false];
             $this->inputsHelper()->select('condicao', $options);
 
-            $options = array('label' => 'Código da escola que compartilha o prédio',
+            $options = ['label' => 'Código da escola que compartilha o prédio',
                 'disabled' => $disabled,
                 'label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
                 'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false,
-                'size' => 8, 'max_length' => 8, 'placeholder' => '');
+                'size' => 8, 'max_length' => 8, 'placeholder' => ''];
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada', $options);
 
-            $resources = array(null => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Difícil',
-                2 => 'Dificílimo');
-            $options = array('label' => 'Acesso à escola', 'resources' => $resources, 'value' => $this->acesso, 'required' => false, 'size' => 50);
+                2 => 'Dificílimo'];
+            $options = ['label' => 'Acesso à escola', 'resources' => $resources, 'value' => $this->acesso, 'required' => false, 'size' => 50];
             $this->inputsHelper()->select('acesso', $options);
 
-            $options = array('label' => 'Decreto de criação de unidade', 'resources' => $resources, 'value' => $this->decreto_criacao, 'required' => false, 'size' => 50);
+            $options = ['label' => 'Decreto de criação de unidade', 'resources' => $resources, 'value' => $this->decreto_criacao, 'required' => false, 'size' => 50];
             $this->inputsHelper()->text('decreto_criacao', $options);
 
-            $options = array('label' => 'Área do terreno total', 'resources' => $resources, 'value' => $this->area_terreno_total, 'required' => false, 'size' => 10, 'placeholder' => '');
+            $options = ['label' => 'Área do terreno total', 'resources' => $resources, 'value' => $this->area_terreno_total, 'required' => false, 'size' => 10, 'placeholder' => ''];
             $this->inputsHelper()->text('area_terreno_total', $options);
 
-            $options = array('label' => 'Área construída', 'resources' => $resources, 'value' => $this->area_construida, 'required' => false, 'size' => 10, 'placeholder' => '');
+            $options = ['label' => 'Área construída', 'resources' => $resources, 'value' => $this->area_construida, 'required' => false, 'size' => 10, 'placeholder' => ''];
             $this->inputsHelper()->text('area_construida', $options);
 
-            $options = array('label' => 'Área disponível', 'resources' => $resources, 'value' => $this->area_disponivel, 'required' => false, 'size' => 10, 'placeholder' => '');
+            $options = ['label' => 'Área disponível', 'resources' => $resources, 'value' => $this->area_disponivel, 'required' => false, 'size' => 10, 'placeholder' => ''];
             $this->inputsHelper()->text('area_disponivel', $options);
 
-            $options = array('label' => 'Número de pavimentos', 'resources' => $resources, 'value' => $this->num_pavimentos, 'required' => false, 'size' => 5, 'placeholder' => '');
+            $options = ['label' => 'Número de pavimentos', 'resources' => $resources, 'value' => $this->num_pavimentos, 'required' => false, 'size' => 5, 'placeholder' => ''];
             $this->inputsHelper()->integer('num_pavimentos', $options);
 
-            $resources = array(null => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Cerâmica',
                 2 => 'Acimentado',
                 3 => 'Madeira',
-                4 => 'Outros');
-            $options = array('label' => 'Tipo de piso', 'resources' => $resources, 'value' => $this->tipo_piso, 'required' => false, 'size' => 70);
+                4 => 'Outros'];
+            $options = ['label' => 'Tipo de piso', 'resources' => $resources, 'value' => $this->tipo_piso, 'required' => false, 'size' => 70];
             $this->inputsHelper()->select('tipo_piso', $options);
 
-            $resources = array(null => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Monofásico',
                 2 => 'Bifásico',
                 3 => 'Trifásico',
-                4 => 'Não');
+                4 => 'Não'];
 
-            $options = array('label' => 'Medidor de energia', 'resources' => $resources, 'value' => $this->medidor_energia, 'required' => false, 'size' => 70);
+            $options = ['label' => 'Medidor de energia', 'resources' => $resources, 'value' => $this->medidor_energia, 'required' => false, 'size' => 70];
             $this->inputsHelper()->select('medidor_energia', $options);
 
-            $resources = array(null => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Não filtrada',
-                2 => 'Filtrada');
-            $options = array('label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => $obrigarCamposCenso, 'size' => 70);
+                2 => 'Filtrada'];
+            $options = ['label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => $obrigarCamposCenso, 'size' => 70];
             $this->inputsHelper()->select('agua_consumida', $options);
 
-            $helperOptions = array('objectName' => 'abastecimento_agua');
-            $options = array('label' => 'Abastecimento de água',
+            $helperOptions = ['objectName' => 'abastecimento_agua'];
+            $options = ['label' => 'Abastecimento de água',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
-                'options' => array('values' => $this->abastecimento_agua,
-                    'all_values' => array(1 => 'Rede pública',
+                'options' => ['values' => $this->abastecimento_agua,
+                    'all_values' => [1 => 'Rede pública',
                         2 => 'Poço artesiano',
                         3 => 'Cacimba/cisterna/poço',
                         4 => 'Fonte/rio/igarapé/riacho/córrego',
-                        5 => 'Inexistente')));
+                        5 => 'Inexistente']]];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $helperOptions = array('objectName' => 'abastecimento_energia');
-            $options = array('label' => 'Abastecimento de energia elétrica',
+            $helperOptions = ['objectName' => 'abastecimento_energia'];
+            $options = ['label' => 'Abastecimento de energia elétrica',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
-                'options' => array('values' => $this->abastecimento_energia,
-                    'all_values' => array(1 => 'Rede pública',
+                'options' => ['values' => $this->abastecimento_energia,
+                    'all_values' => [1 => 'Rede pública',
                         2 => 'Gerador',
                         3 => 'Outros (Ex.: Energia eólica, solar, etc.)',
-                        4 => 'Inexistente')));
+                        4 => 'Inexistente']]];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $helperOptions = array('objectName' => 'esgoto_sanitario');
-            $options = array('label' => 'Esgoto sanitário',
+            $helperOptions = ['objectName' => 'esgoto_sanitario'];
+            $options = ['label' => 'Esgoto sanitário',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
-                'options' => array('values' => $this->esgoto_sanitario,
-                    'all_values' => array(1 => 'Rede pública',
+                'options' => ['values' => $this->esgoto_sanitario,
+                    'all_values' => [1 => 'Rede pública',
                         2 => 'Fossa',
-                        3 => 'Inexistente')));
+                        3 => 'Inexistente']]];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $helperOptions = array('objectName' => 'destinacao_lixo');
-            $options = array('label' => 'Destinação do lixo',
+            $helperOptions = ['objectName' => 'destinacao_lixo'];
+            $options = ['label' => 'Destinação do lixo',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
-                'options' => array('values' => $this->destinacao_lixo,
-                    'all_values' => array(1 => 'Coleta periódica',
+                'options' => ['values' => $this->destinacao_lixo,
+                    'all_values' => [1 => 'Coleta periódica',
                         2 => 'Queima',
                         3 => 'Joga em outra área',
                         4 => 'Recicla',
                         5 => 'Enterra',
-                        6 => 'Outros')));
+                        6 => 'Outros']]];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $dicaCamposCheckbox = "Os campos abaixo que não forem marcados, serão informados no Educacenso como Não";
-            $options = array('label' => 'Marcar todos', 'hint' => $dicaCamposCheckbox);
+            $dicaCamposCheckbox = 'Os campos abaixo que não forem marcados, serão informados no Educacenso como Não';
+            $options = ['label' => 'Marcar todos', 'hint' => $dicaCamposCheckbox];
             $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
 
-            $options = array('label' => 'Sala de diretoria', 'value' => $this->dependencia_sala_diretoria);
+            $options = ['label' => 'Sala de diretoria', 'value' => $this->dependencia_sala_diretoria];
             $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);
 
-            $options = array('label' => 'Sala de professores', 'value' => $this->dependencia_sala_professores);
+            $options = ['label' => 'Sala de professores', 'value' => $this->dependencia_sala_professores];
             $this->inputsHelper()->checkbox('dependencia_sala_professores', $options);
 
-            $options = array('label' => 'Sala de secretaria', 'value' => $this->dependencia_sala_secretaria);
+            $options = ['label' => 'Sala de secretaria', 'value' => $this->dependencia_sala_secretaria];
             $this->inputsHelper()->checkbox('dependencia_sala_secretaria', $options);
 
-            $options = array('label' => 'Laboratório de informática', 'value' => $this->dependencia_laboratorio_informatica);
+            $options = ['label' => 'Laboratório de informática', 'value' => $this->dependencia_laboratorio_informatica];
             $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
 
-            $options = array('label' => 'Laboratório de ciências', 'value' => $this->dependencia_laboratorio_ciencias);
+            $options = ['label' => 'Laboratório de ciências', 'value' => $this->dependencia_laboratorio_ciencias];
             $this->inputsHelper()->checkbox('dependencia_laboratorio_ciencias', $options);
 
-            $options = array('label' => 'Sala de recursos multifuncionais para atendimento educacional especializado - AEE', 'value' => $this->dependencia_sala_aee);
+            $options = ['label' => 'Sala de recursos multifuncionais para atendimento educacional especializado - AEE', 'value' => $this->dependencia_sala_aee];
             $this->inputsHelper()->checkbox('dependencia_sala_aee', $options);
 
-            $options = array('label' => 'Quadra de esportes coberta', 'value' => $this->dependencia_quadra_coberta);
+            $options = ['label' => 'Quadra de esportes coberta', 'value' => $this->dependencia_quadra_coberta];
             $this->inputsHelper()->checkbox('dependencia_quadra_coberta', $options);
 
-            $options = array('label' => 'Quadra de esportes descoberta', 'value' => $this->dependencia_quadra_descoberta);
+            $options = ['label' => 'Quadra de esportes descoberta', 'value' => $this->dependencia_quadra_descoberta];
             $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
 
-            $options = array('label' => 'Cozinha', 'value' => $this->dependencia_cozinha);
+            $options = ['label' => 'Cozinha', 'value' => $this->dependencia_cozinha];
             $this->inputsHelper()->checkbox('dependencia_cozinha', $options);
 
-            $options = array('label' => 'Biblioteca', 'value' => $this->dependencia_biblioteca);
+            $options = ['label' => 'Biblioteca', 'value' => $this->dependencia_biblioteca];
             $this->inputsHelper()->checkbox('dependencia_biblioteca', $options);
 
-            $options = array('label' => 'Sala de leitura', 'value' => $this->dependencia_sala_leitura);
+            $options = ['label' => 'Sala de leitura', 'value' => $this->dependencia_sala_leitura];
             $this->inputsHelper()->checkbox('dependencia_sala_leitura', $options);
 
-            $options = array('label' => 'Parque infantil', 'value' => $this->dependencia_parque_infantil);
+            $options = ['label' => 'Parque infantil', 'value' => $this->dependencia_parque_infantil];
             $this->inputsHelper()->checkbox('dependencia_parque_infantil', $options);
 
-            $options = array('label' => 'Berçário', 'value' => $this->dependencia_bercario);
+            $options = ['label' => 'Berçário', 'value' => $this->dependencia_bercario];
             $this->inputsHelper()->checkbox('dependencia_bercario', $options);
 
-            $options = array('label' => 'Banheiro fora do prédio', 'value' => $this->dependencia_banheiro_fora);
+            $options = ['label' => 'Banheiro fora do prédio', 'value' => $this->dependencia_banheiro_fora];
             $this->inputsHelper()->checkbox('dependencia_banheiro_fora', $options);
 
-            $options = array('label' => 'Banheiro dentro do prédio', 'value' => $this->dependencia_banheiro_dentro);
+            $options = ['label' => 'Banheiro dentro do prédio', 'value' => $this->dependencia_banheiro_dentro];
             $this->inputsHelper()->checkbox('dependencia_banheiro_dentro', $options);
 
-            $options = array('label' => 'Banheiro adequado à Educação infantil', 'value' => $this->dependencia_banheiro_infantil);
+            $options = ['label' => 'Banheiro adequado à Educação infantil', 'value' => $this->dependencia_banheiro_infantil];
             $this->inputsHelper()->checkbox('dependencia_banheiro_infantil', $options);
 
-            $options = array('label' => 'Banheiro adequado a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_banheiro_deficiente);
+            $options = ['label' => 'Banheiro adequado a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_banheiro_deficiente];
             $this->inputsHelper()->checkbox('dependencia_banheiro_deficiente', $options);
 
-            $options = array('label' => 'Dependências e vias adequadas a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_vias_deficiente);
+            $options = ['label' => 'Dependências e vias adequadas a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_vias_deficiente];
             $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
 
-            $options = array('label' => 'Banheiro com chuveiro', 'value' => $this->dependencia_banheiro_chuveiro);
+            $options = ['label' => 'Banheiro com chuveiro', 'value' => $this->dependencia_banheiro_chuveiro];
             $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
 
-            $options = array('label' => 'Refeitório', 'value' => $this->dependencia_refeitorio);
+            $options = ['label' => 'Refeitório', 'value' => $this->dependencia_refeitorio];
             $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
 
-            $options = array('label' => 'Despensa', 'value' => $this->dependencia_dispensa);
+            $options = ['label' => 'Despensa', 'value' => $this->dependencia_dispensa];
             $this->inputsHelper()->checkbox('dependencia_dispensa', $options);
 
-            $options = array('label' => 'Almoxarifado', 'value' => $this->dependencia_aumoxarifado);
+            $options = ['label' => 'Almoxarifado', 'value' => $this->dependencia_aumoxarifado];
             $this->inputsHelper()->checkbox('dependencia_aumoxarifado', $options);
 
-            $options = array('label' => 'Auditório', 'value' => $this->dependencia_auditorio);
+            $options = ['label' => 'Auditório', 'value' => $this->dependencia_auditorio];
             $this->inputsHelper()->checkbox('dependencia_auditorio', $options);
 
-            $options = array('label' => 'Pátio coberto', 'value' => $this->dependencia_patio_coberto);
+            $options = ['label' => 'Pátio coberto', 'value' => $this->dependencia_patio_coberto];
             $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
 
-            $options = array('label' => 'Pátio descoberto', 'value' => $this->dependencia_patio_descoberto);
+            $options = ['label' => 'Pátio descoberto', 'value' => $this->dependencia_patio_descoberto];
             $this->inputsHelper()->checkbox('dependencia_patio_descoberto', $options);
 
-            $resources = array(null => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Lage',
                 2 => 'Telhado',
-                3 => 'Outras');
-            $options = array('label' => 'Alojamento de aluno', 'value' => $this->dependencia_alojamento_aluno);
+                3 => 'Outras'];
+            $options = ['label' => 'Alojamento de aluno', 'value' => $this->dependencia_alojamento_aluno];
             $this->inputsHelper()->checkbox('dependencia_alojamento_aluno', $options);
 
-            $options = array('label' => 'Alojamento de professor', 'value' => $this->dependencia_alojamento_professor);
+            $options = ['label' => 'Alojamento de professor', 'value' => $this->dependencia_alojamento_professor];
             $this->inputsHelper()->checkbox('dependencia_alojamento_professor', $options);
 
-            $options = array('label' => 'Área verde', 'value' => $this->dependencia_area_verde);
+            $options = ['label' => 'Área verde', 'value' => $this->dependencia_area_verde];
             $this->inputsHelper()->checkbox('dependencia_area_verde', $options);
 
-            $options = array('label' => 'Lavanderia', 'value' => $this->dependencia_lavanderia);
+            $options = ['label' => 'Lavanderia', 'value' => $this->dependencia_lavanderia];
             $this->inputsHelper()->checkbox('dependencia_lavanderia', $options);
 
-            $resources = array(null => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Sim',
                 2 => 'Não',
-                3 => 'Parcial');
-            $options = array('label' => 'Nenhuma das relacionadas', 'value' => $this->dependencia_nenhuma_relacionada);
+                3 => 'Parcial'];
+            $options = ['label' => 'Nenhuma das relacionadas', 'value' => $this->dependencia_nenhuma_relacionada];
             $this->inputsHelper()->checkbox('dependencia_nenhuma_relacionada', $options);
 
-            $options = array('label' => 'Número de salas de aula existentes na escola', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $options = ['label' => 'Número de salas de aula existentes na escola', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer('dependencia_numero_salas_existente', $options);
 
-            $options = array('label' => 'Número de salas utilizadas como sala de aula - Dentro e fora do prédio', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
+            $options = ['label' => 'Número de salas utilizadas como sala de aula - Dentro e fora do prédio', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => ''];
             $this->inputsHelper()->integer('dependencia_numero_salas_utilizadas', $options);
 
-            $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('televisoes', $options);
 
-            $options = array('label' => 'Quantidade de videocassetes', 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de videocassetes', 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('videocassetes', $options);
 
-            $options = array('label' => 'Quantidade de DVDs', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de DVDs', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('dvds', $options);
 
-            $options = array('label' => 'Quantidade de antenas parabólicas', 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de antenas parabólicas', 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('antenas_parabolicas', $options);
 
-            $options = array('label' => 'Quantidade de copiadoras', 'resources' => $resources, 'value' => $this->copiadoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de copiadoras', 'resources' => $resources, 'value' => $this->copiadoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('copiadoras', $options);
 
-            $options = array('label' => 'Quantidade de retroprojetores', 'resources' => $resources, 'value' => $this->retroprojetores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de retroprojetores', 'resources' => $resources, 'value' => $this->retroprojetores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('retroprojetores', $options);
 
-            $options = array('label' => 'Quantidade de impressoras', 'resources' => $resources, 'value' => $this->impressoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de impressoras', 'resources' => $resources, 'value' => $this->impressoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('impressoras', $options);
 
-            $options = array('label' => 'Quantidade de aparelhos de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de aparelhos de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('aparelhos_de_som', $options);
 
-            $options = array('label' => 'Quantidade de data show', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de data show', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('projetores_digitais', $options);
 
-            $options = array('label' => 'Quantidade de FAXs', 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de FAXs', 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('faxs', $options);
 
-            $options = array('label' => 'Quantidade de máquinas fotográficas ou filmadoras', 'resources' => $resources, 'value' => $this->maquinas_fotograficas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de máquinas fotográficas ou filmadoras', 'resources' => $resources, 'value' => $this->maquinas_fotograficas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('maquinas_fotograficas', $options);
 
-            $options = array('label' => 'Quantidade de impressoras multifuncionais', 'resources' => $resources, 'value' => $this->impressoras_multifuncionais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de impressoras multifuncionais', 'resources' => $resources, 'value' => $this->impressoras_multifuncionais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('impressoras_multifuncionais', $options);
 
-            $options = array('label' => 'Quantidade de computadores de uso administrativo', 'resources' => $resources, 'value' => $this->computadores_administrativo, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de computadores de uso administrativo', 'resources' => $resources, 'value' => $this->computadores_administrativo, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('computadores_administrativo', $options);
 
-            $options = array('label' => 'Quantidade de computadores de uso dos alunos', 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade de computadores de uso dos alunos', 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('computadores_alunos', $options);
 
-            $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $options = ['label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('computadores', $options);
 
             $disabled = $this->computadores > 0;
-            $options = array(
+            $options = [
                 'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
                 'required' => false,
                 'prompt' => 'Selecione',
                 'disabled' => !$disabled
-            );
+            ];
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
-            $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
+            $options = ['label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => ''];
             $this->inputsHelper()->integer('total_funcionario', $options);
 
-            $resources = array(NULL => 'Selecione',
+            $resources = [null => 'Selecione',
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
-                2 => 'Exclusivamente');
-            $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => $obrigarCamposCenso, 'size' => 70);
+                2 => 'Exclusivamente'];
+            $options = ['label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => $obrigarCamposCenso, 'size' => 70];
             $this->inputsHelper()->select('atendimento_aee', $options);
 
-            $resources = array(NULL => 'Selecione',
+            $resources = [null => 'Selecione',
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
-                2 => 'Exclusivamente');
-            $options = array('label' => 'Atividade complementar', 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => $obrigarCamposCenso, 'size' => 70);
+                2 => 'Exclusivamente'];
+            $options = ['label' => 'Atividade complementar', 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => $obrigarCamposCenso, 'size' => 70];
             $this->inputsHelper()->select('atividade_complementar', $options);
 
             $habilitaFundamentalCiclo = false;
@@ -1189,52 +1193,52 @@ class indice extends clsCadastro
                 $habilitaFundamentalCiclo = dbBool($objEscola->possuiTurmasDoEnsinoFundamentalEmCiclos());
             }
 
-            $options = array(
+            $options = [
                 'label' => 'Ensino fundamental organizado em ciclos',
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->fundamental_ciclo,
                 'required' => $habilitaFundamentalCiclo,
                 'disabled' => !$habilitaFundamentalCiclo
-            );
+            ];
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
-            $resources = array(NULL => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Área de assentamento',
                 2 => 'Terra indígena',
                 3 => 'Área onde se localiza comunidades remanescentes de quilombos',
                 4 => 'Unidade de uso sustentável',
                 5 => 'Unidade de uso sustentável em terra indígena',
                 6 => 'Unidade de uso sustentável em área onde se localiza comunidade remanescente de quilombos',
-                7 => 'Não se aplica');
-            $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
+                7 => 'Não se aplica'];
+            $options = ['label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70];
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
-            $resources = array(NULL => 'Selecione',
+            $resources = [null => 'Selecione',
                 1 => 'Não utiliza',
                 2 => 'Quilombola',
-                3 => 'Indígena');
-            $options = array('label' => 'Materiais didáticos específicos para atendimento à diversidade sócio-cultural',
+                3 => 'Indígena'];
+            $options = ['label' => 'Materiais didáticos específicos para atendimento à diversidade sócio-cultural',
                 'resources' => $resources,
                 'value' => $this->materiais_didaticos_especificos,
                 'required' => $obrigarCamposCenso,
-                'size' => 70);
+                'size' => 70];
             $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
 
-            $options = array('label' => 'Escola indígena',
+            $options = ['label' => 'Escola indígena',
                 'value' => $this->educacao_indigena,
-                'required' => false);
+                'required' => false];
             $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
-            $resources = array(1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena');
+            $resources = [1 => 'Língua Portuguesa',
+                2 => 'Língua Indígena'];
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
-            $options = array('label' => 'Língua em que o ensino é ministrado',
+            $options = ['label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
                 'required' => $habilitaLiguaMinistrada,
                 'disabled' => !$habilitaLiguaMinistrada,
-                'size' => 70);
+                'size' => 70];
             $this->inputsHelper()->select('lingua_ministrada', $options);
 
             $habilitaLiguasIndigenas = $this->lingua_ministrada == 2;
@@ -1244,68 +1248,68 @@ class indice extends clsCadastro
                 $resources[$reg['id']] = $reg['lingua'];
             }
 
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'),
+            $options = ['label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'),
                 'resources' => $resources,
                 'value' => $this->codigo_lingua_indigena,
                 'required' => $habilitaLiguasIndigenas && $habilitaLiguaMinistrada,
                 'disabled' => !$habilitaLiguasIndigenas || !$habilitaLiguaMinistrada,
-                'size' => 70);
+                'size' => 70];
             $this->inputsHelper()->select('codigo_lingua_indigena', $options);
 
-            $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
+            $options = ['label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
                 'prompt' => 'Selecione',
                 'value' => $this->espaco_brasil_aprendizado,
-                'required' => $obrigarCamposCenso);
+                'required' => $obrigarCamposCenso];
             $this->inputsHelper()->booleanSelect('espaco_brasil_aprendizado', $options);
 
-            $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
+            $options = ['label' => 'Escola abre aos finais de semana para a comunidade',
                 'prompt' => 'Selecione',
                 'value' => $this->abre_final_semana,
-                'required' => $obrigarCamposCenso);
+                'required' => $obrigarCamposCenso];
             $this->inputsHelper()->booleanSelect('abre_final_semana', $options);
 
-            $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
+            $options = ['label' => 'Escola com proposta pedagógica de formação por alternância',
                 'prompt' => 'Selecione',
                 'value' => $this->proposta_pedagogica,
-                'required' => $obrigarCamposCenso);
+                'required' => $obrigarCamposCenso];
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
 
-            $resources = array('' => 'Selecione',
+            $resources = ['' => 'Selecione',
                 1 => 'Particular',
                 2 => 'Comunitária',
                 3 => 'Confessional',
-                4 => 'Filantrópica');
-            $options = array('label' => 'Categoria da escola privada',
+                4 => 'Filantrópica'];
+            $options = ['label' => 'Categoria da escola privada',
                 'resources' => $resources,
                 'value' => $this->categoria_escola_privada,
                 'required' => false,
-                'size' => 70);
+                'size' => 70];
             $this->inputsHelper()->select('categoria_escola_privada', $options);
 
-            $resources = array('' => 'Selecione',
+            $resources = ['' => 'Selecione',
                 1 => 'Estadual',
                 2 => 'Municipal',
-                3 => 'Estadual e Municipal');
-            $options = array('label' => 'Conveniada com poder público',
+                3 => 'Estadual e Municipal'];
+            $options = ['label' => 'Conveniada com poder público',
                 'resources' => $resources,
                 'value' => $this->conveniada_com_poder_publico,
                 'required' => false,
-                'size' => 70);
+                'size' => 70];
             $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
 
-            $helperOptions = array('objectName' => 'mantenedora_escola_privada');
-            $options = array('label' => 'Mantenedora escola privada',
+            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
+            $options = ['label' => 'Mantenedora escola privada',
                 'size' => 50,
                 'required' => false,
-                'options' => array('values' => $this->mantenedora_escola_privada,
-                    'all_values' => array(1 => 'Empresa, grupos empresariais do setor privado ou pessoa física',
+                'options' => ['values' => $this->mantenedora_escola_privada,
+                    'all_values' => [1 => 'Empresa, grupos empresariais do setor privado ou pessoa física',
                         2 => 'Sindicatos de trabalhadores ou patronais, associações ou cooperativas',
                         3 => 'Organização não governamental (ONG) internacional ou nacional/Oscip',
                         4 => 'Instituições sem fins lucrativos',
-                        5 => 'Sistema S (Sesi, Senai, Sesc, outros)')));
+                        5 => 'Sistema S (Sesi, Senai, Sesc, outros)']]];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
+            $this->campoCnpj('cnpj_mantenedora_principal', 'CNPJ da mantenedora principal da escola privada', $this->cnpj_mantenedora_principal);
         }
     }
 
@@ -1316,7 +1320,7 @@ class indice extends clsCadastro
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
@@ -1341,16 +1345,19 @@ class indice extends clsCadastro
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+
             return false;
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+
             return false;
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+
             return false;
         }
 
@@ -1358,7 +1365,7 @@ class indice extends clsCadastro
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
         if ($this->com_cnpj) {
-            $objPessoa = new clsPessoa_(false, $this->fantasia, $this->pessoa_logada, $this->p_http, "J", false, false, $this->p_email);
+            $objPessoa = new clsPessoa_(false, $this->fantasia, $this->pessoa_logada, $this->p_http, 'J', false, false, $this->p_email);
             $this->ref_idpes = $objPessoa->cadastra();
 
             if ($this->ref_idpes) {
@@ -1464,18 +1471,18 @@ class indice extends clsCadastro
                     if ($cadastrou1) {
                         $escola = new clsPmieducarEscola($cod_escola);
                         $escola = $escola->detalhe();
-                        $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $cod_escola);
+                        $auditoria = new clsModulesAuditoriaGeral('escola', $this->pessoa_logada, $cod_escola);
                         $auditoria->inclusao($escola);
 
                         $objTelefone = new clsPessoaTelefone($this->ref_idpes);
                         $objTelefone->excluiTodos();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace("-", "", $this->p_telefone_1), $this->p_ddd_telefone_1);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
                         $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace("-", "", $this->p_telefone_2), $this->p_ddd_telefone_2);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
                         $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace("-", "", $this->p_telefone_mov), $this->p_ddd_telefone_mov);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
                         $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace("-", "", $this->p_telefone_fax), $this->p_ddd_telefone_fax);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
                         $objTelefone->cadastra();
 
                         if (!$this->isEnderecoExterno) {
@@ -1487,10 +1494,9 @@ class indice extends clsCadastro
                             } else {
                                 $objEndereco->cadastra();
                             }
-
                         } else {
                             $this->cep = idFederal2int($this->cep);
-                            $objEnderecoExterno = new clsEnderecoExterno($this->ref_idpes, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false);
+                            $objEnderecoExterno = new clsEnderecoExterno($this->ref_idpes, '1', $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false);
 
                             if ($objEnderecoExterno->existe()) {
                                 $objEnderecoExterno->edita();
@@ -1509,28 +1515,33 @@ class indice extends clsCadastro
                                 $cadastrou_ = $curso_escola->cadastra();
 
                                 if (!$cadastrou_) {
-                                    $this->mensagem = "Cadastro não realizado.<br>";
+                                    $this->mensagem = 'Cadastro não realizado.<br>';
                                     echo "<!--\nErro ao cadastrar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$campo}) \n-->";
+
                                     return false;
                                 }
                             }
                         }
                         //-----------------------FIM CADASTRA CURSO------------------------//
                     } else {
-                        $this->mensagem = "Cadastro não realizado (clsPmieducarEscola).<br>";
+                        $this->mensagem = 'Cadastro não realizado (clsPmieducarEscola).<br>';
+
                         return false;
                     }
                 } else {
-                    $this->mensagem = "Cadastro não realizado (clsJuridica).<br>";
+                    $this->mensagem = 'Cadastro não realizado (clsJuridica).<br>';
+
                     return false;
                 }
 
-                $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header("Location: educar_escola_lst.php");
+                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                header('Location: educar_escola_lst.php');
                 die();
+
                 return true;
             } else {
-                $this->mensagem = "Cadastro não realizado (clsPessoa_).<br>";
+                $this->mensagem = 'Cadastro não realizado (clsPessoa_).<br>';
+
                 return false;
             }
         } elseif ($this->sem_cnpj) {
@@ -1631,7 +1642,7 @@ class indice extends clsCadastro
             if ($cadastrou) {
                 $escola = new clsPmieducarEscola($cod_escola);
                 $escola = $escola->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $cod_escola);
+                $auditoria = new clsModulesAuditoriaGeral('escola', $this->pessoa_logada, $cod_escola);
                 $auditoria->inclusao($escola);
                 $obj2 = new clsPmieducarEscolaComplemento($cadastrou, null, $this->pessoa_logada, idFederal2int($this->cep), $this->numero, $this->complemento, $this->p_email, $this->fantasia, $this->cidade, $this->bairro, $this->logradouro, $this->p_ddd_telefone_1, $this->p_telefone_1, $this->p_ddd_telefone_fax, $this->p_telefone_fax, null, null, 1);
                 $cadastrou2 = $obj2->cadastra();
@@ -1647,24 +1658,28 @@ class indice extends clsCadastro
                             $cadastrou_ = $curso_escola->cadastra();
 
                             if (!$cadastrou_) {
-                                $this->mensagem = "Cadastro não realizado.<br>";
+                                $this->mensagem = 'Cadastro não realizado.<br>';
                                 echo "<!--\nErro ao cadastrar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$campo}) \n-->";
+
                                 return false;
                             }
                         }
                     }
                     //-----------------------FIM CADASTRA CURSO------------------------//
-                    $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                    header("Location: educar_escola_lst.php");
+                    $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                    header('Location: educar_escola_lst.php');
                     die();
+
                     return true;
                 } else {
-                    $this->mensagem = "Cadastro não realizado.<br>";
+                    $this->mensagem = 'Cadastro não realizado.<br>';
                     echo "<!--\nErro ao cadastrar clsPmieducarEscolaComplemento\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric($this->pessoa_logada) && is_numeric($this->numero) && is_string($this->complemento) && is_string($this->p_email) && is_string($this->fantasia) && is_string($this->cidade) && is_string($this->bairro)\n-->";
+
                     return false;
                 }
             } else {
-                $this->mensagem = "Cadastro não realizado (clsPmieducarEscola).<br>";
+                $this->mensagem = 'Cadastro não realizado (clsPmieducarEscola).<br>';
+
                 return false;
             }
         }
@@ -1677,7 +1692,7 @@ class indice extends clsCadastro
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1707,16 +1722,19 @@ class indice extends clsCadastro
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+
             return false;
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+
             return false;
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+
             return false;
         }
 
@@ -1826,7 +1844,7 @@ class indice extends clsCadastro
 
             if ($editou) {
                 $escolaDetAtual = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
+                $auditoria = new clsModulesAuditoriaGeral('escola', $this->pessoa_logada, $this->cod_escola);
                 $auditoria->alteracao($escolaDetAntigo, $escolaDetAtual);
             }
         } else {
@@ -1929,14 +1947,14 @@ class indice extends clsCadastro
             if ($this->cod_escola) {
                 $obj = new clsPmieducarEscola($this->cod_escola);
                 $escolaDetAtual = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
+                $auditoria = new clsModulesAuditoriaGeral('escola', $this->pessoa_logada, $this->cod_escola);
                 $auditoria->inclusao($escolaDetAtual);
             }
         }
 
         if ($editou) {
             if ($this->com_cnpj) {
-                $objPessoa = new clsPessoa_($this->ref_idpes, null, false, $this->p_http, false, $this->pessoa_logada, date("Y-m-d H:i:s", time()), $this->p_email);
+                $objPessoa = new clsPessoa_($this->ref_idpes, null, false, $this->p_http, false, $this->pessoa_logada, date('Y-m-d H:i:s', time()), $this->p_email);
                 $editou1 = $objPessoa->edita();
 
                 if ($editou1) {
@@ -1946,13 +1964,13 @@ class indice extends clsCadastro
                     if ($editou2) {
                         $objTelefone = new clsPessoaTelefone($this->ref_idpes);
                         $objTelefone->excluiTodos();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace("-", "", $this->p_telefone_1), $this->p_ddd_telefone_1);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
                         $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace("-", "", $this->p_telefone_2), $this->p_ddd_telefone_2);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
                         $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace("-", "", $this->p_telefone_mov), $this->p_ddd_telefone_mov);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
                         $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace("-", "", $this->p_telefone_fax), $this->p_ddd_telefone_fax);
+                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
                         $objTelefone->cadastra();
                         $objEndereco = new clsPessoaEndereco($this->ref_idpes);
                         $detEndereco = $objEndereco->detalhe();
@@ -1974,7 +1992,7 @@ class indice extends clsCadastro
                             }
                         } else {
                             $this->cep = idFederal2int($this->cep);
-                            $objEnderecoExterno = new clsEnderecoExterno($this->ref_idpes, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false);
+                            $objEnderecoExterno = new clsEnderecoExterno($this->ref_idpes, '1', $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false);
 
                             if ($objEnderecoExterno->existe()) {
                                 $objEnderecoExterno->edita();
@@ -1995,17 +2013,19 @@ class indice extends clsCadastro
                                     $cadastrou_ = $obj->cadastra();
 
                                     if (!$cadastrou_) {
-                                        $this->mensagem = "Edição não realizada.<br>";
+                                        $this->mensagem = 'Edição não realizada.<br>';
                                         echo "<!--\nErro ao editar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($this->cod_serie) && is_numeric({$campo}) && is_numeric($this->pessoa_logada)\n-->";
+
                                         return false;
                                     }
                                 }
                             }
                         }
                         //-----------------------FIM EDITA CURSO------------------------//
-                        $this->mensagem .= "Edição efetuada com sucesso.<br>";
-                        header("Location: educar_escola_lst.php");
+                        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+                        header('Location: educar_escola_lst.php');
                         die();
+
                         return true;
                     }
                 }
@@ -2026,27 +2046,31 @@ class indice extends clsCadastro
                                 $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo]);
                                 $cadastrou_ = $obj->cadastra();
                                 if (!$cadastrou_) {
-                                    $this->mensagem = "Edição não realizada.<br>";
+                                    $this->mensagem = 'Edição não realizada.<br>';
                                     echo "<!--\nErro ao editar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($this->cod_serie) && is_numeric({$campo[$i]}) && is_numeric($this->pessoa_logada)\n-->";
+
                                     return false;
                                 }
                             }
                         }
                     }
                     //-----------------------FIM EDITA CURSO------------------------//
-                    $this->mensagem .= "Edição efetuada com sucesso.<br>";
-                    header("Location: educar_escola_lst.php");
+                    $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+                    header('Location: educar_escola_lst.php');
                     die();
+
                     return true;
                 } else {
-                    $this->mensagem = "Edição não realizada (clsPmieducarEscolaComplemento).<br>";
+                    $this->mensagem = 'Edição não realizada (clsPmieducarEscolaComplemento).<br>';
+
                     return false;
                 }
             }
         }
 
-        $this->mensagem = "Edição não realizada.<br>";
+        $this->mensagem = 'Edição não realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarEscola\nvalores obrigatorios\nif(is_numeric($this->cod_escola) && is_numeric($this->pessoa_logada))\n-->";
+
         return false;
     }
 
@@ -2057,22 +2081,24 @@ class indice extends clsCadastro
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
         $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
         $escola = $obj->detalhe();
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
+            $auditoria = new clsModulesAuditoriaGeral('escola', $this->pessoa_logada, $this->cod_escola);
             $auditoria->exclusao($escola);
-            $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-            header("Location: educar_escola_lst.php");
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+            header('Location: educar_escola_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclusão não realizada.<br>";
+        $this->mensagem = 'Exclusão não realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarEscola\nvalores obrigatorios\nif(is_numeric($this->cod_escola) && is_numeric($this->pessoa_logada))\n-->";
+
         return false;
     }
     protected function inputTelefone($type, $typeLabel = '')
@@ -2082,7 +2108,7 @@ class indice extends clsCadastro
         }
 
         // ddd
-        $options = array(
+        $options = [
             'required' => false,
             'label' => "(DDD) / {$typeLabel}",
             'placeholder' => 'DDD',
@@ -2090,25 +2116,26 @@ class indice extends clsCadastro
             'max_length' => 3,
             'size' => 3,
             'inline' => true,
-        );
+        ];
         $this->inputsHelper()->integer("p_ddd_telefone_{$type}", $options);
 
         // telefone
-        $options = array(
+        $options = [
             'required' => false,
             'label' => '',
             'placeholder' => $typeLabel,
             'value' => $this->{"p_telefone_{$type}"},
             'max_length' => 9,
-        );
+        ];
         $this->inputsHelper()->integer("p_telefone_{$type}", $options);
     }
 
     protected function validaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {
-            return TRUE;
+            return true;
         }
+
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
                 $this->validaSalasExistentes() &&
@@ -2119,66 +2146,78 @@ class indice extends clsCadastro
     {
         if ($this->local_funcionamento == 3 && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
-            return FALSE;
+
+            return false;
         }
-        return TRUE;
+
+        return true;
     }
 
     protected function validaSalasExistentes()
     {
         if ($this->local_funcionamento == 3 && ((int) $this->dependencia_numero_salas_existente) <= 0) {
             $this->mensagem = 'O campo: Número de salas de aula existentes na escola, deve ser informado quando o Local de funcionamento for prédio escolar.';
-            return FALSE;
+
+            return false;
         }
-        return TRUE;
+
+        return true;
     }
 
     protected function validaPossuiBandaLarga()
     {
-        if (((int)$this->computadores) > 0 && !in_array($this->acesso_internet, array('0', '1'))) {
+        if (((int)$this->computadores) > 0 && !in_array($this->acesso_internet, ['0', '1'])) {
             $this->mensagem = 'O campo: Possui internet banda larga, deve ser informado quando existir computadores na escola.';
-            return FALSE;
+
+            return false;
         }
-        return TRUE;
+
+        return true;
     }
 
     protected function validaEscolaPrivada()
     {
-        if ($this->dependencia_administrativa != "4" || $this->situacao_funcionamento != 1) {
-            return TRUE;
+        if ($this->dependencia_administrativa != '4' || $this->situacao_funcionamento != 1) {
+            return true;
         }
         if (empty($this->categoria_escola_privada)) {
-            $this->mensagem = "O campo categoria da escola privada é obrigatório para escolas em atividade de administração privada.";
-            return FALSE;
+            $this->mensagem = 'O campo categoria da escola privada é obrigatório para escolas em atividade de administração privada.';
+
+            return false;
         }
         if (empty($this->conveniada_com_poder_publico)) {
-            $this->mensagem = "O campo conveniada com poder público é obrigatório para escolas em atividade de administração privada.";
-            return FALSE;
+            $this->mensagem = 'O campo conveniada com poder público é obrigatório para escolas em atividade de administração privada.';
+
+            return false;
         }
         if (empty($this->mantenedora_escola_privada) ||
             (is_array($this->mantenedora_escola_privada) &&
             count($this->mantenedora_escola_privada) == 1 &&
             empty($this->mantenedora_escola_privada[0]))) {
-            $this->mensagem = "O campo mantenedora escola privada é obrigatório para escolas em atividade de administração privada.";
-            return FALSE;
+            $this->mensagem = 'O campo mantenedora escola privada é obrigatório para escolas em atividade de administração privada.';
+
+            return false;
         }
         if (empty($this->cnpj_mantenedora_principal)) {
-            $this->mensagem = "O campo CNPJ da mantenedora principal da escola privada é obrigatório para escolas em atividade de administração privada.";
-            return FALSE;
+            $this->mensagem = 'O campo CNPJ da mantenedora principal da escola privada é obrigatório para escolas em atividade de administração privada.';
+
+            return false;
         }
-        return TRUE;
+
+        return true;
     }
 
     protected function validaLatitudeLongitude()
     {
-        $caracteres = array(" ", ".", "-", null, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-        $mensagemErro = "O campo: Latitude e/ou Longitude foi preenchido com valor inválido.";
+        $caracteres = [' ', '.', '-', null, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $mensagemErro = 'O campo: Latitude e/ou Longitude foi preenchido com valor inválido.';
 
         for ($i = 0; $i <= strlen($this->latitude); $i++) {
             $char = substr($this->latitude, $i, 1);
 
             if (!in_array($char, $caracteres)) {
                 $this->mensagem = $mensagemErro;
+
                 return false;
             }
         }
@@ -2187,15 +2226,18 @@ class indice extends clsCadastro
             $char = substr($this->longitude, $i, 1);
             if (!in_array($char, $caracteres)) {
                 $this->mensagem = $mensagemErro;
+
                 return false;
             }
         }
 
         if (empty($this->latitude) && !empty($this->longitude)) {
-            $this->mensagem = "O campo Latitude deve ser preenchido quando o Longitude estiver preenchido.";
+            $this->mensagem = 'O campo Latitude deve ser preenchido quando o Longitude estiver preenchido.';
+
             return false;
         } elseif (!empty($this->latitude) && empty($this->longitude)) {
-            $this->mensagem = "O campo Longitude deve ser preenchido quando o Latitude estiver preenchido.";
+            $this->mensagem = 'O campo Longitude deve ser preenchido quando o Latitude estiver preenchido.';
+
             return false;
         }
 
@@ -2217,11 +2259,13 @@ class indice extends clsCadastro
 
         if (!empty($valorDDD) && empty($valorTelefone)) {
             $this->mensagem = $msgRequereTelefone;
+
             return false;
         }
 
         if (empty($valorDDD) && !empty($valorTelefone)) {
             $this->mensagem = $msgRequereDDD;
+
             return false;
         }
 
@@ -2232,8 +2276,10 @@ class indice extends clsCadastro
     {
         if (!empty($inep) && strlen($inep) != 8) {
             $this->mensagem = "O campo: {$nomeCampo} deve conter 8 dígitos.";
+
             return false;
         }
+
         return true;
     }
 }

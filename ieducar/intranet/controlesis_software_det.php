@@ -25,17 +25,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "Prefeitura de Itaja&iacute; - Detalhe de Software" );
-        $this->processoAp = "793";
+        $this->SetTitulo('Prefeitura de Itaja&iacute; - Detalhe de Software');
+        $this->processoAp = '793';
     }
 }
 
@@ -46,51 +46,47 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_software;
-    var $ref_funcionario_exc;
-    var $ref_funcionario_cad;
-    var $nm_software;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_software;
+    public $ref_funcionario_exc;
+    public $ref_funcionario_cad;
+    public $nm_software;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Software - Detalhe";
-        $this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+        $this->titulo = 'Software - Detalhe';
+        $this->addBanner('/intranet/imagens/nvp_top_intranet.jpg', '/intranet/imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-        $this->cod_software=$_GET["cod_software"];
+        $this->cod_software=$_GET['cod_software'];
 
-        $tmp_obj = new clsPmicontrolesisSoftware( $this->cod_software );
+        $tmp_obj = new clsPmicontrolesisSoftware($this->cod_software);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: controlesis_software_lst.php" );
+        if (! $registro) {
+            header('location: controlesis_software_lst.php');
             die();
         }
 
-        if( $registro["cod_software"] )
-        {
-            $this->addDetalhe( array( "Software", "{$registro["cod_software"]}") );
+        if ($registro['cod_software']) {
+            $this->addDetalhe([ 'Software', "{$registro['cod_software']}"]);
         }
-        if( $registro["nm_software"] )
-        {
-            $this->addDetalhe( array( "Nome Software", "{$registro["nm_software"]}") );
+        if ($registro['nm_software']) {
+            $this->addDetalhe([ 'Nome Software', "{$registro['nm_software']}"]);
         }
 
+        $this->url_novo = 'controlesis_software_cad.php';
+        $this->url_editar = "controlesis_software_cad.php?cod_software={$registro['cod_software']}";
 
-        $this->url_novo = "controlesis_software_cad.php";
-        $this->url_editar = "controlesis_software_cad.php?cod_software={$registro["cod_software"]}";
-
-        $this->url_cancelar = "controlesis_software_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'controlesis_software_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -99,7 +95,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

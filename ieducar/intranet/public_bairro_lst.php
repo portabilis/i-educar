@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package   Ied_Public
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -41,249 +46,315 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Bairro');
-    $this->processoAp = 756;
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Bairro');
+        $this->processoAp = 756;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $__titulo;
-  var $__limite;
-  var $__offset;
+    public $pessoa_logada;
+    public $__titulo;
+    public $__limite;
+    public $__offset;
 
-  var $idmun;
-  var $geom;
-  var $idbai;
-  var $nome;
-  var $idpes_rev;
-  var $data_rev;
-  var $origem_gravacao;
-  var $idpes_cad;
-  var $data_cad;
-  var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
+    public $idmun;
+    public $geom;
+    public $idbai;
+    public $nome;
+    public $idpes_rev;
+    public $data_rev;
+    public $origem_gravacao;
+    public $idpes_cad;
+    public $data_cad;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
 
-  var $idpais;
-  var $sigla_uf;
+    public $idpais;
+    public $sigla_uf;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->__titulo = 'Bairro - Listagem';
+        $this->__titulo = 'Bairro - Listagem';
 
-    // Passa todos os valores obtidos no GET para atributos do objeto
-    foreach ($_GET as $var => $val) {
-      $this->$var = ($val === '') ? NULL : $val;
-    }
+        // Passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
+        $this->addBanner(
+        'imagens/nvp_top_intranet.jpg',
+      'imagens/nvp_vert_intranet.jpg',
+        'Intranet'
+    );
 
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Nome',
       'Zona Localização',
       'Município',
       'Estado',
       'Pais'
-    ));
+    ]);
 
-    // Filtros de Foreign Keys
-    $opcoes = array('' => 'Selecione');
+        // Filtros de Foreign Keys
+        $opcoes = ['' => 'Selecione'];
 
-    if (class_exists('clsPais')) {
-      $objTemp = new clsPais();
-      $lista = $objTemp->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
+        if (class_exists('clsPais')) {
+            $objTemp = new clsPais();
+            $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['idpais']] = $registro['nome'];
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['idpais']] = $registro['nome'];
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geração'];
         }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
-    }
 
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', FALSE, '',
-      '', FALSE, FALSE);
+        $this->campoLista(
+        'idpais',
+        'Pais',
+        $opcoes,
+        $this->idpais,
+        '',
+        false,
+        '',
+      '',
+        false,
+        false
+    );
 
-    $opcoes = array('' => 'Selecione');
+        $opcoes = ['' => 'Selecione'];
 
-    if (class_exists('clsUf')) {
-      if ($this->idpais) {
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista(FALSE, FALSE, $this->idpais, FALSE, FALSE,
-          'nome ASC');
+        if (class_exists('clsUf')) {
+            if ($this->idpais) {
+                $objTemp = new clsUf();
+                $lista = $objTemp->lista(
+            false,
+            false,
+            $this->idpais,
+            false,
+            false,
+          'nome ASC'
+        );
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['sigla_uf']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['sigla_uf']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geração'];
         }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
-    }
 
-    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', FALSE,
-      '', '', FALSE, FALSE);
+        $this->campoLista(
+        'sigla_uf',
+        'Estado',
+        $opcoes,
+        $this->sigla_uf,
+        '',
+        false,
+      '',
+        '',
+        false,
+        false
+    );
 
-    $opcoes = array('' => 'Selecione');
+        $opcoes = ['' => 'Selecione'];
 
-    if (class_exists('clsMunicipio')) {
-      if ($this->sigla_uf) {
-        $objTemp = new clsMunicipio();
-        $lista = $objTemp->lista(FALSE, $this->sigla_uf, FALSE, FALSE, FALSE,
-          FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
+        if (class_exists('clsMunicipio')) {
+            if ($this->sigla_uf) {
+                $objTemp = new clsMunicipio();
+                $lista = $objTemp->lista(
+            false,
+            $this->sigla_uf,
+            false,
+            false,
+            false,
+          false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            'nome ASC'
+        );
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['idmun']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['idmun']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsMunicipio nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geração'];
         }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsMunicipio nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geração');
-    }
 
-    $this->campoLista('idmun', 'Município', $opcoes, $this->idmun, '', FALSE,
-      '', '', FALSE, FALSE);
+        $this->campoLista(
+        'idmun',
+        'Município',
+        $opcoes,
+        $this->idmun,
+        '',
+        false,
+      '',
+        '',
+        false,
+        false
+    );
 
-    if (class_exists('clsPublicDistrito')) {
-      if ($this->idmun) {
-        $objTemp = new clsPublicDistrito();
-        $objTemp->setOrderby(' nome ASC ');
+        if (class_exists('clsPublicDistrito')) {
+            if ($this->idmun) {
+                $objTemp = new clsPublicDistrito();
+                $objTemp->setOrderby(' nome ASC ');
 
-        $lista = $objTemp->lista($this->idmun);
-        
-        if (is_array($lista) && count($lista)) {
-          $opcoesTemp = array('' => 'Selecione');
-          foreach ($lista as $registro) {
-            $opcoesTemp[$registro['iddis']] = $registro['nome'];
-          }
-        }else{
-          $opcoesTemp = array('' => 'Não existem distritos para este município.');
+                $lista = $objTemp->lista($this->idmun);
+
+                if (is_array($lista) && count($lista)) {
+                    $opcoesTemp = ['' => 'Selecione'];
+                    foreach ($lista as $registro) {
+                        $opcoesTemp[$registro['iddis']] = $registro['nome'];
+                    }
+                } else {
+                    $opcoesTemp = ['' => 'Não existem distritos para este município.'];
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsPublicDistrito nao encontrada\n-->";
+            $opcoesTemp = ['' => 'Erro na geração'];
         }
-      }
-    }
-    else {
-      echo "<!--\nErro\nClasse clsPublicDistrito nao encontrada\n-->";
-      $opcoesTemp = array('' => 'Erro na geração');
-    }
 
-    $this->campoLista('iddis', 'Distrito', $opcoesTemp, $this->iddis, '', FALSE,
-      '', '', FALSE, FALSE);
+        $this->campoLista(
+        'iddis',
+        'Distrito',
+        $opcoesTemp,
+        $this->iddis,
+        '',
+        false,
+      '',
+        '',
+        false,
+        false
+    );
 
-    // Outros filtros
-    $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, FALSE);
+        // Outros filtros
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, false);
 
-    // Paginador
-    $this->__limite = 20;
-    $this->__offset = ($_GET['pagina_' . $this->nome]) ?
+        // Paginador
+        $this->__limite = 20;
+        $this->__offset = ($_GET['pagina_' . $this->nome]) ?
       ($_GET['pagina_' . $this->nome] * $this->__limite - $this->__limite) : 0;
 
-    $obj_bairro = new clsPublicBairro();
-    $obj_bairro->setOrderby('nome ASC');
-    $obj_bairro->setLimite($this->__limite, $this->__offset);
+        $obj_bairro = new clsPublicBairro();
+        $obj_bairro->setOrderby('nome ASC');
+        $obj_bairro->setLimite($this->__limite, $this->__offset);
 
-    $lista = $obj_bairro->lista(
+        $lista = $obj_bairro->lista(
       $this->idmun,
-      NULL,
+      null,
       $this->nome,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       $this->idpais,
       $this->sigla_uf,
-      NULL,
-      NULL,
+      null,
+      null,
       $this->iddis
     );
 
-    $total = $obj_bairro->_total;
+        $total = $obj_bairro->_total;
 
-    // Zona Localização.
-    $zona = App_Model_ZonaLocalizacao::getInstance();
+        // Zona Localização.
+        $zona = App_Model_ZonaLocalizacao::getInstance();
 
-    // UrlHelper.
-    $url = CoreExt_View_Helper_UrlHelper::getInstance();
-    $options = array('query' => array('idbai' => NULL));
+        // UrlHelper.
+        $url = CoreExt_View_Helper_UrlHelper::getInstance();
+        $options = ['query' => ['idbai' => null]];
 
-    // Monta a lista.
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $zl = $zona->getValue($registro['zona_localizacao']);
-        $options['query']['idbai'] = $registro['idbai'];
+        // Monta a lista.
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $zl = $zona->getValue($registro['zona_localizacao']);
+                $options['query']['idbai'] = $registro['idbai'];
 
-        $this->addLinhas(array(
+                $this->addLinhas([
           $url->l($registro['nome'], 'public_bairro_det.php', $options),
           $url->l($zl, 'public_bairro_det.php', $options),
           $url->l($registro['nm_municipio'], 'public_bairro_det.php', $options),
           $url->l($registro['nm_estado'], 'public_bairro_det.php', $options),
           $url->l($registro['nm_pais'], 'public_bairro_det.php', $options)
-        ));
-      }
+        ]);
+            }
+        }
+
+        $this->addPaginador2('public_bairro_lst.php', $total, $_GET, $this->nome, $this->__limite);
+
+        $obj_permissao = new clsPermissoes();
+
+        if ($obj_permissao->permissao_cadastra(756, $this->pessoa_logada, 7, null, true)) {
+            $this->acao      = 'go("public_bairro_cad.php")';
+            $this->nome_acao = 'Novo';
+        }
+
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''                                  => 'Listagem de bairros'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->addPaginador2('public_bairro_lst.php', $total, $_GET, $this->nome, $this->__limite);
-
-    $obj_permissao = new clsPermissoes();
-
-    if($obj_permissao->permissao_cadastra(756, $this->pessoa_logada,7,null,true))
-    {
-      $this->acao      = 'go("public_bairro_cad.php")';
-      $this->nome_acao = 'Novo';
-    }    
-
-    $this->largura = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""                                  => "Listagem de bairros"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
 }
 
 // Instancia objeto de página

@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,38 +44,42 @@ require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
  * Class EtapacursoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class EtapacursoController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  protected function searchOptions() {
-    return array('namespace' => 'modules', 'table' => 'etapas_educacenso', 'labelAttr' => 'nome', 'idAttr' => 'id');
-  }
+    protected function searchOptions()
+    {
+        return ['namespace' => 'modules', 'table' => 'etapas_educacenso', 'labelAttr' => 'nome', 'idAttr' => 'id'];
+    }
 
-  protected function formatResourceValue($resource) {
-    return $this->toUtf8($resource['name'], array('transform' => true));
-  }
+    protected function formatResourceValue($resource)
+    {
+        return $this->toUtf8($resource['name'], ['transform' => true]);
+    }
 
-  protected function getEtapacurso() {
-    
-    $arrayEtapacurso;
-    $sql = 'SELECT * FROM modules.etapas_curso_educacenso WHERE curso_id = $1';
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array ('params' => $this->getRequest()->curso_id)) as $reg){
-      $arrayEtapacurso[] = $reg['etapa_id'];
-    }    
+    protected function getEtapacurso()
+    {
+        $arrayEtapacurso;
+        $sql = 'SELECT * FROM modules.etapas_curso_educacenso WHERE curso_id = $1';
+        foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => $this->getRequest()->curso_id]) as $reg) {
+            $arrayEtapacurso[] = $reg['etapa_id'];
+        }
 
-    
-    return array('etapacurso' => $arrayEtapacurso);
-  }
+        return ['etapacurso' => $arrayEtapacurso];
+    }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'etapacurso-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'etapacurso'))
-      $this->appendResponse($this->getEtapacurso());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'etapacurso-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'etapacurso')) {
+            $this->appendResponse($this->getEtapacurso());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

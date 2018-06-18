@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -34,82 +39,98 @@ require_once 'lib/Portabilis/Array/Utils.php';
  * Portabilis_Report_ReportCore class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 
 class Portabilis_Report_ReportCore
 {
+    public function __construct()
+    {
+        $this->requiredArgs = [];
+        $this->args         = [];
 
- function __construct() {
-    $this->requiredArgs = array();
-    $this->args         = array();
-
-    // set required args on construct, because ReportCoreController access it args before call dumps
-    $this->requiredArgs();
-  }
-
-  // wrapper for Portabilis_Array_Utils::merge
-  protected static function mergeOptions($options, $defaultOptions) {
-    return Portabilis_Array_Utils::merge($options, $defaultOptions);
-  }
-
-  function addArg($name, $value) {
-    if (is_string($value))
-      $value = $value;
-
-    $this->args[$name] = $value;
-  }
-
-  function addRequiredArg($name) {
-    $this->requiredArgs[] = $name;
-  }
-
-  function validatesPresenseOfRequiredArgs() {
-    foreach($this->requiredArgs as $requiredArg) {
-
-      if (! isset($this->args[$requiredArg]) || empty($this->args[$requiredArg]))
-        throw new Exception("The required arg '{$requiredArg}' wasn't set or is empty!");
+        // set required args on construct, because ReportCoreController access it args before call dumps
+        $this->requiredArgs();
     }
-  }
 
-  function dumps($options = array()) {
-    $defaultOptions = array('report_factory' => null, 'options' => array());
-    $options        = self::mergeOptions($options, $defaultOptions);
+    // wrapper for Portabilis_Array_Utils::merge
+    protected static function mergeOptions($options, $defaultOptions)
+    {
+        return Portabilis_Array_Utils::merge($options, $defaultOptions);
+    }
 
-    $this->validatesPresenseOfRequiredArgs();
+    public function addArg($name, $value)
+    {
+        if (is_string($value)) {
+            $value = $value;
+        }
 
-    $reportFactory = ! is_null($options['report_factory']) ? $options['report_factory'] : $this->reportFactory();
+        $this->args[$name] = $value;
+    }
 
-    return $reportFactory->dumps($this, $options['options']);
-  }
+    public function addRequiredArg($name)
+    {
+        $this->requiredArgs[] = $name;
+    }
 
-  function reportFactory() {
-    $factoryClassName = $GLOBALS['coreExt']['Config']->report->default_factory;
-    $factoryClassPath = str_replace('_', '/', $factoryClassName) . '.php';
+    public function validatesPresenseOfRequiredArgs()
+    {
+        foreach ($this->requiredArgs as $requiredArg) {
+            if (! isset($this->args[$requiredArg]) || empty($this->args[$requiredArg])) {
+                throw new Exception("The required arg '{$requiredArg}' wasn't set or is empty!");
+            }
+        }
+    }
 
-    if (! $factoryClassName)
-      throw new CoreExt_Exception("No report.default_factory defined in configurations!");
+    public function dumps($options = [])
+    {
+        $defaultOptions = ['report_factory' => null, 'options' => []];
+        $options        = self::mergeOptions($options, $defaultOptions);
 
-    // don't fail if path not exists.
-    include_once $factoryClassPath;
+        $this->validatesPresenseOfRequiredArgs();
 
-    if (! class_exists($factoryClassName))
-      throw new CoreExt_Exception("Class '$factoryClassName' not found in path '$factoryClassPath'");
+        $reportFactory = ! is_null($options['report_factory']) ? $options['report_factory'] : $this->reportFactory();
 
-    return new $factoryClassName();
-  }
+        return $reportFactory->dumps($this, $options['options']);
+    }
 
-  // methods that must be overridden
+    public function reportFactory()
+    {
+        $factoryClassName = $GLOBALS['coreExt']['Config']->report->default_factory;
+        $factoryClassPath = str_replace('_', '/', $factoryClassName) . '.php';
 
-  function templateName() {
-    throw new Exception("The method 'templateName' must be overridden!");
-  }
+        if (! $factoryClassName) {
+            throw new CoreExt_Exception('No report.default_factory defined in configurations!');
+        }
 
-  function requiredArgs() {
-    throw new Exception("The method 'requiredArgs' must be overridden!");
-  }
+        // don't fail if path not exists.
+        include_once $factoryClassPath;
+
+        if (! class_exists($factoryClassName)) {
+            throw new CoreExt_Exception("Class '$factoryClassName' not found in path '$factoryClassPath'");
+        }
+
+        return new $factoryClassName();
+    }
+
+    // methods that must be overridden
+
+    public function templateName()
+    {
+        throw new Exception('The method \'templateName\' must be overridden!');
+    }
+
+    public function requiredArgs()
+    {
+        throw new Exception('The method \'requiredArgs\' must be overridden!');
+    }
 }

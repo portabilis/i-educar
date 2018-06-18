@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -38,47 +43,53 @@ require_once 'intranet/include/clsBanco.inc.php';
 
 /**
  * Class AcervoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class AcervoController extends ApiCoreController
 {
+    protected function searchOptions()
+    {
+        $biblioteca_id = $this->getRequest()->biblioteca_id ? $this->getRequest()->biblioteca_id : 0;
 
-  protected function searchOptions() {
-    $biblioteca_id = $this->getRequest()->biblioteca_id ? $this->getRequest()->biblioteca_id : 0;
+        return ['sqlParams' => [$biblioteca_id]];
+    }
 
-    return array('sqlParams' => array($biblioteca_id));
-  }
+    protected function formatResourceValue($resource)
+    {
+        $nome = $resource['id'] . ' - ' . $this->toUtf8($resource['nome'], ['transform' => true]);
 
-  protected function formatResourceValue($resource) {
-    $nome = $resource['id'] . ' - ' . $this->toUtf8($resource['nome'], array('transform' => true));
+        return $nome;
+    }
 
-    return $nome;
-  }
-
-  protected function sqlsForNumericSearch() {
-     return "SELECT acervo.cod_acervo as id, initcap(acervo.titulo) as nome
+    protected function sqlsForNumericSearch()
+    {
+        return 'SELECT acervo.cod_acervo as id, initcap(acervo.titulo) as nome
                FROM pmieducar.acervo
               LEFT JOIN pmieducar.acervo_acervo_autor ON (acervo.cod_acervo = acervo_acervo_autor.ref_cod_acervo)
               INNER JOIN pmieducar.exemplar ON (exemplar.ref_cod_acervo = acervo.cod_acervo)
               INNER JOIN pmieducar.biblioteca ON (biblioteca.cod_biblioteca = acervo.ref_cod_biblioteca)
               WHERE (case when $2 = 0 then true else biblioteca.cod_biblioteca = $2 end)
-                AND (acervo.cod_acervo::varchar ILIKE '%'||$1||'%' OR acervo.titulo ILIKE '%'||$1||'%')";
-  }
+                AND (acervo.cod_acervo::varchar ILIKE \'%\'||$1||\'%\' OR acervo.titulo ILIKE \'%\'||$1||\'%\')';
+    }
 
-  protected function sqlsForStringSearch() {
-     return "SELECT acervo.cod_acervo as id, initcap(acervo.titulo) as nome
+    protected function sqlsForStringSearch()
+    {
+        return 'SELECT acervo.cod_acervo as id, initcap(acervo.titulo) as nome
                FROM pmieducar.acervo
               LEFT JOIN pmieducar.acervo_acervo_autor ON (acervo.cod_acervo = acervo_acervo_autor.ref_cod_acervo)
               INNER JOIN pmieducar.exemplar ON (exemplar.ref_cod_acervo = acervo.cod_acervo)
               INNER JOIN pmieducar.biblioteca ON (biblioteca.cod_biblioteca = acervo.ref_cod_biblioteca)
               WHERE (case when $2 = 0 then true else biblioteca.cod_biblioteca = $2 end)
-                AND acervo.titulo ILIKE '%'||$1||'%'";
-  }
+                AND acervo.titulo ILIKE \'%\'||$1||\'%\'';
+    }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'acervo-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'acervo-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

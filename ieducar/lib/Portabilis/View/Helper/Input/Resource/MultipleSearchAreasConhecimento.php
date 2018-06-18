@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -37,44 +42,53 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchEtapacurso class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_MultipleSearchAreasConhecimento extends Portabilis_View_Helper_Input_MultipleSearch {
+class Portabilis_View_Helper_Input_Resource_MultipleSearchAreasConhecimento extends Portabilis_View_Helper_Input_MultipleSearch
+{
+    protected function getOptions($resources)
+    {
+        return $this->insertOption(null, '', $resources);
+    }
 
-  protected function getOptions($resources) {
-    return $this->insertOption(null, '', $resources);
-  }
-
-  public function multipleSearchAreasConhecimento($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'areaconhecimento',
+    public function multipleSearchAreasConhecimento($attrName, $options = [])
+    {
+        $defaultOptions = ['objectName'    => 'areaconhecimento',
                             'apiController' => 'AreaConhecimento',
-                            'apiResource'   => 'areaconhecimento-search');
+                            'apiResource'   => 'areaconhecimento-search'];
 
-    $options                         = $this->mergeOptions($options, $defaultOptions);
-    $options['options']['resources'] = $this->getOptions($options['options']['resources']);
+        $options                         = $this->mergeOptions($options, $defaultOptions);
+        $options['options']['resources'] = $this->getOptions($options['options']['resources']);
 
-    $this->placeholderJs($options);
+        $this->placeholderJs($options);
 
-    parent::multipleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::multipleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function placeholderJs($options) {
-    $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
-    $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
+    protected function placeholderJs($options)
+    {
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
+        $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione as áreas de conhecimento');
                        ";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
-  }
-  protected function loadAssets() {
-    Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchAreaconhecimento.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+    }
+    protected function loadAssets()
+    {
+        Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchAreaconhecimento.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    }
 }

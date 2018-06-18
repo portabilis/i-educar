@@ -4,7 +4,6 @@ use Phinx\Migration\AbstractMigration;
 
 class RemoveParecerDuplicadoGeralAndPorComponente extends AbstractMigration
 {
-
     public function up()
     {
         $this->execute('delete

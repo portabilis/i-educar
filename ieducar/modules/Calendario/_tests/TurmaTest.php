@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Calendario
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,34 @@ require_once 'Calendario/Model/Turma.php';
  * TurmaTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Calendario
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class TurmaTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new Calendario_Model_Turma();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new Calendario_Model_Turma();
+    }
 
-  public function testEntityValidators()
-  {
-    $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['calendarioAnoLetivo']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['ano']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['mes']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['dia']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['turma']);
-  }
+    public function testEntityValidators()
+    {
+        $validators = $this->_entity->getDefaultValidatorCollection();
+        $this->assertType('CoreExt_Validate_Numeric', $validators['calendarioAnoLetivo']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['ano']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['mes']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['dia']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['turma']);
+    }
 }

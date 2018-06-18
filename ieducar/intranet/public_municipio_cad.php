@@ -22,11 +22,14 @@
  *
  * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package     Core
  * @subpackage  public
  * @subpackage  Enderecamento
  * @subpackage  Municipio
+ *
  * @since       Arquivo disponível desde a versão 1.0.0
+ *
  * @version     $Id$
  */
 
@@ -34,242 +37,287 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
-require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
+require_once('include/pmieducar/geral.inc.php');
+require_once('include/modules/clsModulesAuditoriaGeral.inc.php');
 require_once 'App/Model/Pais.php';
 require_once 'App/Model/NivelAcesso.php';
 
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Munic&iacute;pio');
-    $this->processoAp = '755';
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Munic&iacute;pio');
+        $this->processoAp = '755';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-  /**
-   * Referência a usuário da sessão.
-   * @var int
-   */
-  var $pessoa_logada;
+    /**
+     * Referência a usuário da sessão.
+     *
+     * @var int
+     */
+    public $pessoa_logada;
 
-  var $idmun;
-  var $nome;
-  var $sigla_uf;
-  var $area_km2;
-  var $idmreg;
-  var $idasmun;
-  var $cod_ibge;
-  var $geom;
-  var $tipo;
-  var $idmun_pai;
-  var $idpes_rev;
-  var $idpes_cad;
-  var $data_rev;
-  var $data_cad;
-  var $origem_gravacao;
-  var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
+    public $idmun;
+    public $nome;
+    public $sigla_uf;
+    public $area_km2;
+    public $idmreg;
+    public $idasmun;
+    public $cod_ibge;
+    public $geom;
+    public $tipo;
+    public $idmun_pai;
+    public $idpes_rev;
+    public $idpes_cad;
+    public $data_rev;
+    public $data_cad;
+    public $origem_gravacao;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
 
-  var $idpais;
+    public $idpais;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->idmun = $_GET['idmun'];
+        $this->idmun = $_GET['idmun'];
 
-    if (is_numeric($this->idmun)) {
-      $obj = new clsPublicMunicipio( $this->idmun );
-      $registro  = $obj->detalhe();
+        if (is_numeric($this->idmun)) {
+            $obj = new clsPublicMunicipio($this->idmun);
+            $registro  = $obj->detalhe();
 
-      if ($registro) {
-        foreach ($registro as $campo => $val) {
-          $this->$campo = $val;
+            if ($registro) {
+                foreach ($registro as $campo => $val) {
+                    $this->$campo = $val;
+                }
+
+                $obj_uf = new clsUf($this->sigla_uf);
+                $det_uf = $obj_uf->detalhe();
+                $this->idpais = $det_uf['idpais']->idpais;
+
+                $retorno = 'Editar';
+            }
         }
-
-        $obj_uf = new clsUf( $this->sigla_uf );
-        $det_uf = $obj_uf->detalhe();
-        $this->idpais = $det_uf['idpais']->idpais;
-
-        $retorno = 'Editar';
-      }
-    }
-    $this->url_cancelar = ($retorno == 'Editar') ?
+        $this->url_cancelar = ($retorno == 'Editar') ?
       'public_municipio_det.php?idmun=' . $registro['idmun'] :
       'public_municipio_lst.php';
-    $this->nome_url_cancelar = 'Cancelar';
+        $this->nome_url_cancelar = 'Cancelar';
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "{$nomeMenu} munic&iacute;pio"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''        => "{$nomeMenu} munic&iacute;pio"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    return $retorno;
-  }
+        return $retorno;
+    }
 
-  function Gerar()
-  {
-    // primary keys
-    $this->campoOculto('idmun', $this->idmun);
+    public function Gerar()
+    {
+        // primary keys
+        $this->campoOculto('idmun', $this->idmun);
 
-    // foreign keys
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPais')) {
-      $objTemp = new clsPais();
-      $lista = $objTemp->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['idpais']] = $registro['nome'];
+        // foreign keys
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsPais')) {
+            $objTemp = new clsPais();
+            $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['idpais']] = $registro['nome'];
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
+        $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
 
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsUf')) {
-      if ($this->idpais) {
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista(FALSE, FALSE, $this->idpais, FALSE, FALSE, 'nome ASC');
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsUf')) {
+            if ($this->idpais) {
+                $objTemp = new clsUf();
+                $lista = $objTemp->lista(false, false, $this->idpais, false, false, 'nome ASC');
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['sigla_uf']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['sigla_uf']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
-    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
+        $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
 
-    // text
-    $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, TRUE);
+        // text
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, true);
 
-    $this->campoNumero('cod_ibge', 'C&oacute;digo INEP', $this->cod_ibge, 7, 7);
-  }
-
-  function Novo()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
-        $this->mensagem = 'Não é permitido cadastro de municípios brasileiros, pois já estão previamente cadastrados.<br>';
-        return FALSE;
+        $this->campoNumero('cod_ibge', 'C&oacute;digo INEP', $this->cod_ibge, 7, 7);
     }
 
-    $obj = new clsPublicMunicipio(NULL, $this->nome, $this->sigla_uf, NULL, NULL,
-      NULL, $this->cod_ibge, NULL, 'M', NULL, NULL, $this->pessoa_logada, NULL, NULL, 'U',
-      'I', NULL, 9);
+    public function Novo()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $cadastrou = $obj->cadastra();
-    if ($cadastrou) {
+        if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            $this->mensagem = 'Não é permitido cadastro de municípios brasileiros, pois já estão previamente cadastrados.<br>';
 
-      $enderecamento = new clsPublicMunicipio($cadastrou);
-      $enderecamento->cadastrou = $cadastrou;
-      $enderecamento = $enderecamento->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Municipio", $this->pessoa_logada, $cadastrou);
-      $auditoria->inclusao($enderecamento);
+            return false;
+        }
 
-      $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_municipio_lst.php');
-      die();
+        $obj = new clsPublicMunicipio(
+        null,
+        $this->nome,
+        $this->sigla_uf,
+        null,
+        null,
+      null,
+        $this->cod_ibge,
+        null,
+        'M',
+        null,
+        null,
+        $this->pessoa_logada,
+        null,
+        null,
+        'U',
+      'I',
+        null,
+        9
+    );
+
+        $cadastrou = $obj->cadastra();
+        if ($cadastrou) {
+            $enderecamento = new clsPublicMunicipio($cadastrou);
+            $enderecamento->cadastrou = $cadastrou;
+            $enderecamento = $enderecamento->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Municipio', $this->pessoa_logada, $cadastrou);
+            $auditoria->inclusao($enderecamento);
+
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: public_municipio_lst.php');
+            die();
+        }
+
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        echo "<!--\nErro ao cadastrar clsPublicMunicipio\nvalores obrigatorios\nis_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
+
+        return false;
     }
 
-    $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-    echo "<!--\nErro ao cadastrar clsPublicMunicipio\nvalores obrigatorios\nis_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
-    return FALSE;
-  }
+    public function Editar()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-  function Editar()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            $this->mensagem = 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.<br>';
 
-    if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
-        $this->mensagem = 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.<br>';
-        return FALSE;
+            return false;
+        }
+
+        $enderecamentoDetalhe = new clsPublicMunicipio($this->idmun);
+        $enderecamentoDetalhe->cadastrou = $this->idmun;
+        $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
+
+        $obj = new clsPublicMunicipio(
+        $this->idmun,
+        $this->nome,
+        $this->sigla_uf,
+      null,
+        null,
+        null,
+        $this->cod_ibge,
+        null,
+        'M',
+        null,
+        $this->pessoa_logada,
+        null,
+        null,
+      null,
+        'U',
+        'I',
+        null,
+        9
+    );
+
+        $editou = $obj->edita();
+
+        if ($editou) {
+            $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Municipio', $this->pessoa_logada, $this->idmun);
+            $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
+
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: public_municipio_lst.php');
+            die();
+        }
+
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        echo "<!--\nErro ao editar clsPublicMunicipio\nvalores obrigatorios\nif( is_numeric( $this->idmun ) )\n-->";
+
+        return false;
     }
 
+    public function Excluir()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $enderecamentoDetalhe = new clsPublicMunicipio($this->idmun);
-    $enderecamentoDetalhe->cadastrou = $this->idmun;
-    $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
+        if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            $this->mensagem = 'Não é permitido exclusão de municípios brasileiros, pois já estão previamente cadastrados.<br>';
 
-    $obj = new clsPublicMunicipio($this->idmun, $this->nome, $this->sigla_uf,
-      NULL, NULL, NULL, $this->cod_ibge, NULL, 'M', NULL, $this->pessoa_logada, NULL, NULL,
-      NULL, 'U', 'I', NULL, 9 );
+            return false;
+        }
 
-    $editou = $obj->edita();
+        $obj = new clsPublicMunicipio(
+        $this->idmun,
+        null,
+        null,
+        null,
+        null,
+        null,
+      null,
+        null,
+        null,
+        null,
+        $this->pessoa_logada
+    );
 
-    if ($editou) {
+        $enderecamento = $obj->detalhe();
+        $enderecamentoDetalhe->cadastrou = $this->idmun;
 
-      $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Municipio", $this->pessoa_logada, $this->idmun);
-      $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
+        $excluiu = $obj->excluir();
 
-      $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header('Location: public_municipio_lst.php');
-      die();
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: public_municipio_lst.php');
+            die();
+        }
+
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        echo "<!--\nErro ao excluir clsPublicMunicipio\nvalores obrigatorios\nif( is_numeric( $this->idmun ) )\n-->";
+
+        return false;
     }
-
-    $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-    echo "<!--\nErro ao editar clsPublicMunicipio\nvalores obrigatorios\nif( is_numeric( $this->idmun ) )\n-->";
-
-    return FALSE;
-  }
-
-  function Excluir()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
-        $this->mensagem = 'Não é permitido exclusão de municípios brasileiros, pois já estão previamente cadastrados.<br>';
-        return FALSE;
-    }
-
-    $obj = new clsPublicMunicipio($this->idmun, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, $this->pessoa_logada);
-
-    $enderecamento = $obj->detalhe();
-    $enderecamentoDetalhe->cadastrou = $this->idmun;
-
-    $excluiu = $obj->excluir();
-
-    if ($excluiu) {
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: public_municipio_lst.php');
-      die();
-    }
-
-    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao excluir clsPublicMunicipio\nvalores obrigatorios\nif( is_numeric( $this->idmun ) )\n-->";
-
-    return FALSE;
-  }
 }
 
 // Instancia objeto de página

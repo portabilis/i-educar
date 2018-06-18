@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,34 @@ require_once 'Avaliacao/_tests/_stub/ParecerDescritivoAbstract.php';
  * ParecerDescritivoAbstractTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class ParecerDescritivoAbstractTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new Avaliacao_Model_ParecerDescritivoAbstractStub();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new Avaliacao_Model_ParecerDescritivoAbstractStub();
+    }
 
-  public function testEntityValidators()
-  {
-    $validators = $this->_entity->getValidatorCollection();
-    $this->assertType('CoreExt_Validate_Choice', $validators['etapa']);
-    $this->assertType('CoreExt_Validate_String', $validators['parecer']);
+    public function testEntityValidators()
+    {
+        $validators = $this->_entity->getValidatorCollection();
+        $this->assertType('CoreExt_Validate_Choice', $validators['etapa']);
+        $this->assertType('CoreExt_Validate_String', $validators['parecer']);
 
-    // Verifica se as opções de etapa incluem 'An'
-    $this->assertTrue(in_array('An', $validators['etapa']->getOption('choices')));
-  }
+        // Verifica se as opções de etapa incluem 'An'
+        $this->assertTrue(in_array('An', $validators['etapa']->getOption('choices')));
+    }
 }

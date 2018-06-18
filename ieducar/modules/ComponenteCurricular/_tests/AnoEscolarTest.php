@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,34 +40,39 @@ require_once 'ComponenteCurricular/Model/AnoEscolar.php';
  * AnoEscolarTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class AnoEscolarTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new ComponenteCurricular_Model_AnoEscolar();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new ComponenteCurricular_Model_AnoEscolar();
+    }
 
-  public function testEntityValidators()
-  {
-    $validators = $this->_entity->getValidatorCollection();
-    $this->assertFalse(isset($validators['cargaHoraria']));
+    public function testEntityValidators()
+    {
+        $validators = $this->_entity->getValidatorCollection();
+        $this->assertFalse(isset($validators['cargaHoraria']));
 
-    $this->_entity->anoEscolar = 1;
-    $validators = $this->_entity->getValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
-  }
+        $this->_entity->anoEscolar = 1;
+        $validators = $this->_entity->getValidatorCollection();
+        $this->assertType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
+    }
 
-  public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
-  {
-    $this->assertType('ComponenteCurricular_Model_AnoEscolarDataMApper', $this->_entity->getDataMapper());
-  }
+    public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
+    {
+        $this->assertType('ComponenteCurricular_Model_AnoEscolarDataMApper', $this->_entity->getDataMapper());
+    }
 }

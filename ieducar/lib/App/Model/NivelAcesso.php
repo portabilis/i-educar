@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -56,30 +61,35 @@ require_once 'CoreExt/Enum.php';
  * </code>
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @see       clsPermissoes#permissao_cadastra
  * @see       clsPermissoes#permissao_excluir
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class App_Model_NivelAcesso extends CoreExt_Enum
 {
-  const POLI_INSTITUCIONAL = 1;
-  const INSTITUCIONAL      = 3;
-  const SOMENTE_ESCOLA     = 7;
-  const SOMENTE_BIBLIOTECA = 11;
+    const POLI_INSTITUCIONAL = 1;
+    const INSTITUCIONAL      = 3;
+    const SOMENTE_ESCOLA     = 7;
+    const SOMENTE_BIBLIOTECA = 11;
 
-  protected $_data = array(
+    protected $_data = [
     self::POLI_INSTITUCIONAL => 'Poli-institucional',
     self::INSTITUCIONAL      => 'Institucional',
     self::SOMENTE_ESCOLA     => 'Somente escola',
     self::SOMENTE_BIBLIOTECA => 'Somente biblioteca'
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

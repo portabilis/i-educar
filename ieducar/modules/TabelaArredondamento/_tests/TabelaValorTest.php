@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     TabelaArredondamento
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -38,55 +43,60 @@ require_once 'RegraAvaliacao/Model/Nota/TipoValor.php';
  * TabelaValorTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     TabelaArredondamento
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class TabelaValorTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new TabelaArredondamento_Model_TabelaValor();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new TabelaArredondamento_Model_TabelaValor();
+    }
 
-  public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
-  {
-    $this->assertType('TabelaArredondamento_Model_TabelaValorDataMapper', $this->_entity->getDataMapper());
-  }
+    public function testGetterDeDataMapperInstanciaObjetoPorPadraoSeNenhumForConfigurado()
+    {
+        $this->assertType('TabelaArredondamento_Model_TabelaValorDataMapper', $this->_entity->getDataMapper());
+    }
 
-  public function testEntityValidators()
-  {
-    $tabelaNumerica = new TabelaArredondamento_Model_Tabela(array(
+    public function testEntityValidators()
+    {
+        $tabelaNumerica = new TabelaArredondamento_Model_Tabela([
       'nome' => 'foo',
       'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA
-    ));
+    ]);
 
-    $tabelaConceitual = new TabelaArredondamento_Model_Tabela(array(
+        $tabelaConceitual = new TabelaArredondamento_Model_Tabela([
       'nome' => 'bar',
       'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL
-    ));
+    ]);
 
-    // Usa a instância recém criaca
-    $this->_entity->tabelaArredondamento = $tabelaNumerica;
+        // Usa a instância recém criaca
+        $this->_entity->tabelaArredondamento = $tabelaNumerica;
 
-    // Asserção para nota numérica
-    $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['nome']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
-    $this->assertTrue(!isset($validators['descricao']));
+        // Asserção para nota numérica
+        $validators = $this->_entity->getDefaultValidatorCollection();
+        $this->assertType('CoreExt_Validate_Numeric', $validators['nome']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
+        $this->assertTrue(!isset($validators['descricao']));
 
-    // Asserção para nota conceitual
-    $this->_entity->tabelaArredondamento = $tabelaConceitual;
-    $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_String',  $validators['nome']);
-    $this->assertType('CoreExt_Validate_String',  $validators['descricao']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
-    $this->assertType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
-  }
+        // Asserção para nota conceitual
+        $this->_entity->tabelaArredondamento = $tabelaConceitual;
+        $validators = $this->_entity->getDefaultValidatorCollection();
+        $this->assertType('CoreExt_Validate_String', $validators['nome']);
+        $this->assertType('CoreExt_Validate_String', $validators['descricao']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['valorMinimo']);
+        $this->assertType('CoreExt_Validate_Numeric', $validators['valorMaximo']);
+    }
 }

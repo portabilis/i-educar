@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,27 +40,33 @@ require_once 'CoreExt/Entity.php';
  * Avaliacao_Model_Etapa class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 abstract class Avaliacao_Model_Etapa extends CoreExt_Entity
 {
-  public function __construct($options = array())
-  {
-    $this->_data['etapa'] = NULL;
-    $this->setValidator('etapa', $this->_getEtapaValidator());
+    public function __construct($options = [])
+    {
+        $this->_data['etapa'] = null;
+        $this->setValidator('etapa', $this->_getEtapaValidator());
 
-    parent::__construct($options);
-  }
+        parent::__construct($options);
+    }
 
-  protected function _getEtapaValidator()
-  {
-    // Aceita etapas de 0 a 10 + a string Rc
-    $etapas = range(0, 10, 1) + array('Rc');
-    return (new CoreExt_Validate_Choice(array('choices' => $etapas)));
-  }
+    protected function _getEtapaValidator()
+    {
+        // Aceita etapas de 0 a 10 + a string Rc
+        $etapas = range(0, 10, 1) + ['Rc'];
+
+        return (new CoreExt_Validate_Choice(['choices' => $etapas]));
+    }
 }

@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   07/2013
+ *
  * @version   $Id$
  */
 
@@ -38,31 +43,33 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 /**
  * Class PessoajController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class PessoajController extends ApiCoreController
 {
+    protected function sqlsForNumericSearch()
+    {
+        $sqls[] = 'select distinct idpes as id, nome as name from
+                 cadastro.pessoa where tipo=\'J\' and idpes::varchar like $1||\'%\'';
 
-  protected function sqlsForNumericSearch() {
+        return $sqls;
+    }
 
-    $sqls[] = "select distinct idpes as id, nome as name from
-                 cadastro.pessoa where tipo='J' and idpes::varchar like $1||'%'";
+    protected function sqlsForStringSearch()
+    {
+        $sqls[] = 'select distinct idpes as id, nome as name from
+                 cadastro.pessoa where tipo=\'J\' and lower((nome)) like \'%\'||lower(($1))||\'%\'';
 
-    return $sqls;
-  }
+        return $sqls;
+    }
 
-  protected function sqlsForStringSearch() {
-
-    $sqls[] = "select distinct idpes as id, nome as name from
-                 cadastro.pessoa where tipo='J' and lower((nome)) like '%'||lower(($1))||'%'";
-
-    return $sqls;
-  }
-
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'pessoaj-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'pessoaj-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

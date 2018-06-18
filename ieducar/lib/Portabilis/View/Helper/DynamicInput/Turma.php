@@ -22,76 +22,90 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_Turma class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_DynamicInput_CoreSelect {
-
-  protected function inputName() {
-    return 'ref_cod_turma';
-  }
-
-  protected function inputOptions($options) {
-    $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $escolaId      = $this->getEscolaId($options['escolaId']);
-    $serieId       = $this->getSerieId($options['serieId']);
-    $ano           = $this->viewInstance->ano;
-    $naoFiltrarAno    = $this->viewInstance->nao_filtrar_ano;
-
-    $userId        = $this->getCurrentUserId();
-    $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
-
-    if ($escolaId and $serieId and empty($resources) and $isProfessor)
-      $resources    = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
-    elseif ($escolaId && $serieId && empty($resources))
-      $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);
-
-
-    // caso no letivo esteja definido para filtrar turmas por ano,
-    // somente exibe as turmas do ano letivo.  
-
-    if ($escolaId && $ano && !$naoFiltrarAno && $this->turmasPorAno($escolaId, $ano)) {
-      foreach ($resources as $id => $nome) {
-        $turma            = new clsPmieducarTurma();
-        $turma->cod_turma = $id;
-        $turma            = $turma->detalhe();
-
-        if ($turma['ano'] != $ano)
-          unset($resources[$id]);
-      }
+class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'ref_cod_turma';
     }
 
-    return $this->insertOption(null, "Selecione uma turma", $resources);
-  }
+    protected function inputOptions($options)
+    {
+        $resources     = $options['resources'];
+        $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
+        $escolaId      = $this->getEscolaId($options['escolaId']);
+        $serieId       = $this->getSerieId($options['serieId']);
+        $ano           = $this->viewInstance->ano;
+        $naoFiltrarAno    = $this->viewInstance->nao_filtrar_ano;
 
-  protected function turmasPorAno($escolaId, $ano) {
-    $anoLetivo                 = new clsPmieducarEscolaAnoLetivo();
-    $anoLetivo->ref_cod_escola = $escolaId;
-    $anoLetivo->ano            = $ano;
-    $anoLetivo                 = $anoLetivo->detalhe();
+        $userId        = $this->getCurrentUserId();
+        $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-    return ($anoLetivo['turmas_por_ano'] == 1);
-  }
+        if ($escolaId and $serieId and empty($resources) and $isProfessor) {
+            $resources    = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
+        } elseif ($escolaId && $serieId && empty($resources)) {
+            $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);
+        }
 
-  public function turma($options = array()) {
-    parent::select($options);
-  }
+        // caso no letivo esteja definido para filtrar turmas por ano,
+        // somente exibe as turmas do ano letivo.
+
+        if ($escolaId && $ano && !$naoFiltrarAno && $this->turmasPorAno($escolaId, $ano)) {
+            foreach ($resources as $id => $nome) {
+                $turma            = new clsPmieducarTurma();
+                $turma->cod_turma = $id;
+                $turma            = $turma->detalhe();
+
+                if ($turma['ano'] != $ano) {
+                    unset($resources[$id]);
+                }
+            }
+        }
+
+        return $this->insertOption(null, 'Selecione uma turma', $resources);
+    }
+
+    protected function turmasPorAno($escolaId, $ano)
+    {
+        $anoLetivo                 = new clsPmieducarEscolaAnoLetivo();
+        $anoLetivo->ref_cod_escola = $escolaId;
+        $anoLetivo->ano            = $ano;
+        $anoLetivo                 = $anoLetivo->detalhe();
+
+        return ($anoLetivo['turmas_por_ano'] == 1);
+    }
+
+    public function turma($options = [])
+    {
+        parent::select($options);
+    }
 }

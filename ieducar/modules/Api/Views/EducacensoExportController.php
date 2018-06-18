@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -44,149 +49,165 @@ require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
 /**
  * Class EducacensoExportController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class EducacensoExportController extends ApiCoreController
 {
+    public $pessoa_logada;
 
-  var $pessoa_logada;
+    public $ref_cod_escola;
+    public $ref_cod_escola_;
+    public $ref_cod_serie;
+    public $ref_cod_serie_;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $hora_inicial;
+    public $hora_final;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $hora_inicio_intervalo;
+    public $hora_fim_intervalo;
+    public $hora_fim_intervalo_;
 
-  var $ref_cod_escola;
-  var $ref_cod_escola_;
-  var $ref_cod_serie;
-  var $ref_cod_serie_;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $hora_inicial;
-  var $hora_final;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $hora_inicio_intervalo;
-  var $hora_fim_intervalo;
-  var $hora_fim_intervalo_;
+    public $ano;
+    public $ref_cod_instituicao;
+    public $msg = '';
+    public $error = false;
 
-  var $ano;
-  var $ref_cod_instituicao;
-  var $msg = "";
-  var $error = false;
+    public $turma_presencial_ou_semi;
 
-  var $turma_presencial_ou_semi;
+    const TECNOLOGO = 1;
+    const LICENCIATURA = 2;
+    const BACHARELADO = 3;
 
-  const TECNOLOGO = 1;
-  const LICENCIATURA = 2;
-  const BACHARELADO = 3;
+    protected function educacensoExport()
+    {
+        $escola   = $this->getRequest()->escola;
+        $ano      = $this->getRequest()->ano;
+        $data_ini = $this->getRequest()->data_ini;
+        $data_fim = $this->getRequest()->data_fim;
 
-
-  protected function educacensoExport() {
-
-    $escola   = $this->getRequest()->escola;
-    $ano      = $this->getRequest()->ano;
-    $data_ini = $this->getRequest()->data_ini;
-    $data_fim = $this->getRequest()->data_fim;
-
-    $conteudo = $this->exportaDadosCensoPorEscola($escola,
+        $conteudo = $this->exportaDadosCensoPorEscola(
+        $escola,
                   $ano,
                   Portabilis_Date_Utils::brToPgSQL($data_ini),
-                  Portabilis_Date_Utils::brToPgSQL($data_fim));
+                  Portabilis_Date_Utils::brToPgSQL($data_fim)
+    );
 
-    if($this->error){
-      return array("error" => true,
-                   "mensagem" => $this->msg);
+        if ($this->error) {
+            return ['error' => true,
+                   'mensagem' => $this->msg];
+        }
+
+        return ['conteudo' => $conteudo];
     }
 
-    return array('conteudo' => $conteudo);
-  }
+    protected function educacensoExportFase2()
+    {
+        $escola   = $this->getRequest()->escola;
+        $ano      = $this->getRequest()->ano;
+        $data_ini = $this->getRequest()->data_ini;
+        $data_fim = $this->getRequest()->data_fim;
 
-  protected function educacensoExportFase2() {
-
-    $escola   = $this->getRequest()->escola;
-    $ano      = $this->getRequest()->ano;
-    $data_ini = $this->getRequest()->data_ini;
-    $data_fim = $this->getRequest()->data_fim;
-
-    $conteudo = $this->exportaDadosCensoPorEscolaFase2($escola,
+        $conteudo = $this->exportaDadosCensoPorEscolaFase2(
+        $escola,
                   $ano,
                   Portabilis_Date_Utils::brToPgSQL($data_ini),
-                  Portabilis_Date_Utils::brToPgSQL($data_fim));
+                  Portabilis_Date_Utils::brToPgSQL($data_fim)
+    );
 
-    if($this->error){
-      return array("error" => true,
-                   "mensagem" => $this->msg);
+        if ($this->error) {
+            return ['error' => true,
+                   'mensagem' => $this->msg];
+        }
+
+        return ['conteudo' => $conteudo];
     }
 
-    return array('conteudo' => $conteudo);
-  }
+    protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim)
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        846,
+        $this->pessoa_logada,
+        7,
+      'educar_index.php'
+    );
+        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $export = $this->exportaDadosRegistro00($escolaId, $ano);
+        $export .= $this->exportaDadosRegistro10($escolaId, $ano);
+        foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
+            $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
+        }
+        foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
+            $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
+            $registro40 = $this->exportaDadosRegistro40($servidor['id'], $escolaId);
+            $registro50 = $this->exportaDadosRegistro50($servidor['id'], $escolaId);
+            $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim, $ano);
+            if (!empty($registro30) && !empty($registro40) && !empty($registro50)) {
+                $export .= $registro30 . $registro40 . $registro50 . $registro51;
+            }
+        }
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
-      'educar_index.php');
-    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+        foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
+            $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
+            $registro70 = $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
+            $registro80 = $this->exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
+            if (!empty($registro60) && !empty($registro70) && !empty($registro80)) {
+                $export .= $registro60 . $registro70 . $registro80;
+            }
+        }
+        $export .= $this->exportaDadosRegistro99();
 
-    $export = $this->exportaDadosRegistro00($escolaId, $ano);
-    $export .= $this->exportaDadosRegistro10($escolaId, $ano);
-    foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
-      $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
-    }
-    foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
-
-      $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
-      $registro40 = $this->exportaDadosRegistro40($servidor['id'], $escolaId);
-      $registro50 = $this->exportaDadosRegistro50($servidor['id'], $escolaId);
-      $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim, $ano);
-      if(!empty($registro30) && !empty($registro40) && !empty($registro50))
-        $export .= $registro30 . $registro40 . $registro50 . $registro51;
-    }
-
-    foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
-      $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
-      $registro70 = $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
-      $registro80 = $this->exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
-      if(!empty($registro60) && !empty($registro70) && !empty($registro80))
-        $export .= $registro60 . $registro70 . $registro80;
-    }
-    $export .= $this->exportaDadosRegistro99();
-    return $export;
-  }
-
-  protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim) {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
-      'educar_index.php');
-    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-
-    $export = $this->exportaDadosRegistro89($escolaId);
-
-    foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
-      foreach ($this->getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId) as $matricula) {
-        $export .= $this->exportaDadosRegistro90($escolaId, $turmaId,  $matricula['id']);
-      }
-    }
-    foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
-      foreach ($this->getMatriculasTurmaAposData($escolaId, $ano, $data_ini, $data_fim, $turmaId) as $matricula) {
-        $export .= $this->exportaDadosRegistro91($escolaId, $turmaId,  $matricula['id']);
-      }
+        return $export;
     }
 
-    return $export;
-  }
+    protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  protected function getTurmas($escolaId, $ano){
-    return App_Model_IedFinder::getTurmasEducacenso($escolaId, $ano);
-  }
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        846,
+        $this->pessoa_logada,
+        7,
+      'educar_index.php'
+    );
+        $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-  protected function getServidores($escolaId, $ano, $data_ini, $data_fim){
-    $sql = 'SELECT distinct cod_servidor as id
+        $export = $this->exportaDadosRegistro89($escolaId);
+
+        foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
+            foreach ($this->getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId) as $matricula) {
+                $export .= $this->exportaDadosRegistro90($escolaId, $turmaId, $matricula['id']);
+            }
+        }
+        foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
+            foreach ($this->getMatriculasTurmaAposData($escolaId, $ano, $data_ini, $data_fim, $turmaId) as $matricula) {
+                $export .= $this->exportaDadosRegistro91($escolaId, $turmaId, $matricula['id']);
+            }
+        }
+
+        return $export;
+    }
+
+    protected function getTurmas($escolaId, $ano)
+    {
+        return App_Model_IedFinder::getTurmasEducacenso($escolaId, $ano);
+    }
+
+    protected function getServidores($escolaId, $ano, $data_ini, $data_fim)
+    {
+        $sql = 'SELECT distinct cod_servidor as id
               from pmieducar.servidor
              inner join modules.professor_turma on(servidor.cod_servidor = professor_turma.servidor_id)
              inner join pmieducar.turma on(professor_turma.turma_id = turma.cod_turma)
@@ -209,11 +230,12 @@ class EducacensoExportController extends ApiCoreController
                       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
                       LIMIT 1) IS NOT NULL';
 
-    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim)));
-  }
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $data_ini, $data_fim]]);
+    }
 
-  protected function getAlunos($escolaId, $ano, $data_ini, $data_fim){
-    $sql =
+    protected function getAlunos($escolaId, $ano, $data_ini, $data_fim)
+    {
+        $sql =
      'SELECT
       distinct(a.cod_aluno) as id
 
@@ -229,11 +251,13 @@ class EducacensoExportController extends ApiCoreController
       AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
       AND m.ano = $2
     ';
-    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim)));
-  }
 
-  protected function getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId){
-    $sql =
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $data_ini, $data_fim]]);
+    }
+
+    protected function getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId)
+    {
+        $sql =
      'SELECT DISTINCT m.cod_matricula as id
         FROM  pmieducar.aluno a
        INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -250,11 +274,13 @@ class EducacensoExportController extends ApiCoreController
          AND mt.ref_cod_turma = $5
          AND m.ativo = 1
     ';
-    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
-  }
 
-  protected function getMatriculasTurmaAposData($escolaId, $ano, $data_ini, $data_fim, $turmaId){
-    $sql =
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $data_ini, $data_fim, $turmaId]]);
+    }
+
+    protected function getMatriculasTurmaAposData($escolaId, $ano, $data_ini, $data_fim, $turmaId)
+    {
+        $sql =
      'SELECT
       distinct(m.cod_matricula) as id
 
@@ -274,11 +300,13 @@ class EducacensoExportController extends ApiCoreController
         AND i.data_educacenso IS NOT NULL
         AND m.ativo = 1
     ';
-    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $turmaId)));
-  }
 
-  protected function exportaDadosRegistro00($escolaId, $ano){
-    $sql =
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $turmaId]]);
+    }
+
+    protected function exportaDadosRegistro00($escolaId, $ano)
+    {
+        $sql =
         ' SELECT
         \'00\' as r00s1,
         ece.cod_escola_inep as r00s2,
@@ -380,48 +408,51 @@ class EducacensoExportController extends ApiCoreController
          LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
         WHERE e.cod_escola = $1
     ';
-    // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId, $ano))));
-    if ($r00s1){
-      $d = '|';
-      $return = '';
+        // Transforma todos resultados em variáveis
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row', 'params' => [$escolaId, $ano]]));
+        if ($r00s1) {
+            $d = '|';
+            $return = '';
 
-      $r00s2 = substr($r00s2, 0, 8);
-      $r00s3 = $this->cpfToCenso($r00s3);
-      $r00s4 = $this->convertStringToCenso($r00s4);
-      $r00s6 = strtoupper($r00s6);
+            $r00s2 = substr($r00s2, 0, 8);
+            $r00s3 = $this->cpfToCenso($r00s3);
+            $r00s4 = $this->convertStringToCenso($r00s4);
+            $r00s6 = strtoupper($r00s6);
 
-      $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
-      $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
+            $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
+            $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
 
-      $r00s10 = $this->convertStringToCenso($r00s10);
-      $r00s14 = $this->convertStringToCenso($r00s14);
-      $r00s15 = $this->convertStringToCenso($r00s15);
-      $r00s16 = $this->convertStringToCenso($r00s16);
-      $r00s17 = $this->convertStringToCenso($r00s17);
-      $r00s26 = strtoupper($r00s26);
-      $r00s27 = ($r00s27 ? str_pad($r00s27, 5, "0", STR_PAD_LEFT) : NULL);
+            $r00s10 = $this->convertStringToCenso($r00s10);
+            $r00s14 = $this->convertStringToCenso($r00s14);
+            $r00s15 = $this->convertStringToCenso($r00s15);
+            $r00s16 = $this->convertStringToCenso($r00s16);
+            $r00s17 = $this->convertStringToCenso($r00s17);
+            $r00s26 = strtoupper($r00s26);
+            $r00s27 = ($r00s27 ? str_pad($r00s27, 5, '0', STR_PAD_LEFT) : null);
 
-      $r00s37 = $this->cnpjToCenso($r00s37);
-      $r00s38 = $this->cnpjToCenso($r00s38);
+            $r00s37 = $this->cnpjToCenso($r00s37);
+            $r00s38 = $this->cnpjToCenso($r00s38);
 
-      if($r00s28 != 4)
-        $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = NULL;
+            if ($r00s28 != 4) {
+                $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = null;
+            }
 
-      for ($i=1; $i <= 42 ; $i++)
-        $return .= ${'r00s'.$i}.$d;
+            for ($i=1; $i <= 42 ; $i++) {
+                $return .= ${'r00s'.$i}.$d;
+            }
 
-      $return = substr_replace($return, "", -1);
+            $return = substr_replace($return, '', -1);
 
-      return $return."\n";
-    }else{
-      $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
-      $this->error = true;
+            return $return."\n";
+        } else {
+            $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
+            $this->error = true;
+        }
     }
-  }
 
-  protected function exportaDadosRegistro10($escolaId, $ano){
-    $sql =
+    protected function exportaDadosRegistro10($escolaId, $ano)
+    {
+        $sql =
         'SELECT
       \'10\' as r10s1,
       ece.cod_escola_inep as r10s2,
@@ -570,90 +601,96 @@ class EducacensoExportController extends ApiCoreController
       WHERE e.cod_escola = $1
     ';
 
-    $exclusivamente = 2;
+        $exclusivamente = 2;
 
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId, $ano))));
-    if($r10s1){
-      $d = '|';
-      $return = '';
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row', 'params' => [$escolaId, $ano]]));
+        if ($r10s1) {
+            $d = '|';
+            $return = '';
 
-      for($i = 3; $i <=11; $i++){
-        if ($local_funcionamento == $i)
-          ${'r10s'.$i} = 1;
-        else
-          ${'r10s'.$i} = 0;
-      }
+            for ($i = 3; $i <=11; $i++) {
+                if ($local_funcionamento == $i) {
+                    ${'r10s'.$i} = 1;
+                } else {
+                    ${'r10s'.$i} = 0;
+                }
+            }
 
-      if($codigo_inep_escola_compartilhada !=null){
-        $r10s13 = 1;
-        $r10s14 = $codigo_inep_escola_compartilhada;
-      }else
-        $r10s13 = 0;
+            if ($codigo_inep_escola_compartilhada !=null) {
+                $r10s13 = 1;
+                $r10s14 = $codigo_inep_escola_compartilhada;
+            } else {
+                $r10s13 = 0;
+            }
 
-      if($r10s3 == 0)
-        $r10s13 = NULL;
+            if ($r10s3 == 0) {
+                $r10s13 = null;
+            }
 
-      if($r10s3 <> 1 && $r10s8 <> 1)
-        $r10s12 = NULL;
+            if ($r10s3 <> 1 && $r10s8 <> 1) {
+                $r10s12 = null;
+            }
 
-      if($r10s3 == 1){
-        if(is_null($r10s12)){
-          $this->msg .= "Dados para formular o registro 10 campo 12 da escola {$escolaId} com problemas. Obrigatório quando o campo 3 for igual a 1 <br/>";
-          $this->error = true;
+            if ($r10s3 == 1) {
+                if (is_null($r10s12)) {
+                    $this->msg .= "Dados para formular o registro 10 campo 12 da escola {$escolaId} com problemas. Obrigatório quando o campo 3 for igual a 1 <br/>";
+                    $this->error = true;
+                }
+            }
+
+            if ($r10s25 == 1) {
+                $r10s21 = $r10s22 = $r10s23 = $r10s24 = 0;
+            }
+
+            if ($r10s29 == 1) {
+                $r10s26 = $r10s27 = $r10s28 = 0;
+            }
+
+            if ($r10s32 == 1) {
+                $r10s30 = $r10s31 = 0;
+            }
+
+            if (!$r10s82) {
+                $r10s86 = $r10s87 = null;
+            }
+
+            $r10s96 = $etapa_ensino_fundamental ? $r10s96 : null;
+
+            if ($r10s90 == $exclusivamente || $r10s91 == $exclusivamente) {
+                $r10s92 = $r10s93 = $r10s94 = $r10s95 = '';
+            } else {
+                $r10s92 = ($r10s92 ? $r10s92 : 0);
+                $r10s93 = ($r10s93 ? $r10s93 : 0);
+                $r10s94 = ($r10s94 ? $r10s94 : 0);
+                $r10s95 = ($r10s95 ? $r10s95 : 0);
+            }
+
+            $r10s98 = 1;
+            $r10s99 = $r10s100 = 0;
+
+            if (!$r10s101) {
+                $r10s102 = $r10s103 = $r10s104 = null;
+            }
+
+            for ($i=1; $i <= 107 ; $i++) {
+                if ($i>=71 && $i<=85) {
+                    $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
+                } else {
+                    $return .= ${'r10s'.$i}.$d;
+                }
+            }
+            $return = substr_replace($return, '', -1);
+
+            return $return."\n";
+        } else {
+            $this->msg .= "Dados para formular o registro 10 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP cadastrado. <br/>";
+            $this->error = true;
         }
-      }
-
-      if($r10s25 == 1){
-        $r10s21 = $r10s22 = $r10s23 = $r10s24 = 0;
-      }
-
-      if($r10s29 == 1){
-        $r10s26 = $r10s27 = $r10s28 = 0;
-      }
-
-      if($r10s32 == 1){
-        $r10s30 = $r10s31 = 0;
-      }
-
-      if (!$r10s82) {
-        $r10s86 = $r10s87 = NULL;
-      }
-
-      $r10s96 = $etapa_ensino_fundamental ? $r10s96 : NULL;
-
-      if ($r10s90 == $exclusivamente || $r10s91 == $exclusivamente) {
-        $r10s92 = $r10s93 = $r10s94 = $r10s95 = '';
-      } else {
-        $r10s92 = ($r10s92 ? $r10s92 : 0);
-        $r10s93 = ($r10s93 ? $r10s93 : 0);
-        $r10s94 = ($r10s94 ? $r10s94 : 0);
-        $r10s95 = ($r10s95 ? $r10s95 : 0);
-      }
-
-      $r10s98 = 1;
-      $r10s99 = $r10s100 = 0;
-
-      if(!$r10s101){
-        $r10s102 = $r10s103 = $r10s104 = NULL;
-      }
-
-      for ($i=1; $i <= 107 ; $i++){
-        if($i>=71 && $i<=85)
-          $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
-        else
-          $return .= ${'r10s'.$i}.$d;
-      }
-      $return = substr_replace($return, "", -1);
-
-      return $return."\n";
-    }else{
-      $this->msg .= "Dados para formular o registro 10 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP cadastrado. <br/>";
-      $this->error = true;
     }
-  }
 
-  protected function exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim){
-    $sql =
+    protected function exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim)
+    {
+        $sql =
         ' SELECT
         \'20\' as r20s1,
         ece.cod_escola_inep as r20s2,
@@ -713,63 +750,64 @@ class EducacensoExportController extends ApiCoreController
               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($2) AND DATE($3)
               LIMIT 1) IS NOT NULL';
 
-    // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId, $data_ini, $data_fim))));
-    if ($r20s1){
+        // Transforma todos resultados em variáveis
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row', 'params' => [$turmaId, $data_ini, $data_fim]]));
+        if ($r20s1) {
+            $r20s5 = $this->convertStringToCenso($r20s5);
 
-      $r20s5 = $this->convertStringToCenso($r20s5);
+            //Dias da semana não podem ser nullos, 1 ou 0
+            for ($i = 11; $i <18; $i++) {
+                ${'r20s'.$i} = (${'r20s'.$i} ? '1' : '0');
+            }
 
-      //Dias da semana não podem ser nullos, 1 ou 0
-      for($i = 11; $i <18; $i++)
-        ${'r20s'.$i} = (${'r20s'.$i} ? '1' : '0');
-
-      // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
-      $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
+            // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
+            $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
       $r20s50 = $r20s51 = $r20s52 = $r20s53 = $r20s54 = $r20s55 = $r20s56 = $r20s57 = $r20s58 = $r20s59 = $r20s60 =
       $r20s61 = $r20s62 = $r20s63 = $r20s64 = $r20s65 = 0;
 
-      // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
-      if ($r20s18 != 5)
-        $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = NULL;
+            // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
+            if ($r20s18 != 5) {
+                $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = null;
+            }
 
-      if (!in_array($dependencia_administrativa, array(2,3))){
-        $r20s19 = NULL;
-      }
+            if (!in_array($dependencia_administrativa, [2,3])) {
+                $r20s19 = null;
+            }
 
-      if (in_array($r20s18, array(1,5))){
-        $r20s19 = NULL;
-      }
+            if (in_array($r20s18, [1,5])) {
+                $r20s19 = null;
+            }
 
-      if (($r20s37 == 3) || !(($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41)) {
-        $r20s19 = NULL;
-      }
+            if (($r20s37 == 3) || !(($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41)) {
+                $r20s19 = null;
+            }
 
-      $coddigoEducacensoToSeq =
-                 array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
+            $coddigoEducacensoToSeq =
+                 [ 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
                               8 => '47', 30 => '48', 9 => '49', 10 => '50', 11 => '51', 12 => '52', 13 => '53',
                               14 => '54', 28 => '55', 29 => '56', 16 => '57', 17 => '58', 20 => '59', 21 => '60',
-                              23 => '61', 25 => '62', 26 => '63', 27 => '64', 99 => '65');
-      try{
-        $componentesTurma = App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId);
-      }catch(Exception $e){
-        $componentesTurma = array();
-      }
+                              23 => '61', 25 => '62', 26 => '63', 27 => '64', 99 => '65'];
+            try {
+                $componentesTurma = App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId);
+            } catch (Exception $e) {
+                $componentesTurma = [];
+            }
 
-      foreach($componentesTurma as $componente){
-        // Só serão consideradas disciplinas tipificadas com o código do Educacenso
-        if($componente->codigo_educacenso){
-          // Pega o código educacenso
-          $codigoEducacenso = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
-          $codigoEducacenso = $codigoEducacenso->getKey($componente->codigo_educacenso);
+            foreach ($componentesTurma as $componente) {
+                // Só serão consideradas disciplinas tipificadas com o código do Educacenso
+                if ($componente->codigo_educacenso) {
+                    // Pega o código educacenso
+                    $codigoEducacenso = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
+                    $codigoEducacenso = $codigoEducacenso->getKey($componente->codigo_educacenso);
 
-          // Código da disciplina no i-Educar
-          $codigoSistema = $componente->id;
+                    // Código da disciplina no i-Educar
+                    $codigoSistema = $componente->id;
 
-          // Verifica se é disciplina padrão ano letivo. Se for, será considerado que existe professor
-          // vinculado a disciplina na sala de aula
+                    // Verifica se é disciplina padrão ano letivo. Se for, será considerado que existe professor
+                    // vinculado a disciplina na sala de aula
 
-          $professorVinculado = (bool)Portabilis_Utils_Database::selectField
-          ('SELECT 1
+                    $professorVinculado = (bool)Portabilis_Utils_Database::selectField(
+              'SELECT 1
               from modules.professor_turma
             inner join modules.professor_turma_disciplina on(professor_turma_disciplina.professor_turma_id = professor_turma.id)
              where professor_turma.turma_id = $1
@@ -782,61 +820,63 @@ class EducacensoExportController extends ApiCoreController
                        AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
                      LIMIT 1) IS NOT NULL
                ',
-               array('params' => array($turmaId, $codigoSistema, $data_ini, $data_fim)));
+               ['params' => [$turmaId, $codigoSistema, $data_ini, $data_fim]]
+          );
 
-          if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)){
-            if(${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} == 1){
-              continue;
-            }elseif(${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} == 2){
-              if(!$professorVinculado){
-                continue;
-              }
+                    if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)) {
+                        if (${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} == 1) {
+                            continue;
+                        } elseif (${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} == 2) {
+                            if (!$professorVinculado) {
+                                continue;
+                            }
+                        }
+                        ${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} = ($professorVinculado ? 1 : 2);
+                    }
+                }
             }
-            ${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} = ($professorVinculado ? 1 : 2);
-            }
-        }
 
-      }
+            $atividadeComplementar = 4;
+            $atendimentoEducEspecializado = 5;
 
-      $atividadeComplementar = 4;
-      $atendimentoEducEspecializado = 5;
+            $educInfantilCreche = 1;
+            $educInfantilPreEscola = 2;
+            $educInfantilUnificada = 3;
+            $ejaEnsinoFundamental = 65;
 
-      $educInfantilCreche = 1;
-      $educInfantilPreEscola = 2;
-      $educInfantilUnificada = 3;
-      $ejaEnsinoFundamental = 65;
-
-      //Percorre todos os campos de disciplinas
-      for ($i=40; $i < 66; $i++) {
-        if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado){
-          ${'r20s'. $i} = '';
-        } else if ($r20s38 == $educInfantilCreche ||
+            //Percorre todos os campos de disciplinas
+            for ($i=40; $i < 66; $i++) {
+                if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado) {
+                    ${'r20s'. $i} = '';
+                } elseif ($r20s38 == $educInfantilCreche ||
                    $r20s38 == $educInfantilPreEscola ||
                    $r20s38 == $educInfantilUnificada ||
-                   $r20s38 == $ejaEnsinoFundamental){
-          ${'r20s'. $i} = '';
+                   $r20s38 == $ejaEnsinoFundamental) {
+                    ${'r20s'. $i} = '';
+                }
+            }
+
+            if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado) {
+                $r20s37 = $r20s38 = '';
+            }
+
+            $this->turma_presencial_ou_semi = $r20s6;
+            $d = '|';
+            $return = '';
+
+            for ($i=1; $i <= 65 ; $i++) {
+                $return .= ${'r20s'.$i}.$d;
+            }
+
+            $return = substr_replace($return, '', -1);
+
+            return $return."\n";
         }
-      }
-
-      if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado){
-        $r20s37 = $r20s38 = '';
-      }
-
-      $this->turma_presencial_ou_semi = $r20s6;
-      $d = '|';
-      $return = '';
-
-      for ($i=1; $i <= 65 ; $i++)
-        $return .= ${'r20s'.$i}.$d;
-
-      $return = substr_replace($return, "", -1);
-
-      return $return."\n";
     }
-  }
 
-  protected function exportaDadosRegistro30($servidorId, $escolaId){
-    $sql =
+    protected function exportaDadosRegistro30($servidorId, $escolaId)
+    {
+        $sql =
         ' SELECT
         \'30\' as r30s1,
         ece.cod_escola_inep as r30s2,
@@ -876,83 +916,89 @@ class EducacensoExportController extends ApiCoreController
         LIMIT 1
     ';
 
-    // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
-    if ($r30s1){
-      $r30s5 = $this->convertStringToCenso($r30s5);
-      $r30s6 = strtoupper($r30s6);
-      $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
-      $r30s9 = $r30s9 == 'M' ? 1 : 2;
-      $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
+        // Transforma todos resultados em variáveis
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row', 'params' => [$servidorId, $escolaId]]));
+        if ($r30s1) {
+            $r30s5 = $this->convertStringToCenso($r30s5);
+            $r30s6 = strtoupper($r30s6);
+            $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
+            $r30s9 = $r30s9 == 'M' ? 1 : 2;
+            $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
 
-      $r30s11 = ($r30s12 || $r30s13) ? 1 : 0;
+            $r30s11 = ($r30s12 || $r30s13) ? 1 : 0;
 
-      $r30s12 = $this->convertStringToAlpha($r30s12);
-      $r30s13 = $this->convertStringToAlpha($r30s13);
+            $r30s12 = $this->convertStringToAlpha($r30s12);
+            $r30s13 = $this->convertStringToAlpha($r30s13);
 
-      if($r30s14 != '1') {
-        $r30s16 = $r30s17 = NULL;
-      }
+            if ($r30s14 != '1') {
+                $r30s16 = $r30s17 = null;
+            }
 
-      if($r30s14 == '1' || $r30s14 == '2')
-        $r30s15 = 76;
+            if ($r30s14 == '1' || $r30s14 == '2') {
+                $r30s15 = 76;
+            }
 
-      if($r30s14 == "1"){
-        if(is_null($r30s16) || is_null($r30s17)){
-          $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se os municípios e UFs dos servidores brasileiros possuem código INEP cadastrados.<br/>";
-          $this->error = true;
-        }
-      }
+            if ($r30s14 == '1') {
+                if (is_null($r30s16) || is_null($r30s17)) {
+                    $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se os municípios e UFs dos servidores brasileiros possuem código INEP cadastrados.<br/>";
+                    $this->error = true;
+                }
+            }
 
-      $sql = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
+            $sql = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
               cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
               and deficiencia_educacenso is not null';
 
-      $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($r30s4)));
+            $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, [ 'params' => [$r30s4]]);
 
-      $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = 0;
+            $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = 0;
 
-      $deficienciaToSeq = array( 1 => '19',
+            $deficienciaToSeq = [ 1 => '19',
                                  2 => '20',
                                  3 => '21',
                                  4 => '22',
                                  5 => '23',
                                  6 => '24',
-                                 7 => '25' );
-      $r30s18 = 0;
+                                 7 => '25' ];
+            $r30s18 = 0;
 
-      $qtde_deficiencia = 0;
-      foreach ($deficiencias as $deficiencia_educacenso) {
-        $deficiencia_educacenso = $deficiencia_educacenso['id'];
-        if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)){
-          ${ 'r30s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
-          $r30s18 = 1;
-          $qtde_deficiencia++;
+            $qtde_deficiencia = 0;
+            foreach ($deficiencias as $deficiencia_educacenso) {
+                $deficiencia_educacenso = $deficiencia_educacenso['id'];
+                if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)) {
+                    ${ 'r30s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
+                    $r30s18 = 1;
+                    $qtde_deficiencia++;
+                }
+            }
+
+            if ($qtde_deficiencia > 1) {
+                $r30s26 = 1;
+            }
+
+            if ($r30s18 == 0) {
+                $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = null;
+            }
+
+            $r30s7 = null;
+
+            $d = '|';
+            $return = '';
+            $numeroRegistros = 26;
+
+            for ($i=1; $i <= $numeroRegistros ; $i++) {
+                $return .= ${'r30s'.$i}.$d;
+            }
+
+            $return = substr_replace($return, '', -1);
+
+            return $return."\n";
         }
-      }
-
-      if ($qtde_deficiencia > 1) $r30s26 = 1;
-
-      if($r30s18 == 0)
-        $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = NULL;
-
-      $r30s7 = null;
-
-      $d = '|';
-      $return = '';
-      $numeroRegistros = 26;
-
-      for ($i=1; $i <= $numeroRegistros ; $i++)
-        $return .= ${'r30s'.$i}.$d;
-
-      $return = substr_replace($return, "", -1);
-
-      return $return."\n";
     }
-  }
 
-  protected function exportaDadosRegistro40($servidorId, $escolaId){
-    $sql =
+    protected function exportaDadosRegistro40($servidorId, $escolaId)
+    {
+        $sql =
     'SELECT
 
         \'40\' as r40s1,
@@ -994,32 +1040,33 @@ class EducacensoExportController extends ApiCoreController
         LIMIT 1
     ';
 
-    // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
-    if ($r40s1){
-      $r40s5 = $this->cpfToCenso($r40s5);
+        // Transforma todos resultados em variáveis
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row', 'params' => [$servidorId, $escolaId]]));
+        if ($r40s1) {
+            $r40s5 = $this->cpfToCenso($r40s5);
 
-      $r40s8  = $this->convertStringToCenso($r40s8);
-      $r40s9  = $this->convertStringToCenso($r40s9);
-      $r40s10 = $this->convertStringToCenso($r40s10);
-      $r40s11 = $this->convertStringToCenso($r40s11);
+            $r40s8  = $this->convertStringToCenso($r40s8);
+            $r40s9  = $this->convertStringToCenso($r40s9);
+            $r40s10 = $this->convertStringToCenso($r40s10);
+            $r40s11 = $this->convertStringToCenso($r40s11);
 
-      $d = '|';
-      $return = '';
-      $numeroRegistros = 13;
+            $d = '|';
+            $return = '';
+            $numeroRegistros = 13;
 
-      for ($i=1; $i <= $numeroRegistros ; $i++)
-        $return .= ${'r40s'.$i}.$d;
+            for ($i=1; $i <= $numeroRegistros ; $i++) {
+                $return .= ${'r40s'.$i}.$d;
+            }
 
-      $return = substr_replace($return, "", -1);
+            $return = substr_replace($return, '', -1);
 
-      return $return."\n";
+            return $return."\n";
+        }
     }
-  }
 
-  protected function exportaDadosRegistro50($servidorId, $escolaId){
-
-    $sql =
+    protected function exportaDadosRegistro50($servidorId, $escolaId)
+    {
+        $sql =
     'SELECT
 
         \'50\' as r50s1,
@@ -1087,80 +1134,99 @@ class EducacensoExportController extends ApiCoreController
         LIMIT 1
     ';
 
-    // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
-      if ($r50s1){
-      $d = '|';
-      $return = '';
-      $numeroRegistros = 43;
+        // Transforma todos resultados em variáveis
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row', 'params' => [$servidorId, $escolaId]]));
+        if ($r50s1) {
+            $d = '|';
+            $return = '';
+            $numeroRegistros = 43;
 
-      if($grau_academico_curso_superior_1 == self::BACHARELADO || $grau_academico_curso_superior_1 == self::TECNOLOGO){
-        if(is_null($r50s7)){
-          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
-          $this->error = true;
+            if ($grau_academico_curso_superior_1 == self::BACHARELADO || $grau_academico_curso_superior_1 == self::TECNOLOGO) {
+                if (is_null($r50s7)) {
+                    $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+                    $this->error = true;
+                }
+            } elseif ($grau_academico_curso_superior_1 == self::LICENCIATURA) {
+                $r50s7 = null;
+            }
+
+            if ($grau_academico_curso_superior_2 == self::BACHARELADO || $grau_academico_curso_superior_2 == self::TECNOLOGO) {
+                if (is_null($r50s13)) {
+                    $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+                    $this->error = true;
+                }
+            } elseif ($grau_academico_curso_superior_2 == self::LICENCIATURA) {
+                $r50s13 = null;
+            }
+
+            if ($grau_academico_curso_superior_3 == self::BACHARELADO || $grau_academico_curso_superior_3 == self::TECNOLOGO) {
+                if (is_null($r50s19)) {
+                    $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+                    $this->error = true;
+                }
+            } elseif ($grau_academico_curso_superior_3 == self::LICENCIATURA) {
+                $r50s19 = null;
+            }
+
+            if ($r50s6 != 2) {
+                $r50s9 = null;
+            }
+            if ($r50s6 != 1) {
+                $r50s10 = null;
+            }
+
+            if ($r50s12 != 2) {
+                $r50s15 = null;
+            }
+            if ($r50s12 != 1) {
+                $r50s16 = null;
+            }
+
+            if ($r50s18 != 2) {
+                $r50s21 = null;
+            }
+            if ($r50s18 != 1) {
+                $r50s22 = null;
+            }
+
+            if ($r50s6 != 1) {
+                $r50s7 = null;
+            }
+            if ($r50s12 != 1) {
+                $r50s13 = null;
+            }
+            if ($r50s18 != 1) {
+                $r50s19 = null;
+            }
+
+            $situacaoConcluido = ($r50s6 == 1 || $r50s12 == 1 || $r50s18 == 1);
+
+            if (!$situacaoConcluido) {
+                $r50s24 = $r50s25 = $r50s26 = $r50s27 = null;
+            }
+
+            if ($r50s43 == 1) {
+                $r50s28 = $r50s29 = $r50s30 = $r50s31 = $r50s32 = $r50s33 = $r50s34 = $r50s35 = $r50s36 = $r50s37 = $r50s38 = $r50s39 = $r50s40 = $r50s41 = $r50s42 = 0;
+            }
+
+            $cont= 0;
+            for ($i=1; $i <= $numeroRegistros; $i++) {
+                if ($i >= 31) {
+                    $return .= (${'r50s'.$i} == 1 ? 1 : 0).$d;
+                } else {
+                    $return .= ${'r50s'.$i}.$d;
+                }
+            }
+
+            $return = substr_replace($return, '', -1);
+
+            return $return."\n";
         }
-      }elseif($grau_academico_curso_superior_1 == self::LICENCIATURA){
-        $r50s7 = NULL;
-      }
-
-      if($grau_academico_curso_superior_2 == self::BACHARELADO || $grau_academico_curso_superior_2 == self::TECNOLOGO){
-        if(is_null($r50s13)){
-          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
-          $this->error = true;
-        }
-      }elseif($grau_academico_curso_superior_2 == self::LICENCIATURA){
-        $r50s13 = NULL;
-      }
-
-      if($grau_academico_curso_superior_3 == self::BACHARELADO || $grau_academico_curso_superior_3 == self::TECNOLOGO){
-        if(is_null($r50s19)){
-          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
-          $this->error = true;
-        }
-      }elseif($grau_academico_curso_superior_3 == self::LICENCIATURA){
-        $r50s19 = NULL;
-      }
-
-      if ($r50s6 != 2) { $r50s9 = NULL;}
-      if ($r50s6 != 1) { $r50s10 = NULL;}
-
-      if ($r50s12 != 2) { $r50s15 = NULL;}
-      if ($r50s12 != 1) { $r50s16 = NULL;}
-
-      if ($r50s18 != 2) { $r50s21 = NULL;}
-      if ($r50s18 != 1) { $r50s22 = NULL;}
-
-      if($r50s6 != 1){ $r50s7 = NULL;}
-      if($r50s12 != 1){ $r50s13 = NULL;}
-      if($r50s18 != 1){ $r50s19 = NULL;}
-
-      $situacaoConcluido = ($r50s6 == 1 || $r50s12 == 1 || $r50s18 == 1);
-
-      if (!$situacaoConcluido) {
-        $r50s24 = $r50s25 = $r50s26 = $r50s27 = NULL;
-      }
-
-      if ($r50s43 == 1) {
-        $r50s28 = $r50s29 = $r50s30 = $r50s31 = $r50s32 = $r50s33 = $r50s34 = $r50s35 = $r50s36 = $r50s37 = $r50s38 = $r50s39 = $r50s40 = $r50s41 = $r50s42 = 0;
-      }
-
-      $cont= 0;
-      for ($i=1; $i <= $numeroRegistros; $i++){
-        if($i >= 31)
-            $return .= (${'r50s'.$i} == 1 ? 1 : 0).$d;
-        else
-          $return .= ${'r50s'.$i}.$d;
-      }
-
-      $return = substr_replace($return, "", -1);
-
-      return $return."\n";
     }
-  }
 
-  protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim, $ano){
-
-    $sql =
+    protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim, $ano)
+    {
+        $sql =
      'SELECT
 
             \'51\' as r51s1,
@@ -1367,60 +1433,61 @@ class EducacensoExportController extends ApiCoreController
             LIMIT 1) IS NOT NULL
     ';
 
-
-    // Transforma todos resultados em variáveis
+        // Transforma todos resultados em variáveis
         $d = '|';
-    $return = '';
-    $numeroRegistros = 21;
+        $return = '';
+        $numeroRegistros = 21;
 
-    $docente = 1;
-    $docenteTitular = 5;
-    $docenteTutor = 6;
+        $docente = 1;
+        $docenteTitular = 5;
+        $docenteTutor = 6;
 
-    $atividadeComplementar = 4;
-    $atendimentoEducEspecializado = 5;
+        $atividadeComplementar = 4;
+        $atendimentoEducEspecializado = 5;
 
-    $educInfantilCreche = 1;
-    $educInfantilPreEscola = 2;
-    $educInfantilUnificada = 3;
-    $ejaEnsinoFundamental = 65;
+        $educInfantilCreche = 1;
+        $educInfantilPreEscola = 2;
+        $educInfantilUnificada = 3;
+        $ejaEnsinoFundamental = 65;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim, $ano))) as $reg) {
-        extract($reg);
-        for ($i=1; $i <= $numeroRegistros ; $i++) {
+        foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$servidorId, $escolaId, $data_ini, $data_fim, $ano]]) as $reg) {
+            extract($reg);
+            for ($i=1; $i <= $numeroRegistros ; $i++) {
+                $escolaPrivada = $dependencia_administrativa == 4;
 
-        $escolaPrivada = $dependencia_administrativa == 4;
+                $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
 
-        $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
+                if (!$funcaoDocente || $escolaPrivada) {
+                    $r51s8 = '';
+                }
 
-        if (!$funcaoDocente || $escolaPrivada) $r51s8 = '';
-
-        //Validação das disciplinas
-        if ($i > 8) {
-          $atividadeDiferenciada = ($tipo_atendimento == $atividadeComplementar ||
+                //Validação das disciplinas
+                if ($i > 8) {
+                    $atividadeDiferenciada = ($tipo_atendimento == $atividadeComplementar ||
                                     $tipo_atendimento == $atendimentoEducEspecializado);
-          $etapaEnsino = ($etapa_ensino == $educInfantilCreche ||
+                    $etapaEnsino = ($etapa_ensino == $educInfantilCreche ||
                           $etapa_ensino == $educInfantilPreEscola ||
                           $etapa_ensino == $educInfantilUnificada ||
                           $etapa_ensino == $ejaEnsinoFundamental);
 
-          if (!$funcaoDocente || $atividadeDiferenciada || $etapaEnsino) {
-            ${'r51s'.$i} = '';
-          }
+                    if (!$funcaoDocente || $atividadeDiferenciada || $etapaEnsino) {
+                        ${'r51s'.$i} = '';
+                    }
+                }
+
+                $return .= ${'r51s'.$i}.$d;
+            }
+
+            $return = substr_replace($return, '', -1);
+            $return .= "\n";
         }
 
-            $return .= ${'r51s'.$i}.$d;
-      }
-
-      $return = substr_replace($return, "", -1);
-        $return .= "\n";
+        return $return;
     }
-    return $return;
-  }
 
-  protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId){
-
-    $sql =
+    protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId)
+    {
+        $sql =
      'SELECT
 
       distinct(a.cod_aluno) as r60s4,
@@ -1469,49 +1536,51 @@ class EducacensoExportController extends ApiCoreController
       AND a.cod_aluno = $5
     ';
 
-    // Transforma todos resultados em variáveis
-    $d = '|';
-    $return = '';
-    $numeroRegistros = 39;
-    $estrangeiro = 3;
-    $naturalizadoBrasileiro = 2;
+        // Transforma todos resultados em variáveis
+        $d = '|';
+        $return = '';
+        $numeroRegistros = 39;
+        $estrangeiro = 3;
+        $naturalizadoBrasileiro = 2;
 
-    $sqlDeficiencias = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
+        $sqlDeficiencias = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
                         cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
                         and deficiencia_educacenso is not null';
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
-      extract($reg);
+        foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $data_ini, $data_fim, $alunoId]]) as $reg) {
+            extract($reg);
 
-      $r60s5 = $this->convertStringToCenso($r60s5);
+            $r60s5 = $this->convertStringToCenso($r60s5);
 
-      $r60s6 = Portabilis_Date_Utils::pgSQLToBr($r60s6);
-      $r60s7 = $r60s7 == 'M' ? 1 : 2;
-      $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
-      $r60s9 = (int) !(is_null($r60s10) && is_null($r60s11));
+            $r60s6 = Portabilis_Date_Utils::pgSQLToBr($r60s6);
+            $r60s7 = $r60s7 == 'M' ? 1 : 2;
+            $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
+            $r60s9 = (int) !(is_null($r60s10) && is_null($r60s11));
 
-      $r60s10 = $this->convertStringToAlpha($r60s10);
-      $r60s11 = $this->convertStringToAlpha($r60s11);
+            $r60s10 = $this->convertStringToAlpha($r60s10);
+            $r60s11 = $this->convertStringToAlpha($r60s11);
 
-      if($r60s12 == '1' || $r60s12 == '2')
-        $r60s13 = 76;
+            if ($r60s12 == '1' || $r60s12 == '2') {
+                $r60s13 = 76;
+            }
 
-      if ($nacionalidade == $estrangeiro || $nacionalidade == $naturalizadoBrasileiro)
-        $r60s14 = $r60s15 = null;
+            if ($nacionalidade == $estrangeiro || $nacionalidade == $naturalizadoBrasileiro) {
+                $r60s14 = $r60s15 = null;
+            }
 
-      $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sqlDeficiencias, array( 'params' => array($idpes)));
+            $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sqlDeficiencias, [ 'params' => [$idpes]]);
 
-      // Reseta deficiências (DEFAULT NULL)
-      $r60s16 = 0;
-      $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
-                 $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
+            // Reseta deficiências (DEFAULT NULL)
+            $r60s16 = 0;
+            $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                 $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = null;
 
-      // Caso não exista nenhum curso seta seq 40 como 1
-      $r60s39 = (int) is_null($r60s30) && is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
+            // Caso não exista nenhum curso seta seq 40 como 1
+            $r60s39 = (int) is_null($r60s30) && is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
                 && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
 
-      // Define 'tipodeficiencia' => 'seqleiaute'
-      $deficienciaToSeq = array(  1 => '17',
+            // Define 'tipodeficiencia' => 'seqleiaute'
+            $deficienciaToSeq = [  1 => '17',
                                   2 => '18',
                                   3 => '19',
                                   4 => '20',
@@ -1523,61 +1592,67 @@ class EducacensoExportController extends ApiCoreController
                                  10 => '26',
                                  11 => '27',
                                  12 => '28',
-                                 13 => '29');
+                                 13 => '29'];
 
-      if (count($deficiencias) == 0) {
-        $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = NULL;
-      }
+            if (count($deficiencias) == 0) {
+                $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = null;
+            }
 
-      // Se tiver alguma deficiência, a seq 16 deve ser 1
-      if (count($deficiencias)>0) {
-        $r60s16 = 1;
-        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+            // Se tiver alguma deficiência, a seq 16 deve ser 1
+            if (count($deficiencias)>0) {
+                $r60s16 = 1;
+                $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
                   $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = 0;
 
-        foreach ($deficiencias as $deficiencia_educacenso) {
-          $deficiencia_educacenso = $deficiencia_educacenso['id'];
-          if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)){
-            ${ 'r60s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
-          }
+                foreach ($deficiencias as $deficiencia_educacenso) {
+                    $deficiencia_educacenso = $deficiencia_educacenso['id'];
+                    if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)) {
+                        ${ 'r60s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
+                    }
+                }
+            }
+            // Se o aluno não tiver deficiências não pode ser informado recursos para provas
+            if ($r60s16) {
+                $r60s39 = null;
+            } else {
+                $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = null;
+            }
+
+            if (!$this->transtornoGlobalDesenvolvimento($deficiencias)) {
+                for ($i=30; $i <= 39; $i++) {
+                    ${'r60s'.$i} = null;
+                }
+            } else {
+                $r60s39 = 1;
+            }
+
+            //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
+            for ($i=30; $i <= 38; $i++) {
+                if (${'r60s'.$i} == 1) {
+                    $r60s39 = 0;
+                }
+            }
+
+            //O campo 39 deve ser diferente de com 1 quando o campo 17 ou 21 for igual a 1.
+            if ($r60s17 || $r60s21) {
+                $r60s39 = 0;
+            }
+
+            for ($i=1; $i <= $numeroRegistros ; $i++) {
+                $return .= ${'r60s'.$i}.$d;
+            }
+
+            $return = substr_replace($return, '', -1);
+            $return .= "\n";
         }
-      }
-      // Se o aluno não tiver deficiências não pode ser informado recursos para provas
-      if ($r60s16)
-        $r60s39 = NULL;
-      else
-        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
-                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
-      if(!$this->transtornoGlobalDesenvolvimento($deficiencias)) {
-        for($i=30; $i <= 39; $i++){
-          ${'r60s'.$i} = NULL;
-        }
-      }else{
-        $r60s39 = 1;
-      }
-
-      //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
-      for($i=30; $i <= 38; $i++){
-        if(${'r60s'.$i} == 1)
-          $r60s39 = 0;
-      }
-
-      //O campo 39 deve ser diferente de com 1 quando o campo 17 ou 21 for igual a 1.
-      if ($r60s17 || $r60s21) $r60s39 = 0;
-
-      for ($i=1; $i <= $numeroRegistros ; $i++)
-        $return .= ${'r60s'.$i}.$d;
-
-      $return = substr_replace($return, "", -1);
-      $return .= "\n";
+        return $return;
     }
 
-    return $return;
-  }
-
-  protected function transtornoGlobalDesenvolvimento($deficiencias) {
-    $deficienciasLayout = array(1 => '17',
+    protected function transtornoGlobalDesenvolvimento($deficiencias)
+    {
+        $deficienciasLayout = [1 => '17',
                                 2 => '18',
                                 3 => '19',
                                 4 => '20',
@@ -1588,24 +1663,25 @@ class EducacensoExportController extends ApiCoreController
                                 9 => '25',
                                10 => '26',
                                11 => '27',
-                               12 => '28');
+                               12 => '28'];
 
-    $existeDeficienciaTranstornoGlobal = FALSE;
+        $existeDeficienciaTranstornoGlobal = false;
 
-    if (count($deficiencias)>0){
-      foreach ($deficiencias as $deficiencia) {
-        $deficiencia = $deficiencia['id'];
-        if (array_key_exists($deficiencia, $deficienciasLayout)){
-          $existeDeficienciaTranstornoGlobal = TRUE;
+        if (count($deficiencias)>0) {
+            foreach ($deficiencias as $deficiencia) {
+                $deficiencia = $deficiencia['id'];
+                if (array_key_exists($deficiencia, $deficienciasLayout)) {
+                    $existeDeficienciaTranstornoGlobal = true;
+                }
+            }
         }
-      }
+
+        return $existeDeficienciaTranstornoGlobal;
     }
-    return $existeDeficienciaTranstornoGlobal;
-  }
 
-protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId){
-
-    $sql =
+    protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId)
+    {
+        $sql =
      '  SELECT
 
         distinct(a.cod_aluno) as r70s4,
@@ -1665,82 +1741,89 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         AND a.cod_aluno = $5
     ';
 
-    // Transforma todos resultados em variáveis
-    $d = '|';
-    $return = '';
-    $numeroRegistros = 29;
+        // Transforma todos resultados em variáveis
+        $d = '|';
+        $return = '';
+        $numeroRegistros = 29;
 
-    $estrangeiro = 3;
+        $estrangeiro = 3;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
-      extract($reg);
+        foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $data_ini, $data_fim, $alunoId]]) as $reg) {
+            extract($reg);
 
-      $r70s8 = Portabilis_Date_Utils::pgSQLToBr($r70s8);
-      $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
+            $r70s8 = Portabilis_Date_Utils::pgSQLToBr($r70s8);
+            $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
-      $r70s18 = $this->convertStringToCertNovoFormato($r70s18);
+            $r70s18 = $this->convertStringToCertNovoFormato($r70s18);
 
-      $r70s19 = $this->cpfToCenso($r70s19);
+            $r70s19 = $this->cpfToCenso($r70s19);
 
-      $r70s24 = $this->convertStringToCenso($r70s24);
-      $r70s25 = $this->convertStringToCenso($r70s25);
-      $r70s26 = $this->convertStringToCenso(substr($r70s26, 0, 20));
-      $r70s27 = $this->convertStringToCenso($r70s27);
+            $r70s24 = $this->convertStringToCenso($r70s24);
+            $r70s25 = $this->convertStringToCenso($r70s25);
+            $r70s26 = $this->convertStringToCenso(substr($r70s26, 0, 20));
+            $r70s27 = $this->convertStringToCenso($r70s27);
 
-      if($r70s21 == 0){ $r70s21 = null; }
-      if($r70s5 == 0){ $r70s5 = null; }
+            if ($r70s21 == 0) {
+                $r70s21 = null;
+            }
+            if ($r70s5 == 0) {
+                $r70s5 = null;
+            }
 
-      if(!$r70s5){
-        $r70s6 = null;
-        $r70s7 = null;
-        $r70s8 = null;
-      }
+            if (!$r70s5) {
+                $r70s6 = null;
+                $r70s7 = null;
+                $r70s8 = null;
+            }
 
-      // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
-      $r70s9 = $r70s10 = NULL;
-      if (is_null($tipo_cert_civil) && !empty($r70s18)){
-        $r70s9 = 2;
-        $r70s10 = NULL;
-        $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = NULL;
-        $r70s18 =  str_replace(' ', '',$r70s18);
-      }elseif($tipo_cert_civil == 91){
-        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17)))
-          $r70s9 = $r70s10 = 1;
-        else
-          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
+            // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
+            $r70s9 = $r70s10 = null;
+            if (is_null($tipo_cert_civil) && !empty($r70s18)) {
+                $r70s9 = 2;
+                $r70s10 = null;
+                $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = null;
+                $r70s18 =  str_replace(' ', '', $r70s18);
+            } elseif ($tipo_cert_civil == 91) {
+                if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17))) {
+                    $r70s9 = $r70s10 = 1;
+                } else {
+                    $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = null;
+                }
+            } elseif ($tipo_cert_civil == 92) {
+                if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17))) {
+                    $r70s9 = 1;
+                    $r70s10 = 2;
+                } else {
+                    $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = null;
+                }
+            } else {
+                $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = null;
+            }
+            // fim das validações de certidões //
 
-      }elseif ($tipo_cert_civil == 92) {
-        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17))){
-          $r70s9 = 1;
-          $r70s10 = 2;
-        }else
-          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
-      }else
-        $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
-      // fim das validações de certidões //
+            if ($nacionalidade == $estrangeiro) {
+                for ($i=5; $i < 19; $i++) {
+                    ${'r70s'.$i} = null;
+                }
+            } else {
+                $r70s20 = null;
+            }
 
-      if ($nacionalidade == $estrangeiro) {
-        for ($i=5; $i < 19; $i++) {
-          ${'r70s'.$i} = NULL;
+            for ($i=1; $i <= $numeroRegistros ; $i++) {
+                $return .= ${'r70s'.$i}.$d;
+            }
+
+            $return = substr_replace($return, '', -1);
+
+            $return .= "\n";
         }
-      } else {
-        $r70s20 = NULL;
-      }
 
-      for ($i=1; $i <= $numeroRegistros ; $i++)
-        $return .= ${'r70s'.$i}.$d;
-
-      $return = substr_replace($return, "", -1);
-
-      $return .= "\n";
+        return $return;
     }
 
-    return $return;
-  }
-
-  protected function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId){
-
-    $sql =
+    protected function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId)
+    {
+        $sql =
      '  SELECT
 
         \'80\' as r80s1,
@@ -1884,80 +1967,84 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
             END)
     ';
 
-    // Transforma todos resultados em variáveis
-    $d = '|';
-    $return = '';
-    $numeroRegistros = 24;
-    $atividadeComplementar = 4;
-    $atendimentoEducEspecializado = 5;
-    $educacaoInfantilUnificada = 3;
+        // Transforma todos resultados em variáveis
+        $d = '|';
+        $return = '';
+        $numeroRegistros = 24;
+        $atividadeComplementar = 4;
+        $atendimentoEducEspecializado = 5;
+        $educacaoInfantilUnificada = 3;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
-      extract($reg);
+        foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $data_ini, $data_fim, $alunoId]]) as $reg) {
+            extract($reg);
 
-      if ($tipo_atendimento == $atividadeComplementar || $tipo_atendimento == $atendimentoEducEspecializado) {
-        $r80s10 = '';
-      }
+            if ($tipo_atendimento == $atividadeComplementar || $tipo_atendimento == $atendimentoEducEspecializado) {
+                $r80s10 = '';
+            }
 
-      if ($etapa_educacenso != $educacaoInfantilUnificada) {
-        $r80s8 = '';
-      }
+            if ($etapa_educacenso != $educacaoInfantilUnificada) {
+                $r80s8 = '';
+            }
 
-      $r80s10 = ($r80s10 == 0 ? NULL : $r80s10);
+            $r80s10 = ($r80s10 == 0 ? null : $r80s10);
 
-      for ($i=13; $i <= 23 ; $i++)
-          ${'r80s'.$i} = 0;
+            for ($i=13; $i <= 23 ; $i++) {
+                ${'r80s'.$i} = 0;
+            }
 
-      if(is_null($transporte_escolar)){
-        $r80s11 = NULL;
-      }else{
-        $r80s11 = (($transporte_escolar == 0 ) ? 0 : 1);
-        if($r80s11){
-          $r80s12 = $transporte_escolar;
+            if (is_null($transporte_escolar)) {
+                $r80s11 = null;
+            } else {
+                $r80s11 = (($transporte_escolar == 0) ? 0 : 1);
+                if ($r80s11) {
+                    $r80s12 = $transporte_escolar;
+                }
+            }
+            ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
+            $utiliza_algum_veiculo = false;
+            for ($i=13; $i<=23;$i++) {
+                $utiliza_algum_veiculo = (${'r80s'.$i} == 1) || $utiliza_algum_veiculo;
+            }
+
+            if (!$transporte_escolar) {
+                for ($i=12; $i<=23;$i++) {
+                    ${'r80s'.$i} = null;
+                }
+            }
+
+            if ($transporte_escolar && !$utiliza_algum_veiculo) {
+                $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo tipo de veículo foi preenchido no aluno {$alunoId}.<br/>";
+                $this->error = true;
+            }
+
+            if ($this->turma_presencial_ou_semi == 1 || $this->turma_presencial_ou_semi == 2) {
+                if (is_null($r80s11)) {
+                    $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido para aluno {$alunoId}.<br/>";
+                    $this->error = true;
+                }
+            }
+
+            // fim validações transporte escolar
+
+            for ($i=1; $i <= $numeroRegistros ; $i++) {
+                $return .= ${'r80s'.$i}.$d;
+            }
+
+            $return = substr_replace($return, '', -1);
+            $return .= "\n";
         }
-      }
-      ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
-      $utiliza_algum_veiculo = FALSE;
-      for($i=13; $i<=23;$i++){
-        $utiliza_algum_veiculo = (${'r80s'.$i} == 1) || $utiliza_algum_veiculo;
-      }
 
-      if(!$transporte_escolar){
-        for($i=12; $i<=23;$i++){
-          ${'r80s'.$i} = NULL;
-        }
-      }
-
-      if($transporte_escolar && !$utiliza_algum_veiculo){
-        $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo tipo de veículo foi preenchido no aluno {$alunoId}.<br/>";
-        $this->error = true;
-      }
-
-      if($this->turma_presencial_ou_semi == 1 || $this->turma_presencial_ou_semi == 2){
-        if(is_null($r80s11)){
-          $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido para aluno {$alunoId}.<br/>";
-          $this->error = true;
-        }
-      }
-
-      // fim validações transporte escolar
-
-      for ($i=1; $i <= $numeroRegistros ; $i++)
-        $return .= ${'r80s'.$i}.$d;
-
-      $return = substr_replace($return, "", -1);
-      $return .= "\n";
+        return $return;
     }
 
-    return $return;
-  }
+    protected function exportaDadosRegistro99()
+    {
+        return "99|\n";
+    }
 
-  protected function exportaDadosRegistro99() {
-    return "99|\n";
-  }
-
-  protected function exportaDadosRegistro89($escolaId) {
-    $sql = "SELECT '89' AS r89s1,
+    protected function exportaDadosRegistro89($escolaId)
+    {
+        $sql = 'SELECT \'89\' AS r89s1,
                    educacenso_cod_escola.cod_escola_inep AS r89s2,
                    gestor_f.cpf AS r89s3,
                    gestor_p.nome AS r89s4,
@@ -1967,30 +2054,31 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
               LEFT JOIN modules.educacenso_cod_escola ON (educacenso_cod_escola.cod_escola = escola.cod_escola)
               LEFT JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = escola.ref_idpes_gestor)
               LEFT JOIN cadastro.pessoa gestor_p ON (gestor_p.idpes = escola.ref_idpes_gestor)
-             WHERE escola.cod_escola = $1";
+             WHERE escola.cod_escola = $1';
 
-    $numeroRegistros = 6;
-    $return = '';
+        $numeroRegistros = 6;
+        $return = '';
 
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row',
-                                                                      'params' => array($escolaId))));
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row',
+                                                                      'params' => [$escolaId]]));
 
-    $r89s3 = $this->cpfToCenso($r89s3);
-    $r89s4 = $this->convertStringToAlpha($r89s4);
-    $r89s6 = $this->convertEmailToCenso($r89s6);
+        $r89s3 = $this->cpfToCenso($r89s3);
+        $r89s4 = $this->convertStringToAlpha($r89s4);
+        $r89s6 = $this->convertEmailToCenso($r89s6);
 
-    for ($i=1; $i <= $numeroRegistros ; $i++)
-      $return .= ${'r89s'.$i}.'|';
+        for ($i=1; $i <= $numeroRegistros ; $i++) {
+            $return .= ${'r89s'.$i}.'|';
+        }
 
-    $return = substr_replace($return, "", -1);
-    $return .= "\n";
+        $return = substr_replace($return, '', -1);
+        $return .= "\n";
 
-    return $return;
-  }
+        return $return;
+    }
 
-  protected function exportaDadosRegistro90($escolaId, $turmaId, $matriculaId) {
-
-    $sql = "SELECT '90' AS r90s1,
+    protected function exportaDadosRegistro90($escolaId, $turmaId, $matriculaId)
+    {
+        $sql = 'SELECT \'90\' AS r90s1,
                    educacenso_cod_escola.cod_escola_inep AS r90s2,
                    educacenso_cod_aluno.cod_aluno_inep AS r90s5,
                    matricula.ref_cod_aluno AS r90s6,
@@ -2000,31 +2088,31 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
             INNER JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
              LEFT JOIN modules.educacenso_cod_aluno ON (educacenso_cod_aluno.cod_aluno = matricula.ref_cod_aluno)
             WHERE escola.cod_escola = $1
-              AND matricula.cod_matricula = $2";
+              AND matricula.cod_matricula = $2';
 
-    $numeroRegistros = 8;
-    $return = '';
+        $numeroRegistros = 8;
+        $return = '';
 
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row',
-                                                                      'params' => array($escolaId, $matriculaId))));
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row',
+                                                                      'params' => [$escolaId, $matriculaId]]));
 
-    $turma = new clsPmieducarTurma($turmaId);
-    $inep = $turma->getInep();
+        $turma = new clsPmieducarTurma($turmaId);
+        $inep = $turma->getInep();
 
-    $turma = $turma->detalhe();
-    $serieId = $turma['ref_ref_cod_serie'];
+        $turma = $turma->detalhe();
+        $serieId = $turma['ref_ref_cod_serie'];
 
-    $serie = new clsPmieducarSerie($serieId);
-    $serie = $serie->detalhe();
+        $serie = new clsPmieducarSerie($serieId);
+        $serie = $serie->detalhe();
 
-    $anoConcluinte = $serie['concluinte'] == 2;
+        $anoConcluinte = $serie['concluinte'] == 2;
 
-    $r90s3 = $turmaId;
-    $r90s4 = ($inep ? $inep : null);
-    $r90s7 = null;
+        $r90s3 = $turmaId;
+        $r90s4 = ($inep ? $inep : null);
+        $r90s7 = null;
 
-    // Atualiza situação para código do censo
-    switch ($r90s8) {
+        // Atualiza situação para código do censo
+        switch ($r90s8) {
       case 4:
         $r90s8 = 1;
         break;
@@ -2045,18 +2133,19 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         break;
     }
 
-    for ($i=1; $i <= $numeroRegistros ; $i++)
-      $return .= ${'r90s'.$i}.'|';
+        for ($i=1; $i <= $numeroRegistros ; $i++) {
+            $return .= ${'r90s'.$i}.'|';
+        }
 
-    $return = substr_replace($return, "", -1);
-    $return .= "\n";
+        $return = substr_replace($return, '', -1);
+        $return .= "\n";
 
-    return $return;
-  }
+        return $return;
+    }
 
-  protected function exportaDadosRegistro91($escolaId, $turmaId, $matriculaId) {
-
-    $sql = "SELECT '91' AS r91s1,
+    protected function exportaDadosRegistro91($escolaId, $turmaId, $matriculaId)
+    {
+        $sql = 'SELECT \'91\' AS r91s1,
                    educacenso_cod_escola.cod_escola_inep AS r91s2,
                    educacenso_cod_aluno.cod_aluno_inep AS r91s5,
                    matricula.ref_cod_aluno AS r91s6,
@@ -2068,39 +2157,39 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
              LEFT JOIN modules.educacenso_cod_aluno ON (educacenso_cod_aluno.cod_aluno = matricula.ref_cod_aluno)
             INNER JOIN pmieducar.curso ON (curso.cod_curso = matricula.ref_cod_curso)
             WHERE escola.cod_escola = $1
-              AND matricula.cod_matricula = $2";
+              AND matricula.cod_matricula = $2';
 
-    $numeroRegistros = 11;
-    $return = '';
+        $numeroRegistros = 11;
+        $return = '';
 
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row',
-                                                                      'params' => array($escolaId, $matriculaId))));
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, ['return_only' => 'first-row',
+                                                                      'params' => [$escolaId, $matriculaId]]));
 
-    $turma = new clsPmieducarTurma($turmaId);
-    $inep = $turma->getInep();
+        $turma = new clsPmieducarTurma($turmaId);
+        $inep = $turma->getInep();
 
-    $turma = $turma->detalhe();
-    $serieId = $turma['ref_ref_cod_serie'];
+        $turma = $turma->detalhe();
+        $serieId = $turma['ref_ref_cod_serie'];
 
-    $serie = new clsPmieducarSerie($serieId);
-    $serie = $serie->detalhe();
+        $serie = new clsPmieducarSerie($serieId);
+        $serie = $serie->detalhe();
 
-    $anoConcluinte = $serie['concluinte'] == 2;
-    $etapaEducacenso = $turma['etapa_educacenso'];
+        $anoConcluinte = $serie['concluinte'] == 2;
+        $etapaEducacenso = $turma['etapa_educacenso'];
 
-    $etapasValidasEducacenso = array(3, 12, 13, 22, 23, 24, 56, 64, 72);
+        $etapasValidasEducacenso = [3, 12, 13, 22, 23, 24, 56, 64, 72];
 
-    $tipoMediacaoDidaticoPedagogico = $turma['tipo_mediacao_didatico_pedagogico'];
+        $tipoMediacaoDidaticoPedagogico = $turma['tipo_mediacao_didatico_pedagogico'];
 
-    $r91s3 = $turmaId;
-    $r91s4 = ($inep ? $inep : null);
-    $r91s7 = null;
-    $r91s8 = ($inep ? null : $tipoMediacaoDidaticoPedagogico);
-    $r91s9 = ($inep ? null : $r91s9);
-    $r91s10 = (in_array($etapaEducacenso, $etapasValidasEducacenso) ? $etapaEducacenso : null);
+        $r91s3 = $turmaId;
+        $r91s4 = ($inep ? $inep : null);
+        $r91s7 = null;
+        $r91s8 = ($inep ? null : $tipoMediacaoDidaticoPedagogico);
+        $r91s9 = ($inep ? null : $r91s9);
+        $r91s10 = (in_array($etapaEducacenso, $etapasValidasEducacenso) ? $etapaEducacenso : null);
 
-    // Atualiza situação para código do censo
-    switch ($r91s11) {
+        // Atualiza situação para código do censo
+        switch ($r91s11) {
       case 4:
         $r91s11 = 1;
         break;
@@ -2121,123 +2210,137 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         break;
     }
 
-    for ($i=1; $i <= $numeroRegistros ; $i++)
-      $return .= ${'r91s'.$i}.'|';
+        for ($i=1; $i <= $numeroRegistros ; $i++) {
+            $return .= ${'r91s'.$i}.'|';
+        }
 
-    $return = substr_replace($return, "", -1);
-    $return .= "\n";
+        $return = substr_replace($return, '', -1);
+        $return .= "\n";
 
-    return $return;
-  }
+        return $return;
+    }
 
-  protected function cpfToCenso($cpf){
-    $cpf = str_replace(array('.', '-'), '', int2CPF($cpf));
-    return $cpf == '00000000000' ? NULL : $cpf;
-  }
+    protected function cpfToCenso($cpf)
+    {
+        $cpf = str_replace(['.', '-'], '', int2CPF($cpf));
 
-protected function cnpjToCenso($cnpj){
-    $cnpj = str_replace(array('.', '-', '/'), '', int2CNPJ($cnpj));
-    return $cnpj == '00000000000000' ? NULL : $cnpj;
-}
+        return $cpf == '00000000000' ? null : $cpf;
+    }
 
-  protected function upperAndUnaccent($string){
-    $string = Portabilis_String_Utils::toUtf8($string);
-    $string = preg_replace(array("/(á|à|ã|â|ä)/",
-                                 "/(Á|À|Ã|Â|Ä)/",
-                                 "/(é|è|ê|ë)/",
-                                 "/(É|È|Ê|Ë)/",
-                                 "/(í|ì|î|ï)/",
-                                 "/(Í|Ì|Î|Ï)/",
-                                 "/(ó|ò|õ|ô|ö)/",
-                                 "/(Ó|Ò|Õ|Ô|Ö)/",
-                                 "/(ú|ù|û|ü)/",
-                                 "/(Ú|Ù|Û|Ü)/",
-                                 "/(ñ)/","/(Ñ)/",
-                                 "/(ç)/","/(Ç)/"),
-                            explode(" ","a A e E i I o O u U n N c C"), $string);
+    protected function cnpjToCenso($cnpj)
+    {
+        $cnpj = str_replace(['.', '-', '/'], '', int2CNPJ($cnpj));
 
-    return strtoupper($string);
-  }
+        return $cnpj == '00000000000000' ? null : $cnpj;
+    }
 
-  protected function convertStringToAlpha($string){
-    $string = $this->upperAndUnaccent($string);
+    protected function upperAndUnaccent($string)
+    {
+        $string = Portabilis_String_Utils::toUtf8($string);
+        $string = preg_replace(
+        ['/(á|à|ã|â|ä)/',
+                                 '/(Á|À|Ã|Â|Ä)/',
+                                 '/(é|è|ê|ë)/',
+                                 '/(É|È|Ê|Ë)/',
+                                 '/(í|ì|î|ï)/',
+                                 '/(Í|Ì|Î|Ï)/',
+                                 '/(ó|ò|õ|ô|ö)/',
+                                 '/(Ó|Ò|Õ|Ô|Ö)/',
+                                 '/(ú|ù|û|ü)/',
+                                 '/(Ú|Ù|Û|Ü)/',
+                                 '/(ñ)/','/(Ñ)/',
+                                 '/(ç)/','/(Ç)/'],
+                            explode(' ', 'a A e E i I o O u U n N c C'),
+        $string
+    );
 
-    //Aceita apenas letras
-    $alphas = range('A','Z');
-    $caracteresAceitos = array(" ");
-    $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
+        return strtoupper($string);
+    }
 
+    protected function convertStringToAlpha($string)
+    {
+        $string = $this->upperAndUnaccent($string);
 
-    //Aplica filtro na string eliminando caracteres indesejados
-    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-    $string = preg_replace($regex, '', $string);
+        //Aceita apenas letras
+        $alphas = range('A', 'Z');
+        $caracteresAceitos = [' '];
+        $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
-    //Elimina espaços indesejados
-    $string = trim($string);
-    $string = preg_replace('/( )+/', ' ', $string);
+        //Aplica filtro na string eliminando caracteres indesejados
+        $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $string = preg_replace($regex, '', $string);
 
-    return $string;
-  }
+        //Elimina espaços indesejados
+        $string = trim($string);
+        $string = preg_replace('/( )+/', ' ', $string);
 
-  protected function convertStringToCenso($string){
-    $string = $this->upperAndUnaccent($string);
+        return $string;
+    }
 
-    //Aceita apenas letras e numeros e alguns caracteres especiais
-    $alphas = range('A','Z');
-    $numbers = range(0,9);
-    $caracteresAceitos = array(" ", "ª", "º", "-");
-    $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
-    $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
+    protected function convertStringToCenso($string)
+    {
+        $string = $this->upperAndUnaccent($string);
 
-    //Aplica filtro na string eliminando caracteres indesejados
-    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-    $string = preg_replace($regex, '', $string);
+        //Aceita apenas letras e numeros e alguns caracteres especiais
+        $alphas = range('A', 'Z');
+        $numbers = range(0, 9);
+        $caracteresAceitos = [' ', 'ª', 'º', '-'];
+        $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
+        $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
-    //Elimina espaços indesejados
-    $string = trim($string);
-    $string = preg_replace('/( )+/', ' ', $string);
+        //Aplica filtro na string eliminando caracteres indesejados
+        $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $string = preg_replace($regex, '', $string);
 
-    return $string;
-  }
+        //Elimina espaços indesejados
+        $string = trim($string);
+        $string = preg_replace('/( )+/', ' ', $string);
 
-  protected function convertStringToCertNovoFormato($string){
-    $string = $this->upperAndUnaccent($string);
+        return $string;
+    }
 
-    //Aceita apenas números e letra X
-    $numbers = range(0,9);
-    $caracteresAceitos = array(" ", "x", "X");
-    $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
+    protected function convertStringToCertNovoFormato($string)
+    {
+        $string = $this->upperAndUnaccent($string);
 
-    //Aplica filtro na string eliminando caracteres indesejados
-    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-    $string = preg_replace($regex, '', $string);
+        //Aceita apenas números e letra X
+        $numbers = range(0, 9);
+        $caracteresAceitos = [' ', 'x', 'X'];
+        $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
 
-    return $string;
-  }
+        //Aplica filtro na string eliminando caracteres indesejados
+        $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $string = preg_replace($regex, '', $string);
 
-  protected function convertEmailToCenso($string){
-    $string = $this->upperAndUnaccent($string);
+        return $string;
+    }
 
-    //Aceita apenas letras e numeros e alguns caracteres especiais
-    $alphas = range('A','Z');
-    $numbers = range(0,9);
-    $caracteresAceitos = array("_", "-", "@", ".");
-    $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
-    $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
+    protected function convertEmailToCenso($string)
+    {
+        $string = $this->upperAndUnaccent($string);
 
-    //Aplica filtro na string eliminando caracteres indesejados
-    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-    $string = preg_replace($regex, '', $string);
+        //Aceita apenas letras e numeros e alguns caracteres especiais
+        $alphas = range('A', 'Z');
+        $numbers = range(0, 9);
+        $caracteresAceitos = ['_', '-', '@', '.'];
+        $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
+        $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
-    return $string;
-  }
+        //Aplica filtro na string eliminando caracteres indesejados
+        $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+        $string = preg_replace($regex, '', $string);
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'educacenso-export'))
-      $this->appendResponse($this->educacensoExport());
-    elseif ($this->isRequestFor('get', 'educacenso-export-fase2'))
-      $this->appendResponse($this->educacensoExportFase2());
-    else
-      $this->notImplementedOperationError();
-  }
+        return $string;
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'educacenso-export')) {
+            $this->appendResponse($this->educacensoExport());
+        } elseif ($this->isRequestFor('get', 'educacenso-export-fase2')) {
+            $this->appendResponse($this->educacensoExportFase2());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

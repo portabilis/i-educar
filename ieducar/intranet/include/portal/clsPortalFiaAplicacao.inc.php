@@ -5,13 +5,12 @@
 * Criado em 27/04/2007 10:48 pelo gerador automatico de classes
 */
 
-
 class clsPortalFiaAplicacao
 {
-    var $cod_aplicacao;
-    var $ano;
-    var $num_entidade;
-    var $valor;
+    public $cod_aplicacao;
+    public $ano;
+    public $num_entidade;
+    public $valor;
 
     // propriedades padrao
 
@@ -20,61 +19,60 @@ class clsPortalFiaAplicacao
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
-     * 
+     *
      * @param integer cod_aplicacao
      * @param integer ano
      * @param integer num_entidade
@@ -82,33 +80,26 @@ class clsPortalFiaAplicacao
      *
      * @return object
      */
-    function __construct( $cod_aplicacao = null, $ano = null, $num_entidade = null, $valor = null )
+    public function __construct($cod_aplicacao = null, $ano = null, $num_entidade = null, $valor = null)
     {
         $db = new clsBanco();
-        $this->_schema = "portal.";
+        $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}fia_aplicacao";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_aplicacao, ano, num_entidade, valor";
+        $this->_campos_lista = $this->_todos_campos = 'cod_aplicacao, ano, num_entidade, valor';
 
-
-
-        if( is_numeric( $cod_aplicacao ) )
-        {
+        if (is_numeric($cod_aplicacao)) {
             $this->cod_aplicacao = $cod_aplicacao;
         }
-        if( is_numeric( $ano ) )
-        {
+        if (is_numeric($ano)) {
             $this->ano = $ano;
         }
-        if( is_numeric( $num_entidade ) )
-        {
+        if (is_numeric($num_entidade)) {
             $this->num_entidade = $num_entidade;
         }
-        if( is_string( $valor ) )
-        {
+        if (is_string($valor)) {
             $this->valor = $valor;
         }
-
     }
 
     /**
@@ -116,39 +107,36 @@ class clsPortalFiaAplicacao
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ano ) && is_numeric( $this->num_entidade ) && is_string( $this->valor ) )
-        {
+        if (is_numeric($this->ano) && is_numeric($this->num_entidade) && is_string($this->valor)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ano ) )
-            {
+            if (is_numeric($this->ano)) {
                 $campos .= "{$gruda}ano";
                 $valores .= "{$gruda}'{$this->ano}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->num_entidade ) )
-            {
+            if (is_numeric($this->num_entidade)) {
                 $campos .= "{$gruda}num_entidade";
                 $valores .= "{$gruda}'{$this->num_entidade}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->valor ) )
-            {
+            if (is_string($this->valor)) {
                 $campos .= "{$gruda}valor";
                 $valores .= "{$gruda}'{$this->valor}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_aplicacao_seq");
+            return $db->InsertId("{$this->_tabela}_cod_aplicacao_seq");
         }
+
         return false;
     }
 
@@ -157,110 +145,95 @@ class clsPortalFiaAplicacao
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_aplicacao ) )
-        {
-
+        if (is_numeric($this->cod_aplicacao)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->ano ) )
-            {
+            if (is_numeric($this->ano)) {
                 $set .= "{$gruda}ano = '{$this->ano}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->num_entidade ) )
-            {
+            if (is_numeric($this->num_entidade)) {
                 $set .= "{$gruda}num_entidade = '{$this->num_entidade}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->valor ) )
-            {
+            if (is_string($this->valor)) {
                 $set .= "{$gruda}valor = '{$this->valor}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aplicacao = '{$this->cod_aplicacao}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_aplicacao = '{$this->cod_aplicacao}'" );
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
-     * 
+     *
      * @param integer int_ano
      * @param integer int_num_entidade
      * @param string str_valor
      *
      * @return array
      */
-    function lista( $int_ano = null, $int_num_entidade = null, $str_valor = null )
+    public function lista($int_ano = null, $int_num_entidade = null, $str_valor = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_aplicacao ) )
-        {
+        if (is_numeric($int_cod_aplicacao)) {
             $filtros .= "{$whereAnd} cod_aplicacao = '{$int_cod_aplicacao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ano ) )
-        {
+        if (is_numeric($int_ano)) {
             $filtros .= "{$whereAnd} ano = '{$int_ano}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_num_entidade ) )
-        {
+        if (is_numeric($int_num_entidade)) {
             $filtros .= "{$whereAnd} num_entidade = '{$int_num_entidade}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_valor ) )
-        {
+        if (is_string($str_valor)) {
             $filtros .= "{$whereAnd} valor LIKE '%{$str_valor}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -269,16 +242,16 @@ class clsPortalFiaAplicacao
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_aplicacao ) )
-        {
-
+        if (is_numeric($this->cod_aplicacao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_aplicacao = '{$this->cod_aplicacao}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_aplicacao = '{$this->cod_aplicacao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -287,18 +260,16 @@ class clsPortalFiaAplicacao
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_aplicacao ) )
-        {
-
+        if (is_numeric($this->cod_aplicacao)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_aplicacao = '{$this->cod_aplicacao}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_aplicacao = '{$this->cod_aplicacao}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -307,19 +278,17 @@ class clsPortalFiaAplicacao
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_aplicacao ) )
-        {
+        if (is_numeric($this->cod_aplicacao)) {
 
-        
         //  delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_aplicacao = '{$this->cod_aplicacao}'" );
-        return true;
+            $db = new clsBanco();
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_aplicacao = '{$this->cod_aplicacao}'");
 
-        
+            return true;
         }
+
         return false;
     }
 
@@ -328,7 +297,7 @@ class clsPortalFiaAplicacao
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -338,7 +307,7 @@ class clsPortalFiaAplicacao
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -348,7 +317,7 @@ class clsPortalFiaAplicacao
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -359,18 +328,18 @@ class clsPortalFiaAplicacao
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -378,13 +347,12 @@ class clsPortalFiaAplicacao
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -394,14 +362,12 @@ class clsPortalFiaAplicacao
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

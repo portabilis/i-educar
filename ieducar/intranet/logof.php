@@ -2,6 +2,7 @@
 /**
  *
  * @version SVN: $Id$
+ *
  * @author  Prefeitura Municipal de Itajaí
  * @updated 29/03/2007
  * Pacote: i-PLB Software Público Livre e Brasileiro
@@ -25,9 +26,9 @@
  * 02111-1307, USA.
  *
  */
- 
+
 session_start();
-$_SESSION = array();
+$_SESSION = [];
 session_destroy();
 
 // Redireciona para página de login

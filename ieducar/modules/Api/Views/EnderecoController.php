@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,18 +44,18 @@ require_once 'intranet/include/pmieducar/clsPmieducarMenuTipoUsuario.inc.php';
 
 /**
  * Class EnderecoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class EnderecoController extends ApiCoreController
 {
+    protected function getPrimeiroEnderecoCep()
+    {
+        $cep = idFederal2int($this->getRequest()->cep);
 
-  protected function getPrimeiroEnderecoCep() {
+        // consulta dados
 
-    $cep = idFederal2int($this->getRequest()->cep);
-
-    // consulta dados
-
-    $select = "
+        $select = "
                 SELECT c.idlog,
                        c.cep,
                        c.idbai,
@@ -74,85 +79,83 @@ class EnderecoController extends ApiCoreController
                 INNER JOIN public.uf u ON u.sigla_uf = m.sigla_uf
                 WHERE c.cep = {$cep} LIMIT 1";
 
+        $result = Portabilis_Utils_Database::fetchPreparedQuery($select, ['return_only' => 'first-line']);
 
+        $return;
 
-    $result = Portabilis_Utils_Database::fetchPreparedQuery($select, array('return_only' => 'first-line'));
+        if (is_array($result)) {
+            $return = [];
+            foreach ($result as $name => $value) {
+                $return[$name] = Portabilis_String_Utils::toUtf8($value);
+            }
+        }
 
-    $return;
-
-    if (is_array($result)){
-      $return = array();
-      foreach ($result as $name => $value) {
-        $return[$name] = Portabilis_String_Utils::toUtf8($value);
-      }
+        return $return;
     }
 
-    return $return;
-  }
+    protected function getPermissaoEditar()
+    {
+        $usuario = new clsPmieducarUsuario($this->getSession()->id_pessoa);
+        $usuario = $usuario->detalhe();
 
-  protected function getPermissaoEditar() {
+        $tipoUsuario = new clsPmieducarMenuTipoUsuario($usuario['ref_cod_tipo_usuario'], 999878);
+        $tipoUsuario = $tipoUsuario->detalhe();
 
-    $usuario = new clsPmieducarUsuario($this->getSession()->id_pessoa);
-    $usuario = $usuario->detalhe();
+        $permissao = ($tipoUsuario['cadastra'] == 1 ? true : false);
 
-    $tipoUsuario = new clsPmieducarMenuTipoUsuario($usuario['ref_cod_tipo_usuario'], 999878);
-    $tipoUsuario = $tipoUsuario->detalhe();
+        return ['permite_editar' => $permissao];
+    }
 
-    $permissao = ($tipoUsuario['cadastra'] == 1 ? true : false);
+    protected function deleteEndereco()
+    {
+        $cep      = idFederal2int($this->getRequest()->cep);
+        $cep      = $cep == '' ? 0 : $cep;
+        $idBairro = $this->getRequest()->id_bairro;
+        $idLog    = $this->getRequest()->id_log;
 
-    return array('permite_editar' => $permissao);
-  }
-
-  protected function deleteEndereco() {
-    $cep      = idFederal2int($this->getRequest()->cep);
-    $cep      = $cep == '' ? 0 : $cep;
-    $idBairro = $this->getRequest()->id_bairro;
-    $idLog    = $this->getRequest()->id_log;
-
-    $sql = "SELECT pessoa.nome
+        $sql = 'SELECT pessoa.nome
               FROM cadastro.pessoa
              INNER JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
              WHERE endereco_pessoa.cep = $1
                AND endereco_pessoa.idbai = $2
-               AND endereco_pessoa.idlog = $3 LIMIT 10;";
+               AND endereco_pessoa.idlog = $3 LIMIT 10;';
 
-    $params = array($cep, $idBairro, $idLog);
-    $pessoa = $this->fetchPreparedQuery($sql, $params, false);
+        $params = [$cep, $idBairro, $idLog];
+        $pessoa = $this->fetchPreparedQuery($sql, $params, false);
 
-    if (is_array($pessoa) && count($pessoa) > 0) {
-      $pessoa_str = '';
+        if (is_array($pessoa) && count($pessoa) > 0) {
+            $pessoa_str = '';
 
-      for ($i=0; $i < count($pessoa); $i++) {
-        $pessoa_str .= "<br />" . $pessoa[$i][nome];
-      }
+            for ($i=0; $i < count($pessoa); $i++) {
+                $pessoa_str .= '<br />' . $pessoa[$i][nome];
+            }
 
-      $this->messenger->append('Não foi possível excluir esse CEP pois o mesmo está sendo utilizado por: ' . $pessoa_str, 'error');
-      return $pessoa;
-    }
+            $this->messenger->append('Não foi possível excluir esse CEP pois o mesmo está sendo utilizado por: ' . $pessoa_str, 'error');
 
-    $sql = "DELETE FROM urbano.cep_logradouro_bairro
+            return $pessoa;
+        }
+
+        $sql = 'DELETE FROM urbano.cep_logradouro_bairro
              WHERE cep_logradouro_bairro.cep = $1
                AND cep_logradouro_bairro.idbai = $2
-               AND cep_logradouro_bairro.idlog = $3;";
+               AND cep_logradouro_bairro.idlog = $3;';
 
-    $params = array($cep, $idBairro, $idLog);
-    $this->fetchPreparedQuery($sql, $params);
+        $params = [$cep, $idBairro, $idLog];
+        $this->fetchPreparedQuery($sql, $params);
 
-    $this->messenger->append('Excluído com sucesso.', 'success');
-  }
+        $this->messenger->append('Excluído com sucesso.', 'success');
+    }
 
-  public function Gerar() {
-
-    if ($this->isRequestFor('get', 'primeiro_endereco_cep'))
-      $this->appendResponse($this->getPrimeiroEnderecoCep());
-
-    elseif ($this->isRequestFor('get', 'permissao_editar'))
-      $this->appendResponse($this->getPermissaoEditar());
-
-    elseif ($this->isRequestFor('delete', 'delete_endereco'))
-      $this->deleteEndereco();
-
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'primeiro_endereco_cep')) {
+            $this->appendResponse($this->getPrimeiroEnderecoCep());
+        } elseif ($this->isRequestFor('get', 'permissao_editar')) {
+            $this->appendResponse($this->getPermissaoEditar());
+        } elseif ($this->isRequestFor('delete', 'delete_endereco')) {
+            $this->deleteEndereco();
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

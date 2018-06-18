@@ -30,14 +30,14 @@
 * Criado em 14/11/2006 16:31 pelo gerador automatico de classes
 */
 
-require_once( "include/pmidrh/geral.inc.php" );
+require_once('include/pmidrh/geral.inc.php');
 
 class clsPmidrhPortariaCamposTabela
 {
-    var $cod_campo_tabela;
-    var $ref_cod_tipo_portaria;
-    var $nome_campo;
-    var $ativo;
+    public $cod_campo_tabela;
+    public $ref_cod_tipo_portaria;
+    public $nome_campo;
+    public $ativo;
     // propriedades padrao
 
     /**
@@ -45,57 +45,56 @@ class clsPmidrhPortariaCamposTabela
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
@@ -106,57 +105,42 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return object
      */
-    function __construct( $cod_campo_tabela = null, $ref_cod_tipo_portaria = null, $nome_campo = null, $ativo = 1 )
+    public function __construct($cod_campo_tabela = null, $ref_cod_tipo_portaria = null, $nome_campo = null, $ativo = 1)
     {
         $db = new clsBanco();
-        $this->_schema = "pmidrh.";
+        $this->_schema = 'pmidrh.';
         $this->_tabela = "{$this->_schema}portaria_campos_tabela";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_campo_tabela, ref_cod_tipo_portaria, nome_campo";
+        $this->_campos_lista = $this->_todos_campos = 'cod_campo_tabela, ref_cod_tipo_portaria, nome_campo';
 
-        if( is_numeric( $ref_cod_tipo_portaria ) )
-        {
-            if( class_exists( "clsPmidrhTipoPortaria" ) )
-            {
-                $tmp_obj = new clsPmidrhTipoPortaria( $ref_cod_tipo_portaria );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_tipo_portaria)) {
+            if (class_exists('clsPmidrhTipoPortaria')) {
+                $tmp_obj = new clsPmidrhTipoPortaria($ref_cod_tipo_portaria);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_tipo_portaria = $ref_cod_tipo_portaria;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_tipo_portaria = $ref_cod_tipo_portaria;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_tipo_portaria = $ref_cod_tipo_portaria;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmidrh.tipo_portaria WHERE cod_tipo_portaria = '{$ref_cod_tipo_portaria}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmidrh.tipo_portaria WHERE cod_tipo_portaria = '{$ref_cod_tipo_portaria}'")) {
                     $this->ref_cod_tipo_portaria = $ref_cod_tipo_portaria;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_campo_tabela ) )
-        {
+        if (is_numeric($cod_campo_tabela)) {
             $this->cod_campo_tabela = $cod_campo_tabela;
         }
-        if( is_string( $nome_campo ) )
-        {
+        if (is_string($nome_campo)) {
             $this->nome_campo = $nome_campo;
         }
-        if( is_numeric($ativo) )
-        {
+        if (is_numeric($ativo)) {
             $this->ativo = $ativo;
         }
-
     }
 
     /**
@@ -164,35 +148,34 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_cod_tipo_portaria ) && is_string( $this->nome_campo ) )
-        {
+        if (is_numeric($this->ref_cod_tipo_portaria) && is_string($this->nome_campo)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_tipo_portaria ) )
-            {
+            if (is_numeric($this->ref_cod_tipo_portaria)) {
                 $campos .= "{$gruda}ref_cod_tipo_portaria";
                 $valores .= "{$gruda}'{$this->ref_cod_tipo_portaria}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nome_campo ) )
-            {
+            if (is_string($this->nome_campo)) {
                 $campos .= "{$gruda}nome_campo";
                 $valores .= "{$gruda}'{$this->nome_campo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_campo_tabela_seq");
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
+            return $db->InsertId("{$this->_tabela}_cod_campo_tabela_seq");
         }
+
         return false;
     }
 
@@ -201,36 +184,32 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_campo_tabela ) )
-        {
-
+        if (is_numeric($this->cod_campo_tabela)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->ref_cod_tipo_portaria ) )
-            {
+            if (is_numeric($this->ref_cod_tipo_portaria)) {
                 $set .= "{$gruda}ref_cod_tipo_portaria = '{$this->ref_cod_tipo_portaria}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nome_campo ) )
-            {
+            if (is_string($this->nome_campo)) {
                 $set .= "{$gruda}nome_campo = '{$this->nome_campo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ativo) )
-            {
+            if (is_numeric($this->ativo)) {
                 $set .="{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_campo_tabela = '{$this->cod_campo_tabela}'" );
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_campo_tabela = '{$this->cod_campo_tabela}'");
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -242,65 +221,56 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return array
      */
-    function lista( $int_ref_cod_tipo_portaria = null, $str_nome_campo = null, $ativo = null )
+    public function lista($int_ref_cod_tipo_portaria = null, $str_nome_campo = null, $ativo = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_campo_tabela ) )
-        {
+        if (is_numeric($int_cod_campo_tabela)) {
             $filtros .= "{$whereAnd} cod_campo_tabela = '{$int_cod_campo_tabela}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_tipo_portaria ) )
-        {
+        if (is_numeric($int_ref_cod_tipo_portaria)) {
             $filtros .= "{$whereAnd} ref_cod_tipo_portaria = '{$int_ref_cod_tipo_portaria}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nome_campo ) )
-        {
+        if (is_string($str_nome_campo)) {
             $filtros .= "{$whereAnd} nome_campo LIKE '%{$str_nome_campo}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( !is_null($ativo) )
-        {
+        if (!is_null($ativo)) {
             $filtros .= "{$whereAnd} ativo = '{$ativo}'";
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -309,16 +279,16 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_campo_tabela ) )
-        {
+        if (is_numeric($this->cod_campo_tabela)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_campo_tabela = '{$this->cod_campo_tabela}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_campo_tabela = '{$this->cod_campo_tabela}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -327,16 +297,16 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_campo_tabela ) )
-        {
+        if (is_numeric($this->cod_campo_tabela)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_campo_tabela = '{$this->cod_campo_tabela}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_campo_tabela = '{$this->cod_campo_tabela}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -345,20 +315,20 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->ref_cod_tipo_portaria ) )
-        {
+        if (is_numeric($this->ref_cod_tipo_portaria)) {
 
         //  delete
-        /*$db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_tipo_portaria = '{$this->ref_cod_tipo_portaria}'" );
-        return true;*/
-        $db = new clsBanco();
-        $db->Consulta( "UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_tipo_portaria = '{$this->ref_cod_tipo_portaria}'" );
-        return true;
+            /*$db = new clsBanco();
+            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_tipo_portaria = '{$this->ref_cod_tipo_portaria}'" );
+            return true;*/
+            $db = new clsBanco();
+            $db->Consulta("UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_tipo_portaria = '{$this->ref_cod_tipo_portaria}'");
 
+            return true;
         }
+
         return false;
     }
 
@@ -367,7 +337,7 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -377,7 +347,7 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -387,7 +357,7 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -398,18 +368,18 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -417,13 +387,12 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -433,14 +402,12 @@ class clsPmidrhPortariaCamposTabela
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

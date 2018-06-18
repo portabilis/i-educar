@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Session
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,52 +42,60 @@ require_once 'CoreExt/Configurable.php';
  * os métodos básicos de escrita e inicialização/destruição de uma session.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Session
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface CoreExt_Session_Storage_Interface extends CoreExt_Configurable
 {
-  /**
-   * Inicializa a session.
-   */
-  public function start();
+    /**
+     * Inicializa a session.
+     */
+    public function start();
 
-  /**
-   *
-   * @param string $key
-   * @return mixed
-   */
-  public function read($key);
+    /**
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function read($key);
 
-  /**
-   * Persiste um dado valor na session.
-   * @param string $key
-   * @param mixed $value
-   */
-  public function write($key, $value);
+    /**
+     * Persiste um dado valor na session.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function write($key, $value);
 
-  /**
-   * Remove/apaga um dado na session.
-   * @param string $key
-   */
-  public function remove($key);
+    /**
+     * Remove/apaga um dado na session.
+     *
+     * @param string $key
+     */
+    public function remove($key);
 
-  /**
-   * Destrói os dados de uma session.
-   */
-  public function destroy();
+    /**
+     * Destrói os dados de uma session.
+     */
+    public function destroy();
 
-  /**
-   * Gera um novo id para a session.
-   */
-  public function regenerate($destroy = FALSE);
+    /**
+     * Gera um novo id para a session.
+     */
+    public function regenerate($destroy = false);
 
-  /**
-   * Persiste os dados da session no storage definido ao final da execução
-   * do script PHP.
-   */
-  public function shutdown();
+    /**
+     * Persiste os dados da session no storage definido ao final da execução
+     * do script PHP.
+     */
+    public function shutdown();
 }

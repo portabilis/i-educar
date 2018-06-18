@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     AreaConhecimento
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,37 +41,41 @@ require_once 'AreaConhecimento/Model/AreaDataMapper.php';
  * ViewController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     AreaConhecimento
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class ViewController extends Core_Controller_Page_ViewController
 {
-  protected $_dataMapper = 'AreaConhecimento_Model_AreaDataMapper';
-  protected $_titulo     = 'Detalhes de área de conhecimento';
-  protected $_processoAp = 945;
-  protected $_tableMap   = array(
+    protected $_dataMapper = 'AreaConhecimento_Model_AreaDataMapper';
+    protected $_titulo     = 'Detalhes de área de conhecimento';
+    protected $_processoAp = 945;
+    protected $_tableMap   = [
     'Nome' => 'nome',
     'Seção' => 'secao',
-  );
+  ];
 
+    protected function _preRender()
+    {
+        parent::_preRender();
 
-  protected function _preRender(){
+        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
-    parent::_preRender();
+        $localizacao = new LocalizacaoSistema();
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
-
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe da &aacute;rea de conhecimento"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Detalhe da &aacute;rea de conhecimento'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }

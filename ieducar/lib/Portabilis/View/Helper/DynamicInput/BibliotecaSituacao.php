@@ -22,43 +22,56 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_BibliotecaSituacao class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'ref_cod_situacao';
+    }
 
-  protected function inputName() {
-    return 'ref_cod_situacao';
-  }
+    protected function inputOptions($options)
+    {
+        $resources    = $options['resources'];
+        $bibliotecaId = $this->getBibliotecaId();
 
-  protected function inputOptions($options) {
-    $resources    = $options['resources'];
-    $bibliotecaId = $this->getBibliotecaId();
+        if ($bibliotecaId and empty($resources)) {
+            $resources = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+        }
 
-    if ($bibliotecaId and empty($resources))
-      $resources = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+        return $this->insertOption(null, 'Selecione uma situa&ccedil;&atilde;o', $resources);
+    }
 
-    return $this->insertOption(null, "Selecione uma situa&ccedil;&atilde;o", $resources);
-  }
-
-  public function bibliotecaSituacao($options = array()) {
-    parent::select($options);
-  }
+    public function bibliotecaSituacao($options = [])
+    {
+        parent::select($options);
+    }
 }

@@ -20,10 +20,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package   Ied_Public
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -39,117 +44,129 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  * clsIndexBase class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Setor');
-    $this->processoAp = 760;
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Setor');
+        $this->processoAp = 760;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $__titulo;
-  var $__limite;
-  var $__offset;
+    public $pessoa_logada;
+    public $__titulo;
+    public $__limite;
+    public $__offset;
 
-  var $idsetorbai;
-  var $nome;
+    public $idsetorbai;
+    public $nome;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->__titulo = 'Setor - Listagem';
+        $this->__titulo = 'Setor - Listagem';
 
-    // Passa todos os valores obtidos no GET para atributos do objeto
-    foreach ($_GET as $var => $val) {
-      $this->$var = ($val === '') ? NULL : $val;
-    }
+        // Passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
+        $this->addBanner(
+        'imagens/nvp_top_intranet.jpg',
+      'imagens/nvp_vert_intranet.jpg',
+        'Intranet'
+    );
 
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Código',
       'Nome'
-    ));
-    
-    // Outros filtros
-    $this->campoNumero('idsetorbai', 'Código', $this->idsetorbai, 5, 5, FALSE);
-    $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, FALSE);
+    ]);
 
-    // Paginador
-    $this->__limite = 20;
-    $this->__offset = ($_GET['pagina_' . $this->nome]) ?
+        // Outros filtros
+        $this->campoNumero('idsetorbai', 'Código', $this->idsetorbai, 5, 5, false);
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, false);
+
+        // Paginador
+        $this->__limite = 20;
+        $this->__offset = ($_GET['pagina_' . $this->nome]) ?
       ($_GET['pagina_' . $this->nome] * $this->__limite - $this->__limite) : 0;
-    
-    $obj_setor = new clsPublicSetorBai();
-    $obj_setor->setOrderby('nome ASC');
-    $obj_setor->setLimite($this->__limite, $this->__offset);
 
-    $lista = $obj_setor->lista(
+        $obj_setor = new clsPublicSetorBai();
+        $obj_setor->setOrderby('nome ASC');
+        $obj_setor->setLimite($this->__limite, $this->__offset);
+
+        $lista = $obj_setor->lista(
       $this->idsetorbai,
       $this->nome
     );
 
-    $total = $obj_setor->_total;
+        $total = $obj_setor->_total;
 
-    $url = CoreExt_View_Helper_UrlHelper::getInstance();
-    $options = array('query' => array('idsetorbai' => NULL));
+        $url = CoreExt_View_Helper_UrlHelper::getInstance();
+        $options = ['query' => ['idsetorbai' => null]];
 
-    // Monta a lista.
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $options['query']['idsetorbai'] = $registro['idsetorbai'];
-        $this->addLinhas(array(
+        // Monta a lista.
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $options['query']['idsetorbai'] = $registro['idsetorbai'];
+                $this->addLinhas([
           $url->l($registro['idsetorbai'], 'public_setor_det.php', $options),
-          $url->l($registro['nome'], 'public_setor_det.php', $options),         
-        ));
-      }
+          $url->l($registro['nome'], 'public_setor_det.php', $options),
+        ]);
+            }
+        }
+
+        $this->addPaginador2('public_setor_lst.php', $total, $_GET, $this->nome, $this->__limite);
+
+        $obj_permissao = new clsPermissoes();
+
+        if ($obj_permissao->permissao_cadastra(760, $this->pessoa_logada, 7, null, true)) {
+            $this->acao      = 'go("public_setor_cad.php")';
+            $this->nome_acao = 'Novo';
+        }
+
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''                                  => 'Listagem de setores'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->addPaginador2('public_setor_lst.php', $total, $_GET, $this->nome, $this->__limite);
-
-    $obj_permissao = new clsPermissoes();
-
-    if($obj_permissao->permissao_cadastra(760, $this->pessoa_logada,7,null,true))
-    {
-      $this->acao      = 'go("public_setor_cad.php")';
-      $this->nome_acao = 'Novo';
-    }
-
-    $this->largura = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""                                  => "Listagem de setores"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
 }
 
 // Instancia objeto de página
@@ -163,4 +180,3 @@ $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
-?>

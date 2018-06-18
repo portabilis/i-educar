@@ -24,12 +24,18 @@
  * instituição.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @todo      Refatorar para um design pattern como Service Layer em conjunto
  *   com um controller que permita respostas em JSON/XML.
+ *
  * @version   $Id$
  */
 
@@ -44,15 +50,15 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 if (isset($_GET['ins']) && is_numeric($_GET['ins'])) {
-  $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+    $mapper = new RegraAvaliacao_Model_RegraDataMapper();
 
-  $regras = $mapper->findAll(
-    array('id', 'nome'),
-    array('instituicao' => $_GET['ins'])
+    $regras = $mapper->findAll(
+    ['id', 'nome'],
+    ['instituicao' => $_GET['ins']]
   );
 
-  foreach ($regras as $regra) {
-    print sprintf('  <regra id="%d">%s</regra>%s', $regra->id, $regra->nome, PHP_EOL);
-  }
+    foreach ($regras as $regra) {
+        print sprintf('  <regra id="%d">%s</regra>%s', $regra->id, $regra->nome, PHP_EOL);
+    }
 }
 print '</query>';

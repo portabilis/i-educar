@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -37,37 +42,45 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_SimpleSearchIes class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão ?
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchIes extends Portabilis_View_Helper_Input_SimpleSearch {
+class Portabilis_View_Helper_Input_Resource_SimpleSearchIes extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    protected function resourceValue($id)
+    {
+        if ($id) {
+            $sql       = 'select ies_id || \' - \' || nome AS nome from modules.educacenso_ies where id = $1';
+            $options   = ['params' => $id, 'return_only' => 'first-row'];
+            $ies = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+            $nome      = $ies['nome'];
 
-  protected function resourceValue($id) {
-    if ($id) {
-      $sql       = "select ies_id || ' - ' || nome AS nome from modules.educacenso_ies where id = $1";
-      $options   = array('params' => $id, 'return_only' => 'first-row');
-      $ies = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-      $nome      = $ies['nome'];
-
-      return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]);
+        }
     }
-  }
 
-  public function simpleSearchIes($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'ies',
+    public function simpleSearchIes($attrName, $options = [])
+    {
+        $defaultOptions = ['objectName'    => 'ies',
                             'apiController' => 'Ies',
                             'apiResource'   => 'ies-search',
-                            'showIdOnValue' => false);
+                            'showIdOnValue' => false];
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::simpleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o código ou nome da instituição';
-  }
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Informe o código ou nome da instituição';
+    }
 }

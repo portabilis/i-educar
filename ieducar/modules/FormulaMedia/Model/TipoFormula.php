@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     FormulaMedia
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,25 +40,30 @@ require_once 'CoreExt/Enum.php';
  * FormulaMedia_Model_TipoFormula class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     FormulaMedia
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class FormulaMedia_Model_TipoFormula extends CoreExt_Enum
 {
-  const MEDIA_FINAL       = 1;
-  const MEDIA_RECUPERACAO = 2;
+    const MEDIA_FINAL       = 1;
+    const MEDIA_RECUPERACAO = 2;
 
-  protected $_data = array(
+    protected $_data = [
     self::MEDIA_FINAL       => 'Média final',
     self::MEDIA_RECUPERACAO => 'Média para recuperação'
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

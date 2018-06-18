@@ -99,15 +99,15 @@ $desabilitado_tab = unserialize(stripslashes(urldecode($desabilitado_tab)));
 
 $nomes_tab = $_GET['nomes_tab'];
 $nomes_tab = unserialize(stripslashes(urldecode($nomes_tab)));
-    foreach ($nomes_tab as $key => $tab)
-    {
+    foreach ($nomes_tab as $key => $tab) {
         $desabilitado = $desabilitado_tab[$key] ? 1 : 0;
         $key = $key+1;
         //   titulo da tab - conteudo que mostra
-        // ["Style Name", "div1", "myicon1.gif", "myicon2.gif", "myicon3.gif", "Home Page Tip", "1"],  
+        // ["Style Name", "div1", "myicon1.gif", "myicon2.gif", "myicon3.gif", "Home Page Tip", "1"],
         echo "[\"{$tab}\",\"content{$key}\", \"\", \"\", \"\", \"\", \"1\", \"$desabilitado\", \"\", ],\n";
-        if($key < count($nomes_tab) )
+        if ($key < count($nomes_tab)) {
             echo "[\"-\",\"\", \"\", \"\", \"\", \"\", \"0\", \"\", \"\", ],\n";
+        }
     }
 
 ?>

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -38,32 +43,39 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-$componentes = array();
+$componentes = [];
 
 // Seleciona os componentes de um curso ou série
 if (is_numeric($_GET['cur']) || is_numeric($_GET['ser'])) {
-  require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-  $mapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+    require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
+    $mapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
 
-  if (is_numeric($_GET['cur'])) {
-    $componentes = $mapper->findComponentePorCurso($_GET['cur']);
-  }
-  elseif(is_numeric($_GET['ser'])) {
-    $componentes = $mapper->findComponentePorSerie($_GET['ser']);
-  }
+    if (is_numeric($_GET['cur'])) {
+        $componentes = $mapper->findComponentePorCurso($_GET['cur']);
+    } elseif (is_numeric($_GET['ser'])) {
+        $componentes = $mapper->findComponentePorSerie($_GET['ser']);
+    }
 }
 
 // Seleciona os componentes de uma escola-série
 if (is_numeric($_GET['esc']) && is_numeric($_GET['ser'])) {
-  require_once 'App/Model/IedFinder.php';
+    require_once 'App/Model/IedFinder.php';
 
-  $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($_GET['ser'],
-    $_GET['esc']);
+    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
+      $_GET['ser'],
+    $_GET['esc']
+  );
 }
 
 foreach ($componentes as $componente) {
-  print sprintf(' <disciplina cod_disciplina="%d" carga_horaria="%d" docente_vinculado="%d">%s</disciplina>%s',
-    $componente->id, $componente->cargaHoraria, $componente->docenteVinculado, $componente, PHP_EOL);
+    print sprintf(
+      ' <disciplina cod_disciplina="%d" carga_horaria="%d" docente_vinculado="%d">%s</disciplina>%s',
+    $componente->id,
+      $componente->cargaHoraria,
+      $componente->docenteVinculado,
+      $componente,
+      PHP_EOL
+  );
 }
 
-echo "</query>";
+echo '</query>';

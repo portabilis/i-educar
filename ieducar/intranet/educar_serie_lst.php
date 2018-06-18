@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -37,161 +42,173 @@ require_once 'include/pmieducar/geral.inc.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
-    $this->processoAp = '583';
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+        $this->processoAp = '583';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $titulo;
-  var $limite;
-  var $offset;
+    public $pessoa_logada;
+    public $titulo;
+    public $limite;
+    public $offset;
 
-  var $cod_serie;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $ref_cod_curso;
-  var $nm_serie;
-  var $etapa_curso;
-  var $concluinte;
-  var $carga_horaria;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $intervalo;
+    public $cod_serie;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_curso;
+    public $nm_serie;
+    public $etapa_curso;
+    public $concluinte;
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $intervalo;
 
-  var $ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = "S&eacute;rie - Listagem";
+        $this->titulo = 'S&eacute;rie - Listagem';
 
-    // passa todos os valores obtidos no GET para atributos do objeto
-    foreach ($_GET as $var => $val) {
-      $this->$var = ($val === '') ? NULL : $val;
-    }
+        // passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
-
-    $lista_busca = array(
-      'S&eacute;rie',
-      'Curso'
+        $this->addBanner(
+        'imagens/nvp_top_intranet.jpg',
+      'imagens/nvp_vert_intranet.jpg',
+        'Intranet'
     );
 
-    $obj_permissoes = new clsPermissoes();
-    $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $lista_busca = [
+      'S&eacute;rie',
+      'Curso'
+    ];
 
-    if ($nivel_usuario == 1) {
-      $lista_busca[] = 'Institui&ccedil;&atilde;o';
-    }
+        $obj_permissoes = new clsPermissoes();
+        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    $this->addCabecalhos($lista_busca);
+        if ($nivel_usuario == 1) {
+            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+        }
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso'));
+        $this->addCabecalhos($lista_busca);
 
-    // outros Filtros
-    $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, FALSE);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso']);
 
-    // Paginador
-    $this->limite = 20;
-    $this->offset = $_GET["pagina_{$this->nome}"] ?
+        // outros Filtros
+        $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, false);
+
+        // Paginador
+        $this->limite = 20;
+        $this->offset = $_GET["pagina_{$this->nome}"] ?
       $_GET["pagina_{$this->nome}"] * $this->limite-$this->limite : 0;
 
-    $obj_serie = new clsPmieducarSerie();
-    $obj_serie->setOrderby("nm_serie ASC");
-    $obj_serie->setLimite($this->limite, $this->offset);
+        $obj_serie = new clsPmieducarSerie();
+        $obj_serie->setOrderby('nm_serie ASC');
+        $obj_serie->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_serie->lista(
-      NULL,
-      NULL,
-      NULL,
+        $lista = $obj_serie->lista(
+      null,
+      null,
+      null,
       $this->ref_cod_curso,
       $this->nm_serie,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       1,
       $this->ref_cod_instituicao
     );
 
-    $total = $obj_serie->_total;
+        $total = $obj_serie->_total;
 
-    // monta a lista
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
+        // monta a lista
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
 
         // Pega detalhes de foreign_keys
-        $obj_ref_cod_curso = new clsPmieducarCurso($registro["ref_cod_curso"]);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro["ref_cod_curso"] = $det_ref_cod_curso["nm_curso"];
+                $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+                $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
+                $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
-        $obj_cod_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"]);
-        $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-        $registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
+                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
+                $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-        $lista_busca = array(
-          "<a href=\"educar_serie_det.php?cod_serie={$registro["cod_serie"]}\">{$registro["nm_serie"]}</a>",
-          "<a href=\"educar_serie_det.php?cod_serie={$registro["cod_serie"]}\">{$registro["ref_cod_curso"]}</a>"
-        );
+                $lista_busca = [
+          "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['nm_serie']}</a>",
+          "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>"
+        ];
 
-        if ($nivel_usuario == 1) {
-          $lista_busca[] = "<a href=\"educar_serie_det.php?cod_serie={$registro["cod_serie"]}\">{$registro["ref_cod_instituicao"]}</a>";
+                if ($nivel_usuario == 1) {
+                    $lista_busca[] = "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
+                }
+
+                $this->addLinhas($lista_busca);
+            }
         }
 
-        $this->addLinhas($lista_busca);
-      }
+        $this->addPaginador2('educar_serie_lst.php', $total, $_GET, $this->nome, $this->limite);
+
+        if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
+            $this->acao = 'go("educar_serie_cad.php")';
+            $this->nome_acao = 'Novo';
+        }
+
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''        => 'Listagem de s&eacute;ries'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->addPaginador2("educar_serie_lst.php", $total, $_GET, $this->nome, $this->limite);
-
-    if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
-      $this->acao = "go(\"educar_serie_cad.php\")";
-      $this->nome_acao = "Novo";
-    }
-
-    $this->largura = "100%";
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Listagem de s&eacute;ries"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());  
-
-  }
 }
 
 // Instancia objeto de página

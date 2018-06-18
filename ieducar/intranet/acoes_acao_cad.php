@@ -24,77 +24,74 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/pmiacoes/geral.inc.php");
-require_once( "include/Geral.inc.php" );
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/pmiacoes/geral.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Aï¿½ï¿½es do Governo - Cadastro de a&ccedil;&otilde;es do Governo" );
-        $this->processoAp = "551";
-
+        $this->SetTitulo("{$this->_instituicao} Sistema de Cadastro de Aï¿½ï¿½es do Governo - Cadastro de a&ccedil;&otilde;es do Governo");
+        $this->processoAp = '551';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $pessoa_logada;
-    var $cod_acao_governo;
-    var $nm_acao;
-    var $descricao;
-    var $data_inauguracao;
-    var $valor;
-    var $destaque;
-    var $categorias = array();
-    var $categoria;
-    var $idbai;
-    var $fotos_portal = array();
-    var $noticias = array();
-    var $nm_arquivo = array();
-    var $secretarias = array();
-    var $nm_fotos = array();
-    var $arquivos = array();
-    var $fotos = array();
-    var $data_fotos = array();
-    
-    //edicao
-    var $edit_categorias = array();
-    var $edit_fotos_portal = array();
-    var $edit_noticias = array();
-    var $edit_nm_arquivo = array();
-    var $edit_secretarias = array();
-    //var $edit_nm_fotos = array();
-    var $edit_arquivos = array();
-    //var $edit_nm_arquivos = array();
-    var $edit_fotos = array();
-    var $edit_data_fotos = array(); 
-    var $edit_nm_fotos = array();   
-    
-    
-    var $valida = "acao();";
-    
-    function Inicializar()
-    {
-        $retorno = "Novo";
-        
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        
-        @session_write_close();
-        
-        $this->cod_acao_governo = $_GET['cod_acao_governo'];
-        
-        $obj = new clsPmiacoesAcaoGoverno($this->cod_acao_governo,null,null,null,null,null,null,null,null,null,1);
-        $detalhe  = $obj->detalhe();
-        if(!$detalhe && $this->cod_acao_governo)
-            header("location: acoes_acao_lst.php");
-        if($detalhe)
-        {           
+    public $pessoa_logada;
+    public $cod_acao_governo;
+    public $nm_acao;
+    public $descricao;
+    public $data_inauguracao;
+    public $valor;
+    public $destaque;
+    public $categorias = [];
+    public $categoria;
+    public $idbai;
+    public $fotos_portal = [];
+    public $noticias = [];
+    public $nm_arquivo = [];
+    public $secretarias = [];
+    public $nm_fotos = [];
+    public $arquivos = [];
+    public $fotos = [];
+    public $data_fotos = [];
 
+    //edicao
+    public $edit_categorias = [];
+    public $edit_fotos_portal = [];
+    public $edit_noticias = [];
+    public $edit_nm_arquivo = [];
+    public $edit_secretarias = [];
+    //var $edit_nm_fotos = array();
+    public $edit_arquivos = [];
+    //var $edit_nm_arquivos = array();
+    public $edit_fotos = [];
+    public $edit_data_fotos = [];
+    public $edit_nm_fotos = [];
+
+    public $valida = 'acao();';
+
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
+
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+
+        @session_write_close();
+
+        $this->cod_acao_governo = $_GET['cod_acao_governo'];
+
+        $obj = new clsPmiacoesAcaoGoverno($this->cod_acao_governo, null, null, null, null, null, null, null, null, null, 1);
+        $detalhe  = $obj->detalhe();
+        if (!$detalhe && $this->cod_acao_governo) {
+            header('location: acoes_acao_lst.php');
+        }
+        if ($detalhe) {
             $this->nm_acao = $detalhe['nm_acao'];
             $this->descricao = $detalhe['descricao'];
             $this->numero = $detalhe['numero'];
@@ -103,61 +100,58 @@ class indice extends clsCadastro
             $this->idbai = $detalhe['idbai'];
             $this->valor = $detalhe['valor'];
             $this->destaque = $detalhe['destaque'];
-                        
-            $this->fexcluir = true;     
-            $retorno = "Editar";
+
+            $this->fexcluir = true;
+            $retorno = 'Editar';
 
             $obj_funcionario = new clsFuncionario($this->pessoa_logada);
             $detalhe_func = $obj_funcionario->detalhe();
-            $setor_funcionario = $detalhe_func["ref_cod_setor_new"];
-            
+            $setor_funcionario = $detalhe_func['ref_cod_setor_new'];
+
             //*
             $obj = new clsSetor();
             $setor_pai = array_shift(array_reverse($obj->getNiveis($setor_funcionario)));
             //*
             $obj_secretaria_responsavel = new clsPmiacoesSecretariaResponsavel($setor_pai);
             $obj_secretaria_responsavel_det = $obj_secretaria_responsavel->detalhe();
-            if($obj_secretaria_responsavel_det == false && $detalhe["status_acao"] == 1)
-                header("location: acoes_acao_lst.php");     
-                
+            if ($obj_secretaria_responsavel_det == false && $detalhe['status_acao'] == 1) {
+                header('location: acoes_acao_lst.php');
+            }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "acoes_acao_det.php?cod_acao_governo={$this->cod_acao_governo}" : "acoes_acao_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "acoes_acao_det.php?cod_acao_governo={$this->cod_acao_governo}" : 'acoes_acao_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
         $this->acao_enviar =$this->valida;
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();     
-        
-        $this->form_enctype = " enctype='multipart/form-data'"; 
-        $this->cod_acao_governo ? $this->campoOculto("cod_acao_governo",$this->cod_acao_governo) : null;
-        
-        $this->campoTexto( "nm_acao", "Nome da ação", $this->nm_acao, 30, 255, true );  
-        $this->campoMemo( "descricao", "Descrição", $this->descricao,100,5,false);
-        $this->campoData( "data_inauguracao", "Data da inauguração", dataToBrasil($this->data_inauguracao),false);
-        $this->campoMonetario( "valor", "Valor",$this->valor,10,16,false);
-        $this->campoRadio("categoria", "Categoria", array("Obras", "Ações"), $this->categoria);
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $this->form_enctype = ' enctype=\'multipart/form-data\'';
+        $this->cod_acao_governo ? $this->campoOculto('cod_acao_governo', $this->cod_acao_governo) : null;
+
+        $this->campoTexto('nm_acao', 'Nome da ação', $this->nm_acao, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 100, 5, false);
+        $this->campoData('data_inauguracao', 'Data da inauguração', dataToBrasil($this->data_inauguracao), false);
+        $this->campoMonetario('valor', 'Valor', $this->valor, 10, 16, false);
+        $this->campoRadio('categoria', 'Categoria', ['Obras', 'Ações'], $this->categoria);
         $objBairo = new clsBairro();
-        $listaBai['0'] = "Selecione";
+        $listaBai['0'] = 'Selecione';
         $listaBairro = $objBairo->lista(8507);
-        if($listaBairro)
-        {
-            foreach ($listaBairro as $valores) 
-            {
+        if ($listaBairro) {
+            foreach ($listaBairro as $valores) {
                 $listaBai[$valores['idbai']] = $valores['nome'] ;
-                
             }
         }
-        $this->campoLista("idbai", "Bairro", $listaBai, $this->idbai);
+        $this->campoLista('idbai', 'Bairro', $listaBai, $this->idbai);
         //*
     /*  $obj_funcionario = new clsFuncionario($this->pessoa_logada);
         $detalhe_func = $obj_funcionario->detalhe();
-        $setor_funcionario = $detalhe_func["ref_cod_setor_new"];        
+        $setor_funcionario = $detalhe_func["ref_cod_setor_new"];
         $obj = new clsSetor();
         $setor_pai = array_shift(array_reverse($obj->getNiveis($setor_funcionario)));*/
         //$isSecom = $setor_pai == 4327 ? true : false;
@@ -166,14 +160,13 @@ class indice extends clsCadastro
             $this->campoCheck("destaque","Destaque",$this->destaque, "Marcar como destaque");
         else
             $this->campoOculto("destaque","0");
-        */                      
-    
+        */
     }
 
-    function Novo() 
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         /*$obj_funcionario = new clsFuncionario($this->pessoa_logada);
@@ -182,118 +175,123 @@ class indice extends clsCadastro
         //*
         $obj = new clsSetor();
         $setor_pai = array_shift(array_reverse($obj->getNiveis($setor_funcionario)));
-        //      
+        //
         $obj_secretaria_responsavel = new clsPmiacoesSecretariaResponsavel($setor_funcionario);
         $obj_secretaria_responsavel_det = $obj_secretaria_responsavel->detalhe();
         */
         //if($obj_secretaria_responsavel_det == false)
-        if(!$this->permiteEditar())
+        if (!$this->permiteEditar()) {
             $pendente  = 0;
-        else 
+        } else {
             $pendente = 1;
+        }
 
-            
-        $this->destaque = $this->destaque == "on" ? 1 : 0;
-        $obj_acao_governo = new clsPmiacoesAcaoGoverno(null,null,$this->pessoa_logada,$this->nm_acao,$this->descricao,$this->data_inauguracao,str_replace(array(".",","),array("","."),$this->valor),$this->destaque,$pendente,1,null, $this->categoria, $this->idbai);
+        $this->destaque = $this->destaque == 'on' ? 1 : 0;
+        $obj_acao_governo = new clsPmiacoesAcaoGoverno(null, null, $this->pessoa_logada, $this->nm_acao, $this->descricao, $this->data_inauguracao, str_replace(['.',','], ['','.'], $this->valor), $this->destaque, $pendente, 1, null, $this->categoria, $this->idbai);
 
-        if(! $cod_acao_governo = $obj_acao_governo->cadastra())
+        if (! $cod_acao_governo = $obj_acao_governo->cadastra()) {
             return false;
-        
+        }
+
         header("location: acoes_acao_det.php?cod_acao_governo={$cod_acao_governo}");
 
         return false;
     }
 
-    function Editar() 
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        
+
         /*$obj_funcionario = new clsFuncionario($this->pessoa_logada);
         $detalhe_func = $obj_funcionario->detalhe();
         $setor_funcionario = $detalhe_func["ref_cod_setor_new"];
         $obj_secretaria_responsavel = new clsPmiacoesSecretariaResponsavel($setor_funcionario);
         $obj_secretaria_responsavel_det = $obj_secretaria_responsavel->detalhe();*/
-        
+
         //if($obj_secretaria_responsavel_det == false)
-        if(!$this->permiteEditar())
+        if (!$this->permiteEditar()) {
             $pendente  = 0;
-        else 
+        } else {
             $pendente = 1;
+        }
 
         //$this->destaque = $this->destaque == "on" ? 1 : 0;
-        $obj_acao_governo = new clsPmiacoesAcaoGoverno($this->cod_acao_governo,null,$this->pessoa_logada,$this->nm_acao,$this->descricao,dataToBanco($this->data_inauguracao),str_replace(array(".",","),array("","."),$this->valor),null,$pendente,null,null, $this->categoria, $this->idbai);
-        if(!$obj_acao_governo->edita())
+        $obj_acao_governo = new clsPmiacoesAcaoGoverno($this->cod_acao_governo, null, $this->pessoa_logada, $this->nm_acao, $this->descricao, dataToBanco($this->data_inauguracao), str_replace(['.',','], ['','.'], $this->valor), null, $pendente, null, null, $this->categoria, $this->idbai);
+        if (!$obj_acao_governo->edita()) {
             return false;
-    
+        }
+
         header("location: acoes_acao_det.php?cod_acao_governo={$this->cod_acao_governo}");
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        
-    /*  $obj_funcionario = new clsFuncionario($this->pessoa_logada);
-        $detalhe_func = $obj_funcionario->detalhe();
-        $setor_funcionario = $detalhe_func["ref_cod_setor_new"];
-        
-        $obj_secretaria_responsavel = new clsPmiacoesSecretariaResponsavel($setor_funcionario);
-        $obj_secretaria_responsavel_det = $obj_secretaria_responsavel->detalhe();
-        if($obj_secretaria_responsavel_det == false)        
-            header("Location: acoes_acao_lst.php");
-    */  
+
+        /*  $obj_funcionario = new clsFuncionario($this->pessoa_logada);
+            $detalhe_func = $obj_funcionario->detalhe();
+            $setor_funcionario = $detalhe_func["ref_cod_setor_new"];
+
+            $obj_secretaria_responsavel = new clsPmiacoesSecretariaResponsavel($setor_funcionario);
+            $obj_secretaria_responsavel_det = $obj_secretaria_responsavel->detalhe();
+            if($obj_secretaria_responsavel_det == false)
+                header("Location: acoes_acao_lst.php");
+        */
 
         $obj_acao = new clsPmiacoesAcaoGoverno($this->cod_acao_governo);
-        if(!$obj_acao->excluir())
+        if (!$obj_acao->excluir()) {
             return false;
-            
-        header("Location: acoes_acao_lst.php");
+        }
+
+        header('Location: acoes_acao_lst.php');
+
         return true;
     }
-    
-    function permiteEditar()
+
+    public function permiteEditar()
     {
         $retorno = false;
-    
+
         $obj_funcionario = new clsFuncionario($this->pessoa_logada);
         $detalhe_func = $obj_funcionario->detalhe();
-        $setor_funcionario = $detalhe_func["ref_cod_setor_new"];
-        
+        $setor_funcionario = $detalhe_func['ref_cod_setor_new'];
+
         //*
         $obj = new clsSetor();
         $setor_pai = array_shift(array_reverse($obj->getNiveis($setor_funcionario)));
         //*
-        
+
         $obj_secretaria_responsavel = new clsPmiacoesSecretariaResponsavel($setor_pai);
         $obj_secretaria_responsavel_det = $obj_secretaria_responsavel->detalhe();
 
         $obj_acao = new clsPmiacoesAcaoGoverno($this->cod_acao_governo);
         $obj_acao_det = $obj_acao->detalhe();
-        $status = $obj_acao_det["status_acao"];
-        
-        
+        $status = $obj_acao_det['status_acao'];
+
         //**
-            $func_cad = $obj_acao_det["ref_funcionario_cad"];   
-            $obj_funcionario = new clsFuncionario($func_cad);
-            $detalhe_func = $obj_funcionario->detalhe();
-            $setor_cad = $detalhe_func["ref_cod_setor_new"];            
-            $setor_cad = array_shift(array_reverse($obj->getNiveis($setor_cad)));
+        $func_cad = $obj_acao_det['ref_funcionario_cad'];
+        $obj_funcionario = new clsFuncionario($func_cad);
+        $detalhe_func = $obj_funcionario->detalhe();
+        $setor_cad = $detalhe_func['ref_cod_setor_new'];
+        $setor_cad = array_shift(array_reverse($obj->getNiveis($setor_cad)));
         //**
-        
-    //  $isSecom = $setor_pai == 4327 ? true : false;
-        $retorno = ($obj_secretaria_responsavel_det != false )? true : false;   
+
+        //  $isSecom = $setor_pai == 4327 ? true : false;
+        $retorno = ($obj_secretaria_responsavel_det != false)? true : false;
+
         return $retorno;
     }
-        
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script>

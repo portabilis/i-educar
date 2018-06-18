@@ -24,145 +24,140 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/pmiacoes/geral.inc.php");
-require_once( "include/Geral.inc.php" );
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/pmiacoes/geral.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Cadastro de setores" );
-        $this->processoAp = "553";
+        $this->SetTitulo("{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Cadastro de setores");
+        $this->processoAp = '553';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $setor;
-    var $cod_setor_old;
-    var $pessoa_logada;
-        
-    function Inicializar()
+    public $setor;
+    public $cod_setor_old;
+    public $pessoa_logada;
+
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        
+
         $this->setor = $_GET['cod_setor'];
-        
+
         $obj = new clsPmiacoesSecretariaResponsavel($this->setor);
         $detalhe = $obj->detalhe();
-        if($detalhe)
-        {
+        if ($detalhe) {
             $this->pessoa_logada = $detalhe['ref_cod_funcionario_cad'];
-        }       
-        if($detalhe)
-        {
+        }
+        if ($detalhe) {
             /*
             $obj = new clsSetor();
             $niveis = $obj->getNiveis($this->cod_setor);
             sort($niveis);
-            if($niveis)         
+            if($niveis)
             {
-                foreach ($niveis as $id => $nivel) 
+                foreach ($niveis as $id => $nivel)
                 {
                     $objSetor = new clsSetor($nivel);
                     $detalhe = $objSetor->detalhe();
                     if($id == 0 )
                     {
-                        $this->setor_0 = $detalhe['cod_setor']; 
-                        $this->cod_setor_old = $detalhe['cod_setor'];   
-                    }                   
+                        $this->setor_0 = $detalhe['cod_setor'];
+                        $this->cod_setor_old = $detalhe['cod_setor'];
+                    }
                     if($id == 1 )
                     {
                         $this->setor_1 = $detalhe['cod_setor'];
-                        $this->cod_setor_old = $detalhe['cod_setor'];   
+                        $this->cod_setor_old = $detalhe['cod_setor'];
                     }
                     if($id == 2 )
                     {
                         $this->setor_2 = $detalhe['cod_setor'];
-                        $this->cod_setor_old = $detalhe['cod_setor'];   
+                        $this->cod_setor_old = $detalhe['cod_setor'];
                     }
                     if($id == 3 )
                     {
                         $this->setor_3 = $detalhe['cod_setor'];
-                        $this->cod_setor_old = $detalhe['cod_setor'];   
+                        $this->cod_setor_old = $detalhe['cod_setor'];
                     }
                     if($id == 4 )
                     {
                         $this->setor_4 = $detalhe['cod_setor'];
-                        $this->cod_setor_old = $detalhe['cod_setor'];   
-                    }           
-                    
+                        $this->cod_setor_old = $detalhe['cod_setor'];
+                    }
+
                 }
             }*/
-        
-            
-            $this->fexcluir = true; 
-            
-            $retorno = "Editar";
-        }       
-        
-        $this->url_cancelar = ($retorno == "Editar") ? "acoes_setor_det.php?cod_setor={$this->cod_setor}" : "acoes_setor_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+
+            $this->fexcluir = true;
+
+            $retorno = 'Editar';
+        }
+
+        $this->url_cancelar = ($retorno == 'Editar') ? "acoes_setor_det.php?cod_setor={$this->cod_setor}" : 'acoes_setor_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
-    {           
-    //  include( "include/form_setor.inc.php" );
+    public function Gerar()
+    {
+        //  include( "include/form_setor.inc.php" );
 
         $obj_setores = new clsPmiacoesSecretariaResponsavel();
-        $obj_setores->_campos_lista = "ref_cod_setor";
+        $obj_setores->_campos_lista = 'ref_cod_setor';
         $obj_lista = $obj_setores->lista();
-        if($obj_lista){
-            unset($obj_lista[array_search($this->setor,$obj_lista)]);
-            $not_in = implode(",",$obj_lista);
+        if ($obj_lista) {
+            unset($obj_lista[array_search($this->setor, $obj_lista)]);
+            $not_in = implode(',', $obj_lista);
         }
-        
+
         $obj_setor = new clsSetor();
 
-        $obj_setor_lista = $obj_setor->lista(null,null,null,null,null,null,null,null,null,1,0,null,null,"nm_setor",null,null,null,null,null,$not_in,$cod_setor);
-        $setores = array('' => 'Selecione um setor');
-        if($obj_setor_lista)
-        {
-            foreach ($obj_setor_lista as $secretaria)
-            {
-                $setores[$secretaria["cod_setor"]] = $secretaria["sgl_setor"];
-                
+        $obj_setor_lista = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0, null, null, 'nm_setor', null, null, null, null, null, $not_in, $cod_setor);
+        $setores = ['' => 'Selecione um setor'];
+        if ($obj_setor_lista) {
+            foreach ($obj_setor_lista as $secretaria) {
+                $setores[$secretaria['cod_setor']] = $secretaria['sgl_setor'];
             }
         }
-        $this->campoLista("setor","Setor",$setores,$this->setor,'',false,'','','',true);
-        $this->campoOculto("pessoa_logada", $this->pessoa_logada);
-        $this->campoOculto("cod_setor_old", $this->setor);
+        $this->campoLista('setor', 'Setor', $setores, $this->setor, '', false, '', '', '', true);
+        $this->campoOculto('pessoa_logada', $this->pessoa_logada);
+        $this->campoOculto('cod_setor_old', $this->setor);
     }
- 
-    function Novo() 
+
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
         $obj = new clsPmiacoesSecretariaResponsavel($this->setor, $this->pessoa_logada);
-        if($obj->cadastra())
-        {
-            header("Location: acoes_setor_lst.php");
+        if ($obj->cadastra()) {
+            header('Location: acoes_setor_lst.php');
         }
+
         return false;
     }
 
-    function Editar() 
-    {       
+    public function Editar()
+    {
         /*if($this->setor_0)
             $this->ref_sec = $this->setor_0;
         if($this->setor_1)
-            $this->ref_sec = $this->setor_1; 
+            $this->ref_sec = $this->setor_1;
         if($this->setor_2)
             $this->ref_sec = $this->setor_2;
         if($this->setor_3)
@@ -172,29 +167,29 @@ class indice extends clsCadastro
         */
         $obj = new clsPmiacoesSecretariaResponsavel($this->cod_setor_old);
         $obj->excluir();
-        
+
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
         $obj = new clsPmiacoesSecretariaResponsavel($this->setor, $this->pessoa_logada);
-        if($obj->cadastra())
-        {
-            header("Location: acoes_setor_lst.php");
+        if ($obj->cadastra()) {
+            header('Location: acoes_setor_lst.php');
         }
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         $obj = new clsPmiacoesSecretariaResponsavel($this->cod_setor_old);
         $obj->excluir();
-        header("Location: acoes_setor_lst.php");
+        header('Location: acoes_setor_lst.php');
+
         return true;
     }
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-?>

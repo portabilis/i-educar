@@ -4,101 +4,109 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarInstituicao
 {
-    var $cod_instituicao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_idtlog;
-    var $ref_sigla_uf;
-    var $cep;
-    var $cidade;
-    var $bairro;
-    var $logradouro;
-    var $numero;
-    var $complemento;
-    var $nm_responsavel;
-    var $ddd_telefone;
-    var $telefone;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $nm_instituicao;
-    var $data_base_remanejamento;
-    var $data_base_transferencia;
-    var $exigir_vinculo_turma_professor;
-    var $controlar_espaco_utilizacao_aluno;
-    var $percentagem_maxima_ocupacao_salas;
-    var $quantidade_alunos_metro_quadrado;
-    var $gerar_historico_transferencia;
-    var $controlar_posicao_historicos;
-    var $restringir_multiplas_enturmacoes;
-    var $permissao_filtro_abandono_transferencia;
-    var $data_base_matricula;
-    var $multiplas_reserva_vaga;
-    var $permitir_carga_horaria;
-    var $reserva_integral_somente_com_renda;
-    var $data_expiracao_reserva_vaga;
-    var $componente_curricular_turma;
-    var $reprova_dependencia_ano_concluinte;
-    var $data_educacenso;
-    var $exigir_dados_socioeconomicos;
-    var $altera_atestado_para_declaracao;
-    var $obrigar_campos_censo;
-    var $orgao_regional;
+    public $cod_instituicao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_idtlog;
+    public $ref_sigla_uf;
+    public $cep;
+    public $cidade;
+    public $bairro;
+    public $logradouro;
+    public $numero;
+    public $complemento;
+    public $nm_responsavel;
+    public $ddd_telefone;
+    public $telefone;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $nm_instituicao;
+    public $data_base_remanejamento;
+    public $data_base_transferencia;
+    public $exigir_vinculo_turma_professor;
+    public $controlar_espaco_utilizacao_aluno;
+    public $percentagem_maxima_ocupacao_salas;
+    public $quantidade_alunos_metro_quadrado;
+    public $gerar_historico_transferencia;
+    public $controlar_posicao_historicos;
+    public $restringir_multiplas_enturmacoes;
+    public $permissao_filtro_abandono_transferencia;
+    public $data_base_matricula;
+    public $multiplas_reserva_vaga;
+    public $permitir_carga_horaria;
+    public $reserva_integral_somente_com_renda;
+    public $data_expiracao_reserva_vaga;
+    public $componente_curricular_turma;
+    public $reprova_dependencia_ano_concluinte;
+    public $data_educacenso;
+    public $exigir_dados_socioeconomicos;
+    public $altera_atestado_para_declaracao;
+    public $obrigar_campos_censo;
+    public $orgao_regional;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
+     *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema.
+     *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela.
+     *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por vírgula, com os campos que devem ser selecionados na
      * próxima chamado ao método lista().
+     *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por vírgula, padrão para
      * seleção no método lista.
+     *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo método lista().
+     *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no método lista().
+     *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo para ser usado como padrão de ordenação no método lista().
+     *
      * @var string
      */
-    var $_campo_order_by;
+    public $_campo_order_by;
 
     /**
      * Construtor.
      */
-    function __construct(
+    public function __construct(
         $cod_instituicao = null,
         $ref_usuario_exc = null,
         $ref_usuario_cad = null,
@@ -122,13 +130,12 @@ class clsPmieducarInstituicao
         $quantidade_alunos_metro_quadrado = null,
         $exigir_dados_socioeconomicos = null,
         $altera_atestado_para_declaracao = null,
-        $obrigar_campos_censo = NULL
-    )
-    {
+        $obrigar_campos_censo = null
+    ) {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}instituicao";
-        $this->_campos_lista = $this->_todos_campos = "cod_instituicao,
+        $this->_campos_lista = $this->_todos_campos = 'cod_instituicao,
                                                    ref_usuario_exc,
                                                    ref_usuario_cad,
                                                    ref_idtlog,
@@ -172,7 +179,7 @@ class clsPmieducarInstituicao
                                                    exigir_dados_socioeconomicos,
                                                    altera_atestado_para_declaracao,
                                                    obrigar_campos_censo,
-                                                   orgao_regional";
+                                                   orgao_regional';
 
         if (is_numeric($ref_usuario_cad)) {
             if (class_exists('clsPmieducarUsuario')) {
@@ -311,7 +318,7 @@ class clsPmieducarInstituicao
         }
     }
 
-    function canRegister()
+    public function canRegister()
     {
         return is_numeric($this->ref_usuario_cad) && is_string($this->ref_idtlog) &&
             is_string($this->ref_sigla_uf) && is_numeric($this->cep) &&
@@ -322,9 +329,10 @@ class clsPmieducarInstituicao
 
     /**
      * Cria um novo registro.
+     *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         if ($this->canRegister()) {
             $db = new clsBanco();
@@ -336,174 +344,174 @@ class clsPmieducarInstituicao
             if (is_numeric($this->ref_usuario_exc)) {
                 $campos .= "{$gruda}ref_usuario_exc";
                 $valores .= "{$gruda}'{$this->ref_usuario_exc}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_usuario_cad)) {
                 $campos .= "{$gruda}ref_usuario_cad";
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->ref_idtlog)) {
                 $campos .= "{$gruda}ref_idtlog";
                 $valores .= "{$gruda}'{$this->ref_idtlog}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->ref_sigla_uf)) {
                 $campos .= "{$gruda}ref_sigla_uf";
                 $valores .= "{$gruda}'{$this->ref_sigla_uf}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->cep)) {
                 $campos .= "{$gruda}cep";
                 $valores .= "{$gruda}'{$this->cep}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->cidade)) {
                 $campos .= "{$gruda}cidade";
                 $valores .= "{$gruda}'{$this->cidade}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->bairro)) {
                 $campos .= "{$gruda}bairro";
                 $valores .= "{$gruda}'{$this->bairro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->logradouro)) {
                 $campos .= "{$gruda}logradouro";
                 $valores .= "{$gruda}'{$this->logradouro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->numero)) {
                 $campos .= "{$gruda}numero";
                 $valores .= "{$gruda}'{$this->numero}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->complemento)) {
                 $campos .= "{$gruda}complemento";
                 $valores .= "{$gruda}'{$this->complemento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->nm_responsavel)) {
                 $campos .= "{$gruda}nm_responsavel";
                 $valores .= "{$gruda}'{$this->nm_responsavel}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ddd_telefone)) {
                 $campos .= "{$gruda}ddd_telefone";
                 $valores .= "{$gruda}'{$this->ddd_telefone}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->telefone)) {
                 $campos .= "{$gruda}telefone";
                 $valores .= "{$gruda}'{$this->telefone}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda = ", ";
+            $gruda = ', ';
 
             if (is_numeric($this->ativo)) {
                 $campos .= "{$gruda}ativo";
                 $valores .= "{$gruda}'{$this->ativo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->nm_instituicao)) {
                 $campos .= "{$gruda}nm_instituicao";
                 $valores .= "{$gruda}'{$this->nm_instituicao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if ((is_string($this->data_base_remanejamento)) AND !empty($this->data_base_remanejamento)) {
+            if ((is_string($this->data_base_remanejamento)) and !empty($this->data_base_remanejamento)) {
                 $campos .= "{$gruda}data_base_remanejamento";
                 $valores .= "{$gruda}'{$this->data_base_remanejamento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if ((is_string($this->data_base_transferencia)) AND !empty($this->data_base_transferencia)) {
+            if ((is_string($this->data_base_transferencia)) and !empty($this->data_base_transferencia)) {
                 $campos .= "{$gruda}data_base_transferencia";
                 $valores .= "{$gruda}'{$this->data_base_transferencia}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if ((is_string($this->data_expiracao_reserva_vaga)) AND !empty($this->data_expiracao_reserva_vaga)) {
+            if ((is_string($this->data_expiracao_reserva_vaga)) and !empty($this->data_expiracao_reserva_vaga)) {
                 $campos .= "{$gruda}data_expiracao_reserva_vaga";
                 $valores .= "{$gruda}'{$this->data_expiracao_reserva_vaga}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->exigir_vinculo_turma_professor)) {
                 $campos .= "{$gruda}exigir_vinculo_turma_professor";
                 $valores .= "{$gruda}'{$this->exigir_vinculo_turma_professor}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
                 $campos .= "{$gruda}controlar_espaco_utilizacao_aluno";
                 $valores .= "{$gruda}'{$this->controlar_espaco_utilizacao_aluno}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->percentagem_maxima_ocupacao_salas)) {
                 $campos .= "{$gruda}percentagem_maxima_ocupacao_salas";
                 $valores .= "{$gruda}'{$this->percentagem_maxima_ocupacao_salas}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->quantidade_alunos_metro_quadrado)) {
                 $campos .= "{$gruda}quantidade_alunos_metro_quadrado";
                 $valores .= "{$gruda}'{$this->quantidade_alunos_metro_quadrado}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->gerar_historico_transferencia)) {
                 $campos .= "{$gruda}gerar_historico_transferencia";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}gerar_historico_transferencia";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             if (dbBool($this->controlar_posicao_historicos)) {
                 $campos .= "{$gruda}controlar_posicao_historicos";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}controlar_posicao_historicos";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             if (dbBool($this->matricula_apenas_bairro_escola)) {
                 $campos .= "{$gruda}matricula_apenas_bairro_escola";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}matricula_apenas_bairro_escola";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             if (dbBool($this->restringir_historico_escolar)) {
                 $campos .= "{$gruda}restringir_historico_escolar";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}restringir_historico_escolar";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '(')) {
@@ -513,144 +521,145 @@ class clsPmieducarInstituicao
             if (is_string($this->coordenador_transporte)) {
                 $campos .= "{$gruda}coordenador_transporte";
                 $valores .= "{$gruda}'{$this->coordenador_transporte}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->restringir_multiplas_enturmacoes)) {
                 $campos .= "{$gruda}restringir_multiplas_enturmacoes";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}restringir_multiplas_enturmacoes";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->permissao_filtro_abandono_transferencia)) {
                 $campos .= "{$gruda}permissao_filtro_abandono_transferencia";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}permissao_filtro_abandono_transferencia";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->multiplas_reserva_vaga)) {
                 $campos .= "{$gruda}multiplas_reserva_vaga";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}multiplas_reserva_vaga";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->permitir_carga_horaria)) {
                 $campos .= "{$gruda}permitir_carga_horaria";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}permitir_carga_horaria";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->componente_curricular_turma)) {
                 $campos .= "{$gruda}componente_curricular_turma";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}componente_curricular_turma";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->reprova_dependencia_ano_concluinte)) {
                 $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->reserva_integral_somente_com_renda)) {
                 $campos .= "{$gruda}reserva_integral_somente_com_renda";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}reserva_integral_somente_com_renda";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
                 $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if ((is_string($this->data_base_matricula)) AND !empty($this->data_base_matricula)) {
+            if ((is_string($this->data_base_matricula)) and !empty($this->data_base_matricula)) {
                 $campos .= "{$gruda}data_base_matricula";
                 $valores .= "{$gruda}'{$this->data_base_matricula}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if ((is_string($this->data_fechamento)) AND !empty($this->data_fechamento)) {
+            if ((is_string($this->data_fechamento)) and !empty($this->data_fechamento)) {
                 $campos .= "{$gruda}data_fechamento";
                 $valores .= "{$gruda}'{$this->data_fechamento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if ((is_string($this->data_educacenso)) AND !empty($this->data_educacenso)) {
+            if ((is_string($this->data_educacenso)) and !empty($this->data_educacenso)) {
                 $campos .= "{$gruda}data_educacenso";
                 $valores .= "{$gruda}'{$this->data_educacenso}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->exigir_dados_socieconomicos)) {
                 $campos .= "{$gruda}exigir_dados_socioeconomicos";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}exigir_dados_socioeconomicos";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->altera_atestado_para_declaracao)) {
                 $campos .= "{$gruda}altera_atestado_para_declaracao";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}altera_atestado_para_declaracao";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->obrigar_campos_censo)) {
                 $campos .= "{$gruda}obrigar_campos_censo";
                 $valores .= "{$gruda} true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $campos .= "{$gruda}obrigar_campos_censo";
                 $valores .= "{$gruda} false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->orgao_regional) AND !empty($this->orgao_regional)) {
+            if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
             return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
         }
 
@@ -659,9 +668,10 @@ class clsPmieducarInstituicao
 
     /**
      * Edita os dados de um registro.
+     *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
         if (is_numeric($this->cod_instituicao)) {
             $db = new clsBanco();
@@ -669,151 +679,151 @@ class clsPmieducarInstituicao
 
             if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_usuario_cad)) {
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->ref_idtlog)) {
                 $set .= "{$gruda}ref_idtlog = '{$this->ref_idtlog}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->ref_sigla_uf)) {
                 $set .= "{$gruda}ref_sigla_uf = '{$this->ref_sigla_uf}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->cep)) {
                 $set .= "{$gruda}cep = '{$this->cep}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->cidade)) {
                 $set .= "{$gruda}cidade = '{$this->cidade}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->bairro)) {
                 $set .= "{$gruda}bairro = '{$this->bairro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->logradouro)) {
                 $set .= "{$gruda}logradouro = '{$this->logradouro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->numero)) {
                 $set .= "{$gruda}numero = '{$this->numero}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->complemento)) {
                 $set .= "{$gruda}complemento = '{$this->complemento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->nm_responsavel)) {
                 $set .= "{$gruda}nm_responsavel = '{$this->nm_responsavel}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ddd_telefone)) {
                 $set .= "{$gruda}ddd_telefone = '{$this->ddd_telefone}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->telefone)) {
                 $set .= "{$gruda}telefone = '{$this->telefone}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ", ";
+            $gruda = ', ';
 
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_string($this->nm_instituicao)) {
                 $set .= "{$gruda}nm_instituicao = '{$this->nm_instituicao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->data_base_transferencia) AND !empty($this->data_base_transferencia)) {
+            if (is_string($this->data_base_transferencia) and !empty($this->data_base_transferencia)) {
                 $set .= "{$gruda}data_base_transferencia = '{$this->data_base_transferencia}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}data_base_transferencia = null ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->data_expiracao_reserva_vaga) AND !empty($this->data_expiracao_reserva_vaga)) {
+            if (is_string($this->data_expiracao_reserva_vaga) and !empty($this->data_expiracao_reserva_vaga)) {
                 $set .= "{$gruda}data_expiracao_reserva_vaga = '{$this->data_expiracao_reserva_vaga}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}data_expiracao_reserva_vaga = null ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->data_base_remanejamento) AND !empty($this->data_base_remanejamento)) {
+            if (is_string($this->data_base_remanejamento) and !empty($this->data_base_remanejamento)) {
                 $set .= "{$gruda}data_base_remanejamento = '{$this->data_base_remanejamento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}data_base_remanejamento = null ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
                 $set .= "{$gruda}controlar_espaco_utilizacao_aluno = '{$this->controlar_espaco_utilizacao_aluno}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->exigir_vinculo_turma_professor)) {
                 $set .= "{$gruda}exigir_vinculo_turma_professor = '{$this->exigir_vinculo_turma_professor}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->gerar_historico_transferencia)) {
                 $set .= "{$gruda}gerar_historico_transferencia = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}gerar_historico_transferencia = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->controlar_posicao_historicos)) {
                 $set .= "{$gruda}controlar_posicao_historicos = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}controlar_posicao_historicos = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->matricula_apenas_bairro_escola)) {
                 $set .= "{$gruda}matricula_apenas_bairro_escola = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}matricula_apenas_bairro_escola = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->restringir_historico_escolar)) {
                 $set .= "{$gruda}restringir_historico_escolar = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}restringir_historico_escolar = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '(')) {
                 $this->coordenador_transporte = $this->parteString($this->coordenador_transporte, '-', '(');
@@ -821,148 +831,149 @@ class clsPmieducarInstituicao
 
             if (is_string($this->coordenador_transporte)) {
                 $set .= "{$gruda}coordenador_transporte = '{$this->coordenador_transporte}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_numeric($this->percentagem_maxima_ocupacao_salas) AND !empty($this->percentagem_maxima_ocupacao_salas)) {
+            if (is_numeric($this->percentagem_maxima_ocupacao_salas) and !empty($this->percentagem_maxima_ocupacao_salas)) {
                 $set .= "{$gruda}percentagem_maxima_ocupacao_salas = '{$this->percentagem_maxima_ocupacao_salas}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}percentagem_maxima_ocupacao_salas = null";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_numeric($this->quantidade_alunos_metro_quadrado) AND !empty($this->quantidade_alunos_metro_quadrado)) {
+            if (is_numeric($this->quantidade_alunos_metro_quadrado) and !empty($this->quantidade_alunos_metro_quadrado)) {
                 $set .= "{$gruda}quantidade_alunos_metro_quadrado = '{$this->quantidade_alunos_metro_quadrado}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}quantidade_alunos_metro_quadrado = null";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->restringir_multiplas_enturmacoes)) {
                 $set .= "{$gruda}restringir_multiplas_enturmacoes = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}restringir_multiplas_enturmacoes = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->permissao_filtro_abandono_transferencia)) {
                 $set .= "{$gruda}permissao_filtro_abandono_transferencia = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}permissao_filtro_abandono_transferencia = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->multiplas_reserva_vaga)) {
                 $set .= "{$gruda}multiplas_reserva_vaga = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}multiplas_reserva_vaga = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->permitir_carga_horaria)) {
                 $set .= "{$gruda}permitir_carga_horaria = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}permitir_carga_horaria = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->reserva_integral_somente_com_renda)) {
                 $set .= "{$gruda}reserva_integral_somente_com_renda = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}reserva_integral_somente_com_renda = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->componente_curricular_turma)) {
                 $set .= "{$gruda}componente_curricular_turma = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}componente_curricular_turma = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->reprova_dependencia_ano_concluinte)) {
                 $set .= "{$gruda}reprova_dependencia_ano_concluinte = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}reprova_dependencia_ano_concluinte = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
                 $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->data_base_matricula) AND !empty($this->data_base_matricula)) {
+            if (is_string($this->data_base_matricula) and !empty($this->data_base_matricula)) {
                 $set .= "{$gruda}data_base_matricula = '{$this->data_base_matricula}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}data_base_matricula = null ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->data_fechamento) AND !empty($this->data_fechamento)) {
+            if (is_string($this->data_fechamento) and !empty($this->data_fechamento)) {
                 $set .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}data_fechamento = null ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->data_educacenso) AND !empty($this->data_educacenso)) {
+            if (is_string($this->data_educacenso) and !empty($this->data_educacenso)) {
                 $data_educacenso_pg = Portabilis_Date_Utils::brToPgSQL($this->data_educacenso);
                 $set .= "{$gruda}data_educacenso = '{$data_educacenso_pg}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}data_educacenso = null ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if (is_string($this->orgao_regional) AND !empty($this->orgao_regional)) {
+            if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $set .= "{$gruda}orgao_regional = '{$this->orgao_regional}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}orgao_regional = null ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if ($this->exigir_dados_socioeconomicos) {
                 $set .= "{$gruda}exigir_dados_socioeconomicos = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}exigir_dados_socioeconomicos = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if ($this->altera_atestado_para_declaracao) {
                 $set .= "{$gruda}altera_atestado_para_declaracao = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}altera_atestado_para_declaracao = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (dbBool($this->obrigar_campos_censo)) {
                 $set .= "{$gruda}obrigar_campos_censo = true ";
-                $gruda = ", ";
+                $gruda = ', ';
             } else {
                 $set .= "{$gruda}obrigar_campos_censo = false ";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
+
                 return true;
             }
         }
@@ -970,7 +981,7 @@ class clsPmieducarInstituicao
         return false;
     }
 
-    function parteString($string, $ponto_inicio, $ponto_final)
+    public function parteString($string, $ponto_inicio, $ponto_final)
     {
         $num = 1;
         if ($string and $ponto_inicio) {
@@ -980,14 +991,16 @@ class clsPmieducarInstituicao
             $num = 0;
             $registro = explode($ponto_final, $registro[1]);
         }
+
         return $registro[$num];
     }
 
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+     *
      * @return array
      */
-    function lista(
+    public function lista(
         $int_cod_instituicao = null,
         $str_ref_sigla_uf = null,
         $int_cep = null,
@@ -1005,81 +1018,81 @@ class clsPmieducarInstituicao
         $str_nm_instituicao = null
     ) {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
         if (is_numeric($int_cod_instituicao)) {
             $filtros .= "{$whereAnd} cod_instituicao = '{$int_cod_instituicao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_ref_sigla_uf)) {
             $filtros .= "{$whereAnd} ref_sigla_uf LIKE '%{$str_ref_sigla_uf}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_cep)) {
             $filtros .= "{$whereAnd} cep = '{$int_cep}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_cidade)) {
             $filtros .= "{$whereAnd} cidade LIKE '%{$str_cidade}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_bairro)) {
             $filtros .= "{$whereAnd} bairro LIKE '%{$str_bairro}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_logradouro)) {
             $filtros .= "{$whereAnd} logradouro LIKE '%{$str_logradouro}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_numero)) {
             $filtros .= "{$whereAnd} numero = '{$int_numero}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_complemento)) {
             $filtros .= "{$whereAnd} complemento LIKE '%{$str_complemento}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_nm_responsavel)) {
             $filtros .= "{$whereAnd} nm_responsavel LIKE '%{$str_nm_responsavel}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_ddd_telefone)) {
             $filtros .= "{$whereAnd} ddd_telefone = '{$int_ddd_telefone}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_telefone)) {
             $filtros .= "{$whereAnd} telefone = '{$int_telefone}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_null($int_ativo) || $int_ativo) {
             $filtros .= "{$whereAnd} ativo = '1'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         } else {
             $filtros .= "{$whereAnd} ativo = '0'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_nm_instituicao)) {
             $filtros .= "{$whereAnd} nm_instituicao LIKE '%{$str_nm_instituicao}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado = array();
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
@@ -1090,7 +1103,7 @@ class clsPmieducarInstituicao
         if ($countCampos > 1) {
             while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
         } else {
@@ -1108,22 +1121,38 @@ class clsPmieducarInstituicao
 
     public function primeiraAtiva()
     {
-        $instituicoes = $this->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                    NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
-        return COUNT($instituicoes) ? $instituicoes[0] : NULL;
-    }
+        $instituicoes = $this->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+                    null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            true
+        );
 
+        return COUNT($instituicoes) ? $instituicoes[0] : null;
+    }
 
     /**
      * Retorna um array com os dados de um registro.
+     *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
         if (is_numeric($this->cod_instituicao)) {
             $db = new clsBanco();
             $db->Consulta("SELECT {$this->_todos_campos},fcn_upper_nrm(nm_instituicao) as nm_instituicao_upper FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
 
@@ -1132,14 +1161,16 @@ class clsPmieducarInstituicao
 
     /**
      * Retorna um array com os dados de um registro.
+     *
      * @return array
      */
-    function existe()
+    public function existe()
     {
         if (is_numeric($this->cod_instituicao)) {
             $db = new clsBanco();
             $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
 
@@ -1148,12 +1179,14 @@ class clsPmieducarInstituicao
 
     /**
      * Exclui um registro.
+     *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
         if (is_numeric($this->cod_instituicao)) {
             $this->ativo = 0;
+
             return $this->edita();
         }
 
@@ -1163,7 +1196,7 @@ class clsPmieducarInstituicao
     /**
      * Define quais campos da tabela serão selecionados no método Lista().
      */
-    function setCamposLista($str_campos)
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -1171,7 +1204,7 @@ class clsPmieducarInstituicao
     /**
      * Define que o método Lista() deverpa retornar todos os campos da tabela.
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -1179,7 +1212,7 @@ class clsPmieducarInstituicao
     /**
      * Define limites de retorno para o método Lista().
      */
-    function setLimite($intLimiteQtd, $intLimiteOffset = null)
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -1191,22 +1224,24 @@ class clsPmieducarInstituicao
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
         if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
             if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
+
         return '';
     }
 
     /**
      * Define o campo para ser utilizado como ordenação no método Lista().
      */
-    function setOrderby($strNomeCampo)
+    public function setOrderby($strNomeCampo)
     {
         if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
@@ -1219,11 +1254,12 @@ class clsPmieducarInstituicao
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
         if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
+
         return '';
     }
 }

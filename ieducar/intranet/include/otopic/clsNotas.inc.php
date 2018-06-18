@@ -24,27 +24,27 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsNotas
 {
-    var $sequencial;
-    var $ref_idpes;
-    var $ref_pessoa_exc;
-    var $ref_pessoa_cad;
-    var $nota;
-    var $ativo;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $tabela;
+    public $sequencial;
+    public $ref_idpes;
+    public $ref_pessoa_exc;
+    public $ref_pessoa_cad;
+    public $nota;
+    public $ativo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $tabela;
 
     /**
      * Construtor
      *
      * @return Object:clsnatureza
      */
-    function __construct( $int_ref_idpes = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nota = false,  $ativo=false, $sequencial = false )
+    public function __construct($int_ref_idpes = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nota = false, $ativo=false, $sequencial = false)
     {
         $this->ref_idpes = is_numeric($int_ref_idpes) ? $int_ref_idpes : false;
         $this->ref_pessoa_cad = is_numeric($int_ref_pessoa_cad) ? $int_ref_pessoa_cad : false;
@@ -52,176 +52,164 @@ class clsNotas
         $this->nota = is_string($str_nota) ? $str_nota : false;
         $this->ativo = is_numeric($ativo) ? $ativo : false;
         $this->sequencial = is_numeric($sequencial) ? $sequencial: false;
-        
-        $this->tabela = "pmiotopic.notas";
+
+        $this->tabela = 'pmiotopic.notas';
     }
-    
+
     /**
      * Funcao que cadastra um novo registro com os valores atuais
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificacoes de campos obrigatorios para insercao
-        if( $this->ref_idpes && $this->ref_pessoa_cad && $this->nota )
-        {
-            $db->Consulta( "SELECT MAX(sequencial) as seq FROM {$this->tabela} WHERE ref_idpes = $this->ref_idpes GROUP BY ref_idpes" );
-            if($db->ProximoRegistro())
-            {
+        if ($this->ref_idpes && $this->ref_pessoa_cad && $this->nota) {
+            $db->Consulta("SELECT MAX(sequencial) as seq FROM {$this->tabela} WHERE ref_idpes = $this->ref_idpes GROUP BY ref_idpes");
+            if ($db->ProximoRegistro()) {
                 list($this->sequencial) = $db->Tupla();
                 $this->sequencial++;
-            }else 
-            {
+            } else {
                 $this->sequencial = 1;
             }
-            $db->Consulta( "INSERT INTO {$this->tabela} (ref_idpes,sequencial, ref_pessoa_cad, nota, data_cadastro ) VALUES ( '{$this->ref_idpes}', '{$this->sequencial}', '{$this->ref_pessoa_cad}', '{$this->nota}', NOW() )" );
+            $db->Consulta("INSERT INTO {$this->tabela} (ref_idpes,sequencial, ref_pessoa_cad, nota, data_cadastro ) VALUES ( '{$this->ref_idpes}', '{$this->sequencial}', '{$this->ref_pessoa_cad}', '{$this->nota}', NOW() )");
             // Retorna Id cadastrado
             return $this->ref_idpes;
         }
+
         return false;
     }
-    
+
     /**
      * Edita o registro atual
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
         // verifica campos obrigatorios para edicao
-        if( $this->ref_idpes && $this->ref_pessoa_cad && $this->nota && $this->sequencial)
-        {
+        if ($this->ref_idpes && $this->ref_pessoa_cad && $this->nota && $this->sequencial) {
             $db = new clsBanco();
-            $db->Consulta( "UPDATE {$this->tabela} SET ref_pessoa_cad = '{$this->ref_pessoa_cad}', nota = '{$this->nota}' WHERE ref_idpes = '{$this->ref_idpes}' AND sequencial = '{$this->sequencial}' " );
+            $db->Consulta("UPDATE {$this->tabela} SET ref_pessoa_cad = '{$this->ref_pessoa_cad}', nota = '{$this->nota}' WHERE ref_idpes = '{$this->ref_idpes}' AND sequencial = '{$this->sequencial}' ");
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * Remove o registro atual
      *
      * @return bool
      */
-    function exclui( )
+    public function exclui()
     {
         // verifica se existe um ID definido para delecao
-        if( $this->ref_idpes && $this->ref_pessoa_exc && $this->sequencial  )
-        {
-                $db = new clsBanco();
-                $this->detalhe();
-                $this->ativo++;
+        if ($this->ref_idpes && $this->ref_pessoa_exc && $this->sequencial) {
+            $db = new clsBanco();
+            $this->detalhe();
+            $this->ativo++;
 
-                $db->Consulta("UPDATE $this->tabela SET ativo='{$this->ativo}', data_exclusao=NOW(), ref_pessoa_exc = '$this->ref_pessoa_exc' WHERE ref_idpes = '{$this->ref_idpes}' AND sequencial = '{$this->sequencial}' ");
-                return true;
+            $db->Consulta("UPDATE $this->tabela SET ativo='{$this->ativo}', data_exclusao=NOW(), ref_pessoa_exc = '$this->ref_pessoa_exc' WHERE ref_idpes = '{$this->ref_idpes}' AND sequencial = '{$this->sequencial}' ");
+
+            return true;
         }
+
         return false;
     }
-    
+
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
      * @return Array
      */
-    function lista( $int_ref_idpes = false, $int_ref_pessoa_cad = false, $str_ordenacao = false, $date_cadastro_ini=false, $date_cadastro_fim=false, $int_ativo=1, $date_exclusao_ini=false, $date_exclusao_fim=false, $int_limite_ini = false, $int_limite_qtd = false )
+    public function lista($int_ref_idpes = false, $int_ref_pessoa_cad = false, $str_ordenacao = false, $date_cadastro_ini=false, $date_cadastro_fim=false, $int_ativo=1, $date_exclusao_ini=false, $date_exclusao_fim=false, $int_limite_ini = false, $int_limite_qtd = false)
     {
         // verificacoes de filtros a serem usados
-        $whereAnd = "WHERE ";
-        if( is_numeric( $int_ref_pessoa_cad ) )
-        {
+        $whereAnd = 'WHERE ';
+        if (is_numeric($int_ref_pessoa_cad)) {
             $where .= "{$whereAnd}ref_pessoa_cad = '$int_ref_pessoa_cad'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_pessoa_exc ) )
-        {
+        if (is_numeric($int_ref_pessoa_exc)) {
             $where .= "{$whereAnd}ref_pessoa_exc = '$int_ref_pessoa_exc'";
-            $whereAnd = " AND ";
-        }       
-        
-        if( is_numeric( $int_ref_idpes ) )
-        {
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_idpes)) {
             $where .= "{$whereAnd}ref_idpes = '$int_ref_idpes'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        
-        if( is_string( $date_cadastro_ini ) )
-        {
+
+        if (is_string($date_cadastro_ini)) {
             $where .= "{$whereAnd}data_cadastro >= '$date_cadastro_ini'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_cadastro_fim ) )
-        {
+        if (is_string($date_cadastro_fim)) {
             $where .= "{$whereAnd}data_cadastro <= '$date_cadastro_fim'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_exclusao_ini ) )
-        {
+        if (is_string($date_exclusao_ini)) {
             $where .= "{$whereAnd}data_exclusao >= '$date_exclusao_ini'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_exclusao_fim ) )
-        {
+        if (is_string($date_exclusao_fim)) {
             $where .= "{$whereAnd}data_exclusao <= '$date_exclusao_fim'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ativo ) )
-        {
+        if (is_numeric($int_ativo)) {
             $where .= "{$whereAnd}ativo = '$int_ativo'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        
-        $orderBy = "";
-        if( is_string( $str_ordenacao ) )
-        {
+
+        $orderBy = '';
+        if (is_string($str_ordenacao)) {
             $orderBy = "ORDER BY $str_ordenacao";
         }
-        
-        $limit = "";
-        if( is_numeric( $int_limite_ini ) && is_numeric( $int_limite_qtd ) )
-        {
+
+        $limit = '';
+        if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
-        
+
         // Seleciona o total de registro da tabela
         $db = new clsBanco();
-        $total = $db->CampoUnico( "SELECT COUNT(0) AS total FROM {$this->tabela} $where" );
+        $total = $db->CampoUnico("SELECT COUNT(0) AS total FROM {$this->tabela} $where");
 
-        $db->Consulta( "SELECT ref_idpes, ref_pessoa_cad, ref_pessoa_exc, nota, data_cadastro, data_exclusao, ativo, sequencial FROM {$this->tabela} $where $orderBy $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() ) 
-        {
+        $db->Consulta("SELECT ref_idpes, ref_pessoa_cad, ref_pessoa_exc, nota, data_cadastro, data_exclusao, ativo, sequencial FROM {$this->tabela} $where $orderBy $limit");
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla["total"] = $total;
+            $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
-    } 
-    
+    }
+
     /**
      * Retorna um array com os detalhes do objeto
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if($this->ref_idpes && $this->sequencial)
-        {
+        if ($this->ref_idpes && $this->sequencial) {
             $db = new clsBanco();
             $db->Consulta("SELECT ref_idpes, ref_pessoa_cad, ref_pessoa_exc, nota, data_cadastro, data_exclusao, ativo, sequencial FROM {$this->tabela} WHERE ref_idpes = '$this->ref_idpes' AND sequencial = '$this->sequencial' ");
-            if( $db->ProximoRegistro() )
-            {
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $this->ativo = $tupla['ativo'];
+
                 return $tupla;
             }
         }
+
         return false;
     }
 }
-?>

@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,52 +44,60 @@ require_once 'Portabilis/Business/Professor.php';
  * CursoController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CursoController extends ApiCoreController
 {
-
-  protected function canGetCursos() {
-    return $this->validatesId('instituicao') &&
+    protected function canGetCursos()
+    {
+        return $this->validatesId('instituicao') &&
            $this->validatesId('escola');
-  }
-
-  protected function getCursos() {
-    if ($this->canGetCursos()) {
-      $userId        = $this->getSession()->id_pessoa;
-      $instituicaoId = $this->getRequest()->instituicao_id;
-      $escolaId      = $this->getRequest()->escola_id;
-
-      $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
-
-      if ($isProfessor)
-        $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
-
-      else {
-        $sql    = "select c.cod_curso as id, c.nm_curso as nome FROM pmieducar.curso c,
-                   pmieducar.escola_curso ec WHERE ec.ref_cod_escola = $1 AND ec.ref_cod_curso =
-                   c.cod_curso AND ec.ativo = 1 AND c.ativo = 1 ORDER BY c.nm_curso ASC";
-
-        $cursos = $this->fetchPreparedQuery($sql, $escolaId);
-      }
-
-      $options = array();
-      foreach ($cursos as $curso)
-        $options['__' . $curso['id']] = $this->toUtf8($curso['nome']);
-
-      return array('options' => $options);
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'cursos'))
-      $this->appendResponse($this->getCursos());
-    else
-      $this->notImplementedOperationError();
-  }
+    protected function getCursos()
+    {
+        if ($this->canGetCursos()) {
+            $userId        = $this->getSession()->id_pessoa;
+            $instituicaoId = $this->getRequest()->instituicao_id;
+            $escolaId      = $this->getRequest()->escola_id;
+
+            $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+
+            if ($isProfessor) {
+                $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
+            } else {
+                $sql    = 'select c.cod_curso as id, c.nm_curso as nome FROM pmieducar.curso c,
+                   pmieducar.escola_curso ec WHERE ec.ref_cod_escola = $1 AND ec.ref_cod_curso =
+                   c.cod_curso AND ec.ativo = 1 AND c.ativo = 1 ORDER BY c.nm_curso ASC';
+
+                $cursos = $this->fetchPreparedQuery($sql, $escolaId);
+            }
+
+            $options = [];
+            foreach ($cursos as $curso) {
+                $options['__' . $curso['id']] = $this->toUtf8($curso['nome']);
+            }
+
+            return ['options' => $options];
+        }
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'cursos')) {
+            $this->appendResponse($this->getCursos());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

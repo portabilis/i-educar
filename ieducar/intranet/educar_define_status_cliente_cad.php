@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ERROR);
-ini_set("display_errors", 1);
+ini_set('display_errors', 1);
 /**
  *
  *  @author Prefeitura Municipal de Itajaí
@@ -30,18 +30,18 @@ ini_set("display_errors", 1);
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
-        $this->processoAp = "603";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
+        $this->processoAp = '603';
     }
 }
 
@@ -52,100 +52,98 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_cliente;
-    var $ref_cod_instituicao;
-    var $ref_cod_escola;
-    var $ref_cod_biblioteca;
-    var $ref_cod_cliente_tipo;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_idpes;
-    var $login;
-    var $senha;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $del_cod_cliente;
-    var $del_cod_cliente_tipo;
-    var $acao_status;
-    var $cod_motivo_suspensao;
-    var $descricao;
-    var $dias;
-    var $sequencial;
+    public $cod_cliente;
+    public $ref_cod_instituicao;
+    public $ref_cod_escola;
+    public $ref_cod_biblioteca;
+    public $ref_cod_cliente_tipo;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_idpes;
+    public $login;
+    public $senha;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $del_cod_cliente;
+    public $del_cod_cliente_tipo;
+    public $acao_status;
+    public $cod_motivo_suspensao;
+    public $descricao;
+    public $dias;
+    public $sequencial;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_cliente        = $_GET["cod_cliente"];
-        $this->acao_status        = $_GET["status"];
-        $this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"];
+        $this->cod_cliente        = $_GET['cod_cliente'];
+        $this->acao_status        = $_GET['status'];
+        $this->ref_cod_biblioteca = $_GET['ref_cod_biblioteca'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_det.php" );
+        $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_det.php');
 
-        if( is_numeric( $this->cod_cliente ) )
-        {
-            $obj = new clsPmieducarCliente( $this->cod_cliente );
+        if (is_numeric($this->cod_cliente)) {
+            $obj = new clsPmieducarCliente($this->cod_cliente);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                if ( $this->acao_status == "liberar" )
-                    $retorno = "Editar";
+                if ($this->acao_status == 'liberar') {
+                    $retorno = 'Editar';
+                }
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}" : "educar_cliente_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_cliente_det.php?cod_cliente={$registro['cod_cliente']}" : 'educar_cliente_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"       => "Biblioteca",
-         ""                                  => "Motivo de suspensão do cliente"
-        ));
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_biblioteca_index.php'       => 'Biblioteca',
+         ''                                  => 'Motivo de suspensão do cliente'
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        if ( $this->acao_status == "suspender" ) {
+        if ($this->acao_status == 'suspender') {
+            $this->campoOculto('cod_cliente', $this->cod_cliente);
+            $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
 
-            $this->campoOculto("cod_cliente", $this->cod_cliente);
-            $this->campoOculto("ref_cod_biblioteca", $this->ref_cod_biblioteca);
-
-            if ( $this->ref_idpes ) {
-
-                $objTemp = new clsPessoaFisica( $this->ref_idpes );
+            if ($this->ref_idpes) {
+                $objTemp = new clsPessoaFisica($this->ref_idpes);
                 $detalhe = $objTemp->detalhe();
 
-                $this->campoRotulo( "nm_cliente", "Cliente", $detalhe["nome"] );
+                $this->campoRotulo('nm_cliente', 'Cliente', $detalhe['nome']);
             }
-            $this->campoNumero( "dias", "Dias", $this->dias, 9, 9, true );
-            if ( class_exists( "clsPmieducarMotivoSuspensao" ) ) {
+            $this->campoNumero('dias', 'Dias', $this->dias, 9, 9, true);
+            if (class_exists('clsPmieducarMotivoSuspensao')) {
                 echo "<script> descricao = new Array();\n </script>";
-                $opcoes[""] = "Selecione um motivo";
-                $todos_motivos = "";
+                $opcoes[''] = 'Selecione um motivo';
+                $todos_motivos = '';
                 $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao();
-                $lst_motivo_suspensao = $obj_motivo_suspensao->listaClienteBiblioteca( $this->cod_cliente );
-                if ( $lst_motivo_suspensao )
-                {
-                    foreach ( $lst_motivo_suspensao as $motivo_suspensao ) {
-                        $todos_motivos .= "descricao[descricao.length] = new Array( {$motivo_suspensao["cod_motivo_suspensao"]}, '{$motivo_suspensao["descricao"]}' );\n";
-                        $opcoes["{$motivo_suspensao["cod_motivo_suspensao"]}"] = "{$motivo_suspensao["nm_motivo"]}";
+                $lst_motivo_suspensao = $obj_motivo_suspensao->listaClienteBiblioteca($this->cod_cliente);
+                if ($lst_motivo_suspensao) {
+                    foreach ($lst_motivo_suspensao as $motivo_suspensao) {
+                        $todos_motivos .= "descricao[descricao.length] = new Array( {$motivo_suspensao['cod_motivo_suspensao']}, '{$motivo_suspensao['descricao']}' );\n";
+                        $opcoes["{$motivo_suspensao['cod_motivo_suspensao']}"] = "{$motivo_suspensao['nm_motivo']}";
                     }
                     echo "<script>{$todos_motivos}</script>";
-                    $this->campoLista( "cod_motivo_suspensao", "Motivo da Suspensão", $opcoes, $this->cod_motivo_suspensao, "", false, "", "", false, true );
-                    $this->campoMemo( "descricao", "Descrição", $this->descricao, 50, 5, false, "", "", false, false, "onClick", true );
-                    echo "<script>
+                    $this->campoLista('cod_motivo_suspensao', 'Motivo da Suspensão', $opcoes, $this->cod_motivo_suspensao, '', false, '', '', false, true);
+                    $this->campoMemo('descricao', 'Descrição', $this->descricao, 50, 5, false, '', '', false, false, 'onClick', true);
+                    echo '<script>
                             var before_getDescricao = function(){}
                             var after_getDescricao  = function(){}
 
@@ -153,123 +151,123 @@ class indice extends clsCadastro
                             {
                                 before_getDescricao();
 
-                                var campoMotivoSuspensao = document.getElementById( 'cod_motivo_suspensao' ).value;
-                                var campoDescricao       = document.getElementById( 'descricao' );
+                                var campoMotivoSuspensao = document.getElementById( \'cod_motivo_suspensao\' ).value;
+                                var campoDescricao       = document.getElementById( \'descricao\' );
                                 for ( var j = 0; j < descricao.length; j++ )
                                 {
                                     if ( descricao[j][0] == campoMotivoSuspensao )
                                     {
                                         campoDescricao.value = descricao[j][1];
                                     }
-                                    else if ( campoMotivoSuspensao == '' )
+                                    else if ( campoMotivoSuspensao == \'\' )
                                     {
-                                        campoDescricao.value = 'Sem descrição...';
+                                        campoDescricao.value = \'Sem descrição...\';
                                     }
                                 }
-                                if ( campoDescricao.length == 0 && campoMotivoSuspensao != '' ) {
-                                    campoDescricao.value = 'Sem descrição...';
+                                if ( campoDescricao.length == 0 && campoMotivoSuspensao != \'\' ) {
+                                    campoDescricao.value = \'Sem descrição...\';
                                 }
 
                                 after_getDescricao();
                             }
-                         </script>";
-                }
-                else
-                {
-                    $this->campoLista( "cod_motivo_suspensao", "Motivo da Suspensão", array("" => "Não há motivo cadastrado"), "", "", false, "", "", true, true );
+                         </script>';
+                } else {
+                    $this->campoLista('cod_motivo_suspensao', 'Motivo da Suspensão', ['' => 'Não há motivo cadastrado'], '', '', false, '', '', true, true);
                 }
             }
-        }
-        elseif ( $this->acao_status == "liberar" ) {
+        } elseif ($this->acao_status == 'liberar') {
             $db               = new clsBanco();
-            $this->sequencial = $db->CampoUnico( "SELECT MAX( sequencial ) FROM pmieducar.cliente_suspensao WHERE ref_cod_cliente = {$this->cod_cliente} AND data_liberacao IS NULL" );
-            $this->campoOculto("sequencial", $this->sequencial );
+            $this->sequencial = $db->CampoUnico("SELECT MAX( sequencial ) FROM pmieducar.cliente_suspensao WHERE ref_cod_cliente = {$this->cod_cliente} AND data_liberacao IS NULL");
+            $this->campoOculto('sequencial', $this->sequencial);
 
             $this->Editar();
         }
     }
 
-    function Novo()
+    public function Novo()
     {
         session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
+        $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
 
-        $obj = new clsPmieducarClienteSuspensao( null, $this->cod_cliente, $this->cod_motivo_suspensao, null, $this->pessoa_logada, $this->dias, null, null );
+        $obj = new clsPmieducarClienteSuspensao(null, $this->cod_cliente, $this->cod_motivo_suspensao, null, $this->pessoa_logada, $this->dias, null, null);
 
         // Caso suspensão tenha sido efetuada, envia para página de detalhes
-        if ($sequencial = $obj->cadastra())
-        {
-      $obj->sequencial = $sequencial;
-      $clienteSuspensao = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
-      $auditoria->inclusao($clienteSuspensao);
+        if ($sequencial = $obj->cadastra()) {
+            $obj->sequencial = $sequencial;
+            $clienteSuspensao = $obj->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('cliente_suspensao', $this->pessoa_logada);
+            $auditoria->inclusao($clienteSuspensao);
 
-            $this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
+            $this->mensagem .= 'Suspens&atilde;o efetuada com sucesso.<br>';
             header("Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
             die();
+
             return true;
         }
 
-        $this->mensagem = "Suspens&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Suspens&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarClienteSuspensao\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
+        $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
 
-        $obj_suspensao = new clsPmieducarClienteSuspensao( $this->sequencial, $this->cod_cliente, null, $this->pessoa_logada, null, null, null, null );
+        $obj_suspensao = new clsPmieducarClienteSuspensao($this->sequencial, $this->cod_cliente, null, $this->pessoa_logada, null, null, null, null);
         $detalheAntigo = $obj_suspensao->detalhe();
-    if ( $obj_suspensao->edita() ) {
-      $detalheAtual = $obj_suspensao->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
-            $this->mensagem .= "Libera&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php" );
+        if ($obj_suspensao->edita()) {
+            $detalheAtual = $obj_suspensao->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('cliente_suspensao', $this->pessoa_logada);
+            $auditoria->alteracao($detalheAntigo, $detalheAtual);
+            $this->mensagem .= 'Libera&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_cliente_lst.php');
             die();
+
             return true;
         }
-        $obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo );
+        $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
-        $this->mensagem = "Libera&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Libera&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
-
+        $obj_permissoes->permissao_excluir(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
 
         $obj = new clsPmieducarCliente($this->cod_cliente, $this->ref_cod_cliente_tipo, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $this->senha, $this->data_cadastro, $this->data_exclusao, 0);
-    $detalhe = $obj->detalhe();
+        $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-      $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
-      $auditoria->exclusao($detalhe);
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php?cod_cliente={$this->cod_cliente}" );
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('cliente', $this->pessoa_logada, $this->cod_cliente);
+            $auditoria->exclusao($detalhe);
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header("Location: educar_cliente_lst.php?cod_cliente={$this->cod_cliente}");
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }
@@ -279,7 +277,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

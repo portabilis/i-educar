@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -40,52 +45,59 @@ require_once 'CoreExt/Validate/Email.php';
  * ComponenteCurricular_Model_Componente class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Usuario_Model_Usuario extends CoreExt_Entity
 {
-  protected $_data = array(
-    'id'               => NULL,
-    'escolaId'         => NULL,
-    'instituicaoId'    => NULL,
-    'funcionarioCadId' => NULL,
-    'funcionarioExcId' => NULL,
-    'tipoUsuarioId'    => NULL,
-    'dataCadastro'     => NULL,
-    'dataExclusao'     => NULL,
-    'ativo'            => NULL
-  );
+    protected $_data = [
+    'id'               => null,
+    'escolaId'         => null,
+    'instituicaoId'    => null,
+    'funcionarioCadId' => null,
+    'funcionarioExcId' => null,
+    'tipoUsuarioId'    => null,
+    'dataCadastro'     => null,
+    'dataExclusao'     => null,
+    'ativo'            => null
+  ];
 
-  /*protected $_dataTypes = array(
-  );
+    /*protected $_dataTypes = array(
+    );
 
-  protected $_references = array(
-  );*/
+    protected $_references = array(
+    );*/
 
-  public function getDataMapper()
-  {
-    if (is_null($this->_dataMapper)) {
-      require_once 'Usuario/Model/UsuarioDataMapper.php';
-      $this->setDataMapper(new Usuario_Model_UsuarioDataMapper());
+    public function getDataMapper()
+    {
+        if (is_null($this->_dataMapper)) {
+            require_once 'Usuario/Model/UsuarioDataMapper.php';
+            $this->setDataMapper(new Usuario_Model_UsuarioDataMapper());
+        }
+
+        return parent::getDataMapper();
     }
-    return parent::getDataMapper();
-  }
 
-  public function getDefaultValidatorCollection()
-  {
-    return array();
-  }
+    public function getDefaultValidatorCollection()
+    {
+        return [];
+    }
 
-  // TODO remover metodo? já que foi usado $_attributeMap id
-  protected function _createIdentityField()
-  {
-    $id = array('id' => NULL);
-    $this->_data = array_merge($id, $this->_data);
-    return $this;
-  }
+    // TODO remover metodo? já que foi usado $_attributeMap id
+    protected function _createIdentityField()
+    {
+        $id = ['id' => null];
+        $this->_data = array_merge($id, $this->_data);
+
+        return $this;
+    }
 }

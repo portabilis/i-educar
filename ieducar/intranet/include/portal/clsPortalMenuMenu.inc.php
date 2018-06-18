@@ -30,14 +30,14 @@
 * Criado em 22/12/2006 16:57 pelo gerador automatico de classes
 */
 
-require_once( "include/portal/geral.inc.php" );
+require_once('include/portal/geral.inc.php');
 
 class clsPortalMenuMenu
 {
-    var $cod_menu_menu;
-    var $nm_menu;
-    var $title;
-    var $ref_cod_menu_pai;
+    public $cod_menu_menu;
+    public $nm_menu;
+    public $title;
+    public $ref_cod_menu_pai;
 
     // propriedades padrao
 
@@ -46,61 +46,60 @@ class clsPortalMenuMenu
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
-     * 
+     *
      * @param integer cod_menu_menu
      * @param string nm_menu
      * @param string title
@@ -108,58 +107,42 @@ class clsPortalMenuMenu
      *
      * @return object
      */
-    function __construct( $cod_menu_menu = null, $nm_menu = null, $title = null, $ref_cod_menu_pai = null )
+    public function __construct($cod_menu_menu = null, $nm_menu = null, $title = null, $ref_cod_menu_pai = null)
     {
         $db = new clsBanco();
-        $this->_schema = "portal.";
+        $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}menu_menu";
 
-        $this->_campos_lista = $this->_todos_campos = "cod_menu_menu, nm_menu, title, ref_cod_menu_pai";
+        $this->_campos_lista = $this->_todos_campos = 'cod_menu_menu, nm_menu, title, ref_cod_menu_pai';
 
-        if( is_numeric( $ref_cod_menu_pai ) )
-        {
-            if( class_exists( "clsMenuMenu" ) )
-            {
-                $tmp_obj = new clsMenuMenu( $ref_cod_menu_pai );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_menu_pai)) {
+            if (class_exists('clsMenuMenu')) {
+                $tmp_obj = new clsMenuMenu($ref_cod_menu_pai);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_menu_pai = $ref_cod_menu_pai;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_menu_pai = $ref_cod_menu_pai;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_menu_pai = $ref_cod_menu_pai;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM menu_menu WHERE cod_menu_menu = '{$ref_cod_menu_pai}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM menu_menu WHERE cod_menu_menu = '{$ref_cod_menu_pai}'")) {
                     $this->ref_cod_menu_pai = $ref_cod_menu_pai;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_menu_menu ) )
-        {
+        if (is_numeric($cod_menu_menu)) {
             $this->cod_menu_menu = $cod_menu_menu;
         }
-        if( is_string( $nm_menu ) )
-        {
+        if (is_string($nm_menu)) {
             $this->nm_menu = $nm_menu;
         }
-        if( is_string( $title ) )
-        {
+        if (is_string($title)) {
             $this->title = $title;
         }
-        
-
     }
 
     /**
@@ -167,40 +150,37 @@ class clsPortalMenuMenu
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_string( $this->nm_menu )  )
-        {
+        if (is_string($this->nm_menu)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_string( $this->nm_menu ) )
-            {
+            if (is_string($this->nm_menu)) {
                 $campos .= "{$gruda}nm_menu";
                 $valores .= "{$gruda}'{$this->nm_menu}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->title ) )
-            {
+            if (is_string($this->title)) {
                 $campos .= "{$gruda}title";
                 $valores .= "{$gruda}'{$this->title}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            
-            if( is_numeric( $this->ref_cod_menu_pai ) )
-            {
+
+            if (is_numeric($this->ref_cod_menu_pai)) {
                 $campos .= "{$gruda}ref_cod_menu_pai";
                 $valores .= "{$gruda}'{$this->ref_cod_menu_pai}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_menu_menu_seq");
+            return $db->InsertId("{$this->_tabela}_cod_menu_menu_seq");
         }
+
         return false;
     }
 
@@ -209,112 +189,97 @@ class clsPortalMenuMenu
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_menu_menu ) )
-        {
-
+        if (is_numeric($this->cod_menu_menu)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_string( $this->nm_menu ) )
-            {
+            if (is_string($this->nm_menu)) {
                 $set .= "{$gruda}nm_menu = '{$this->nm_menu}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->title ) )
-            {
+            if (is_string($this->title)) {
                 $set .= "{$gruda}title = '{$this->title}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            
-            if( is_numeric( $this->ref_cod_menu_pai ) )
-            {
+
+            if (is_numeric($this->ref_cod_menu_pai)) {
                 $set .= "{$gruda}ref_cod_menu_pai = '{$this->ref_cod_menu_pai}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_menu_menu = '{$this->cod_menu_menu}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_menu_menu = '{$this->cod_menu_menu}'" );
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
-     * 
+     *
      * @param string str_nm_menu
      * @param string str_title
      * @param integer int_ref_cod_menu_pai
      *
      * @return array
      */
-    function lista( $str_nm_menu = null, $str_title = null, $int_ref_cod_menu_pai = null )
+    public function lista($str_nm_menu = null, $str_title = null, $int_ref_cod_menu_pai = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_menu_menu ) )
-        {
+        if (is_numeric($int_cod_menu_menu)) {
             $filtros .= "{$whereAnd} cod_menu_menu = '{$int_cod_menu_menu}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nm_menu ) )
-        {
+        if (is_string($str_nm_menu)) {
             $filtros .= "{$whereAnd} nm_menu LIKE '%{$str_nm_menu}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_title ) )
-        {
+        if (is_string($str_title)) {
             $filtros .= "{$whereAnd} title LIKE '%{$str_title}%'";
-            $whereAnd = " AND ";
-        }
-        
-        if( is_numeric( $int_ref_cod_menu_pai ) )
-        {
-            $filtros .= "{$whereAnd} ref_cod_menu_pai = '{$int_ref_cod_menu_pai}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_ref_cod_menu_pai)) {
+            $filtros .= "{$whereAnd} ref_cod_menu_pai = '{$int_ref_cod_menu_pai}'";
+            $whereAnd = ' AND ';
+        }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -323,16 +288,16 @@ class clsPortalMenuMenu
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_menu_menu ) )
-        {
-
+        if (is_numeric($this->cod_menu_menu)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_menu_menu = '{$this->cod_menu_menu}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_menu_menu = '{$this->cod_menu_menu}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -341,18 +306,16 @@ class clsPortalMenuMenu
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_menu_menu ) )
-        {
-
+        if (is_numeric($this->cod_menu_menu)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_menu_menu = '{$this->cod_menu_menu}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_menu_menu = '{$this->cod_menu_menu}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -361,10 +324,9 @@ class clsPortalMenuMenu
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_menu_menu ) )
-        {
+        if (is_numeric($this->cod_menu_menu)) {
 
         /*
             delete
@@ -372,9 +334,8 @@ class clsPortalMenuMenu
         $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_menu_menu = '{$this->cod_menu_menu}'" );
         return true;
         */
-
-        
         }
+
         return false;
     }
 
@@ -383,7 +344,7 @@ class clsPortalMenuMenu
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -393,7 +354,7 @@ class clsPortalMenuMenu
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -403,7 +364,7 @@ class clsPortalMenuMenu
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -414,18 +375,18 @@ class clsPortalMenuMenu
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -433,13 +394,12 @@ class clsPortalMenuMenu
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -449,14 +409,12 @@ class clsPortalMenuMenu
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

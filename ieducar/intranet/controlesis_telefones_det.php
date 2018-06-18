@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Telefones" );
-        $this->processoAp = "611";
+        $this->SetTitulo("{$this->_instituicao} Telefones");
+        $this->processoAp = '611';
     }
 }
 
@@ -45,53 +45,46 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_telefones;
-    var $ref_funcionario_cad;
-    var $ref_funcionario_exc;
-    var $nome;
-    var $numero;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_telefones;
+    public $ref_funcionario_cad;
+    public $ref_funcionario_exc;
+    public $nome;
+    public $numero;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Telefones - Detalhe";
-        
+        $this->titulo = 'Telefones - Detalhe';
 
-        $this->cod_telefones=$_GET["cod_telefones"];
+        $this->cod_telefones=$_GET['cod_telefones'];
 
-        $tmp_obj = new clsPmicontrolesisTelefones( $this->cod_telefones );
+        $tmp_obj = new clsPmicontrolesisTelefones($this->cod_telefones);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: controlesis_telefones_lst.php" );
+        if (! $registro) {
+            header('location: controlesis_telefones_lst.php');
             die();
         }
 
-
-
-
-        if( $registro["nome"] )
-        {
-            $this->addDetalhe( array( "Nome", "{$registro["nome"]}") );
+        if ($registro['nome']) {
+            $this->addDetalhe([ 'Nome', "{$registro['nome']}"]);
         }
-        if( $registro["numero"] )
-        {
-            $this->addDetalhe( array( "Numero", "{$registro["numero"]}") );
+        if ($registro['numero']) {
+            $this->addDetalhe([ 'Numero', "{$registro['numero']}"]);
         }
 
-        $this->url_novo = "controlesis_telefones_cad.php";
-        $this->url_editar = "controlesis_telefones_cad.php?cod_telefones={$registro["cod_telefones"]}";
-        $this->url_cancelar = "controlesis_telefones_lst.php";
-        $this->largura = "100%";
+        $this->url_novo = 'controlesis_telefones_cad.php';
+        $this->url_editar = "controlesis_telefones_cad.php?cod_telefones={$registro['cod_telefones']}";
+        $this->url_cancelar = 'controlesis_telefones_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -100,7 +93,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

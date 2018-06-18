@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -37,35 +42,42 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
  * CursoController class.
  *
  * @author    Matheus Nicoski <matheus@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão ?
+ *
  * @version     @@package_version@@
  */
 class SetorController extends ApiCoreController
 {
-
-
-  protected function getSetor() {
-      $sql = "SELECT idsetorbai AS id_setor,
+    protected function getSetor()
+    {
+        $sql = 'SELECT idsetorbai AS id_setor,
                      nome AS nome
-              FROM public.setor_bai";
+              FROM public.setor_bai';
 
-      $setores = $this->fetchPreparedQuery($sql);
-      $options = array();
+        $setores = $this->fetchPreparedQuery($sql);
+        $options = [];
 
-      foreach ($setores as $setor)
-        $options['__' . $setor['id_setor']] = $this->toUtf8($setor['nome']);
+        foreach ($setores as $setor) {
+            $options['__' . $setor['id_setor']] = $this->toUtf8($setor['nome']);
+        }
 
-      return array('options' => $options);
+        return ['options' => $options];
     }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'setor'))
-        $this->appendResponse($this->getSetor());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'setor')) {
+            $this->appendResponse($this->getSetor());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

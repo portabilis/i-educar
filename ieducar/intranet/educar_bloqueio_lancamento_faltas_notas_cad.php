@@ -21,10 +21,15 @@
  * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib <caroline@portabillis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -38,211 +43,234 @@ require_once 'lib/Portabilis/Date/Utils.php';
  * clsIndexBase class.
  *
  * @author    Caroline Salib <caroline@portabillis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
-    $this->processoAp = 999848;
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
+        $this->processoAp = 999848;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Caroline Salib <caroline@portabillis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $cod_bloqueio;
-  var $ano;
-  var $ref_cod_escola;
-  var $etapa;
-  var $data_inicio;
-  var $data_fim;
-  var $modoEdicao;
+    public $cod_bloqueio;
+    public $ano;
+    public $ref_cod_escola;
+    public $etapa;
+    public $data_inicio;
+    public $data_fim;
+    public $modoEdicao;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $this->cod_bloqueio = $_GET['cod_bloqueio'];
-
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999848, $this->pessoa_logada, 7,
-      'educar_bloqueio_lancamento_faltas_notas_lst.php');
-
-    if (is_numeric($this->cod_bloqueio)) {
-      $obj = new clsPmieducarBloqueioLancamentoFaltasNotas($this->cod_bloqueio);
-
-      $registro  = $obj->detalhe();
-
-      if ($registro) {
-        // passa todos os valores obtidos no registro para atributos do objeto
-        foreach ($registro as $campo => $val)   {
-          $this->$campo = $val;
-        }
+        $this->cod_bloqueio = $_GET['cod_bloqueio'];
 
         $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        999848,
+        $this->pessoa_logada,
+        7,
+      'educar_bloqueio_lancamento_faltas_notas_lst.php'
+    );
 
-        if ($obj_permissoes->permissao_excluir(999848, $this->pessoa_logada, 7)) {
-          $this->fexcluir = TRUE;
+        if (is_numeric($this->cod_bloqueio)) {
+            $obj = new clsPmieducarBloqueioLancamentoFaltasNotas($this->cod_bloqueio);
+
+            $registro  = $obj->detalhe();
+
+            if ($registro) {
+                // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {
+                    $this->$campo = $val;
+                }
+
+                $obj_permissoes = new clsPermissoes();
+
+                if ($obj_permissoes->permissao_excluir(999848, $this->pessoa_logada, 7)) {
+                    $this->fexcluir = true;
+                }
+
+                $retorno = 'Editar';
+            }
         }
 
-        $retorno = 'Editar';
-      }
-    }
-
-    $this->url_cancelar = $retorno == 'Editar' ?
+        $this->url_cancelar = $retorno == 'Editar' ?
       sprintf('educar_bloqueio_lancamento_faltas_notas_det.php?cod_bloqueio=%d', $this->cod_bloqueio) :
                 'educar_bloqueio_lancamento_faltas_notas_lst.php';
 
-    $this->nome_url_cancelar = 'Cancelar';
+        $this->nome_url_cancelar = 'Cancelar';
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} bloqueio de lan&ccedil;amento de notas e faltas por etapa"
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => "{$nomeMenu} bloqueio de lan&ccedil;amento de notas e faltas por etapa"
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
 
-    $this->modoEdicao = ($retorno == 'Editar');
+        $this->modoEdicao = ($retorno == 'Editar');
 
-     return $retorno;
-  }
+        return $retorno;
+    }
 
-  function Gerar()
-  {
-    // primary keys
-    $this->campoOculto('cod_bloqueio', $this->cod_bloqueio);
+    public function Gerar()
+    {
+        // primary keys
+        $this->campoOculto('cod_bloqueio', $this->cod_bloqueio);
 
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao'));
+        $this->inputsHelper()->dynamic(['ano', 'instituicao']);
 
-    if ($this->modoEdicao) {
-      $objEscola = new clsPmieducarEscola($this->ref_cod_escola);
-      $objEscola = $objEscola->detalhe();
+        if ($this->modoEdicao) {
+            $objEscola = new clsPmieducarEscola($this->ref_cod_escola);
+            $objEscola = $objEscola->detalhe();
 
-      $options = array(
+            $options = [
         'required'    => false,
         'label'       => 'Escola',
         'placeholder' => '',
         'value'       => $objEscola['nome'],
         'size'        => 35,
         'disabled'    => true
-      );
+      ];
 
-      $this->inputsHelper()->text('escola', $options);
-    } else {
-      $this->inputsHelper()->multipleSearchEscola(null, array('label' => 'Escola(s)'));
-    }
+            $this->inputsHelper()->text('escola', $options);
+        } else {
+            $this->inputsHelper()->multipleSearchEscola(null, ['label' => 'Escola(s)']);
+        }
 
-    $selectOptions = array(
+        $selectOptions = [
       1 => '1ª Etapa',
       2 => '2ª Etapa',
       3 => '3ª Etapa',
       4 => '4ª Etapa'
-    );
+    ];
 
-    $options = array('label' => 'Etapa', 'resources' => $selectOptions, 'value' => $this->etapa);
+        $options = ['label' => 'Etapa', 'resources' => $selectOptions, 'value' => $this->etapa];
 
-    $this->inputsHelper()->select('etapa', $options);
+        $this->inputsHelper()->select('etapa', $options);
 
+        $this->inputsHelper()->date('data_inicio', ['label' => 'Data inicial', 'value' => dataToBrasil($this->data_inicio), 'placeholder' => '']);
+        $this->inputsHelper()->date('data_fim', ['label' => 'Data final', 'value' => dataToBrasil($this->data_fim), 'placeholder' => '']);
+    }
 
-    $this->inputsHelper()->date('data_inicio', array('label' => 'Data inicial', 'value' => dataToBrasil($this->data_inicio), 'placeholder' => ''));
-    $this->inputsHelper()->date('data_fim', array('label' => 'Data final', 'value' => dataToBrasil($this->data_fim), 'placeholder' => ''));
-  }
+    public function Novo()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(999848, $this->pessoa_logada, 7, 'educar_bloqueio_lancamento_faltas_notas_lst.php');
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999848, $this->pessoa_logada, 7, 'educar_bloqueio_lancamento_faltas_notas_lst.php');
+        $array_escolas = array_filter($this->escola);
 
-    $array_escolas = array_filter($this->escola);
-
-    foreach ($array_escolas as $escolaId) {
-      $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(null,
+        foreach ($array_escolas as $escolaId) {
+            $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(
+          null,
                                                            $this->ano,
                                                            $escolaId,
                                                            $this->etapa,
                                                            Portabilis_Date_Utils::brToPgSQL($this->data_inicio),
-                                                           Portabilis_Date_Utils::brToPgSQL($this->data_fim));
+                                                           Portabilis_Date_Utils::brToPgSQL($this->data_fim)
+      );
 
-      $obj->cadastra();
+            $obj->cadastra();
+        }
+
+        $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+        header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
+        die();
     }
 
-    $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-    header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-    die();
-  }
+    public function Editar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Editar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(999848, $this->pessoa_logada, 7, 'educar_bloqueio_lancamento_faltas_notas_lst.php');
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999848, $this->pessoa_logada, 7, 'educar_bloqueio_lancamento_faltas_notas_lst.php');
+        $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(
+        $this->cod_bloqueio,
+        $this->ano,
+        $this->ref_cod_escola,
+                    $this->etapa,
+        Portabilis_Date_Utils::brToPgSQL($this->data_inicio),
+        Portabilis_Date_Utils::brToPgSQL($this->data_fim)
+    );
 
-    $obj = new clsPmieducarBloqueioLancamentoFaltasNotas($this->cod_bloqueio, $this->ano, $this->ref_cod_escola,
-                    $this->etapa, Portabilis_Date_Utils::brToPgSQL($this->data_inicio), Portabilis_Date_Utils::brToPgSQL($this->data_fim));
+        $editou = $obj->edita();
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
+            header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
+            die();
+        }
 
-    $editou = $obj->edita();
-    if ($editou) {
-      $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-      die();
+        $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
+
+        return false;
     }
 
-    $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
-    return FALSE;
-  }
+    public function Excluir()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Excluir()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_excluir(999848, $this->pessoa_logada, 7, 'educar_bloqueio_lancamento_faltas_notas_lst.php');
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_excluir(999848, $this->pessoa_logada, 7, 'educar_bloqueio_lancamento_faltas_notas_lst.php');
+        $obj = new clsPmieducarBloqueioLancamentoFaltasNotas($this->cod_bloqueio);
 
-    $obj = new clsPmieducarBloqueioLancamentoFaltasNotas($this->cod_bloqueio);
+        $excluiu = $obj->excluir();
 
-    $excluiu = $obj->excluir();
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+            header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
+            die();
+        }
 
-    if ($excluiu) {
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-      die();
+        $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
+
+        return false;
     }
-
-    $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
-    return FALSE;
-  }
 }
 
 // Instancia objeto de pÃ¡gina

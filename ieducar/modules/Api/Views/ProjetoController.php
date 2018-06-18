@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -35,19 +40,22 @@ require_once 'intranet/include/clsBanco.inc.php';
 
 /**
  * Class ProjetoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class ProjetoController extends ApiCoreController
 {
+    protected function searchOptions()
+    {
+        return ['namespace' => 'pmieducar', 'idAttr' => 'cod_projeto'];
+    }
 
-   protected function searchOptions() {
-    return array('namespace' => 'pmieducar', 'idAttr' => 'cod_projeto');
-  }
-
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'projeto-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'projeto-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

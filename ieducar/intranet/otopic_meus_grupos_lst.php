@@ -24,122 +24,104 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsIndex extends clsBase
 {
-
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Pauta - Grupos de Reunião!" );
-        $this->processoAp = "294";
+        $this->SetTitulo("{$this->_instituicao} i-Pauta - Grupos de Reunião!");
+        $this->processoAp = '294';
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $id_pesssoa = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->titulo = "Meus Grupos";
-        
+        $this->titulo = 'Meus Grupos';
 
         // Paginador
         $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
         // Busca
-        $this->campoTexto("grupo","Grupo","",50,255);
+        $this->campoTexto('grupo', 'Grupo', '', 50, 255);
         $lista_grupos = true;
-        if($_GET['grupo'])
-        {
-            $lista_grupos = "";
+        if ($_GET['grupo']) {
+            $lista_grupos = '';
             $obj = new clsGrupos();
             $lista = $obj->lista($_GET['grupo']);
-            if($lista)
-            {
+            if ($lista) {
                 foreach ($lista as $grupo) {
                     $lista_grupos[] = $grupo['cod_grupos'];
                 }
             }
         }
 
-        $this->addCabecalhos( array( "Grupo", "Status" ) );
+        $this->addCabecalhos([ 'Grupo', 'Status' ]);
 
-
-        if($lista_grupos)
-        {
+        if ($lista_grupos) {
             $obj = new clsFuncionarioSu($id_pesssoa);
-            if(!$obj->detalhe())
-            {
+            if (!$obj->detalhe()) {
                 $obj = new clsGrupoPessoa();
-                $lista = $obj->meusGrupos($id_pesssoa, "tipo ASC",1,false,false,$lista_grupos);
-                if($lista)
-                {
+                $lista = $obj->meusGrupos($id_pesssoa, 'tipo ASC', 1, false, false, $lista_grupos);
+                if ($lista) {
                     $objGrupos = new clsGrupos();
                     foreach ($lista as $pessoa_grupo) {
-                        if(!$objGrupos->lista(false, false, false, false, false, 1, false, false, false, false, 1, $pessoa_grupo['ref_cod_grupos']))
-                        {
+                        if (!$objGrupos->lista(false, false, false, false, false, 1, false, false, false, false, 1, $pessoa_grupo['ref_cod_grupos'])) {
                             $obj = new clsGrupos($pessoa_grupo['ref_cod_grupos']);
                             $total = $pessoa_grupo['total'];
                             $detalhe = $obj->detalhe();
-                            $this->addLinhas(array("<a href='otopic_meus_grupos_det.php?cod_grupo={$pessoa_grupo['ref_cod_grupos']}'>{$detalhe['nm_grupo']}</a>", ($pessoa_grupo['tipo'] == 1) ? "Moderador" : "Membro"));
+                            $this->addLinhas(["<a href='otopic_meus_grupos_det.php?cod_grupo={$pessoa_grupo['ref_cod_grupos']}'>{$detalhe['nm_grupo']}</a>", ($pessoa_grupo['tipo'] == 1) ? 'Moderador' : 'Membro']);
                         }
                     }
                 }
-            }else
-            {
+            } else {
                 $obj = new clsGrupos();
-                $lista = $obj->lista(false,false,false,false,false,1,false,false,$iniciolimit,$limite);
-                if($lista)
-                {
-                    $grupos = "";
+                $lista = $obj->lista(false, false, false, false, false, 1, false, false, $iniciolimit, $limite);
+                if ($lista) {
+                    $grupos = '';
                     foreach ($lista as $grupo) {
                         $total = $grupo['total'];
-                        $obj = new clsGrupoModerador($id_pesssoa,$grupo['cod_grupos']);
+                        $obj = new clsGrupoModerador($id_pesssoa, $grupo['cod_grupos']);
                         $detalhe = $obj->detalhe();
-                        $status = "Super Usuário";
-                        if($detalhe['ativo'] == 1)
-                        {
-                            $status = "Moderador";
-                        }else {
-                            $obj = new clsGrupoPessoa($id_pesssoa,$grupo['cod_grupos']);
+                        $status = 'Super Usuário';
+                        if ($detalhe['ativo'] == 1) {
+                            $status = 'Moderador';
+                        } else {
+                            $obj = new clsGrupoPessoa($id_pesssoa, $grupo['cod_grupos']);
                             $detalhe = $obj->detalhe();
-                            if($detalhe['ativo'] == 1)
-                            {
-                                $status = "Membro";
+                            if ($detalhe['ativo'] == 1) {
+                                $status = 'Membro';
                             }
                         }
-                        $grupos[] = array($status,$grupo['nm_grupo'],$grupo['cod_grupos']);
-
+                        $grupos[] = [$status,$grupo['nm_grupo'],$grupo['cod_grupos']];
                     }
                     rsort($grupos);
                     reset($grupos);
                     foreach ($grupos as $grupo) {
-                        $this->addLinhas(array("<a href='otopic_meus_grupos_det.php?cod_grupo={$grupo['2']}'>{$grupo['1']}</a>", $grupo['0']));
+                        $this->addLinhas(["<a href='otopic_meus_grupos_det.php?cod_grupo={$grupo['2']}'>{$grupo['1']}</a>", $grupo['0']]);
                     }
                 }
             }
         }
-        $this->largura = "100%";
-        $this->addPaginador2( "otopic_meus_grupos_lst.php", $total, $_GET, $this->nome, $limite );
-
+        $this->largura = '100%';
+        $this->addPaginador2('otopic_meus_grupos_lst.php', $total, $_GET, $this->nome, $limite);
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -39,106 +44,114 @@ require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de bairros');
-    $this->processoAp = 761; // @TODO CORRIGIR PROCESSOAP
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de bairros');
+        $this->processoAp = 761; // @TODO CORRIGIR PROCESSOAP
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $tabela_bairros = array();
-  var $bairro_duplicado;
+    public $tabela_bairros = [];
+    public $bairro_duplicado;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(761, $this->pessoa_logada, 7,
-      'index.php');
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        761,
+        $this->pessoa_logada,
+        7,
+      'index.php'
+    );
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "Unifica&ccedil;&atilde;o de bairros"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''        => 'Unifica&ccedil;&atilde;o de bairros'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    return $retorno;
-  }
+        return $retorno;
+    }
 
-  function Gerar()
-  {
-      $this->inputsHelper()->hidden('exibir_municipio');
-      $this->inputsHelper()->simpleSearchBairro(null,array('label' => 'Bairro principal' ));
-      $this->campoTabelaInicio("tabela_bairros","",array("Bairro duplicado"),$this->tabela_bairros);
-      $this->campoTexto( "bairro_duplicado", "Bairro duplicado", $this->bairro_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus' );
-      $this->campoTabelaFim();
+    public function Gerar()
+    {
+        $this->inputsHelper()->hidden('exibir_municipio');
+        $this->inputsHelper()->simpleSearchBairro(null, ['label' => 'Bairro principal' ]);
+        $this->campoTabelaInicio('tabela_bairros', '', ['Bairro duplicado'], $this->tabela_bairros);
+        $this->campoTexto('bairro_duplicado', 'Bairro duplicado', $this->bairro_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoTabelaFim();
+    }
 
-  }
+    public function Novo()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        761,
+        $this->pessoa_logada,
+        7,
+      'index.php'
+    );
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(761, $this->pessoa_logada, 7,
-      'index.php');
+        $bairro_principal = $this->bairro_id;
+        $obj_bairro = new clsPublicBairro(null, null, $bairro_principal);
+        $obj_bairro = $obj_bairro->detalhe();
+        $municipio_principal = $obj_bairro['idmun'];
 
-    $bairro_principal = $this->bairro_id;
-    $obj_bairro = new clsPublicBairro(NULL, NULL, $bairro_principal);
-    $obj_bairro = $obj_bairro->detalhe();
-    $municipio_principal = $obj_bairro['idmun'];
+        $bairros_duplicados = [];
 
-    $bairros_duplicados = array();
+        // Loop entre bairros das tabelas
+        foreach ($this->bairro_duplicado as $key => $bairro_duplicado) {
+            $idbai = $this->retornaCodigo($bairro_duplicado);
 
-    // Loop entre bairros das tabelas
-    foreach ( $this->bairro_duplicado AS $key => $bairro_duplicado ){
+            // Verifica se o bairro é válido e não é igual ao bairro principal
+            if (is_numeric($idbai) && $idbai != $bairro_principal) {
+                $obj_bairro = new clsPublicBairro(null, null, $bairro_principal);
+                $obj_bairro_det = $obj_bairro->detalhe();
+                if ($obj_bairro_det) {
+                    // Verifica se o município é o mesmo que o bairro principal
+                    if ($obj_bairro_det['idmun'] == $municipio_principal) {
+                        $bairros_duplicados[] = $idbai;
+                    } else {
+                        $this->mensagem = 'Bairros a serem unificados devem pertencer a mesma cidade que o bairro principal.<br />';
 
-      $idbai = $this->retornaCodigo($bairro_duplicado);
-
-      // Verifica se o bairro é válido e não é igual ao bairro principal
-      if(is_numeric($idbai) && $idbai != $bairro_principal){
-        $obj_bairro = new clsPublicBairro(NULL, NULL, $bairro_principal);
-        $obj_bairro_det = $obj_bairro->detalhe();
-        if($obj_bairro_det){
-          // Verifica se o município é o mesmo que o bairro principal
-          if($obj_bairro_det['idmun'] == $municipio_principal)
-            $bairros_duplicados[] = $idbai;
-          else{
-            $this->mensagem = 'Bairros a serem unificados devem pertencer a mesma cidade que o bairro principal.<br />';
-            return FALSE;
-          }
+                        return false;
+                    }
+                }
+            }
         }
-      }
+        // Unifica o array de bairros a serem unificados
+        $bairros_duplicados = array_keys(array_flip($bairros_duplicados));
+        $db = new clsBanco();
+        foreach ($bairros_duplicados as $key => $value) {
+            $db->consulta("SELECT public.unifica_bairro({$value}, {$bairro_principal});");
+        }
+
+        $this->mensagem = '<span>Bairros unificados com sucesso.</span>';
+
+        return true;
     }
-    // Unifica o array de bairros a serem unificados
-    $bairros_duplicados = array_keys(array_flip($bairros_duplicados));
-    $db = new clsBanco();
-    foreach ($bairros_duplicados as $key => $value) {
-      $db->consulta("SELECT public.unifica_bairro({$value}, {$bairro_principal});");
+
+    protected function retornaCodigo($palavra)
+    {
+        return substr($palavra, 0, strpos($palavra, ' -'));
     }
-
-    $this->mensagem = "<span>Bairros unificados com sucesso.</span>";
-    return TRUE;
-  }
-
-  protected function retornaCodigo($palavra){
-
-    return substr($palavra, 0, strpos($palavra, " -"));
-  }
 }
 
 // Instancia objeto de página

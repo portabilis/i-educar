@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id: educar_serie_xml.php 772 2010-12-19 19:27:16Z eriksencosta@gmail.com $
  */
 
@@ -38,24 +43,24 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-if (isset($_GET['cur']) && is_numeric($_GET['cur']))
-{
-  $db = new clsBanco();
-  $db->Consulta(sprintf('SELECT
+if (isset($_GET['cur']) && is_numeric($_GET['cur'])) {
+    $db = new clsBanco();
+    $db->Consulta(sprintf(
+      'SELECT
       cod_serie, nm_serie
     FROM
       pmieducar.serie
     WHERE
       ref_cod_curso = %d AND ativo = 1
     ORDER BY
-      nm_serie ASC', $_GET['cur']
+      nm_serie ASC',
+      $_GET['cur']
   ));
 
-  while ($db->ProximoRegistro())
-  {
-    list($cod, $nome) = $db->Tupla();
-    print sprintf('  <serie cod_serie="%d">%s</serie>%s', $cod, $nome, PHP_EOL);
-  }
+    while ($db->ProximoRegistro()) {
+        list($cod, $nome) = $db->Tupla();
+        print sprintf('  <serie cod_serie="%d">%s</serie>%s', $cod, $nome, PHP_EOL);
+    }
 }
 
 echo '</query>';

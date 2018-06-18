@@ -24,20 +24,20 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
+require_once('include/clsBanco.inc.php');
 
 class clsAgendaFuncionario
 {
-    var $cod_funcionario_agenda;
-    var $ref_ref_cod_pessoa_fj;
-    var $data_inicio;
-    var $data_fim;
-    var $compromisso;
-    var $versao;
-    var $ref_cod_funcionario_agenda;
-    var $tabela;
-    
-    function __construct($int_cod_funcionario_agenda=false,$int_ref_ref_cod_pessoa_fj=false,$str_data_inicio=false, $str_data_fim=false, $str_compromisso=false,$int_versao=false,$int_ref_cod_funcionario_agenda=false)
+    public $cod_funcionario_agenda;
+    public $ref_ref_cod_pessoa_fj;
+    public $data_inicio;
+    public $data_fim;
+    public $compromisso;
+    public $versao;
+    public $ref_cod_funcionario_agenda;
+    public $tabela;
+
+    public function __construct($int_cod_funcionario_agenda=false, $int_ref_ref_cod_pessoa_fj=false, $str_data_inicio=false, $str_data_fim=false, $str_compromisso=false, $int_versao=false, $int_ref_cod_funcionario_agenda=false)
     {
         $this->cod_funcionario_agenda = $int_cod_funcionario_agenda;
         $this->ref_ref_cod_pessoa_fj = $int_ref_ref_cod_pessoa_fj;
@@ -46,38 +46,34 @@ class clsAgendaFuncionario
         $this->compromisso = $str_compromisso;
         $this->versao = $int_versao;
         $this->ref_cod_funcionario_agenda = $int_ref_cod_funcionario_agenda;
-        $this->tabela = "funcionario_agenda";
+        $this->tabela = 'funcionario_agenda';
     }
 
-    function cadastra()
+    public function cadastra()
     {
-        if(is_numeric($this->ref_ref_cod_pessoa_fj) && is_string($this->data_inicio) && is_string($this->compromisso))
-        {
-            $campos = "";
-            $valores = "";
-            if(is_string($this->data_fim))
-            {
-                $campos = ", data_fim";
+        if (is_numeric($this->ref_ref_cod_pessoa_fj) && is_string($this->data_inicio) && is_string($this->compromisso)) {
+            $campos = '';
+            $valores = '';
+            if (is_string($this->data_fim)) {
+                $campos = ', data_fim';
                 $valores = ", '{$this->data_fim}'";
             }
             $db = new clsBanco();
             //die("INSERT INTO funcionario_agenda (ref_ref_cod_pessoa_fj, data_inicio, compromisso, versao $campos) VALUES ('$this->ref_ref_cod_pessoa_fj', '$this->data_inicio', '$this->compromisso', 1 $valores)");
             $db->Consulta("INSERT INTO funcionario_agenda (ref_ref_cod_pessoa_fj, data_inicio, compromisso, versao $campos) VALUES ('$this->ref_ref_cod_pessoa_fj', '$this->data_inicio', '$this->compromisso', 1 $valores)");
-            return $db->InsertId("funcionario_agenda_cod_funcionario_agenda_seq");
+
+            return $db->InsertId('funcionario_agenda_cod_funcionario_agenda_seq');
         }
     }
-    
-    function detalhe()
+
+    public function detalhe()
     {
         $db = new clsBanco();
-        $db->Consulta( "SELECT cod_funcionario_agenda, ref_ref_cod_pessoa_fj, data_inicio, data_fim, compromisso, versao, ref_cod_funcionario_agenda FROM {$this->tabela} WHERE cod_funcionario_agenda = '{$this->cod_funcionario_agenda}'" );
-        if( $db->ProximoRegistro() )
-        {
+        $db->Consulta("SELECT cod_funcionario_agenda, ref_ref_cod_pessoa_fj, data_inicio, data_fim, compromisso, versao, ref_cod_funcionario_agenda FROM {$this->tabela} WHERE cod_funcionario_agenda = '{$this->cod_funcionario_agenda}'");
+        if ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
+
             return $tupla;
         }
     }
-
-
 }
-?>

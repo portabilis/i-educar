@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -35,98 +40,107 @@ require_once 'include/clsBancoPgSql.inc.php';
  * clsBanco class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsBanco extends clsBancoSQL_
 {
-  /**
-   * Construtor (PHP 4).
-   */
-  public function __construct($strDataBase = FALSE)
-  {
-    parent::__construct($strDataBase);
+    /**
+     * Construtor (PHP 4).
+     */
+    public function __construct($strDataBase = false)
+    {
+        parent::__construct($strDataBase);
 
-    global $coreExt;
-    $config = $coreExt['Config']->app->database;
+        global $coreExt;
+        $config = $coreExt['Config']->app->database;
 
-    $this->setHost($config->hostname);
-    $this->setDbname($config->dbname);
-    $this->setPassword($config->password);
-    $this->setUser($config->username);
-    $this->setPort($config->port);
-  }
-
-  /**
-   * Retorna a quantidade de registros de uma tabela baseado no objeto que a
-   * abstrai. Este deve ter um atributo público Object->_tabela.
-   *
-   * @param   mixed   Objeto que abstrai a tabela
-   * @param   string  Nome da coluna para cálculo COUNT()
-   * @return  int     Quantidade de registros da tabela
-   */
-  public function doCountFromObj($obj, $column = '*')
-  {
-    if ($obj->_tabela == NULL) {
-      return FALSE;
+        $this->setHost($config->hostname);
+        $this->setDbname($config->dbname);
+        $this->setPassword($config->password);
+        $this->setUser($config->username);
+        $this->setPort($config->port);
     }
 
-    $sql = sprintf('SELECT COUNT(%s) FROM %s', $column, $obj->_tabela);
-    $this->Consulta($sql);
+    /**
+     * Retorna a quantidade de registros de uma tabela baseado no objeto que a
+     * abstrai. Este deve ter um atributo público Object->_tabela.
+     *
+     * @param   mixed   Objeto que abstrai a tabela
+     * @param   string  Nome da coluna para cálculo COUNT()
+     *
+     * @return int Quantidade de registros da tabela
+     */
+    public function doCountFromObj($obj, $column = '*')
+    {
+        if ($obj->_tabela == null) {
+            return false;
+        }
 
-    return (int)$this->UnicoCampo($sql);
-  }
+        $sql = sprintf('SELECT COUNT(%s) FROM %s', $column, $obj->_tabela);
+        $this->Consulta($sql);
 
-  /**
-   * Retorna os dados convertidos para a sintaxe SQL aceita por ext/pgsql.
-   *
-   * <code>
-   * <?php
-   * $data = array(
-   *   'id' => 1,
-   *   'hasChild' = FALSE
-   * );
-   *
-   * $clsBanco->getDbValuesFromArray($data);
-   * // array(
-   * //   'id' => 1,
-   * //   'hasChild' => 'f'
-   * // );
-   * </code>
-   *
-   * Apenas o tipo booleano é convertido.
-   *
-   * @param array $data Array associativo com os valores a serem convertidos.
-   * @return array
-   */
-  public function formatValues(array $data)
-  {
-    $db = array();
-    foreach ($data as $key => $val) {
-      if (is_bool($val)) {
-        $db[$key] = $this->_formatBool($val);
-        continue;
-      }
-      $db[$key] = $val;
+        return (int)$this->UnicoCampo($sql);
     }
-    return $db;
-  }
 
+    /**
+     * Retorna os dados convertidos para a sintaxe SQL aceita por ext/pgsql.
+     *
+     * <code>
+     * <?php
+     * $data = array(
+     *   'id' => 1,
+     *   'hasChild' = FALSE
+     * );
+     *
+     * $clsBanco->getDbValuesFromArray($data);
+     * // array(
+     * //   'id' => 1,
+     * //   'hasChild' => 'f'
+     * // );
+     * </code>
+     *
+     * Apenas o tipo booleano é convertido.
+     *
+     * @param array $data Array associativo com os valores a serem convertidos.
+     *
+     * @return array
+     */
+    public function formatValues(array $data)
+    {
+        $db = [];
+        foreach ($data as $key => $val) {
+            if (is_bool($val)) {
+                $db[$key] = $this->_formatBool($val);
+                continue;
+            }
+            $db[$key] = $val;
+        }
 
-  /**
-   * Retorna um valor formatado de acordo com o tipo output do tipo booleano
-   * no PostgreSQL.
-   *
-   * @link   http://www.postgresql.org/docs/8.2/interactive/datatype-boolean.html
-   * @link   http://www.php.net/manual/en/function.pg-query-params.php#78072
-   * @param  mixed $val
-   * @return string "t" para TRUE e "f" para false
-   */
-  protected function _formatBool($val)
-  {
-    return ($val == TRUE ? 't' : 'f');
-  }
+        return $db;
+    }
+
+    /**
+     * Retorna um valor formatado de acordo com o tipo output do tipo booleano
+     * no PostgreSQL.
+     *
+     * @link   http://www.postgresql.org/docs/8.2/interactive/datatype-boolean.html
+     * @link   http://www.php.net/manual/en/function.pg-query-params.php#78072
+     *
+     * @param mixed $val
+     *
+     * @return string "t" para TRUE e "f" para false
+     */
+    protected function _formatBool($val)
+    {
+        return ($val == true ? 't' : 'f');
+    }
 }

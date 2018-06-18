@@ -24,19 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Escola" );
-        $this->processoAp = "561";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
+        $this->processoAp = '561';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -47,89 +46,80 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $cod_escola;
-    var $ref_usuario_cad;
-    var $ref_usuario_exc;
-    var $ref_cod_instituicao;
-    var $ref_cod_escola_rede_ensino;
-    var $ref_idpes;
-    var $sigla;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $nm_escola;
+    public $cod_escola;
+    public $ref_usuario_cad;
+    public $ref_usuario_exc;
+    public $ref_cod_instituicao;
+    public $ref_cod_escola_rede_ensino;
+    public $ref_idpes;
+    public $sigla;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $nm_escola;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Escola - Listagem";
+        $this->titulo = 'Escola - Listagem';
 
         $obj_permissoes = new clsPermissoes();
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-
-
-        $cabecalhos = array("Escola");
+        $cabecalhos = ['Escola'];
         $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if( $nivel == 1 )
-        {
-            $cabecalhos[] = "Institui&ccedil;&atilde;o";
+        if ($nivel == 1) {
+            $cabecalhos[] = 'Institui&ccedil;&atilde;o';
             $objInstituicao = new clsPmieducarInstituicao();
-            $opcoes = array( "" => "Selecione" );
-            $objInstituicao->setOrderby( "nm_instituicao ASC" );
+            $opcoes = [ '' => 'Selecione' ];
+            $objInstituicao->setOrderby('nm_instituicao ASC');
             $lista = $objInstituicao->lista();
-            if( is_array( $lista ) )
-            {
-                foreach ( $lista AS $linha )
-                {
-                    $opcoes[$linha["cod_instituicao"]] = $linha["nm_instituicao"];
+            if (is_array($lista)) {
+                foreach ($lista as $linha) {
+                    $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, false, false, false, false, false, false );
-        }
-        else
-        {
-            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada );
-            if( $this->ref_cod_instituicao )
-            {
-                $this->campoOculto( "ref_cod_instituicao", $this->ref_cod_instituicao );
-            }
-            else
-            {
-                die( "Erro: Usuário não é do nivel poli-institucional e não possui uma instituição" );
+            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, false, false, false, false, false, false);
+        } else {
+            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+            if ($this->ref_cod_instituicao) {
+                $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+            } else {
+                die('Erro: Usuário não é do nivel poli-institucional e não possui uma instituição');
             }
         }
-        $this->addCabecalhos( $cabecalhos );
+        $this->addCabecalhos($cabecalhos);
 
-        $this->campoTexto( "nm_escola", "Escola", $this->nm_escola, 30, 255, false );
+        $this->campoTexto('nm_escola', 'Escola', $this->nm_escola, 30, 255, false);
 
         // Filtros de Foreign Keys
         $this->limite = 10;
@@ -139,10 +129,10 @@ class indice extends clsListagem
             $obj_escola->codUsuario = $this->pessoa_logada;
         }
 
-        if ($this->pagina_formulario){
-            $obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
+        if ($this->pagina_formulario) {
+            $obj_escola->setLimite($this->limite, ($this->pagina_formulario - 1) * $this->limite);
         } else {
-            $obj_escola->setLimite( $this->limite );
+            $obj_escola->setLimite($this->limite);
         }
         $lista = $obj_escola->lista(
             null,
@@ -163,40 +153,34 @@ class indice extends clsListagem
 
         $total = $obj_escola->_total;
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $linha = [];
 
-                $linha = array();
-
-                $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro["cod_escola"]}\">{$registro["nome"]}</a>";
-                if( $nivel == 1 )
-                {
-                    $objInstituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">{$registro['nome']}</a>";
+                if ($nivel == 1) {
+                    $objInstituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                     $detInstituicao = $objInstituicao->detalhe();
 
-                    $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro["cod_escola"]}\">{$detInstituicao["nm_instituicao"]}</a>";
+                    $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">{$detInstituicao['nm_instituicao']}</a>";
                 }
-                $this->addLinhas( $linha );
+                $this->addLinhas($linha);
             }
         }
-        $this->addPaginador2( "educar_escola_lst.php", $total, $_GET, $this->nome, $this->limite );
-        if( $obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3 ) )
-        {
-            $this->acao = "go(\"educar_escola_cad.php\")";
-            $this->nome_acao = "Novo";
+        $this->addPaginador2('educar_escola_lst.php', $total, $_GET, $this->nome, $this->limite);
+        if ($obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3)) {
+            $this->acao = 'go("educar_escola_cad.php")';
+            $this->nome_acao = 'Novo';
         }
-        $this->largura = "100%";
+        $this->largura = '100%';
 
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Listagem de escolas"
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => 'Listagem de escolas'
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
-
     }
 }
 // cria uma extensao da classe base
@@ -204,7 +188,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

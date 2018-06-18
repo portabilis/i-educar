@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package   Ied_Public
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -38,112 +43,139 @@ require_once 'include/public/clsPublicDistrito.inc.php';
  * clsIndexBase class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Distrito');
-    $this->processoAp = 759;
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Distrito');
+        $this->processoAp = 759;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
 {
-  var $titulo;
+    public $titulo;
 
-  var $idmun;
-  var $geom;
-  var $iddis;
-  var $nome;
-  var $idpes_rev;
-  var $data_rev;
-  var $origem_gravacao;
-  var $idpes_cad;
-  var $data_cad;
-  var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
+    public $idmun;
+    public $geom;
+    public $iddis;
+    public $nome;
+    public $idpes_rev;
+    public $data_rev;
+    public $origem_gravacao;
+    public $idpes_cad;
+    public $data_cad;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    $this->titulo = 'Distrito - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
-
-    $this->iddis = $_GET['iddis'];
-
-    $tmp_obj = new clsPublicDistrito();
-    $lst_distrito = $tmp_obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->iddis);
-
-    if (! $lst_distrito) {
-      header('Location: public_distrito_lst.php');
-      die();
-    }
-    else {
-      $registro = $lst_distrito[0];
-    }
-
-    if ($registro['nome']) {
-      $this->addDetalhe(array('Nome', $registro['nome']));
-    }
-
-    if ($registro['nm_municipio']) {
-      $this->addDetalhe(array("Município", $registro['nm_municipio']));
-    }
-
-    if ($registro['nm_estado']) {
-      $this->addDetalhe(array('Estado', $registro['nm_estado']));
-    }
-
-    if ($registro['nm_pais']) {
-      $this->addDetalhe(array('Pais', $registro['nm_pais']));
-    }
-
-    if ($registro['cod_ibge']) {
-      $this->addDetalhe(array('C&oacute;digo INEP', $registro['cod_ibge']));
-    }
-
-    $obj_permissao = new clsPermissoes();   
-
-    if($obj_permissao->permissao_cadastra(759, $this->pessoa_logada,7,null,true))
+    public function Gerar()
     {
-      $this->url_novo   = 'public_distrito_cad.php';
-      $this->url_editar = 'public_distrito_cad.php?iddis=' . $registro['iddis'];
-    }    
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->url_cancelar = 'public_distrito_lst.php';
-    $this->largura      = '100%';
+        $this->titulo = 'Distrito - Detalhe';
+        $this->addBanner(
+        'imagens/nvp_top_intranet.jpg',
+      'imagens/nvp_vert_intranet.jpg',
+        'Intranet'
+    );
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""                                  => "Detalhe do distrito"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
+        $this->iddis = $_GET['iddis'];
+
+        $tmp_obj = new clsPublicDistrito();
+        $lst_distrito = $tmp_obj->lista(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        $this->iddis
+    );
+
+        if (! $lst_distrito) {
+            header('Location: public_distrito_lst.php');
+            die();
+        } else {
+            $registro = $lst_distrito[0];
+        }
+
+        if ($registro['nome']) {
+            $this->addDetalhe(['Nome', $registro['nome']]);
+        }
+
+        if ($registro['nm_municipio']) {
+            $this->addDetalhe(['Município', $registro['nm_municipio']]);
+        }
+
+        if ($registro['nm_estado']) {
+            $this->addDetalhe(['Estado', $registro['nm_estado']]);
+        }
+
+        if ($registro['nm_pais']) {
+            $this->addDetalhe(['Pais', $registro['nm_pais']]);
+        }
+
+        if ($registro['cod_ibge']) {
+            $this->addDetalhe(['C&oacute;digo INEP', $registro['cod_ibge']]);
+        }
+
+        $obj_permissao = new clsPermissoes();
+
+        if ($obj_permissao->permissao_cadastra(759, $this->pessoa_logada, 7, null, true)) {
+            $this->url_novo   = 'public_distrito_cad.php';
+            $this->url_editar = 'public_distrito_cad.php?iddis=' . $registro['iddis'];
+        }
+
+        $this->url_cancelar = 'public_distrito_lst.php';
+        $this->largura      = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''                                  => 'Detalhe do distrito'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }
 
 // Instancia objeto de página

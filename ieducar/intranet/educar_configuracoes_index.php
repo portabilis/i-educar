@@ -24,38 +24,34 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar" );
-        $this->processoAp = "554";
+        $this->SetTitulo("{$this->_instituicao} i-Educar");
+        $this->processoAp = '554';
     }
 }
 
 class indice
 {
-    function RenderHTML()
+    public function RenderHTML()
     {
-        return "
-                <table width='100%' height='100%'>
-                    <tr align=center valign='top'><td></td></tr>
+        return '
+                <table width=\'100%\' height=\'100%\'>
+                    <tr align=center valign=\'top\'><td></td></tr>
                 </table>
-                ";
+                ';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

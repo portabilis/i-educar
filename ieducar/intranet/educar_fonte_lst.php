@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Fonte" );
-        $this->processoAp = "608";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Fonte");
+        $this->processoAp = '608';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -46,80 +46,77 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $cod_fonte;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_fonte;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_biblioteca;
+    public $cod_fonte;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_fonte;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_biblioteca;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Fonte - Listagem";
+        $this->titulo = 'Fonte - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        
-
-        $this->addCabecalhos( array(
-            "Fonte",
-            "Biblioteca"
-        ) );
+        $this->addCabecalhos([
+            'Fonte',
+            'Biblioteca'
+        ]);
 
         // Filtros de Foreign Keys
         $get_escola = true;
         $get_biblioteca = true;
-        $get_cabecalho = "lista_busca";
-        include("include/pmieducar/educar_campo_lista.php");
+        $get_cabecalho = 'lista_busca';
+        include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto( "nm_fonte", "Fonte", $this->nm_fonte, 30, 255, false );
-
+        $this->campoTexto('nm_fonte', 'Fonte', $this->nm_fonte, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        if(!is_numeric($this->ref_cod_biblioteca))
-        {
+        if (!is_numeric($this->ref_cod_biblioteca)) {
             $obj_bib_user = new clsPmieducarBibliotecaUsuario();
             $this->ref_cod_biblioteca = $obj_bib_user->listaBibliotecas($this->pessoa_logada);
         }
-        
+
         $obj_fonte = new clsPmieducarFonte();
-        $obj_fonte->setOrderby( "nm_fonte ASC" );
-        $obj_fonte->setLimite( $this->limite, $this->offset );
+        $obj_fonte->setOrderby('nm_fonte ASC');
+        $obj_fonte->setLimite($this->limite, $this->offset);
 
         $lista = $obj_fonte->lista(
             $this->cod_fonte,
@@ -138,36 +135,33 @@ class indice extends clsListagem
         $total = $obj_fonte->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 $obj_biblioteca = new clsPmieducarBiblioteca($registro['ref_cod_biblioteca']);
                 $det_biblioteca = $obj_biblioteca->detalhe();
                 $registro['ref_cod_biblioteca'] = $det_biblioteca['nm_biblioteca'];
-                $this->addLinhas( array(
-                    "<a href=\"educar_fonte_det.php?cod_fonte={$registro["cod_fonte"]}\">{$registro["nm_fonte"]}</a>",
-                    "<a href=\"educar_fonte_det.php?cod_fonte={$registro["cod_fonte"]}\">{$registro["ref_cod_biblioteca"]}</a>"
-                ) );
+                $this->addLinhas([
+                    "<a href=\"educar_fonte_det.php?cod_fonte={$registro['cod_fonte']}\">{$registro['nm_fonte']}</a>",
+                    "<a href=\"educar_fonte_det.php?cod_fonte={$registro['cod_fonte']}\">{$registro['ref_cod_biblioteca']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "educar_fonte_lst.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2('educar_fonte_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 608, $this->pessoa_logada, 11 ) )
-        {
-        $this->acao = "go(\"educar_fonte_cad.php\")";
-        $this->nome_acao = "Novo";
+        if ($obj_permissoes->permissao_cadastra(608, $this->pessoa_logada, 11)) {
+            $this->acao = 'go("educar_fonte_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de fontes"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_biblioteca_index.php'                  => 'Biblioteca',
+         ''                                  => 'Listagem de fontes'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
@@ -175,7 +169,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

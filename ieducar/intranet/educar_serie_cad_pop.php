@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - S&eacute;rie" );
-        $this->processoAp = "583";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - S&eacute;rie");
+        $this->processoAp = '583';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -48,43 +48,43 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_serie;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_cod_curso;
-    var $nm_serie;
-    var $etapa_curso;
-    var $concluinte;
-    var $carga_horaria;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_serie;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_curso;
+    public $nm_serie;
+    public $etapa_curso;
+    public $concluinte;
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    var $ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
-    var $disciplina_serie;
-    var $ref_cod_disciplina;
-    var $incluir_disciplina;
-    var $excluir_disciplina;
+    public $disciplina_serie;
+    public $ref_cod_disciplina;
+    public $incluir_disciplina;
+    public $excluir_disciplina;
 
-    var $idade_inicial;
-    var $idade_final;
+    public $idade_inicial;
+    public $idade_final;
 
-    var $media_especial;
+    public $media_especial;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_serie=$_GET["cod_serie"];
-//die();
+        $this->cod_serie=$_GET['cod_serie'];
+        //die();
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 583, $this->pessoa_logada, 3, "educar_serie_lst.php" );
+        $obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3, 'educar_serie_lst.php');
 
         /*if( is_numeric( $this->cod_serie ) )
         {
@@ -104,64 +104,58 @@ class indice extends clsCadastro
             }
         }*/
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_serie_det.php?cod_serie={$registro["cod_serie"]}" : "educar_serie_lst.php";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+        $this->nome_url_cancelar = 'Cancelar';
 
-
-        $this->campoOculto("ref_cod_instituicao" ,$this->ref_cod_instituicao);
-        $this->campoOculto("ref_cod_curso", $this->ref_cod_curso);
+        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+        $this->campoOculto('ref_cod_curso', $this->ref_cod_curso);
 
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        if( $_POST )
-            foreach( $_POST AS $campo => $val )
-                $this->$campo = ( $this->$campo ) ? $this->$campo : $val;
+        if ($_POST) {
+            foreach ($_POST as $campo => $val) {
+                $this->$campo = ($this->$campo) ? $this->$campo : $val;
+            }
+        }
 
         // primary keys
-        $this->campoOculto( "cod_serie", $this->cod_serie );
+        $this->campoOculto('cod_serie', $this->cod_serie);
 
-        if ($_GET['precisa_lista'])
-        {
-
+        if ($_GET['precisa_lista']) {
             $obrigatorio = true;
             $get_curso = true;
-            include("include/pmieducar/educar_campo_lista.php");
+            include('include/pmieducar/educar_campo_lista.php');
         }
         // text
 
-        $this->campoTexto( "nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, true );
+        $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, true);
 
-        $opcoes = array( "" => "Selecione" );
-        if( $this->ref_cod_curso )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if ($this->ref_cod_curso) {
             $objTemp = new clsPmieducarCurso();
-            $lista = $objTemp->lista( $this->ref_cod_curso,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1);
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
+            $lista = $objTemp->lista($this->ref_cod_curso, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes_["{$registro['cod_curso']}"] = "{$registro['qtd_etapas']}";
                 }
             }
-            for ($i=1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++)
-            {
+            for ($i=1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++) {
                 $opcoes[$i] = "Etapa {$i}";
             }
-
         }
-        $this->campoLista( "etapa_curso", "Etapa Curso", $opcoes, $this->etapa_curso);
+        $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
 
-        $opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim");
-        $this->campoLista( "concluinte", "Concluinte", $opcoes, $this->concluinte);
-        $this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 7, 7, true );
+        $opcoes = [ '' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim'];
+        $this->campoLista('concluinte', 'Concluinte', $opcoes, $this->concluinte);
+        $this->campoMonetario('carga_horaria', 'Carga Hor&aacute;ria', $this->carga_horaria, 7, 7, true);
         $this->media_especial = dbBool($this->media_especial) ? 'true' : '';
-        $this->campoCheck('media_especial','M&eacute;dia Especial',$this->media_especial);
+        $this->campoCheck('media_especial', 'M&eacute;dia Especial', $this->media_especial);
 
-        $this->campoNumero( "idade_inicial", "Faixa et&aacute;ria", $this->idade_inicial, 2, 2, false,"","",false,false,true );
-        $this->campoNumero( "idade_final", "&nbsp;até", $this->idade_final, 2, 2, false );
+        $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial, 2, 2, false, '', '', false, false, true);
+        $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
 
         //-----------------------INCLUI DISCIPLINA------------------------//
 
@@ -170,39 +164,32 @@ class indice extends clsCadastro
         if ( $_POST["disciplina_serie"] )
             $this->disciplina_serie = unserialize( urldecode( $_POST["disciplina_serie"] ) );
         */
-        if( is_numeric( $this->cod_serie ) /*&& !$_POST*/ )
-        {
+        if (is_numeric($this->cod_serie) /*&& !$_POST*/) {
             $obj = new clsPmieducarDisciplinaSerie();
-            $registros = $obj->lista( null,$this->cod_serie,1 );
-            if( $registros )
-            {
-                foreach ( $registros AS $campo )
-                {
-                    $this->disciplina_serie[$campo["ref_cod_disciplina"]] = $campo["ref_cod_disciplina"];
+            $registros = $obj->lista(null, $this->cod_serie, 1);
+            if ($registros) {
+                foreach ($registros as $campo) {
+                    $this->disciplina_serie[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
                 }
             }
         }
 
-
-
-        $disciplinas = "Nenhum curso selecionado";
-        if($this->ref_cod_curso)
-        {
-            $disciplinas = "";
-            $conteudo = "";
+        $disciplinas = 'Nenhum curso selecionado';
+        if ($this->ref_cod_curso) {
+            $disciplinas = '';
+            $conteudo = '';
 
             $objTemp = new clsPmieducarDisciplina();
-            $objTemp->setOrderby("nm_disciplina");
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,null,null,1, null, $this->ref_cod_curso);
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
+            $objTemp->setOrderby('nm_disciplina');
+            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_curso);
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
 //                  $opcoes["{$registro['cod_disciplina']}"] = "{$registro['nm_disciplina']}";
-                    $checked = "";
-                    if($this->disciplina_serie[$registro["cod_disciplina"]] == $registro["cod_disciplina"])
-                        $checked = "checked=\"checked\"";
-                    $conteudo .= "<input type=\"checkbox\" $checked name=\"disciplinas[]\" id=\"disciplinas[]\" value=\"{$registro["cod_disciplina"]}\"><label for=\"disciplinas[]\">{$registro["nm_disciplina"]}</label> <br />";
+                    $checked = '';
+                    if ($this->disciplina_serie[$registro['cod_disciplina']] == $registro['cod_disciplina']) {
+                        $checked = 'checked="checked"';
+                    }
+                    $conteudo .= "<input type=\"checkbox\" $checked name=\"disciplinas[]\" id=\"disciplinas[]\" value=\"{$registro['cod_disciplina']}\"><label for=\"disciplinas[]\">{$registro['nm_disciplina']}</label> <br />";
                 }
             }
             $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
@@ -210,39 +197,36 @@ class indice extends clsCadastro
             $disciplinas .= '</table>';
         }
 
-        $this->campoRotulo("disciplinas_","Disciplinas","<div id='disciplinas'>$disciplinas</div>");
+        $this->campoRotulo('disciplinas_', 'Disciplinas', "<div id='disciplinas'>$disciplinas</div>");
 
         $this->campoQuebra();
         //-----------------------FIM INCLUI DISCIPLINA------------------------//
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->carga_horaria = str_replace(".","",$this->carga_horaria);
-        $this->carga_horaria = str_replace(",",".",$this->carga_horaria);
+        $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
+        $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
-        $this->media_especial = $this->media_especial ? "true" : "false";
+        $this->media_especial = $this->media_especial ? 'true' : 'false';
 //      $this->disciplina_serie = unserialize( urldecode( $this->disciplina_serie ) );
-        if ($this->disciplinas)
-        {
-            $obj = new clsPmieducarSerie( null, null, $this->pessoa_logada, $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria, null, null, 1, $this->idade_inicial, $this->idade_final, $this->media_especial );
+        if ($this->disciplinas) {
+            $obj = new clsPmieducarSerie(null, null, $this->pessoa_logada, $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria, null, null, 1, $this->idade_inicial, $this->idade_final, $this->media_especial);
             $cadastrou = $obj->cadastra();
-            if( $cadastrou )
-            {
-            $elemento = ($_GET['ref_ref_cod_serie']) ? 'ref_ref_cod_serie' : 'ref_cod_serie';
-            //-----------------------CADASTRA DISCIPLINA------------------------//
-                foreach ( $this->disciplinas AS $disciplina )
-                {
-                    $obj = new clsPmieducarDisciplinaSerie( $disciplina, $cadastrou );
+            if ($cadastrou) {
+                $elemento = ($_GET['ref_ref_cod_serie']) ? 'ref_ref_cod_serie' : 'ref_cod_serie';
+                //-----------------------CADASTRA DISCIPLINA------------------------//
+                foreach ($this->disciplinas as $disciplina) {
+                    $obj = new clsPmieducarDisciplinaSerie($disciplina, $cadastrou);
                     $cadastrou1  = $obj->cadastra();
-                    if ( !$cadastrou1 )
-                    {
-                        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+                    if (!$cadastrou1) {
+                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
                         echo "<!--\nErro ao cadastrar clsPmieducarDisciplinaSerie\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$disciplina} ) \n-->";
+
                         return false;
                     }
                 }
@@ -257,19 +241,22 @@ class indice extends clsCadastro
 //              $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 //              header( "Location: educar_serie_lst.php" );
                 die();
+
                 return true;
-            //-----------------------FIM CADASTRA DISCIPLINA------------------------//
+                //-----------------------FIM CADASTRA DISCIPLINA------------------------//
             }
-            $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
             echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria )\n-->";
+
             return false;
         }
-        echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        echo '<script> alert(\'É necessário adicionar pelo menos 1 Disciplina!\') </script>';
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -333,7 +320,7 @@ class indice extends clsCadastro
         return false;*/
     }
 
-    function Excluir()
+    public function Excluir()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -365,15 +352,14 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
 <script>
 <?php
-if (!$_GET['precisa_lista'])
-{
-?>
+if (!$_GET['precisa_lista']) {
+    ?>
     Event.observe(window, 'load', Init, false);
 
     function Init()
@@ -411,10 +397,8 @@ if (!$_GET['precisa_lista'])
         xml_disciplina.envia( "educar_disciplina_xml.php?cur="+campoCurso );
     }
 <?php
-}
-else
-{
-?>
+} else {
+    ?>
     document.getElementById('ref_cod_curso').onchange = function()
     {
     //  EtapasCurso();
@@ -444,7 +428,8 @@ else
         var xml_disciplina = new ajax( getDisciplina );
         xml_disciplina.envia( "educar_disciplina_xml.php?cur="+campoCurso );
     }
-<?php } ?>
+<?php
+} ?>
 
 function EtapasCurso(xml_qtd_etapas)
 {

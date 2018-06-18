@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -38,6 +43,7 @@ require_once 'intranet/include/clsBanco.inc.php';
 
 /**
  * Class ClienteController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class ClienteController extends ApiCoreController
@@ -45,43 +51,48 @@ class ClienteController extends ApiCoreController
 
   // search options
 
-  protected function searchOptions() {
-    $escolaId = $this->getRequest()->escola_id ? $this->getRequest()->escola_id : 0;
+    protected function searchOptions()
+    {
+        $escolaId = $this->getRequest()->escola_id ? $this->getRequest()->escola_id : 0;
 
-    return array('sqlParams' => array($escolaId));
-  }
+        return ['sqlParams' => [$escolaId]];
+    }
 
-  protected function formatResourceValue($resource) {
-    $nome    = $this->toUtf8($resource['nome'], array('transform' => true));
+    protected function formatResourceValue($resource)
+    {
+        $nome    = $this->toUtf8($resource['nome'], ['transform' => true]);
 
-    return $nome;
-  }
+        return $nome;
+    }
 
-  protected function sqlsForNumericSearch() {
-    return "SELECT cliente.cod_cliente as id, initcap(pessoa.nome) as nome
+    protected function sqlsForNumericSearch()
+    {
+        return 'SELECT cliente.cod_cliente as id, initcap(pessoa.nome) as nome
                  FROM pmieducar.cliente
                 INNER JOIN pmieducar.cliente_tipo_cliente ON (cliente_tipo_cliente.ref_cod_cliente = cliente.cod_cliente)
                 INNER JOIN pmieducar.biblioteca ON (biblioteca.cod_biblioteca = cliente_tipo_cliente.ref_cod_biblioteca)
                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = cliente.ref_idpes)
                 WHERE (case when $2 = 0 then true else biblioteca.ref_cod_escola = $2 end)
-                  AND cliente.cod_cliente ILIKE '%'||$1||'%'";
-  }
+                  AND cliente.cod_cliente ILIKE \'%\'||$1||\'%\'';
+    }
 
-
-  protected function sqlsForStringSearch() {
-     return "SELECT cliente.cod_cliente as id, initcap(pessoa.nome) as nome
+    protected function sqlsForStringSearch()
+    {
+        return 'SELECT cliente.cod_cliente as id, initcap(pessoa.nome) as nome
                  FROM pmieducar.cliente
                 INNER JOIN pmieducar.cliente_tipo_cliente ON (cliente_tipo_cliente.ref_cod_cliente = cliente.cod_cliente)
                 INNER JOIN pmieducar.biblioteca ON (biblioteca.cod_biblioteca = cliente_tipo_cliente.ref_cod_biblioteca)
                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = cliente.ref_idpes)
                 WHERE (case when $2 = 0 then true else biblioteca.ref_cod_escola = $2 end)
-                  AND pessoa.nome ILIKE '%'||$1||'%'";
-  }
+                  AND pessoa.nome ILIKE \'%\'||$1||\'%\'';
+    }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'cliente-search'))
-      $this->appendResponse($this->search());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'cliente-search')) {
+            $this->appendResponse($this->search());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

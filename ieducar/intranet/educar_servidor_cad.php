@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -43,97 +48,107 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
-    $this->processoAp = 635;
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
+        $this->processoAp = 635;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
-  var $cod_servidor;
-  var $ref_cod_instituicao;
-  var $ref_idesco;
-  var $ref_cod_funcao = array();
-  var $carga_horaria;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $ref_cod_instituicao_original;
-  var $situacao_curso_superior_1;
-  var $formacao_complementacao_pedagogica_1;
-  var $codigo_curso_superior_1;
-  var $ano_inicio_curso_superior_1;
-  var $ano_conclusao_curso_superior_1;
-  var $instituicao_curso_superior_1;
-  var $situacao_curso_superior_2;
-  var $formacao_complementacao_pedagogica_2;
-  var $codigo_curso_superior_2;
-  var $ano_inicio_curso_superior_2;
-  var $ano_conclusao_curso_superior_2;
-  var $instituicao_curso_superior_2;
-  var $situacao_curso_superior_3;
-  var $formacao_complementacao_pedagogica_3;
-  var $codigo_curso_superior_3;
-  var $ano_inicio_curso_superior_3;
-  var $ano_conclusao_curso_superior_3;
-  var $instituicao_curso_superior_3;
-  var $curso_formacao_continuada;
-  var $multi_seriado;
-  var $matricula = array();
+    public $pessoa_logada;
+    public $cod_servidor;
+    public $ref_cod_instituicao;
+    public $ref_idesco;
+    public $ref_cod_funcao = [];
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao_original;
+    public $situacao_curso_superior_1;
+    public $formacao_complementacao_pedagogica_1;
+    public $codigo_curso_superior_1;
+    public $ano_inicio_curso_superior_1;
+    public $ano_conclusao_curso_superior_1;
+    public $instituicao_curso_superior_1;
+    public $situacao_curso_superior_2;
+    public $formacao_complementacao_pedagogica_2;
+    public $codigo_curso_superior_2;
+    public $ano_inicio_curso_superior_2;
+    public $ano_conclusao_curso_superior_2;
+    public $instituicao_curso_superior_2;
+    public $situacao_curso_superior_3;
+    public $formacao_complementacao_pedagogica_3;
+    public $codigo_curso_superior_3;
+    public $ano_inicio_curso_superior_3;
+    public $ano_conclusao_curso_superior_3;
+    public $instituicao_curso_superior_3;
+    public $curso_formacao_continuada;
+    public $multi_seriado;
+    public $matricula = [];
 
-  var $total_horas_alocadas;
+    public $total_horas_alocadas;
 
-  var $cod_docente_inep;
+    public $cod_docente_inep;
 
-  // Determina se o servidor é um docente para buscar código Educacenso/Inep.
-  var $docente = false;
+    // Determina se o servidor é um docente para buscar código Educacenso/Inep.
+    public $docente = false;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $this->cod_servidor                 = $_GET['cod_servidor'];
-    $this->ref_cod_instituicao          = $_GET['ref_cod_instituicao'];
-    $this->ref_cod_instituicao_original = $_GET['ref_cod_instituicao'];
+        $this->cod_servidor                 = $_GET['cod_servidor'];
+        $this->ref_cod_instituicao          = $_GET['ref_cod_instituicao'];
+        $this->ref_cod_instituicao_original = $_GET['ref_cod_instituicao'];
 
-    if ($_POST['ref_cod_instituicao_original']) {
-      $this->ref_cod_instituicao_original = $_POST['ref_cod_instituicao_original'];
-    }
+        if ($_POST['ref_cod_instituicao_original']) {
+            $this->ref_cod_instituicao_original = $_POST['ref_cod_instituicao_original'];
+        }
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
       635,
       $this->pessoa_logada,
       7,
       'educar_servidor_lst.php'
     );
-    if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
-      $obj = new clsPmieducarServidor(
+        if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
+            $obj = new clsPmieducarServidor(
         $this->cod_servidor,
         null,
         null,
@@ -144,25 +159,25 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao
       );
 
-      $registro = $obj->detalhe();
+            $registro = $obj->detalhe();
 
-      if ($registro) {
-        // passa todos os valores obtidos no registro para atributos do objeto
-        foreach ($registro as $campo => $val) {
-          $this->$campo = $val;
-        }
+            if ($registro) {
+                // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {
+                    $this->$campo = $val;
+                }
 
-        $this->multi_seriado = dbBool($this->multi_seriado);
+                $this->multi_seriado = dbBool($this->multi_seriado);
 
-        $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
-          $this->fexcluir = TRUE;
-        }
+                $obj_permissoes = new clsPermissoes();
+                if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
+                    $this->fexcluir = true;
+                }
 
-        $db = new clsBanco();
+                $db = new clsBanco();
 
-        // Carga horária alocada no ultimo ano de alocação
-        $sql = sprintf("SELECT
+                // Carga horária alocada no ultimo ano de alocação
+                $sql = sprintf("SELECT
             carga_horaria
           FROM
             pmieducar.servidor_alocacao
@@ -173,127 +188,124 @@ class indice extends clsCadastro
                         FROM pmieducar.servidor_alocacao
                         WHERE ref_cod_servidor = $this->cod_servidor)", $this->cod_servidor);
 
-        $db->Consulta($sql);
+                $db->Consulta($sql);
 
-        $carga = 0;
-        while ($db->ProximoRegistro()) {
-          $cargaHoraria = $db->Tupla();
-          $cargaHoraria = explode(':', $cargaHoraria['carga_horaria']);
-          $carga += $cargaHoraria[0] * 60 + $cargaHoraria[1];
-        }
+                $carga = 0;
+                while ($db->ProximoRegistro()) {
+                    $cargaHoraria = $db->Tupla();
+                    $cargaHoraria = explode(':', $cargaHoraria['carga_horaria']);
+                    $carga += $cargaHoraria[0] * 60 + $cargaHoraria[1];
+                }
 
-        $this->total_horas_alocadas = sprintf('%02d:%02d', $carga / 60, $carga % 60);
-        // Funções
-        $obj_funcoes = new clsPmieducarServidorFuncao();
-        $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
+                $this->total_horas_alocadas = sprintf('%02d:%02d', $carga / 60, $carga % 60);
+                // Funções
+                $obj_funcoes = new clsPmieducarServidorFuncao();
+                $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
 
-        if ($lst_funcoes) {
-          foreach ($lst_funcoes as $funcao) {
-            $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
-            $det_funcao = $obj_funcao->detalhe();
+                if ($lst_funcoes) {
+                    foreach ($lst_funcoes as $funcao) {
+                        $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
+                        $det_funcao = $obj_funcao->detalhe();
 
-            $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula']);
+                        $this->ref_cod_funcao[] = [$funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula']];
 
-            if (false == $this->docente && (bool) $det_funcao['professor']) {
-              $this->docente = true;
+                        if (false == $this->docente && (bool) $det_funcao['professor']) {
+                            $this->docente = true;
+                        }
+                    }
+                }
+
+                $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
+                $lst_servidor_disciplina = $obj_servidor_disciplina->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
+
+                if ($lst_servidor_disciplina) {
+                    foreach ($lst_servidor_disciplina as $disciplina) {
+                        $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
+                        $det_disciplina = $obj_disciplina->detalhe();
+                        $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+                    }
+                }
+
+                if (is_string($this->pos_graduacao)) {
+                    $this->pos_graduacao = explode(',', str_replace(['{', '}'], '', $this->pos_graduacao));
+                }
+
+                if (is_string($this->curso_formacao_continuada)) {
+                    $this->curso_formacao_continuada = explode(',', str_replace(['{', '}'], '', $this->curso_formacao_continuada));
+                }
+
+                @session_start();
+
+                if ($_SESSION['cod_servidor'] == $this->cod_servidor) {
+                    $_SESSION['cursos_disciplina'] = $this->cursos_disciplina;
+                } else {
+                    unset($_SESSION['cursos_disciplina']);
+                }
+
+                @session_write_close();
+
+                $retorno = 'Editar';
             }
-
-          }
         }
 
-        $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
-        $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL, $this->ref_cod_instituicao,$this->cod_servidor);
+        $this->url_cancelar = ($retorno == 'Editar') ?
+      "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
+      'educar_servidor_lst.php';
 
-        if ($lst_servidor_disciplina) {
-          foreach ($lst_servidor_disciplina as $disciplina) {
-            $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-            $det_disciplina = $obj_disciplina->detalhe();
-            $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
-          }
-        }
+        $this->nome_url_cancelar = 'Cancelar';
 
-        if (is_string($this->pos_graduacao)) {
-          $this->pos_graduacao = explode(',',str_replace(array('{', "}"), '', $this->pos_graduacao));
-        }
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_servidores_index.php'       => 'Servidores',
+         '' => "{$nomeMenu} servidor"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-        if (is_string($this->curso_formacao_continuada)) {
-          $this->curso_formacao_continuada = explode(',',str_replace(array('{', "}"), '', $this->curso_formacao_continuada));
-        }
-
-        @session_start();
-
-        if ($_SESSION['cod_servidor'] == $this->cod_servidor) {
-          $_SESSION['cursos_disciplina'] = $this->cursos_disciplina;
-        } else {
-          unset($_SESSION['cursos_disciplina']);
-        }
-
-        @session_write_close();
-
-        $retorno = 'Editar';
-      }
+        return $retorno;
     }
 
-    $this->url_cancelar = ($retorno == 'Editar') ?
-      "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
-      "educar_servidor_lst.php";
-
-    $this->nome_url_cancelar = 'Cancelar';
-
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos(array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         "" => "{$nomeMenu} servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-
-    return $retorno;
-  }
-
-  /**
-   * Gerar formulário
-   */
-  function Gerar()
-  {
-    // Foreign keys
-    $obrigatorio = true;
-    $get_instituicao = true;
-    include 'include/pmieducar/educar_campo_lista.php';
-
-    $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
-    $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
-
     /**
-     * Selecionar funcionário,
-     * Escolher a pessoa (não o usuário)
+     * Gerar formulário
      */
-    $opcoes = array('' => 'Para procurar, clique na lupa ao lado.');
-    if ($this->cod_servidor) {
-      $servidor = new clsFuncionario($this->cod_servidor);
-      $detalhe = $servidor->detalhe();
-      //$detalhe = $detalhe['idpes']->detalhe();
+    public function Gerar()
+    {
+        // Foreign keys
+        $obrigatorio = true;
+        $get_instituicao = true;
+        include 'include/pmieducar/educar_campo_lista.php';
 
-      $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
-      $this->campoOculto('cod_servidor', $this->cod_servidor);
-      $this->campoOculto(
+        $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+        $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+
+        /**
+         * Selecionar funcionário,
+         * Escolher a pessoa (não o usuário)
+         */
+        $opcoes = ['' => 'Para procurar, clique na lupa ao lado.'];
+        if ($this->cod_servidor) {
+            $servidor = new clsFuncionario($this->cod_servidor);
+            $detalhe = $servidor->detalhe();
+            //$detalhe = $detalhe['idpes']->detalhe();
+
+            $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
+            $this->campoOculto('cod_servidor', $this->cod_servidor);
+            $this->campoOculto(
           'ref_cod_instituicao_original',
           $this->ref_cod_instituicao_original
       );
-
-    } else {
-
-      $parametros = new clsParametrosPesquisas();
-      $parametros->setSubmit(0);
-      $parametros->adicionaCampoSelect(
+        } else {
+            $parametros = new clsParametrosPesquisas();
+            $parametros->setSubmit(0);
+            $parametros->adicionaCampoSelect(
           'cod_servidor',
           'idpes',
           'nome'
       );
 
-      // Configurações do campo de pesquisa
-      $this->campoListaPesq(
+            // Configurações do campo de pesquisa
+            $this->campoListaPesq(
         'cod_servidor',
         'Pessoa',
         $opcoes,
@@ -310,82 +322,88 @@ class indice extends clsCadastro
         $parametros->serializaCampos(),
         true
       );
-    }
+        }
 
-    // ----
-    $this->inputsHelper()->integer(
+        // ----
+        $this->inputsHelper()->integer(
         'cod_docente_inep',
-        array(
+        [
             'label' => 'Código INEP',
             'required' => false,
             'label_hint' => 'Somente números',
             'max_length' => 12,
             'placeholder' => 'INEP'
-        )
+        ]
     );
 
-    $helperOptions = array('objectName' => 'deficiencias');
-    $options = array(
+        $helperOptions = ['objectName' => 'deficiencias'];
+        $options = [
       'label' => 'Deficiências',
       'size' => 50,
       'required' => false,
-      'options' => array('value' => null)
-    );
+      'options' => ['value' => null]
+    ];
 
-    $this->inputsHelper()->multipleSearchDeficiencias(
+        $this->inputsHelper()->multipleSearchDeficiencias(
         '',
         $options,
         $helperOptions
     );
 
-    $opcoes = array('' => 'Selecione');
+        $opcoes = ['' => 'Selecione'];
 
-    if (class_exists('clsPmieducarFuncao')) {
-      if (is_numeric($this->ref_cod_instituicao)) {
-        $objTemp = new clsPmieducarFuncao();
-        $objTemp->setOrderby("nm_funcao ASC");
-        $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
+        if (class_exists('clsPmieducarFuncao')) {
+            if (is_numeric($this->ref_cod_instituicao)) {
+                $objTemp = new clsPmieducarFuncao();
+                $objTemp->setOrderby('nm_funcao ASC');
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
+                    }
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsPmieducarFuncao nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    } else {
-      echo "<!--\nErro\nClasse clsPmieducarFuncao nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geracao');
-    }
 
-    $this->campoTabelaInicio(
+        $this->campoTabelaInicio(
       'funcao',
       'Funções Servidor',
-      array(
-        "Função",
-        "Componentes Curriculares",
-        "Cursos",
-        "Matrícula"),
+      [
+        'Função',
+        'Componentes Curriculares',
+        'Cursos',
+        'Matrícula'],
       ($this->ref_cod_funcao)
     );
 
-    $funcao = 'popless()';
+        $funcao = 'popless()';
 
-    $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao, 'funcaoChange(this)', '', '', '');
+        $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao, 'funcaoChange(this)', '', '', '');
 
-    $this->campoRotulo('disciplina', 'Componentes Curriculares',
-      "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">");
+        $this->campoRotulo(
+        'disciplina',
+        'Componentes Curriculares',
+      "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">"
+    );
 
-    $funcao = 'popCurso()';
+        $funcao = 'popCurso()';
 
-    $this->campoRotulo('curso', 'Curso',
-      "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Cursos' title='Buscar Cursos' onclick=\"$funcao\">");
+        $this->campoRotulo(
+        'curso',
+        'Curso',
+      "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Cursos' title='Buscar Cursos' onclick=\"$funcao\">"
+    );
 
-    $this->campoTexto('matricula', 'Matricula', $this->matricula);
+        $this->campoTexto('matricula', 'Matricula', $this->matricula);
 
-    $this->campoTabelaFim();
+        $this->campoTabelaFim();
 
-    if (strtoupper($this->tipoacao) == 'EDITAR') {
-      $this->campoTextoInv(
+        if (strtoupper($this->tipoacao) == 'EDITAR') {
+            $this->campoTextoInv(
         'total_horas_alocadas_',
         'Total de Horas Alocadadas',
         $this->total_horas_alocadas,
@@ -393,19 +411,19 @@ class indice extends clsCadastro
         20
       );
 
-      $hora = explode(':', $this->total_horas_alocadas);
-      $this->total_horas_alocadas = $hora[0] + ($hora[1] / 60);
-      $this->campoOculto('total_horas_alocadas', $this->total_horas_alocadas);
-      $this->acao_enviar = 'acao2()';
-    }
+            $hora = explode(':', $this->total_horas_alocadas);
+            $this->total_horas_alocadas = $hora[0] + ($hora[1] / 60);
+            $this->campoOculto('total_horas_alocadas', $this->total_horas_alocadas);
+            $this->acao_enviar = 'acao2()';
+        }
 
-    if ($this->carga_horaria) {
-      $horas = (int) $this->carga_horaria;
-      $minutos = round(($this->carga_horaria - (int) $this->carga_horaria) * 60);
-      $hora_formatada = sprintf('%02d:%02d', $horas, $minutos);
-    }
+        if ($this->carga_horaria) {
+            $horas = (int) $this->carga_horaria;
+            $minutos = round(($this->carga_horaria - (int) $this->carga_horaria) * 60);
+            $hora_formatada = sprintf('%02d:%02d', $horas, $minutos);
+        }
 
-    $this->campoHora(
+        $this->campoHora(
       'carga_horaria',
       'Carga Horária',
       $hora_formatada,
@@ -415,254 +433,253 @@ class indice extends clsCadastro
       false
     );
 
-    $this->inputsHelper()->checkbox('multi_seriado', array( 'label' => 'Multi-seriado', 'value' => $this->multi_seriado));
+        $this->inputsHelper()->checkbox('multi_seriado', [ 'label' => 'Multi-seriado', 'value' => $this->multi_seriado]);
 
-    // Dados do docente no Inep/Educacenso.
-    if ($this->docente) {
-      $docenteMapper = new Educacenso_Model_DocenteDataMapper();
+        // Dados do docente no Inep/Educacenso.
+        if ($this->docente) {
+            $docenteMapper = new Educacenso_Model_DocenteDataMapper();
 
-      $docenteInep = NULL;
-      try {
-        $docenteInep = $docenteMapper->find(array('docente' => $this->cod_servidor));
-      } catch (Exception $e) {
-
-      }
-    }
-
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsCadastroEscolaridade')) {
-      $objTemp = new clsCadastroEscolaridade();
-      $lista = $objTemp->lista();
-
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['idesco']] = $registro['descricao'];
+            $docenteInep = null;
+            try {
+                $docenteInep = $docenteMapper->find(['docente' => $this->cod_servidor]);
+            } catch (Exception $e) {
+            }
         }
-      }
-    } else {
-      echo "<!--\nErro\nClasse clsCadastroEscolaridade nao encontrada\n-->";
-      $opcoes = array('' => 'Erro na geracao');
-    }
 
-    $obj_permissoes = new clsPermissoes();
-    if ($obj_permissoes->permissao_cadastra( 632, $this->pessoa_logada, 4)){
-      $script = "javascript:showExpansivelIframe(350, 135, 'educar_escolaridade_cad_pop.php');";
-      $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-    } else {
-      $script = null;
-    }
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsCadastroEscolaridade')) {
+            $objTemp = new clsCadastroEscolaridade();
+            $lista = $objTemp->lista();
 
-    $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, $obrigarCamposCenso);
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['idesco']] = $registro['descricao'];
+                }
+            }
+        } else {
+            echo "<!--\nErro\nClasse clsCadastroEscolaridade nao encontrada\n-->";
+            $opcoes = ['' => 'Erro na geracao'];
+        }
 
-    $resources = array(
+        $obj_permissoes = new clsPermissoes();
+        if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4)) {
+            $script = 'javascript:showExpansivelIframe(350, 135, \'educar_escolaridade_cad_pop.php\');';
+            $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+        } else {
+            $script = null;
+        }
+
+        $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', false, '', $script, false, $obrigarCamposCenso);
+
+        $resources = [
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
       2 => 'Em andamento'
-    );
+    ];
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Situação do curso superior 1'),
       'resources' => $resources,
       'value' => $this->situacao_curso_superior_1,
       'required' => false
-    );
+    ];
 
-    $this->inputsHelper()->select('situacao_curso_superior_1', $options);
+        $this->inputsHelper()->select('situacao_curso_superior_1', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false);
-    $helperOptions = array(
+        $options = ['label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false];
+        $helperOptions = [
       'objectName' => 'codigo_curso_superior_1',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_1)
-      )
-    );
-    $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
+      'hiddenInputOptions' => [
+        'options' => ['value' => $this->codigo_curso_superior_1]
+      ]
+    ];
+        $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 1'),
       'placeholder' => '',
       'value' => $this->ano_inicio_curso_superior_1,
       'max_length' => 4,
       'size' => 5,
       'required' => false
-    );
-    $this->inputsHelper()->integer('ano_inicio_curso_superior_1', $options);
+    ];
+        $this->inputsHelper()->integer('ano_inicio_curso_superior_1', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 1'),
       'placeholder' => '',
       'value' => $this->ano_conclusao_curso_superior_1,
       'max_length' => 4,
       'size' => 5,
       'required' => false
-    );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);
+    ];
+        $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 1'),
       'required'   => false
-    );
-    $helperOptions = array(
+    ];
+        $helperOptions = [
       'objectName' => 'instituicao_curso_superior_1',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_1)
-      )
-    );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
+      'hiddenInputOptions' => [
+        'options' => ['value' => $this->instituicao_curso_superior_1]
+      ]
+    ];
+        $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
-    $options = array('label' => 'Possui formação/complementação pedagógica 1',
+        $options = ['label' => 'Possui formação/complementação pedagógica 1',
                      'value' => $this->formacao_complementacao_pedagogica_1,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_1', $options);
+                     'required' => false];
+        $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_1', $options);
 
-    $this->campoQuebra();
+        $this->campoQuebra();
 
-    $resources = array(
+        $resources = [
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
       2 => 'Em andamento'
-    );
+    ];
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Situação do curso superior 2'),
       'resources' => $resources,
       'value' => $this->situacao_curso_superior_2,
       'required' => false
-    );
-    $this->inputsHelper()->select('situacao_curso_superior_2', $options);
+    ];
+        $this->inputsHelper()->select('situacao_curso_superior_2', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 2'),
       'required' => false
-    );
-    $helperOptions = array(
+    ];
+        $helperOptions = [
       'objectName' => 'codigo_curso_superior_2',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_2)
-      )
-    );
-    $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
+      'hiddenInputOptions' => [
+        'options' => ['value' => $this->codigo_curso_superior_2]
+      ]
+    ];
+        $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 2'),
       'placeholder' => '',
       'value' => $this->ano_inicio_curso_superior_2,
       'max_length' => 4,
       'size' => 5,
       'required' => false
-    );
-    $this->inputsHelper()->integer('ano_inicio_curso_superior_2', $options);
+    ];
+        $this->inputsHelper()->integer('ano_inicio_curso_superior_2', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 2'),
       'placeholder' => '',
       'value' => $this->ano_conclusao_curso_superior_2,
       'max_length' => 4,
       'size' => 5,
       'required' => false
-    );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);
+    ];
+        $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 2'),
       'required' => false
-    );
-    $helperOptions = array(
+    ];
+        $helperOptions = [
       'objectName' => 'instituicao_curso_superior_2',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_2)
-      )
-    );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
+      'hiddenInputOptions' => [
+        'options' => ['value' => $this->instituicao_curso_superior_2]
+      ]
+    ];
+        $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
-    $options = array('label' => 'Possui formação/complementação pedagógica 2',
+        $options = ['label' => 'Possui formação/complementação pedagógica 2',
                      'value' => $this->formacao_complementacao_pedagogica_2,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_2', $options);
+                     'required' => false];
+        $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_2', $options);
 
-    $this->campoQuebra();
+        $this->campoQuebra();
 
-    $resources = array(
+        $resources = [
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
       2 => 'Em andamento'
-    );
+    ];
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Situação do curso superior 3'),
       'resources' => $resources,
       'value' => $this->situacao_curso_superior_3,
       'required' => false
-    );
-    $this->inputsHelper()->select('situacao_curso_superior_3', $options);
+    ];
+        $this->inputsHelper()->select('situacao_curso_superior_3', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 3'),
       'required' => false
-    );
-    $helperOptions = array(
+    ];
+        $helperOptions = [
       'objectName' => 'codigo_curso_superior_3',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_3)
-      )
-    );
-    $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
+      'hiddenInputOptions' => [
+        'options' => ['value' => $this->codigo_curso_superior_3]
+      ]
+    ];
+        $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 3'),
       'placeholder' => '',
       'value' => $this->ano_inicio_curso_superior_3,
       'max_length' => 4,
       'size' => 5,
       'required' => false
-    );
-    $this->inputsHelper()->integer('ano_inicio_curso_superior_3', $options);
+    ];
+        $this->inputsHelper()->integer('ano_inicio_curso_superior_3', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 3'),
       'placeholder' => '',
       'value' => $this->ano_conclusao_curso_superior_3,
       'max_length' => 4,
       'size' => 5,
       'required' => false
-    );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);
+    ];
+        $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);
 
-    $options = array(
+        $options = [
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 3'),
       'required' => false
-    );
-    $helperOptions = array(
+    ];
+        $helperOptions = [
       'objectName' => 'instituicao_curso_superior_3',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_3)
-      )
-    );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
+      'hiddenInputOptions' => [
+        'options' => ['value' => $this->instituicao_curso_superior_3]
+      ]
+    ];
+        $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
-    $options = array('label' => 'Possui formação/complementação pedagógica 3',
+        $options = ['label' => 'Possui formação/complementação pedagógica 3',
                      'value' => $this->formacao_complementacao_pedagogica_3,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
+                     'required' => false];
+        $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
 
-    $this->campoQuebra();
+        $this->campoQuebra();
 
-    $helperOptions = array('objectName'  => 'pos_graduacao');
-    $options       = array('label' => 'Possui pós-graduação',
+        $helperOptions = ['objectName'  => 'pos_graduacao'];
+        $options       = ['label' => 'Possui pós-graduação',
                             'required' => false,
-                            'options' => array('values' => $this->pos_graduacao,
-                                               'all_values' => array(
+                            'options' => ['values' => $this->pos_graduacao,
+                                               'all_values' => [
                                                   1 => 'Especialização',
                                                   2 => 'Mestrado',
                                                   3 => 'Doutorado',
-                                                  4 => 'Nenhuma')));
-    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+                                                  4 => 'Nenhuma']]];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $helperOptions = array('objectName'  => 'curso_formacao_continuada');
-    $options       = array('label' => 'Possui cursos de formação continuada',
+        $helperOptions = ['objectName'  => 'curso_formacao_continuada'];
+        $options       = ['label' => 'Possui cursos de formação continuada',
                             'required' => $obrigarCamposCenso,
-                            'options' => array('values' => $this->curso_formacao_continuada,
-                                               'all_values' => array(
+                            'options' => ['values' => $this->curso_formacao_continuada,
+                                               'all_values' => [
                                                  1 => 'Específico para Creche (0 a 3 anos)',
                                                  2 => 'Específico para Pré-escola (4 e 5 anos)',
                                                  3 => 'Específico para anos iniciais do ensino fundamental',
@@ -678,394 +695,472 @@ class indice extends clsCadastro
                                                 13 => 'Direito das crianças e adolescentes',
                                                 14 => 'Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana',
                                                 15 => 'Outros',
-                                                16 => 'Nenhum')));
-    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+                                                16 => 'Nenhum']]];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $scripts = array('/modules/Cadastro/Assets/Javascripts/Servidor.js');
+        $scripts = ['/modules/Cadastro/Assets/Javascripts/Servidor.js'];
 
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Servidor.css',
-                     '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css');
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/Servidor.css',
+                     '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'];
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
-  }
-
-  function Novo()
-  {
-    $this->cod_servidor = (int) $this->cod_servidor;
-    $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
-
-    $timesep = explode(':', $this->carga_horaria);
-    $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
-    $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
-
-    $this->carga_horaria = $hour + $min;
-    $this->carga_horaria = $hour + $min;
-
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
-    
-    $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
-
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
-
-    $obj   = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
-
-    $servidorAntes = $obj->detalhe();
-
-    if ($obj->detalhe()) {
-      $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-      $obj = new clsPmieducarServidor($this->cod_servidor, NULL, $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
-      $obj = $this->addCamposCenso($obj);
-      $obj->multi_seriado = !is_null($this->multi_seriado);
-
-      $editou = $obj->edita();
-
-      if ($editou) {
-
-        $servidorDepois = $obj->detalhe();
-
-        $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $this->cod_servidor);
-        $auditoria->alteracao($servidorAntes, $servidorDepois);
-
-        $this->cadastraFuncoes();
-        $this->createOrUpdateInep();
-        $this->createOrUpdateDeficiencias();
-
-        include 'educar_limpa_sessao_curso_disciplina_servidor.php';
-
-        $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-
-        die();
-      }
-    } else {
-      $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
-      $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-
-      $obj_2 = new clsPmieducarServidor($this->cod_servidor, NULL, $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
-      $obj_2 = $this->addCamposCenso($obj_2);
-      $obj_2->multi_seriado = !is_null($this->multi_seriado);
-      $obj_2->cod_servidor = $this->cod_servidor;
-
-      $cadastrou = $obj_2->cadastra();
-
-      if ($cadastrou) {
-
-        $servidor = new clsPmieducarServidor($cadastrou, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
-        $servidor = $servidor->detalhe();
-
-        $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $cadastrou);
-        $auditoria->inclusao($servidor);
-
-        $this->cadastraFuncoes();
-        $this->createOrUpdateInep();
-        $this->createOrUpdateDeficiencias();
-
-        include 'educar_limpa_sessao_curso_disciplina_servidor.php';
-
-        $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-        die();
-      }
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
-    $this->mensagem = 'Cadastro não realizado.<br>';
 
-    return false;
-  }
+    public function Novo()
+    {
+        $this->cod_servidor = (int) $this->cod_servidor;
+        $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
-  function Editar()
-  {
-    $timesep = explode(':', $this->carga_horaria);
-    $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
-    $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
-    $this->carga_horaria = $hour + $min;
-    $this->carga_horaria = $hour + $min;
+        $timesep = explode(':', $this->carga_horaria);
+        $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
+        $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
 
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+        $this->carga_horaria = $hour + $min;
+        $this->carga_horaria = $hour + $min;
 
-    $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
+        $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
-    $servidor = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
-    $servidorAntes = $servidor->detalhe();
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
-    if ($this->ref_cod_instituicao == $this->ref_cod_instituicao_original) {
-      $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+        $obj   = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
 
-      $obj = new clsPmieducarServidor($this->cod_servidor, NULL, $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
-      $obj = $this->addCamposCenso($obj);
-      $obj->multi_seriado = !is_null($this->multi_seriado);
-      $editou = $obj->edita();
+        $servidorAntes = $obj->detalhe();
 
-      if ($editou) {
+        if ($obj->detalhe()) {
+            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+            $obj = new clsPmieducarServidor($this->cod_servidor, null, $this->ref_idesco, $this->carga_horaria, null, null, 1, $this->ref_cod_instituicao);
+            $obj = $this->addCamposCenso($obj);
+            $obj->multi_seriado = !is_null($this->multi_seriado);
 
-        $servidorDepois = $servidor->detalhe();
+            $editou = $obj->edita();
 
-        $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $this->cod_servidor);
-        $auditoria->alteracao($servidorAntes, $servidorDepois);
+            if ($editou) {
+                $servidorDepois = $obj->detalhe();
 
-        $this->cadastraFuncoes();
-        $this->createOrUpdateInep();
-        $this->createOrUpdateDeficiencias();
+                $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $this->cod_servidor);
+                $auditoria->alteracao($servidorAntes, $servidorDepois);
 
-        include 'educar_limpa_sessao_curso_disciplina_servidor.php';
+                $this->cadastraFuncoes();
+                $this->createOrUpdateInep();
+                $this->createOrUpdateDeficiencias();
 
-        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+                include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-        die();
-      }
-    } else {
-      $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-      $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(NULL, NULL,
-        NULL, NULL, NULL, NULL, $this->cod_servidor, NULL, NULL, NULL, NULL,
-        NULL, NULL, 1, $this->ref_cod_instituicao);
+                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
 
-      if ($obj_quadro_horario->detalhe()) {
-        $this->mensagem = "Edição não realizada. O servidor está vinculado a um quadro de horários.<br>";
-
-        return false;
-      } else {
-        $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(NULL, NULL,
-          NULL, NULL, NULL, NULL, NULL, $this->cod_servidor, NULL, NULL, NULL,
-          NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
-
-        if ($obj_quadro_horario->detalhe()) {
-          $this->mensagem = "Edição não realizada. O servidor está vinculado a um quadro de horários.<br>";
-
-          return false;
-        }
-        else {
-
-          $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-
-          $obj = new clsPmieducarServidor($this->cod_servidor,
-            NULL, $this->ref_idesco, $this->carga_horaria,
-            NULL, NULL, 0, $this->ref_cod_instituicao_original);
-          $obj = $this->addCamposCenso($obj);
-          $obj->multi_seriado = !is_null($this->multi_seriado);
-          $editou = $obj->edita();
-
-          if ($editou) {
-            $obj = new clsPmieducarServidor($this->cod_servidor,
-              NULL, $this->ref_idesco,
-              $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
-
-            if ($obj->existe()) {
-              $cadastrou = $obj->edita();
-            } else {
-              $cadastrou = $obj->cadastra();
+                die();
             }
+        } else {
+            $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
+            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+
+            $obj_2 = new clsPmieducarServidor($this->cod_servidor, null, $this->ref_idesco, $this->carga_horaria, null, null, 1, $this->ref_cod_instituicao);
+            $obj_2 = $this->addCamposCenso($obj_2);
+            $obj_2->multi_seriado = !is_null($this->multi_seriado);
+            $obj_2->cod_servidor = $this->cod_servidor;
+
+            $cadastrou = $obj_2->cadastra();
 
             if ($cadastrou) {
-              $this->cadastraFuncoes();
-              $this->createOrUpdateInep();
-              $this->createOrUpdateDeficiencias();
+                $servidor = new clsPmieducarServidor($cadastrou, null, null, null, null, null, null, $this->ref_cod_instituicao);
+                $servidor = $servidor->detalhe();
 
-              include 'educar_limpa_sessao_curso_disciplina_servidor.php';
+                $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $cadastrou);
+                $auditoria->inclusao($servidor);
 
-              $this->mensagem .= "Edição efetuada com sucesso.<br>";
-              header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+                $this->cadastraFuncoes();
+                $this->createOrUpdateInep();
+                $this->createOrUpdateDeficiencias();
 
-              die();
+                include 'educar_limpa_sessao_curso_disciplina_servidor.php';
+
+                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+
+                die();
             }
-          }
         }
-      }
-    }
-    $this->mensagem = "Edição não realizada.<br>";
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
-    return false;
-  }
-
-  function Excluir()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
-
-    $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(NULL, NULL, NULL,
-      NULL, NULL, NULL, $this->cod_servidor, NULL, NULL, NULL, NULL, NULL,
-      NULL, 1, $this->ref_cod_instituicao);
-
-    if ($obj_quadro_horario->detalhe()) {
-      $this->mensagem = "Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>";
-      return FALSE;
-    } else {
-      $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, $this->cod_servidor, NULL, NULL, NULL,
-        NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
-
-      if ($obj_quadro_horario->detalhe()) {
-        $this->mensagem = "Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>";
-        return FALSE;
-      } else {
-        $obj = new clsPmieducarServidor($this->cod_servidor,
-          NULL, $this->ref_idesco, $this->carga_horaria,
-          NULL, NULL, 0, $this->ref_cod_instituicao_original);
-
-        $servidor = $obj->detalhe();
-
-        $excluiu = $obj->excluir();
-
-        if ($excluiu) {
-          $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $this->cod_servidor);
-          $auditoria->exclusao($servidor);
-
-          $this->excluiFuncoes();
-          $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-          header("Location: educar_servidor_lst.php");
-          die();
-        }
-      }
-    }
-    $this->mensagem = 'Exclusão não realizada.<br>';
-
-    return false;
-  }
-
-  function addCamposCenso($obj){
-
-    $obj->situacao_curso_superior_1 = $this->situacao_curso_superior_1;
-    $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1;
-    $obj->codigo_curso_superior_1 = $this->codigo_curso_superior_1_id;
-    $obj->ano_inicio_curso_superior_1 = $this->ano_inicio_curso_superior_1;
-    $obj->ano_conclusao_curso_superior_1 = $this->ano_conclusao_curso_superior_1;
-    $obj->instituicao_curso_superior_1 = $this->instituicao_curso_superior_1_id;
-    $obj->situacao_curso_superior_2 = $this->situacao_curso_superior_2;
-    $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2;
-    $obj->codigo_curso_superior_2 = $this->codigo_curso_superior_2_id;
-    $obj->ano_inicio_curso_superior_2 = $this->ano_inicio_curso_superior_2;
-    $obj->ano_conclusao_curso_superior_2 = $this->ano_conclusao_curso_superior_2;
-    $obj->instituicao_curso_superior_2 = $this->instituicao_curso_superior_2_id;
-    $obj->situacao_curso_superior_3 = $this->situacao_curso_superior_3;
-    $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3;
-    $obj->codigo_curso_superior_3 = $this->codigo_curso_superior_3_id;
-    $obj->ano_inicio_curso_superior_3 = $this->ano_inicio_curso_superior_3;
-    $obj->ano_conclusao_curso_superior_3 = $this->ano_conclusao_curso_superior_3;
-    $obj->instituicao_curso_superior_3 = $this->instituicao_curso_superior_3_id;
-    $obj->pos_graduacao = $this->pos_graduacao;
-    $obj->curso_formacao_continuada = $this->curso_formacao_continuada;
-    return $obj;
-  }
-
-  function cadastraFuncoes()
-  {
-    @session_start();
-    $cursos_disciplina = $_SESSION['cursos_disciplina'];
-    $cursos_servidor   = $_SESSION['cursos_servidor'];
-    @session_write_close();
-
-    $existe_funcao_professor = FALSE;
-    if ($this->ref_cod_funcao) {
-      $cont = -1;
-      $this->excluiFuncoes();
-      foreach ($this->ref_cod_funcao as $funcao) {
-        $cont++;
-        $funcao_professor = explode('-', $funcao);
-        $funcao = array_shift($funcao_professor);
-        $professor = array_shift($funcao_professor);
-
-        if ($professor) {
-          $existe_funcao_professor = true;
-        }
-
-        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $this->matricula[$cont]);
-        $obj_servidor_funcao->cadastra();
-      }
+        return false;
     }
 
-    if ($existe_funcao_professor) {
-      if ($cursos_disciplina) {
-        $this->excluiDisciplinas();
-        foreach ($cursos_disciplina as $curso => $disciplinas) {
-          if ($disciplinas) {
-            foreach ($disciplinas as $disciplina) {
-              $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
-                $disciplina, $this->ref_cod_instituicao, $this->cod_servidor,
-                $curso);
+    public function Editar()
+    {
+        $timesep = explode(':', $this->carga_horaria);
+        $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
+        $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
+        $this->carga_horaria = $hour + $min;
+        $this->carga_horaria = $hour + $min;
 
-              if (!$obj_servidor_disciplina->existe()) {
-                $obj_servidor_disciplina->cadastra();
-              }
+        $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+
+        $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
+
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $servidor = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
+        $servidorAntes = $servidor->detalhe();
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
+
+        if ($this->ref_cod_instituicao == $this->ref_cod_instituicao_original) {
+            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+
+            $obj = new clsPmieducarServidor($this->cod_servidor, null, $this->ref_idesco, $this->carga_horaria, null, null, 1, $this->ref_cod_instituicao);
+            $obj = $this->addCamposCenso($obj);
+            $obj->multi_seriado = !is_null($this->multi_seriado);
+            $editou = $obj->edita();
+
+            if ($editou) {
+                $servidorDepois = $servidor->detalhe();
+
+                $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $this->cod_servidor);
+                $auditoria->alteracao($servidorAntes, $servidorDepois);
+
+                $this->cadastraFuncoes();
+                $this->createOrUpdateInep();
+                $this->createOrUpdateDeficiencias();
+
+                include 'educar_limpa_sessao_curso_disciplina_servidor.php';
+
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+                header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+
+                die();
             }
-          }
+        } else {
+            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+            $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
+          null,
+          null,
+        null,
+          null,
+          null,
+          null,
+          $this->cod_servidor,
+          null,
+          null,
+          null,
+          null,
+        null,
+          null,
+          1,
+          $this->ref_cod_instituicao
+      );
+
+            if ($obj_quadro_horario->detalhe()) {
+                $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
+
+                return false;
+            } else {
+                $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
+            null,
+            null,
+          null,
+            null,
+            null,
+            null,
+            null,
+            $this->cod_servidor,
+            null,
+            null,
+            null,
+          null,
+            null,
+            1,
+            null,
+            $this->ref_cod_instituicao
+        );
+
+                if ($obj_quadro_horario->detalhe()) {
+                    $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
+
+                    return false;
+                } else {
+                    $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+
+                    $obj = new clsPmieducarServidor(
+              $this->cod_servidor,
+            null,
+              $this->ref_idesco,
+              $this->carga_horaria,
+            null,
+              null,
+              0,
+              $this->ref_cod_instituicao_original
+          );
+                    $obj = $this->addCamposCenso($obj);
+                    $obj->multi_seriado = !is_null($this->multi_seriado);
+                    $editou = $obj->edita();
+
+                    if ($editou) {
+                        $obj = new clsPmieducarServidor(
+                $this->cod_servidor,
+              null,
+                $this->ref_idesco,
+              $this->carga_horaria,
+                null,
+                null,
+                1,
+                $this->ref_cod_instituicao
+            );
+
+                        if ($obj->existe()) {
+                            $cadastrou = $obj->edita();
+                        } else {
+                            $cadastrou = $obj->cadastra();
+                        }
+
+                        if ($cadastrou) {
+                            $this->cadastraFuncoes();
+                            $this->createOrUpdateInep();
+                            $this->createOrUpdateDeficiencias();
+
+                            include 'educar_limpa_sessao_curso_disciplina_servidor.php';
+
+                            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+                            header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+
+                            die();
+                        }
+                    }
+                }
+            }
         }
-      }
+        $this->mensagem = 'Edição não realizada.<br>';
 
-      if ($cursos_servidor) {
-        $this->excluiCursos();
-        foreach ($cursos_servidor as $curso) {
-          $obj_curso_servidor = new clsPmieducarServidorCursoMinistra($curso, $this->ref_cod_instituicao, $this->cod_servidor);
+        return false;
+    }
 
-          if (!$obj_curso_servidor->existe()) {
-            $det_curso_servidor = $obj_curso_servidor->cadastra();
-          }
+    public function Excluir()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
+
+        $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
+        null,
+        null,
+        null,
+      null,
+        null,
+        null,
+        $this->cod_servidor,
+        null,
+        null,
+        null,
+        null,
+        null,
+      null,
+        1,
+        $this->ref_cod_instituicao
+    );
+
+        if ($obj_quadro_horario->detalhe()) {
+            $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
+
+            return false;
+        } else {
+            $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
+          null,
+          null,
+        null,
+          null,
+          null,
+          null,
+          null,
+          $this->cod_servidor,
+          null,
+          null,
+          null,
+        null,
+          null,
+          1,
+          null,
+          $this->ref_cod_instituicao
+      );
+
+            if ($obj_quadro_horario->detalhe()) {
+                $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
+
+                return false;
+            } else {
+                $obj = new clsPmieducarServidor(
+            $this->cod_servidor,
+          null,
+            $this->ref_idesco,
+            $this->carga_horaria,
+          null,
+            null,
+            0,
+            $this->ref_cod_instituicao_original
+        );
+
+                $servidor = $obj->detalhe();
+
+                $excluiu = $obj->excluir();
+
+                if ($excluiu) {
+                    $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $this->cod_servidor);
+                    $auditoria->exclusao($servidor);
+
+                    $this->excluiFuncoes();
+                    $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+                    header('Location: educar_servidor_lst.php');
+                    die();
+                }
+            }
         }
-      }
-    }
-  }
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
-  function excluiFuncoes()
-  {
-    $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
-    $obj_servidor_funcao->excluirTodos();
-  }
-
-  function excluiDisciplinas()
-  {
-    $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(NULL, $this->ref_cod_instituicao, $this->cod_servidor);
-    $obj_servidor_disciplina->excluirTodos();
-  }
-
-  function excluiCursos()
-  {
-    $obj_servidor_curso = new clsPmieducarServidorCursoMinistra(NULL, $this->ref_cod_instituicao, $this->cod_servidor);
-    $obj_servidor_curso->excluirTodos();
-  }
-
-  protected function createOrUpdateDeficiencias(){
-    $servidorId = $this->cod_servidor;
-
-    $sql = "delete from cadastro.fisica_deficiencia where ref_idpes = $1";
-    Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId)), false);
-
-    foreach ($this->getRequest()->deficiencias as $id) {
-      if (!empty($id)) {
-        $deficiencia = new clsCadastroFisicaDeficiencia($servidorId, $id);
-        $deficiencia->cadastra();
-      }
+        return false;
     }
 
-  }
+    public function addCamposCenso($obj)
+    {
+        $obj->situacao_curso_superior_1 = $this->situacao_curso_superior_1;
+        $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1;
+        $obj->codigo_curso_superior_1 = $this->codigo_curso_superior_1_id;
+        $obj->ano_inicio_curso_superior_1 = $this->ano_inicio_curso_superior_1;
+        $obj->ano_conclusao_curso_superior_1 = $this->ano_conclusao_curso_superior_1;
+        $obj->instituicao_curso_superior_1 = $this->instituicao_curso_superior_1_id;
+        $obj->situacao_curso_superior_2 = $this->situacao_curso_superior_2;
+        $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2;
+        $obj->codigo_curso_superior_2 = $this->codigo_curso_superior_2_id;
+        $obj->ano_inicio_curso_superior_2 = $this->ano_inicio_curso_superior_2;
+        $obj->ano_conclusao_curso_superior_2 = $this->ano_conclusao_curso_superior_2;
+        $obj->instituicao_curso_superior_2 = $this->instituicao_curso_superior_2_id;
+        $obj->situacao_curso_superior_3 = $this->situacao_curso_superior_3;
+        $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3;
+        $obj->codigo_curso_superior_3 = $this->codigo_curso_superior_3_id;
+        $obj->ano_inicio_curso_superior_3 = $this->ano_inicio_curso_superior_3;
+        $obj->ano_conclusao_curso_superior_3 = $this->ano_conclusao_curso_superior_3;
+        $obj->instituicao_curso_superior_3 = $this->instituicao_curso_superior_3_id;
+        $obj->pos_graduacao = $this->pos_graduacao;
+        $obj->curso_formacao_continuada = $this->curso_formacao_continuada;
 
-  protected function createOrUpdateInep(){
-    Portabilis_Utils_Database::fetchPreparedQuery("DELETE FROM modules.educacenso_cod_docente WHERE cod_servidor = $1",array('params' => array($this->cod_servidor)), false );
-    if ($this->cod_docente_inep){
-      $sql = "INSERT INTO modules.educacenso_cod_docente (cod_servidor,cod_docente_inep, fonte, created_at)
-                                                  VALUES ($1, $2,'U', 'NOW()')";
-      Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($this->cod_servidor, $this->cod_docente_inep)));
+        return $obj;
     }
-  }
 
+    public function cadastraFuncoes()
+    {
+        @session_start();
+        $cursos_disciplina = $_SESSION['cursos_disciplina'];
+        $cursos_servidor   = $_SESSION['cursos_servidor'];
+        @session_write_close();
+
+        $existe_funcao_professor = false;
+        if ($this->ref_cod_funcao) {
+            $cont = -1;
+            $this->excluiFuncoes();
+            foreach ($this->ref_cod_funcao as $funcao) {
+                $cont++;
+                $funcao_professor = explode('-', $funcao);
+                $funcao = array_shift($funcao_professor);
+                $professor = array_shift($funcao_professor);
+
+                if ($professor) {
+                    $existe_funcao_professor = true;
+                }
+
+                $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $this->matricula[$cont]);
+                $obj_servidor_funcao->cadastra();
+            }
+        }
+
+        if ($existe_funcao_professor) {
+            if ($cursos_disciplina) {
+                $this->excluiDisciplinas();
+                foreach ($cursos_disciplina as $curso => $disciplinas) {
+                    if ($disciplinas) {
+                        foreach ($disciplinas as $disciplina) {
+                            $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
+                $disciplina,
+                  $this->ref_cod_instituicao,
+                  $this->cod_servidor,
+                $curso
+              );
+
+                            if (!$obj_servidor_disciplina->existe()) {
+                                $obj_servidor_disciplina->cadastra();
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($cursos_servidor) {
+                $this->excluiCursos();
+                foreach ($cursos_servidor as $curso) {
+                    $obj_curso_servidor = new clsPmieducarServidorCursoMinistra($curso, $this->ref_cod_instituicao, $this->cod_servidor);
+
+                    if (!$obj_curso_servidor->existe()) {
+                        $det_curso_servidor = $obj_curso_servidor->cadastra();
+                    }
+                }
+            }
+        }
+    }
+
+    public function excluiFuncoes()
+    {
+        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
+        $obj_servidor_funcao->excluirTodos();
+    }
+
+    public function excluiDisciplinas()
+    {
+        $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(null, $this->ref_cod_instituicao, $this->cod_servidor);
+        $obj_servidor_disciplina->excluirTodos();
+    }
+
+    public function excluiCursos()
+    {
+        $obj_servidor_curso = new clsPmieducarServidorCursoMinistra(null, $this->ref_cod_instituicao, $this->cod_servidor);
+        $obj_servidor_curso->excluirTodos();
+    }
+
+    protected function createOrUpdateDeficiencias()
+    {
+        $servidorId = $this->cod_servidor;
+
+        $sql = 'delete from cadastro.fisica_deficiencia where ref_idpes = $1';
+        Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$servidorId]], false);
+
+        foreach ($this->getRequest()->deficiencias as $id) {
+            if (!empty($id)) {
+                $deficiencia = new clsCadastroFisicaDeficiencia($servidorId, $id);
+                $deficiencia->cadastra();
+            }
+        }
+    }
+
+    protected function createOrUpdateInep()
+    {
+        Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM modules.educacenso_cod_docente WHERE cod_servidor = $1', ['params' => [$this->cod_servidor]], false);
+        if ($this->cod_docente_inep) {
+            $sql = 'INSERT INTO modules.educacenso_cod_docente (cod_servidor,cod_docente_inep, fonte, created_at)
+                                                  VALUES ($1, $2,\'U\', \'NOW()\')';
+            Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$this->cod_servidor, $this->cod_docente_inep]]);
+        }
+    }
 }
 
 // Instancia objeto de página

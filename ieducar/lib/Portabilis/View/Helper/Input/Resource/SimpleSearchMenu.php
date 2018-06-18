@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,32 +40,40 @@ require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
  * Portabilis_View_Helper_Input_SimpleSearchMenu class.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchMenu extends Portabilis_View_Helper_Input_SimpleSearch {
-
-  public function simpleSearchMenu($attrName = '', $options = array()) {
-    $defaultOptions = array('objectName'    => 'menu',
+class Portabilis_View_Helper_Input_Resource_SimpleSearchMenu extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    public function simpleSearchMenu($attrName = '', $options = [])
+    {
+        $defaultOptions = ['objectName'    => 'menu',
                             'apiController' => 'Menu',
-                            'apiResource'   => 'menu-search');
+                            'apiResource'   => 'menu-search'];
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::simpleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o nome do menu';
-  }
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Informe o nome do menu';
+    }
 
-  protected function loadAssets() {
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/simpleSearchMenu.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-    $style  = '/modules/Portabilis/Assets/Stylesheets/Frontend/Inputs/Resource/simpleSearchMenu.css';
-    Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
-  }
+    protected function loadAssets()
+    {
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/simpleSearchMenu.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+        $style  = '/modules/Portabilis/Assets/Stylesheets/Frontend/Inputs/Resource/simpleSearchMenu.css';
+        Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
+    }
 }

@@ -26,94 +26,85 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 class clsEmail
 {
-    var $remetente;
-    var $remetenteNome;
-    var $replyto;
-    var $destinatarios;
-    var $assunto;
-    var $conteudo;
-    var $template;
-    var $footer;
-    var $tipo;
-    var $compilado;
-    var $conteudoCompilado;
-    var $charset = "";
-    
-    function __construct( $destinatarios, $assunto, $conteudo, $template=false, $remetente=false, $remetenteNome=false, $replyto=false, $tipo="html", $strFooter=false )
+    public $remetente;
+    public $remetenteNome;
+    public $replyto;
+    public $destinatarios;
+    public $assunto;
+    public $conteudo;
+    public $template;
+    public $footer;
+    public $tipo;
+    public $compilado;
+    public $conteudoCompilado;
+    public $charset = '';
+
+    public function __construct($destinatarios, $assunto, $conteudo, $template=false, $remetente=false, $remetenteNome=false, $replyto=false, $tipo='html', $strFooter=false)
     {
         $this->compilado = false;
         $this->destinatarios = $destinatarios;
         $this->assunto = $assunto;
         $this->conteudo = $conteudo;
         $this->footer = $strFooter;
-        $this->template = ( $template )? $template : "email_padrao";
-        $this->remetente = ( $remetente )? $remetente: "sistema@itajai.sc.gov.br";
-        $this->remetenteNome = ( $remetenteNome ) ? $remetenteNome: "Sistema - Itajai.sc.gov.br";
-        $this->replyto = ( $replyto )? $replyto: $remetente;
-        $this->tipo = ( $tipo == "html" )? "text/html": "text/plain";
+        $this->template = ($template)? $template : 'email_padrao';
+        $this->remetente = ($remetente)? $remetente: 'sistema@itajai.sc.gov.br';
+        $this->remetenteNome = ($remetenteNome) ? $remetenteNome: 'Sistema - Itajai.sc.gov.br';
+        $this->replyto = ($replyto)? $replyto: $remetente;
+        $this->tipo = ($tipo == 'html')? 'text/html': 'text/plain';
     }
-    
-    function compilar()
+
+    public function compilar()
     {
-        if( $this->tipo != "text/html" )
-        {
+        if ($this->tipo != 'text/html') {
             $this->conteudoCompilado = $this->conteudo;
-        }
-        else 
-        {
+        } else {
             $arquivo = "templates/{$this->template}.tpl";
-            $ptrTpl = fopen( $arquivo, "r");
+            $ptrTpl = fopen($arquivo, 'r');
             $strArquivo = fread($ptrTpl, filesize($arquivo));
-            fclose ($ptrTpl);
-            $strArquivo = str_replace( "<!-- #&CONTEUDO&# -->", $this->conteudo, $strArquivo );
-            $strArquivo = str_replace( "<!-- #&ASSUNTO&# -->", $this->assunto, $strArquivo );
-            if( $this->footer )
-            {
-                $strArquivo = str_replace( "<!-- #&FOOTER&# -->", $this->footer, $strArquivo );
+            fclose($ptrTpl);
+            $strArquivo = str_replace('<!-- #&CONTEUDO&# -->', $this->conteudo, $strArquivo);
+            $strArquivo = str_replace('<!-- #&ASSUNTO&# -->', $this->assunto, $strArquivo);
+            if ($this->footer) {
+                $strArquivo = str_replace('<!-- #&FOOTER&# -->', $this->footer, $strArquivo);
             }
             $this->conteudoCompilado = $strArquivo;
         }
         $this->compilado = true;
     }
-    
-    function envia()
+
+    public function envia()
     {
-        if( ! $this->compilado ) $this->compilar();
+        if (! $this->compilado) {
+            $this->compilar();
+        }
         $headers  = "MIME-Version: 1.0\n";
         $headers .= "Content-type: {$this->tipo}; charset={$this->charset}\n";
         $headers .= "X-Priority: 3\n";
         $headers .= "X-MSMail-Priority: Normal\n";
-        $headers .= "X-Mailer: php/" . phpversion() . "\n";
+        $headers .= 'X-Mailer: php/' . phpversion() . "\n";
         $headers .= "From: \"{$this->remetenteNome}\" <{$this->remetente}>\n";
         $headers .= "Reply-To: {$this->replyto}\n";
-        
-        if( is_array( $this->destinatarios ) )
-        {
-            $this->destinatarios = implode( ",", $this->destinatarios );
+
+        if (is_array($this->destinatarios)) {
+            $this->destinatarios = implode(',', $this->destinatarios);
         }
-        $this->destinatarios = str_replace( " ", ",", $this->destinatarios );
-        
-        $ok = mail( $this->destinatarios, $this->assunto, $this->conteudoCompilado, $headers );
+        $this->destinatarios = str_replace(' ', ',', $this->destinatarios);
+
+        $ok = mail($this->destinatarios, $this->assunto, $this->conteudoCompilado, $headers);
+
         return $ok;
     }
-    
-    function addDestinatario( $email )
+
+    public function addDestinatario($email)
     {
-        if( is_array( $this->destinatarios ) )
-        {
+        if (is_array($this->destinatarios)) {
             $this->destinatarios[] = $email;
-        }
-        else 
-        {
-            if( $this->destinatarios != "" )
-            {
+        } else {
+            if ($this->destinatarios != '') {
                 $this->destinatarios .= ",{$email}";
-            }
-            else 
-            {
+            } else {
                 $this->destinatarios = $email;
             }
         }
     }
 }
-?>

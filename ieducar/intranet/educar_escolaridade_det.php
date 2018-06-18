@@ -22,9 +22,12 @@
  *
  * @author      Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package     Core
  * @subpackage  Escolaridade
+ *
  * @since       Arquivo disponível desde a versão 1.0.0
+ *
  * @version     $Id$
  */
 
@@ -36,71 +39,72 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
-    $this->processoAp = '632';
-    $this->addEstilo("localizacaoSistema");    
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
+        $this->processoAp = '632';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsDetalhe
 {
-  /**
-   * Referência a usuário da sessão
-   * @var int
-   */
-  var $pessoa_logada = NULL;
+    /**
+     * Referência a usuário da sessão
+     *
+     * @var int
+     */
+    public $pessoa_logada = null;
 
-  /**
-   * Título no topo da página
-   * @var string
-   */
-  var $titulo = '';
+    /**
+     * Título no topo da página
+     *
+     * @var string
+     */
+    public $titulo = '';
 
-  var $idesco;
-  var $descricao;
+    public $idesco;
+    public $descricao;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'Escolaridade - Detalhe';
-    
+        $this->titulo = 'Escolaridade - Detalhe';
 
-    $this->idesco = $_GET['idesco'];
+        $this->idesco = $_GET['idesco'];
 
-    $tmp_obj = new clsCadastroEscolaridade($this->idesco);
-    $registro = $tmp_obj->detalhe();
+        $tmp_obj = new clsCadastroEscolaridade($this->idesco);
+        $registro = $tmp_obj->detalhe();
 
-    if (! $registro) {
-      header('Location: educar_escolaridade_lst.php');
-      die();
+        if (! $registro) {
+            header('Location: educar_escolaridade_lst.php');
+            die();
+        }
+
+        if ($registro['descricao']) {
+            $this->addDetalhe(['Descri&ccedil;&atilde;o', $registro['descricao']]);
+        }
+
+        $obj_permissoes = new clsPermissoes();
+        if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3)) {
+            $this->url_novo   = 'educar_escolaridade_cad.php';
+            $this->url_editar = 'educar_escolaridade_cad.php?idesco=' . $registro['idesco'];
+        }
+
+        $this->url_cancelar = 'educar_escolaridade_lst.php';
+        $this->largura      = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
+         'educar_servidores_index.php'                  => 'Servidores',
+         ''                                  => 'Detalhe da escolaridade'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    if ($registro['descricao']) {
-      $this->addDetalhe(array('Descri&ccedil;&atilde;o', $registro['descricao']));
-    }
-
-    $obj_permissoes = new clsPermissoes();
-    if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3)) {
-      $this->url_novo   = 'educar_escolaridade_cad.php';
-      $this->url_editar = 'educar_escolaridade_cad.php?idesco=' . $registro['idesco'];
-    }
-
-    $this->url_cancelar = 'educar_escolaridade_lst.php';
-    $this->largura      = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"                  => "Servidores",
-         ""                                  => "Detalhe da escolaridade"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }
 }
 
 // Instancia objeto de página

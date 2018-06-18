@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Cadastro
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -38,54 +43,61 @@ require_once 'include/Geral.inc.php';
  * "cadastro.v_endereco".
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Cadastro
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsEndereco
 {
-  var $idpes;
-  var $tipo;
-  var $idtlog;
-  var $logradouro;
-  var $idlog;
-  var $numero;
-  var $letra;
-  var $complemento;
-  var $bairro;
-  var $idbai;
-  var $cep;
-  var $cidade;
-  var $idmun;
-  var $sigla_uf;
-  var $reside_desde;
-  var $bloco;
-  var $apartamento;
-  var $andar;
-  var $zona_localizacao;
+    public $idpes;
+    public $tipo;
+    public $idtlog;
+    public $logradouro;
+    public $idlog;
+    public $numero;
+    public $letra;
+    public $complemento;
+    public $bairro;
+    public $idbai;
+    public $cep;
+    public $cidade;
+    public $idmun;
+    public $sigla_uf;
+    public $reside_desde;
+    public $bloco;
+    public $apartamento;
+    public $andar;
+    public $zona_localizacao;
 
-  /**
-   * Construtor.
-   * @param int $idpes
-   */
-  function __construct($idpes = FALSE)
-  {
-    $this->idpes = $idpes;
-  }
+    /**
+     * Construtor.
+     *
+     * @param int $idpes
+     */
+    public function __construct($idpes = false)
+    {
+        $this->idpes = $idpes;
+    }
 
-  /**
-   * Retorna o endereço da pessoa cadastrada (tabela cadastro.endereco_pessoa
-   * ou cadastro.endereco_externo) como array associativo.
-   * @return array|FALSE caso não haja um endereço cadastrado.
-   */
-  function detalhe()
-  {
-    if ($this->idpes) {
-      $db = new clsBanco();
+    /**
+     * Retorna o endereço da pessoa cadastrada (tabela cadastro.endereco_pessoa
+     * ou cadastro.endereco_externo) como array associativo.
+     *
+     * @return array|FALSE caso não haja um endereço cadastrado.
+     */
+    public function detalhe()
+    {
+        if ($this->idpes) {
+            $db = new clsBanco();
 
-      $sql = sprintf('SELECT
+            $sql = sprintf('SELECT
                 cep, idlog, numero, letra, complemento, idbai, bloco, andar,
                 apartamento, logradouro, bairro, cidade, sigla_uf, idtlog,
                 zona_localizacao
@@ -94,34 +106,34 @@ class clsEndereco
               WHERE
                 idpes = %d', $this->idpes);
 
-      $db->Consulta($sql);
+            $db->Consulta($sql);
 
-      if ($db->ProximoRegistro()) {
-        $tupla                  = $db->Tupla();
-        $this->bairro           = $tupla['bairro'];
-        $this->idbai            = $tupla['idbai'];
-        $this->cidade           = $tupla['cidade'];
-        $this->sigla_uf         = $tupla['sigla_uf'];
-        $this->complemento      = $tupla['complemento'];
-        $this->bloco            = $tupla['bloco'];
-        $this->apartamento      = $tupla['apartamento'];
-        $this->andar            = $tupla['andar'];
-        $this->letra            = $tupla['letra'];
-        $this->numero           = $tupla['numero'];
-        $this->logradouro       = $tupla['logradouro'];
-        $this->idlog            = $tupla['idlog'];
-        $this->idtlog           = $tupla['idtlog'];
-        $this->cep              = $tupla['cep'];
-        $this->zona_localizacao = $tupla['zona_localizacao'];
+            if ($db->ProximoRegistro()) {
+                $tupla                  = $db->Tupla();
+                $this->bairro           = $tupla['bairro'];
+                $this->idbai            = $tupla['idbai'];
+                $this->cidade           = $tupla['cidade'];
+                $this->sigla_uf         = $tupla['sigla_uf'];
+                $this->complemento      = $tupla['complemento'];
+                $this->bloco            = $tupla['bloco'];
+                $this->apartamento      = $tupla['apartamento'];
+                $this->andar            = $tupla['andar'];
+                $this->letra            = $tupla['letra'];
+                $this->numero           = $tupla['numero'];
+                $this->logradouro       = $tupla['logradouro'];
+                $this->idlog            = $tupla['idlog'];
+                $this->idtlog           = $tupla['idtlog'];
+                $this->cep              = $tupla['cep'];
+                $this->zona_localizacao = $tupla['zona_localizacao'];
 
-        return $tupla;
-      }
+                return $tupla;
+            }
+        }
+
+        return false;
     }
 
-    return FALSE;
-  }
-
-  function edita()
-  {
-  }
+    public function edita()
+    {
+    }
 }

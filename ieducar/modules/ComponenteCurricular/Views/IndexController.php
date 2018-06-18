@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,38 +41,43 @@ require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
  * IndexController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class IndexController extends Core_Controller_Page_ListController
 {
-  protected $_dataMapper = 'ComponenteCurricular_Model_ComponenteDataMapper';
-  protected $_titulo     = 'Listagem de componentes curriculares';
-  protected $_processoAp = 946;
-  protected $_tableMap   = array(
+    protected $_dataMapper = 'ComponenteCurricular_Model_ComponenteDataMapper';
+    protected $_titulo     = 'Listagem de componentes curriculares';
+    protected $_processoAp = 946;
+    protected $_tableMap   = [
     'Nome' => 'nome',
     'Abreviatura' => 'abreviatura',
     'Base' => 'tipo_base',
     'Área de conhecimento' => 'area_conhecimento'
-  );
+  ];
 
-  protected function _preRender(){
+    protected function _preRender()
+    {
+        parent::_preRender();
 
-    parent::_preRender();
+        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+        $localizacao = new LocalizacaoSistema();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de componentes curriculares"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Listagem de componentes curriculares'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }

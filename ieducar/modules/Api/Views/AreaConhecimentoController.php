@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,18 +44,19 @@ require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
  * Class AreaConhecimentoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class AreaConhecimentoController extends ApiCoreController
 {
-
-    function canGetAreasDeConhecimento(){
+    public function canGetAreasDeConhecimento()
+    {
         return  $this->validatesPresenceOf('instituicao_id');
     }
 
-    function getAreasDeConhecimento(){
-        if($this->canGetAreasDeConhecimento()){
-
+    public function getAreasDeConhecimento()
+    {
+        if ($this->canGetAreasDeConhecimento()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
 
             $sql = 'SELECT id, nome, ordenamento_ac
@@ -58,21 +64,21 @@ class AreaConhecimentoController extends ApiCoreController
                      WHERE instituicao_id = $1
                   ORDER BY nome ';
 
-            $areas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+            $areas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-            $attrs = array('id', 'nome', 'ordenamento_ac');
+            $attrs = ['id', 'nome', 'ordenamento_ac'];
             $areas = Portabilis_Array_Utils::filterSet($areas, $attrs);
 
             foreach ($areas as &$disciplina) {
-            $disciplina['nome'] = Portabilis_String_Utils::toUtf8($disciplina['nome']);
+                $disciplina['nome'] = Portabilis_String_Utils::toUtf8($disciplina['nome']);
             }
 
-            return array('areas' => $areas);
+            return ['areas' => $areas];
         }
     }
 
-    protected function getAreasDeConhecimentoForSerie() {
-
+    protected function getAreasDeConhecimentoForSerie()
+    {
         $serieId = $this->getRequest()->serie_id;
 
         $sql = 'SELECT ac.id as id, (ac.nome) as nome
@@ -84,13 +90,13 @@ class AreaConhecimentoController extends ApiCoreController
                                                                                                    AND ccae.ano_escolar_id = $1))
               ORDER BY (lower(ac.nome)) ASC';
 
-        $paramsSql = array($serieId);
+        $paramsSql = [$serieId];
 
         return $this->getReturnRequest($this->fetchPreparedQuery($sql, $paramsSql));
-      }
+    }
 
-    protected function getAreasDeConhecimentoForEscolaSerie() {
-
+    protected function getAreasDeConhecimentoForEscolaSerie()
+    {
         $escolaId = $this->getRequest()->escola_id;
         $serieId = $this->getRequest()->serie_id;
 
@@ -105,12 +111,13 @@ class AreaConhecimentoController extends ApiCoreController
                        )
               ORDER BY (lower(ac.nome)) ASC';
 
-        $paramsSql = array($escolaId, $serieId);
+        $paramsSql = [$escolaId, $serieId];
 
         return $this->getReturnRequest($this->fetchPreparedQuery($sql, $paramsSql));
     }
 
-    protected function getAreasDeConhecimentoForTurma(){
+    protected function getAreasDeConhecimentoForTurma()
+    {
         $turmaId = $this->getRequest()->turma_id;
 
         $sql = 'SELECT ac.id AS id, (ac.nome) AS nome
@@ -121,27 +128,28 @@ class AreaConhecimentoController extends ApiCoreController
                  )
                  ORDER BY (lower(ac.nome)) ASC';
 
-        $paramsSql = array($turmaId);
+        $paramsSql = [$turmaId];
 
         return $this->getReturnRequest($this->fetchPreparedQuery($sql, $paramsSql));
     }
 
-    protected function getReturnRequest($areasConhecimento){
-
-        $options = array();
+    protected function getReturnRequest($areasConhecimento)
+    {
+        $options = [];
         $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome');
 
-        return array('options' => $options);
+        return ['options' => $options];
     }
 
-    public function Gerar() {
+    public function Gerar()
+    {
         if ($this->isRequestFor('get', 'areas-de-conhecimento')) {
             $this->appendResponse($this->getAreasDeConhecimento());
-        } elseif($this->isRequestFor('get', 'areaconhecimento-serie')) {
+        } elseif ($this->isRequestFor('get', 'areaconhecimento-serie')) {
             $this->appendResponse($this->getAreasDeConhecimentoForSerie());
-        } elseif($this->isRequestFor('get', 'areaconhecimento-turma')) {
+        } elseif ($this->isRequestFor('get', 'areaconhecimento-turma')) {
             $this->appendResponse($this->getAreasDeConhecimentoForTurma());
-        } elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie')) {
+        } elseif ($this->isRequestFor('get', 'areaconhecimento-escolaserie')) {
             $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
         } else {
             $this->notImplementedOperationError();

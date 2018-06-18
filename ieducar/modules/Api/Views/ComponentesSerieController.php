@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -42,15 +47,16 @@ require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 /**
  * Class ComponentesSerieController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class ComponentesSerieController extends ApiCoreController
 {
-
-    function atualizaComponentesDaSerie(){
+    public function atualizaComponentesDaSerie()
+    {
         $serieId     = $this->getRequest()->serie_id;
         $componentes = json_decode($this->getRequest()->componentes);
-        $arrayComponentes = array();
+        $arrayComponentes = [];
 
         foreach ($componentes as $key => $componente) {
             $arrayComponentes[$key]['id'] = $componente->id;
@@ -58,31 +64,32 @@ class ComponentesSerieController extends ApiCoreController
             $arrayComponentes[$key]['tipo_nota'] = $componente->tipo_nota;
         }
 
-        $obj = new clsModulesComponenteCurricularAnoEscolar(NULL, $serieId, NULL, NULL,  $arrayComponentes);
+        $obj = new clsModulesComponenteCurricularAnoEscolar(null, $serieId, null, null, $arrayComponentes);
 
-        $updateInfo = $obj->updateInfo();            
+        $updateInfo = $obj->updateInfo();
         $componentesAtualizados = $updateInfo['update'];
         $componentesInseridos   = $updateInfo['insert'];
         $componentesExcluidos   = $updateInfo['delete'];
-        
+
         if ($obj->atualizaComponentesDaSerie()) {
-        
             if ($componentesExcluidos) {
-              $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
+                $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
             }
 
-            return array('update' => $componentesAtualizados,
+            return ['update' => $componentesAtualizados,
                          'insert' => $componentesInseridos,
-                         'delete' => $componentesExcluidos);
+                         'delete' => $componentesExcluidos];
         }
-        return array('msgErro' => 'Erro ao alterar componentes da série.');
+
+        return ['msgErro' => 'Erro ao alterar componentes da série.'];
     }
 
-    function atualizaEscolasSerieDisciplina(){
+    public function atualizaEscolasSerieDisciplina()
+    {
         $serieId     = $this->getRequest()->serie_id;
         $componentes = json_decode($this->getRequest()->componentes);
-        $arrayComponentes = array();
-        
+        $arrayComponentes = [];
+
         foreach ($componentes as $key => $componente) {
             $arrayComponentes[$key]['id'] = $componente->id;
             $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
@@ -91,14 +98,15 @@ class ComponentesSerieController extends ApiCoreController
         $this->replicaComponentesAdicionadosNasEscolas($serieId, $arrayComponentes);
     }
 
-    function replicaComponentesAdicionadosNasEscolas($serieId, $componentes){
+    public function replicaComponentesAdicionadosNasEscolas($serieId, $componentes)
+    {
         $escolas = $this->getEscolasDaSerie($serieId);
         $turmas  = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
-        if($escolas && $componentes){
+        if ($escolas && $componentes) {
             foreach ($escolas as $escola) {
-                foreach ($componentes as $componente){
+                foreach ($componentes as $componente) {
                     $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola['ref_cod_escola'], $componente['id']);
-                    if(!$objEscolaSerieDisciplina->cadastra()){
+                    if (!$objEscolaSerieDisciplina->cadastra()) {
                         return false;
                     }
                 }
@@ -106,81 +114,94 @@ class ComponentesSerieController extends ApiCoreController
         }
     }
 
-    function getUltimoAnoLetivoAberto(){
+    public function getUltimoAnoLetivoAberto()
+    {
         $objEscolaAnoLetivo = new clsPmieducarEscolaAnoLetivo();
         $ultimoAnoLetivoAberto = $objEscolaAnoLetivo->getUltimoAnoLetivoAberto();
+
         return $ultimoAnoLetivoAberto;
     }
 
-    function getEscolasDaSerie($serieId){
+    public function getEscolasDaSerie($serieId)
+    {
         $objEscolaSerie = new clsPmieducarEscolaSerie();
-        $escolasDaSerie = $objEscolaSerie->lista(NULL, $serieId);
-        if($escolasDaSerie){
+        $escolasDaSerie = $objEscolaSerie->lista(null, $serieId);
+        if ($escolasDaSerie) {
             return $escolasDaSerie;
         }
+
         return false;
     }
 
-    function getTurmasDaSerieNoAnoLetivoAtual($serieId){
+    public function getTurmasDaSerieNoAnoLetivoAtual($serieId)
+    {
         $objTurmas     = new clsPmieducarTurma();
-        $turmasDaSerie = $objTurmas->lista(NULL, NULL, NULL, $serieId, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->getUltimoAnoLetivoAberto());
-        if($turmasDaSerie){
+        $turmasDaSerie = $objTurmas->lista(null, null, null, $serieId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->getUltimoAnoLetivoAberto());
+        if ($turmasDaSerie) {
             return $turmasDaSerie;
         }
+
         return false;
     }
 
-    function excluiEscolaSerieDisciplina($escolaId, $serieId, $disciplinaId){
+    public function excluiEscolaSerieDisciplina($escolaId, $serieId, $disciplinaId)
+    {
         $objEscolaSerieDisiciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escolaId, $disciplinaId);
-        if($objEscolaSerieDisiciplina->excluir()){
+        if ($objEscolaSerieDisiciplina->excluir()) {
             return true;
         }
+
         return false;
     }
 
-    function excluiComponenteDaTurma($componenteId, $turmaId){
+    public function excluiComponenteDaTurma($componenteId, $turmaId)
+    {
         $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
-        $where = array('componente_curricular_id' => $componenteId, 'turma_id' => $turmaId);
-        $componente = $mapper->findAll(array('componente_curricular_id', 'turma_id'), $where, array(), false);
-        
-        if($componente && $mapper->delete($componente[0])){
+        $where = ['componente_curricular_id' => $componenteId, 'turma_id' => $turmaId];
+        $componente = $mapper->findAll(['componente_curricular_id', 'turma_id'], $where, [], false);
+
+        if ($componente && $mapper->delete($componente[0])) {
             return true;
         }
+
         return false;
     }
 
-    function atualizaExclusoesDeComponentes($serieId, $componentes){
+    public function atualizaExclusoesDeComponentes($serieId, $componentes)
+    {
         $escolas = $this->getEscolasDaSerie($serieId);
         $turmas  = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
-        if($escolas && $componentes){
+        if ($escolas && $componentes) {
             foreach ($escolas as $escola) {
-                foreach ($componentes as $componente){
+                foreach ($componentes as $componente) {
                     $this->excluiEscolaSerieDisciplina($escola['ref_cod_escola'], $serieId, $componente);
                 }
             }
         }
 
-        if($turmas && $componentes){
+        if ($turmas && $componentes) {
             foreach ($turmas as $turma) {
-                foreach ($componentes as $componente){
-                $this->excluiComponenteDaTurma($componente, $turma['cod_turma']);
+                foreach ($componentes as $componente) {
+                    $this->excluiComponenteDaTurma($componente, $turma['cod_turma']);
                 }
             }
         }
     }
 
-    function excluiComponentesSerie(){
+    public function excluiComponentesSerie()
+    {
         $serieId = $this->getRequest()->serie_id;
-        $obj     = new clsModulesComponenteCurricularAnoEscolar(NULL, $serieId);
+        $obj     = new clsModulesComponenteCurricularAnoEscolar(null, $serieId);
         if ($obj->exclui()) {
             $this->excluiTodosComponenteDaTurma($serieId);
             $this->excluiTodasDisciplinasEscolaSerie($serieId);
         }
     }
 
-    function excluiTodasDisciplinasEscolaSerie($serieId){
+    public function excluiTodasDisciplinasEscolaSerie($serieId)
+    {
         $escolas = $this->getEscolasDaSerie($serieId);
-        if($escolas){
+        if ($escolas) {
             foreach ($escolas as $escola) {
                 $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola['ref_cod_escola']);
                 $objEscolaSerieDisciplina->excluirTodos();
@@ -188,56 +209,61 @@ class ComponentesSerieController extends ApiCoreController
         }
     }
 
-    function excluiTodosComponenteDaTurma($serieId){
+    public function excluiTodosComponenteDaTurma($serieId)
+    {
         $turmas  = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
         $mapper  = new ComponenteCurricular_Model_TurmaDataMapper();
-        if($turmas){
+        if ($turmas) {
             foreach ($turmas as $turma) {
-                $where = array('turma_id' => $turma['cod_turma']);
-                $componentes = $mapper->findAll(array('componente_curricular_id', 'turma_id'), $where, array(), false);
+                $where = ['turma_id' => $turma['cod_turma']];
+                $componentes = $mapper->findAll(['componente_curricular_id', 'turma_id'], $where, [], false);
             }
         }
-        if($componentes){
+        if ($componentes) {
             foreach ($componentes as $componente) {
                 $mapper->delete($componente);
             }
         }
     }
 
-    function existeDependencia(){
+    public function existeDependencia()
+    {
         $serie = $this->getRequest()->serie_id;
         $escola = $this->getRequest()->escola_id;
         $disciplinas = $this->getRequest()->disciplinas;
         $disciplinas = explode(',', $disciplinas);
 
-        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, NULL, 1);
+        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, null, 1);
 
-        return array('existe_dependencia' => $obj->existeDependencia($disciplinas));
+        return ['existe_dependencia' => $obj->existeDependencia($disciplinas)];
     }
 
-    function existeDispensa(){
+    public function existeDispensa()
+    {
         $serie = $this->getRequest()->serie_id;
         $escola = $this->getRequest()->escola_id;
         $disciplinas = $this->getRequest()->disciplinas;
         $disciplinas = explode(',', $disciplinas);
 
-        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, NULL, 1);
+        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, null, 1);
 
-        return array('existe_dispensa' => $obj->existeDispensa($disciplinas));
+        return ['existe_dispensa' => $obj->existeDispensa($disciplinas)];
     }
 
-  public function Gerar() {
-    if ($this->isRequestFor('post', 'atualiza-componentes-serie'))
-      $this->appendResponse($this->atualizaComponentesDaSerie());
-    elseif($this->isRequestFor('post', 'replica-componentes-adicionados-escolas'))
-      $this->appendResponse($this->atualizaEscolasSerieDisciplina());
-    elseif($this->isRequestFor('post', 'exclui-componentes-serie'))
-        $this->appendResponse($this->excluiComponentesSerie());
-    elseif($this->isRequestFor('get', 'existe-dispensa'))
-        $this->appendResponse($this->existeDispensa());
-    elseif($this->isRequestFor('get', 'existe-dependencia'))
-        $this->appendResponse($this->existeDependencia());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('post', 'atualiza-componentes-serie')) {
+            $this->appendResponse($this->atualizaComponentesDaSerie());
+        } elseif ($this->isRequestFor('post', 'replica-componentes-adicionados-escolas')) {
+            $this->appendResponse($this->atualizaEscolasSerieDisciplina());
+        } elseif ($this->isRequestFor('post', 'exclui-componentes-serie')) {
+            $this->appendResponse($this->excluiComponentesSerie());
+        } elseif ($this->isRequestFor('get', 'existe-dispensa')) {
+            $this->appendResponse($this->existeDispensa());
+        } elseif ($this->isRequestFor('get', 'existe-dependencia')) {
+            $this->appendResponse($this->existeDependencia());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

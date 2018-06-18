@@ -24,57 +24,52 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Tipos de Notícias!" );
-        $this->processoAp = "104";
+        $this->SetTitulo("{$this->_instituicao} Tipos de Notícias!");
+        $this->processoAp = '104';
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Tipos ";
-        $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
+        $this->titulo = 'Tipos ';
+        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-        $this->CampoTexto("nome_","Nome",$_GET['nome_'],30,250);
+        $this->CampoTexto('nome_', 'Nome', $_GET['nome_'], 30, 250);
 
-
-        $this->addCabecalhos( array( "Nome"));
+        $this->addCabecalhos([ 'Nome']);
         $db = new clsBanco();
 
-        $where = "";
-        if($_GET['nome_'])
-        {
+        $where = '';
+        if ($_GET['nome_']) {
             $where = "WHERE nm_tipo like '%{$_GET['nome_']}%' ";
         }
 
         $total = $db->UnicoCampo(" SELECT count(*) FROM not_tipo $where");
         $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"] * $limite-$limite: 0;
-        $db->Consulta( "SELECT cod_not_tipo,nm_tipo FROM not_tipo $where   ORDER BY nm_tipo ASC  LIMIT $iniciolimit,$limite" );
-        while ($db->ProximoRegistro())
-        {
-            list ($cod_tipo, $nome) = $db->Tupla();
-            $this->addLinhas( array("<img src='imagens/noticia.jpg' border=0>&nbsp;&nbsp;<a href='not_tipos_det.php?id_tipo=$cod_tipo'>$nome</a>") );
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite-$limite: 0;
+        $db->Consulta("SELECT cod_not_tipo,nm_tipo FROM not_tipo $where   ORDER BY nm_tipo ASC  LIMIT $iniciolimit,$limite");
+        while ($db->ProximoRegistro()) {
+            list($cod_tipo, $nome) = $db->Tupla();
+            $this->addLinhas(["<img src='imagens/noticia.jpg' border=0>&nbsp;&nbsp;<a href='not_tipos_det.php?id_tipo=$cod_tipo'>$nome</a>"]);
         }
-        $this->acao = "go(\"not_tipos_cad.php\")";
-        $this->nome_acao = "Novo";
-        $this->addPaginador2( "not_tipos_lst.php", $total, $_GET, $this->nome, $limite );
-        $this->largura = "100%";
+        $this->acao = 'go("not_tipos_cad.php")';
+        $this->nome_acao = 'Novo';
+        $this->addPaginador2('not_tipos_lst.php', $total, $_GET, $this->nome, $limite);
+        $this->largura = '100%';
     }
 }
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id: /ieducar/branches/teste/ieducar/lib/CoreExt/Controller/Dispatcher/Interface.php 645 2009-11-12T20:08:26.084511Z eriksen  $
  */
 
@@ -34,10 +39,15 @@ require_once 'CoreExt/Controller/Dispatcher/Abstract.php';
  * CoreExt_Controller_Dispatcher_Standard class.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class CoreExt_Controller_Dispatcher_Standard extends CoreExt_Controller_Dispatcher_Abstract

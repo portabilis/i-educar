@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     TabelaArredondamento
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -37,24 +42,29 @@ require_once 'App/Model/IedFinder.php';
  * TabelaArredondamento_Model_TabelaDataMapper class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     TabelaArredondamento
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class TabelaArredondamento_Model_TabelaValorDataMapper extends CoreExt_DataMapper
 {
-  protected $_entityClass = 'TabelaArredondamento_Model_TabelaValor';
-  protected $_tableName   = 'tabela_arredondamento_valor';
-  protected $_tableSchema = 'modules';
+    protected $_entityClass = 'TabelaArredondamento_Model_TabelaValor';
+    protected $_tableName   = 'tabela_arredondamento_valor';
+    protected $_tableSchema = 'modules';
 
-  protected $_attributeMap = array(
+    protected $_attributeMap = [
     'tabelaArredondamento' => 'tabela_arredondamento_id',
     'valorMinimo'          => 'valor_minimo',
     'valorMaximo'          => 'valor_maximo',
     'acao'                 => 'acao',
     'casaDecimalExata'     => 'casa_decimal_exata'
-  );
+  ];
 }

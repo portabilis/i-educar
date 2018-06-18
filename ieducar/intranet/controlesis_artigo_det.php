@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "Prefeitura de Itaja&iacute; - Artigo" );
-        $this->processoAp = "0";
+        $this->SetTitulo('Prefeitura de Itaja&iacute; - Artigo');
+        $this->processoAp = '0';
     }
 }
 
@@ -45,50 +45,47 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_artigo;
-    var $texto;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_artigo;
+    public $texto;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Artigo - Detalhe";
-        $this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+        $this->titulo = 'Artigo - Detalhe';
+        $this->addBanner('/intranet/imagens/nvp_top_intranet.jpg', '/intranet/imagens/nvp_vert_intranet.jpg', 'Intranet');
 
-        $this->cod_artigo=$_GET["cod_artigo"];
+        $this->cod_artigo=$_GET['cod_artigo'];
 
-        $tmp_obj = new clsPmicontrolesisArtigo( $this->cod_artigo );
+        $tmp_obj = new clsPmicontrolesisArtigo($this->cod_artigo);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: controlesis_artigo_lst.php" );
+        if (! $registro) {
+            header('location: controlesis_artigo_lst.php');
             die();
         }
-
 
 //      if( $registro["cod_artigo"] )
 //      {
 //          $this->addDetalhe( array( "Artigo", "{$registro["cod_artigo"]}") );
 //      }
-        if( $registro["texto"] )
-        {
-            $registro["texto"] = nl2br($registro["texto"]);
-            $this->addDetalhe( array( "Texto", "{$registro["texto"]}") );
+        if ($registro['texto']) {
+            $registro['texto'] = nl2br($registro['texto']);
+            $this->addDetalhe([ 'Texto', "{$registro['texto']}"]);
         }
 
-        $this->url_novo = "controlesis_artigo_cad.php";
-        $this->url_editar = "controlesis_artigo_cad.php?cod_artigo={$registro["cod_artigo"]}";
+        $this->url_novo = 'controlesis_artigo_cad.php';
+        $this->url_editar = "controlesis_artigo_cad.php?cod_artigo={$registro['cod_artigo']}";
 
-        $this->url_cancelar = "controlesis_artigo_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'controlesis_artigo_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -97,7 +94,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

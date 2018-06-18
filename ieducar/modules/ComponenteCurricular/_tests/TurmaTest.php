@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,25 +40,30 @@ require_once 'ComponenteCurricular/Model/Turma.php';
  * ComponenteCurricular_Model_TurmaTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class ComponenteCurricular_Model_TurmaTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new ComponenteCurricular_Model_Turma();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new ComponenteCurricular_Model_Turma();
+    }
 
-  public function testEntityValidators()
-  {
-    $validators = $this->_entity->getValidatorCollection();
-    $this->assertType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
-  }
+    public function testEntityValidators()
+    {
+        $validators = $this->_entity->getValidatorCollection();
+        $this->assertType('CoreExt_Validate_Numeric', $validators['cargaHoraria']);
+    }
 }

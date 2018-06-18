@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -37,77 +42,87 @@ require_once 'include/pmieducar/geral.inc.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
-    $this->processoAp = 635;
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
+        $this->processoAp = 635;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
 {
-  var $titulo;
+    public $titulo;
 
-  var $cod_falta_atraso;
-  var $ref_cod_escola;
-  var $ref_ref_cod_instituicao;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $ref_cod_servidor;
-  var $tipo;
-  var $data_falta_atraso;
-  var $qtd_horas;
-  var $qtd_min;
-  var $justificada;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
+    public $cod_falta_atraso;
+    public $ref_cod_escola;
+    public $ref_ref_cod_instituicao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_servidor;
+    public $tipo;
+    public $data_falta_atraso;
+    public $qtd_horas;
+    public $qtd_min;
+    public $justificada;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'Falta Atraso - Detalhe';
+        $this->titulo = 'Falta Atraso - Detalhe';
 
+        $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
+        $this->ref_cod_escola          = $_GET['ref_cod_escola'];
+        $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-    $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
-    $this->ref_cod_escola          = $_GET['ref_cod_escola'];
-    $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $tmp_obj = new clsPmieducarFaltaAtraso();
+        $tmp_obj->setOrderby('data_falta_atraso DESC');
+        $this->cod_falta_atraso = $_GET['cod_falta_atraso'];
+        $registro = $tmp_obj->lista($this->cod_falta_atraso);
 
-    $tmp_obj = new clsPmieducarFaltaAtraso();
-    $tmp_obj->setOrderby('data_falta_atraso DESC');
-    $this->cod_falta_atraso = $_GET['cod_falta_atraso'];
-    $registro = $tmp_obj->lista($this->cod_falta_atraso);
-
-    if (!$registro) {
-      header('Location: ' . sprintf(
+        if (!$registro) {
+            header('Location: ' . sprintf(
         'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
-      die();
-    }
-    else {
-      $tabela = '<table>
+        $this->ref_cod_servidor,
+          $this->ref_ref_cod_instituicao
+      ));
+            die();
+        } else {
+            $tabela = '<table>
                  <tr align=center>
                      <td bgcolor="#ccdce6"><b>Dia</b></td>
                      <td bgcolor="#ccdce6"><b>Tipo</b></td>
@@ -117,23 +132,23 @@ class indice extends clsDetalhe
                      <td bgcolor="#ccdce6"><b>Instituição</b></td>
                  </tr>';
 
-      $cont  = 0;
-      $total = 0;
+            $cont  = 0;
+            $total = 0;
 
-      foreach ($registro as $falta) {
-        if (($cont % 2) == 0) {
-          $color = ' bgcolor="#f5f9fd" ';
-        }
-        else {
-          $color = ' bgcolor="#FFFFFF" ';
-        }
+            foreach ($registro as $falta) {
+                if (($cont % 2) == 0) {
+                    $color = ' bgcolor="#f5f9fd" ';
+                } else {
+                    $color = ' bgcolor="#FFFFFF" ';
+                }
 
-        $obj_esc = new clsPmieducarEscolaComplemento($falta['ref_cod_escola']);
-        $det_esc = $obj_esc->detalhe();
-        $obj_ins = new clsPmieducarInstituicao($falta['ref_ref_cod_instituicao']);
-        $det_ins = $obj_ins->detalhe();
+                $obj_esc = new clsPmieducarEscolaComplemento($falta['ref_cod_escola']);
+                $det_esc = $obj_esc->detalhe();
+                $obj_ins = new clsPmieducarInstituicao($falta['ref_ref_cod_instituicao']);
+                $det_ins = $obj_ins->detalhe();
 
-        $corpo .= sprintf('
+                $corpo .= sprintf(
+            '
           <tr>
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
@@ -142,53 +157,66 @@ class indice extends clsDetalhe
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
           </tr>',
-          $color, dataFromPgToBr($falta['data_falta_atraso']),
-          $color, $falta['tipo'] == 1 ? 'Atraso' : 'Falta',
-          $color, $falta['qtd_horas'],
-          $color, $falta['qtd_min'],
-          $color, $det_esc['nm_escola'],
-          $color, $det_ins['nm_instituicao']);
+          $color,
+            dataFromPgToBr($falta['data_falta_atraso']),
+          $color,
+            $falta['tipo'] == 1 ? 'Atraso' : 'Falta',
+          $color,
+            $falta['qtd_horas'],
+          $color,
+            $falta['qtd_min'],
+          $color,
+            $det_esc['nm_escola'],
+          $color,
+            $det_ins['nm_instituicao']
+        );
 
-        $cont++;
-      }
+                $cont++;
+            }
 
-      $tabela .= $corpo;
-      $tabela .= "</table>";
+            $tabela .= $corpo;
+            $tabela .= '</table>';
 
-      if ($tabela) {
-        $this->addDetalhe(array('Faltas/Atrasos', $tabela));
-      }
-    }
+            if ($tabela) {
+                $this->addDetalhe(['Faltas/Atrasos', $tabela]);
+            }
+        }
 
-    $obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-      $this->caption_novo = 'Compensar';
-      $this->url_novo     = sprintf(
+        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+            $this->caption_novo = 'Compensar';
+            $this->url_novo     = sprintf(
         'educar_falta_atraso_compensado_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_ref_cod_instituicao
+        $this->ref_cod_servidor,
+          $this->ref_cod_escola,
+          $this->ref_ref_cod_instituicao
       );
-      $this->url_editar   = sprintf(
+            $this->url_editar   = sprintf(
         'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d&cod_falta_atraso=%d',
-        $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_ref_cod_instituicao, $this->cod_falta_atraso
+        $this->ref_cod_servidor,
+          $this->ref_cod_escola,
+          $this->ref_ref_cod_instituicao,
+          $this->cod_falta_atraso
       );
-    }
+        }
 
-    $this->url_cancelar = sprintf(
-      "educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d",
-      $this->ref_cod_servidor, $this->ref_ref_cod_instituicao
+        $this->url_cancelar = sprintf(
+      'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+      $this->ref_cod_servidor,
+        $this->ref_ref_cod_instituicao
     );
 
-    $this->largura = '100%';
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe da falta/atraso do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_servidores_index.php'       => 'Servidores',
+         ''                                  => 'Detalhe da falta/atraso do servidor'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }
 
 // Instancia objeto de página

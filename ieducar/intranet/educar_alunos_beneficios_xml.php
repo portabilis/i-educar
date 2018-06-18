@@ -24,31 +24,35 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+    require_once('include/clsBanco.inc.php');
+    require_once('include/funcoes.inc.php');
 
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    if( is_numeric( $_GET["inst"] ) )
-    {
-        if(is_numeric( $_GET["ano"] ))
+    if (is_numeric($_GET['inst'])) {
+        if (is_numeric($_GET['ano'])) {
             $ano = " AND ano = {$_GET['ano']} ";
-        $where = "";
-        if (is_numeric($_GET['esc']))
+        }
+        $where = '';
+        if (is_numeric($_GET['esc'])) {
             $where .= "AND ref_ref_cod_escola = {$_GET['esc']} ";
-        if (is_numeric($_GET['curso']))
+        }
+        if (is_numeric($_GET['curso'])) {
             $where .= "AND m.ref_cod_curso = {$_GET['curso']} ";
-        if (is_numeric($_GET['serie']))
+        }
+        if (is_numeric($_GET['serie'])) {
             $where .= "AND m.ref_ref_cod_serie = {$_GET['serie']} ";
-        if (is_numeric($_GET['turma']))
-            $where = "AND mt.ref_cod_turma = {$_GET["turma"]} ";
+        }
+        if (is_numeric($_GET['turma'])) {
+            $where = "AND mt.ref_cod_turma = {$_GET['turma']} ";
+        }
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
           SELECT  m.cod_matricula
                  ,p.nome
             FROM
@@ -72,14 +76,11 @@
             ORDER BY
                 (p.nome) ASC
         ");
-        if ($db->numLinhas())
-        {
-            while ( $db->ProximoRegistro() )
-            {
-                list( $cod, $nome ) = $db->Tupla();
+        if ($db->numLinhas()) {
+            while ($db->ProximoRegistro()) {
+                list($cod, $nome) = $db->Tupla();
                 echo "  <matricula cod_matricula=\"{$cod}\">{$nome}</matricula>\n";
             }
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

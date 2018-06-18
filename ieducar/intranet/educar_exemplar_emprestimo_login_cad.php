@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Empr&eacute;stimo" );
-        $this->processoAp = "610";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Empr&eacute;stimo");
+        $this->processoAp = '610';
     }
 }
 
@@ -45,20 +45,20 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $ref_cod_biblioteca;
-    var $login_;
-    var $senha_;
-    var $ref_cod_cliente;
+    public $ref_cod_biblioteca;
+    public $login_;
+    public $senha_;
+    public $ref_cod_cliente;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            unset($_SESSION['emprestimo']['cod_cliente']);
-            unset($_SESSION['emprestimo']['ref_cod_biblioteca']);
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        unset($_SESSION['emprestimo']['cod_cliente']);
+        unset($_SESSION['emprestimo']['ref_cod_biblioteca']);
         @session_write_close();
 
 //      $this->url_cancelar = "educar_exemplar_emprestimo_lst.php";
@@ -66,7 +66,7 @@ class indice extends clsCadastro
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         unset($this->login_);
         unset($this->senha_);
@@ -93,97 +93,91 @@ class indice extends clsCadastro
 //      echo "<script>{$bibliotecas_usuario}</script>";
         $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca);
 */
-        
+
         $get_escola     = 1;
         $escola_obrigatorio = false;
         $get_biblioteca = 1;
         $instituicao_obrigatorio = true;
         $biblioteca_obrigatorio = true;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
         // text
-        $this->campoNumero( "login_", "Login", $this->login_, 9, 9,false );
-        $this->campoSenha( "senha_", "Senha", $this->senha_,false );
+        $this->campoNumero('login_', 'Login', $this->login_, 9, 9, false);
+        $this->campoSenha('senha_', 'Senha', $this->senha_, false);
 
-        $this->campoOculto("requisita_senha", "0");
+        $this->campoOculto('requisita_senha', '0');
 
-        $this->campoTexto("nm_cliente1", "Cliente", $this->nm_cliente, 30, 255, false, false, false, "", "<img border=\"0\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>","","",true);
-        $this->campoOculto("ref_cod_cliente", $this->ref_cod_cliente);
+        $this->campoTexto('nm_cliente1', 'Cliente', $this->nm_cliente, 30, 255, false, false, false, '', "<img border=\"0\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>", '', '', true);
+        $this->campoOculto('ref_cod_cliente', $this->ref_cod_cliente);
         $this->botao_enviar = false;
-        $this->array_botao = array("Continuar", "Cancelar");
-        $this->array_botao_url_script = array("acao2();","go('educar_exemplar_emprestimo_lst.php');");
+        $this->array_botao = ['Continuar', 'Cancelar'];
+        $this->array_botao_url_script = ['acao2();','go(\'educar_exemplar_emprestimo_lst.php\');'];
         $this->acao_executa_submit = false;
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 610, $this->pessoa_logada, 11,  "educar_exemplar_emprestimo_lst.php" );
+        $obj_permissoes->permissao_cadastra(610, $this->pessoa_logada, 11, 'educar_exemplar_emprestimo_lst.php');
 
-        if ($this->ref_cod_cliente)
-        {
+        if ($this->ref_cod_cliente) {
             @session_start();
-                $_SESSION['emprestimo']['cod_cliente'] = $this->ref_cod_cliente;
-                $_SESSION['emprestimo']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
+            $_SESSION['emprestimo']['cod_cliente'] = $this->ref_cod_cliente;
+            $_SESSION['emprestimo']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
             @session_write_close();
-            header( "Location: educar_exemplar_emprestimo_cad.php" );
+            header('Location: educar_exemplar_emprestimo_cad.php');
             die();
+
             return true;
-        }
-        else if($this->login_ && $this->senha_)
-        {
-            $this->senha_ = md5( $this->senha_."asnk@#*&(23" );
+        } elseif ($this->login_ && $this->senha_) {
+            $this->senha_ = md5($this->senha_.'asnk@#*&(23');
 
             $obj_cliente = new clsPmieducarCliente();
-            $lst_cliente = $obj_cliente->lista(null,null,null,null,$this->login_,$this->senha_,null,null,null,null,1);
+            $lst_cliente = $obj_cliente->lista(null, null, null, null, $this->login_, $this->senha_, null, null, null, null, 1);
 
-            if( is_array( $lst_cliente ) && count( $lst_cliente ) )
-            {
+            if (is_array($lst_cliente) && count($lst_cliente)) {
                 $cliente = array_shift($lst_cliente);
-                $cod_cliente = $cliente["cod_cliente"];
+                $cod_cliente = $cliente['cod_cliente'];
 
                 $obj_cliente_tipo_cliente = new clsPmieducarClienteTipoCliente();
-                $lst_cliente_tipo_cliente = $obj_cliente_tipo_cliente->lista(null,$cod_cliente);
+                $lst_cliente_tipo_cliente = $obj_cliente_tipo_cliente->lista(null, $cod_cliente);
 
-                if( is_array( $lst_cliente_tipo_cliente ) && count( $lst_cliente_tipo_cliente ) )
-                {
-                    foreach ($lst_cliente_tipo_cliente as $cliente_tipo)
-                    {
+                if (is_array($lst_cliente_tipo_cliente) && count($lst_cliente_tipo_cliente)) {
+                    foreach ($lst_cliente_tipo_cliente as $cliente_tipo) {
                         // tipo do cliente
-                        $cod_cliente_tipo = $cliente_tipo["ref_cod_cliente_tipo"];
+                        $cod_cliente_tipo = $cliente_tipo['ref_cod_cliente_tipo'];
 
                         $obj_cliente_tipo = new clsPmieducarClienteTipo($cod_cliente_tipo);
                         $det_cliente_tipo = $obj_cliente_tipo->detalhe();
-                        $biblioteca_cliente = $det_cliente_tipo["ref_cod_biblioteca"];
+                        $biblioteca_cliente = $det_cliente_tipo['ref_cod_biblioteca'];
 
-                        if ($this->ref_cod_biblioteca == $biblioteca_cliente)
-                        {
+                        if ($this->ref_cod_biblioteca == $biblioteca_cliente) {
                             @session_start();
-                                $_SESSION['emprestimo']['cod_cliente'] = $cod_cliente;
-                                $_SESSION['emprestimo']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
+                            $_SESSION['emprestimo']['cod_cliente'] = $cod_cliente;
+                            $_SESSION['emprestimo']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
                             @session_write_close();
-                            $this->mensagem .= "Login efetuado com sucesso.<br>";
-                            header( "Location: educar_exemplar_emprestimo_cad.php" );
+                            $this->mensagem .= 'Login efetuado com sucesso.<br>';
+                            header('Location: educar_exemplar_emprestimo_cad.php');
                             die();
+
                             return true;
                         }
                     }
-                    echo "<script> alert('Cliente não pertence a biblioteca escolhida!'); </script>";
+                    echo '<script> alert(\'Cliente não pertence a biblioteca escolhida!\'); </script>';
+
                     return true;
                 }
-            }
-            else
-            {
-                $this->mensagem = "Login e/ou Senha incorreto(s).<br>";
+            } else {
+                $this->mensagem = 'Login e/ou Senha incorreto(s).<br>';
+
                 return false;
             }
-        }
-        else
-        {
-            $this->mensagem = "Preencha o(s) campo(s) corretamente.<br>";
+        } else {
+            $this->mensagem = 'Preencha o(s) campo(s) corretamente.<br>';
+
             return false;
         }
     }
@@ -194,7 +188,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

@@ -30,28 +30,28 @@
 * Criado em 12/02/2007 15:36 pelo gerador automatico de classes
 */
 
-require_once( "include/public/geral.inc.php" );
+require_once('include/public/geral.inc.php');
 
 class clsPublicMunicipio
 {
-    var $idmun;
-    var $nome;
-    var $sigla_uf;
-    var $area_km2;
-    var $idmreg;
-    var $idasmun;
-    var $cod_ibge;
-    var $geom;
-    var $tipo;
-    var $idmun_pai;
-    var $idpes_rev;
-    var $idpes_cad;
-    var $data_rev;
-    var $data_cad;
-    var $origem_gravacao;
-    var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
+    public $idmun;
+    public $nome;
+    public $sigla_uf;
+    public $area_km2;
+    public $idmreg;
+    public $idasmun;
+    public $cod_ibge;
+    public $geom;
+    public $tipo;
+    public $idmun_pai;
+    public $idpes_rev;
+    public $idpes_cad;
+    public $data_rev;
+    public $data_cad;
+    public $origem_gravacao;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
 
     // propriedades padrao
 
@@ -60,57 +60,56 @@ class clsPublicMunicipio
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
@@ -136,257 +135,174 @@ class clsPublicMunicipio
      *
      * @return object
      */
-    function __construct( $idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+    public function __construct($idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null, $idsis_rev = null, $idsis_cad = null)
     {
         $db = new clsBanco();
-        $this->_schema = "public.";
+        $this->_schema = 'public.';
         $this->_tabela = "{$this->_schema}municipio";
 
-        $this->_campos_lista = $this->_todos_campos = "idmun, nome, sigla_uf, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, idpes_cad, data_rev, data_cad, origem_gravacao, operacao, idsis_rev, idsis_cad";
+        $this->_campos_lista = $this->_todos_campos = 'idmun, nome, sigla_uf, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, idpes_cad, data_rev, data_cad, origem_gravacao, operacao, idsis_rev, idsis_cad';
 
-        if( is_string( $sigla_uf ) )
-        {
-            if( class_exists( "clsUf" ) )
-            {
-                $tmp_obj = new clsUf( $sigla_uf );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_string($sigla_uf)) {
+            if (class_exists('clsUf')) {
+                $tmp_obj = new clsUf($sigla_uf);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->sigla_uf = $sigla_uf;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->sigla_uf = $sigla_uf;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->sigla_uf = $sigla_uf;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM uf WHERE sigla_uf = '{$sigla_uf}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM uf WHERE sigla_uf = '{$sigla_uf}'")) {
                     $this->sigla_uf = $sigla_uf;
                 }
             }
         }
-        if( is_numeric( $idsis_rev ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_rev );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($idsis_rev)) {
+            if (class_exists('clsAcessoSistema')) {
+                $tmp_obj = new clsAcessoSistema($idsis_rev);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->idsis_rev = $idsis_rev;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->idsis_rev = $idsis_rev;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_rev = $idsis_rev;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_rev}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_rev}'")) {
                     $this->idsis_rev = $idsis_rev;
                 }
             }
         }
-        if( is_numeric( $idsis_cad ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($idsis_cad)) {
+            if (class_exists('clsAcessoSistema')) {
+                $tmp_obj = new clsAcessoSistema($idsis_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->idsis_cad = $idsis_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->idsis_cad = $idsis_cad;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_cad = $idsis_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_cad}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_cad}'")) {
                     $this->idsis_cad = $idsis_cad;
                 }
             }
         }
-        if( is_numeric( $idpes_rev ) )
-        {
-            if( class_exists( "clsCadastroPessoa" ) )
-            {
-                $tmp_obj = new clsCadastroPessoa( $idpes_rev );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($idpes_rev)) {
+            if (class_exists('clsCadastroPessoa')) {
+                $tmp_obj = new clsCadastroPessoa($idpes_rev);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->idpes_rev = $idpes_rev;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->idpes_rev = $idpes_rev;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_rev}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_rev}'")) {
                     $this->idpes_rev = $idpes_rev;
                 }
             }
         }
-        if( is_numeric( $idpes_cad ) )
-        {
-            if( class_exists( "clsCadastroPessoa" ) )
-            {
-                $tmp_obj = new clsCadastroPessoa( $idpes_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($idpes_cad)) {
+            if (class_exists('clsCadastroPessoa')) {
+                $tmp_obj = new clsCadastroPessoa($idpes_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->idpes_cad = $idpes_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->idpes_cad = $idpes_cad;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_cad}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_cad}'")) {
                     $this->idpes_cad = $idpes_cad;
                 }
             }
         }
-        if( is_numeric( $idmun_pai ) )
-        {
-            if( class_exists( "clsMunicipio" ) )
-            {
-                $tmp_obj = new clsMunicipio( $idmun_pai );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($idmun_pai)) {
+            if (class_exists('clsMunicipio')) {
+                $tmp_obj = new clsMunicipio($idmun_pai);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->idmun_pai = $idmun_pai;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->idmun_pai = $idmun_pai;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idmun_pai = $idmun_pai;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM municipio WHERE idmun = '{$idmun_pai}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM municipio WHERE idmun = '{$idmun_pai}'")) {
                     $this->idmun_pai = $idmun_pai;
                 }
             }
         }
-        if( is_numeric( $idmun ) )
-        {
-            if( class_exists( "clsMunicipio" ) )
-            {
-                $tmp_obj = new clsMunicipio( $idmun );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($idmun)) {
+            if (class_exists('clsMunicipio')) {
+                $tmp_obj = new clsMunicipio($idmun);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->idmun = $idmun;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->idmun = $idmun;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idmun = $idmun;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM municipio WHERE idmun = '{$idmun}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM municipio WHERE idmun = '{$idmun}'")) {
                     $this->idmun = $idmun;
                 }
             }
         }
 
-
-        if( is_string( $nome ) )
-        {
+        if (is_string($nome)) {
             $this->nome = $nome;
         }
-        if( is_numeric( $area_km2 ) )
-        {
+        if (is_numeric($area_km2)) {
             $this->area_km2 = $area_km2;
         }
-        if( is_numeric( $idmreg ) )
-        {
+        if (is_numeric($idmreg)) {
             $this->idmreg = $idmreg;
         }
-        if( is_numeric( $idasmun ) )
-        {
+        if (is_numeric($idasmun)) {
             $this->idasmun = $idasmun;
         }
-        if( is_numeric( $cod_ibge ) )
-        {
+        if (is_numeric($cod_ibge)) {
             $this->cod_ibge = $cod_ibge;
         }
-        if( is_string( $geom ) )
-        {
+        if (is_string($geom)) {
             $this->geom = $geom;
         }
-        if( is_string( $tipo ) )
-        {
+        if (is_string($tipo)) {
             $this->tipo = $tipo;
         }
-        if( is_string( $data_rev ) )
-        {
+        if (is_string($data_rev)) {
             $this->data_rev = $data_rev;
         }
-        if( is_string( $data_cad ) )
-        {
+        if (is_string($data_cad)) {
             $this->data_cad = $data_cad;
         }
-        if( is_string( $origem_gravacao ) )
-        {
+        if (is_string($origem_gravacao)) {
             $this->origem_gravacao = $origem_gravacao;
         }
-        if( is_string( $operacao ) )
-        {
+        if (is_string($operacao)) {
             $this->operacao = $operacao;
         }
-
     }
 
     /**
@@ -394,120 +310,104 @@ class clsPublicMunicipio
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad ) )
-        {
+        if (is_string($this->nome) && is_string($this->sigla_uf) && is_string($this->tipo) && is_string($this->origem_gravacao) && is_string($this->operacao) && is_numeric($this->idsis_cad)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_string( $this->nome ) )
-            {
+            if (is_string($this->nome)) {
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}E'" . addslashes($this->nome) . "'";
-                $gruda = ", ";
+                $valores .= "{$gruda}E'" . addslashes($this->nome) . '\'';
+                $gruda = ', ';
             }
-            if( is_string( $this->sigla_uf ) )
-            {
+            if (is_string($this->sigla_uf)) {
                 $campos .= "{$gruda}sigla_uf";
                 $valores .= "{$gruda}'{$this->sigla_uf}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->area_km2 ) )
-            {
+            if (is_numeric($this->area_km2)) {
                 $campos .= "{$gruda}area_km2";
                 $valores .= "{$gruda}'{$this->area_km2}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idmreg ) )
-            {
+            if (is_numeric($this->idmreg)) {
                 $campos .= "{$gruda}idmreg";
                 $valores .= "{$gruda}'{$this->idmreg}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idasmun ) )
-            {
+            if (is_numeric($this->idasmun)) {
                 $campos .= "{$gruda}idasmun";
                 $valores .= "{$gruda}'{$this->idasmun}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->cod_ibge ) )
-            {
+            if (is_numeric($this->cod_ibge)) {
                 $campos .= "{$gruda}cod_ibge";
                 $valores .= "{$gruda}'{$this->cod_ibge}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->geom ) )
-            {
+            if (is_string($this->geom)) {
                 $campos .= "{$gruda}geom";
                 $valores .= "{$gruda}'{$this->geom}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->tipo ) )
-            {
+            if (is_string($this->tipo)) {
                 $campos .= "{$gruda}tipo";
                 $valores .= "{$gruda}'{$this->tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idmun_pai ) )
-            {
+            if (is_numeric($this->idmun_pai)) {
                 $campos .= "{$gruda}idmun_pai";
                 $valores .= "{$gruda}'{$this->idmun_pai}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idpes_rev ) )
-            {
+            if (is_numeric($this->idpes_rev)) {
                 $campos .= "{$gruda}idpes_rev";
                 $valores .= "{$gruda}'{$this->idpes_rev}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idpes_cad ) )
-            {
+            if (is_numeric($this->idpes_cad)) {
                 $campos .= "{$gruda}idpes_cad";
                 $valores .= "{$gruda}'{$this->idpes_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_rev ) )
-            {
+            if (is_string($this->data_rev)) {
                 $campos .= "{$gruda}data_rev";
                 $valores .= "{$gruda}'{$this->data_rev}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $campos .= "{$gruda}data_cad";
             $valores .= "{$gruda}NOW()";
-            $gruda = ", ";
-            if( is_string( $this->origem_gravacao ) )
-            {
+            $gruda = ', ';
+            if (is_string($this->origem_gravacao)) {
                 $campos .= "{$gruda}origem_gravacao";
                 $valores .= "{$gruda}'{$this->origem_gravacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->operacao ) )
-            {
+            if (is_string($this->operacao)) {
                 $campos .= "{$gruda}operacao";
                 $valores .= "{$gruda}'{$this->operacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idsis_rev ) )
-            {
+            if (is_numeric($this->idsis_rev)) {
                 $campos .= "{$gruda}idsis_rev";
                 $valores .= "{$gruda}'{$this->idsis_rev}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idsis_cad ) )
-            {
+            if (is_numeric($this->idsis_cad)) {
                 $campos .= "{$gruda}idsis_cad";
                 $valores .= "{$gruda}'{$this->idsis_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "seq_municipio" );
+            return $db->InsertId('seq_municipio');
         }
+
         return false;
     }
 
@@ -516,107 +416,88 @@ class clsPublicMunicipio
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->idmun ) )
-        {
-
+        if (is_numeric($this->idmun)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_string( $this->nome ) )
-            {
-                $set .= "{$gruda}nome = E'" . addslashes($this->nome) . "'";
-                $gruda = ", ";
+            if (is_string($this->nome)) {
+                $set .= "{$gruda}nome = E'" . addslashes($this->nome) . '\'';
+                $gruda = ', ';
             }
-            if( is_string( $this->sigla_uf ) )
-            {
+            if (is_string($this->sigla_uf)) {
                 $set .= "{$gruda}sigla_uf = '{$this->sigla_uf}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->area_km2 ) )
-            {
+            if (is_numeric($this->area_km2)) {
                 $set .= "{$gruda}area_km2 = '{$this->area_km2}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idmreg ) )
-            {
+            if (is_numeric($this->idmreg)) {
                 $set .= "{$gruda}idmreg = '{$this->idmreg}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idasmun ) )
-            {
+            if (is_numeric($this->idasmun)) {
                 $set .= "{$gruda}idasmun = '{$this->idasmun}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->cod_ibge ) )
-            {
+            if (is_numeric($this->cod_ibge)) {
                 $set .= "{$gruda}cod_ibge = '{$this->cod_ibge}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->geom ) )
-            {
+            if (is_string($this->geom)) {
                 $set .= "{$gruda}geom = '{$this->geom}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->tipo ) )
-            {
+            if (is_string($this->tipo)) {
                 $set .= "{$gruda}tipo = '{$this->tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idmun_pai ) )
-            {
+            if (is_numeric($this->idmun_pai)) {
                 $set .= "{$gruda}idmun_pai = '{$this->idmun_pai}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idpes_rev ) )
-            {
+            if (is_numeric($this->idpes_rev)) {
                 $set .= "{$gruda}idpes_rev = '{$this->idpes_rev}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idpes_cad ) )
-            {
+            if (is_numeric($this->idpes_cad)) {
                 $set .= "{$gruda}idpes_cad = '{$this->idpes_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_rev ) )
-            {
+            if (is_string($this->data_rev)) {
                 $set .= "{$gruda}data_rev = '{$this->data_rev}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_cad ) )
-            {
+            if (is_string($this->data_cad)) {
                 $set .= "{$gruda}data_cad = '{$this->data_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->origem_gravacao ) )
-            {
+            if (is_string($this->origem_gravacao)) {
                 $set .= "{$gruda}origem_gravacao = '{$this->origem_gravacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->operacao ) )
-            {
+            if (is_string($this->operacao)) {
                 $set .= "{$gruda}operacao = '{$this->operacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idsis_rev ) )
-            {
+            if (is_numeric($this->idsis_rev)) {
                 $set .= "{$gruda}idsis_rev = '{$this->idsis_rev}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->idsis_cad ) )
-            {
+            if (is_numeric($this->idsis_cad)) {
                 $set .= "{$gruda}idsis_cad = '{$this->idsis_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE idmun = '{$this->idmun}'");
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE idmun = '{$this->idmun}'" );
                 return true;
             }
         }
+
         return false;
     }
 
@@ -645,147 +526,121 @@ class clsPublicMunicipio
      *
      * @return array
      */
-    function lista( $str_nome = null, $str_sigla_uf = null, $int_area_km2 = null, $int_idmreg = null, $int_idasmun = null, $int_cod_ibge = null, $str_geom = null, $str_tipo = null, $int_idmun_pai = null, $int_idpes_rev = null, $int_idpes_cad = null, $date_data_rev_ini = null, $date_data_rev_fim = null, $date_data_cad_ini = null, $date_data_cad_fim = null, $str_origem_gravacao = null, $str_operacao = null, $int_idsis_rev = null, $int_idsis_cad = null )
+    public function lista($str_nome = null, $str_sigla_uf = null, $int_area_km2 = null, $int_idmreg = null, $int_idasmun = null, $int_cod_ibge = null, $str_geom = null, $str_tipo = null, $int_idmun_pai = null, $int_idpes_rev = null, $int_idpes_cad = null, $date_data_rev_ini = null, $date_data_rev_fim = null, $date_data_cad_ini = null, $date_data_cad_fim = null, $str_origem_gravacao = null, $str_operacao = null, $int_idsis_rev = null, $int_idsis_cad = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_idmun ) )
-        {
+        if (is_numeric($int_idmun)) {
             $filtros .= "{$whereAnd} idmun = '{$int_idmun}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nome ) )
-        {
-            $filtros .= "{$whereAnd} nome LIKE E'%" . addslashes($str_nome) . "%'";
-            $whereAnd = " AND ";
+        if (is_string($str_nome)) {
+            $filtros .= "{$whereAnd} nome LIKE E'%" . addslashes($str_nome) . '%\'';
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_sigla_uf ) )
-        {
+        if (is_string($str_sigla_uf)) {
             $filtros .= "{$whereAnd} sigla_uf LIKE '%{$str_sigla_uf}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_area_km2 ) )
-        {
+        if (is_numeric($int_area_km2)) {
             $filtros .= "{$whereAnd} area_km2 = '{$int_area_km2}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idmreg ) )
-        {
+        if (is_numeric($int_idmreg)) {
             $filtros .= "{$whereAnd} idmreg = '{$int_idmreg}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idasmun ) )
-        {
+        if (is_numeric($int_idasmun)) {
             $filtros .= "{$whereAnd} idasmun = '{$int_idasmun}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_cod_ibge ) )
-        {
+        if (is_numeric($int_cod_ibge)) {
             $filtros .= "{$whereAnd} cod_ibge = '{$int_cod_ibge}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_geom ) )
-        {
+        if (is_string($str_geom)) {
             $filtros .= "{$whereAnd} geom LIKE '%{$str_geom}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_tipo ) )
-        {
+        if (is_string($str_tipo)) {
             $filtros .= "{$whereAnd} tipo LIKE '%{$str_tipo}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idmun_pai ) )
-        {
+        if (is_numeric($int_idmun_pai)) {
             $filtros .= "{$whereAnd} idmun_pai = '{$int_idmun_pai}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idpes_rev ) )
-        {
+        if (is_numeric($int_idpes_rev)) {
             $filtros .= "{$whereAnd} idpes_rev = '{$int_idpes_rev}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idpes_cad ) )
-        {
+        if (is_numeric($int_idpes_cad)) {
             $filtros .= "{$whereAnd} idpes_cad = '{$int_idpes_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_rev_ini ) )
-        {
+        if (is_string($date_data_rev_ini)) {
             $filtros .= "{$whereAnd} data_rev >= '{$date_data_rev_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_rev_fim ) )
-        {
+        if (is_string($date_data_rev_fim)) {
             $filtros .= "{$whereAnd} data_rev <= '{$date_data_rev_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cad_ini ) )
-        {
+        if (is_string($date_data_cad_ini)) {
             $filtros .= "{$whereAnd} data_cad >= '{$date_data_cad_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cad_fim ) )
-        {
+        if (is_string($date_data_cad_fim)) {
             $filtros .= "{$whereAnd} data_cad <= '{$date_data_cad_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_origem_gravacao ) )
-        {
+        if (is_string($str_origem_gravacao)) {
             $filtros .= "{$whereAnd} origem_gravacao LIKE '%{$str_origem_gravacao}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_operacao ) )
-        {
+        if (is_string($str_operacao)) {
             $filtros .= "{$whereAnd} operacao LIKE '%{$str_operacao}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idsis_rev ) )
-        {
+        if (is_numeric($int_idsis_rev)) {
             $filtros .= "{$whereAnd} idsis_rev = '{$int_idsis_rev}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_idsis_cad ) )
-        {
+        if (is_numeric($int_idsis_cad)) {
             $filtros .= "{$whereAnd} idsis_cad = '{$int_idsis_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -794,16 +649,16 @@ class clsPublicMunicipio
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->idmun ) )
-        {
-
+        if (is_numeric($this->idmun)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE idmun = '{$this->idmun}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE idmun = '{$this->idmun}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -812,18 +667,16 @@ class clsPublicMunicipio
      *
      * @return bool
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->idmun ) )
-        {
-
+        if (is_numeric($this->idmun)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE idmun = '{$this->idmun}'" );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE idmun = '{$this->idmun}'");
+            if ($db->ProximoRegistro()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -832,15 +685,16 @@ class clsPublicMunicipio
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->idmun ) )
-        {
+        if (is_numeric($this->idmun)) {
 //          delete
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE idmun = '{$this->idmun}'" );
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE idmun = '{$this->idmun}'");
+
             return true;
         }
+
         return false;
     }
 
@@ -849,7 +703,7 @@ class clsPublicMunicipio
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -859,7 +713,7 @@ class clsPublicMunicipio
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -869,7 +723,7 @@ class clsPublicMunicipio
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -880,18 +734,18 @@ class clsPublicMunicipio
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -899,13 +753,12 @@ class clsPublicMunicipio
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -915,14 +768,12 @@ class clsPublicMunicipio
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>

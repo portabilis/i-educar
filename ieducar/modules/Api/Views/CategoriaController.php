@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,38 +44,41 @@ require_once 'intranet/include/pmieducar/clsPmieducarCategoriaAcervo.inc.php';
 
 /**
  * Class CategoriaController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class CategoriaController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  /*protected function searchOptions() {
-    return array('namespace' => 'pmieducar', 'labelAttr' => 'descricao', 'idAttr' => 'id');
-  }
+    /*protected function searchOptions() {
+      return array('namespace' => 'pmieducar', 'labelAttr' => 'descricao', 'idAttr' => 'id');
+    }
 
-  protected function formatResourceValue($resource) {
-    return $this->toUtf8($resource['name'], array('transform' => true));
-  }*/
+    protected function formatResourceValue($resource) {
+      return $this->toUtf8($resource['name'], array('transform' => true));
+    }*/
 
-  protected function getCategorias() {
-    
-    $obj = new clsPmieducarCategoriaAcervo();
-    $arrayCategorias;
-    
-    foreach ($obj->listaCategoriasPorObra($this->getRequest()->id) as $reg) {
-      $arrayCategorias[] = $reg['categoria_id'];
-    }    
-    
-    return array('categorias' => $arrayCategorias);
-  }
+    protected function getCategorias()
+    {
+        $obj = new clsPmieducarCategoriaAcervo();
+        $arrayCategorias;
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'categoria-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'categorias'))
-      $this->appendResponse($this->getCategorias());
-    else
-      $this->notImplementedOperationError();
-  }
+        foreach ($obj->listaCategoriasPorObra($this->getRequest()->id) as $reg) {
+            $arrayCategorias[] = $reg['categoria_id'];
+        }
+
+        return ['categorias' => $arrayCategorias];
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'categoria-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'categorias')) {
+            $this->appendResponse($this->getCategorias());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

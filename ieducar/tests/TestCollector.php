@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Tests
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -80,138 +85,158 @@ require_once 'PHPUnit/Runner/IncludePathTestCollector.php';
  * </code>
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Tests
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 abstract class TestCollector
 {
-  /**
-   * Caminho completo do arquivo da classe que estende TestCollector.
-   * @var string
-   */
-  protected $_file = NULL;
+    /**
+     * Caminho completo do arquivo da classe que estende TestCollector.
+     *
+     * @var string
+     */
+    protected $_file = null;
 
-  /**
-   * Diretório onde residem os arquivos com as classes de teste.
-   * @var array
-   */
-  protected $_directory = array();
+    /**
+     * Diretório onde residem os arquivos com as classes de teste.
+     *
+     * @var array
+     */
+    protected $_directory = [];
 
-  /**
-   * Nome da suíte de testes.
-   * @var string
-   */
-  protected $_name  = '';
+    /**
+     * Nome da suíte de testes.
+     *
+     * @var string
+     */
+    protected $_name  = '';
 
-  /**
-   * Uma instância de PHPUnit_Framework_TestSuite.
-   * @var PHPUnit_Framework_TestSuite
-   */
-  protected $_suite = NULL;
+    /**
+     * Uma instância de PHPUnit_Framework_TestSuite.
+     *
+     * @var PHPUnit_Framework_TestSuite
+     */
+    protected $_suite = null;
 
-  /**
-   * Construtor.
-   * @return TestCollector
-   */
-  public function __construct()
-  {
-    $this->_defineCurrentDirectory();
-  }
+    /**
+     * Construtor.
+     *
+     * @return TestCollector
+     */
+    public function __construct()
+    {
+        $this->_defineCurrentDirectory();
+    }
 
-  /**
-   * Cria um objeto PHPUnit_Framework_TestSuite com o nome passado como
-   * argumento ou usando a variável de instância $_name.
-   *
-   * @param   string  $name  O nome para a suíte de testes
-   * @return  TestCollector  Interface fluída
-   * @throws  InvalidArgumentException
-   */
-  public function createTestSuite($name = '')
-  {
-    if ((trim((string) $name)) == '' && $this->_name == '') {
-      throw new InvalidArgumentException('A classe concreta deve sobrescrever a '
+    /**
+     * Cria um objeto PHPUnit_Framework_TestSuite com o nome passado como
+     * argumento ou usando a variável de instância $_name.
+     *
+     * @param string $name O nome para a suíte de testes
+     *
+     * @return TestCollector Interface fluída
+     *
+     * @throws InvalidArgumentException
+     */
+    public function createTestSuite($name = '')
+    {
+        if ((trim((string) $name)) == '' && $this->_name == '') {
+            throw new InvalidArgumentException('A classe concreta deve sobrescrever a '
                 . 'variável "$_name" ou passar um nome válido ao chamar o método'
                 . 'createTestSuite().');
-    }
-    if (trim((string) $name) != '') {
-      $name = $this->_name;
-    }
+        }
+        if (trim((string) $name) != '') {
+            $name = $this->_name;
+        }
 
-    $this->_suite = new PHPUnit_Framework_TestSuite($name);
-    return $this;
-  }
+        $this->_suite = new PHPUnit_Framework_TestSuite($name);
 
-  /**
-   * Adiciona os testes do diretório da classe de definição de suíte.
-   *
-   * @param   PHPUnit_Framework_TestSuite  $suite
-   * @return  PHPUnit_Framework_TestSuite
-   */
-  public function addDirectoryTests(PHPUnit_Framework_TestSuite $suite = NULL)
-  {
-    // Se não existir um objeto PHPUnit_Framework_TestSuite, cria um com o nome
-    // do arquivo da classe de definição da suíte
-    if ($this->_suite == NULL && $suite == NULL) {
-      $this->createTestSuite();
-    }
-    if ($suite == NULL) {
-      $suite = $this->_suite;
+        return $this;
     }
 
-    $suite->addTestFiles($this->_collectTests());
-    return $suite;
-  }
+    /**
+     * Adiciona os testes do diretório da classe de definição de suíte.
+     *
+     * @param PHPUnit_Framework_TestSuite $suite
+     *
+     * @return PHPUnit_Framework_TestSuite
+     */
+    public function addDirectoryTests(PHPUnit_Framework_TestSuite $suite = null)
+    {
+        // Se não existir um objeto PHPUnit_Framework_TestSuite, cria um com o nome
+        // do arquivo da classe de definição da suíte
+        if ($this->_suite == null && $suite == null) {
+            $this->createTestSuite();
+        }
+        if ($suite == null) {
+            $suite = $this->_suite;
+        }
 
-  /**
-   * Retorna um PHPUnit_Util_FilterIterator que contém as regras de inclusão
-   * de testes do diretório definido por $_fir.
-   *
-   * @return PHPUnit_Util_FilterIterator
-   */
-  protected function _collectTests()
-  {
-    $testCollector = new PHPUnit_Runner_IncludePathTestCollector($this->_directory);
-    return $testCollector->collectTests();
-  }
+        $suite->addTestFiles($this->_collectTests());
 
-  /**
-   * Define o diretório atual da classe que estende TestCollector. O diretório é
-   * definido pela variável de instância $_file.
-   *
-   * @throws  Exception  Lança exceção
-   * @todo    Refatorar o código para utilizar {@link http://php.net/lsb Late static binding}
-   *          quando a versão do PHP for a 5.3.
-   */
-  protected function _defineCurrentDirectory()
-  {
-    if ($this->_file === NULL) {
-      throw new Exception('A classe concreta deve sobrescrever a variável "$_file".');
+        return $suite;
     }
-    $directory = $this->_getDirectoryPath($this->_file);
-    if (!array_search($directory, $this->_directory)) {
-      $this->_directory[] = $directory;
-    }
-  }
 
-  /**
-   * Pega o caminho do diretório que será varrido para a inclusão de testes.
-   * @param  string $path
-   * @return string
-   */
-  protected function _getDirectoryPath($path)
-  {
-    $directory = realpath(dirname($path));
-    if (!is_dir($directory)) {
-      throw new Exception('The path "'. $directory .'" is not a valid directory');
-    }
-    return $directory;
-  }
+    /**
+     * Retorna um PHPUnit_Util_FilterIterator que contém as regras de inclusão
+     * de testes do diretório definido por $_fir.
+     *
+     * @return PHPUnit_Util_FilterIterator
+     */
+    protected function _collectTests()
+    {
+        $testCollector = new PHPUnit_Runner_IncludePathTestCollector($this->_directory);
 
-  public function addDirectory($directory)
-  {
-    $this->_directory[] = $this->_getDirectoryPath($directory);
-  }
+        return $testCollector->collectTests();
+    }
+
+    /**
+     * Define o diretório atual da classe que estende TestCollector. O diretório é
+     * definido pela variável de instância $_file.
+     *
+     * @throws Exception Lança exceção
+     *
+     * @todo    Refatorar o código para utilizar {@link http://php.net/lsb Late static binding}
+     *          quando a versão do PHP for a 5.3.
+     */
+    protected function _defineCurrentDirectory()
+    {
+        if ($this->_file === null) {
+            throw new Exception('A classe concreta deve sobrescrever a variável "$_file".');
+        }
+        $directory = $this->_getDirectoryPath($this->_file);
+        if (!array_search($directory, $this->_directory)) {
+            $this->_directory[] = $directory;
+        }
+    }
+
+    /**
+     * Pega o caminho do diretório que será varrido para a inclusão de testes.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    protected function _getDirectoryPath($path)
+    {
+        $directory = realpath(dirname($path));
+        if (!is_dir($directory)) {
+            throw new Exception('The path "'. $directory .'" is not a valid directory');
+        }
+
+        return $directory;
+    }
+
+    public function addDirectory($directory)
+    {
+        $this->_directory[] = $this->_getDirectoryPath($directory);
+    }
 }

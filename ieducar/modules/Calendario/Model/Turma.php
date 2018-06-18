@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Calendario
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,37 +40,42 @@ require_once 'CoreExt/Entity.php';
  * Calendario_Model_Turma class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Calendario
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Calendario_Model_Turma extends CoreExt_Entity
 {
-  protected $_data = array(
-    'calendarioAnoLetivo' => NULL,
-    'ano'                 => NULL,
-    'mes'                 => NULL,
-    'dia'                 => NULL,
-    'turma'               => NULL
-  );
+    protected $_data = [
+    'calendarioAnoLetivo' => null,
+    'ano'                 => null,
+    'mes'                 => null,
+    'dia'                 => null,
+    'turma'               => null
+  ];
 
-  public function getDefaultValidatorCollection()
-  {
-    return array(
-      'calendarioAnoLetivo' => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'ano'                 => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'mes'                 => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'dia'                 => new CoreExt_Validate_Numeric(array('min' => 0)),
-      'turma'               => new CoreExt_Validate_Numeric(array('min' => 0))
-    );
-  }
+    public function getDefaultValidatorCollection()
+    {
+        return [
+      'calendarioAnoLetivo' => new CoreExt_Validate_Numeric(['min' => 0]),
+      'ano'                 => new CoreExt_Validate_Numeric(['min' => 0]),
+      'mes'                 => new CoreExt_Validate_Numeric(['min' => 0]),
+      'dia'                 => new CoreExt_Validate_Numeric(['min' => 0]),
+      'turma'               => new CoreExt_Validate_Numeric(['min' => 0])
+    ];
+    }
 
-  public function __construct(array $options = array())
-  {
-    parent::__construct($options);
-    unset($this->_data['id']);
-  }
+    public function __construct(array $options = [])
+    {
+        parent::__construct($options);
+        unset($this->_data['id']);
+    }
 }

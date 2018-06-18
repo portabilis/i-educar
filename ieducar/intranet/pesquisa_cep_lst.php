@@ -28,17 +28,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ( "include/clsBase.inc.php" );
-require_once ( "include/clsListagem.inc.php" );
-require_once ( "include/Geral.inc.php" );
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Pesquisa por CEP!" );
-        $this->processoAp         = "0";
+        $this->SetTitulo("{$this->_instituicao} Pesquisa por CEP!");
+        $this->processoAp         = '0';
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;
     }
@@ -46,160 +46,154 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $id_pessoa  = $_SESSION['id_pessoa'];
-        $this->nome = "form1";
+        $this->nome = 'form1';
 
-        if ( $_GET["campos"] ) {
-            $campos             = str_replace( "\\", null, $_GET["campos"] );
-            $campos             = unserialize( $campos );
+        if ($_GET['campos']) {
+            $campos             = str_replace('\\', null, $_GET['campos']);
+            $campos             = unserialize($campos);
             $_SESSION['campos'] = $campos;
-            unset( $_GET["campos"] );
-        }
-        else {
+            unset($_GET['campos']);
+        } else {
             $campos             = $_SESSION['campos'];
         }
 
         @session_write_close();
         $submit = false;
 
-
-        $this->addCabecalhos( array( "CEP", "Logradouro", "Bairro", "Cidade" ) );
+        $this->addCabecalhos([ 'CEP', 'Logradouro', 'Bairro', 'Cidade' ]);
 
         // Filtros de Busca
-        $this->campoCep( "cep", "CEP", "" );
-        $this->campoTexto( "logradouro", "Logradouro", "", 30, 255 );
-        $this->campoTexto( "cidade", "Cidade", "", 30, 255 );
+        $this->campoCep('cep', 'CEP', '');
+        $this->campoTexto('logradouro', 'Logradouro', '', 30, 255);
+        $this->campoTexto('cidade', 'Cidade', '', 30, 255);
 
-        if ( $_GET["busca"] == "S" ) {
-            $cep        = @$_GET["cep"];
-            $logradouro = @$_GET["logradouro"];
-            $cidade     = @$_GET["cidade"];
-            $cep        = idFederal2int( $cep );
+        if ($_GET['busca'] == 'S') {
+            $cep        = @$_GET['cep'];
+            $logradouro = @$_GET['logradouro'];
+            $cidade     = @$_GET['cidade'];
+            $cep        = idFederal2int($cep);
         }
 
         // Paginador
         $limite        = 10;
-        $iniciolimit   = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
-################### BUSCA CIDADE E LOGRADOURO ##########
-        if ($cidade && $logradouro)
-        {
+        $iniciolimit   = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+        ################### BUSCA CIDADE E LOGRADOURO ##########
+        if ($cidade && $logradouro) {
             $obj_mun = new clsMunicipio();
-            $lista = $obj_mun->lista( $cidade );
+            $lista = $obj_mun->lista($cidade);
 
             $obj_logradouro    = new clsLogradouro();
-            $lista_logradouros = $obj_logradouro->lista( false, $logradouro, $lista[0]['idmun'], false, false );
-            if ( $lista_logradouros ) {
-                foreach ( $lista_logradouros as $logradouro ) {
+            $lista_logradouros = $obj_logradouro->lista(false, $logradouro, $lista[0]['idmun'], false, false);
+            if ($lista_logradouros) {
+                foreach ($lista_logradouros as $logradouro) {
                     $objCepLogBairro   = new clsCepLogradouroBairro();
-                    $listaCepLogBairro = $objCepLogBairro->lista( $logradouro['idlog'], false, "", "idlog", $iniciolimit, $limite );
-                    if ( $listaCepLogBairro ) {
-                        foreach ( $listaCepLogBairro as $id => $juncao ) {
+                    $listaCepLogBairro = $objCepLogBairro->lista($logradouro['idlog'], false, '', 'idlog', $iniciolimit, $limite);
+                    if ($listaCepLogBairro) {
+                        foreach ($listaCepLogBairro as $id => $juncao) {
                             $det_cepLog    = $juncao['idlog']->detalhe();
                             $det_log       = $det_cepLog['idlog']->detalhe();
                             $det_TLog      = $det_log['idtlog']->detalhe();
                             $det_bai       = $juncao['idbai']->detalhe();
                             $det_mun       = $det_bai['idmun']->detalhe();
                             $det_uf        = $det_mun['sigla_uf']->detalhe();
-                            $cep_formatado = int2CEP( $det_cepLog['cep'] );
+                            $cep_formatado = int2CEP($det_cepLog['cep']);
                             //$funcao      = "set_campo_pesquisa( 'cidade', '".$det_mun["nome"]."', 'bairro', '".$det_bai["nome"]."', 'idbai', '".$det_bai["idbai"]."', 'logradouro', '".$det_log["nome"]."', 'idlog', '".$det_log["idlog"]."', 'cep', '".$det_cepLog['cep']."', 'cep_', '".$cep_formatado."', 'sigla_uf', '".$det_mun["sigla_uf"]."', 'idtlog', '".$det_TLog["idtlog"]."' )";
-                            $funcao        = "enviar( '{$det_cepLog["cep"]}', '{$det_bai["idbai"]}', '{$det_log["idlog"]}', '{$det_mun["nome"]}', '{$det_bai["nome"]}', '{$det_log["nome"]}', '{$det_uf["sigla_uf"]}', '{$det_TLog["idtlog"]}' )";
-                            $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun["nome"]}</a>" ) );
+                            $funcao        = "enviar( '{$det_cepLog['cep']}', '{$det_bai['idbai']}', '{$det_log['idlog']}', '{$det_mun['nome']}', '{$det_bai['nome']}', '{$det_log['nome']}', '{$det_uf['sigla_uf']}', '{$det_TLog['idtlog']}' )";
+                            $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun['nome']}</a>" ]);
                             $total         = $juncao['total'];
                         }
                     }
                 }
             }
         }
-######################################################################
-        if ( $cep || ( !$cep && !$logradouro && !$cidade ) ) {
+        ######################################################################
+        if ($cep || (!$cep && !$logradouro && !$cidade)) {
             $obj_cepLogBai = new clsCepLogradouroBairro();
-            $lst_cepLogBai = $obj_cepLogBai->lista( false, $cep, false, "idlog", $iniciolimit, $limite );
+            $lst_cepLogBai = $obj_cepLogBai->lista(false, $cep, false, 'idlog', $iniciolimit, $limite);
 
-            if ( $lst_cepLogBai ) {
-                foreach ( $lst_cepLogBai as $juncao ) {
+            if ($lst_cepLogBai) {
+                foreach ($lst_cepLogBai as $juncao) {
                     $det_bai       = $juncao['idbai']->detalhe();
                     $det_mun         = $det_bai['idmun']->detalhe();
                     $det_uf          = $det_mun['sigla_uf']->detalhe();
 
                     $cepLogradouro = $juncao['idlog'];
-          $_logradouro   = $cepLogradouro->detalhe();
+                    $_logradouro   = $cepLogradouro->detalhe();
 
-          if(! is_null($_logradouro['idlog']))
-            $_logradouro['idlog']->detalhe();
+                    if (! is_null($_logradouro['idlog'])) {
+                        $_logradouro['idlog']->detalhe();
+                    }
 
-          $_logradouro   = $_logradouro['idlog'];
-                    $cepFormatado  = int2CEP( $cepLogradouro->cep );
+                    $_logradouro   = $_logradouro['idlog'];
+                    $cepFormatado  = int2CEP($cepLogradouro->cep);
 
-                    $funcao        = "enviar( '{$cepLogradouro->cep}', '{$det_bai["idbai"]}', '{$cepLogradouro->idlog}', '{$det_mun["nome"]}', '{$det_bai["nome"]}', '{$_logradouro->nome}', '{$det_uf["sigla_uf"]}', '{$_logradouro->idtlog}' )";
+                    $funcao        = "enviar( '{$cepLogradouro->cep}', '{$det_bai['idbai']}', '{$cepLogradouro->idlog}', '{$det_mun['nome']}', '{$det_bai['nome']}', '{$_logradouro->nome}', '{$det_uf['sigla_uf']}', '{$_logradouro->idtlog}' )";
 
-                    $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cepFormatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$_logradouro->nome}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun["nome"]}</a>" ) );
+                    $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cepFormatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$_logradouro->nome}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun['nome']}</a>" ]);
                     $total         = $juncao['total'];
                 }
+            } else {
+                $this->addLinhas([ 'Não existe nenhum resultado a ser apresentado.' ]);
             }
-            else {
-                $this->addLinhas( array( "Não existe nenhum resultado a ser apresentado." ) );
-            }
-        }
-        elseif ( $logradouro ) {
+        } elseif ($logradouro) {
             $obj_logradouro    = new clsLogradouro();
-            $lista_logradouros = $obj_logradouro->lista( false, $logradouro, false, false, false );
-            if ( $lista_logradouros ) {
-                foreach ( $lista_logradouros as $logradouro ) {
+            $lista_logradouros = $obj_logradouro->lista(false, $logradouro, false, false, false);
+            if ($lista_logradouros) {
+                foreach ($lista_logradouros as $logradouro) {
                     $objCepLogBairro   = new clsCepLogradouroBairro();
-                    $listaCepLogBairro = $objCepLogBairro->lista( $logradouro['idlog'], false, "", "idlog", $iniciolimit, $limite );
-                    if ( $listaCepLogBairro ) {
-                        foreach ( $listaCepLogBairro as $id => $juncao ) {
+                    $listaCepLogBairro = $objCepLogBairro->lista($logradouro['idlog'], false, '', 'idlog', $iniciolimit, $limite);
+                    if ($listaCepLogBairro) {
+                        foreach ($listaCepLogBairro as $id => $juncao) {
                             $det_cepLog    = $juncao['idlog']->detalhe();
                             $det_log       = $det_cepLog['idlog']->detalhe();
                             $det_TLog      = $det_log['idtlog']->detalhe();
                             $det_bai       = $juncao['idbai']->detalhe();
                             $det_mun       = $det_bai['idmun']->detalhe();
                             $det_uf        = $det_mun['sigla_uf']->detalhe();
-                            $cep_formatado = int2CEP( $det_cepLog['cep'] );
+                            $cep_formatado = int2CEP($det_cepLog['cep']);
                             //$funcao      = "set_campo_pesquisa( 'cidade', '".$det_mun["nome"]."', 'bairro', '".$det_bai["nome"]."', 'idbai', '".$det_bai["idbai"]."', 'logradouro', '".$det_log["nome"]."', 'idlog', '".$det_log["idlog"]."', 'cep', '".$det_cepLog['cep']."', 'cep_', '".$cep_formatado."', 'sigla_uf', '".$det_mun["sigla_uf"]."', 'idtlog', '".$det_TLog["idtlog"]."' )";
-                            $funcao        = "enviar( '{$det_cepLog["cep"]}', '{$det_bai["idbai"]}', '{$det_log["idlog"]}', '{$det_mun["nome"]}', '{$det_bai["nome"]}', '{$det_log["nome"]}', '{$det_uf["sigla_uf"]}', '{$det_TLog["idtlog"]}' )";
-                            $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun["nome"]}</a>" ) );
+                            $funcao        = "enviar( '{$det_cepLog['cep']}', '{$det_bai['idbai']}', '{$det_log['idlog']}', '{$det_mun['nome']}', '{$det_bai['nome']}', '{$det_log['nome']}', '{$det_uf['sigla_uf']}', '{$det_TLog['idtlog']}' )";
+                            $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_bai['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_mun['nome']}</a>" ]);
                             $total         = $juncao['total'];
                         }
                     }
                 }
             }
-        }
-        elseif ( $cidade ) {
-            $cidade = strtoupper( limpa_acentos( $cidade ) );
-            $resultado = "";
+        } elseif ($cidade) {
+            $cidade = strtoupper(limpa_acentos($cidade));
+            $resultado = '';
             $obj_mun = new clsMunicipio();
-            $lista = $obj_mun->lista( $cidade );
-            if ( $lista ) {
-                foreach ( $lista as $cidade ) {
+            $lista = $obj_mun->lista($cidade);
+            if ($lista) {
+                foreach ($lista as $cidade) {
                     $det_uf = $cidade['sigla_uf']->detalhe();
                     $objBairro      = new clsBairro();
-                    $listaBairro    = $objBairro->lista( $cidade['idmun'], false );
-                    if ( $listaBairro ) {
-                        foreach ( $listaBairro as $bairro ) {
+                    $listaBairro    = $objBairro->lista($cidade['idmun'], false);
+                    if ($listaBairro) {
+                        foreach ($listaBairro as $bairro) {
                             $objCepLogBairro   = new clsCepLogradouroBairro();
-                            $listaCepLogBairro = $objCepLogBairro->lista( false, false, $bairro['idbai'], "idlog", $iniciolimit, $limite );
-                            if ( $listaCepLogBairro ) {
-                                foreach ( $listaCepLogBairro as $id => $juncao ) {
+                            $listaCepLogBairro = $objCepLogBairro->lista(false, false, $bairro['idbai'], 'idlog', $iniciolimit, $limite);
+                            if ($listaCepLogBairro) {
+                                foreach ($listaCepLogBairro as $id => $juncao) {
                                     $det_cepLog    = $juncao['idlog']->detalhe();
                                     $det_log       = $det_cepLog['idlog']->detalhe();
                                     $det_TLog      = $det_log['idtlog']->detalhe();
-                                    $cep_formatado = int2CEP( $det_cepLog['cep'] );
-                                    if ( $logradouro ) {
-                                        if ( substr_count( strtolower( $det_log["nome"] ), strtolower( $logradouro ) ) > 0 ) {
+                                    $cep_formatado = int2CEP($det_cepLog['cep']);
+                                    if ($logradouro) {
+                                        if (substr_count(strtolower($det_log['nome']), strtolower($logradouro)) > 0) {
                                             //$funcao      = "set_campo_pesquisa( 'cidade', '".$cidade["nome"]."', 'bairro', '".$bairro["nome"]."', 'idbai', '".$bairro["idbai"]."', 'logradouro', '".$det_log["nome"]."', 'idlog', '".$det_log["idlog"]."', 'cep', '".$det_cepLog['cep']."', 'cep_', '".$cep_formatado."', 'sigla_uf', '".$cidade["sigla_uf"]."', 'idtlog', '".$det_TLog["idtlog"]."' )";
-                                            $funcao        = "enviar( '{$det_cepLog["cep"]}', '{$bairro["idbai"]}', '{$det_log["idlog"]}', '{$cidade["nome"]}', '{$bairro["nome"]}', '{$det_log["nome"]}', '{$det_uf["sigla_uf"]}', '{$det_TLog["idtlog"]}' )";
-                                            $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$bairro["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cidade["nome"]}</a>" ) );
+                                            $funcao        = "enviar( '{$det_cepLog['cep']}', '{$bairro['idbai']}', '{$det_log['idlog']}', '{$cidade['nome']}', '{$bairro['nome']}', '{$det_log['nome']}', '{$det_uf['sigla_uf']}', '{$det_TLog['idtlog']}' )";
+                                            $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$bairro['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cidade['nome']}</a>" ]);
                                             $total         = $juncao['total'];
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         //$funcao      = "set_campo_pesquisa( 'cidade', '".$cidade["nome"]."', 'bairro', '".$bairro["nome"]."', 'idbai', '".$bairro["idbai"]."', 'logradouro', '".$det_log["nome"]."', 'idlog', '".$det_log["idlog"]."', 'cep', '".$det_cepLog['cep']."', 'cep_', '".$cep_formatado."', 'sigla_uf', '".$cidade["sigla_uf"]."', 'idtlog', '".$det_TLog["idtlog"]."' )";
-                                        $funcao        = "enviar( '{$det_cepLog["cep"]}', '{$bairro["idbai"]}', '{$det_log["idlog"]}', '{$cidade["nome"]}', '{$bairro["nome"]}', '{$det_log["nome"]}', '{$det_uf["sigla_uf"]}', '{$det_TLog["idtlog"]}' )";
-                                        $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$bairro["nome"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cidade["nome"]}</a>" ) );
+                                        $funcao        = "enviar( '{$det_cepLog['cep']}', '{$bairro['idbai']}', '{$det_log['idlog']}', '{$cidade['nome']}', '{$bairro['nome']}', '{$det_log['nome']}', '{$det_uf['sigla_uf']}', '{$det_TLog['idtlog']}' )";
+                                        $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cep_formatado}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$det_log['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$bairro['nome']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$cidade['nome']}</a>" ]);
                                         $total         = $juncao['total'];
                                     }
                                 }
@@ -210,11 +204,10 @@ class indice extends clsListagem
             }
         }
 
-
         // Paginador
-        $this->addPaginador2( "pesquisa_cep_lst.php", $total, $_GET, $this->nome, $limite );
+        $this->addPaginador2('pesquisa_cep_lst.php', $total, $_GET, $this->nome, $limite);
 
-        $funcao_js    = "pesquisa_libera_campos( 'cep_', 'sigla_uf', 'cidade', 'bairro', 'idtlog', 'logradouro', 'idbai', 'idlog' )";
+        $funcao_js    = 'pesquisa_libera_campos( \'cep_\', \'sigla_uf\', \'cidade\', \'bairro\', \'idtlog\', \'logradouro\', \'idbai\', \'idlog\' )';
         $this->rodape = "
                         <table border='0' cellspacing='0' cellpadding='0' width=\"100%\" align=\"center\">
                         <tr width='100%'>
@@ -225,12 +218,12 @@ class indice extends clsListagem
                         </table>";
 
         // Define Largura da Página
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript"/">

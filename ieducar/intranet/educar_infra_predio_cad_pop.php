@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Infra Predio" );
-        $this->processoAp = "567";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Infra Predio");
+        $this->processoAp = '567';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -48,30 +48,30 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_infra_predio;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_cod_escola;
-    var $nm_predio;
-    var $desc_predio;
-    var $endereco;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_infra_predio;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_escola;
+    public $nm_predio;
+    public $desc_predio;
+    public $endereco;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_infra_predio=$_GET["cod_infra_predio"];
+        $this->cod_infra_predio=$_GET['cod_infra_predio'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 567, $this->pessoa_logada,7, "educar_infra_predio_lst.php" );
+        $obj_permissoes->permissao_cadastra(567, $this->pessoa_logada, 7, 'educar_infra_predio_lst.php');
 
 //      if( is_numeric( $this->cod_infra_predio ) )
 //      {
@@ -96,20 +96,19 @@ class indice extends clsCadastro
 //          }
 //      }
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}" : "educar_infra_predio_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 //      die();
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
         // primary keys
-        $this->campoOculto( "cod_infra_predio", $this->cod_infra_predio );
-
+        $this->campoOculto('cod_infra_predio', $this->cod_infra_predio);
 
         //** 2 - Escola 1 - institucional 0 - poli-institucional
 //      $obj_permissao = new clsPermissoes();
@@ -152,37 +151,28 @@ class indice extends clsCadastro
 //              //$this->campoOculto("ref_cod_instituicao",$escola_usuario);
 //      }
 
-        if ($_GET['precisa_lista'])
-        {
+        if ($_GET['precisa_lista']) {
             $obrigatorio = true;
             $get_escola  = true;
-            include("include/pmieducar/educar_campo_lista.php");
-        }
-        else
-        {
-            $this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
+            include('include/pmieducar/educar_campo_lista.php');
+        } else {
+            $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         }
         // text
-        $this->campoTexto( "nm_predio", "Nome Prédio", $this->nm_predio, 30, 255, true );
-        $this->campoMemo( "desc_predio", "Descrição Prédio", $this->desc_predio, 60, 10, false );
-        $this->campoMemo( "endereco", "Endereço", $this->endereco, 60, 2, true );
-
-
-
-
+        $this->campoTexto('nm_predio', 'Nome Prédio', $this->nm_predio, 30, 255, true);
+        $this->campoMemo('desc_predio', 'Descrição Prédio', $this->desc_predio, 60, 10, false);
+        $this->campoMemo('endereco', 'Endereço', $this->endereco, 60, 2, true);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 //      die($this->ref_cod_escola);
-        $obj = new clsPmieducarInfraPredio( $this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, null, null, 1 );
+        $obj = new clsPmieducarInfraPredio($this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, null, null, 1);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-
+        if ($cadastrou) {
             echo "<script>
                         if (parent.document.getElementById('ref_cod_infra_predio').disabled)
                             parent.document.getElementById('ref_cod_infra_predio').options[0] = new Option('Selecione um prédio', '', false, false);
@@ -194,15 +184,17 @@ class indice extends clsCadastro
 //          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 //          header( "Location: educar_infra_predio_lst.php" );
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarInfraPredio\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_escola ) && is_string( $this->nm_predio ) && is_string( $this->endereco )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -223,7 +215,7 @@ class indice extends clsCadastro
         return false;*/
     }
 
-    function Excluir()
+    public function Excluir()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -250,7 +242,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
@@ -258,9 +250,8 @@ $pagina->MakeAll();
 
 <?php
 
-if (!$_GET['precisa_lista'])
-{
-?>
+if (!$_GET['precisa_lista']) {
+    ?>
     Event.observe(window, 'load', Init, false);
 
     function Init()
@@ -269,6 +260,7 @@ if (!$_GET['precisa_lista'])
 //      alert($F('ref_cod_escola'));
     }
 
-<?php } ?>
+<?php
+} ?>
 
 </script>

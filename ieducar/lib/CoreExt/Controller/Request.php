@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -36,89 +41,100 @@ require_once 'CoreExt/Controller/Request/Interface.php';
  * Classe de gerenciamento de dados de uma requisição HTTP.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
 {
-  /**
-   * Opções de configuração geral da classe.
-   * @var array
-   */
-  protected $_options = array(
-    'baseurl' => NULL
-  );
+    /**
+     * Opções de configuração geral da classe.
+     *
+     * @var array
+     */
+    protected $_options = [
+    'baseurl' => null
+  ];
 
-  /**
-   * Construtor.
-   * @param array $options
-   */
-  public function __construct(array $options = array())
-  {
-    $this->setOptions($options);
-  }
-
-  /**
-   * @see CoreExt_Configurable#setOptions($options)
-   */
-  public function setOptions(array $options = array())
-  {
-    $defaultOptions = array_keys($this->getOptions());
-    $passedOptions  = array_keys($options);
-
-    if (0 < count(array_diff($passedOptions, $defaultOptions))) {
-      throw new InvalidArgumentException(
-        sprintf('A classe %s não suporta as opções: %s.', get_class($this), implode(', ', $passedOptions))
-      );
+    /**
+     * Construtor.
+     *
+     * @param array $options
+     */
+    public function __construct(array $options = [])
+    {
+        $this->setOptions($options);
     }
 
-    $this->_options = array_merge($this->getOptions(), $options);
-    return $this;
-  }
+    /**
+     * @see CoreExt_Configurable#setOptions($options)
+     */
+    public function setOptions(array $options = [])
+    {
+        $defaultOptions = array_keys($this->getOptions());
+        $passedOptions  = array_keys($options);
 
-  /**
-   * @see CoreExt_Configurable#getOptions()
-   */
-  public function getOptions()
-  {
-    return $this->_options;
-  }
+        if (0 < count(array_diff($passedOptions, $defaultOptions))) {
+            throw new InvalidArgumentException(
+        sprintf('A classe %s não suporta as opções: %s.', get_class($this), implode(', ', $passedOptions))
+      );
+        }
 
-  /**
-   * Verifica se uma opção está setada.
-   *
-   * @param string $key
-   * @return bool
-   */
-  protected function _hasOption($key)
-  {
-    return array_key_exists($key, $this->_options);
-  }
+        $this->_options = array_merge($this->getOptions(), $options);
 
-  /**
-   * Retorna um valor de opção de configuração ou NULL caso a opção não esteja
-   * setada.
-   *
-   * @param string $key
-   * @return mixed|NULL
-   */
-  protected function _getOption($key)
-  {
-    return $this->_hasOption($key) ? $this->_options[$key] : NULL;
-  }
+        return $this;
+    }
 
-  /**
-   * Implementação do método mágico __get().
-   *
-   * @param  string $key
-   * @return mixed
-   */
-  public function __get($key)
-  {
-    switch (true) {
+    /**
+     * @see CoreExt_Configurable#getOptions()
+     */
+    public function getOptions()
+    {
+        return $this->_options;
+    }
+
+    /**
+     * Verifica se uma opção está setada.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    protected function _hasOption($key)
+    {
+        return array_key_exists($key, $this->_options);
+    }
+
+    /**
+     * Retorna um valor de opção de configuração ou NULL caso a opção não esteja
+     * setada.
+     *
+     * @param string $key
+     *
+     * @return mixed|NULL
+     */
+    protected function _getOption($key)
+    {
+        return $this->_hasOption($key) ? $this->_options[$key] : null;
+    }
+
+    /**
+     * Implementação do método mágico __get().
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        switch (true) {
       case isset($_GET[$key]):
         return $_GET[$key];
       case isset($_POST[$key]):
@@ -130,63 +146,73 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
       default:
         break;
     }
-    return NULL;
-  }
 
-  /**
-   * Getter para as variáveis de requisição.
-   * @param string $key
-   * @return mixed
-   */
-  public function get($key)
-  {
-    return $this->__get($key);
-  }
-
-  /**
-   * Implementação do método mágico __isset().
-   *
-   * @link   http://php.net/manual/en/language.oop5.overloading.php
-   * @param  string $key
-   * @return bool
-   */
-  public function __isset($key)
-  {
-    $val = $this->$key;
-    return isset($val);
-  }
-
-  /**
-   * Setter para a opção de configuração baseurl.
-   * @param string $url
-   * @return CoreExt_Controller_Request_Interface Provê interface fluída
-   */
-  public function setBaseurl($url)
-  {
-    $this->setOptions(array('baseurl' => $url));
-    return $this;
-  }
-
-  /**
-   * Getter para a opção de configuração baseurl.
-   *
-   * Caso a opção não esteja configurada, determina um valor baseado na
-   * variável $_SERVER['REQUEST_URI'] da requisição, usando apenas os
-   * componentes scheme e path da URL. Veja {@link http://php.net/parse_url}
-   * para mais informações sobre os componentes de uma URL.
-   *
-   * @return string
-   */
-  public function getBaseurl()
-  {
-    if (is_null($this->_getOption('baseurl'))) {
-      require_once 'CoreExt/View/Helper/UrlHelper.php';
-      $url = CoreExt_View_Helper_UrlHelper::url(
-        $this->get('REQUEST_URI'),
-        array('absolute' => TRUE, 'components' => CoreExt_View_Helper_UrlHelper::URL_HOST)
-      );
-      $this->setBaseurl($url);
+        return null;
     }
-    return $this->_getOption('baseurl');
-  }
+
+    /**
+     * Getter para as variáveis de requisição.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function get($key)
+    {
+        return $this->__get($key);
+    }
+
+    /**
+     * Implementação do método mágico __isset().
+     *
+     * @link   http://php.net/manual/en/language.oop5.overloading.php
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        $val = $this->$key;
+
+        return isset($val);
+    }
+
+    /**
+     * Setter para a opção de configuração baseurl.
+     *
+     * @param string $url
+     *
+     * @return CoreExt_Controller_Request_Interface Provê interface fluída
+     */
+    public function setBaseurl($url)
+    {
+        $this->setOptions(['baseurl' => $url]);
+
+        return $this;
+    }
+
+    /**
+     * Getter para a opção de configuração baseurl.
+     *
+     * Caso a opção não esteja configurada, determina um valor baseado na
+     * variável $_SERVER['REQUEST_URI'] da requisição, usando apenas os
+     * componentes scheme e path da URL. Veja {@link http://php.net/parse_url}
+     * para mais informações sobre os componentes de uma URL.
+     *
+     * @return string
+     */
+    public function getBaseurl()
+    {
+        if (is_null($this->_getOption('baseurl'))) {
+            require_once 'CoreExt/View/Helper/UrlHelper.php';
+            $url = CoreExt_View_Helper_UrlHelper::url(
+        $this->get('REQUEST_URI'),
+        ['absolute' => true, 'components' => CoreExt_View_Helper_UrlHelper::URL_HOST]
+      );
+            $this->setBaseurl($url);
+        }
+
+        return $this->_getOption('baseurl');
+    }
 }

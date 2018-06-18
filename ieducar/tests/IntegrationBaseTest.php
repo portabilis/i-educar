@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   IntegrationTests
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -38,82 +43,92 @@ require_once 'CoreExt/DataMapper.php';
  * memória. Útil para os testes dos novos componentes de domínio.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   IntegrationTests
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 abstract class IntegrationBaseTest extends PHPUnit_Extensions_Database_TestCase
 {
-  /**
-   * Objeto de conexão com o banco de dados que será utilizado tanto pelas
-   * classes da aplicação quanto pelos testes de integração.
-   *
-   * @var CustomPdo
-   */
-  protected $db = NULL;
+    /**
+     * Objeto de conexão com o banco de dados que será utilizado tanto pelas
+     * classes da aplicação quanto pelos testes de integração.
+     *
+     * @var CustomPdo
+     */
+    protected $db = null;
 
-  /**
-   * Construtor.
-   */
-  public function __construct()
-  {
-    $this->db = new CustomPdo('sqlite::memory:');
-  }
+    /**
+     * Construtor.
+     */
+    public function __construct()
+    {
+        $this->db = new CustomPdo('sqlite::memory:');
+    }
 
-  /**
-   * Usa o setUp() para configurar a todas as instâncias de CoreExt_DataMapper
-   * que usem o adapter de banco dessa classe.
-   */
-  protected function setUp()
-  {
-    parent::setUp();
-    CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
-  }
+    /**
+     * Usa o setUp() para configurar a todas as instâncias de CoreExt_DataMapper
+     * que usem o adapter de banco dessa classe.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
+    }
 
-  /**
-   * Getter.
-   * @return CustomPdo
-   */
-  protected function getDbAdapter()
-  {
-    return $this->db;
-  }
+    /**
+     * Getter.
+     *
+     * @return CustomPdo
+     */
+    protected function getDbAdapter()
+    {
+        return $this->db;
+    }
 
-  /**
-   * Retorna a conexão usada pelos testes de integração do DbUnit. Note que
-   * a conexão é criada com o objeto PDO encapsulado em CustomPdo.
-   *
-   * @return PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection
-   */
-  protected function getConnection()
-  {
-    return $this->createDefaultDBConnection($this->db->getPdo(), 'testdb');
-  }
+    /**
+     * Retorna a conexão usada pelos testes de integração do DbUnit. Note que
+     * a conexão é criada com o objeto PDO encapsulado em CustomPdo.
+     *
+     * @return PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection
+     */
+    protected function getConnection()
+    {
+        return $this->createDefaultDBConnection($this->db->getPdo(), 'testdb');
+    }
 
-  /**
-   * Retorna o caminho absoluto para um arquivo fixture em unit/CoreExt/.
-   *
-   * @param string $filename
-   * @return string
-   */
-  public function getFixture($filename)
-  {
-    $path = dirname(__FILE__);
-    return $path . '/unit/CoreExt/_fixtures/' . $filename;
-  }
+    /**
+     * Retorna o caminho absoluto para um arquivo fixture em unit/CoreExt/.
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    public function getFixture($filename)
+    {
+        $path = dirname(__FILE__);
 
-/**
-   * Retorna o caminho absoluto para um arquivo fixture dentro do diretório
-   * _tests de um módulo.
-   *
-   * @param  string $filename
-   * @return string
-   */
-  public function getFixtureForModule($filename, $module)
-  {
-    $path = PROJECT_ROOT . DS . 'modules' . DS . $module . DS . '_tests';
-    return $path . DS . $filename;
-  }
+        return $path . '/unit/CoreExt/_fixtures/' . $filename;
+    }
+
+    /**
+       * Retorna o caminho absoluto para um arquivo fixture dentro do diretório
+       * _tests de um módulo.
+       *
+       * @param string $filename
+       *
+       * @return string
+       */
+    public function getFixtureForModule($filename, $module)
+    {
+        $path = PROJECT_ROOT . DS . 'modules' . DS . $module . DS . '_tests';
+
+        return $path . DS . $filename;
+    }
 }

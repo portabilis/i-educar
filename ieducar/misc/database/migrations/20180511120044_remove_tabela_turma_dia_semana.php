@@ -36,5 +36,4 @@ class RemoveTabelaTurmaDiaSemana extends AbstractMigration
              EXECUTE PROCEDURE pmieducar.fcn_aft_update();'
         );
     }
-    
 }

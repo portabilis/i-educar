@@ -24,10 +24,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,28 +42,37 @@ require_once 'lib/Portabilis/Utils/User.php';
  * Portabilis_Utils_DeprecatedXmlApi class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_Utils_DeprecatedXmlApi {
+class Portabilis_Utils_DeprecatedXmlApi
+{
+    public static function returnEmptyQueryUnlessUserIsLoggedIn($xmlns = 'sugestoes', $rootNodeName = 'query')
+    {
+        if (Portabilis_Utils_User::loggedIn() != true) {
+            Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Login required');
+        }
+    }
 
-  public static function returnEmptyQueryUnlessUserIsLoggedIn($xmlns = 'sugestoes', $rootNodeName = 'query') {
-    if (Portabilis_Utils_User::loggedIn() != true)
-      Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Login required');
-  }
+    public static function returnEmptyQueryForDisabledApi($xmlns = 'sugestoes', $rootNodeName = 'query')
+    {
+        Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Disabled API');
+    }
 
-  public static function returnEmptyQueryForDisabledApi($xmlns = 'sugestoes', $rootNodeName = 'query'){
-    Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Disabled API');
-  }
-
-  public static function returnEmptyQuery($xmlns = 'sugestoes', $rootNodeName = 'query', $comment = ''){
-    $emptyQuery = "<?xml version='1.0' encoding='5'?>" .
+    public static function returnEmptyQuery($xmlns = 'sugestoes', $rootNodeName = 'query', $comment = '')
+    {
+        $emptyQuery = '<?xml version=\'1.0\' encoding=\'5\'?>' .
                   "<!-- $comment -->" .
                   "<$rootNodeName xmlns='$xmlns'></$rootNodeName>";
 
-    die($emptyQuery);
-  }
+        die($emptyQuery);
+    }
 }

@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Operador" );
-        $this->processoAp = "589";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Operador");
+        $this->processoAp = '589';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -48,29 +48,29 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_operador;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nome;
-    var $valor;
-    var $fim_sentenca;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_operador;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nome;
+    public $valor;
+    public $fim_sentenca;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_operador=$_GET["cod_operador"];
+        $this->cod_operador=$_GET['cod_operador'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
+        $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
 
         /*if( is_numeric( $this->cod_operador ) )
         {
@@ -94,57 +94,57 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_operador_det.php?cod_operador={$registro["cod_operador"]}" : "educar_operador_lst.php";*/
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_operador", $this->cod_operador );
+        $this->campoOculto('cod_operador', $this->cod_operador);
 
         // foreign keys
 
         // text
-        $this->campoTexto( "nome", "Nome", $this->nome, 30, 255, true );
-        $this->campoMemo( "valor", "Valor", $this->valor, 60, 10, true );
-        $opcoes = array( "Não", "Sim" );
-        $this->campoLista( "fim_sentenca", "Fim Sentenca", $opcoes, $this->fim_sentenca );
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, true);
+        $this->campoMemo('valor', 'Valor', $this->valor, 60, 10, true);
+        $opcoes = [ 'Não', 'Sim' ];
+        $this->campoLista('fim_sentenca', 'Fim Sentenca', $opcoes, $this->fim_sentenca);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
+        $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
 
-
-        $obj = new clsPmieducarOperador( $this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, $this->ativo );
+        $obj = new clsPmieducarOperador($this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             echo "<script>
                         parent.document.getElementById('ref_cod_operador').options[parent.document.getElementById('ref_cod_operador').options.length] = new Option('$this->nome', '$cadastrou', false, false);
                         parent.document.getElementById('ref_cod_operador').value = '$cadastrou';
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarOperador\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nome ) && is_string( $this->valor ) && is_numeric( $this->fim_sentenca )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -169,7 +169,7 @@ class indice extends clsCadastro
         return false;*/
     }
 
-    function Excluir()
+    public function Excluir()
     {
         /*@session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -200,7 +200,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

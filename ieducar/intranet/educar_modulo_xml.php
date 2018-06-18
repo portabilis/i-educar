@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -40,20 +45,20 @@ print '<?xml version="1.0" encoding=""?>' . "\n";
 print '<query xmlns="sugestoes">' . "\n";
 
 if (is_numeric($_GET['curso'])) {
-  $cod_curso = $_GET['curso'];
+    $cod_curso = $_GET['curso'];
 
-  $db = new clsBanco();
-  $consulta  = sprintf('SELECT padrao_ano_escolar FROM pmieducar.curso WHERE cod_curso = \'%d\'', $cod_curso);
+    $db = new clsBanco();
+    $consulta  = sprintf('SELECT padrao_ano_escolar FROM pmieducar.curso WHERE cod_curso = \'%d\'', $cod_curso);
 
-  $padrao_ano_escolar = $db->CampoUnico($consulta);
+    $padrao_ano_escolar = $db->CampoUnico($consulta);
 
-  if ($padrao_ano_escolar == 1) {
-    $ano = is_numeric($_GET['ano']) ? sprintf(' AND ref_ano = \'%d\'', $_GET['ano']) : '';
+    if ($padrao_ano_escolar == 1) {
+        $ano = is_numeric($_GET['ano']) ? sprintf(' AND ref_ano = \'%d\'', $_GET['ano']) : '';
 
-    $db->Consulta(sprintf("
+        $db->Consulta(sprintf('
       SELECT
         cod_modulo,
-        sequencial || 'º ' || nm_tipo || ' - de ' || to_char(data_inicio,'dd/mm/yyyy') || ' até ' || to_char(data_fim,'dd/mm/yyyy'),
+        sequencial || \'º \' || nm_tipo || \' - de \' || to_char(data_inicio,\'dd/mm/yyyy\') || \' até \' || to_char(data_fim,\'dd/mm/yyyy\'),
         ref_ano,
         sequencial
       FROM
@@ -63,50 +68,61 @@ if (is_numeric($_GET['curso'])) {
         modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
         AND modulo.ativo = 1
         %s
-        AND ref_ref_cod_escola = '%s'
+        AND ref_ref_cod_escola = \'%s\'
       ORDER BY
         data_inicio,
         data_fim ASC
-    ", $ano, $_GET['esc']));
+    ', $ano, $_GET['esc']));
 
-    if ($db->numLinhas()) {
-      while ($db->ProximoRegistro()) {
-        list($cod, $nome, $ano, $sequencial) = $db->Tupla();
-        print sprintf('  <ano_letivo_modulo sequencial="%d" ano="%d" cod_modulo="%d">%s</ano_letivo_modulo>%s',
-          $sequencial, $ano, $cod, $nome, "\n");
-      }
-    }
-  }
-  else {
-    $ano       = $_GET['ano'];
-    $cod_turma = $_GET['turma'];
+        if ($db->numLinhas()) {
+            while ($db->ProximoRegistro()) {
+                list($cod, $nome, $ano, $sequencial) = $db->Tupla();
+                print sprintf(
+            '  <ano_letivo_modulo sequencial="%d" ano="%d" cod_modulo="%d">%s</ano_letivo_modulo>%s',
+          $sequencial,
+            $ano,
+            $cod,
+            $nome,
+            "\n"
+        );
+            }
+        }
+    } else {
+        $ano       = $_GET['ano'];
+        $cod_turma = $_GET['turma'];
 
-    if (is_numeric($cod_turma)) {
-      $db->Consulta(sprintf("
+        if (is_numeric($cod_turma)) {
+            $db->Consulta(sprintf('
         SELECT
           ref_cod_modulo,
-          nm_tipo || ' - de ' || to_char(data_inicio,'dd/mm/yyyy') || ' até ' || to_char(data_fim,'dd/mm/yyyy'),
+          nm_tipo || \' - de \' || to_char(data_inicio,\'dd/mm/yyyy\') || \' até \' || to_char(data_fim,\'dd/mm/yyyy\'),
           sequencial
         FROM
           pmieducar.turma_modulo,
           pmieducar.modulo
         WHERE
           modulo.cod_modulo = turma_modulo.ref_cod_modulo
-          AND ref_cod_turma = '%d'
-          AND to_char(data_inicio,'yyyy') = %d
+          AND ref_cod_turma = \'%d\'
+          AND to_char(data_inicio,\'yyyy\') = %d
         ORDER BY
           data_inicio,
           data_fim ASC
-      ", $cod_turma, $ano));
+      ', $cod_turma, $ano));
+        }
+        if ($db->numLinhas()) {
+            while ($db->ProximoRegistro()) {
+                list($cod, $nome, $sequencial) = $db->Tupla();
+                print sprintf(
+            '  <ano_letivo_modulo sequencial="%d" ano="{%d}" cod_modulo="%d">%s</ano_letivo_modulo>%s',
+          $sequencial,
+            $ano,
+            $cod,
+            $nome,
+            "\n"
+        );
+            }
+        }
     }
-    if ($db->numLinhas()) {
-      while ($db->ProximoRegistro()) {
-        list($cod, $nome,$sequencial) = $db->Tupla();
-        print sprintf('  <ano_letivo_modulo sequencial="%d" ano="{%d}" cod_modulo="%d">%s</ano_letivo_modulo>%s',
-          $sequencial, $ano, $cod, $nome, "\n");
-      }
-    }
-  }
 }
 
 print '</query>';

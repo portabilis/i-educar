@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     App_Model
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/tests/unit/App/Model/IedFinderTest.php 1046 2009-12-21T17:30:49.663282Z eriksencosta  $
  */
 
@@ -36,26 +41,35 @@ require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
  * App_Model_MatriculaTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     App_Model
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class App_Model_MatriculaTest extends UnitBaseTest
 {
-  public function testAtualizaMatricula()
-  {
-    $matricula = $this->getCleanMock('clsPmieducarMatricula');
-    $matricula->expects($this->once())
+    public function testAtualizaMatricula()
+    {
+        $matricula = $this->getCleanMock('clsPmieducarMatricula');
+        $matricula->expects($this->once())
               ->method('edita')
-              ->will($this->returnValue(TRUE));
+              ->will($this->returnValue(true));
 
-    // Guarda no repositório estático de classes
-    CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matricula,
-      NULL, TRUE);
+        // Guarda no repositório estático de classes
+        CoreExt_Entity::addClassToStorage(
+        'clsPmieducarMatricula',
+        $matricula,
+      null,
+        true
+    );
 
-    App_Model_Matricula::atualizaMatricula(1, 1, TRUE);
-  }
+        App_Model_Matricula::atualizaMatricula(1, 1, true);
+    }
 }

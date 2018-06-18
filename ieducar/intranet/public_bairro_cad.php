@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package   Ied_Public
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -34,8 +39,8 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 require_once 'include/public/clsPublicDistrito.inc.php';
 require_once 'include/public/clsPublicSetorBai.inc.php';
-require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
+require_once('include/pmieducar/geral.inc.php');
+require_once('include/modules/clsModulesAuditoriaGeral.inc.php');
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
@@ -43,299 +48,360 @@ require_once 'App/Model/ZonaLocalizacao.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Bairro');
-    $this->processoAp = 756;
-    $this->addEstilo('localizacaoSistema');
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Bairro');
+        $this->processoAp = 756;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Public
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
 {
-  /**
-   * Referência a usuário da sessão.
-   * @var int
-   */
-  var $pessoa_logada;
+    /**
+     * Referência a usuário da sessão.
+     *
+     * @var int
+     */
+    public $pessoa_logada;
 
-  var $idmun;
-  var $geom;
-  var $idbai;
-  var $nome;
-  var $idpes_rev;
-  var $data_rev;
-  var $origem_gravacao;
-  var $idpes_cad;
-  var $data_cad;
-  var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
-  var $zona_localizacao;
-  var $iddis;
+    public $idmun;
+    public $geom;
+    public $idbai;
+    public $nome;
+    public $idpes_rev;
+    public $data_rev;
+    public $origem_gravacao;
+    public $idpes_cad;
+    public $data_cad;
+    public $operacao;
+    public $idsis_rev;
+    public $idsis_cad;
+    public $zona_localizacao;
+    public $iddis;
 
-  var $idpais;
-  var $sigla_uf;
+    public $idpais;
+    public $sigla_uf;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->idbai = $_GET['idbai'];
+        $this->idbai = $_GET['idbai'];
 
-    if (is_numeric($this->idbai)) {
-      $obj_bairro = new clsPublicBairro();
-      $lst_bairro = $obj_bairro->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idbai);
+        if (is_numeric($this->idbai)) {
+            $obj_bairro = new clsPublicBairro();
+            $lst_bairro = $obj_bairro->lista(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+        null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          $this->idbai
+      );
 
-      if ($lst_bairro) {
-        $registro = $lst_bairro[0];
-      }
+            if ($lst_bairro) {
+                $registro = $lst_bairro[0];
+            }
 
-      if ($registro) {
-        foreach ($registro as $campo => $val) {
-          $this->$campo = $val;
+            if ($registro) {
+                foreach ($registro as $campo => $val) {
+                    $this->$campo = $val;
+                }
+
+                $retorno = 'Editar';
+            }
         }
 
-        $retorno = 'Editar';
-      }
-    }
-
-    $this->url_cancelar = ($retorno == 'Editar') ?
+        $this->url_cancelar = ($retorno == 'Editar') ?
       'public_bairro_det.php?idbai=' . $registro['idbai'] :
       'public_bairro_lst.php';
 
-    $this->nome_url_cancelar = 'Cancelar';
+        $this->nome_url_cancelar = 'Cancelar';
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "{$nomeMenu} bairro"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_enderecamento_index.php'    => 'Endereçamento',
+         ''        => "{$nomeMenu} bairro"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
 
-    return $retorno;
-  }
+        return $retorno;
+    }
 
-  function Gerar()
-  {
-    // primary keys
-    $this->campoOculto('idbai', $this->idbai);
+    public function Gerar()
+    {
+        // primary keys
+        $this->campoOculto('idbai', $this->idbai);
 
-    // foreign keys
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPais')) {
-      $objTemp = new clsPais();
-      $lista = $objTemp->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
+        // foreign keys
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsPais')) {
+            $objTemp = new clsPais();
+            $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['idpais']] = $registro['nome'];
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['idpais']] = $registro['nome'];
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
+        $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
 
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsUf')) {
-      if ($this->idpais) {
-        $objTemp = new clsUf();
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsUf')) {
+            if ($this->idpais) {
+                $objTemp = new clsUf();
 
-        $lista = $objTemp->lista(FALSE, FALSE, $this->idpais, FALSE, FALSE, 'nome ASC');
+                $lista = $objTemp->lista(false, false, $this->idpais, false, false, 'nome ASC');
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['sigla_uf']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['sigla_uf']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
-      $opcoes = array('' => 'Erro na geracao');
-    }
 
-    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
+        $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
 
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsMunicipio')) {
-      if ($this->sigla_uf) {
-        $objTemp = new clsMunicipio();
-        $lista = $objTemp->lista(FALSE, $this->sigla_uf, FALSE, FALSE, FALSE,
-          FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsMunicipio')) {
+            if ($this->sigla_uf) {
+                $objTemp = new clsMunicipio();
+                $lista = $objTemp->lista(
+            false,
+            $this->sigla_uf,
+            false,
+            false,
+            false,
+          false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            'nome ASC'
+        );
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['idmun']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['idmun']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
-      $opcoes = array("" => "Erro na geracao");
-    }
 
-    $this->campoLista('idmun', 'Município', $opcoes, $this->idmun);
+        $this->campoLista('idmun', 'Município', $opcoes, $this->idmun);
 
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPublicDistrito')) {
-      if ($this->idmun) {
-        $objTemp = new clsPublicDistrito();
-        $objTemp->setOrderBy(' nome asc ');
-        $lista = $objTemp->lista($this->idmun);
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsPublicDistrito')) {
+            if ($this->idmun) {
+                $objTemp = new clsPublicDistrito();
+                $objTemp->setOrderBy(' nome asc ');
+                $lista = $objTemp->lista($this->idmun);
 
-        if (is_array($lista) && count($lista)) {
-          foreach ($lista as $registro) {
-            $opcoes[$registro['iddis']] = $registro['nome'];
-          }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes[$registro['iddis']] = $registro['nome'];
+                    }
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }
-    }
-    else {
-      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
-      $opcoes = array("" => "Erro na geracao");
-    }
 
-    $this->campoLista('iddis', 'Distrito', $opcoes, $this->iddis);
+        $this->campoLista('iddis', 'Distrito', $opcoes, $this->iddis);
 
-    $opcoes = array('' => 'Selecione');
-    if (class_exists('clsPublicSetorBai')) {
-      $objTemp = new clsPublicSetorBai();
-      $objTemp->setOrderBy(' nome asc ');
-      $lista = $objTemp->lista();
+        $opcoes = ['' => 'Selecione'];
+        if (class_exists('clsPublicSetorBai')) {
+            $objTemp = new clsPublicSetorBai();
+            $objTemp->setOrderBy(' nome asc ');
+            $lista = $objTemp->lista();
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['idsetorbai']] = $registro['nome'];
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['idsetorbai']] = $registro['nome'];
+                }
+            }
+        } else {
+            echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+            $opcoes = ['' => 'Erro na geracao'];
         }
-      }      
-    }
-    else {
-      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
-      $opcoes = array("" => "Erro na geracao");
-    }
 
-    $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, NULL, NULL, NULL, NULL, NULL, FALSE);
+        $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, null, null, null, null, null, false);
 
-    $zona = App_Model_ZonaLocalizacao::getInstance();
-    $this->campoLista('zona_localizacao', 'Zona Localização', $zona->getEnums(),
-      $this->zona_localizacao);
+        $zona = App_Model_ZonaLocalizacao::getInstance();
+        $this->campoLista(
+        'zona_localizacao',
+        'Zona Localização',
+        $zona->getEnums(),
+      $this->zona_localizacao
+    );
 
-    $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, TRUE);
-  }
-
-  function Novo()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
-      NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
-      $this->zona_localizacao, $this->iddis);
-    $obj->idsetorbai = $this->idsetorbai;
-
-    $cadastrou = $obj->cadastra();
-    if ($cadastrou) {
-
-      $enderecamento = new clsPublicBairro();
-      $enderecamento->idbai = $cadastrou;
-      $enderecamento = $enderecamento->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Bairro", $this->pessoa_logada, $cadastrou);
-      $auditoria->inclusao($enderecamento);
-
-      $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_bairro_lst.php');
-      die();
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, true);
     }
 
-    $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-    echo "<!--\nErro ao cadastrar clsPublicBairro\nvalores obrigatorios\nis_numeric( $this->idmun ) && is_string( $this->nome ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
+    public function Novo()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    return FALSE;
-  }
+        $obj = new clsPublicBairro(
+        $this->idmun,
+        null,
+        null,
+        $this->nome,
+        null,
+      null,
+        'U',
+        $this->pessoa_logada,
+        null,
+        'I',
+        null,
+        9,
+      $this->zona_localizacao,
+        $this->iddis
+    );
+        $obj->idsetorbai = $this->idsetorbai;
 
-  function Editar()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        $cadastrou = $obj->cadastra();
+        if ($cadastrou) {
+            $enderecamento = new clsPublicBairro();
+            $enderecamento->idbai = $cadastrou;
+            $enderecamento = $enderecamento->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Bairro', $this->pessoa_logada, $cadastrou);
+            $auditoria->inclusao($enderecamento);
 
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: public_bairro_lst.php');
+            die();
+        }
 
-    $enderecamentoDetalhe = new clsPublicBairro(null, null, $this->idbai);
-    $enderecamentoDetalhe->cadastrou = $this->idbai;
-    $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        echo "<!--\nErro ao cadastrar clsPublicBairro\nvalores obrigatorios\nis_numeric( $this->idmun ) && is_string( $this->nome ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
 
-    $obj = new clsPublicBairro($this->idmun, NULL, $this->idbai, $this->nome,
-      $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9,
-      $this->zona_localizacao, $this->iddis);
-    $obj->idsetorbai = $this->idsetorbai;
-
-    $editou = $obj->edita();
-    if ($editou) {
-
-      $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Bairro", $this->pessoa_logada, $this->idbai);
-      $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
-
-      $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header('Location: public_bairro_lst.php');
-      die();
+        return false;
     }
 
-    $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao editar clsPublicBairro\nvalores obrigatorios\nif( is_numeric( $this->idbai ) )\n-->";
+    public function Editar()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    return FALSE;
-  }
+        $enderecamentoDetalhe = new clsPublicBairro(null, null, $this->idbai);
+        $enderecamentoDetalhe->cadastrou = $this->idbai;
+        $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
 
-  function Excluir()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        $obj = new clsPublicBairro(
+        $this->idmun,
+        null,
+        $this->idbai,
+        $this->nome,
+      $this->pessoa_logada,
+        null,
+        'U',
+        null,
+        null,
+        'I',
+        null,
+        9,
+      $this->zona_localizacao,
+        $this->iddis
+    );
+        $obj->idsetorbai = $this->idsetorbai;
 
-    $obj = new clsPublicBairro(NULL, NULL, $this->idbai, NULL, $this->pessoa_logada);
-    $excluiu = $obj->excluir();
+        $editou = $obj->edita();
+        if ($editou) {
+            $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Bairro', $this->pessoa_logada, $this->idbai);
+            $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
-    if ($excluiu) {
-      $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-      header('Location: public_bairro_lst.php');
-      die();
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: public_bairro_lst.php');
+            die();
+        }
+
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        echo "<!--\nErro ao editar clsPublicBairro\nvalores obrigatorios\nif( is_numeric( $this->idbai ) )\n-->";
+
+        return false;
     }
 
-    $this->mensagem = 'Exclusão não realizada.<br>';
+    public function Excluir()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    return FALSE;
-  }
+        $obj = new clsPublicBairro(null, null, $this->idbai, null, $this->pessoa_logada);
+        $excluiu = $obj->excluir();
+
+        if ($excluiu) {
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+            header('Location: public_bairro_lst.php');
+            die();
+        }
+
+        $this->mensagem = 'Exclusão não realizada.<br>';
+
+        return false;
+    }
 }
 
 // Instancia objeto de página

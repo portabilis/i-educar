@@ -40,44 +40,54 @@ require_once 'include/pmieducar/clsPmieducarCategoriaNivel.inc.php';
  * versão 1.0.0.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @link      http://svn.softwarepublico.gov.br/trac/ieducar/ticket/21
+ *
  * @package   FunctionalTests
+ *
  * @since     Classe disponível desde a versão 1.0.1
+ *
  * @version   @@package_version@@
  */
 class ServidorCategoriaNivelWebTest extends FunctionalBaseTest
 {
-  private $slStringTest = 'Selenese Nivel Teste';
+    private $slStringTest = 'Selenese Nivel Teste';
 
-  protected function tearDown()
-  {
-    $db = new clsBanco();
-    $categoriaNivel = new clsPmieducarCategoriaNivel();
-    $sql = sprintf('DELETE FROM %s WHERE %s = \'%s\'',
-      $categoriaNivel->_tabela, 'nm_categoria_nivel', $this->slStringTest);
+    protected function tearDown()
+    {
+        $db = new clsBanco();
+        $categoriaNivel = new clsPmieducarCategoriaNivel();
+        $sql = sprintf(
+        'DELETE FROM %s WHERE %s = \'%s\'',
+      $categoriaNivel->_tabela,
+        'nm_categoria_nivel',
+        $this->slStringTest
+    );
 
-    $db->Consulta($sql);
-  }
+        $db->Consulta($sql);
+    }
 
-  private function createNewEntry()
-  {
-    $this->open("/intranet/educar_categoria_nivel_lst.php");
-    $this->clickAndWait("//input[@value=' Novo ']");
-    $this->type("nm_categoria_nivel", $this->slStringTest);
-    $this->clickAndWait("btn_enviar");
-  }
+    private function createNewEntry()
+    {
+        $this->open('/intranet/educar_categoria_nivel_lst.php');
+        $this->clickAndWait('//input[@value=\' Novo \']');
+        $this->type('nm_categoria_nivel', $this->slStringTest);
+        $this->clickAndWait('btn_enviar');
+    }
 
-  public function testCategoriaNivelDelete()
-  {
-    $this->doLogin();
-    $this->createNewEntry();
+    public function testCategoriaNivelDelete()
+    {
+        $this->doLogin();
+        $this->createNewEntry();
 
-    $this->clickAndWait("link=" . $this->slStringTest);
-    $this->clickAndWait("//input[@value=' Editar ']");
-    $this->clickAndWait("//input[@value=' Excluir ']");
-    $this->assertTrue((bool) preg_match('/^Excluir registro[\s\S]$/', $this->getConfirmation()));
-    $this->assertTrue(!$this->isTextPresent($this->slStringTest));
-  }
+        $this->clickAndWait('link=' . $this->slStringTest);
+        $this->clickAndWait('//input[@value=\' Editar \']');
+        $this->clickAndWait('//input[@value=\' Excluir \']');
+        $this->assertTrue((bool) preg_match('/^Excluir registro[\s\S]$/', $this->getConfirmation()));
+        $this->assertTrue(!$this->isTextPresent($this->slStringTest));
+    }
 }

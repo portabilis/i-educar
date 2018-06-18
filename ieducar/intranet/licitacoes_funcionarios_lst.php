@@ -24,63 +24,55 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es - equipe!" );
-        $this->processoAp = "135";
+        $this->SetTitulo("{$this->_instituicao} Licita&ccedil;&otilde;es - equipe!");
+        $this->processoAp = '135';
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Licita&ccedil;&otilde;es - equipe";
-        
-        
-        $this->addCabecalhos( array( "Data", "Objeto") );
-        
-        
+        $this->titulo = 'Licita&ccedil;&otilde;es - equipe';
+
+        $this->addCabecalhos([ 'Data', 'Objeto']);
+
         $db = new clsBanco();
-        $db->Consulta( "SELECT count(0) FROM compras_licitacoes WHERE cod_compras_licitacoes NOT IN ( SELECT ref_cod_compras_licitacoes FROM compras_pregao_execucao )" );
+        $db->Consulta('SELECT count(0) FROM compras_licitacoes WHERE cod_compras_licitacoes NOT IN ( SELECT ref_cod_compras_licitacoes FROM compras_pregao_execucao )');
         $db->ProximoRegistro();
-        list ($total) = $db->Tupla();
+        list($total) = $db->Tupla();
         $total_tmp = $total;
-        $iniciolimit = (@$_GET['iniciolimit']) ? @$_GET['iniciolimit'] : "0";
+        $iniciolimit = (@$_GET['iniciolimit']) ? @$_GET['iniciolimit'] : '0';
         $limite = 10;
-        if ($total > $limite)
-        {
+        if ($total > $limite) {
             $iniciolimit_ = $iniciolimit *$limite;
             $limit = " LIMIT {$iniciolimit_}, $limite";
-        }       
-        
-        $db->Consulta( "SELECT l.data_hora, l.numero, l.cod_compras_licitacoes FROM compras_licitacoes l WHERE cod_compras_licitacoes NOT IN ( SELECT ref_cod_compras_licitacoes FROM compras_pregao_execucao ) ORDER BY l.data_hora DESC {$limit}" );
-        while ($db->ProximoRegistro())
-        {
-            list ($data, $numero, $id_licitacao) = $db->Tupla();
-            $data= date('d/m/Y', strtotime(substr($data,0,19)));
-
-            $this->addLinhas( array( "<a href='licitacoes_funcionarios_cad.php?id_licitacao=$id_licitacao'><img src='imagens/noticia.jpg' border=0>$data</a>", "<a href='licitacoes_funcionarios_cad.php?id_licitacao=$id_licitacao'>$numero</a>" ) );
         }
-        $this->paginador("licitacoes_funcionarios_lst.php?",$total_tmp,$limite,@$_GET['pos_atual']);
-        $this->largura = "100%";
+
+        $db->Consulta("SELECT l.data_hora, l.numero, l.cod_compras_licitacoes FROM compras_licitacoes l WHERE cod_compras_licitacoes NOT IN ( SELECT ref_cod_compras_licitacoes FROM compras_pregao_execucao ) ORDER BY l.data_hora DESC {$limit}");
+        while ($db->ProximoRegistro()) {
+            list($data, $numero, $id_licitacao) = $db->Tupla();
+            $data= date('d/m/Y', strtotime(substr($data, 0, 19)));
+
+            $this->addLinhas([ "<a href='licitacoes_funcionarios_cad.php?id_licitacao=$id_licitacao'><img src='imagens/noticia.jpg' border=0>$data</a>", "<a href='licitacoes_funcionarios_cad.php?id_licitacao=$id_licitacao'>$numero</a>" ]);
+        }
+        $this->paginador('licitacoes_funcionarios_lst.php?', $total_tmp, $limite, @$_GET['pos_atual']);
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

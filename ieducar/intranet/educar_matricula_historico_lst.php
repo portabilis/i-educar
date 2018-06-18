@@ -21,10 +21,15 @@
  * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -39,65 +44,75 @@ require_once 'App/Model/MatriculaSituacao.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
-    $this->processoAp = 578;
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
+        $this->processoAp = 578;
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $ref_cod_matricula;
+    public $pessoa_logada;
+    public $ref_cod_matricula;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'Lista de enturmações da matrí­cula';
+        $this->titulo = 'Lista de enturmações da matrí­cula';
 
-    $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
-    if (!$this->ref_cod_matricula) {
-      header('Location: educar_matricula_historico_lst.php');
-      die;
-    }
+        if (!$this->ref_cod_matricula) {
+            header('Location: educar_matricula_historico_lst.php');
+            die;
+        }
 
-    $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
-    $det_matricula = $obj_matricula->detalhe();
+        $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+        $det_matricula = $obj_matricula->detalhe();
 
-    $situacao = App_Model_MatriculaSituacao::getSituacao($det_matricula['aprovado']);
+        $situacao = App_Model_MatriculaSituacao::getSituacao($det_matricula['aprovado']);
 
-    $this->ref_cod_curso = $det_matricula['ref_cod_curso'];
+        $this->ref_cod_curso = $det_matricula['ref_cod_curso'];
 
-    $this->ref_cod_serie  = $det_matricula['ref_ref_cod_serie'];
-    $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
-    $this->ref_cod_turma  = $_GET['ref_cod_turma'];
-    $this->ano_letivo     = $_GET['ano_letivo'];
+        $this->ref_cod_serie  = $det_matricula['ref_ref_cod_serie'];
+        $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
+        $this->ref_cod_turma  = $_GET['ref_cod_turma'];
+        $this->ano_letivo     = $_GET['ano_letivo'];
 
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Sequencial',
       'Turma',
       'Ativo',
@@ -110,94 +125,115 @@ class indice extends clsListagem
       'Falecido',
       'Usuário criou',
       'Usuário editou'
+    ]);
+
+        // Busca dados da matricula
+        $obj_ref_cod_matricula = new clsPmieducarMatricula();
+        $detalhe_matricula = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+
+        $obj_aluno = new clsPmieducarAluno();
+        $det_aluno = array_shift($obj_aluno->lista(
+        $detalhe_matricula['ref_cod_aluno'],
+      null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1
     ));
 
-    // Busca dados da matricula
-    $obj_ref_cod_matricula = new clsPmieducarMatricula();
-    $detalhe_matricula = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $obj_escola = new clsPmieducarEscola(
+        $this->ref_cod_escola,
+        null,
+        null,
+      null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1
+    );
+        $det_escola = $obj_escola->detalhe();
 
-    $obj_aluno = new clsPmieducarAluno();
-    $det_aluno = array_shift($obj_aluno->lista($detalhe_matricula['ref_cod_aluno'],
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1));
+        if ($det_escola['nome']) {
+            $this->campoRotulo('nm_escola', 'Escola', $det_escola['nome']);
+        }
 
-    $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-      $det_escola = $obj_escola->detalhe();
+        $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
+        $this->campoRotulo('matricula', 'Matrícula', $this->ref_cod_matricula);
+        $this->campoRotulo('situacao', 'Situação', $situacao);
+        $this->campoRotulo('data_saida', 'Data saída', dataToBrasil($detalhe_matricula['data_cancel']));
 
-    if ($det_escola['nome']) {
-      $this->campoRotulo('nm_escola', 'Escola', $det_escola['nome']);
+        //Paginador
+        $this->limite = 20;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+
+        $obj = new clsPmieducarMatriculaTurma();
+        $obj->setOrderby('sequencial ASC');
+        $obj->setLimite($this->limite, $this->offset);
+
+        $lista = $obj->lista($this->ref_cod_matricula);
+
+        $total = $obj->_total;
+
+        // monta a lista
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $ativo = $registro['ativo'] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+                $dataEnturmacao = dataToBrasil($registro['data_enturmacao']);
+                $dataSaida = dataToBrasil($registro['data_exclusao']);
+                $dataSaidaMatricula = dataToBrasil($detalhe_matricula['data_cancel']);
+                $transferido = $registro['transferido'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+                $remanejado = $registro['remanejado'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+                $abandono = $registro['abandono'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+                $reclassificado = $registro['reclassificado'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+                $falecido = $registro['falecido'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+
+                $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
+                $usuarioCriou = $usuarioCriou->detalhe();
+
+                $usuarioEditou = new clsPessoa_($registro['ref_usuario_exc']);
+                $usuarioEditou = $usuarioEditou->detalhe();
+
+                $this->addLinhas(
+          [
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$registro['sequencial']}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$registro['nm_turma']}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$ativo}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$dataEnturmacao}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$dataSaida}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$transferido}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$remanejado}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$reclassificado}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$abandono}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$falecido}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$usuarioCriou['nome']}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$usuarioEditou['nome']}</a>",
+          ]
+        );
+            }
+        }
+        $this->addPaginador2('educar_matricula_historico_lst.php', $total, $_GET, $this->nome, $this->limite);
+
+        $this->acao = "go(\"educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}\")";
+        $this->nome_acao = 'Voltar';
+
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Histórico de enturmações da matrí­cula'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
-    $this->campoRotulo('matricula', 'Matrícula', $this->ref_cod_matricula);
-    $this->campoRotulo('situacao', 'Situação', $situacao);
-    $this->campoRotulo('data_saida', 'Data saída', dataToBrasil($detalhe_matricula['data_cancel']));
-
-    //Paginador
-    $this->limite = 20;
-    $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
-    $obj = new clsPmieducarMatriculaTurma();
-    $obj->setOrderby( "sequencial ASC" );
-    $obj->setLimite( $this->limite, $this->offset );
-
-    $lista = $obj->lista($this->ref_cod_matricula);
-
-    $total = $obj->_total;
-
-    // monta a lista
-    if( is_array( $lista ) && count( $lista ) )
-    {
-      foreach ( $lista AS $registro )
-      {
-        $ativo = $registro["ativo"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $dataEnturmacao = dataToBrasil($registro["data_enturmacao"]);
-        $dataSaida = dataToBrasil($registro["data_exclusao"]);
-        $dataSaidaMatricula = dataToBrasil($detalhe_matricula["data_cancel"]);
-        $transferido = $registro["transferido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $remanejado = $registro["remanejado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $abandono = $registro["abandono"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $reclassificado = $registro["reclassificado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $falecido = $registro["falecido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-
-        $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
-        $usuarioCriou = $usuarioCriou->detalhe();
-
-        $usuarioEditou = new clsPessoa_($registro['ref_usuario_exc']);
-        $usuarioEditou = $usuarioEditou->detalhe();
-
-        $this->addLinhas(
-          array(
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$registro["sequencial"]}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$registro["nm_turma"]}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$ativo}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$dataEnturmacao}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$dataSaida}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$transferido}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$remanejado}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$reclassificado}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$abandono}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$falecido}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$usuarioCriou['nome']}</a>",
-          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$usuarioEditou['nome']}</a>",
-          ));
-      }
-    }
-    $this->addPaginador2( "educar_matricula_historico_lst.php", $total, $_GET, $this->nome, $this->limite );
-
-    $this->acao = "go(\"educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}\")";
-    $this->nome_acao = "Voltar";
-
-    $this->largura = "100%";
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Histórico de enturmações da matrí­cula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
 }
 
 // Instancia objeto de pÃ¡gina

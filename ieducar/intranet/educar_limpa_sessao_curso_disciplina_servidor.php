@@ -28,8 +28,11 @@
  *
  * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package  Core
+ *
  * @since    Arquivo disponível desde a versão 1.0.0
+ *
  * @version  $Id$
  */
 
@@ -38,4 +41,4 @@ unset($_SESSION['cursos_disciplina']);
 unset($_SESSION['cursos_servidor']);
 unset($_SESSION['cod_servidor']);
 session_write_close();
-echo "";
+echo '';

@@ -21,9 +21,13 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -31,7 +35,7 @@
  * Verifica se o PHP instalado é maior ou igual a 5.2.0
  */
 if (! version_compare('5.2.0', PHP_VERSION, '<=')) {
-  die('O i-Educar requer o PHP na versão 5.2. A versão instalada de seu PHP (' . PHP_VERSION . ') não é suportada.');
+    die('O i-Educar requer o PHP na versão 5.2. A versão instalada de seu PHP (' . PHP_VERSION . ') não é suportada.');
 }
 
 /**
@@ -54,11 +58,11 @@ define('APP_ROOT', $root . DS . 'intranet');
  * Altera o include_path, adicionando o caminho a CoreExt, tornando mais
  * simples o uso de require e include para as novas classes.
  */
-$paths = array();
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, 'intranet'));
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, 'lib'));
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, 'modules'));
-$paths[] = join(DIRECTORY_SEPARATOR, array($root, '.'));
+$paths = [];
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, 'intranet']);
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, 'lib']);
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, 'modules']);
+$paths[] = join(DIRECTORY_SEPARATOR, [$root, '.']);
 
 // Configura o include_path.
 set_include_path(join(PATH_SEPARATOR, $paths) . PATH_SEPARATOR . get_include_path());
@@ -68,18 +72,18 @@ set_include_path(join(PATH_SEPARATOR, $paths) . PATH_SEPARATOR . get_include_pat
  * de ambiente configurada ou define 'production' como padrão.
  */
 if (getenv('CORE_EXT_CONFIGURATION_ENV')) {
-  define('CORE_EXT_CONFIGURATION_ENV', getenv('CORE_EXT_CONFIGURATION_ENV'));
-}
-else {
-  define('CORE_EXT_CONFIGURATION_ENV', 'production');
+    define('CORE_EXT_CONFIGURATION_ENV', getenv('CORE_EXT_CONFIGURATION_ENV'));
+} else {
+    define('CORE_EXT_CONFIGURATION_ENV', 'production');
 }
 
 // por padrão busca uma configuração para o ambiente atual definido em CORE_EXT_CONFIGURATION_ENV
 $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
 
 // caso não exista o ini para o ambiente atual, usa o arquivo padrão ieducar.ini
-if (! file_exists($configFile))
-  $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
+if (! file_exists($configFile)) {
+    $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
+}
 
 // Classe de configuração
 require_once 'CoreExt/Config.class.php';
@@ -88,7 +92,7 @@ require_once 'CoreExt/Locale.php';
 
 // Array global de objetos de classes do pacote CoreExt
 global $coreExt;
-$coreExt = array();
+$coreExt = [];
 
 // Localização para pt_BR
 $locale = CoreExt_Locale::getInstance();
@@ -107,7 +111,7 @@ $tenantEnv = $_SERVER['HTTP_HOST'];
 // ex: ao acessar http://tenant.ieducar.com.br será carregado a seção tenant.ieducar.com.br caso exista
 if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
     $coreExt['Config']->changeEnviroment($tenantEnv);
-} else if (!$coreExt['Config']->hasEnviromentSection($tenantEnv) && CORE_EXT_CONFIGURATION_ENV !== "development"){
+} elseif (!$coreExt['Config']->hasEnviromentSection($tenantEnv) && CORE_EXT_CONFIGURATION_ENV !== 'development') {
     $coreExt['Config']->app->ambiente_inexistente = true;
 }
 
@@ -120,7 +124,8 @@ chdir($root . DS . 'intranet');
 unset($root, $paths);
 
 // função pra ajudar no debug
-function debug($var) {
+function debug($var)
+{
     $backtrace = debug_backtrace();
     $template = '<div><strong>%s</strong> linha <strong>%d</strong></div>';
     echo sprintf($template, $backtrace[0]['file'], $backtrace[0]['line']);

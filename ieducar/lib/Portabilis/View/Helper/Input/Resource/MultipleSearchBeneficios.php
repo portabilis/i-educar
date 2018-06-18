@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   $Id$
  */
 
@@ -37,44 +42,52 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchBeneficios class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Portabilis_View_Helper_Input_MultipleSearch {
+class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Portabilis_View_Helper_Input_MultipleSearch
+{
+    protected function getOptions($resources)
+    {
+        if (empty($resources)) {
+            $resources = new clsPmieducarAlunoBeneficio();
+            $resources = $resources->lista();
+            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_aluno_beneficio', 'nm_beneficio');
+        }
 
-  protected function getOptions($resources) {
-    if (empty($resources)) {
-      $resources = new clsPmieducarAlunoBeneficio();
-      $resources = $resources->lista();
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_aluno_beneficio', 'nm_beneficio');
+        return $this->insertOption(null, '', $resources);
     }
 
-    return $this->insertOption(null, '', $resources);
-  }
-
-  public function multipleSearchBeneficios($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'beneficios',
+    public function multipleSearchBeneficios($attrName, $options = [])
+    {
+        $defaultOptions = ['objectName'    => 'beneficios',
                             'apiController' => 'Beneficio',
-                            'apiResource'   => 'beneficio-search');
+                            'apiResource'   => 'beneficio-search'];
 
-    $options                         = $this->mergeOptions($options, $defaultOptions);
-    $options['options']['resources'] = $this->getOptions($options['options']['resources']);
+        $options                         = $this->mergeOptions($options, $defaultOptions);
+        $options['options']['resources'] = $this->getOptions($options['options']['resources']);
 
-    //var_dump($options['options']['options']);
+        //var_dump($options['options']['options']);
 
-    $this->placeholderJs($options);
+        $this->placeholderJs($options);
 
-    parent::multipleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::multipleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function placeholderJs($options) {
-    $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
-    $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
+    protected function placeholderJs($options)
+    {
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
+        $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = 'Selecione os benefícios';";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+    }
 }

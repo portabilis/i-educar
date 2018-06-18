@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Core_View
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,40 +40,45 @@ require_once 'Core/Controller/_stub/Page/Abstract.php';
  * Core_ViewTest class.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Core_View
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Core_ViewTest extends UnitBaseTest
 {
-  protected $_pageController = NULL;
-  protected $_view = NULL;
+    protected $_pageController = null;
+    protected $_view = null;
 
-  public function __construct()
-  {
-    $this->_pageController = new Core_Controller_Page_AbstractStub();
-    $this->_pageController->setOptions(array('processoAp' => 1, 'titulo' => 'foo'));
-  }
+    public function __construct()
+    {
+        $this->_pageController = new Core_Controller_Page_AbstractStub();
+        $this->_pageController->setOptions(['processoAp' => 1, 'titulo' => 'foo']);
+    }
 
-  protected function setUp()
-  {
-    $this->_view = new Core_ViewStub($this->_pageController);
-  }
+    protected function setUp()
+    {
+        $this->_view = new Core_ViewStub($this->_pageController);
+    }
 
-  public function testTituloConfiguradoComValorDeConfiguracaoGlobal()
-  {
-    global $coreExt;
-    $instituicao = $coreExt['Config']->app->template->vars->instituicao;
+    public function testTituloConfiguradoComValorDeConfiguracaoGlobal()
+    {
+        global $coreExt;
+        $instituicao = $coreExt['Config']->app->template->vars->instituicao;
 
-    $this->_view->MakeAll();
-    $this->assertEquals($instituicao . ' | foo', $this->_view->getTitulo());
-  }
+        $this->_view->MakeAll();
+        $this->assertEquals($instituicao . ' | foo', $this->_view->getTitulo());
+    }
 
-  public function testProcessoApConfiguradoPeloValorDePageController()
-  {
-    $this->_view->MakeAll();
-    $this->assertEquals(1, $this->_view->getProcessoAp());
-  }
+    public function testProcessoApConfiguradoPeloValorDePageController()
+    {
+        $this->_view->MakeAll();
+        $this->assertEquals(1, $this->_view->getProcessoAp());
+    }
 }

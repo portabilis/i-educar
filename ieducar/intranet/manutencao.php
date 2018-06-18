@@ -26,12 +26,15 @@
  *
  * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package  Core
+ *
  * @since    Arquivo disponível desde a versão 1.0.1
+ *
  * @version  $Id$
  */
 
-header("HTTP/1.1 503 Service Unavailable");
+header('HTTP/1.1 503 Service Unavailable');
 
 ?>
 

@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,87 +40,92 @@ require_once 'Avaliacao/_tests/Service/TestCommon.php';
  * Avaliacao_Service_SituacaoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Service_SituacaoTest extends Avaliacao_Service_TestCommon
 {
-  public function testSituacaoAluno()
-  {
-    $notaSituacoes = array(
+    public function testSituacaoAluno()
+    {
+        $notaSituacoes = [
       1 => App_Model_MatriculaSituacao::APROVADO,
       2 => App_Model_MatriculaSituacao::APROVADO_APOS_EXAME,
       3 => App_Model_MatriculaSituacao::EM_ANDAMENTO,
       4 => App_Model_MatriculaSituacao::EM_EXAME,
       5 => App_Model_MatriculaSituacao::REPROVADO
-    );
+    ];
 
-    $faltaSituacoes = array(
+        $faltaSituacoes = [
       1 => App_Model_MatriculaSituacao::EM_ANDAMENTO,
       2 => App_Model_MatriculaSituacao::APROVADO,
       3 => App_Model_MatriculaSituacao::REPROVADO
-    );
+    ];
 
-    // Possibilidades
-    $expected = array(
-      1 => array(
-        1 => array(FALSE, TRUE, FALSE, FALSE),
-        2 => array(TRUE, FALSE, FALSE, FALSE),
-        3 => array(FALSE, FALSE, TRUE, FALSE)
-      ),
-      2 => array(
-        1 => array(FALSE, TRUE, FALSE, TRUE),
-        2 => array(TRUE, FALSE, FALSE, TRUE),
-        3 => array(FALSE, FALSE, TRUE, TRUE)
-      ),
-      3 => array(
-        1 => array(FALSE, TRUE, FALSE, FALSE),
-        2 => array(FALSE, TRUE, FALSE, FALSE),
-        3 => array(FALSE, TRUE, TRUE, FALSE)
-      ),
-      4 => array(
-        1 => array(FALSE, TRUE, FALSE, TRUE),
-        2 => array(FALSE, TRUE, FALSE, TRUE),
-        3 => array(FALSE, TRUE, TRUE, TRUE)
-      ),
-      5 => array(
-        1 => array(FALSE, TRUE, FALSE, FALSE),
-        2 => array(FALSE, FALSE, FALSE, FALSE),
-        3 => array(FALSE, FALSE, TRUE, FALSE)
-      )
-    );
+        // Possibilidades
+        $expected = [
+      1 => [
+        1 => [false, true, false, false],
+        2 => [true, false, false, false],
+        3 => [false, false, true, false]
+      ],
+      2 => [
+        1 => [false, true, false, true],
+        2 => [true, false, false, true],
+        3 => [false, false, true, true]
+      ],
+      3 => [
+        1 => [false, true, false, false],
+        2 => [false, true, false, false],
+        3 => [false, true, true, false]
+      ],
+      4 => [
+        1 => [false, true, false, true],
+        2 => [false, true, false, true],
+        3 => [false, true, true, true]
+      ],
+      5 => [
+        1 => [false, true, false, false],
+        2 => [false, false, false, false],
+        3 => [false, false, true, false]
+      ]
+    ];
 
-    foreach ($notaSituacoes as $i => $notaSituacao) {
-      $nota = new stdClass();
-      $nota->situacao = $notaSituacao;
+        foreach ($notaSituacoes as $i => $notaSituacao) {
+            $nota = new stdClass();
+            $nota->situacao = $notaSituacao;
 
-      foreach ($faltaSituacoes as $ii => $faltaSituacao) {
-        $service = $this->setExcludedMethods(array('getSituacaoAluno'))
+            foreach ($faltaSituacoes as $ii => $faltaSituacao) {
+                $service = $this->setExcludedMethods(['getSituacaoAluno'])
                         ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $falta = new stdClass();
-        $falta->situacao = $faltaSituacao;
+                $falta = new stdClass();
+                $falta->situacao = $faltaSituacao;
 
-        $service->expects($this->once())
+                $service->expects($this->once())
                 ->method('getSituacaoComponentesCurriculares')
                 ->will($this->returnValue($nota));
 
-        $service->expects($this->once())
+                $service->expects($this->once())
                 ->method('getSituacaoFaltas')
                 ->will($this->returnValue($falta));
 
-        // Testa
-        $situacao = $service->getSituacaoAluno();
+                // Testa
+                $situacao = $service->getSituacaoAluno();
 
-        $this->assertEquals($expected[$i][$ii][0], $situacao->aprovado, "Aprovado, caso $i - $ii");
-        $this->assertEquals($expected[$i][$ii][1], $situacao->andamento, "Andamento, caso $i - $ii");
-        $this->assertEquals($expected[$i][$ii][2], $situacao->retidoFalta, "Retido por falta, caso $i - $ii");
-        $this->assertEquals($expected[$i][$ii][3], $situacao->recuperacao, "Recuperação, caso $i - $ii");
-      }
+                $this->assertEquals($expected[$i][$ii][0], $situacao->aprovado, "Aprovado, caso $i - $ii");
+                $this->assertEquals($expected[$i][$ii][1], $situacao->andamento, "Andamento, caso $i - $ii");
+                $this->assertEquals($expected[$i][$ii][2], $situacao->retidoFalta, "Retido por falta, caso $i - $ii");
+                $this->assertEquals($expected[$i][$ii][3], $situacao->recuperacao, "Recuperação, caso $i - $ii");
+            }
+        }
     }
-  }
 }

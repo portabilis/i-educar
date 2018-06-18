@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,40 +44,43 @@ require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
  * Class CursoAlunoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class CursoAlunoController extends ApiCoreController
 {
-
-  function canGetCursoDoAluno(){
-    return  $this->validatesPresenceOf('aluno_id');
-  }
-
-  function getCursoDoAluno(){
-    if($this->canGetCursoDoAluno()){
-
-      $alunoId = $this->getRequest()->aluno_id;
-
-      $sql = "SELECT  '''' || (nm_curso ) || '''' AS id, (nm_curso ) AS nome FROM pmieducar.historico_escolar WHERE ref_cod_aluno = $1";
-
-      $cursos = $this->fetchPreparedQuery($sql, array($alunoId));
-
-      $attrs = array('id', 'nome');
-      $cursos = Portabilis_Array_Utils::filterSet($cursos, $attrs);
-      $options = array();
-
-      foreach ($cursos as $curso) {
-        $options[$curso['id']] = Portabilis_String_Utils::toUtf8($curso['nome']);
-      }
-
-      return array('options' => $options);
+    public function canGetCursoDoAluno()
+    {
+        return  $this->validatesPresenceOf('aluno_id');
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'curso-aluno'))
-      $this->appendResponse($this->getCursoDoAluno());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function getCursoDoAluno()
+    {
+        if ($this->canGetCursoDoAluno()) {
+            $alunoId = $this->getRequest()->aluno_id;
+
+            $sql = 'SELECT  \'\'\'\' || (nm_curso ) || \'\'\'\' AS id, (nm_curso ) AS nome FROM pmieducar.historico_escolar WHERE ref_cod_aluno = $1';
+
+            $cursos = $this->fetchPreparedQuery($sql, [$alunoId]);
+
+            $attrs = ['id', 'nome'];
+            $cursos = Portabilis_Array_Utils::filterSet($cursos, $attrs);
+            $options = [];
+
+            foreach ($cursos as $curso) {
+                $options[$curso['id']] = Portabilis_String_Utils::toUtf8($curso['nome']);
+            }
+
+            return ['options' => $options];
+        }
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'curso-aluno')) {
+            $this->appendResponse($this->getCursoDoAluno());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

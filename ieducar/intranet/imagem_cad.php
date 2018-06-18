@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Imagem
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -37,147 +42,178 @@ require_once 'include/imagem/clsPortalImagem.inc.php';
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Imagem
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Banco de Imagens');
-    $this->processoAp = '473';
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Banco de Imagens');
+        $this->processoAp = '473';
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Imagem
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
-  var $nome_reponsavel;
+    public $pessoa_logada;
+    public $nome_reponsavel;
 
-  var $cod_imagem;
-  var $ref_cod_imagem_tipo;
-  var $caminho;
-  var $nm_imagem;
-  var $extensao;
-  var $img_altura;
-  var $img_largura;
-  var $data_cadastro;
-  var $ref_cod_pessoa_cad;
-  var $data_exclusao;
-  var $ref_cod_pessoa_exc;
+    public $cod_imagem;
+    public $ref_cod_imagem_tipo;
+    public $caminho;
+    public $nm_imagem;
+    public $extensao;
+    public $img_altura;
+    public $img_largura;
+    public $data_cadastro;
+    public $ref_cod_pessoa_cad;
+    public $data_exclusao;
+    public $ref_cod_pessoa_exc;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $this->cod_imagem = $_GET['cod_imagem'];
+        $this->cod_imagem = $_GET['cod_imagem'];
 
-    if ($this->cod_imagem) {
-      $obj = new clsPortalImagem($this->cod_imagem);
+        if ($this->cod_imagem) {
+            $obj = new clsPortalImagem($this->cod_imagem);
 
-      $detalhe  = $obj->detalhe();
+            $detalhe  = $obj->detalhe();
 
-      $this->nm_tipo             = $detalhe['nm_tipo'];
-      $this->ref_cod_imagem_tipo = $detalhe['ref_cod_imagem_tipo'];
-      $this->caminho             = $detalhe['caminho'];
-      $this->nm_imagem           = $detalhe['nm_imagem'];
-      $this->extensao            = $detalhe['extensao'];
-      $this->img_altura          = $detalhe['altura'];
-      $this->img_largura         = $detalhe['largura'];
-      $this->data_cadastro       = dataFromPgToBr($detalhe['data_cadastro']);
-      $this->ref_cod_pessoa_cad  = $detalhe['ref_cod_pessoa_cad'];
-      $this->data_exclusao       = dataFromPgToBr($detalhe['data_exclusao']);
-      $this->ref_cod_pessoa_exc  = $detalhe['ref_cod_pessoa_exc'];
-      $this->fexcluir = TRUE;
-      $retorno = 'Editar';
-    }
+            $this->nm_tipo             = $detalhe['nm_tipo'];
+            $this->ref_cod_imagem_tipo = $detalhe['ref_cod_imagem_tipo'];
+            $this->caminho             = $detalhe['caminho'];
+            $this->nm_imagem           = $detalhe['nm_imagem'];
+            $this->extensao            = $detalhe['extensao'];
+            $this->img_altura          = $detalhe['altura'];
+            $this->img_largura         = $detalhe['largura'];
+            $this->data_cadastro       = dataFromPgToBr($detalhe['data_cadastro']);
+            $this->ref_cod_pessoa_cad  = $detalhe['ref_cod_pessoa_cad'];
+            $this->data_exclusao       = dataFromPgToBr($detalhe['data_exclusao']);
+            $this->ref_cod_pessoa_exc  = $detalhe['ref_cod_pessoa_exc'];
+            $this->fexcluir = true;
+            $retorno = 'Editar';
+        }
 
-    $this->url_cancelar = $retorno == 'Editar' ?
+        $this->url_cancelar = $retorno == 'Editar' ?
       'imagem_det.php?cod_imagem=' . $this->cod_imagem : 'imagem_lst.php';
 
-    $this->nome_url_cancelar = 'Cancelar';
-    return $retorno;
-  }
+        $this->nome_url_cancelar = 'Cancelar';
 
-  function Gerar()
-  {
-    $this->campoOculto('cod_imagem', $this->cod_imagem_tipo);
-    $ObjTImagem = new clsPortalImagemTipo();
-    $TipoImagem = $ObjTImagem->lista();
-    $listaTipo = array();
-
-    if ($TipoImagem) {
-      foreach ($TipoImagem as $dados) {
-        $listaTipo[$dados['cod_imagem_tipo']] = $dados['nm_tipo'];
-      }
+        return $retorno;
     }
 
-    $this->campoOculto('cod_imagem', $this->cod_imagem);
-    $this->campoOculto('img_altura', $this->img_altura);
-    $this->campoOculto('img_largura', $this->img_largura);
-    $this->campoOculto('extensao', $this->extensao);
-    $this->campoLista('ref_cod_imagem_tipo', 'Tipo da Imagem', $listaTipo, $this->ref_cod_imagem_tipo);
-    $this->campoTexto('nm_imagem', 'Nome da Imagem', $this->nm_imagem, 30, 255, TRUE);
-    $this->campoArquivo('caminho', 'Imagem', $this->caminho, 30);
-  }
+    public function Gerar()
+    {
+        $this->campoOculto('cod_imagem', $this->cod_imagem_tipo);
+        $ObjTImagem = new clsPortalImagemTipo();
+        $TipoImagem = $ObjTImagem->lista();
+        $listaTipo = [];
 
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        if ($TipoImagem) {
+            foreach ($TipoImagem as $dados) {
+                $listaTipo[$dados['cod_imagem_tipo']] = $dados['nm_tipo'];
+            }
+        }
 
-    $obj = new clsPortalImagem(FALSE, $this->ref_cod_imagem_tipo, 'caminho',
-      $this->nm_imagem, FALSE, FALSE, FALSE, FALSE, $this->pessoa_logada,
-      FALSE, FALSE);
-
-    if($obj->cadastra()) {
-      header("Location: imagem_lst.php");
+        $this->campoOculto('cod_imagem', $this->cod_imagem);
+        $this->campoOculto('img_altura', $this->img_altura);
+        $this->campoOculto('img_largura', $this->img_largura);
+        $this->campoOculto('extensao', $this->extensao);
+        $this->campoLista('ref_cod_imagem_tipo', 'Tipo da Imagem', $listaTipo, $this->ref_cod_imagem_tipo);
+        $this->campoTexto('nm_imagem', 'Nome da Imagem', $this->nm_imagem, 30, 255, true);
+        $this->campoArquivo('caminho', 'Imagem', $this->caminho, 30);
     }
 
-    return FALSE;
-  }
+    public function Novo()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Editar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        $obj = new clsPortalImagem(
+        false,
+        $this->ref_cod_imagem_tipo,
+        'caminho',
+      $this->nm_imagem,
+        false,
+        false,
+        false,
+        false,
+        $this->pessoa_logada,
+      false,
+        false
+    );
 
-    $obj = new clsPortalImagem($this->cod_imagem, $this->ref_cod_imagem_tipo,
-      'caminho', $this->nm_imagem, FALSE, FALSE, FALSE, FALSE, $this->pessoa_logada,
-      FALSE, FALSE);
+        if ($obj->cadastra()) {
+            header('Location: imagem_lst.php');
+        }
 
-    if($obj->edita()) {
-      header("Location: imagem_det.php?cod_imagem={$this->cod_imagem}");
+        return false;
     }
 
-    return TRUE;
-  }
+    public function Editar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-  function Excluir()
-  {
-    $ObjImg = new clsPortalImagem($this->cod_imagem);
-    $ObjImg->excluir();
-    header('Location: imagem_lst.php');
-  }
+        $obj = new clsPortalImagem(
+        $this->cod_imagem,
+        $this->ref_cod_imagem_tipo,
+      'caminho',
+        $this->nm_imagem,
+        false,
+        false,
+        false,
+        false,
+        $this->pessoa_logada,
+      false,
+        false
+    );
+
+        if ($obj->edita()) {
+            header("Location: imagem_det.php?cod_imagem={$this->cod_imagem}");
+        }
+
+        return true;
+    }
+
+    public function Excluir()
+    {
+        $ObjImg = new clsPortalImagem($this->cod_imagem);
+        $ObjImg->excluir();
+        header('Location: imagem_lst.php');
+    }
 }
 
 // Instancia objeto de página

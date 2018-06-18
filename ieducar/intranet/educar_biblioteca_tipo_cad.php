@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
-        $this->processoAp = "591";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Biblioteca");
+        $this->processoAp = '591';
     }
 }
 
@@ -45,46 +45,48 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $tipo_biblioteca;
+    public $tipo_biblioteca;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
+        $obj_permissoes->permissao_cadastra(591, $this->pessoa_logada, 3, 'educar_biblioteca_lst.php');
 
-        $this->url_cancelar = "educar_biblioteca_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = 'educar_biblioteca_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // list
-        $opcoes = array( "" => "Selecione", 2 => "Institucional", 4 => "Escolar");
-        $this->campoLista( "tipo_biblioteca", "Tipo Biblioteca", $opcoes, $this->tipo_biblioteca);
+        $opcoes = [ '' => 'Selecione', 2 => 'Institucional', 4 => 'Escolar'];
+        $this->campoLista('tipo_biblioteca', 'Tipo Biblioteca', $opcoes, $this->tipo_biblioteca);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
+        $obj_permissoes->permissao_cadastra(591, $this->pessoa_logada, 3, 'educar_biblioteca_lst.php');
 
         @session_start();
-         $_SESSION['biblioteca']['tipo_biblioteca'] = $this->tipo_biblioteca;
+        $_SESSION['biblioteca']['tipo_biblioteca'] = $this->tipo_biblioteca;
         @session_write_close();
-        header( "Location: educar_biblioteca_cad.php" );
+        header('Location: educar_biblioteca_cad.php');
         die();
+
         return true;
     }
 }
@@ -94,7 +96,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

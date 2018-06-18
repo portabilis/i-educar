@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,39 +44,43 @@ require_once 'intranet/include/pmieducar/clsPmieducarAlunoBeneficio.inc.php';
 
 /**
  * Class BeneficioController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class BeneficioController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  protected function searchOptions() {
-    return array('namespace' => 'pmieducar', 'table' => 'beneficio_aluno','labelAttr' => 'nm_beneficio', 'idAttr' => 'cod_beneficio_aluno');
-  }
+    protected function searchOptions()
+    {
+        return ['namespace' => 'pmieducar', 'table' => 'beneficio_aluno','labelAttr' => 'nm_beneficio', 'idAttr' => 'cod_beneficio_aluno'];
+    }
 
-  protected function formatResourceValue($resource) {
-    return $this->toUtf8($resource['name'], array('transform' => true));
-  }
+    protected function formatResourceValue($resource)
+    {
+        return $this->toUtf8($resource['name'], ['transform' => true]);
+    }
 
-  protected function getBeneficios() {
-    
-    $obj = new clsPmieducarAlunoBeneficio();
-    $arrayBeneficios;
-    
-    foreach ($obj->listaBeneficiosPorAluno($this->getRequest()->id) as $reg) {
-      $arrayBeneficios[] = $reg['aluno_beneficio_id'];
-    }    
+    protected function getBeneficios()
+    {
+        $obj = new clsPmieducarAlunoBeneficio();
+        $arrayBeneficios;
 
-    
-    return array('beneficios' => $arrayBeneficios);
-  }
+        foreach ($obj->listaBeneficiosPorAluno($this->getRequest()->id) as $reg) {
+            $arrayBeneficios[] = $reg['aluno_beneficio_id'];
+        }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'assunto-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'assunto'))
-      $this->appendResponse($this->getBeneficios());
-    else
-      $this->notImplementedOperationError();
-  }
+        return ['beneficios' => $arrayBeneficios];
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'assunto-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'assunto')) {
+            $this->appendResponse($this->getBeneficios());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

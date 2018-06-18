@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     AreaConhecimento
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,37 +41,41 @@ require_once 'App/Model/IedFinder.php';
  * AreaConhecimento_Model_Area class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     AreaConhecimento
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class AreaConhecimento_Model_Area extends CoreExt_Entity
 {
-  protected $_data = array(
-    'instituicao' => NULL,
-    'nome' => NULL,
-    'secao' => NULL,
-    'ordenamento_ac' => NULL
-  );
+    protected $_data = [
+    'instituicao' => null,
+    'nome' => null,
+    'secao' => null,
+    'ordenamento_ac' => null
+  ];
 
-  public function getDefaultValidatorCollection()
-  {
-    $instituicoes = array_keys(App_Model_IedFinder::getInstituicoes());
+    public function getDefaultValidatorCollection()
+    {
+        $instituicoes = array_keys(App_Model_IedFinder::getInstituicoes());
 
-    return array(
-      'instituicao' => new CoreExt_Validate_Choice(array('choices' => $instituicoes)),
-      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 60)),
-      'secao' => new CoreExt_Validate_String(array('min' => 0, 'max' => 50)),
-      'ordenamento_ac' => new CoreExt_Validate_Choice(array('min' => 0, 'max' => 50))
-    );
-  }
+        return [
+      'instituicao' => new CoreExt_Validate_Choice(['choices' => $instituicoes]),
+      'nome' => new CoreExt_Validate_String(['min' => 5, 'max' => 60]),
+      'secao' => new CoreExt_Validate_String(['min' => 0, 'max' => 50]),
+      'ordenamento_ac' => new CoreExt_Validate_Choice(['min' => 0, 'max' => 50])
+    ];
+    }
 
-  public function __toString()
-  {
-    return $this->nome;
-  }
-
+    public function __toString()
+    {
+        return $this->nome;
+    }
 }

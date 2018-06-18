@@ -24,33 +24,31 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pessoa/clsPessoaFj.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pessoa/clsPessoaFj.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es" );
-        $this->processoAp = "159";
+        $this->SetTitulo("{$this->_instituicao} Licita&ccedil;&otilde;es");
+        $this->processoAp = '159';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe da licita&ccedil;&atilde;o finalizada";
-        
+        $this->titulo = 'Detalhe da licita&ccedil;&atilde;o finalizada';
 
         $id_licitacao = @$_GET['id_licitacao'];
 
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
             SELECT 
                 m.nm_modalidade, 
                 p.nm_pessoa, 
@@ -80,54 +78,50 @@ class indice extends clsDetalhe
                 m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND 
                 cod_compras_licitacoes={$id_licitacao} AND 
                 ref_cod_compras_licitacoes = cod_compras_licitacoes
-        " );
+        ");
         $db2 = new clsBanco();
-        if ($db->ProximoRegistro())
-        {
-            list ($nm, $nome, $numero, $objeto, $data_c, $cod_licitacao, $ref_pregoeiro, $ref_equipe1, $ref_equipe2, $ref_equipe3, $ano_processo, $mes_processo, $seq_processo, $seq_portaria, $ano_portaria, $valor_referencia, $valor_real, $ref_final ) = $db->Tupla();
-            $hora = date('H:i', strtotime(substr($data_c,0,19)));
-            $data_c = date('d/m/Y', strtotime(substr($data_c,0,19)));
-            $this->addDetalhe( array("Modalidade", $nm." ".$numero) );
-            $this->addDetalhe( array("Objeto", $objeto) );
-            $this->addDetalhe( array("Data", "{$data_c}") );
-            $this->addDetalhe( array("Hora", $hora) );
-            $pessoa = new clsPessoaFj( $ref_pregoeiro );
+        if ($db->ProximoRegistro()) {
+            list($nm, $nome, $numero, $objeto, $data_c, $cod_licitacao, $ref_pregoeiro, $ref_equipe1, $ref_equipe2, $ref_equipe3, $ano_processo, $mes_processo, $seq_processo, $seq_portaria, $ano_portaria, $valor_referencia, $valor_real, $ref_final) = $db->Tupla();
+            $hora = date('H:i', strtotime(substr($data_c, 0, 19)));
+            $data_c = date('d/m/Y', strtotime(substr($data_c, 0, 19)));
+            $this->addDetalhe(['Modalidade', $nm.' '.$numero]);
+            $this->addDetalhe(['Objeto', $objeto]);
+            $this->addDetalhe(['Data', "{$data_c}"]);
+            $this->addDetalhe(['Hora', $hora]);
+            $pessoa = new clsPessoaFj($ref_pregoeiro);
             $det = $pessoa->detalhe();
-            $this->addDetalhe( array("Pregoeiro", $det["nm_pessoa"]) );
-            $pessoa = new clsPessoaFj( $ref_equipe1 );
+            $this->addDetalhe(['Pregoeiro', $det['nm_pessoa']]);
+            $pessoa = new clsPessoaFj($ref_equipe1);
             $det = $pessoa->detalhe();
-            $this->addDetalhe( array("Equipe 1", $det["nm_pessoa"]) );
-            $pessoa = new clsPessoaFj( $ref_equipe2 );
+            $this->addDetalhe(['Equipe 1', $det['nm_pessoa']]);
+            $pessoa = new clsPessoaFj($ref_equipe2);
             $det = $pessoa->detalhe();
-            $this->addDetalhe( array("Equipe 2", $det["nm_pessoa"]) );
-            $pessoa = new clsPessoaFj( $ref_equipe3 );
+            $this->addDetalhe(['Equipe 2', $det['nm_pessoa']]);
+            $pessoa = new clsPessoaFj($ref_equipe3);
             $det = $pessoa->detalhe();
-            $this->addDetalhe( array("Equipe 3", $det["nm_pessoa"]) );
-            $this->addDetalhe( array("Ano do Processo", $ano_processo ) );
-            $this->addDetalhe( array("Mes do Processo", $mes_processo ) );
-            $this->addDetalhe( array("Sequencia Processo", $seq_processo ) );
-            $this->addDetalhe( array("Sequencia Portaria", $seq_portaria ) );
-            $this->addDetalhe( array("Ano da Portaria", $ano_portaria ) );
-            $this->addDetalhe( array("Valor de Ref.", number_format( $valor_referencia, 2, ",", "." ) ) );
-            $this->addDetalhe( array("Valor Real", number_format( $valor_real, 2, ",", "." ) ) );
-            $this->addDetalhe( array("Diferença", number_format( ( $valor_referencia - $valor_real ), 2, ",", "." ) ) );
-            $this->addDetalhe( array("Diferença em %", number_format( 100 - ( ( $valor_real / $valor_referencia ) * 100 ), 2, ",", "." ) ) );
-            $nmFinal = $db2->UnicoCampo( "SELECT nm_final FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$ref_final}'" );
-            $this->addDetalhe( array("Status Final", $nmFinal ) );
+            $this->addDetalhe(['Equipe 3', $det['nm_pessoa']]);
+            $this->addDetalhe(['Ano do Processo', $ano_processo ]);
+            $this->addDetalhe(['Mes do Processo', $mes_processo ]);
+            $this->addDetalhe(['Sequencia Processo', $seq_processo ]);
+            $this->addDetalhe(['Sequencia Portaria', $seq_portaria ]);
+            $this->addDetalhe(['Ano da Portaria', $ano_portaria ]);
+            $this->addDetalhe(['Valor de Ref.', number_format($valor_referencia, 2, ',', '.') ]);
+            $this->addDetalhe(['Valor Real', number_format($valor_real, 2, ',', '.') ]);
+            $this->addDetalhe(['Diferença', number_format(($valor_referencia - $valor_real), 2, ',', '.') ]);
+            $this->addDetalhe(['Diferença em %', number_format(100 - (($valor_real / $valor_referencia) * 100), 2, ',', '.') ]);
+            $nmFinal = $db2->UnicoCampo("SELECT nm_final FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$ref_final}'");
+            $this->addDetalhe(['Status Final', $nmFinal ]);
         }
         $this->url_editar = "licitacoes_funcionarios_cad.php?id_licitacao=$id_licitacao";
-        $this->url_cancelar = "licitacoes_finalizadas_lst.php";
+        $this->url_cancelar = 'licitacoes_finalizadas_lst.php';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

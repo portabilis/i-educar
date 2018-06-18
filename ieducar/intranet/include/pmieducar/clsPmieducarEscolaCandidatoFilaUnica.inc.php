@@ -30,69 +30,65 @@
 * Criado em 02/08/2006 14:41 pelo gerador automatico de classes
 */
 
-require_once("include/pmieducar/geral.inc.php");
+require_once('include/pmieducar/geral.inc.php');
 
 class clsPmieducarEscolaCandidatoFilaUnica
 {
-    var $ref_cod_candidato_fila_unica;
-    var $ref_cod_escola;
-    var $sequencial;
+    public $ref_cod_candidato_fila_unica;
+    public $ref_cod_escola;
+    public $sequencial;
 
     // Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-    var $_total;
+    public $_total;
 
     // Nome do schema
-    var $_schema;
+    public $_schema;
 
     // Nome da tabela
-    var $_tabela;
+    public $_tabela;
 
     // Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-    var $_campos_lista;
+    public $_campos_lista;
 
     // Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-    var $_todos_campos;
+    public $_todos_campos;
 
     // Valor que define a quantidade de registros a ser retornada pelo metodo lista
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     // Define o valor de offset no retorno dos registros no metodo lista
-    var $_limite_offset;
+    public $_limite_offset;
 
     // Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
      *
      * @return object
      */
-    function __construct($ref_cod_candidato_fila_unica = null,
+    public function __construct(
+        $ref_cod_candidato_fila_unica = null,
                                                   $ref_cod_escola = null,
-                                                  $sequencial = null)
-    {
+                                                  $sequencial = null
+    ) {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_candidato_fila_unica";
 
-        $this->_campos_lista = $this->_todos_campos = "ref_cod_candidato_fila_unica,
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_candidato_fila_unica,
                                                        ref_cod_escola,
-                                                       sequencial";
+                                                       sequencial';
 
-        if( is_numeric( $ref_cod_candidato_fila_unica ) )
-        {
+        if (is_numeric($ref_cod_candidato_fila_unica)) {
             $this->ref_cod_candidato_fila_unica = $ref_cod_candidato_fila_unica;
         }
-        if( is_numeric( $ref_cod_escola ) )
-        {
+        if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
         }
-        if( is_numeric( $sequencial ) )
-        {
+        if (is_numeric($sequencial)) {
             $this->sequencial = $sequencial;
         }
-
     }
 
     /**
@@ -100,33 +96,34 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric($this->ref_cod_candidato_fila_unica) &&
+        if (is_numeric($this->ref_cod_candidato_fila_unica) &&
             is_numeric($this->ref_cod_escola) &&
-            is_numeric($this->sequencial))
-        {
+            is_numeric($this->sequencial)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
             $campos .= "{$gruda}ref_cod_candidato_fila_unica";
             $valores .= "{$gruda}'{$this->ref_cod_candidato_fila_unica}'";
-            $gruda = ", ";
+            $gruda = ', ';
 
             $campos .= "{$gruda}ref_cod_escola";
             $valores .= "{$gruda}'{$this->ref_cod_escola}'";
-            $gruda = ", ";
+            $gruda = ', ';
 
             $campos .= "{$gruda}sequencial";
             $valores .= "{$gruda}'{$this->sequencial}'";
-            $gruda = ", ";
-            
+            $gruda = ', ';
+
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES($valores)");
+
             return true;
         }
+
         return false;
     }
 
@@ -135,76 +132,68 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return array
      */
-    function lista()
+    public function lista()
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if(is_numeric($this->ref_cod_candidato_fila_unica))
-        {
+        if (is_numeric($this->ref_cod_candidato_fila_unica)) {
             $filtros .= "{$whereAnd} ref_cod_candidato_fila_unica = {$this->ref_cod_candidato_fila_unica}";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if(is_numeric($this->ref_cod_escola))
-        {
+        if (is_numeric($this->ref_cod_escola)) {
             $filtros .= "{$whereAnd} ref_cod_escola = {$this->ref_cod_escola}";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if(is_numeric($this->sequencial))
-        {
+        if (is_numeric($this->sequencial)) {
             $filtros .= "{$whereAnd} sequencial = {$this->sequencial}";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
     /**
      * Exclui todos os registros referentes a uma turma
      */
-    function  excluirTodos()
+    public function excluirTodos()
     {
-        if (is_numeric($this->ref_cod_candidato_fila_unica))
-        {
+        if (is_numeric($this->ref_cod_candidato_fila_unica)) {
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_candidato_fila_unica = {$this->ref_cod_candidato_fila_unica}");
+
             return true;
         }
+
         return false;
     }
 
@@ -213,7 +202,7 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -223,7 +212,7 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -233,7 +222,7 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -244,18 +233,18 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -263,13 +252,12 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -279,12 +267,12 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
+
+        return '';
     }
 }

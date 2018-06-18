@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Iniciar/Finalizar Ano Letivo" );
-        $this->processoAp = "561";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Iniciar/Finalizar Ano Letivo");
+        $this->processoAp = '561';
     }
 }
 
@@ -45,15 +45,15 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $ref_cod_escola;
-    var $tipo_acao;
-    var $ano;
+    public $ref_cod_escola;
+    public $tipo_acao;
+    public $ano;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
@@ -62,30 +62,28 @@ class indice extends clsCadastro
          * verifica permissao para realizar operacao
          */
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7,  "educar_escola_lst.php" );
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
         /**
          * Somente inicia ano por POST
          */
-        if(!$_POST)
-        {
-            header("location: educar_escola_lst.php");
+        if (!$_POST) {
+            header('location: educar_escola_lst.php');
             die;
         }
 
-        foreach ($_POST as $key => $value)
+        foreach ($_POST as $key => $value) {
             $this->$key = $value;
+        }
 
         /**
          *  Os 3 campos devem estar preenchidos para poder realizar acao
          */
-        if(!$this->ref_cod_escola || !$this->tipo_acao || !$this->ano)
-        {
-            header("location: educar_escola_lst.php");
+        if (!$this->ref_cod_escola || !$this->tipo_acao || !$this->ano) {
+            header('location: educar_escola_lst.php');
             die;
         }
 
-        if(strtolower($this->tipo_acao) == 'editar')
-        {
+        if (strtolower($this->tipo_acao) == 'editar') {
             /**
              * redirediona para a pagina de edicao do ano letivo
              */
@@ -98,12 +96,11 @@ class indice extends clsCadastro
          * verifica se existe ano letivo
          */
 
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo($this->ref_cod_escola,$this->ano,null,null,null,null,null,null);
+        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo($this->ref_cod_escola, $this->ano, null, null, null, null, null, null);
         $det_ano = $obj_ano_letivo->detalhe();
 
-        if(!$obj_ano_letivo->detalhe())
-        {
-            header("location: educar_escola_lst.php");
+        if (!$obj_ano_letivo->detalhe()) {
+            header('location: educar_escola_lst.php');
             die;
         }
 
@@ -111,14 +108,13 @@ class indice extends clsCadastro
          * verifica se ano letivo da escola nao possui nenhuma matricula
          */
 
-        if($this->tipo_acao == "iniciar" && $det_ano['andamento'] == 0)
+        if ($this->tipo_acao == 'iniciar' && $det_ano['andamento'] == 0) {
             $this->iniciarAnoLetivo();
-        elseif($this->tipo_acao == "reabrir")
+        } elseif ($this->tipo_acao == 'reabrir') {
             $this->iniciarAnoLetivo();
-        elseif($this->tipo_acao == "finalizar"  && $det_ano['andamento'] == 1)
+        } elseif ($this->tipo_acao == 'finalizar'  && $det_ano['andamento'] == 1) {
             $this->finalizarAnoLetivo();
-        else
-        {
+        } else {
             header("location: educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo'");
             die;
         }
@@ -130,22 +126,19 @@ class indice extends clsCadastro
         die;
     }
 
-    function iniciarAnoLetivo()
+    public function iniciarAnoLetivo()
     {
         /**
          *  INICIALIZA ano letivo
          */
 
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo($this->ref_cod_escola,$this->ano,$this->pessoa_logada,$this->pessoa_logada,1,null,null,1);
-        if(!$obj_ano_letivo->edita())
-        {
+        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo($this->ref_cod_escola, $this->ano, $this->pessoa_logada, $this->pessoa_logada, 1, null, null, 1);
+        if (!$obj_ano_letivo->edita()) {
             echo "<script>
                     alert('Erro ao finalizar o ano letivo!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
-        }
-        else
-        {
+        } else {
             echo "<script>
                     alert('Ano letivo inicializado com sucesso!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
@@ -153,32 +146,28 @@ class indice extends clsCadastro
         }
     }
 
-    function finalizarAnoLetivo()
+    public function finalizarAnoLetivo()
     {
         /**
          * VERIFICA se nï¿½o existem matriculas em andamento
          */
 
         $obj_matriculas = new clsPmieducarMatricula();
-        $existe_matricula_andamento_com_curso = $obj_matriculas->lista(null,null,$this->ref_cod_escola,null,null,null,null,3,null,null,null,null,1,$this->ano,null,null,1,null,null,null,null,null,null,null,null,false);
+        $existe_matricula_andamento_com_curso = $obj_matriculas->lista(null, null, $this->ref_cod_escola, null, null, null, null, 3, null, null, null, null, 1, $this->ano, null, null, 1, null, null, null, null, null, null, null, null, false);
 
-        if($existe_matricula_andamento_com_curso)
-        {
+        if ($existe_matricula_andamento_com_curso) {
             echo "<script>
                     alert('Não foi possível finalizar o ano letivo existem matrículas em andamento!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}';
                   </script>";
         }
 
-
-        $obj_matriculas = new clsPmieducarMatricula(null,null,$this->ref_cod_escola,null,$this->pessoa_logada,null,null,null,null,null,1,$this->ano);
-        $existe_matricula_andamento = $obj_matriculas->lista(null,null,$this->ref_cod_escola,null,null,null,null,3,null,null,null,null,1,$this->ano,null,null,1,null,null,null,null,null,null,null,null,true);
-        if($existe_matricula_andamento)
-        {
-      // REVER CHAMADA DE MÉTODO, NÃO FAZ SENTIDO, ESTÁ COLOCANDO TODOS ALUNOS COMO APROVADOS SEM NENHUM FILTRO
+        $obj_matriculas = new clsPmieducarMatricula(null, null, $this->ref_cod_escola, null, $this->pessoa_logada, null, null, null, null, null, 1, $this->ano);
+        $existe_matricula_andamento = $obj_matriculas->lista(null, null, $this->ref_cod_escola, null, null, null, null, 3, null, null, null, null, 1, $this->ano, null, null, 1, null, null, null, null, null, null, null, null, true);
+        if ($existe_matricula_andamento) {
+            // REVER CHAMADA DE MÉTODO, NÃO FAZ SENTIDO, ESTÁ COLOCANDO TODOS ALUNOS COMO APROVADOS SEM NENHUM FILTRO
             //$editou = $obj_matriculas->aprova_matricula_andamento_curso_sem_avaliacao();
-            if(!editou)
-            {
+            if (!editou) {
                 echo "<script>
                         alert('Não foi possível finalizar o ano letivo.\\nErro ao editar matriculas de curso sem avaliação!');
                         window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}';
@@ -190,23 +179,19 @@ class indice extends clsCadastro
          *  FINALIZA ano letivo
          */
 
-        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo($this->ref_cod_escola,$this->ano,$this->pessoa_logada,$this->pessoa_logada,2,null,null,1);
-        if(!$obj_ano_letivo->edita())
-        {
+        $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo($this->ref_cod_escola, $this->ano, $this->pessoa_logada, $this->pessoa_logada, 2, null, null, 1);
+        if (!$obj_ano_letivo->edita()) {
             echo "<script>
                     alert('Erro ao finalizar o ano letivo!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
-        }else
-        {
+        } else {
             echo "<script>
                     alert('Ano letivo finalizado com sucesso!');
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
         }
     }
-
-
 }
 
 // cria uma extensao da classe base
@@ -214,7 +199,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

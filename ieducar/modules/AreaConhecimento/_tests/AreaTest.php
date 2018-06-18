@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     AreaConhecimento
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -37,44 +42,49 @@ require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
  * ComponenteCurricular_AreaTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     AreaConhecimento
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class AreaConhecimento_AreaTest extends UnitBaseTest
 {
-  protected $_entity = NULL;
+    protected $_entity = null;
 
-  protected function setUp()
-  {
-    $this->_entity = new AreaConhecimento_Model_Area();
-  }
+    protected function setUp()
+    {
+        $this->_entity = new AreaConhecimento_Model_Area();
+    }
 
-  public function testInstanciaDeAreaRetornaOValorDeNOmeEmContextoDeImpressao()
-  {
-    $this->_entity->nome = 'Ciências exatas';
-    $this->assertEquals('Ciências exatas', $this->_entity->__toString());
-  }
+    public function testInstanciaDeAreaRetornaOValorDeNOmeEmContextoDeImpressao()
+    {
+        $this->_entity->nome = 'Ciências exatas';
+        $this->assertEquals('Ciências exatas', $this->_entity->__toString());
+    }
 
-  public function testEntityValidators()
-  {
-    // Valores de retorno
-    $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'Instituição'));
+    public function testEntityValidators()
+    {
+        // Valores de retorno
+        $returnValue = [['cod_instituicao' => 1, 'nm_instituicao' => 'Instituição']];
 
-    // Mock para instituição
-    $mock = $this->getCleanMock('clsPmieducarInstituicao');
-    $mock->expects($this->once())
+        // Mock para instituição
+        $mock = $this->getCleanMock('clsPmieducarInstituicao');
+        $mock->expects($this->once())
          ->method('lista')
          ->will($this->returnValue($returnValue));
 
-    // Adiciona o mock no repositório de classe estático
-    $this->_entity->addClassToStorage('clsPmieducarInstituicao', $mock);
+        // Adiciona o mock no repositório de classe estático
+        $this->_entity->addClassToStorage('clsPmieducarInstituicao', $mock);
 
-    $validators = $this->_entity->getDefaultValidatorCollection();
-    $this->assertType('CoreExt_Validate_Choice', $validators['instituicao']);
-    $this->assertType('CoreExt_Validate_String', $validators['nome']);
-  }
+        $validators = $this->_entity->getDefaultValidatorCollection();
+        $this->assertType('CoreExt_Validate_Choice', $validators['instituicao']);
+        $this->assertType('CoreExt_Validate_String', $validators['nome']);
+    }
 }

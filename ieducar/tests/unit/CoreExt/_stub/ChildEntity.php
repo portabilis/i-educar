@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,42 +40,47 @@ require_once 'CoreExt/Entity.php';
  * CoreExt_ChildEntityStub class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_ChildEntityStub extends CoreExt_Entity
 {
-  protected $_data = array(
-    'nome' => NULL,
-    'sexo' => NULL,
-    'tipoSanguineo' => NULL,
-    'peso' => NULL,
-  );
+    protected $_data = [
+    'nome' => null,
+    'sexo' => null,
+    'tipoSanguineo' => null,
+    'peso' => null,
+  ];
 
-  protected $_references = array(
-    'sexo' => array(
-      'value' => NULL,
+    protected $_references = [
+    'sexo' => [
+      'value' => null,
       'class' => 'CoreExt_EnumSexStub',
       'file'  => 'CoreExt/_stub/EnumSex.php'
-    ),
-    'tipoSanguineo' => array(
-      'value' => NULL,
+    ],
+    'tipoSanguineo' => [
+      'value' => null,
       'class' => 'CoreExt_EnumTipoSanguineoStub',
       'file'  => 'CoreExt/_stub/EnumTipoSanguineo.php',
-      'null'  => TRUE
-    )
-  );
+      'null'  => true
+    ]
+  ];
 
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'peso' => 'numeric'
-  );
+  ];
 
-  public function getDefaultValidatorCollection()
-  {
-    return array();
-  }
+    public function getDefaultValidatorCollection()
+    {
+        return [];
+    }
 }

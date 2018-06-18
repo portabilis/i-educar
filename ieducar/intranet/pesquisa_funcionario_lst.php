@@ -30,18 +30,18 @@
  * @author Adriano Erik Weiguert Nagasava
  *
  */
-$desvio_diretorio = "";
+$desvio_diretorio = '';
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ( "include/Geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Pesquisa por Funcion&aacute;rio!" );
-        $this->processoAp         = "0";
+        $this->SetTitulo("{$this->_instituicao} Pesquisa por Funcion&aacute;rio!");
+        $this->processoAp         = '0';
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;
     }
@@ -49,68 +49,70 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
+    public $chave_campo;
+    public $importarCpf;
 
-    var $chave_campo;
-    var $importarCpf;
-
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $id_pessoa  = $_SESSION['id_pessoa'];
-        $this->nome = "form1";
+        $this->nome = 'form1';
 
-        if ($_GET["campos"]) {
+        if ($_GET['campos']) {
             $parametros = new clsParametrosPesquisas();
-            $parametros->deserializaCampos( $_GET["campos"] );
+            $parametros->deserializaCampos($_GET['campos']);
             $_SESSION['campos'] = $parametros->geraArrayComAtributos();
 
-            unset( $_GET["campos"] );
+            unset($_GET['campos']);
         } else {
             $parametros = new clsParametrosPesquisas();
-            $parametros->preencheAtributosComArray( $_SESSION['campos'] );
+            $parametros->preencheAtributosComArray($_SESSION['campos']);
         }
 
         @session_write_close();
         $submit = false;
 
-        $this->addCabecalhos(array("Matr&iacute;cula", "CPF", "Funcion&aacute;rio"));
+        $this->addCabecalhos(['Matr&iacute;cula', 'CPF', 'Funcion&aacute;rio']);
 
         // Filtros de Busca
-        $this->campoTexto("campo_busca", "Funcionário", "", 50, 255, false, false, false, "Matrícula/CPF/Nome do Funcionário");
-        $this->campoOculto("com_matricula",$_GET['com_matricula']);
+        $this->campoTexto('campo_busca', 'Funcionário', '', 50, 255, false, false, false, 'Matrícula/CPF/Nome do Funcionário');
+        $this->campoOculto('com_matricula', $_GET['com_matricula']);
 
-        if ($_GET['campo_busca'])
+        if ($_GET['campo_busca']) {
             $chave_busca = @$_GET['campo_busca'];
+        }
 
-        if ($_GET['busca'])
+        if ($_GET['busca']) {
             $busca = @$_GET['busca'];
+        }
 
         // Paginador
         $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
 
         $this->chave_campo = $_GET['chave_campo'];
-        $this->campoOculto("chave_campo", $this->chave_campo);
-        if(is_numeric($this->chave_campo))
-        $chave = "[$this->chave_campo]";
-    else
-        $chave = "";
+        $this->campoOculto('chave_campo', $this->chave_campo);
+        if (is_numeric($this->chave_campo)) {
+            $chave = "[$this->chave_campo]";
+        } else {
+            $chave = '';
+        }
 
         $this->importarCpf = $_GET['importa_cpf'];
 
-        if($_GET['com_matricula'])
+        if ($_GET['com_matricula']) {
             $com_matricula = null;
-        else
+        } else {
             $com_matricula = true;
+        }
 
         if ($busca == 'S') {
             $obj_funcionario = new clsFuncionario();
             $lst_funcionario = $obj_funcionario->lista(false, $chave_busca, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
 
-            if (!$lst_funcionario)
-            {
-        // Obter lista de funcionário
-        // Mudar: Pegar por pessoa para cadastrar em vez do usuário
+            if (!$lst_funcionario) {
+                // Obter lista de funcionário
+                // Mudar: Pegar por pessoa para cadastrar em vez do usuário
                 $lst_funcionario = $obj_funcionario->lista($chave_busca, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
             }
 
@@ -124,72 +126,72 @@ class indice extends clsListagem
             $obj_funcionario = new clsFuncionario();
             $lst_funcionario = $obj_funcionario->lista(false, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
         }
-    
-        if ( $lst_funcionario ) {
-            foreach ($lst_funcionario as $funcionario) {
-        $obj_cod_servidor = new clsFuncionario($funcionario['ref_cod_pessoa_fj']);
-        $det_cod_servidor = $obj_cod_servidor->detalhe();
-        $det_cod_servidor = $det_cod_servidor['idpes']->detalhe();
 
-                $funcao  = " set_campo_pesquisa(";
-                $virgula = "";
+        if ($lst_funcionario) {
+            foreach ($lst_funcionario as $funcionario) {
+                $obj_cod_servidor = new clsFuncionario($funcionario['ref_cod_pessoa_fj']);
+                $det_cod_servidor = $obj_cod_servidor->detalhe();
+                $det_cod_servidor = $det_cod_servidor['idpes']->detalhe();
+
+                $funcao  = ' set_campo_pesquisa(';
+                $virgula = '';
                 $cont    = 0;
 
-                foreach ($parametros->getCampoNome() as $campo){
-                    if ($parametros->getCampoTipo($cont ) == "text") {
-                        if ($parametros->getCampoValor($cont) == "cpf") {
-                            if($this->importarCpf || $busca) {
-                                $objPessoa = new clsPessoaFisica($funcionario["ref_cod_pessoa_fj"]);
+                foreach ($parametros->getCampoNome() as $campo) {
+                    if ($parametros->getCampoTipo($cont) == 'text') {
+                        if ($parametros->getCampoValor($cont) == 'cpf') {
+                            if ($this->importarCpf || $busca) {
+                                $objPessoa = new clsPessoaFisica($funcionario['ref_cod_pessoa_fj']);
                                 $objPessoa_det = $objPessoa->detalhe();
-                                $funcionario[$parametros->getCampoValor( $cont )] = $objPessoa_det["cpf"];
+                                $funcionario[$parametros->getCampoValor($cont)] = $objPessoa_det['cpf'];
                             }
 
-                            $funcionario[$parametros->getCampoValor( $cont )] = int2CPF( $funcionario[$parametros->getCampoValor( $cont )] );
+                            $funcionario[$parametros->getCampoValor($cont)] = int2CPF($funcionario[$parametros->getCampoValor($cont)]);
                         }
 
-                        $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoValor( $cont )]}'";
-                        $virgula = ",";
-                    } elseif ($parametros->getCampoTipo($cont) == "select") {
-                        if ( $parametros->getCampoValor( $cont ) == "cpf" ) {
-                            if($this->importarCpf || $busca) {
-                                $objPessoa = new clsPessoaFisica($funcionario["ref_cod_pessoa_fj"]);
+                        $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoValor($cont)]}'";
+                        $virgula = ',';
+                    } elseif ($parametros->getCampoTipo($cont) == 'select') {
+                        if ($parametros->getCampoValor($cont) == 'cpf') {
+                            if ($this->importarCpf || $busca) {
+                                $objPessoa = new clsPessoaFisica($funcionario['ref_cod_pessoa_fj']);
                                 $objPessoa_det = $objPessoa->detalhe();
-                                $funcionario[$parametros->getCampoValor( $cont )] = $objPessoa_det["cpf"];
+                                $funcionario[$parametros->getCampoValor($cont)] = $objPessoa_det['cpf'];
                             }
 
-                            $funcionario[$parametros->getCampoValor( $cont )] = int2CPF( $funcionario[$parametros->getCampoValor( $cont )] );
+                            $funcionario[$parametros->getCampoValor($cont)] = int2CPF($funcionario[$parametros->getCampoValor($cont)]);
                         }
 
-                        $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoIndice( $cont )]}', '{$funcionario[$parametros->getCampoValor( $cont )]}'";
-                        $virgula = ",";
+                        $funcao .= "{$virgula} '{$campo}{$chave}', '{$funcionario[$parametros->getCampoIndice($cont)]}', '{$funcionario[$parametros->getCampoValor($cont)]}'";
+                        $virgula = ',';
                     }
 
                     $cont++;
                 }
 
-                if ($parametros->getSubmit())
+                if ($parametros->getSubmit()) {
                     $funcao .= "{$virgula} 'submit')";
-                else
-                    $funcao .= " )";
-                $this->addLinhas( array("
-                    <a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario["matricula"]}</a>", 
-                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$det_cod_servidor['cpf']}</a>", 
-                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario["nome"]}</a>" ) );
+                } else {
+                    $funcao .= ' )';
+                }
+                $this->addLinhas(["
+                    <a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario['matricula']}</a>",
+                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$det_cod_servidor['cpf']}</a>",
+                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario['nome']}</a>" ]);
                 $total = $funcionario['_total'];
-
             }
         }
         // Paginador
-        $this->addPaginador2( "pesquisa_funcionario_lst.php", $total, $_GET, $this->nome, $limite );
+        $this->addPaginador2('pesquisa_funcionario_lst.php', $total, $_GET, $this->nome, $limite);
 
         // Define Largura da Página
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript"/">

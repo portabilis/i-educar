@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,65 +41,73 @@ require_once 'ComponenteCurricular/Model/TipoBase.php';
  * ComponenteCurricular_Model_AnoEscolar class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class ComponenteCurricular_Model_AnoEscolar extends CoreExt_Entity
 {
-  protected $_data = array(
-    'componenteCurricular' => NULL,
-    'anoEscolar' => NULL,
-    'cargaHoraria' => NULL
-  );
+    protected $_data = [
+    'componenteCurricular' => null,
+    'anoEscolar' => null,
+    'cargaHoraria' => null
+  ];
 
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'cargaHoraria' => 'numeric'
-  );
+  ];
 
-  protected $_references = array(
-    'componenteCurricular' => array(
-      'value' => NULL,
+    protected $_references = [
+    'componenteCurricular' => [
+      'value' => null,
       'class' => 'ComponenteCurricular_Model_ComponenteDataMapper',
       'file'  => 'ComponenteCurricular/Model/ComponenteDataMapper.php'
-    )
-  );
+    ]
+  ];
 
-  /**
-   * Construtor. Remove o campo identidade já que usa uma chave composta.
-   * @see CoreExt_Entity#__construct($options = array())
-   */
-  public function __construct($options = array()) {
-    parent::__construct($options);
-    unset($this->_data['id']);
-  }
-
-  /**
-   * @see CoreExt_Entity#getDataMapper()
-   */
-  public function getDataMapper()
-  {
-    if (is_null($this->_dataMapper)) {
-      require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-      $this->setDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper());
-    }
-    return parent::getDataMapper();
-  }
-
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   */
-  public function getDefaultValidatorCollection()
-  {
-    $validators = array();
-
-    if (isset($this->anoEscolar)) {
-      $validators['cargaHoraria'] = new CoreExt_Validate_Numeric(array('min' => 1));
+    /**
+     * Construtor. Remove o campo identidade já que usa uma chave composta.
+     *
+     * @see CoreExt_Entity#__construct($options = array())
+     */
+    public function __construct($options = [])
+    {
+        parent::__construct($options);
+        unset($this->_data['id']);
     }
 
-    return $validators;
-  }
+    /**
+     * @see CoreExt_Entity#getDataMapper()
+     */
+    public function getDataMapper()
+    {
+        if (is_null($this->_dataMapper)) {
+            require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
+            $this->setDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper());
+        }
+
+        return parent::getDataMapper();
+    }
+
+    /**
+     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     */
+    public function getDefaultValidatorCollection()
+    {
+        $validators = [];
+
+        if (isset($this->anoEscolar)) {
+            $validators['cargaHoraria'] = new CoreExt_Validate_Numeric(['min' => 1]);
+        }
+
+        return $validators;
+    }
 }

@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -38,149 +43,160 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
-    $this->processoAp = '583';
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+        $this->processoAp = '583';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
 {
-  var $titulo;
+    public $titulo;
 
-  var $cod_serie;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $ref_cod_curso;
-  var $nm_serie;
-  var $etapa_curso;
-  var $concluinte;
-  var $carga_horaria;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $regra_avaliacao_id;
+    public $cod_serie;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_curso;
+    public $nm_serie;
+    public $etapa_curso;
+    public $concluinte;
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $regra_avaliacao_id;
 
-  var $ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'S&eacute;rie - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
+        $this->titulo = 'S&eacute;rie - Detalhe';
+        $this->addBanner(
+        'imagens/nvp_top_intranet.jpg',
+      'imagens/nvp_vert_intranet.jpg',
+        'Intranet'
+    );
 
-    $this->cod_serie=$_GET["cod_serie"];
+        $this->cod_serie=$_GET['cod_serie'];
 
-    $tmp_obj = new clsPmieducarSerie( $this->cod_serie );
-    $registro = $tmp_obj->detalhe();
+        $tmp_obj = new clsPmieducarSerie($this->cod_serie);
+        $registro = $tmp_obj->detalhe();
 
-    if (!$registro) {
-      header('Location: educar_serie_lst.php');
-      die();
+        if (!$registro) {
+            header('Location: educar_serie_lst.php');
+            die();
+        }
+
+        $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
+        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+
+        $registro['ref_cod_instituicao'] = $det_ref_cod_curso['ref_cod_instituicao'];
+        $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+        $obj_instituicao_det = $obj_instituicao->detalhe();
+        $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
+
+        $obj_permissoes = new clsPermissoes();
+
+        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+
+        if ($nivel_usuario == 1) {
+            if ($registro['ref_cod_instituicao']) {
+                $this->addDetalhe(['Institui&ccedil;&atilde;o',
+          $registro['ref_cod_instituicao']]);
+            }
+        }
+
+        if ($registro['ref_cod_curso']) {
+            $this->addDetalhe(['Curso', $registro['ref_cod_curso']]);
+        }
+
+        if ($registro['nm_serie']) {
+            $this->addDetalhe(['S&eacute;rie', $registro['nm_serie']]);
+        }
+
+        if ($registro['etapa_curso']) {
+            $this->addDetalhe(['Etapa Curso', $registro['etapa_curso']]);
+        }
+
+        if ($regraId = $registro['regra_avaliacao_id']) {
+            $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+            $regra = $mapper->find($regraId);
+            $this->addDetalhe(['Regra Avaliação', $regra]);
+        }
+
+        if ($registro['concluinte']) {
+            if ($registro['concluinte'] == 1) {
+                $registro['concluinte'] = 'n&atilde;o';
+            } elseif ($registro['concluinte'] == 2) {
+                $registro['concluinte'] = 'sim';
+            }
+
+            $this->addDetalhe(['Concluinte', $registro['concluinte']]);
+        }
+
+        if ($registro['carga_horaria']) {
+            $this->addDetalhe(['Carga Hor&aacute;ria', $registro['carga_horaria']]);
+        }
+
+        $this->addDetalhe(['Dias letivos', $registro['dias_letivos']]);
+
+        $this->addDetalhe(['Idade padrão', $registro['idade_ideal']]);
+
+        if ($registro['observacao_historico']) {
+            $this->addDetalhe(['Observação histórico', $registro['observacao_historico']]);
+        }
+
+        if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
+            $this->url_novo = 'educar_serie_cad.php';
+            $this->url_editar = "educar_serie_cad.php?cod_serie={$registro['cod_serie']}";
+        }
+
+        $this->url_cancelar = 'educar_serie_lst.php';
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''        => 'Detalhe da s&eacute;rie'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $obj_ref_cod_curso = new clsPmieducarCurso( $registro['ref_cod_curso'] );
-    $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-    $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
-
-    $registro['ref_cod_instituicao'] = $det_ref_cod_curso['ref_cod_instituicao'];
-    $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-    $obj_instituicao_det = $obj_instituicao->detalhe();
-    $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
-
-    $obj_permissoes = new clsPermissoes();
-
-    $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-
-    if ($nivel_usuario == 1) {
-      if ($registro['ref_cod_instituicao']) {
-        $this->addDetalhe(array('Institui&ccedil;&atilde;o',
-          $registro['ref_cod_instituicao']));
-      }
-    }
-
-    if ( $registro['ref_cod_curso'] ) {
-      $this->addDetalhe(array('Curso', $registro['ref_cod_curso']));
-    }
-
-    if ($registro['nm_serie']) {
-      $this->addDetalhe(array('S&eacute;rie', $registro['nm_serie']));
-    }
-
-    if ($registro['etapa_curso']) {
-      $this->addDetalhe(array('Etapa Curso', $registro['etapa_curso']));
-    }
-
-    if ($regraId = $registro['regra_avaliacao_id']) {
-      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
-      $regra = $mapper->find($regraId);
-      $this->addDetalhe(array('Regra Avaliação', $regra));
-    }
-
-    if ($registro['concluinte']) {
-      if ($registro['concluinte'] == 1) {
-        $registro['concluinte'] = 'n&atilde;o';
-      }
-      else if ($registro['concluinte'] == 2) {
-        $registro['concluinte'] = 'sim';
-      }
-
-      $this->addDetalhe(array('Concluinte', $registro['concluinte']));
-    }
-
-    if ($registro['carga_horaria']) {
-      $this->addDetalhe(array('Carga Hor&aacute;ria', $registro['carga_horaria']));
-    }
-
-    $this->addDetalhe(array('Dias letivos', $registro['dias_letivos']));
-
-    $this->addDetalhe(array('Idade padrão', $registro['idade_ideal']));
-
-    if ($registro['observacao_historico']) {
-      $this->addDetalhe(array('Observação histórico', $registro['observacao_historico']));
-    }
-
-    if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
-      $this->url_novo = 'educar_serie_cad.php';
-      $this->url_editar = "educar_serie_cad.php?cod_serie={$registro['cod_serie']}";
-    }
-
-    $this->url_cancelar = 'educar_serie_lst.php';
-    $this->largura = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Detalhe da s&eacute;rie"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());  
-
-  }
 }
 
 // Instancia objeto de página

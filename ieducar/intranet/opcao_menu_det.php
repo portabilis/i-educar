@@ -24,54 +24,52 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Opção Menu" );
-        $this->processoAp = "475";
+        $this->SetTitulo("{$this->_instituicao} Opção Menu");
+        $this->processoAp = '475';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $idpes = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->titulo = "Tipo de Menu";
-        
+        $this->titulo = 'Tipo de Menu';
 
         $db = new clsBanco();
         $tipo_menu = $db->UnicoCampo("SELECT tipo_menu FROM funcionario WHERE ref_cod_pessoa_fj = '$idpes'");
-        $opcao = array("0"=>"Menu Padrão","1"=> "Menu Suspenso");
+        $opcao = ['0'=>'Menu Padrão','1'=> 'Menu Suspenso'];
 
-        $this->addDetalhe( array("Tipo de Menu", $opcao[$tipo_menu]) );
-        
+        $this->addDetalhe(['Tipo de Menu', $opcao[$tipo_menu]]);
+
         //botoes
-        $this->url_editar   = "opcao_menu_cad.php";
-        $this->url_cancelar = "opcao_menu_lst.php";
-        
-        $this->largura = "100%";
+        $this->url_editar   = 'opcao_menu_cad.php';
+        $this->url_cancelar = 'opcao_menu_lst.php';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe da prefer&ecirc;ncia"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());                
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         ''                                  => 'Detalhe da prefer&ecirc;ncia'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-?>

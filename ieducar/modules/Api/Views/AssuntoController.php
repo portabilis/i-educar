@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Api
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,39 +44,43 @@ require_once 'intranet/include/pmieducar/clsPmieducarAcervoAssunto.inc.php';
 
 /**
  * Class AssuntoController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class AssuntoController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  protected function searchOptions() {
-    return array('namespace' => 'pmieducar', 'labelAttr' => 'nm_assunto', 'idAttr' => 'cod_acervo_assunto');
-  }
+    protected function searchOptions()
+    {
+        return ['namespace' => 'pmieducar', 'labelAttr' => 'nm_assunto', 'idAttr' => 'cod_acervo_assunto'];
+    }
 
-  protected function formatResourceValue($resource) {
-    return $this->toUtf8($resource['name'], array('transform' => true));
-  }
+    protected function formatResourceValue($resource)
+    {
+        return $this->toUtf8($resource['name'], ['transform' => true]);
+    }
 
-  protected function getAssunto() {
-    
-    $obj = new clsPmieducarAcervoAssunto();
-    $arrayAssuntos;
-    
-    foreach ($obj->listaAssuntosPorObra($this->getRequest()->id) as $reg) {
-      $arrayAssuntos[] = $reg['ref_cod_acervo_assunto'];
-    }    
+    protected function getAssunto()
+    {
+        $obj = new clsPmieducarAcervoAssunto();
+        $arrayAssuntos;
 
-    
-    return array('assuntos' => $arrayAssuntos);
-  }
+        foreach ($obj->listaAssuntosPorObra($this->getRequest()->id) as $reg) {
+            $arrayAssuntos[] = $reg['ref_cod_acervo_assunto'];
+        }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'assunto-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'assunto'))
-      $this->appendResponse($this->getAssunto());
-    else
-      $this->notImplementedOperationError();
-  }
+        return ['assuntos' => $arrayAssuntos];
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'assunto-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'assunto')) {
+            $this->appendResponse($this->getAssunto());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

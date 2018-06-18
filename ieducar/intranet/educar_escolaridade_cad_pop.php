@@ -27,19 +27,19 @@
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/Geral.inc.php" );
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/Geral.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 require_once 'lib/Portabilis/String/Utils.php';
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Escolaridade" );
-        $this->processoAp = "632";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Escolaridade");
+        $this->processoAp = '632';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -53,99 +53,96 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $idesco;
-    var $descricao;
-    var $escolaridade;
+    public $idesco;
+    public $descricao;
+    public $escolaridade;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->idesco=$_GET["idesco"];
+        $this->idesco=$_GET['idesco'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 632, $this->pessoa_logada, 4,  "educar_escolaridade_lst.php" );
+        $obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4, 'educar_escolaridade_lst.php');
 
-        if( is_numeric( $this->idesco ) )
-        {
-
-            $obj = new clsCadastroEscolaridade( $this->idesco );
+        if (is_numeric($this->idesco)) {
+            $obj = new clsCadastroEscolaridade($this->idesco);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                if( $obj_permissoes->permissao_excluir( 632, $this->pessoa_logada, 3 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(632, $this->pessoa_logada, 3)) {
                     $this->fexcluir = true;
                 }
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_escolaridade_det.php?idesco={$registro["idesco"]}" : "educar_escolaridade_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "idesco", $this->idesco );  
+        $this->campoOculto('idesco', $this->idesco);
 
         // text
-        $this->campoTexto( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 30, 255, true );
-        
-        $resources = array(1 => 'Fundamental incompleto',
+        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, true);
+
+        $resources = [1 => 'Fundamental incompleto',
                            2 => 'Fundamental completo',
                            3 => 'Ensino médio - Normal/Magistério',
                            4 => 'Ensino médio - Normal/Magistério Indígena',
                            5 => 'Ensino médio',
-                           6 => 'Superior');
+                           6 => 'Superior'];
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Escolaridade'), 'resources' => $resources, 'value' => $this->escolaridade);
+        $options = ['label' => Portabilis_String_Utils::toLatin1('Escolaridade'), 'resources' => $resources, 'value' => $this->escolaridade];
         $this->inputsHelper()->select('escolaridade', $options);
-
-
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $obj = new clsCadastroEscolaridade( null, $this->descricao, $this->escolaridade );
+        $obj = new clsCadastroEscolaridade(null, $this->descricao, $this->escolaridade);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             echo "<script>
                         parent.document.getElementById('ref_idesco').options[parent.document.getElementById('ref_idesco').options.length] = new Option('$this->descricao', '$cadastrou', false, false);
                         parent.document.getElementById('ref_idesco').value = '$cadastrou';
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsCadastroEscolaridade\nvalores obrigatorios\nis_numeric( $this->idesco ) && is_string( $this->descricao )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
     }
 
-    function Excluir()
-    {       
+    public function Excluir()
+    {
     }
 }
 
@@ -154,7 +151,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

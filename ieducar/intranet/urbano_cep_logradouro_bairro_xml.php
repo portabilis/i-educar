@@ -24,40 +24,37 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+    require_once('include/clsBanco.inc.php');
+    require_once('include/funcoes.inc.php');
 
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"\"?>\n<query xmlns=\"sugestoes\">\n";
-    if( is_numeric( $_GET["log"] ) )
-    {
+    if (is_numeric($_GET['log'])) {
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
             SELECT
                 cep
                 , idbai
             FROM
                 urbano.cep_logradouro_bairro
             WHERE
-                idlog = '{$_GET["log"]}'
+                idlog = '{$_GET['log']}'
             ORDER BY
                 cep ASC
-            " );
+            ");
 
-        while ( $db->ProximoRegistro() )
-        {
-            list( $cep, $bairro ) = $db->Tupla();
+        while ($db->ProximoRegistro()) {
+            list($cep, $bairro) = $db->Tupla();
             echo " <cep_bairro cep=\"{$cep}\">{$bairro}</cep_bairro>\n";
         }
     }
-    if( is_numeric( $_GET["bai"] ) )
-    {
+    if (is_numeric($_GET['bai'])) {
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
             SELECT
                 DISTINCT clb.idlog
                 , l.nome
@@ -65,17 +62,15 @@
                 urbano.cep_logradouro_bairro clb
                 , public.logradouro l
             WHERE
-                clb.idbai = '{$_GET["bai"]}'
+                clb.idbai = '{$_GET['bai']}'
                 AND clb.idlog = l.idlog
             ORDER BY
                 l.nome ASC
-            " );
+            ");
 
-        while ( $db->ProximoRegistro() )
-        {
-            list( $log, $nm_log ) = $db->Tupla();
+        while ($db->ProximoRegistro()) {
+            list($log, $nm_log) = $db->Tupla();
             echo " <cep_log_bairro idlog=\"{$log}\">{$nm_log}</cep_log_bairro>\n";
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

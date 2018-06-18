@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Calendario
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -36,32 +41,37 @@ require_once 'Calendario/Model/Turma.php';
  * Calendario_Model_TurmaDataMapper class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Calendario
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Calendario_Model_TurmaDataMapper extends CoreExt_DataMapper
 {
-  protected $_entityClass = 'Calendario_Model_Turma';
-  protected $_tableName   = 'calendario_turma';
-  protected $_tableSchema = 'modules';
+    protected $_entityClass = 'Calendario_Model_Turma';
+    protected $_tableName   = 'calendario_turma';
+    protected $_tableSchema = 'modules';
 
-  protected $_attributeMap = array(
+    protected $_attributeMap = [
     'calendarioAnoLetivo'   => 'calendario_ano_letivo_id',
     'ano'                   => 'ano',
     'mes'                   => 'mes',
     'dia'                   => 'dia',
     'turma'                 => 'turma_id'
-  );
+  ];
 
-  protected $_primaryKey = array(
+    protected $_primaryKey = [
     'calendarioAnoLetivo'   => 'calendario_ano_letivo_id',
     'ano'                   => 'ano',
     'mes'                   => 'mes',
     'dia'                   => 'dia',
     'turma'                 => 'turma_id'
-  );
+  ];
 }

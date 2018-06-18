@@ -22,9 +22,12 @@
  *
  * @author      Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package     Core
  * @subpackage  Escolaridade
+ *
  * @since       Arquivo disponível desde a versão 1.0.0
+ *
  * @version     $Id$
  */
 
@@ -36,104 +39,108 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-  function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade do servidor');
-    $this->processoAp = '632';
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade do servidor');
+        $this->processoAp = '632';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsListagem
 {
-  /**
-   * Referência a usuário da sessão
-   * @var int
-   */
-  var $pessoa_logada = NULL;
+    /**
+     * Referência a usuário da sessão
+     *
+     * @var int
+     */
+    public $pessoa_logada = null;
 
-  /**
-   * Título no topo da página
-   * @var string
-   */
-  var $titulo = '';
+    /**
+     * Título no topo da página
+     *
+     * @var string
+     */
+    public $titulo = '';
 
-  /**
-   * Limite de registros por página
-   * @var int
-   */
-  var $limite = 0;
+    /**
+     * Limite de registros por página
+     *
+     * @var int
+     */
+    public $limite = 0;
 
-  /**
-   * Início dos registros a serem exibidos (limit)
-   * @var int
-   */
-  var $offset = 0;
+    /**
+     * Início dos registros a serem exibidos (limit)
+     *
+     * @var int
+     */
+    public $offset = 0;
 
-  var $idesco;
-  var $descricao;
+    public $idesco;
+    public $descricao;
 
-  function Gerar()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'Escolaridade - Listagem';
+        $this->titulo = 'Escolaridade - Listagem';
 
-    // Passa todos os valores obtidos no GET para atributos do objeto
-    foreach ($_GET AS $var => $val){
-      $this->$var = ($val === '') ? NULL : $val;
-    }
+        // Passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    
-
-    $this->addCabecalhos(array(
+        $this->addCabecalhos([
       'Descri&ccedil;&atilde;o'
-    ));
+    ]);
 
-    // Outros Filtros
-    $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, FALSE);
+        // Outros Filtros
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, false);
 
-    // Paginador
-    $this->limite = 20;
-    $this->offset = ($_GET['pagina_' . $this->nome]) ?
+        // Paginador
+        $this->limite = 20;
+        $this->offset = ($_GET['pagina_' . $this->nome]) ?
       $_GET['pagina_' . $this->nome] * $this->limite-$this->limite : 0;
 
-    $obj_escolaridade = new clsCadastroEscolaridade();
-    $obj_escolaridade->setOrderby('descricao ASC');
-    $obj_escolaridade->setLimite($this->limite, $this->offset);
-    $lista = $obj_escolaridade->lista(NULL,
+        $obj_escolaridade = new clsCadastroEscolaridade();
+        $obj_escolaridade->setOrderby('descricao ASC');
+        $obj_escolaridade->setLimite($this->limite, $this->offset);
+        $lista = $obj_escolaridade->lista(
+        null,
       $this->descricao
     );
 
-    $total = $obj_escolaridade->_total;
+        $total = $obj_escolaridade->_total;
 
-    // Monta a lista
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $this->addLinhas(array(
-          "<a href=\"educar_escolaridade_det.php?idesco={$registro["idesco"]}\">{$registro["descricao"]}</a>"
-        ));
-      }
+        // Monta a lista
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $this->addLinhas([
+          "<a href=\"educar_escolaridade_det.php?idesco={$registro['idesco']}\">{$registro['descricao']}</a>"
+        ]);
+            }
+        }
+
+        $this->addPaginador2('educar_escolaridade_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $obj_permissoes = new clsPermissoes();
+        if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3)) {
+            $this->acao = 'go("educar_escolaridade_cad.php")';
+            $this->nome_acao = 'Novo';
+        }
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
+         'educar_servidores_index.php'       => 'Servidores',
+         ''                                  => 'Escolaridade do servidor'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->largura = '100%';
     }
-
-    $this->addPaginador2('educar_escolaridade_lst.php', $total, $_GET, $this->nome, $this->limite);
-    $obj_permissoes = new clsPermissoes();
-    if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3)) {
-      $this->acao = 'go("educar_escolaridade_cad.php")';
-      $this->nome_acao = 'Novo';
-    }
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Escolaridade do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-
-    $this->largura = '100%';
-  }
 }
 
 // Instancia objeto de página

@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Ambientes " );
-        $this->processoAp = "574";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Ambientes ");
+        $this->processoAp = '574';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -46,65 +46,63 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $cod_infra_predio_comodo;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_cod_infra_comodo_funcao;
-    var $ref_cod_infra_predio;
-    var $nm_comodo;
-    var $desc_comodo;
-    var $area;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_infra_predio_comodo;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_infra_comodo_funcao;
+    public $ref_cod_infra_predio;
+    public $nm_comodo;
+    public $desc_comodo;
+    public $area;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    var $ref_cod_escola;
-    var $ref_cod_instituicao;
+    public $ref_cod_escola;
+    public $ref_cod_instituicao;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Ambientes - Listagem";
+        $this->titulo = 'Ambientes - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-
-
-
-        $lista_busca = array(
-                    "Ambiente",
-                    "Tipo de ambiente",
-                    "Pr&eacute;dio",
-                    "Escola",
-                    "Instituição"
-        );
+        $lista_busca = [
+                    'Ambiente',
+                    'Tipo de ambiente',
+                    'Pr&eacute;dio',
+                    'Escola',
+                    'Instituição'
+        ];
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -112,41 +110,34 @@ class indice extends clsListagem
         $this->addCabecalhos($lista_busca);
 
         $get_escola = true;
-        $this->inputsHelper()->dynamic(array('instituicao','escola'),array('required' => false));
+        $this->inputsHelper()->dynamic(['instituicao','escola'], ['required' => false]);
 
         // Filtros de Foreign Keys
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarInfraComodoFuncao')) {
 
             // EDITAR
-            if ($this->ref_cod_escola)
-            {
+            if ($this->ref_cod_escola) {
                 $objTemp = new clsPmieducarInfraComodoFuncao();
-                $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1,$this->ref_cod_escola );
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_escola);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
                         $opcoes["{$registro['cod_infra_comodo_funcao']}"] = "{$registro['nm_funcao']}";
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarInfraComodoFuncao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "ref_cod_infra_comodo_funcao", "Tipo de ambiente", $opcoes, $this->ref_cod_infra_comodo_funcao,"",false,"","","",false );
+        $this->campoLista('ref_cod_infra_comodo_funcao', 'Tipo de ambiente', $opcoes, $this->ref_cod_infra_comodo_funcao, '', false, '', '', '', false);
 
         // outros Filtros
-        $this->campoTexto( "nm_comodo", "Ambiente", $this->nm_comodo, 30, 255, false );
+        $this->campoTexto('nm_comodo', 'Ambiente', $this->nm_comodo, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_infra_predio_comodo = new clsPmieducarInfraPredioComodo();
 
@@ -154,8 +145,8 @@ class indice extends clsListagem
             $obj_infra_predio_comodo->codUsuario = $this->pessoa_logada;
         }
 
-        $obj_infra_predio_comodo->setOrderby( "nm_comodo ASC" );
-        $obj_infra_predio_comodo->setLimite( $this->limite, $this->offset );
+        $obj_infra_predio_comodo->setOrderby('nm_comodo ASC');
+        $obj_infra_predio_comodo->setLimite($this->limite, $this->offset);
         $lista = $obj_infra_predio_comodo->lista(
             null,
             null,
@@ -177,65 +168,51 @@ class indice extends clsListagem
         $total = $obj_infra_predio_comodo->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-                if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
-                {
-                    $obj_ref_cod_infra_comodo_funcao = new clsPmieducarInfraComodoFuncao( $registro["ref_cod_infra_comodo_funcao"] );
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                if (class_exists('clsPmieducarInfraComodoFuncao')) {
+                    $obj_ref_cod_infra_comodo_funcao = new clsPmieducarInfraComodoFuncao($registro['ref_cod_infra_comodo_funcao']);
                     $det_ref_cod_infra_comodo_funcao = $obj_ref_cod_infra_comodo_funcao->detalhe();
-                    $registro["ref_cod_infra_comodo_funcao"] = $det_ref_cod_infra_comodo_funcao["nm_funcao"];
-                }
-                else
-                {
-                    $registro["ref_cod_infra_comodo_funcao"] = "Erro na geracao";
+                    $registro['ref_cod_infra_comodo_funcao'] = $det_ref_cod_infra_comodo_funcao['nm_funcao'];
+                } else {
+                    $registro['ref_cod_infra_comodo_funcao'] = 'Erro na geracao';
                     echo "<!--\nErro\nClasse nao existente: clsPmieducarInfraComodoFuncao\n-->";
                 }
 
-                if( class_exists( "clsPmieducarInfraPredio" ) )
-                {
-                    $obj_ref_cod_infra_predio = new clsPmieducarInfraPredio( $registro["ref_cod_infra_predio"] );
+                if (class_exists('clsPmieducarInfraPredio')) {
+                    $obj_ref_cod_infra_predio = new clsPmieducarInfraPredio($registro['ref_cod_infra_predio']);
                     $det_ref_cod_infra_predio = $obj_ref_cod_infra_predio->detalhe();
-                    $registro["ref_cod_infra_predio"] = $det_ref_cod_infra_predio["nm_predio"];
-                }
-                else
-                {
-                    $registro["ref_cod_infra_predio"] = "Erro na geracao";
+                    $registro['ref_cod_infra_predio'] = $det_ref_cod_infra_predio['nm_predio'];
+                } else {
+                    $registro['ref_cod_infra_predio'] = 'Erro na geracao';
                     echo "<!--\nErro\nClasse nao existente: clsPmieducarInfraPredio\n-->";
                 }
-                if( class_exists( "clsPmieducarEscola" ) )
-                {
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+                if (class_exists('clsPmieducarEscola')) {
+                    $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
                     $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $nm_escola = $det_ref_cod_escola["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
+                    $nm_escola = $det_ref_cod_escola['nome'];
+                } else {
+                    $registro['ref_cod_escola'] = 'Erro na gera&ccedil;&atilde;o';
                     echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
                 }
 
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"] );
+                if (class_exists('clsPmieducarInstituicao')) {
+                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                     $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na geracao";
+                    $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
+                } else {
+                    $registro['ref_cod_instituicao'] = 'Erro na geracao';
                     echo "<!--\nErro\nClasse nao existente: clsPmieducarInfraPredio\n-->";
                 }
 
-                $lista_busca = array(
-                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["nm_comodo"]}</a>",
-                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_infra_comodo_funcao"]}</a>",
-                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_infra_predio"]}</a>",
+                $lista_busca = [
+                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro['cod_infra_predio_comodo']}\">{$registro['nm_comodo']}</a>",
+                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro['cod_infra_predio_comodo']}\">{$registro['ref_cod_infra_comodo_funcao']}</a>",
+                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro['cod_infra_predio_comodo']}\">{$registro['ref_cod_infra_predio']}</a>",
 
-                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$nm_escola}</a>",
-                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_instituicao"]}</a>"
-                );
+                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro['cod_infra_predio_comodo']}\">{$nm_escola}</a>",
+                    "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro['cod_infra_predio_comodo']}\">{$registro['ref_cod_instituicao']}</a>"
+                ];
 
                 $this->addLinhas($lista_busca);
             }
@@ -243,22 +220,20 @@ class indice extends clsListagem
 
         $obj_permissao = new clsPermissoes();
 
-        if($obj_permissao->permissao_cadastra(574, $this->pessoa_logada,7,null,true))
-        {
-            $this->acao = "go(\"educar_infra_predio_comodo_cad.php\")";
-            $this->nome_acao = "Novo";
+        if ($obj_permissao->permissao_cadastra(574, $this->pessoa_logada, 7, null, true)) {
+            $this->acao = 'go("educar_infra_predio_comodo_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
-
-        $this->addPaginador2( "educar_infra_predio_comodo_lst.php", $total, $_GET, $this->nome, $this->limite );        
-        $this->largura = "100%";
+        $this->addPaginador2('educar_infra_predio_comodo_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->largura = '100%';
 
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Infraestrutura da escola"
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => 'Infraestrutura da escola'
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
     }
 }
@@ -267,7 +242,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

@@ -16,7 +16,6 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'lib/Utils/SafeJson.php';
 
-
 // TODO migrar classe novo padrao api controller
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
@@ -26,7 +25,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected $_saveOption = false;
     protected $_deleteOption = false;
     protected $_titulo = '';
-    var $DISCIPLINA_DISPENSADA = "Disp";
+    public $DISCIPLINA_DISPENSADA = 'Disp';
 
     protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '', $addMsgOnEmpty = true)
     {
@@ -42,6 +41,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
             return false;
         }
+
         return true;
     }
 
@@ -59,12 +59,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
             return false;
         }
+
         return true;
     }
 
     protected function validatesValueIsArray(&$value, $name, $raiseExceptionOnError = false, $msg = '', $addMsgOnError = true)
     {
-
         if (!is_array($value)) {
             if ($addMsgOnError) {
                 $msg = empty($msg) ? "Deve ser recebido uma lista de '$name'" : $msg;
@@ -77,6 +77,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
             return false;
         }
+
         return true;
     }
 
@@ -92,9 +93,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
             return false;
         }
+
         return true;
     }
-
 
     protected function requiresLogin($raiseExceptionOnEmpty)
     {
@@ -171,39 +172,39 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return $this->validatesPresenceOf($this->getRequest()->att_value, 'att_value', $raiseExceptionOnEmpty);
     }
 
-
     protected function validatesPresenceAndValueInSetOfAtt($raiseExceptionOnError)
     {
         $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
 
         if ($result) {
-            $expectedAtts = array('matriculas', 'processamento', 'historico');
+            $expectedAtts = ['matriculas', 'processamento', 'historico'];
             $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att', $raiseExceptionOnError);
         }
+
         return $result;
     }
-
 
     protected function validatesPresenceAndValueInSetOfOper($raiseExceptionOnError)
     {
         $result = $this->validatesPresenceOf($this->getRequest()->oper, 'oper', $raiseExceptionOnError);
 
         if ($result) {
-            $expectedOpers = array('post', 'get', 'delete');
+            $expectedOpers = ['post', 'get', 'delete'];
             $result = $this->validatesValueInSetOf($this->getRequest()->oper, $expectedOpers, 'oper', $raiseExceptionOnError);
         }
+
         return $result;
     }
-
 
     protected function validatesPresenceAndValueInSetOfExtraCurricular($raiseExceptionOnError)
     {
         $result = $this->validatesPresenceOf($this->getRequest()->extra_curricular, 'extra_curricular', $raiseExceptionOnError);
 
         if ($result) {
-            $expectedOpers = array(0, 1);
+            $expectedOpers = [0, 1];
             $result = $this->validatesValueInSetOf($this->getRequest()->extra_curricular, $expectedOpers, 'extra_curricular', $raiseExceptionOnError);
         }
+
         return $result;
     }
 
@@ -236,7 +237,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return $isValid;
     }
 
-
     protected function validatesPresenceAndValueOfDisciplinas($raiseExceptionOnError)
     {
         $name = 'disciplinas';
@@ -254,6 +254,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
             }
         }
+
         return $isValid;
     }
 
@@ -263,20 +264,18 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $isValid = $this->validatesPresenceOf($this->getRequest()->situacao, $name, $raiseExceptionOnError);
 
         if ($isValid) {
-            $expectedOpers = array('buscar-matricula', 'aprovado', 'reprovado', 'em-andamento', 'transferido');
+            $expectedOpers = ['buscar-matricula', 'aprovado', 'reprovado', 'em-andamento', 'transferido'];
             $isValid = $this->validatesValueInSetOf($this->getRequest()->situacao, $expectedOpers, $name, $raiseExceptionOnError);
         }
 
         return $isValid;
     }
 
-
     /* esta funcao só pode ser chamada após setar $this->getService() */
     protected function validatesPresenceOfComponenteCurricularId($raiseExceptionOnEmpty, $addMsgOnEmpty = true)
     {
         return $this->validatesPresenceOf($this->getRequest()->componente_curricular_id, 'componente_curricular_id', $raiseExceptionOnEmpty, $msg = '', $addMsgOnEmpty);
     }
-
 
     protected function canAcceptRequest()
     {
@@ -287,9 +286,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         } catch (Exception $e) {
             return false;
         }
+
         return true;
     }
-
 
     protected function canGetMatriculas()
     {
@@ -297,7 +296,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $this->validatesPresenceOfInstituicaoId(false) &&
             $this->validatesPresenceOfEscolaId(false);
     }
-
 
     protected function canPostProcessamento()
     {
@@ -315,7 +313,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
 
         if ($canPost) {
-            $sql = "select 1 from pmieducar.matricula where cod_matricula = $1 and ativo = 1";
+            $sql = 'select 1 from pmieducar.matricula where cod_matricula = $1 and ativo = 1';
 
             if (!Portabilis_Utils_Database::selectField($sql, $this->getRequest()->matricula_id)) {
                 $this->appendMsg("A matricula {$this->getRequest()->matricula_id} não existe ou esta desativa", 'error');
@@ -324,16 +322,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
 
         if ($canPost) {
-            $sql = "select 1 from pmieducar.matricula_turma where ref_cod_matricula = $1 and ativo = 1 limit 1";
+            $sql = 'select 1 from pmieducar.matricula_turma where ref_cod_matricula = $1 and ativo = 1 limit 1';
 
             if (!Portabilis_Utils_Database::selectField($sql, $this->getRequest()->matricula_id)) {
                 $this->appendMsg("A matricula {$this->getRequest()->matricula_id} não está enturmada.", 'error');
                 $canPost = false;
             }
         }
+
         return $canPost && $this->setService();
     }
-
 
     protected function canDeleteHistorico()
     {
@@ -341,11 +339,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $this->validatesPresenceOfMatriculaId(false);
     }
 
-
     protected function deleteHistorico()
     {
         if ($this->canDeleteHistorico()) {
-
             $matriculaId = $this->getRequest()->matricula_id;
             $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
             $dadosMatricula = $this->getdadosMatricula($matriculaId);
@@ -394,10 +390,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $historicoDisciplinas->excluirTodos($alunoId, $historicoSequencial);
     }
 
-
     protected function getdadosEscola($escolaId)
     {
-        $sql = "select
+        $sql = 'select
             (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes
             where esc.ref_cod_instituicao = $1 and esc.cod_escola = $2
             and pes.idpes = esc.ref_idpes) as nome,
@@ -416,53 +411,50 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
             escola.cod_escola = $2),(select endereco_externo.sigla_uf from cadastro.endereco_externo,
             pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = $2))),
-            (select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $1))) as uf";
+            (select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $1))) as uf';
 
-        $params = array('params' => array($this->getrequest()->instituicao_id, $escolaId), 'return_only' => 'first-line');
+        $params = ['params' => [$this->getrequest()->instituicao_id, $escolaId], 'return_only' => 'first-line'];
+
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
     }
-
 
     protected function getNextHistoricoSequencial($alunoId)
     {
         //A consulta leva em consideração historicos inativos pois o sequencial é chave composta com ref_cod_aluno id
-        $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $1";
+        $sql = 'select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_escolar where ref_cod_aluno = $1';
 
         return Portabilis_Utils_Database::selectField($sql, $alunoId);
     }
 
-
     protected function getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId)
     {
-        $sql = "select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_disciplinas where
-            ref_sequencial = $1 and ref_ref_cod_aluno = $2";
+        $sql = 'select coalesce(max(sequencial), 0) + 1 from pmieducar.historico_disciplinas where
+            ref_sequencial = $1 and ref_ref_cod_aluno = $2';
 
-        return Portabilis_Utils_Database::selectField($sql, array($historicoSequencial, $alunoId));
+        return Portabilis_Utils_Database::selectField($sql, [$historicoSequencial, $alunoId]);
     }
-
 
     protected function getSituacaoMatricula($matriculaId = null)
     {
         if (!is_null($matriculaId)) {
-
             if (!is_null($this->getService(false, false))) {
                 $situacao = $this->getService()->getOption('aprovado');
             } else {
-                $sql = "select aprovado from pmieducar.matricula where cod_matricula = $1";
+                $sql = 'select aprovado from pmieducar.matricula where cod_matricula = $1';
                 $situacao = Portabilis_Utils_Database::selectField($sql, $matriculaId);
             }
-
-        } else if ($this->getRequest()->situacao == 'buscar-matricula') {
+        } elseif ($this->getRequest()->situacao == 'buscar-matricula') {
             $situacao = $this->getService()->getOption('aprovado');
         } else {
-            $situacoes = array(
+            $situacoes = [
                 'aprovado' => App_Model_MatriculaSituacao::APROVADO,
                 'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
                 'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
                 'transferido' => App_Model_MatriculaSituacao::TRANSFERIDO
-            );
+            ];
             $situacao = $situacoes[$this->getRequest()->situacao];
         }
+
         return $situacao;
     }
 
@@ -473,6 +465,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         } else {
             $percentual = $this->getRequest()->percentual_frequencia;
         }
+
         return str_replace(',', '.', $percentual);
     }
 
@@ -541,7 +534,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
                     $this->appendMsg('Histórico processado com sucesso', 'success');
                 } else {
-
                     $sequencial = $this->getSequencial($alunoId, $ano, $matriculaId);
 
                     $historicoEscolar = new clsPmieducarHistoricoEscolar(
@@ -582,7 +574,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $this->recreateHistoricoDisciplinas($sequencial, $alunoId, $dadosMatricula['turma_id']);
                     $this->appendMsg('Histórico reprocessado com sucesso', 'success');
                 }
-
             } catch (Exception $e) {
                 $this->appendMsg('Erro ao processar histórico, detalhes:' . $e->getMessage(), 'error', true);
             }
@@ -594,7 +585,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $this->appendResponse('link_to_historico', $linkToHistorico);
         }
     }
-
 
     protected function _createHistoricoDisciplinas($fields)
     {
@@ -617,16 +607,15 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         if (!empty($this->getRequest()->area_conhecimento)) {
             return in_array($areaConhecimento, $this->getRequest()->area_conhecimento);
         }
+
         return true;
     }
 
     protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId, $turmaId = null)
     {
-
         $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
         if ($this->getRequest()->disciplinas == 'buscar-boletim') {
-
             $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
             $tpNota = $this->getService()->getRegra()->get('tipoNota');
             $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
@@ -655,7 +644,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $nota = $this->DISCIPLINA_DISPENSADA;
                 } elseif ($this->getRequest()->notas == 'buscar-boletim') {
                     if ($tpNota == $cnsNota::CONCEITUAL) {
-                        if ($GLOBALS['coreExt']['Config']->app->processar_historicos_conceituais == "1") {
+                        if ($GLOBALS['coreExt']['Config']->app->processar_historicos_conceituais == '1') {
                             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
                             $notaConceitualNumerica = (string)$mediasCc[$ccId][0]->media;
                         }
@@ -670,7 +659,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
 
                 if (is_numeric($nota)) {
-                    $nota = sprintf("%.1f", $nota);
+                    $nota = sprintf('%.1f', $nota);
                 }
 
                 if ($processarMediaGeral) {
@@ -689,24 +678,23 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
                 } else {
                     $this->_createHistoricoDisciplinas(
-                        array(
-                            "sequencial" => $sequencial,
-                            "alunoId" => $alunoId,
-                            "historicoSequencial" => $historicoSequencial,
-                            "nome" => $nome,
-                            "nota" => $nota,
-                            "falta" => $this->getFalta($situacaoFaltasCc[$ccId]),
-                            "ordenamento" => $ordenamento,
-                            "carga_horaria_disciplina" => $carga_horaria_disciplina,
-                            "dependencia" => $disciplinaDependencia
-                        )
+                        [
+                            'sequencial' => $sequencial,
+                            'alunoId' => $alunoId,
+                            'historicoSequencial' => $historicoSequencial,
+                            'nome' => $nome,
+                            'nota' => $nota,
+                            'falta' => $this->getFalta($situacaoFaltasCc[$ccId]),
+                            'ordenamento' => $ordenamento,
+                            'carga_horaria_disciplina' => $carga_horaria_disciplina,
+                            'dependencia' => $disciplinaDependencia
+                        ]
                     );
                 }
             }
 
             if ($mediaAreaConhecimento) {
                 foreach ($arrayAreaConhecimento as $key => $value) {
-
                     $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
 
                     if ($this->getRequest()->notas == 'buscar-boletim') {
@@ -718,17 +706,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     }
 
                     $this->_createHistoricoDisciplinas(
-                        array(
-                            "sequencial" => $sequencial,
-                            "alunoId" => $alunoId,
-                            "historicoSequencial" => $historicoSequencial,
-                            "nome" => $value['nome'],
-                            "nota" => $nota,
-                            "falta" => round($value['falta'] / $value['count']),
-                            "ordenamento" => $value['ordenamento'],
-                            "carga_horaria_disciplina" => $value['carga_horaria_disciplina'],
-                            "dependencia" => $value['dependencia']
-                        )
+                        [
+                            'sequencial' => $sequencial,
+                            'alunoId' => $alunoId,
+                            'historicoSequencial' => $historicoSequencial,
+                            'nome' => $value['nome'],
+                            'nota' => $nota,
+                            'falta' => round($value['falta'] / $value['count']),
+                            'ordenamento' => $value['ordenamento'],
+                            'carga_horaria_disciplina' => $value['carga_horaria_disciplina'],
+                            'dependencia' => $value['dependencia']
+                        ]
                     );
                 }
             }
@@ -740,17 +728,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
 
                 $this->_createHistoricoDisciplinas(
-                    array(
-                        "sequencial" => $sequencial,
-                        "alunoId" => $alunoId,
-                        "historicoSequencial" => $historicoSequencial,
-                        "nome" => $disciplina['nome'],
-                        "nota" => $disciplina['nota'],
-                        "falta" => $falta = $disciplina['falta'],
-                        "ordenamento" => $value['ordenamento'],
-                        "carga_horaria_disciplina" => $value['carga_horaria_disciplina'],
-                        "dependencia" => $value['dependencia']
-                    )
+                    [
+                        'sequencial' => $sequencial,
+                        'alunoId' => $alunoId,
+                        'historicoSequencial' => $historicoSequencial,
+                        'nome' => $disciplina['nome'],
+                        'nota' => $disciplina['nota'],
+                        'falta' => $falta = $disciplina['falta'],
+                        'ordenamento' => $value['ordenamento'],
+                        'carga_horaria_disciplina' => $value['carga_horaria_disciplina'],
+                        'dependencia' => $value['dependencia']
+                    ]
                 );
             }
         }
@@ -767,7 +755,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getFalta($situacaoFaltaComponenteCurricular = null)
     {
         if ($this->getRequest()->faltas == 'buscar-boletim') {
-
             $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
             $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
@@ -790,13 +777,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getDadosMatricula($matriculaId)
     {
         $ano = $this->getAnoMatricula($matriculaId);
-        $sql = "select ref_ref_cod_serie as serie_id, ref_cod_curso as curso_id from pmieducar.matricula
-                      where cod_matricula = $1";
+        $sql = 'select ref_ref_cod_serie as serie_id, ref_cod_curso as curso_id from pmieducar.matricula
+                      where cod_matricula = $1';
 
-        $params = array('params' => $matriculaId, 'return_only' => 'first-line');
+        $params = ['params' => $matriculaId, 'return_only' => 'first-line'];
         $idsSerieCurso = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
 
-        $matriculas = array();
+        $matriculas = [];
 
         $matriculaTurma = new clsPmieducarMatriculaTurma();
         $matriculaTurma = $matriculaTurma->lista(
@@ -815,7 +802,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
         $matriculaTurma = $matriculaTurma[0];
 
-        $dadosMatricula = array();
+        $dadosMatricula = [];
 
         if (is_array($matriculaTurma) && count($matriculaTurma) > 0) {
             $dadosMatricula['ano'] = $ano;
@@ -834,41 +821,42 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function getAlunoIdByMatriculaId($matriculaId)
     {
-        $sql = "select ref_cod_aluno from pmieducar.matricula where cod_matricula = $1";
+        $sql = 'select ref_cod_aluno from pmieducar.matricula where cod_matricula = $1';
 
         return Portabilis_Utils_Database::selectField($sql, $matriculaId);
     }
 
     protected function getAnoMatricula($matriculaId)
     {
-        $sql = "select ano from pmieducar.matricula where cod_matricula = $1";
+        $sql = 'select ano from pmieducar.matricula where cod_matricula = $1';
 
         return Portabilis_Utils_Database::selectField($sql, $matriculaId);
     }
 
     protected function getNomeSerie($serieId)
     {
-        $sql = "select nm_serie from pmieducar.serie where cod_serie = $1";
+        $sql = 'select nm_serie from pmieducar.serie where cod_serie = $1';
 
         return Portabilis_String_Utils::toLatin1(Portabilis_Utils_Database::selectField($sql, $serieId));
     }
 
     protected function getSequencial($alunoId, $ano, $matriculaId)
     {
-        $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $1 and ano = $2
-            and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = 1 limit 1";
+        $sql = 'select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $1 and ano = $2
+            and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = 1 limit 1';
 
-        $params = array($alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId);
+        $params = [$alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId];
+
         return Portabilis_Utils_Database::selectField($sql, $params);
     }
 
     protected function existsHistorico($alunoId, $ano, $matriculaId, $ativo = 1, $reload = false)
     {
         if (!isset($this->existsHistorico) || $reload) {
-            $sql = "select 1 from pmieducar.historico_escolar where ref_cod_aluno = $1 and ano = $2
-              and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = $5";
+            $sql = 'select 1 from pmieducar.historico_escolar where ref_cod_aluno = $1 and ano = $2
+              and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = $5';
 
-            $params = array($alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId, $ativo);
+            $params = [$alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId, $ativo];
             $this->existsHistorico = Portabilis_Utils_Database::selectField($sql, $params) == 1;
         }
 
@@ -888,10 +876,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function getLinkToHistorico($alunoId, $ano, $matriculaId)
     {
-        $sql = "select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $1 and
-            ano = $2 and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = 1";
+        $sql = 'select sequencial from pmieducar.historico_escolar where ref_cod_aluno = $1 and
+            ano = $2 and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = 1';
 
-        $params = array($alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId);
+        $params = [$alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId];
         $sequencial = Portabilis_Utils_DataBase::selectField($sql, $params);
 
         if (is_numeric($sequencial)) {
@@ -905,7 +893,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function getMatriculas()
     {
-        $matriculas = array();
+        $matriculas = [];
 
         if ($this->canGetMatriculas()) {
             $alunos = new clsPmieducarMatriculaTurma();
@@ -950,24 +938,23 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             );
 
             if (!is_array($alunos)) {
-                $alunos = array();
+                $alunos = [];
             }
 
-            $situacoesMatricula = array(
+            $situacoesMatricula = [
                 'aprovado' => App_Model_MatriculaSituacao::APROVADO,
                 'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
                 'reprovado-faltas' => App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS,
                 'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
                 'aprovado-conselho' => App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO,
                 'aprovado-dependencia' => App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA
-            );
+            ];
 
             foreach ($alunos as $aluno) {
-
                 $situacaoMatricula = $this->getSituacaoMatricula($aluno['ref_cod_matricula']);
 
                 if (in_array($situacaoMatricula, $situacoesMatricula)) {
-                    $matricula = array();
+                    $matricula = [];
                     $matriculaId = $aluno['ref_cod_matricula'];
                     $matricula['matricula_id'] = $matriculaId;
                     $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
@@ -988,8 +975,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getObservacaoPadraoSerie()
     {
         if ($this->validatesPresenceOfSerieId(false, false)) {
-            $sql = "select coalesce(observacao_historico, '') as observacao_historico from pmieducar.serie
-                     where cod_serie = $1";
+            $sql = 'select coalesce(observacao_historico, \'\') as observacao_historico from pmieducar.serie
+                     where cod_serie = $1';
 
             $observacao = Portabilis_Utils_DataBase::selectField($sql, $this->getRequest()->serie_id);
         } else {
@@ -1037,6 +1024,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         } catch (Exception $e) {
             return false;
         }
+
         return true;
     }
 
@@ -1044,16 +1032,15 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         if ($this->canSetService($validatesPresenceOfMatriculaId = is_null($matriculaId))) {
             try {
-
                 if (!$matriculaId) {
                     $matriculaId = $this->getRequest()->matricula_id;
                 }
 
                 $this->service = new Avaliacao_Service_Boletim(
-                    array(
+                    [
                         'matricula' => $matriculaId,
                         'usuario' => $this->getSession()->id_pessoa
-                    )
+                    ]
                 );
 
                 return true;
@@ -1061,6 +1048,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $this->appendMsg('Exception ao instanciar serviço boletim: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
             }
         }
+
         return false;
     }
 
@@ -1071,12 +1059,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     public function Gerar()
     {
-        $this->msgs = array();
-        $this->response = array();
+        $this->msgs = [];
+        $this->response = [];
 
         if ($this->canAcceptRequest()) {
             try {
-
                 if (isset($this->getRequest()->matricula_id)) {
                     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
                 }
@@ -1089,7 +1076,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     } else {
                         $this->notImplementedError();
                     }
-
                 } elseif ($this->getRequest()->oper == 'post') {
                     if ($this->getRequest()->att == 'processamento') {
                         $this->postProcessamento();
@@ -1117,25 +1103,25 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function prepareResponse()
     {
-        $msgs = array();
+        $msgs = [];
         $this->appendResponse('att', isset($this->getRequest()->att) ? $this->getRequest()->att : '');
 
         foreach ($this->msgs as $m) {
-            $msgs[] = array('msg' => $m['msg'], 'type' => $m['type']);
+            $msgs[] = ['msg' => $m['msg'], 'type' => $m['type']];
         }
         $this->appendResponse('msgs', $msgs);
 
         echo SafeJson::encode($this->response);
     }
 
-    protected function appendMsg($msg, $type = "error", $encodeToUtf8 = false)
+    protected function appendMsg($msg, $type = 'error', $encodeToUtf8 = false)
     {
         if ($encodeToUtf8) {
             $msg = utf8_encode($msg);
         }
 
         //error_log("$type msg: '$msg'");
-        $this->msgs[] = array('msg' => $msg, 'type' => $type);
+        $this->msgs[] = ['msg' => $msg, 'type' => $type];
     }
 
     public function generate(CoreExt_Controller_Page_Interface $instance)
@@ -1144,10 +1130,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $instance->Gerar();
     }
 
-
     // TODO remover metodo, ao migrar esta classe para novo padrao
 
-    protected function toUtf8($str, $options = array())
+    protected function toUtf8($str, $options = [])
     {
         return Portabilis_String_Utils::toUtf8($str, $options);
     }

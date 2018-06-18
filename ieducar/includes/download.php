@@ -26,8 +26,11 @@
  *
  * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package  Core
+ *
  * @since    Arquivo disponível desde a versão 1.1.0
+ *
  * @version  $Id$
  */
 
@@ -35,10 +38,10 @@ require_once 'Utils/Mimetype.class.php';
 require_once 'Utils/FileStream.class.php';
 
 // Pega o nome do arquivo (caminho completo)
-$filename = isset($_GET['filename']) ? $_GET['filename'] : NULL;
+$filename = isset($_GET['filename']) ? $_GET['filename'] : null;
 
 // Diretórios públicos (permitidos) para stream de arquivo.
-$defaultDirectories = array('tmp', 'pdf');
+$defaultDirectories = ['tmp', 'pdf'];
 
 // Classe Mimetype
 $mimetype = new Mimetype();
@@ -47,19 +50,17 @@ $mimetype = new Mimetype();
 $fileStream = new FileStream($mimetype, $defaultDirectories);
 
 try {
-  $fileStream->setFilepath($filename);
-}
-catch (Exception $e) {
-  print $e->getMessage();
-  exit();
+    $fileStream->setFilepath($filename);
+} catch (Exception $e) {
+    print $e->getMessage();
+    exit();
 }
 
 try {
-  $fileStream->streamFile();
-}
-catch (Exception $e) {
-  print $e->getMessage();
-  exit();
+    $fileStream->streamFile();
+} catch (Exception $e) {
+    print $e->getMessage();
+    exit();
 }
 
 unlink($filename);

@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Controller
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,34 @@ require_once 'CoreExt/Controller/_stub/Abstract.php';
  * CoreExt_Controller_AbstractTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Controller
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_Controller_AbstractTest extends UnitBaseTest
 {
-  protected $_controller = NULL;
+    protected $_controller = null;
 
-  protected function setUp()
-  {
-    $this->_controller = new CoreExt_Controller_AbstractStub();
-  }
+    protected function setUp()
+    {
+        $this->_controller = new CoreExt_Controller_AbstractStub();
+    }
 
-  public function testControllerInstanciaDispatcherStandardPorPadrao()
-  {
-    $this->assertType('CoreExt_Controller_Dispatcher_Standard', $this->_controller->getDispatcher());
-  }
+    public function testControllerInstanciaDispatcherStandardPorPadrao()
+    {
+        $this->assertType('CoreExt_Controller_Dispatcher_Standard', $this->_controller->getDispatcher());
+    }
 
-  public function testInstanciaTemCoreExtSessionPorPadrao()
-  {
-    $this->assertType('CoreExt_Session', $this->_controller->getSession());
-  }
+    public function testInstanciaTemCoreExtSessionPorPadrao()
+    {
+        $this->assertType('CoreExt_Session', $this->_controller->getSession());
+    }
 }

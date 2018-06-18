@@ -21,109 +21,112 @@
  * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Api
  * @subpackage  Modules
+ *
  * @since       Arquivo disponÃ­vel desde a versÃ£o ?
+ *
  * @version     $Id$
  */
 
-class FileController {
+class FileController
+{
+    public $file;
+    public $errorMessage;
+    public $maxSize;
+    public $suportedExtensions;
 
-    var $file;
-    var $errorMessage;
-    var $maxSize;
-    var $suportedExtensions;
+    public function __construct(
+        $file,
+        $maxSize = null,
+                             $suportedExtensions = null
+    ) {
+        $this->file = $file;
 
-    function __construct($file, $maxSize = NULL,
-                             $suportedExtensions = NULL){
-
-        
-        $this->file = $file;       
-
-        if ($maxSize!=null)
+        if ($maxSize!=null) {
             $this->maxSize = $maxSize;
-        else
+        } else {
             $this->maxSize = 250*1024;
+        }
 
-        if ($suportedExtensions != null)
+        if ($suportedExtensions != null) {
             $this->suportedExtensions = $suportedExtensions;
-        else
-            $this->suportedExtensions = array('jpg', 'pdf','png', 'doc', 'docx', 'xls');
+        } else {
+            $this->suportedExtensions = ['jpg', 'pdf','png', 'doc', 'docx', 'xls'];
+        }
     }
 
-    function sendFile(){
-
-
-        $tmp = $this->file["tmp_name"];
+    public function sendFile()
+    {
+        $tmp = $this->file['tmp_name'];
         include('s3_config.php');
-        
+
         //Rename file name.
-        $actual_file_name = $directory.time().md5($this->file["name"]);
-        if($s3->putObjectFile($tmp, $bucket , $actual_file_name, S3::ACL_PUBLIC_READ) )
-        {
-                                                
+        $actual_file_name = $directory.time().md5($this->file['name']);
+        if ($s3->putObjectFile($tmp, $bucket, $actual_file_name, S3::ACL_PUBLIC_READ)) {
             $s3file='http://'.$bucket.'.s3.amazonaws.com/'.$actual_file_name;
+
             return $s3file;
-        }
-        else{
-            $this->errorMessage = "Ocorreu um erro no servidor ao enviar arquivo. Tente novamente.";
+        } else {
+            $this->errorMessage = 'Ocorreu um erro no servidor ao enviar arquivo. Tente novamente.';
+
             return '';
         }
     }
 
-    function validateFile(){
-
+    public function validateFile()
+    {
         $msg='';
 
-        $name = $this->file["name"];
-        $size = $this->file["size"];
+        $name = $this->file['name'];
+        $size = $this->file['size'];
         $ext = $this->getExtension($name);
 
-
-        if(strlen($name) > 0)
-        {
+        if (strlen($name) > 0) {
             // File format validation
-            if(in_array($ext,$this->suportedExtensions))
-            {
+            if (in_array($ext, $this->suportedExtensions)) {
                 // File size validation
-                if($size < $this->maxSize){
-                    return true;   
-                }
-                else{
-                    $this->errorMessage = "NÃ£o sÃ£o permitidos arquivos com mais de 250KB.";
+                if ($size < $this->maxSize) {
+                    return true;
+                } else {
+                    $this->errorMessage = 'NÃ£o sÃ£o permitidos arquivos com mais de 250KB.';
+
                     return false;
                 }
-            }
-            else{
-                $this->errorMessage = "Deve ser enviado um arquivo do tipo jpg, pdf ou png.";
+            } else {
+                $this->errorMessage = 'Deve ser enviado um arquivo do tipo jpg, pdf ou png.';
+
                 return false;
             }
-        }
-        else{
-            $this->errorMessage = "Selecione um arquivo."; 
+        } else {
+            $this->errorMessage = 'Selecione um arquivo.';
+
             return false;
         }
-        $this->errorMessage = "Arquivo invÃ¡lido."; 
+        $this->errorMessage = 'Arquivo invÃ¡lido.';
+
         return false;
     }
 
-    function getErrorMessage(){
+    public function getErrorMessage()
+    {
         return $this->errorMessage;
     }
 
-
-    function getExtension($name) 
+    public function getExtension($name)
     {
-        $i = strrpos($name,".");
-        if (!$i)
-          return "";
+        $i = strrpos($name, '.');
+        if (!$i) {
+            return '';
+        }
         $l = strlen($name) - $i;
-        $ext = substr($name,$i+1,$l);
+        $ext = substr($name, $i+1, $l);
 
         return $ext;
     }
 }
-
-?>

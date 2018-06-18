@@ -24,98 +24,89 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Diária Valores" );
-        $this->processoAp = "295";
+        $this->SetTitulo("{$this->_instituicao} Diária Valores");
+        $this->processoAp = '295';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Di&aacute;rias";
-        
-    
-        $this->addCabecalhos( array( "Grupo", "Vig&ecirc;ncia", "Estadual", "100%", "75%", "50%", "25%" ) );
-        
-        
-        $where = "";
-        $gruda = "";
-        if ( ! empty( $_GET['ref_sec'] ) )
-        {
-            $where .= "";
+        $this->titulo = 'Di&aacute;rias';
+
+        $this->addCabecalhos([ 'Grupo', 'Vig&ecirc;ncia', 'Estadual', '100%', '75%', '50%', '25%' ]);
+
+        $where = '';
+        $gruda = '';
+        if (! empty($_GET['ref_sec'])) {
+            $where .= '';
         }
         $db = new clsBanco();
         $db2 = new clsBanco();
-        $total = $db->UnicoCampo( "SELECT count(0) FROM pmidrh.diaria_valores $where" );
-        
+        $total = $db->UnicoCampo("SELECT count(0) FROM pmidrh.diaria_valores $where");
+
         // Paginador
         $limite = 20;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-        
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+
         $objPessoa = new clsPessoaFisica();
-        
+
         $sql = "SELECT cod_diaria_valores, ref_cod_diaria_grupo, data_vigencia, estadual, p100, p75, p50, p25 FROM pmidrh.diaria_valores $where ORDER BY data_vigencia DESC, estadual ASC, ref_cod_diaria_grupo ASC";
-        $db->Consulta( $sql );
-        while ( $db->ProximoRegistro() )
-        {
-            list ( $cod_diaria_valores, $ref_cod_diaria_grupo, $data_vigencia, $estadual, $p100, $p75, $p50, $p25 ) = $db->Tupla();
-            
-            $nome_grupo = $db2->CampoUnico( "SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'" );
-            
-            $data_vigencia = date( "d/m/Y", strtotime( $data_vigencia ) );
-            
-            if( strlen( $nome_grupo ) > 40 )
-            {
-                $nome_grupo = substr( $nome_grupo, 0, 37 );
+        $db->Consulta($sql);
+        while ($db->ProximoRegistro()) {
+            list($cod_diaria_valores, $ref_cod_diaria_grupo, $data_vigencia, $estadual, $p100, $p75, $p50, $p25) = $db->Tupla();
+
+            $nome_grupo = $db2->CampoUnico("SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'");
+
+            $data_vigencia = date('d/m/Y', strtotime($data_vigencia));
+
+            if (strlen($nome_grupo) > 40) {
+                $nome_grupo = substr($nome_grupo, 0, 37);
             }
-            
-            $estadual = ( $estadual )? "Sim": "Não";
-            
-            $this->addLinhas( array( 
-            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'><img src='imagens/noticia.jpg' border=0>$nome_grupo</a>", 
+
+            $estadual = ($estadual)? 'Sim': 'Não';
+
+            $this->addLinhas([
+            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'><img src='imagens/noticia.jpg' border=0>$nome_grupo</a>",
             "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>$data_vigencia</a>",
             "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>$estadual</a>",
-            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format( $p100, 2, ",", "." ) . "</a>",
-            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format( $p75, 2, ",", "." ) . "</a>",
-            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format( $p50, 2, ",", "." ) . "</a>",
-            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format( $p25, 2, ",", "." ) . "</a>" ) );
+            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format($p100, 2, ',', '.') . '</a>',
+            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format($p75, 2, ',', '.') . '</a>',
+            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format($p50, 2, ',', '.') . '</a>',
+            "<a href='diaria_valores_det.php?cod_diaria_valores={$cod_diaria_valores}'>" . number_format($p25, 2, ',', '.') . '</a>' ]);
         }
-        
+
         // Paginador
-        $this->addPaginador2( "diaria_valores_lst.php", $total, $_GET, $this->nome, $limite );
-        
-        $this->acao = "go(\"diaria_valores_cad.php\")";
-        $this->nome_acao = "Novo";
+        $this->addPaginador2('diaria_valores_lst.php', $total, $_GET, $this->nome, $limite);
 
-        $this->largura = "100%";
+        $this->acao = 'go("diaria_valores_cad.php")';
+        $this->nome_acao = 'Novo';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Listagem  valores de di&aacute;rias"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         ''                                  => 'Listagem  valores de di&aacute;rias'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

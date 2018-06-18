@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,35 @@ require_once 'Avaliacao/Model/FaltaAbstract.php';
  * Avaliacao_Model_FaltaComponente class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Model_FaltaComponente extends Avaliacao_Model_FaltaAbstract
 {
-  /**
-   * Construtor.
-   * @param array $options
-   */
-  public function __construct($options = array())
-  {
-    $this->_data['componenteCurricular'] = NULL;
+    /**
+     * Construtor.
+     *
+     * @param array $options
+     */
+    public function __construct($options = [])
+    {
+        $this->_data['componenteCurricular'] = null;
 
-    $this->_references['componenteCurricular'] = array(
-      'value' => NULL,
+        $this->_references['componenteCurricular'] = [
+      'value' => null,
       'class' => 'ComponenteCurricular_Model_Componente',
       'file'  => 'ComponenteCurricular/Model/Componente.php'
-    );
+    ];
 
-    parent::__construct($options);
-  }
+        parent::__construct($options);
+    }
 }

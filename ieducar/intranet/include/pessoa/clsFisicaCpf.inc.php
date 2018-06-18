@@ -24,33 +24,33 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
+require_once('include/clsBanco.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsFisicaCpf
 {
-    var $idpes;
-    var $cpf;
-    var $idpes_cad;
-    var $idpes_rev;
+    public $idpes;
+    public $cpf;
+    public $idpes_cad;
+    public $idpes_rev;
 
-    var $tabela;
-    var $schema;
+    public $tabela;
+    public $schema;
 
     /**
      * Construtor
      *
      * @return Object:clsFisicaCpf
      */
-    function __construct( $idpes=false, $cpf=false, $idpes_cad = false, $idpes_rev = false)
+    public function __construct($idpes=false, $cpf=false, $idpes_cad = false, $idpes_rev = false)
     {
         $this->idpes = $idpes;
         $this->idpes_cad = $idpes_cad? $idpes_cad : $_SESSION['id_pessoa'];
         $this->idpes_rev = $idpes_rev? $idpes_rev : $_SESSION['id_pessoa'];
         $this->cpf   = $cpf;
 
-        $this->tabela = "fisica";
-        $this->schema = "cadastro";
+        $this->tabela = 'fisica';
+        $this->schema = 'cadastro';
     }
 
     /**
@@ -58,15 +58,16 @@ class clsFisicaCpf
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificacoes de campos obrigatorios para insercao
-        if( is_numeric($this->idpes) && is_numeric($this->cpf) && $this->idpes_cad)
-        {
-            $db->Consulta( "UPDATE {$this->schema}.{$this->tabela} SET cpf = '$this->cpf'  WHERE idpes = '$this->idpes' " );
+        if (is_numeric($this->idpes) && is_numeric($this->cpf) && $this->idpes_cad) {
+            $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET cpf = '$this->cpf'  WHERE idpes = '$this->idpes' ");
+
             return true;
         }
+
         return false;
     }
 
@@ -75,66 +76,61 @@ class clsFisicaCpf
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
         // verifica campos obrigatorios para edicao
         //die( "is_numeric($this->idpes) && is_numeric($this->cpf)");
-        if(is_numeric($this->idpes) && is_numeric($this->cpf) && is_numeric($this->idpes_rev))
-        {
+        if (is_numeric($this->idpes) && is_numeric($this->cpf) && is_numeric($this->idpes_rev)) {
             $db = new clsBanco();
-            $db->Consulta( "UPDATE {$this->schema}.{$this->tabela} SET cpf = '$this->cpf'  WHERE idpes = '$this->idpes' " );
+            $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET cpf = '$this->cpf'  WHERE idpes = '$this->idpes' ");
+
             return true;
         }
+
         return false;
     }
 
-    
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
      * @return Array
      */
-    function lista( $int_idpes=false, $int_cpf=false, $str_ordenacao="idpes", $int_limite_ini=false, $int_limite_qtd=false )
+    public function lista($int_idpes=false, $int_cpf=false, $str_ordenacao='idpes', $int_limite_ini=false, $int_limite_qtd=false)
     {
         // verificacoes de filtros a serem usados
-        $whereAnd = "WHERE ";
-        if(is_numeric($int_idpes))
-        {
+        $whereAnd = 'WHERE ';
+        if (is_numeric($int_idpes)) {
             $where .= "{$whereAnd}idpes = '$int_idpes'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if(is_numeric($int_cpf))
-        {
+        if (is_numeric($int_cpf)) {
             $where .= "{$whereAnd}cpf ILIKE '%$int_cpf%' OR cpf ILIKE '$int_cpf%' ";
         }
 
-        $orderBy = "";
-        if(is_string($str_ordenacao))
-        {
+        $orderBy = '';
+        if (is_string($str_ordenacao)) {
             $orderBy = "ORDER BY $str_ordenacao";
         }
-        $limit = "";
-        if(is_numeric($int_limite_ini) && is_numeric($int_limite_qtd))
-        {
+        $limit = '';
+        if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
+        $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
-        $total = $db->Campo( "total" );
-        $db->Consulta( "SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() )
-        {
+        $total = $db->Campo('total');
+        $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla["total"] = $total;
+            $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -143,45 +139,40 @@ class clsFisicaCpf
      *
      * @return Array
      */
-    function listaCod( $int_idpes=false, $int_cpf=false, $str_ordenacao="idpes", $int_limite_ini=false, $int_limite_qtd=false )
+    public function listaCod($int_idpes=false, $int_cpf=false, $str_ordenacao='idpes', $int_limite_ini=false, $int_limite_qtd=false)
     {
         // verificacoes de filtros a serem usados
-        $whereAnd = "WHERE ";
-        if(is_numeric($int_idpes))
-        {
+        $whereAnd = 'WHERE ';
+        if (is_numeric($int_idpes)) {
             $where .= "{$whereAnd}idpes = '$int_idpes'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if(is_numeric($int_cpf))
-        {
+        if (is_numeric($int_cpf)) {
             $temp_cpf = $int_cpf + 0;
             $where .= "{$whereAnd}cpf ILIKE '%$int_cpf%' OR cpf ILIKE '$temp_cpf%' ";
         }
 
-        $orderBy = "";
-        if(is_string($str_ordenacao))
-        {
+        $orderBy = '';
+        if (is_string($str_ordenacao)) {
             $orderBy = "ORDER BY $str_ordenacao";
         }
-        $limit = "";
-        if(is_numeric($int_limite_ini) && is_numeric($int_limite_qtd))
-        {
+        $limit = '';
+        if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT idpes FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() )
-        {
+        $db->Consulta("SELECT idpes FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $resultado[] = $tupla['idpes'];
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -190,42 +181,38 @@ class clsFisicaCpf
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( $this->cpf )
-        {
+        if ($this->cpf) {
             $db = new clsBanco();
             $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf} ");
-            if( $db->ProximoRegistro() )
-            {
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
+
                 return $tupla;
             }
-        }
-        elseif($this->idpes)
-        {
+        } elseif ($this->idpes) {
             $db = new clsBanco();
             $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes} ");
-            if( $db->ProximoRegistro() )
-            {
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
+
                 return $tupla;
             }
         }
 
         return false;
     }
-    function detalheCPF()
+    public function detalheCPF()
     {
         $db = new clsBanco();
         $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf}");
-        if( $db->ProximoRegistro() )
-        {
+        if ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
+
             return $tupla;
         }
+
         return false;
     }
 }
-
-?>

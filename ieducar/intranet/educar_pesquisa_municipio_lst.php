@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/Geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/Geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Municipio" );
-        $this->processoAp = "0";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Municipio");
+        $this->processoAp = '0';
         $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
@@ -48,120 +48,107 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $idmun;
-    var $nome;
-    var $sigla_uf;
+    public $idmun;
+    public $nome;
+    public $sigla_uf;
 
-    function Gerar()
+    public function Gerar()
     {
         global $coreExt;
         $config = $coreExt['Config']->app->locale;
 
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
+        $_SESSION['campo1'] = $_GET['campo1'] ? $_GET['campo1'] : $_SESSION['campo1'];
         //$_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
         session_write_close();
 
-        $this->titulo = "Municipio - Listagem";
+        $this->titulo = 'Municipio - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
         //
 
-        $this->addCabecalhos( array(
-            "Cidade",
-            "Estado"
-        ) );
-
+        $this->addCabecalhos([
+            'Cidade',
+            'Estado'
+        ]);
 
         $obj_uf = new clsUf(false, false, 1);
-        $lst_uf = $obj_uf->lista(false, false, false, false, false, "sigla_uf");
-        $array_uf = array('' => 'Todos');
-        foreach ($lst_uf as $uf)
-        {
+        $lst_uf = $obj_uf->lista(false, false, false, false, false, 'sigla_uf');
+        $array_uf = ['' => 'Todos'];
+        foreach ($lst_uf as $uf) {
             $array_uf[$uf['sigla_uf']] = $uf['nome'];
         }
-        if(!isset($this->sigla_uf))
-        {
+        if (!isset($this->sigla_uf)) {
             $this->sigla_uf = $config->province ? $config->province : '';
         }
 
-
-
-
         // outros Filtros
 
-        $this->campoLista("sigla_uf", "UF", $array_uf, $this->sigla_uf, "", false, "","", $disabled);
-        $this->campoTexto( "nome", "Cidade", $this->nome, 30, 255, false );
-    //  $this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 30, 255, false );
-
+        $this->campoLista('sigla_uf', 'UF', $array_uf, $this->sigla_uf, '', false, '', '', $disabled);
+        $this->campoTexto('nome', 'Cidade', $this->nome, 30, 255, false);
+        //  $this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 30, 255, false );
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_municipio = new clsMunicipio();
         //$obj_municipio->setOrderby( "nome ASC" );
         //$obj_municipio->setLimite( $this->limite, $this->offset );
 
-        $lista = $obj_municipio->lista($this->nome,$this->sigla_uf,null,null,null,null,null,null,null,$this->offset,$this->limite,"nome ASC");
+        $lista = $obj_municipio->lista($this->nome, $this->sigla_uf, null, null, null, null, null, null, null, $this->offset, $this->limite, 'nome ASC');
 
         $total = $obj_municipio->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-
-
-                if( class_exists( "clsUf" ) )
-                {
-                    $obj_sigla_uf = new clsUf($registro["sigla_uf"]->sigla_uf);
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                if (class_exists('clsUf')) {
+                    $obj_sigla_uf = new clsUf($registro['sigla_uf']->sigla_uf);
                     $det_sigla_uf = $obj_sigla_uf->detalhe();
-                    $registro["sigla_uf"] = $det_sigla_uf["nome"];
-                }
-                else
-                {
-                    $registro["sigla_uf"] = "Erro na geracao";
+                    $registro['sigla_uf'] = $det_sigla_uf['nome'];
+                } else {
+                    $registro['sigla_uf'] = 'Erro na geracao';
                     echo "<!--\nErro\nClasse nao existente: clsUf\n-->";
                 }
 
                 $script = " onclick=\"addSel1('{$_SESSION['campo1']}','{$registro['idmun']}','{$registro['nome']}'); fecha();\"";
-                $this->addLinhas( array(
-                    "<a href=\"javascript:void(0);\" {$script}>{$registro["nome"]}</a>",
-                    "<a href=\"javascript:void(0);\" {$script}>{$registro["sigla_uf"]}</a>"
-                ) );
+                $this->addLinhas([
+                    "<a href=\"javascript:void(0);\" {$script}>{$registro['nome']}</a>",
+                    "<a href=\"javascript:void(0);\" {$script}>{$registro['sigla_uf']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "educar_pesquisa_municipio_lst.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2('educar_pesquisa_municipio_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 // cria uma extensao da classe base
@@ -169,7 +156,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

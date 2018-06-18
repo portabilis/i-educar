@@ -6,8 +6,8 @@ class CriaCampoAtividadesComplementaresNaTurma extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("ALTER TABLE pmieducar.turma ADD COLUMN atividades_complementares INTEGER[];");
-        $this->execute("UPDATE pmieducar.turma
+        $this->execute('ALTER TABLE pmieducar.turma ADD COLUMN atividades_complementares INTEGER[];');
+        $this->execute('UPDATE pmieducar.turma
                            SET atividades_complementares = array_append(atividades_complementares, atividade_complementar_1)
                          WHERE atividade_complementar_1 IS NOT NULL;
 
@@ -29,11 +29,11 @@ class CriaCampoAtividadesComplementaresNaTurma extends AbstractMigration
 
                          UPDATE pmieducar.turma
                            SET atividades_complementares = array_append(atividades_complementares, atividade_complementar_6)
-                         WHERE atividade_complementar_6 IS NOT NULL;");
+                         WHERE atividade_complementar_6 IS NOT NULL;');
     }
 
     public function down()
     {
-        $this->execute("ALTER TABLE pmieducar.turma DROP COLUMN atividades_complementares;");
+        $this->execute('ALTER TABLE pmieducar.turma DROP COLUMN atividades_complementares;');
     }
 }

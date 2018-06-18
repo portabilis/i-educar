@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,73 +44,84 @@ require_once 'intranet/include/pmieducar/clsPmieducarMatricula.inc.php';
  * MatriculaController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class MatriculaController extends ApiCoreController
 {
-
-  protected function canGetMatriculas() {
-    return $this->validatesId('turma') &&
+    protected function canGetMatriculas()
+    {
+        return $this->validatesId('turma') &&
            $this->validatesPresenceOf('ano');
-  }
+    }
 
-  protected function getMatriculas() {
-    if ($this->canGetMatriculas()) {
-      $matriculas = new clsPmieducarMatricula();
-      $matriculas->setOrderby("sequencial_fechamento , translate(nome,'".Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ)."', '".Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN)."') ");
-      $matriculas = $matriculas->lista(NULL,
-                                       NULL,
+    protected function getMatriculas()
+    {
+        if ($this->canGetMatriculas()) {
+            $matriculas = new clsPmieducarMatricula();
+            $matriculas->setOrderby('sequencial_fechamento , translate(nome,\''.Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ).'\', \''.Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN).'\') ');
+            $matriculas = $matriculas->lista(
+          null,
+                                       null,
                                        $this->getRequest()->escola_id,
                                        $this->getRequest()->serie_id,
-                                       NULL,
-                                       NULL,
+                                       null,
+                                       null,
                                        $this->getRequest()->aluno_id,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
                                        $ativo = 1,
                                        $this->getRequest()->ano,
-                                       NULL,
+                                       null,
                                        $this->getRequest()->instituicao_id,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
                                        $this->getRequest()->curso_id,
-                                       NULL,
+                                       null,
                                        $this->getRequest()->matricula_id,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
                                        $this->getRequest()->turma_id,
-                                       NULL,
-                                       false); // Mostra alunos em abandono/transferidos se não existir nenhuma matricula_turma ativa pra outra turma
+                                       null,
+                                       false
+      ); // Mostra alunos em abandono/transferidos se não existir nenhuma matricula_turma ativa pra outra turma
 
-      $options = array();
+            $options = [];
 
-      foreach ($matriculas as $matricula)
-        $options['__' . $matricula['cod_matricula']] = mb_strtoupper($matricula['nome'], 'UTF-8');
+            foreach ($matriculas as $matricula) {
+                $options['__' . $matricula['cod_matricula']] = mb_strtoupper($matricula['nome'], 'UTF-8');
+            }
 
-      return array('options' => $options);
+            return ['options' => $options];
+        }
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'matriculas'))
-      $this->appendResponse($this->getMatriculas());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'matriculas')) {
+            $this->appendResponse($this->getMatriculas());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

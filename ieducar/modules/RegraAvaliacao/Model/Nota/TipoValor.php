@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,34 @@ require_once 'CoreExt/Enum.php';
  * RegraAvaliacao_Model_Nota_TipoValor class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     RegraAvaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class RegraAvaliacao_Model_Nota_TipoValor extends CoreExt_Enum
 {
-  const NENHUM             = 0;
-  const NUMERICA           = 1;
-  const CONCEITUAL         = 2;
-  const NUMERICACONCEITUAL = 3;
+    const NENHUM             = 0;
+    const NUMERICA           = 1;
+    const CONCEITUAL         = 2;
+    const NUMERICACONCEITUAL = 3;
 
-  protected $_data = array(
+    protected $_data = [
     self::NENHUM             => 'Não usar nota',
     self::NUMERICA           => 'Nota numérica',
     self::CONCEITUAL         => 'Nota conceitual',
     self::NUMERICACONCEITUAL => 'Nota conceitual e numérica'
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

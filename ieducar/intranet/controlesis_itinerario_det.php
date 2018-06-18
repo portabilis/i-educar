@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Itinerario" );
-        $this->processoAp = "614";
+        $this->SetTitulo("{$this->_instituicao} Itinerario");
+        $this->processoAp = '614';
     }
 }
 
@@ -45,77 +45,65 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_itinerario;
-    var $ref_funcionario_cad;
-    var $ref_funcionario_exc;
-    var $numero;
-    var $itinerario;
-    var $retorno;
-    var $horarios;
-    var $descricao_horario;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $nome;
+    public $cod_itinerario;
+    public $ref_funcionario_cad;
+    public $ref_funcionario_exc;
+    public $numero;
+    public $itinerario;
+    public $retorno;
+    public $horarios;
+    public $descricao_horario;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $nome;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Itinerario - Detalhe";
-        
+        $this->titulo = 'Itinerario - Detalhe';
 
-        $this->cod_itinerario=$_GET["cod_itinerario"];
+        $this->cod_itinerario=$_GET['cod_itinerario'];
 
-        $tmp_obj = new clsPmicontrolesisItinerario( $this->cod_itinerario );
+        $tmp_obj = new clsPmicontrolesisItinerario($this->cod_itinerario);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: controlesis_itinerario_lst.php" );
+        if (! $registro) {
+            header('location: controlesis_itinerario_lst.php');
             die();
         }
 
-
-
-
-        if( $registro["cod_itinerario"] )
-        {
-            $this->addDetalhe( array( "Itinerario", "{$registro["cod_itinerario"]}") );
+        if ($registro['cod_itinerario']) {
+            $this->addDetalhe([ 'Itinerario', "{$registro['cod_itinerario']}"]);
         }
-        if( $registro["numero"] )
-        {
-            $this->addDetalhe( array( "Numero", "{$registro["numero"]}") );
+        if ($registro['numero']) {
+            $this->addDetalhe([ 'Numero', "{$registro['numero']}"]);
         }
-        if( $registro["itinerario"] )
-        {
-            $this->addDetalhe( array( "Itinerario", "{$registro["itinerario"]}") );
+        if ($registro['itinerario']) {
+            $this->addDetalhe([ 'Itinerario', "{$registro['itinerario']}"]);
         }
-        if( $registro["retorno"] )
-        {
-            $this->addDetalhe( array( "Retorno", "{$registro["retorno"]}") );
+        if ($registro['retorno']) {
+            $this->addDetalhe([ 'Retorno', "{$registro['retorno']}"]);
         }
-        if( $registro["horarios"] )
-        {
-            $this->addDetalhe( array( "Horarios", "{$registro["horarios"]}") );
+        if ($registro['horarios']) {
+            $this->addDetalhe([ 'Horarios', "{$registro['horarios']}"]);
         }
-        if( $registro["descricao_horario"] )
-        {
-            $this->addDetalhe( array( "Descric&atilde;o Horario", "{$registro["descricao_horario"]}") );
+        if ($registro['descricao_horario']) {
+            $this->addDetalhe([ 'Descric&atilde;o Horario', "{$registro['descricao_horario']}"]);
         }
-        if( $registro["nome"] )
-        {
-            $this->addDetalhe( array( "Nome", "{$registro["nome"]}") );
+        if ($registro['nome']) {
+            $this->addDetalhe([ 'Nome', "{$registro['nome']}"]);
         }
 
-        $this->url_novo = "controlesis_itinerario_cad.php";
-        $this->url_editar = "controlesis_itinerario_cad.php?cod_itinerario={$registro["cod_itinerario"]}";
-        $this->url_cancelar = "controlesis_itinerario_lst.php";
-        $this->largura = "100%";
+        $this->url_novo = 'controlesis_itinerario_cad.php';
+        $this->url_editar = "controlesis_itinerario_cad.php?cod_itinerario={$registro['cod_itinerario']}";
+        $this->url_cancelar = 'controlesis_itinerario_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -124,7 +112,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

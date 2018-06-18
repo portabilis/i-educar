@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Tipo Acontecimento" );
-        $this->processoAp = "604";
+        $this->SetTitulo("{$this->_instituicao} Tipo Acontecimento");
+        $this->processoAp = '604';
     }
 }
 
@@ -45,159 +45,150 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_tipo_acontecimento;
-    var $ref_cod_funcionario_cad;
-    var $ref_cod_funcionario_exc;
-    var $nm_tipo;
-    var $caminho;
-    var $imagem;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_tipo_acontecimento;
+    public $ref_cod_funcionario_cad;
+    public $ref_cod_funcionario_exc;
+    public $nm_tipo;
+    public $caminho;
+    public $imagem;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_tipo_acontecimento=$_GET["cod_tipo_acontecimento"];
+        $this->cod_tipo_acontecimento=$_GET['cod_tipo_acontecimento'];
 
-
-        if( is_numeric( $this->cod_tipo_acontecimento ) )
-        {
-
-            $obj = new clsPmicontrolesisTipoAcontecimento( $this->cod_tipo_acontecimento );
+        if (is_numeric($this->cod_tipo_acontecimento)) {
+            $obj = new clsPmicontrolesisTipoAcontecimento($this->cod_tipo_acontecimento);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
-                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
+                }
+                $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
+                $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
                 $this->fexcluir = true;
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
             $this->imagem = $this->caminho;
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "controlesis_tipo_acontecimento_det.php?cod_tipo_acontecimento={$registro["cod_tipo_acontecimento"]}" : "controlesis_tipo_acontecimento_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "controlesis_tipo_acontecimento_det.php?cod_tipo_acontecimento={$registro['cod_tipo_acontecimento']}" : 'controlesis_tipo_acontecimento_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_tipo_acontecimento", $this->cod_tipo_acontecimento );
-        $this->campoOculto( "imagem", $this->imagem );
+        $this->campoOculto('cod_tipo_acontecimento', $this->cod_tipo_acontecimento);
+        $this->campoOculto('imagem', $this->imagem);
 
         // text
-        $this->campoTexto( "nm_tipo", "Nome Tipo", $this->nm_tipo, 30, 255, true );
-        $this->campoArquivo( "caminho", "Caminho", $this->caminho, 30 );
+        $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, true);
+        $this->campoArquivo('caminho', 'Caminho', $this->caminho, 30);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-        $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : FALSE;
-        $diretorio = "imagens/";
-        if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name']))
-        {
+        $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : false;
+        $diretorio = 'imagens/';
+        if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name'])) {
             $this->caminho = $arquivo['name'];
 
-            $obj = new clsPmicontrolesisTipoAcontecimento( $this->cod_tipo_acontecimento, $this->pessoa_logada, null, $this->nm_tipo, $this->caminho, null, null, 1 );
+            $obj = new clsPmicontrolesisTipoAcontecimento($this->cod_tipo_acontecimento, $this->pessoa_logada, null, $this->nm_tipo, $this->caminho, null, null, 1);
             $cadastrou = $obj->cadastra();
-            if( $cadastrou )
-            {
-                $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: controlesis_tipo_acontecimento_lst.php" );
+            if ($cadastrou) {
+                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                header('Location: controlesis_tipo_acontecimento_lst.php');
                 die();
+
                 return true;
             }
         }
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmicontrolesisTipoAcontecimento\nvalores obrigatorios\nis_numeric( $this->ref_cod_funcionario_cad )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        if($this->caminho['tmp_name'])
-        {
-            $diretorio = "imagens/";
+        if ($this->caminho['tmp_name']) {
+            $diretorio = 'imagens/';
             unlink("{$diretorio}{$this->imagem}");
-            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : FALSE;
-            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name']))
-            {
+            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : false;
+            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name'])) {
                 $this->caminho = $arquivo['name'];
             }
-        }
-        else
-        {
+        } else {
             $this->caminho = null;
         }
 
         $obj = new clsPmicontrolesisTipoAcontecimento($this->cod_tipo_acontecimento, null, $this->pessoa_logada, $this->nm_tipo, $this->caminho, null, null, 1);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_tipo_acontecimento_lst.php" );
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: controlesis_tipo_acontecimento_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmicontrolesisTipoAcontecimento\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_acontecimento ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        if($this->caminho['tmp_name'])
-        {
-            $diretorio = "imagens/";
+        if ($this->caminho['tmp_name']) {
+            $diretorio = 'imagens/';
             unlink("{$diretorio}{$this->imagem}");
-            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : FALSE;
-            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name']))
-            {
+            $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : false;
+            if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name'])) {
                 $this->caminho = $arquivo['name'];
             }
-        }
-        else
-        {
+        } else {
             $this->caminho = null;
         }
 
         $obj = new clsPmicontrolesisTipoAcontecimento($this->cod_tipo_acontecimento, null, $this->pessoa_logada, $this->nm_tipo, $this->caminho, null, null, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_tipo_acontecimento_lst.php" );
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: controlesis_tipo_acontecimento_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmicontrolesisTipoAcontecimento\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_acontecimento ) )\n-->";
+
         return false;
     }
 }
@@ -207,7 +198,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

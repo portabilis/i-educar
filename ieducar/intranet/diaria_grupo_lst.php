@@ -24,79 +24,72 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
-        $this->processoAp = "297";
+        $this->SetTitulo("{$this->_instituicao} Diária Grupo");
+        $this->processoAp = '297';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Diária Grupo";
-        
-    
-        $this->addCabecalhos( array( "Grupo" ) );
-        
-        
-        $where = "";
-        $gruda = "";
+        $this->titulo = 'Diária Grupo';
+
+        $this->addCabecalhos([ 'Grupo' ]);
+
+        $where = '';
+        $gruda = '';
 
         $db = new clsBanco();
         $db2 = new clsBanco();
-        $total = $db->UnicoCampo( "SELECT count(0) FROM pmidrh.diaria_grupo $where" );
-        
+        $total = $db->UnicoCampo("SELECT count(0) FROM pmidrh.diaria_grupo $where");
+
         // Paginador
         $limite = 20;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-        
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+
         $objPessoa = new clsPessoaFisica();
-        
+
         $sql = "SELECT cod_diaria_grupo, desc_grupo FROM pmidrh.diaria_grupo $where ORDER BY desc_grupo ASC";
-        $db->Consulta( $sql );
-        while ( $db->ProximoRegistro() )
-        {
-            list ( $cod_diaria_grupo, $desc_grupo ) = $db->Tupla();
-        
-            $this->addLinhas( array( 
-            "<a href='diaria_grupo_det.php?cod_diaria_grupo={$cod_diaria_grupo}'><img src='imagens/noticia.jpg' border=0>$desc_grupo</a>"));
+        $db->Consulta($sql);
+        while ($db->ProximoRegistro()) {
+            list($cod_diaria_grupo, $desc_grupo) = $db->Tupla();
+
+            $this->addLinhas([
+            "<a href='diaria_grupo_det.php?cod_diaria_grupo={$cod_diaria_grupo}'><img src='imagens/noticia.jpg' border=0>$desc_grupo</a>"]);
         }
-        
+
         // Paginador
-        $this->addPaginador2( "diaria_grupo_lst.php", $total, $_GET, $this->nome, $limite );
-        
-        $this->acao = "go(\"diaria_grupo_cad.php\")";
-        $this->nome_acao = "Novo";
+        $this->addPaginador2('diaria_grupo_lst.php', $total, $_GET, $this->nome, $limite);
 
-        $this->largura = "100%";
+        $this->acao = 'go("diaria_grupo_cad.php")';
+        $this->nome_acao = 'Novo';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de grupos de di&aacute;rias"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''                                  => 'Listagem de grupos de di&aacute;rias'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

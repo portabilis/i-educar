@@ -24,48 +24,46 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Grupos de Email!" );
-        $this->processoAp = "85";
+        $this->SetTitulo("{$this->_instituicao} Grupos de Email!");
+        $this->processoAp = '85';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe do Grupo";
-        
+        $this->titulo = 'Detalhe do Grupo';
+
         $id_grupo = @$_GET['id_grupo'];
         $db = new clsBanco();
-        $db->Consulta( "SELECT cod_mailling_grupo, nm_grupo FROM mailling_grupo WHERE cod_mailling_grupo={$id_grupo}" );
-        if ($db->ProximoRegistro())
-        {
-            list ($cod_grupo, $nome) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nome) );
+        $db->Consulta("SELECT cod_mailling_grupo, nm_grupo FROM mailling_grupo WHERE cod_mailling_grupo={$id_grupo}");
+        if ($db->ProximoRegistro()) {
+            list($cod_grupo, $nome) = $db->Tupla();
+            $this->addDetalhe(['Nome', $nome]);
         }
         $db->Consulta("SELECT nm_pessoa, email FROM mailling_grupo_email mge, mailling_email me WHERE ref_cod_mailling_grupo={$id_grupo} AND cod_mailling_email=ref_cod_mailling_email");
         while ($db->ProximoRegistro()) {
             list($nome, $email) = $db->Tupla();
-            $this->addDetalhe(array("Emails Vinculados", "{$nome} - {$email}"));
+            $this->addDetalhe(['Emails Vinculados', "{$nome} - {$email}"]);
         }
-        
-        $this->url_novo = "mailling_grupos_cad.php";
+
+        $this->url_novo = 'mailling_grupos_cad.php';
         $this->url_editar = "mailling_grupos_cad.php?id_grupo={$id_grupo}";
-        $this->url_cancelar = "mailling_grupos_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'mailling_grupos_lst.php';
+        $this->largura = '100%';
     }
 }
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-?>

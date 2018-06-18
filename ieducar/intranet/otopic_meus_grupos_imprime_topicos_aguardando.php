@@ -24,118 +24,101 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/relatorio.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/relatorio.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
-        $this->processoAp = "294";
+        $this->SetTitulo("{$this->_instituicao} i-Pauta - Detalhe do Grupo");
+        $this->processoAp = '294';
     }
 }
 
 class Listas2 extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $id_visualiza = $_SESSION['id_pessoa'];
         @session_write_close();
-        $this->nome = "Form2";
+        $this->nome = 'Form2';
 
-        $this->titulo = "Tópicos Aguardando em Reunião";
-        $this->addBanner(false,false,false,false );
-        
+        $this->titulo = 'Tópicos Aguardando em Reunião';
+        $this->addBanner(false, false, false, false);
+
         $cod_membro = $_GET['cod_membro'];
         $cod_grupo = $_GET['cod_grupo'];
         $imprimir = $_GET['imprimir'];
-        
-        $this->addCabecalhos( array( "Imprimir") );
+
+        $this->addCabecalhos([ 'Imprimir']);
 
         $obj = new clsReuniao();
-        /*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados 
-            que nao foram finalizados nessa reuniao 
+        /*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados
+            que nao foram finalizados nessa reuniao
         */
-        $lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,false,true);
-        if($lista)
-        {
-            foreach ($lista as $reuniao) 
-            {
+        $lista = $obj->lista(false, $cod_grupo, false, false, false, false, false, false, true);
+        if ($lista) {
+            foreach ($lista as $reuniao) {
                 $obj = new clsTopicoReuniao();
-                $lista = $obj->lista(false,false,false,false,false,false,false,$reuniao['cod_reuniao']);
-                if($lista)
-                {
-                    foreach ($lista as $topicos) 
-                    {
-                        if($topicos['finalizado'])
-                        {
+                $lista = $obj->lista(false, false, false, false, false, false, false, $reuniao['cod_reuniao']);
+                if ($lista) {
+                    foreach ($lista as $topicos) {
+                        if ($topicos['finalizado']) {
                             $topico_comprometidos[] = $topicos['ref_cod_topico'];
                         }
                     }
                 }
             }
         }
-        /*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como 
+        /*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como
             comprometido
-        */  
+        */
         $obj = new clsReuniao();
-        $lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,true);
-        if($lista)
-        {
+        $lista = $obj->lista(false, $cod_grupo, false, false, false, false, false, true);
+        if ($lista) {
             foreach ($lista as $reuniao) {
                 $obj = new clsTopicoReuniao();
-                $lista = $obj->lista(false,false,false,false,false,false,false,$reuniao['cod_reuniao']);
-                if($lista)
-                {
+                $lista = $obj->lista(false, false, false, false, false, false, false, $reuniao['cod_reuniao']);
+                if ($lista) {
                     foreach ($lista as $topicos) {
-                            $topico_comprometidos[] = $topicos['ref_cod_topico'];
+                        $topico_comprometidos[] = $topicos['ref_cod_topico'];
                     }
                 }
             }
         }
-        if($topico_comprometidos)
-        {
-            $topico_finalizados = "";
+        if ($topico_comprometidos) {
+            $topico_finalizados = '';
             foreach ($topico_comprometidos as $topicos) {
                 $obj = new clsTopicoReuniao($topicos);
                 $detalhe = $obj->detalhe();
-                if(!$detalhe['finalizado'])
-                {
+                if (!$detalhe['finalizado']) {
                     $topico_finalizados[] = $topicos;
                 }
             }
         }
-        
-        if($topico_finalizados)
-        {
+
+        if ($topico_finalizados) {
             $obj = new clsTopico();
-            $lista = $obj->lista(false,false,false,false,false,false,false,1,$iniciolimit,$limite,"cod_topico DESC",false,$topico_finalizados);
-            if($lista)
-            {
+            $lista = $obj->lista(false, false, false, false, false, false, false, 1, $iniciolimit, $limite, 'cod_topico DESC', false, $topico_finalizados);
+            if ($lista) {
                 //pdf
-                $objRelatorio = new relatorios("Tópicos Aguardando em Reunião",80,false,false,"A4","Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC","#FFFFFF","#000000", "#FFFFFF", "#FFFFFF");
-                
-                if($imprimir == "jato")
-                {
-                    foreach ($lista as $topicos) 
-                    {
+                $objRelatorio = new relatorios('Tópicos Aguardando em Reunião', 80, false, false, 'A4', "Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC", '#FFFFFF', '#000000', '#FFFFFF', '#FFFFFF');
+
+                if ($imprimir == 'jato') {
+                    foreach ($lista as $topicos) {
                         $total = $topicos['total'];
                         $obj = new clsTopicoReuniao($topicos['cod_topico']);
                         $detalhe = $obj->detalhe();
-                        if(strlen($topicos['assunto']) > 60 )
-                        {
-                            
-                            $descricao = substr($topicos['assunto'],0,60)."...";
-                        }else 
-                        {
+                        if (strlen($topicos['assunto']) > 60) {
+                            $descricao = substr($topicos['assunto'], 0, 60).'...';
+                        } else {
                             $descricao = $topicos['assunto'];
                         }
                         // Pega o Nome do responsável pelo Tópico
@@ -143,27 +126,20 @@ class Listas2 extends clsListagem
                         $detalhe = $obj->detalhe();
                         $nome = $detalhe['nome'];
                         //pdf
-                        $objRelatorio->novalinha(array("Descrição: ".quebra_linhas_pdf($descricao, 70)), 0, 13*(count(explode("\n",quebra_linhas_pdf($descricao, 70) ))) , false, false, 109,false,"#FFFFFF");                      
-                        $objRelatorio->novalinha(array("Responsável: ".$nome), 15, 13 , false, false, 109,false,"#FFFFFF");                     
-                        $objRelatorio->novalinha(array(""), 15, 13 , false, false, 109,false,"#FFFFFF");                        
-                        $objRelatorio->novalinha(array(""), 15, 13 , false, false, 109,false,"#FFFFFF");                        
-                        $objRelatorio->novalinha(array(""), 15, 13 , false, false, 109,false,"#FFFFFF");                        
-                                
+                        $objRelatorio->novalinha(['Descrição: '.quebra_linhas_pdf($descricao, 70)], 0, 13*(count(explode("\n", quebra_linhas_pdf($descricao, 70)))), false, false, 109, false, '#FFFFFF');
+                        $objRelatorio->novalinha(['Responsável: '.$nome], 15, 13, false, false, 109, false, '#FFFFFF');
+                        $objRelatorio->novalinha([''], 15, 13, false, false, 109, false, '#FFFFFF');
+                        $objRelatorio->novalinha([''], 15, 13, false, false, 109, false, '#FFFFFF');
+                        $objRelatorio->novalinha([''], 15, 13, false, false, 109, false, '#FFFFFF');
                     }
-                }
-                else 
-                {
-                    foreach ($lista as $topicos) 
-                    {
+                } else {
+                    foreach ($lista as $topicos) {
                         $total = $topicos['total'];
                         $obj = new clsTopicoReuniao($topicos['cod_topico']);
                         $detalhe = $obj->detalhe();
-                        if(strlen($topicos['assunto']) > 60 )
-                        {
-                            
-                            $descricao = substr($topicos['assunto'],0,60)."...";
-                        }else 
-                        {
+                        if (strlen($topicos['assunto']) > 60) {
+                            $descricao = substr($topicos['assunto'], 0, 60).'...';
+                        } else {
                             $descricao = $topicos['assunto'];
                         }
                         // Pega o Nome do responsável pelo Tópico
@@ -171,29 +147,27 @@ class Listas2 extends clsListagem
                         $detalhe = $obj->detalhe();
                         $nome = $detalhe['nome'];
                         //pdf
-                        $objRelatorio->novalinha(array("Descrição: ".quebra_linhas_pdf($descricao, 70)), 0, 13*(count(explode("\n",quebra_linhas_pdf($descricao, 70) ))) , false, false, 109);                      
-                        $objRelatorio->novalinha(array(""), 15, 13 , false, false, 109);                        
-                        $objRelatorio->novalinha(array(""), 15, 13 , false, false, 109);                        
-                        $objRelatorio->novalinha(array(""), 15, 13 , false, false, 109);                        
-                        $objRelatorio->novalinha(array(""), 15, 13 , false, false, 109);                        
+                        $objRelatorio->novalinha(['Descrição: '.quebra_linhas_pdf($descricao, 70)], 0, 13*(count(explode("\n", quebra_linhas_pdf($descricao, 70)))), false, false, 109);
+                        $objRelatorio->novalinha([''], 15, 13, false, false, 109);
+                        $objRelatorio->novalinha([''], 15, 13, false, false, 109);
+                        $objRelatorio->novalinha([''], 15, 13, false, false, 109);
+                        $objRelatorio->novalinha([''], 15, 13, false, false, 109);
                     }
                 }
                 //pdf
                 $link = $objRelatorio->fechaPdf();
-                $this->addLinhas( array("<a href='$link'>Clique aqui para abrir o arquivo</a>" ) );
-                $this->array_botao = array("Cancelar");
-                $this->array_botao_url = array("otopic_meus_grupos_det2.php?cod_grupo=$cod_grupo");
+                $this->addLinhas(["<a href='$link'>Clique aqui para abrir o arquivo</a>" ]);
+                $this->array_botao = ['Cancelar'];
+                $this->array_botao_url = ["otopic_meus_grupos_det2.php?cod_grupo=$cod_grupo"];
             }
-        }                       
-        $this->largura = "100%";
+        }
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 
 $miolo = new Listas2();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

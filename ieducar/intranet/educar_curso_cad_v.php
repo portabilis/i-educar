@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Curso" );
-        $this->processoAp = "0";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Curso");
+        $this->processoAp = '0';
     }
 }
 
@@ -45,212 +45,189 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_curso;
-    var $ref_usuario_cad;
-    var $ref_cod_tipo_regime;
-    var $ref_cod_nivel_ensino;
-    var $ref_cod_tipo_ensino;
-    var $ref_cod_tipo_avaliacao;
-    var $nm_curso;
-    var $sgl_curso;
-    var $qtd_etapas;
-    var $frequencia_minima;
-    var $media;
-    var $media_exame;
-    var $falta_ch_globalizada;
-    var $carga_horaria;
-    var $ato_poder_publico;
-    var $edicao_final;
-    var $objetivo_curso;
-    var $publico_alvo;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_usuario_exc;
-    var $ref_cod_instituicao;
-    var $padrao_ano_escolar;
-    var $hora_falta;
+    public $cod_curso;
+    public $ref_usuario_cad;
+    public $ref_cod_tipo_regime;
+    public $ref_cod_nivel_ensino;
+    public $ref_cod_tipo_ensino;
+    public $ref_cod_tipo_avaliacao;
+    public $nm_curso;
+    public $sgl_curso;
+    public $qtd_etapas;
+    public $frequencia_minima;
+    public $media;
+    public $media_exame;
+    public $falta_ch_globalizada;
+    public $carga_horaria;
+    public $ato_poder_publico;
+    public $edicao_final;
+    public $objetivo_curso;
+    public $publico_alvo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_usuario_exc;
+    public $ref_cod_instituicao;
+    public $padrao_ano_escolar;
+    public $hora_falta;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_curso=$_GET["cod_curso"];
+        $this->cod_curso=$_GET['cod_curso'];
 
         /*$obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0,  "educar_curso_lst.php" );
         */
-        if( is_numeric( $this->cod_curso ) )
-        {
-
-            $obj = new clsPmieducarCurso( $this->cod_curso );
+        if (is_numeric($this->cod_curso)) {
+            $obj = new clsPmieducarCurso($this->cod_curso);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
-                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
+                }
+                $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
+                $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
-            //$obj_permissoes = new clsPermissoes();
-            if( $obj_permissoes->permissao_excluir( 0, $this->pessoa_logada, 0 ) )
-            {
-                $this->fexcluir = true;
-            }
+                //$obj_permissoes = new clsPermissoes();
+                if ($obj_permissoes->permissao_excluir(0, $this->pessoa_logada, 0)) {
+                    $this->fexcluir = true;
+                }
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_curso_det.php?cod_curso={$registro["cod_curso"]}" : "educar_curso_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_curso_det.php?cod_curso={$registro['cod_curso']}" : 'educar_curso_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_curso", $this->cod_curso );
+        $this->campoOculto('cod_curso', $this->cod_curso);
 
         // foreign keys
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarInstituicao')) {
             $objTemp = new clsPmieducarInstituicao();
             $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
-            {
-                foreach ( $lista as $registro ) 
-                {
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarInstituicao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "ref_cod_instituicao", "Instituic&atilde;o", $opcoes, $this->ref_cod_instituicao );
+        $this->campoLista('ref_cod_instituicao', 'Instituic&atilde;o', $opcoes, $this->ref_cod_instituicao);
 
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoEnsino" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarTipoEnsino')) {
             $objTemp = new clsPmieducarTipoEnsino();
             $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
-            {
-                foreach ( $lista as $registro ) 
-                {
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_tipo']}";
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarTipoEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "ref_cod_tipo_ensino", "Tipo Ensino", $opcoes, $this->ref_cod_tipo_ensino );
+        $this->campoLista('ref_cod_tipo_ensino', 'Tipo Ensino', $opcoes, $this->ref_cod_tipo_ensino);
 
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoAvaliacao" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarTipoAvaliacao')) {
             $objTemp = new clsPmieducarTipoAvaliacao();
             $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
-            {
-                foreach ( $lista as $registro ) 
-                {
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes["{$registro['cod_tipo_avaliacao']}"] = "{$registro['nm_tipo']}";
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarTipoAvaliacao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "ref_cod_tipo_avaliacao", "Tipo Avaliac&atilde;o", $opcoes, $this->ref_cod_tipo_avaliacao );
+        $this->campoLista('ref_cod_tipo_avaliacao', 'Tipo Avaliac&atilde;o', $opcoes, $this->ref_cod_tipo_avaliacao);
 
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarNivelEnsino" ) )
-        {
+        $opcoes = [ '' => 'Selecione' ];
+        if (class_exists('clsPmieducarNivelEnsino')) {
             $objTemp = new clsPmieducarNivelEnsino();
             $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
-            {
-                foreach ( $lista as $registro ) 
-                {
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "<!--\nErro\nClasse clsPmieducarNivelEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
+            $opcoes = [ '' => 'Erro na geracao' ];
         }
-        $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
-
+        $this->campoLista('ref_cod_nivel_ensino', 'Nivel Ensino', $opcoes, $this->ref_cod_nivel_ensino);
 
         // text
-        $this->campoTexto( "nm_curso", "Nome Curso", $this->nm_curso, 30, 255, true );
-        $this->campoTexto( "sgl_curso", "Sgl Curso", $this->sgl_curso, 30, 255, true );
-        $this->campoNumero( "qtd_etapas", "Qtd Etapas", $this->qtd_etapas, 15, 255, true );
-        $this->campoMonetario( "frequencia_minima", "Frequencia Minima", $this->frequencia_minima, 15, 255, true );
-        $this->campoMonetario( "media", "Media", $this->media, 15, 255, true );
-        $this->campoMonetario( "media_exame", "Media Exame", $this->media_exame, 15, 255, false );
-        $this->campoNumero( "falta_ch_globalizada", "Falta Ch Globalizada", $this->falta_ch_globalizada, 15, 255, true );
-        $this->campoMonetario( "carga_horaria", "Carga Horaria", $this->carga_horaria, 15, 255, true );
-        $this->campoTexto( "ato_poder_publico", "Ato Poder Publico", $this->ato_poder_publico, 30, 255, false );
-        $this->campoNumero( "edicao_final", "Edic&atilde;o Final", $this->edicao_final, 15, 255, true );
-        $this->campoMemo( "objetivo_curso", "Objetivo Curso", $this->objetivo_curso, 60, 10, false );
-        $this->campoMemo( "publico_alvo", "Publico Alvo", $this->publico_alvo, 60, 10, false );
-        $this->campoNumero( "padrao_ano_escolar", "Padr&atilde;o Ano Escolar", $this->padrao_ano_escolar, 15, 255, true );
-        $this->campoMonetario( "hora_falta", "Hora Falta", $this->hora_falta, 15, 255, true );
+        $this->campoTexto('nm_curso', 'Nome Curso', $this->nm_curso, 30, 255, true);
+        $this->campoTexto('sgl_curso', 'Sgl Curso', $this->sgl_curso, 30, 255, true);
+        $this->campoNumero('qtd_etapas', 'Qtd Etapas', $this->qtd_etapas, 15, 255, true);
+        $this->campoMonetario('frequencia_minima', 'Frequencia Minima', $this->frequencia_minima, 15, 255, true);
+        $this->campoMonetario('media', 'Media', $this->media, 15, 255, true);
+        $this->campoMonetario('media_exame', 'Media Exame', $this->media_exame, 15, 255, false);
+        $this->campoNumero('falta_ch_globalizada', 'Falta Ch Globalizada', $this->falta_ch_globalizada, 15, 255, true);
+        $this->campoMonetario('carga_horaria', 'Carga Horaria', $this->carga_horaria, 15, 255, true);
+        $this->campoTexto('ato_poder_publico', 'Ato Poder Publico', $this->ato_poder_publico, 30, 255, false);
+        $this->campoNumero('edicao_final', 'Edic&atilde;o Final', $this->edicao_final, 15, 255, true);
+        $this->campoMemo('objetivo_curso', 'Objetivo Curso', $this->objetivo_curso, 60, 10, false);
+        $this->campoMemo('publico_alvo', 'Publico Alvo', $this->publico_alvo, 60, 10, false);
+        $this->campoNumero('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar', $this->padrao_ano_escolar, 15, 255, true);
+        $this->campoMonetario('hora_falta', 'Hora Falta', $this->hora_falta, 15, 255, true);
 
         // data
 
         // time
 
         // bool
-
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         /*$obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0,  "educar_curso_lst.php" );
 */
 
-        $obj = new clsPmieducarCurso( $this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta );
+        $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_curso_lst.php" );
+        if ($cadastrou) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_curso_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarCurso\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_nivel_ensino ) && is_numeric( $this->ref_cod_tipo_ensino ) && is_string( $this->nm_curso ) && is_string( $this->sgl_curso ) && is_numeric( $this->qtd_etapas ) && is_numeric( $this->frequencia_minima ) && is_numeric( $this->media ) && is_numeric( $this->falta_ch_globalizada ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->edicao_final ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->padrao_ano_escolar ) && is_numeric( $this->hora_falta )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         /*$obj_permissoes = new clsPermissoes();
@@ -259,23 +236,24 @@ class indice extends clsCadastro
 
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_curso_lst.php" );
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_curso_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarCurso\nvalores obrigatorios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         /*$obj_permissoes = new clsPermissoes();
@@ -284,16 +262,17 @@ class indice extends clsCadastro
 
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, 0, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_curso_lst.php" );
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_curso_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarCurso\nvalores obrigatorios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }
@@ -303,7 +282,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/portal/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/portal/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Compras Modalidade" );
-        $this->processoAp = "773";
+        $this->SetTitulo("{$this->_instituicao} Compras Modalidade");
+        $this->processoAp = '773';
     }
 }
 
@@ -45,43 +45,38 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
-    
-    var $cod_compras_modalidade;
-    var $nm_modalidade;
-    
-    function Gerar()
+    public $titulo;
+
+    public $cod_compras_modalidade;
+    public $nm_modalidade;
+
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
-        
-        $this->titulo = "Compras Modalidade - Detalhe";
-        
 
-        $this->cod_compras_modalidade=$_GET["cod_compras_modalidade"];
+        $this->titulo = 'Compras Modalidade - Detalhe';
 
-        $tmp_obj = new clsPortalComprasModalidade( $this->cod_compras_modalidade );
+        $this->cod_compras_modalidade=$_GET['cod_compras_modalidade'];
+
+        $tmp_obj = new clsPortalComprasModalidade($this->cod_compras_modalidade);
         $registro = $tmp_obj->detalhe();
-        
-        if( ! $registro )
-        {
-            header( "location: portal_compras_modalidade_lst.php" );
+
+        if (! $registro) {
+            header('location: portal_compras_modalidade_lst.php');
             die();
         }
-        
 
-        if( $registro["nm_modalidade"] )
-        {
-            $this->addDetalhe( array( "Modalidade", "{$registro["nm_modalidade"]}") );
+        if ($registro['nm_modalidade']) {
+            $this->addDetalhe([ 'Modalidade', "{$registro['nm_modalidade']}"]);
         }
 
+        $this->url_novo = 'portal_compras_modalidade_cad.php';
+        $this->url_editar = "portal_compras_modalidade_cad.php?cod_compras_modalidade={$registro['cod_compras_modalidade']}";
 
-        $this->url_novo = "portal_compras_modalidade_cad.php";
-        $this->url_editar = "portal_compras_modalidade_cad.php?cod_compras_modalidade={$registro["cod_compras_modalidade"]}";
-
-        $this->url_cancelar = "portal_compras_modalidade_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'portal_compras_modalidade_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -90,7 +85,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

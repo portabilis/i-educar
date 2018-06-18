@@ -1,31 +1,28 @@
 <?php
 
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
-$sql = "SELECT cod_nota_aluno, ref_cod_matricula, ref_cod_disciplina, nota FROM 
+$sql = 'SELECT cod_nota_aluno, ref_cod_matricula, ref_cod_disciplina, nota FROM 
 pmieducar.nota_aluno na, pmieducar.matricula m WHERE
 na.ativo=1 and m.cod_matricula=na.ref_cod_matricula
 and m.ativo=1 and m.ano=2007 and m.aprovado in (1,2,3) and
 na.modulo >= 5
-order by ref_cod_matricula,na.data_cadastro";
+order by ref_cod_matricula,na.data_cadastro';
 //die("a");
 $db = new clsBanco();
 $db->Consulta($sql);
-$notas_exame = array();
-while ($db->ProximoRegistro())
-{
+$notas_exame = [];
+while ($db->ProximoRegistro()) {
     list($cod_nota_aluno, $ref_cod_matricula, $ref_cod_disciplina, $nota) = $db->Tupla();
     $notas_exame[$ref_cod_matricula][$ref_cod_disciplina][] = $cod_nota_aluno;
 }
-die("ss");
-$matriculas = array();
-foreach ($notas_exame as $ref_cod_matricula => $nota)
-{
-    foreach ($nota as $nota_sozinha)
-    {
+die('ss');
+$matriculas = [];
+foreach ($notas_exame as $ref_cod_matricula => $nota) {
+    foreach ($nota as $nota_sozinha) {
         if (count($nota_sozinha) > 1) {
-            echo $ref_cod_matricula."<br>";
+            echo $ref_cod_matricula.'<br>';
 //          $obj_notas_alunossss = new clsPmieducarNotaAluno($nota_sozinha[count($nota_sozinha)-1], null, null, null, null, null, null, 184580);
 //          if($obj_notas_alunossss->excluir())
 //          {
@@ -89,13 +86,11 @@ foreach ($notas_exame as $ref_cod_matricula => $nota)
 //              }
 //              die("aqui");
 //          }
-//          else 
+//          else
 //          {
 //              die("nao exclui");
 //          }
         }
     }
 }
-echo "acabo";
-
-?>
+echo 'acabo';

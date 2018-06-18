@@ -26,8 +26,11 @@
  *
  * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ *
  * @package  Core
+ *
  * @since    Arquivo disponível desde a versão 1.0.1
+ *
  * @version  $Id$
  */
 
@@ -87,11 +90,11 @@ $reason = $configuracoes['ieducar_suspension_message'];
       <div class="content">
         <h1>Acesso suspenso</h1>
         <p class="explanation">
-          <?PHP
-            if(!empty($reason)){
-              echo $reason;
-            }else{
-              echo "Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.";
+          <?php
+            if (!empty($reason)) {
+                echo $reason;
+            } else {
+                echo 'Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.';
             }
           ?>
         </p>

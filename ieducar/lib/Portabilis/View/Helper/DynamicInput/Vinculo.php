@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -36,30 +41,38 @@ require_once 'lib/Portabilis/Utils/Database.php';
  * Portabilis_View_Helper_DynamicInput_Vinculo class.
  *
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Vinculo extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_Vinculo extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
+        $sql = 'select cod_funcionario_vinculo, nm_vinculo from portal.funcionario_vinculo';
 
-    $sql = "select cod_funcionario_vinculo, nm_vinculo from portal.funcionario_vinculo";
+        $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql);
+        $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_funcionario_vinculo', 'nm_vinculo');
 
-    $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql);
-    $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_funcionario_vinculo', 'nm_vinculo');
+        return $this->insertOption(null, 'Selecione', $resources);
+    }
 
-    return $this->insertOption(null, "Selecione", $resources);
-  }
+    protected function defaultOptions()
+    {
+        return ['options' => ['label' => 'Vínculo']];
+    }
 
-  protected function defaultOptions(){
-    return array('options' => array('label' => 'Vínculo'));
-  }
-
-  public function vinculo($options = array()) {
-    parent::select($options);
-  }
+    public function vinculo($options = [])
+    {
+        parent::select($options);
+    }
 }

@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -36,54 +41,67 @@ require_once 'lib/Portabilis/Utils/Database.php';
  * Portabilis_View_Helper_DynamicInput_AnoLetivo class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
 
   // subscreve para não acrescentar '_id' no final
-  protected function inputName() {
-    return 'ano_letivo';
-  }
-
-  protected function filtroSituacao() {
-    $tiposSituacao  = array('nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2);
-    $situacaoIn     = array();
-
-    foreach ($tiposSituacao as $nome => $flag) {
-      if (in_array("$nome", $this->options['situacoes']))
-        $situacaoIn[] = $flag;
+    protected function inputName()
+    {
+        return 'ano_letivo';
     }
 
-    return (empty($situacaoIn) ? '' : 'and andamento in ('. implode(',', $situacaoIn) . ')');
-  }
+    protected function filtroSituacao()
+    {
+        $tiposSituacao  = ['nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2];
+        $situacaoIn     = [];
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
-    $escolaId  = $this->getEscolaId($options['escolaId']);
+        foreach ($tiposSituacao as $nome => $flag) {
+            if (in_array("$nome", $this->options['situacoes'])) {
+                $situacaoIn[] = $flag;
+            }
+        }
 
-    if ($escolaId && empty($resources)) {
-      $sql       = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
+        return (empty($situacaoIn) ? '' : 'and andamento in ('. implode(',', $situacaoIn) . ')');
+    }
+
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
+        $escolaId  = $this->getEscolaId($options['escolaId']);
+
+        if ($escolaId && empty($resources)) {
+            $sql       = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
                     and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 
-      $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => $escolaId));
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ano', 'ano');
+            $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => $escolaId]);
+            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ano', 'ano');
+        }
+
+        return $this->insertOption(null, 'Selecione um ano letivo', $resources);
     }
 
-    return $this->insertOption(null, "Selecione um ano letivo", $resources);
-  }
+    protected function defaultOptions()
+    {
+        return ['escolaId' => null, 'situacoes' => ['em_andamento', 'nao_iniciado', 'finalizado']];
+    }
 
-  protected function defaultOptions() {
-    return array('escolaId' => null, 'situacoes' => array('em_andamento', 'nao_iniciado', 'finalizado'));
-  }
+    public function anoLetivo($options = [])
+    {
+        parent::select($options);
 
-  public function anoLetivo($options = array()) {
-    parent::select($options);
-
-    foreach ($this->options['situacoes'] as $situacao)
-      $this->viewInstance->appendOutput("<input type='hidden' name='situacoes_ano_letivo' value='$situacao' />");
-  }
+        foreach ($this->options['situacoes'] as $situacao) {
+            $this->viewInstance->appendOutput("<input type='hidden' name='situacoes_ano_letivo' value='$situacao' />");
+        }
+    }
 }

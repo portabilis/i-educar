@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -39,43 +44,52 @@ require_once 'Portabilis/Business/Professor.php';
  * CursoController class.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão ?
+ *
  * @version     @@package_version@@
  */
 class RotasController extends ApiCoreController
 {
+    protected function canGetRotas()
+    {
+        return $this->validatesPresenceOf('ano_rota');
+    }
 
-   protected function canGetRotas() {
-    return $this->validatesPresenceOf('ano_rota');
-  }
+    protected function getRotas()
+    {
+        if ($this->canGetRotas()) {
+            $anoRota = $this->getRequest()->ano_rota;
 
-  protected function getRotas() {
-    if ($this->canGetRotas()) {
-      $anoRota = $this->getRequest()->ano_rota;
-
-      $sql = "SELECT descricao,
+            $sql = 'SELECT descricao,
                      cod_rota_transporte_escolar
               FROM modules.rota_transporte_escolar
-              WHERE ano = $1";
+              WHERE ano = $1';
 
-      $rotas = $this->fetchPreparedQuery($sql, array($anoRota));
-      $options = array();
+            $rotas = $this->fetchPreparedQuery($sql, [$anoRota]);
+            $options = [];
 
-      foreach ($rotas as $rota)
-        $options['__' . $rota['cod_rota_transporte_escolar']] = $this->toUtf8($rota['descricao']);
+            foreach ($rotas as $rota) {
+                $options['__' . $rota['cod_rota_transporte_escolar']] = $this->toUtf8($rota['descricao']);
+            }
 
-      return array('options' => $options);
+            return ['options' => $options];
+        }
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'rotas'))
-        $this->appendResponse($this->getRotas());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'rotas')) {
+            $this->appendResponse($this->getRotas());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

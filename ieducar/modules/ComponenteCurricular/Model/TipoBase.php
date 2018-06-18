@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,29 +40,34 @@ require_once 'CoreExt/Enum.php';
  * ComponenteCurricular_Model_TipoBase class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class ComponenteCurricular_Model_TipoBase extends CoreExt_Enum
 {
-  const COMUM = 1;
-  const DIVERSIFICADA = 2;
-  const PROFISSIONAL = 3;
-  const ART33 = 4;
+    const COMUM = 1;
+    const DIVERSIFICADA = 2;
+    const PROFISSIONAL = 3;
+    const ART33 = 4;
 
-  protected $_data = array(
+    protected $_data = [
     self::COMUM         => 'Base nacional comum',
     self::DIVERSIFICADA => 'Base diversificada',
     self::PROFISSIONAL  => 'Base profissional',
     self::ART33  => 'Art.33 (Ensino religioso)',
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

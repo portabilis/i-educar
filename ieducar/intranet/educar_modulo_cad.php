@@ -24,19 +24,19 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
+require_once('include/modules/clsModulesAuditoriaGeral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
-        $this->processoAp = "584";
-        $this->addEstilo("localizacaoSistema");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - M&oacute;dulo");
+        $this->processoAp = '584';
+        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -47,72 +47,71 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_modulo;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_tipo;
-    var $descricao;
-    var $num_meses;
-    var $num_semanas;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
+    public $cod_modulo;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_tipo;
+    public $descricao;
+    public $num_meses;
+    public $num_semanas;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_modulo=$_GET["cod_modulo"];
+        $this->cod_modulo=$_GET['cod_modulo'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
+        $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
 
-        if( is_numeric( $this->cod_modulo ) )
-        {
-            $obj = new clsPmieducarModulo( $this->cod_modulo );
+        if (is_numeric($this->cod_modulo)) {
+            $obj = new clsPmieducarModulo($this->cod_modulo);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
                 $obj_permissoes = new clsPermissoes();
-                if( $obj_permissoes->permissao_excluir( 584, $this->pessoa_logada, 3 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(584, $this->pessoa_logada, 3)) {
                     $this->fexcluir = true;
                 }
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_modulo_det.php?cod_modulo={$registro["cod_modulo"]}" : "educar_modulo_lst.php";
-        
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}" : 'educar_modulo_lst.php';
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} m&oacute;dulo"             
-        ));
+        $localizacao->entradaCaminhos([
+             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+             'educar_index.php'                  => 'Escola',
+             ''        => "{$nomeMenu} m&oacute;dulo"
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
 
-        $this->nome_url_cancelar = "Cancelar";
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_modulo", $this->cod_modulo );
+        $this->campoOculto('cod_modulo', $this->cod_modulo);
 
         // Filtros de Foreign Keys
         $obrigatorio = true;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -149,101 +148,101 @@ class indice extends clsCadastro
 //      }
 
         // text
-        $this->campoTexto( "nm_tipo", "M&oacute;dulo", $this->nm_tipo, 30, 255, true );
-        $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
-        $this->campoNumero( "num_meses", "N&uacute;mero Meses", $this->num_meses, 2, 2, true );
-        $this->campoNumero( "num_semanas", "N&uacute;mero Semanas", $this->num_semanas, 2, 2, true );
+        $this->campoTexto('nm_tipo', 'M&oacute;dulo', $this->nm_tipo, 30, 255, true);
+        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoNumero('num_meses', 'N&uacute;mero Meses', $this->num_meses, 2, 2, true);
+        $this->campoNumero('num_semanas', 'N&uacute;mero Semanas', $this->num_semanas, 2, 2, true);
     }
 
-    function Novo()
+    public function Novo()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
+        $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
 
-
-        $obj = new clsPmieducarModulo( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao );
+        $obj = new clsPmieducarModulo(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             $modulo = new clsPmieducarModulo($cadastrou);
             $modulo = $modulo->detalhe();
 
-            $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $cadastrou);
+            $auditoria = new clsModulesAuditoriaGeral('modulo', $this->pessoa_logada, $cadastrou);
             $auditoria->inclusao($modulo);
 
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_modulo_lst.php" );
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_modulo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
         echo "<!--\nErro ao cadastrar clsPmieducarModulo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo ) && is_numeric( $this->num_meses ) && is_numeric( $this->num_semanas ) && is_numeric( $this->ref_cod_instituicao )\n-->";
+
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $moduloDetalhe = new clsPmieducarModulo($this->cod_modulo);
         $moduloDetalheAntes = $moduloDetalhe->detalhe();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
+        $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
 
-
-        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao );
+        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
-        if( $editou )
-        {
+        if ($editou) {
             $moduloDetalheDepois = $moduloDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $this->cod_modulo);
+            $auditoria = new clsModulesAuditoriaGeral('modulo', $this->pessoa_logada, $this->cod_modulo);
             $auditoria->alteracao($moduloDetalheAntes, $moduloDetalheDepois);
 
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_modulo_lst.php" );
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_modulo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao editar clsPmieducarModulo\nvalores obrigatorios\nif( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
+        $obj_permissoes->permissao_excluir(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
 
-
-        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null,null,null,null,null,null,null, 0 );
+        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
         $modulo = $obj->detalhe();
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $this->cod_modulo);
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('modulo', $this->pessoa_logada, $this->cod_modulo);
             $auditoria->exclusao($modulo);
 
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_modulo_lst.php" );
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_modulo_lst.php');
             die();
+
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         echo "<!--\nErro ao excluir clsPmieducarModulo\nvalores obrigatorios\nif( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }
@@ -253,7 +252,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

@@ -24,156 +24,152 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
+require_once('include/clsBanco.inc.php');
 
 class clsTutormenu
 {
-    var $cod_tutormenu;
-    var $nm_tutormenu;
-    
+    public $cod_tutormenu;
+    public $nm_tutormenu;
+
     // Variáveis que definem a tabela e o schema em que a tabela se encontra
-    var $tabela;
-    var $schema;
+    public $tabela;
+    public $schema;
 
     /**
      * Construtor
      *
      * @return Object:clsGrupo
      */
-    function __construct( $cod_tutormenu = false, $nm_tutormenu = false )
+    public function __construct($cod_tutormenu = false, $nm_tutormenu = false)
     {
         $this->cod_tutormenu = $cod_tutormenu;
         $this->nm_tutormenu  = $nm_tutormenu;
-        
+
         // Difiniïção da tabela
-        $this->tabela = "tutormenu";
+        $this->tabela = 'tutormenu';
         // Difiniïção do schema
-        $this->schema = "pmicontrolesis";
+        $this->schema = 'pmicontrolesis';
     }
-    
+
     /**
      * Funcao que cadastra um novo registro com os valores atuais
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
-        
+
         // verificacoes de campos obrigatorios para insercao
-        if( is_string( $this->nm_tutormenu ) )
-        {
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( nm_tutormenu ) VALUES ( '$this->nm_tutormenu' )" );
+        if (is_string($this->nm_tutormenu)) {
+            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} ( nm_tutormenu ) VALUES ( '$this->nm_tutormenu' )");
+
             return $db->InsertId("{$this->schema}.tutormenu_cod_tutormenu_seq");
         }
+
         return false;
     }
-    
+
     /**
      * Edita o registro atual
      *
      * @return bool
      */
-    function edita(  )
+    public function edita()
     {
         // verifica campos obrigatorios para edicao
-        if( is_numeric( $this->cod_tutormenu ) )
-        {
-            if( is_string($this->nm_tutormenu) )
-            {
+        if (is_numeric($this->cod_tutormenu)) {
+            if (is_string($this->nm_tutormenu)) {
                 $set .=  "SET {$where_set} nm_tutormenu = '$this->nm_tutormenu' ";
             }
 
-            if($set)
-            {
+            if ($set) {
                 $db = new clsBanco();
-                $db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE cod_tutormenu = '{$this->cod_tutormenu}'" );
+                $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE cod_tutormenu = '{$this->cod_tutormenu}'");
+
                 return true;
             }
         }
+
         return false;
     }
-    
+
     /**
      * Remove o registro atual
      *
      * @return bool
      */
-    function exclui( )
+    public function exclui()
     {
         // verifica se existe um ID definido para delecao
-        if( is_numeric( $this->cod_tutormenu) )
-        {
+        if (is_numeric($this->cod_tutormenu)) {
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->schema}.{$this->tabela} WHERE cod_tutormenu = {$this->cod_tutormenu} " );
+            $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE cod_tutormenu = {$this->cod_tutormenu} ");
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
      * @return Array
      */
-    function lista( $str_nm_tutormenu = false, $int_limite_ini = false, $int_limite_qtd = false, $str_ordenacao = false )
+    public function lista($str_nm_tutormenu = false, $int_limite_ini = false, $int_limite_qtd = false, $str_ordenacao = false)
     {
         // verificacoes de filtros a serem usados
-        $whereAnd = "WHERE ";
+        $whereAnd = 'WHERE ';
 
-        if( is_string( $str_nm_tutormenu ) )
-        {
+        if (is_string($str_nm_tutormenu)) {
             $where .= "{$whereAnd}nm_tutormenu <= '$str_nm_tutormenu'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        
-        $orderBy = "";
-        if( is_string( $str_ordenacao ) )
-        {
+
+        $orderBy = '';
+        if (is_string($str_ordenacao)) {
             $orderBy = "ORDER BY $str_ordenacao";
         }
-        
-        $limit = "";
-        if( is_numeric( $int_limite_ini ) && is_numeric( $int_limite_qtd ) )
-        {
+
+        $limit = '';
+        if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
             $limit = " LIMIT $int_limite_qtd OFFSET $int_limite_ini";
         }
 
         $db = new clsBanco();
-        $total = $db->UnicoCampo( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where " );
-        $db->Consulta( "SELECT cod_tutormenu, nm_tutormenu FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() ) 
-        {
+        $total = $db->UnicoCampo("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where ");
+        $db->Consulta("SELECT cod_tutormenu, nm_tutormenu FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
-    } 
-    
+    }
+
     /**
      * Retorna um array com os detalhes do objeto
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if ($this->cod_tutormenu)
-        {
+        if ($this->cod_tutormenu) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT cod_tutormenu, nm_tutormenu FROM {$this->schema}.{$this->tabela} WHERE cod_tutormenu = '$this->cod_tutormenu' " );
-            if( $db->ProximoRegistro() )
-            {
+            $db->Consulta("SELECT cod_tutormenu, nm_tutormenu FROM {$this->schema}.{$this->tabela} WHERE cod_tutormenu = '$this->cod_tutormenu' ");
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
+
                 return $tupla;
             }
+
             return false;
         }
     }
 }
-?>

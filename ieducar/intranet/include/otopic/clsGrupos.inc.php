@@ -24,29 +24,29 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/otopic/otopicGeral.inc.php");
+require_once('include/clsBanco.inc.php');
+require_once('include/otopic/otopicGeral.inc.php');
 
 class clsGrupos
 {
-    var $cod_grupos;
-    var $ref_pessoa_exc;
-    var $ref_pessoa_cad;
-    var $nm_grupo;
-    var $ativo;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $atendimento;
-    var $camposLista;
-    var $todosCampos;
-    var $tabela;
+    public $cod_grupos;
+    public $ref_pessoa_exc;
+    public $ref_pessoa_cad;
+    public $nm_grupo;
+    public $ativo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $atendimento;
+    public $camposLista;
+    public $todosCampos;
+    public $tabela;
 
     /**
      * Construtor
      *
      * @return Object:clsnatureza
      */
-    function __construct( $int_cod_grupos = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nm_grupo = false,  $ativo=false, $int_atendimento = false )
+    public function __construct($int_cod_grupos = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nm_grupo = false, $ativo=false, $int_atendimento = false)
     {
         $this->cod_grupos = is_numeric($int_cod_grupos) ? $int_cod_grupos : false;
         $this->ref_pessoa_cad = is_numeric($int_ref_pessoa_cad) ? $int_ref_pessoa_cad : false;
@@ -55,8 +55,8 @@ class clsGrupos
         $this->ativo = is_numeric($ativo) ? $ativo : 1;
         $this->atendimento = is_numeric($int_atendimento) ? $int_atendimento : false;
 
-        $this->camposLista = $this->todosCampos = "cod_grupos, ref_pessoa_cad, ref_pessoa_exc, nm_grupo, data_cadastro, data_exclusao, ativo, atendimento";
-        $this->tabela = "pmiotopic.grupos";
+        $this->camposLista = $this->todosCampos = 'cod_grupos, ref_pessoa_cad, ref_pessoa_exc, nm_grupo, data_cadastro, data_exclusao, ativo, atendimento';
+        $this->tabela = 'pmiotopic.grupos';
     }
 
     /**
@@ -64,26 +64,25 @@ class clsGrupos
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
         // verificacoes de campos obrigatorios para insercao
-        if( $this->ref_pessoa_cad && $this->nm_grupo )
-        {
-            $campos = "";
-            $valores= "";
+        if ($this->ref_pessoa_cad && $this->nm_grupo) {
+            $campos = '';
+            $valores= '';
 
-            if($this->atendimento)
-            {
-                $campos .= ", atendimento";
+            if ($this->atendimento) {
+                $campos .= ', atendimento';
                 $valores .= ", '$this->atendimento'";
             }
             //echo ( "INSERT INTO {$this->tabela} (ref_pessoa_cad, nm_grupo, data_cadastro$campos ) VALUES ( '{$this->ref_pessoa_cad}', '{$this->nm_grupo}', NOW()$valores )" );
             //die();
-            $db->Consulta( "INSERT INTO {$this->tabela} (ref_pessoa_cad, nm_grupo, data_cadastro$campos ) VALUES ( '{$this->ref_pessoa_cad}', '{$this->nm_grupo}', NOW()$valores )" );
+            $db->Consulta("INSERT INTO {$this->tabela} (ref_pessoa_cad, nm_grupo, data_cadastro$campos ) VALUES ( '{$this->ref_pessoa_cad}', '{$this->nm_grupo}', NOW()$valores )");
             // Retorna Id cadastrado
-            return $db->InsertId("pmiotopic.grupos_cod_grupos_seq");
+            return $db->InsertId('pmiotopic.grupos_cod_grupos_seq');
         }
+
         return false;
     }
 
@@ -92,23 +91,22 @@ class clsGrupos
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
         // verifica campos obrigatorios para edicao
-        if( $this->cod_grupos && $this->ref_pessoa_cad && $this->nm_grupo)
-        {
-            $setVir = ", ";
-            if($this->atendimento)
-            {
+        if ($this->cod_grupos && $this->ref_pessoa_cad && $this->nm_grupo) {
+            $setVir = ', ';
+            if ($this->atendimento) {
                 $set .= "$setVir atendimento = '$this->atendimento'";
-                $setVir = ", ";
-
+                $setVir = ', ';
             }
 
             $db = new clsBanco();
-            $db->Consulta( "UPDATE {$this->tabela} SET ref_pessoa_cad = '{$this->ref_pessoa_cad}', nm_grupo = '{$this->nm_grupo}'$set WHERE cod_grupos = '{$this->cod_grupos}' " );
+            $db->Consulta("UPDATE {$this->tabela} SET ref_pessoa_cad = '{$this->ref_pessoa_cad}', nm_grupo = '{$this->nm_grupo}'$set WHERE cod_grupos = '{$this->cod_grupos}' ");
+
             return true;
         }
+
         return false;
     }
 
@@ -117,17 +115,18 @@ class clsGrupos
      *
      * @return bool
      */
-    function exclui( )
+    public function exclui()
     {
         // verifica se existe um ID definido para delecao
-        if( $this->cod_grupos && $this->ref_pessoa_exc  )
-        {
-                $db = new clsBanco();
-                $this->detalhe();
-                $this->ativo++;
-                $db->Consulta("UPDATE $this->tabela SET ativo='{$this->ativo}', data_exclusao=NOW(), ref_pessoa_exc = '$this->ref_pessoa_exc' WHERE cod_grupos = '{$this->cod_grupos}' ");
-                return true;
+        if ($this->cod_grupos && $this->ref_pessoa_exc) {
+            $db = new clsBanco();
+            $this->detalhe();
+            $this->ativo++;
+            $db->Consulta("UPDATE $this->tabela SET ativo='{$this->ativo}', data_exclusao=NOW(), ref_pessoa_exc = '$this->ref_pessoa_exc' WHERE cod_grupos = '{$this->cod_grupos}' ");
+
+            return true;
         }
+
         return false;
     }
 
@@ -136,7 +135,7 @@ class clsGrupos
      *
      * @return Array
      */
-    function setCamposLista($str_campos)
+    public function setCamposLista($str_campos)
     {
         $this->camposLista = $str_campos;
     }
@@ -146,7 +145,7 @@ class clsGrupos
      *
      * @return void
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->camposLista = $this->todosCampos;
     }
@@ -156,101 +155,85 @@ class clsGrupos
      *
      * @return Array
      */
-    function lista( $str_nm_grupo = false, $int_ref_pessoa_cad = false, $str_ordenacao = false, $date_cadastro_ini=false, $date_cadastro_fim=false, $int_ativo=1, $date_exclusao_ini=false, $date_exclusao_fim=false, $int_limite_ini = false, $int_limite_qtd = false, $int_atendimento = 0, $int_cod_grupos = false )
+    public function lista($str_nm_grupo = false, $int_ref_pessoa_cad = false, $str_ordenacao = false, $date_cadastro_ini=false, $date_cadastro_fim=false, $int_ativo=1, $date_exclusao_ini=false, $date_exclusao_fim=false, $int_limite_ini = false, $int_limite_qtd = false, $int_atendimento = 0, $int_cod_grupos = false)
     {
         // verificacoes de filtros a serem usados
-        $whereAnd = "WHERE ";
-        if( is_numeric( $int_ref_pessoa_cad ) )
-        {
+        $whereAnd = 'WHERE ';
+        if (is_numeric($int_ref_pessoa_cad)) {
             $where .= "{$whereAnd}ref_pessoa_cad = '$int_ref_pessoa_cad'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_pessoa_exc ) )
-        {
+        if (is_numeric($int_ref_pessoa_exc)) {
             $where .= "{$whereAnd}ref_pessoa_exc = '$int_ref_pessoa_exc'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_string( $str_nm_grupo ) )
-        {
+        if (is_string($str_nm_grupo)) {
             $where .= "{$whereAnd}nm_grupo LIKE '%$str_nm_grupo%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_string( $date_cadastro_ini ) )
-        {
+        if (is_string($date_cadastro_ini)) {
             $where .= "{$whereAnd}data_cadastro >= '$date_cadastro_ini'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_cadastro_fim ) )
-        {
+        if (is_string($date_cadastro_fim)) {
             $where .= "{$whereAnd}data_cadastro <= '$date_cadastro_fim'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_exclusao_ini ) )
-        {
+        if (is_string($date_exclusao_ini)) {
             $where .= "{$whereAnd}data_exclusao >= '$date_exclusao_ini'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_exclusao_fim ) )
-        {
+        if (is_string($date_exclusao_fim)) {
             $where .= "{$whereAnd}data_exclusao <= '$date_exclusao_fim'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ativo ) )
-        {
+        if (is_numeric($int_ativo)) {
             $where .= "{$whereAnd}ativo = '$int_ativo'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_atendimento ) )
-        {
+        if (is_numeric($int_atendimento)) {
             $where .= "{$whereAnd}atendimento = '$int_atendimento'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_cod_grupos ) )
-        {
+        if (is_numeric($int_cod_grupos)) {
             $where .= "{$whereAnd}cod_grupos = '$int_cod_grupos'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        $orderBy = "";
-        if( is_string( $str_ordenacao ) )
-        {
+        $orderBy = '';
+        if (is_string($str_ordenacao)) {
             $orderBy = "ORDER BY $str_ordenacao";
         }
 
-        $limit = "";
-        if( is_numeric( $int_limite_ini ) && is_numeric( $int_limite_qtd ) )
-        {
+        $limit = '';
+        if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
             $limit = " LIMIT $int_limite_ini,$int_limite_qtd";
         }
 
         // Seleciona o total de registro da tabela
         $db = new clsBanco();
-        $total = $db->CampoUnico( "SELECT COUNT(0) AS total FROM {$this->tabela} $where" );
-        $db->Consulta( "SELECT ".$this->camposLista." FROM {$this->tabela} $where $orderBy $limit" );
+        $total = $db->CampoUnico("SELECT COUNT(0) AS total FROM {$this->tabela} $where");
+        $db->Consulta('SELECT '.$this->camposLista." FROM {$this->tabela} $where $orderBy $limit");
 
-        $resultado = array();
-        $countCampos = count( explode( ",", $this->camposLista ) );
+        $resultado = [];
+        $countCampos = count(explode(',', $this->camposLista));
 
-        while ( $db->ProximoRegistro() )
-        {
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
 
-            if($countCampos > 1 )
-            {
-                $tupla["total"] = $total;
+            if ($countCampos > 1) {
+                $tupla['total'] = $total;
                 $resultado[] = $tupla;
-            }
-            else
-            {
+            } else {
                 $resultado[] = $tupla["$this->camposLista"];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -259,20 +242,19 @@ class clsGrupos
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if($this->cod_grupos)
-        {
+        if ($this->cod_grupos) {
             $db = new clsBanco();
             $db->Consulta("SELECT cod_grupos, ref_pessoa_cad, ref_pessoa_exc, nm_grupo, data_cadastro, data_exclusao, ativo, atendimento FROM {$this->tabela} WHERE cod_grupos = '$this->cod_grupos' ");
-            if( $db->ProximoRegistro() )
-            {
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $this->ativo = $tupla['ativo'];
+
                 return $tupla;
             }
         }
+
         return false;
     }
 }
-?>

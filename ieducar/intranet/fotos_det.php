@@ -24,65 +24,57 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Fotos" );
-        $this->processoAp = "27";
+        $this->SetTitulo("{$this->_instituicao} Fotos");
+        $this->processoAp = '27';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe de fotos";
-        
+        $this->titulo = 'Detalhe de fotos';
 
         $id_foto = @$_GET['id_foto'];
 
         $objPessoa = new clsPessoaFisica();
         $db = new clsBanco();
         //$db->Consulta( "SELECT f.data_foto, f.titulo, f.descricao, p1.nm_pessoa, f.caminho, f.altura, f.largura, p2.nm_pessoa, f.ref_cod_foto_secao FROM foto_portal f, pessoa_fj p1, pessoa_fj p2 WHERE f.ref_ref_cod_pessoa_fj=p1.cod_pessoa_fj AND p2.cod_pessoa_fj=f.ref_cod_credito AND cod_foto_portal={$id_foto}" );
-        $db->Consulta( "SELECT f.ref_ref_cod_pessoa_fj, f.nm_credito, f.data_foto, f.titulo, f.descricao, f.caminho, f.altura, f.largura, f.ref_cod_foto_secao FROM foto_portal f WHERE cod_foto_portal={$id_foto}" );
-        if ($db->ProximoRegistro())
-        {
+        $db->Consulta("SELECT f.ref_ref_cod_pessoa_fj, f.nm_credito, f.data_foto, f.titulo, f.descricao, f.caminho, f.altura, f.largura, f.ref_cod_foto_secao FROM foto_portal f WHERE cod_foto_portal={$id_foto}");
+        if ($db->ProximoRegistro()) {
             //list ($data, $titulo, $descricao, $nome, $foto, $altura, $largura, $credito, $secao ) = $db->Tupla();
-            list ($cod_pessoa, $nm_credito, $data, $titulo, $descricao, $foto, $altura, $largura, $secao ) = $db->Tupla();
-            list($nome) = $objPessoa->queryRapida($cod_pessoa, "nome");
-            
-            $data = date('d/m/Y', strtotime(substr($data,0,19) ));
-            
-            
+            list($cod_pessoa, $nm_credito, $data, $titulo, $descricao, $foto, $altura, $largura, $secao) = $db->Tupla();
+            list($nome) = $objPessoa->queryRapida($cod_pessoa, 'nome');
 
-            $this->addDetalhe( array("Data", $data) );
-            $this->addDetalhe( array("T&iacute;tulo", $titulo) );
-            $this->addDetalhe( array("Criador", $nome) );
-            $this->addDetalhe( array("Credito", $nm_credito) );
+            $data = date('d/m/Y', strtotime(substr($data, 0, 19)));
+
+            $this->addDetalhe(['Data', $data]);
+            $this->addDetalhe(['T&iacute;tulo', $titulo]);
+            $this->addDetalhe(['Criador', $nome]);
+            $this->addDetalhe(['Credito', $nm_credito]);
             //echo $foto;
-            $this->addDetalhe( array("Foto", "<a href='#' onclick='javascript:openfoto(\"$foto\", \"$altura\",  \"$largura\")'><img src='fotos/small/{$foto}' border='0'></a>") );
+            $this->addDetalhe(['Foto', "<a href='#' onclick='javascript:openfoto(\"$foto\", \"$altura\",  \"$largura\")'><img src='fotos/small/{$foto}' border='0'></a>"]);
         }
-        $this->url_novo = "fotos_cad.php";
+        $this->url_novo = 'fotos_cad.php';
         $this->url_editar = "fotos_cad.php?id_foto=$id_foto";
-        $this->url_cancelar = "fotos_lst.php";
+        $this->url_cancelar = 'fotos_lst.php';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

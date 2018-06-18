@@ -5,11 +5,11 @@ require_once 'lib/Portabilis/Array/Utils.php';
 
 /**
  * Class RegraController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class RegraController extends ApiCoreController
 {
-
     protected function canGetTabelasDeArredondamento()
     {
         return $this->validatesPresenceOf('instituicao_id');
@@ -36,39 +36,39 @@ class RegraController extends ApiCoreController
         if ($this->canGetTabelasDeArredondamento()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
 
-            $sql = "SELECT ta.id, ta.nome, ta.tipo_nota, tav.nome as rotulo,
+            $sql = 'SELECT ta.id, ta.nome, ta.tipo_nota, tav.nome as rotulo,
                         tav.descricao, tav.valor_maximo, tav.casa_decimal_exata, tav.acao
                 FROM modules.tabela_arredondamento ta
                 INNER JOIN modules.tabela_arredondamento_valor tav
                 ON tav.tabela_arredondamento_id = ta.id
-                WHERE ta.instituicao_id = $1";
+                WHERE ta.instituicao_id = $1';
 
-            $tabelas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+            $tabelas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-            $attrs = array('id', 'nome', 'tipo_nota', 'rotulo', 'descricao', 'valor_maximo', 'casa_decimal_exata', 'acao');
+            $attrs = ['id', 'nome', 'tipo_nota', 'rotulo', 'descricao', 'valor_maximo', 'casa_decimal_exata', 'acao'];
             $tabelas = Portabilis_Array_Utils::filterSet($tabelas, $attrs);
-            $_tabelas = array();
+            $_tabelas = [];
 
             foreach ($tabelas as $tabela) {
                 $_tabelas[$tabela['id']]['id'] = $tabela['id'];
                 $_tabelas[$tabela['id']]['nome'] = Portabilis_String_Utils::toUtf8($tabela['nome']);
                 $_tabelas[$tabela['id']]['tipo_nota'] = $tabela['tipo_nota'];
-                $_tabelas[$tabela['id']]['valores'][] = array(
+                $_tabelas[$tabela['id']]['valores'][] = [
                     'rotulo' => Portabilis_String_Utils::toUtf8($tabela['rotulo']),
                     'descricao' => Portabilis_String_Utils::toUtf8($tabela['descricao']),
                     'valor_maximo' => Portabilis_String_Utils::toUtf8($tabela['valor_maximo']),
                     'casa_decimal_exata' => Portabilis_String_Utils::toUtf8($tabela['casa_decimal_exata']),
                     'acao' => Portabilis_String_Utils::toUtf8($tabela['acao']),
-                );
+                ];
             }
 
-            $tabelas = array();
+            $tabelas = [];
 
             foreach ($_tabelas as $tabela) {
                 $tabelas[] = $tabela;
             }
 
-            return array('tabelas' => $tabelas);
+            return ['tabelas' => $tabelas];
         }
     }
 
@@ -77,7 +77,7 @@ class RegraController extends ApiCoreController
         if ($this->canGetRegrasRecuperacao()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
 
-            $sql = "SELECT
+            $sql = 'SELECT
                 rar.id,
                 rar.regra_avaliacao_id,
                 rar.descricao,
@@ -88,11 +88,11 @@ class RegraController extends ApiCoreController
                 INNER JOIN modules.regra_avaliacao ra
                     ON rar.regra_avaliacao_id = ra.id
                 WHERE ra.instituicao_id = $1
-                ";
+                ';
 
-            $regrasRecuperacao = $this->fetchPreparedQuery($sql, array($instituicaoId));
+            $regrasRecuperacao = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-            $attrs = array('id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas', 'media', 'nota_maxima');
+            $attrs = ['id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas', 'media', 'nota_maxima'];
 
             $regrasRecuperacao = Portabilis_Array_Utils::filterSet($regrasRecuperacao, $attrs);
 
@@ -101,7 +101,7 @@ class RegraController extends ApiCoreController
                 $regra['etapas_recuperadas'] = explode(';', $regra['etapas_recuperadas']);
             }
 
-            return array('regras-recuperacao' => $regrasRecuperacao);
+            return ['regras-recuperacao' => $regrasRecuperacao];
         }
     }
 
@@ -111,7 +111,7 @@ class RegraController extends ApiCoreController
             $instituicaoId = $this->getRequest()->instituicao_id;
             $ano = $this->getRequest()->ano;
 
-            $sql = "SELECT
+            $sql = 'SELECT
                 ra.id,
                 tabela_arredondamento_id,
                 tabela_arredondamento_id_conceitual,
@@ -161,21 +161,21 @@ class RegraController extends ApiCoreController
 
                         ORDER BY regra_diferenciada_id, id, turma_id
 
-                ";
+                ';
 
-            $_regras = $this->fetchPreparedQuery($sql, array(
+            $_regras = $this->fetchPreparedQuery($sql, [
                 $instituicaoId, $ano,$instituicaoId, $ano
-            ));
+            ]);
 
-            $attrs = array(
+            $attrs = [
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
                 'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turma_id',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
                 'nota_maxima_exame', 'regra_diferenciada_id'
-            );
+            ];
             $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
-            $regras = array();
-            $__regras = array();
+            $regras = [];
+            $__regras = [];
 
             foreach ($_regras as $regra) {
                 $__regras[$regra['id']]['id'] = $regra['id'];
@@ -189,16 +189,16 @@ class RegraController extends ApiCoreController
                 $__regras[$regra['id']]['media_recuperacao_paralela'] = $regra['media_recuperacao_paralela'];
                 $__regras[$regra['id']]['nota_maxima_geral'] = $regra['nota_maxima_geral'];
                 $__regras[$regra['id']]['nota_maxima_exame'] = $regra['nota_maxima_exame'];
-                $__regras[$regra['id']]['turmas'][] = array(
+                $__regras[$regra['id']]['turmas'][] = [
                     'turma_id' => $regra['turma_id'],
-                );
+                ];
             }
 
             foreach ($__regras as $regra) {
                 $regras[] = $regra;
             }
 
-            return array('regras' => $regras);
+            return ['regras' => $regras];
         }
     }
 
@@ -206,18 +206,18 @@ class RegraController extends ApiCoreController
     {
         $serieId = $this->getRequest()->serie_id;
         if ($this->canGetRegraSerie()) {
-            $sql = "SELECT *
+            $sql = 'SELECT *
                 FROM modules.regra_avaliacao
                WHERE regra_avaliacao.id = (SELECT regra_avaliacao_id
                                              FROM pmieducar.serie
-                                            WHERE serie.cod_serie = $1) LIMIT 1";
-            $regra = $this->fetchPreparedQuery($sql, array('params' => $serieId));
-            $atributos = array(
+                                            WHERE serie.cod_serie = $1) LIMIT 1';
+            $regra = $this->fetchPreparedQuery($sql, ['params' => $serieId]);
+            $atributos = [
                 'id', 'tabela_arredondamento_id', 'tipo_nota',
                 'tipo_presenca', 'parecer_descritivo', 'turma_id',
                 'tipo_recuperacao', 'media_recuperacao_paralela',
                 'nota_maxima_geral', 'nota_maxima_exame'
-            );
+            ];
 
             $regra = Portabilis_Array_Utils::filterSet($regra, $atributos);
 
@@ -238,7 +238,5 @@ class RegraController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
-
     }
-
 }

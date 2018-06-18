@@ -24,10 +24,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Arquivo disponível desde a versão 1.0.0
+ *
  * @version   $Id$
  */
 
@@ -40,239 +45,302 @@ require_once 'include/pmieducar/geral.inc.php';
  * clsIndexBase class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
-    $this->processoAp = '566';
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
+        $this->processoAp = '566';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $titulo;
-  var $limite;
-  var $offset;
+    public $pessoa_logada;
+    public $titulo;
+    public $limite;
+    public $offset;
 
-  var $cod_curso;
-  var $ref_usuario_cad;
-  var $ref_cod_tipo_regime;
-  var $ref_cod_nivel_ensino;
-  var $ref_cod_tipo_ensino;
-  var $nm_curso;
-  var $sgl_curso;
-  var $qtd_etapas;
-  var $carga_horaria;
-  var $ato_poder_publico;
-  var $habilitacao;
-  var $objetivo_curso;
-  var $publico_alvo;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $ref_usuario_exc;
-  var $ref_cod_instituicao;
-  var $padrao_ano_escolar;
+    public $cod_curso;
+    public $ref_usuario_cad;
+    public $ref_cod_tipo_regime;
+    public $ref_cod_nivel_ensino;
+    public $ref_cod_tipo_ensino;
+    public $nm_curso;
+    public $sgl_curso;
+    public $qtd_etapas;
+    public $carga_horaria;
+    public $ato_poder_publico;
+    public $habilitacao;
+    public $objetivo_curso;
+    public $publico_alvo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_usuario_exc;
+    public $ref_cod_instituicao;
+    public $padrao_ano_escolar;
 
-  function Gerar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    public function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $this->titulo = 'Curso - Listagem';
+        $this->titulo = 'Curso - Listagem';
 
-    // passa todos os valores obtidos no GET para atributos do objeto
-    foreach ($_GET AS $var => $val) {
-      $this->$var = ($val === '') ? NULL : $val;
-    }
+        // passa todos os valores obtidos no GET para atributos do objeto
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null : $val;
+        }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
+        $this->addBanner(
+        'imagens/nvp_top_intranet.jpg',
+        'imagens/nvp_vert_intranet.jpg',
+      'Intranet'
+    );
 
-    $lista_busca = array(
+        $lista_busca = [
       'Curso',
       'N&iacute;vel Ensino',
       'Tipo Ensino'
+    ];
+
+        $obj_permissoes = new clsPermissoes();
+        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        if ($nivel_usuario == 1) {
+            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+        }
+
+        $this->addCabecalhos($lista_busca);
+
+        include('include/pmieducar/educar_campo_lista.php');
+
+        // outros Filtros
+        $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false);
+
+        // outros de Foreign Keys
+        $opcoes = ['' => 'Selecione'];
+
+        $todos_niveis_ensino = "nivel_ensino = new Array();\n";
+        $objTemp = new clsPmieducarNivelEnsino();
+        $lista = $objTemp->lista(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      null,
+        1
     );
 
-    $obj_permissoes = new clsPermissoes();
-    $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-    if ($nivel_usuario == 1)
-      $lista_busca[] = 'Institui&ccedil;&atilde;o';
-
-    $this->addCabecalhos($lista_busca);
-
-    include('include/pmieducar/educar_campo_lista.php');
-
-    // outros Filtros
-    $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, FALSE);
-
-    // outros de Foreign Keys
-    $opcoes = array('' => 'Selecione');
-
-    $todos_niveis_ensino = "nivel_ensino = new Array();\n";
-    $objTemp = new clsPmieducarNivelEnsino();
-    $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, 1);
-
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-          $todos_niveis_ensino .= "nivel_ensino[nivel_ensino.length] = new Array({$registro["cod_nivel_ensino"]},'{$registro["nm_nivel"]}', {$registro["ref_cod_instituicao"]});\n";
-      }
-    }
-    echo "<script>{$todos_niveis_ensino}</script>";
-
-    if ($this->ref_cod_instituicao) {
-      $objTemp = new clsPmieducarNivelEnsino();
-      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 1, $this->ref_cod_instituicao);
-
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['cod_nivel_ensino']] = $registro['nm_nivel'];
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $todos_niveis_ensino .= "nivel_ensino[nivel_ensino.length] = new Array({$registro['cod_nivel_ensino']},'{$registro['nm_nivel']}', {$registro['ref_cod_instituicao']});\n";
+            }
         }
-      }
-    }
+        echo "<script>{$todos_niveis_ensino}</script>";
 
-    $this->campoLista('ref_cod_nivel_ensino', 'N&iacute;vel Ensino', $opcoes,
-      $this->ref_cod_nivel_ensino, NULL, NULL, NULL, NULL, NULL, FALSE);
+        if ($this->ref_cod_instituicao) {
+            $objTemp = new clsPmieducarNivelEnsino();
+            $lista = $objTemp->lista(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+        null,
+          1,
+          $this->ref_cod_instituicao
+      );
 
-    $opcoes = array('' => 'Selecione');
-
-    $todos_tipos_ensino = "tipo_ensino = new Array();\n";
-    $objTemp = new clsPmieducarTipoEnsino();
-    $objTemp->setOrderby('nm_tipo');
-    $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, 1);
-
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $todos_tipos_ensino .= "tipo_ensino[tipo_ensino.length] = new Array({$registro["cod_tipo_ensino"]},'{$registro["nm_tipo"]}', {$registro["ref_cod_instituicao"]});\n";
-      }
-    }
-    echo "<script>{$todos_tipos_ensino}</script>";
-
-    if ($this->ref_cod_instituicao) {
-      $objTemp = new clsPmieducarTipoEnsino();
-      $objTemp->setOrderby("nm_tipo");
-
-      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, 1,
-        $this->ref_cod_instituicao);
-
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes["{$registro['cod_tipo_ensino']}"] = $registro['nm_tipo'];
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['cod_nivel_ensino']] = $registro['nm_nivel'];
+                }
+            }
         }
-      }
-    }
 
-    $this->campoLista('ref_cod_tipo_ensino', 'Tipo Ensino', $opcoes,
-      $this->ref_cod_tipo_ensino, '', FALSE, '', '', '', FALSE);
+        $this->campoLista(
+        'ref_cod_nivel_ensino',
+        'N&iacute;vel Ensino',
+        $opcoes,
+      $this->ref_cod_nivel_ensino,
+        null,
+        null,
+        null,
+        null,
+        null,
+        false
+    );
 
-    // Paginador
-    $this->limite = 20;
-    $this->offset = ($_GET["pagina_{$this->nome}"]) ?
+        $opcoes = ['' => 'Selecione'];
+
+        $todos_tipos_ensino = "tipo_ensino = new Array();\n";
+        $objTemp = new clsPmieducarTipoEnsino();
+        $objTemp->setOrderby('nm_tipo');
+        $lista = $objTemp->lista(null, null, null, null, null, null, 1);
+
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $todos_tipos_ensino .= "tipo_ensino[tipo_ensino.length] = new Array({$registro['cod_tipo_ensino']},'{$registro['nm_tipo']}', {$registro['ref_cod_instituicao']});\n";
+            }
+        }
+        echo "<script>{$todos_tipos_ensino}</script>";
+
+        if ($this->ref_cod_instituicao) {
+            $objTemp = new clsPmieducarTipoEnsino();
+            $objTemp->setOrderby('nm_tipo');
+
+            $lista = $objTemp->lista(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+        $this->ref_cod_instituicao
+      );
+
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes["{$registro['cod_tipo_ensino']}"] = $registro['nm_tipo'];
+                }
+            }
+        }
+
+        $this->campoLista(
+        'ref_cod_tipo_ensino',
+        'Tipo Ensino',
+        $opcoes,
+      $this->ref_cod_tipo_ensino,
+        '',
+        false,
+        '',
+        '',
+        '',
+        false
+    );
+
+        // Paginador
+        $this->limite = 20;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ?
       $_GET["pagina_{$this->nome}"] * $this->limite-$this->limite : 0;
 
-    $obj_curso = new clsPmieducarCurso();
-    $obj_curso->setOrderby('nm_curso ASC');
-    $obj_curso->setLimite($this->limite, $this->offset);
+        $obj_curso = new clsPmieducarCurso();
+        $obj_curso->setOrderby('nm_curso ASC');
+        $obj_curso->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_curso->lista(
-      NULL,
-      NULL,
-      NULL,
+        $lista = $obj_curso->lista(
+      null,
+      null,
+      null,
       $this->ref_cod_nivel_ensino,
       $this->ref_cod_tipo_ensino,
-      NULL,
+      null,
       $this->nm_curso,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       1,
-      NULL,
+      null,
       $this->ref_cod_instituicao
     );
 
-    $total = $obj_curso->_total;
+        $total = $obj_curso->_total;
 
-    // monta a lista
-    if (is_array($lista) && count($lista)) {
-      foreach ($lista as $registro) {
-        $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
-        $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
-        $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
+        // monta a lista
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
+                $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
+                $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
-        $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino($registro['ref_cod_tipo_ensino']);
-        $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
-        $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
+                $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino($registro['ref_cod_tipo_ensino']);
+                $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
+                $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
 
-        $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-        $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-        $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
+                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
+                $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-        $lista_busca = array(
-          "<a href=\"educar_curso_det.php?cod_curso={$registro["cod_curso"]}\">{$registro["nm_curso"]}</a>",
-          "<a href=\"educar_curso_det.php?cod_curso={$registro["cod_curso"]}\">{$registro["ref_cod_nivel_ensino"]}</a>",
-          "<a href=\"educar_curso_det.php?cod_curso={$registro["cod_curso"]}\">{$registro["ref_cod_tipo_ensino"]}</a>"
-        );
+                $lista_busca = [
+          "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['nm_curso']}</a>",
+          "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_nivel_ensino']}</a>",
+          "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_tipo_ensino']}</a>"
+        ];
 
-        if ($nivel_usuario == 1) {
-          $lista_busca[] = "<a href=\"educar_curso_det.php?cod_curso={$registro["cod_curso"]}\">{$registro["ref_cod_instituicao"]}</a>";
+                if ($nivel_usuario == 1) {
+                    $lista_busca[] = "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_instituicao']}</a>";
+                }
+
+                $this->addLinhas($lista_busca);
+            }
         }
 
-        $this->addLinhas($lista_busca);
-      }
+        $this->addPaginador2('educar_curso_lst.php', $total, $_GET, $this->nome, $this->limite);
+
+        $obj_permissoes = new clsPermissoes();
+        if ($obj_permissoes->permissao_cadastra(566, $this->pessoa_logada, 3)) {
+            $this->acao = 'go("educar_curso_cad.php")';
+            $this->nome_acao = 'Novo';
+        }
+        $this->largura = '100%';
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''        => 'Listagem de cursos'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
-
-    $this->addPaginador2("educar_curso_lst.php", $total, $_GET, $this->nome, $this->limite);
-
-    $obj_permissoes = new clsPermissoes();
-    if( $obj_permissoes->permissao_cadastra(566, $this->pessoa_logada, 3)) {
-      $this->acao = "go(\"educar_curso_cad.php\")";
-      $this->nome_acao = "Novo";
-    }
-    $this->largura = "100%";
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Listagem de cursos"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-  }
 }
 
 // Instancia objeto de página

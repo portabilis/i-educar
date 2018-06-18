@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/clsPmicontrolesisMenuPortal.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmicontrolesis/clsPmicontrolesisMenuPortal.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Menu Portal" );
-        $this->processoAp = "612";
+        $this->SetTitulo("{$this->_instituicao} Menu Portal");
+        $this->processoAp = '612';
     }
 }
 
@@ -45,61 +45,53 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_menu_portal;
-    var $ref_funcionario_cad;
-    var $ref_funcionario_exc;
-    var $nm_menu;
-    var $title;
-    var $caminho;
-    var $cor;
-    var $posicao;
-    var $ordem;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_menu_portal;
+    public $ref_funcionario_cad;
+    public $ref_funcionario_exc;
+    public $nm_menu;
+    public $title;
+    public $caminho;
+    public $cor;
+    public $posicao;
+    public $ordem;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Menu Portal - Detalhe";
-        
+        $this->titulo = 'Menu Portal - Detalhe';
 
-        $this->cod_menu_portal=$_GET["cod_menu_portal"];
+        $this->cod_menu_portal=$_GET['cod_menu_portal'];
 
-        $tmp_obj = new clsPmicontrolesisMenuPortal( $this->cod_menu_portal );
+        $tmp_obj = new clsPmicontrolesisMenuPortal($this->cod_menu_portal);
         $registro = $tmp_obj->detalhe();
 
-
-        if( $registro["nm_menu"] )
-        {
-            $this->addDetalhe( array( "Nome Menu", "{$registro["nm_menu"]}") );
+        if ($registro['nm_menu']) {
+            $this->addDetalhe([ 'Nome Menu', "{$registro['nm_menu']}"]);
         }
-        if( $registro["title"] )
-        {
-            $this->addDetalhe( array( "Title", "{$registro["title"]}") );
+        if ($registro['title']) {
+            $this->addDetalhe([ 'Title', "{$registro['title']}"]);
         }
-        if( $registro["caminho"] )
-        {
-            $this->addDetalhe( array( "Caminho", "<img src='imagens/{$registro["caminho"]}' alt='{$registro["nm_menu"]}'>") );
+        if ($registro['caminho']) {
+            $this->addDetalhe([ 'Caminho', "<img src='imagens/{$registro['caminho']}' alt='{$registro['nm_menu']}'>"]);
         }
-        if( $registro["cor"] )
-        {
-            $this->addDetalhe( array( "Cor", "{$registro["cor"]}") );
+        if ($registro['cor']) {
+            $this->addDetalhe([ 'Cor', "{$registro['cor']}"]);
         }
-        if( $registro["posicao"] )
-        {
-            $registro["posicao"] = $registro["posicao"]=='E' ? 'Esquerda' : 'Direita';
-            $this->addDetalhe( array( "Posição", "{$registro["posicao"]}") );
+        if ($registro['posicao']) {
+            $registro['posicao'] = $registro['posicao']=='E' ? 'Esquerda' : 'Direita';
+            $this->addDetalhe([ 'Posição', "{$registro['posicao']}"]);
         }
-        if( $registro["ordem"] )
-        {
-            $this->addDetalhe( array( "Ordem", "{$registro["ordem"]}") );
+        if ($registro['ordem']) {
+            $this->addDetalhe([ 'Ordem', "{$registro['ordem']}"]);
         }
-        $this->url_novo = "controlesis_menu_portal_cad.php";
-        $this->url_editar = "controlesis_menu_portal_cad.php?cod_menu_portal={$registro["cod_menu_portal"]}";
-        $this->url_cancelar = "controlesis_menu_portal_lst.php";
-        $this->largura = "100%";
+        $this->url_novo = 'controlesis_menu_portal_cad.php';
+        $this->url_editar = "controlesis_menu_portal_cad.php?cod_menu_portal={$registro['cod_menu_portal']}";
+        $this->url_cancelar = 'controlesis_menu_portal_lst.php';
+        $this->largura = '100%';
     }
 }
 
@@ -108,7 +100,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

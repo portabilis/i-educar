@@ -22,34 +22,44 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
-
 /**
  * Portabilis_View_Helper_Input_Select class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core
+{
+    public function select($attrName, $options = [])
+    {
+        $defaultOptions       = ['options' => [], 'objectName' => '', 'resources' => []];
+        $options              = $this->mergeOptions($options, $defaultOptions);
 
-  public function select($attrName, $options = array()) {
-    $defaultOptions       = array('options' => array(), 'objectName' => '', 'resources' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
-    $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+        $defaultInputOptions = ['id'         => $options['objectName'] . $spacer . $attrName,
                                  'label'      => ucwords($attrName),
                                  'resources'  => $options['resources'],
                                  'value'      => '',
@@ -59,11 +69,11 @@ class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_C
                                  'input_hint' => '',
                                  'disabled'   => false,
                                  'required'   => true,
-                                 'multiple'   => false);
+                                 'multiple'   => false];
 
-    $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
+        $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], ['escape' => false]);
 
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
-  }
+        call_user_func_array([$this->viewInstance, 'campoLista'], $inputOptions);
+    }
 }

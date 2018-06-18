@@ -24,123 +24,108 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/clsGrafico.inc.php");
+require_once('include/clsBase.inc.php');
+require_once('include/clsCadastro.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/clsGrafico.inc.php');
 
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Grafico de Mailling por quantidade" );
-        $this->processoAp = "0";
+        $this->SetTitulo("{$this->_instituicao} Grafico de Mailling por quantidade");
+        $this->processoAp = '0';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $data_inicial,
-        $link,
-        $data_final;
+    public $data_inicial;
+    public $link;
+    public $data_final;
 
-    function Inicializar()
+    public function Inicializar()
     {
         @session_start();
         $this->cod_pessoa_fj = $_SESSION['id_pessoa'];
         session_write_close();
-        $retorno = "Novo";
+        $retorno = 'Novo';
+
         return $retorno;
     }
-    
-    function Gerar()
+
+    public function Gerar()
     {
-        $this->campoData("data_inicial","Data Inicial","");
-        $this->campoData("data_final","Data Final","");
+        $this->campoData('data_inicial', 'Data Inicial', '');
+        $this->campoData('data_final', 'Data Final', '');
     }
-    
-    function Novo()
+
+    public function Novo()
     {
-        $totais = array();
-        $legenda = array();
+        $totais = [];
+        $legenda = [];
         $ObjPecasSaida = new clsPecasSaida();
-        if(!$this->data_inicial)
-        {
+        if (!$this->data_inicial) {
             $this->data_inicial =false;
-        }else 
-        {
-            $data = explode("/", $this->data_inicial);
+        } else {
+            $data = explode('/', $this->data_inicial);
             $this->data_inicial = "{$data[2]}/{$data[1]}/{$data[0]}";
         }
-        if(!$this->data_final)
-        {
+        if (!$this->data_final) {
             $this->data_final = false;
-        }else 
-        {
-            $data = explode("/", $this->data_final);
+        } else {
+            $data = explode('/', $this->data_final);
             $this->data_final = "{$data[2]}/{$data[1]}/{$data[0]}";
         }
         // gera a lista de pecas utilizadas no intervalo de tempo definido
         $db = new clsBanco();
-        $where = "";
-        $gruda = "";
-        if( $this->data_inicial )
-        {
+        $where = '';
+        $gruda = '';
+        if ($this->data_inicial) {
             $where .= "data_hora >= '{$this->data_inicial}' AND ";
         }
-        if( $this->data_final )
-        {
+        if ($this->data_final) {
             $where .= "data_hora <= '{$this->data_final}' AND";
         }
         //$db->Consulta( "SELECT CONCAT( YEAR(data_hora), '/', MONTH(data_hora) ) AS mes, COUNT( ref_cod_mailling_email ) AS total FROM mailling_historico, mailling_grupo_email WHERE $where mailling_grupo_email.ref_cod_mailling_grupo = mailling_historico.ref_cod_mailling_grupo GROUP BY mes ORDER BY mes ASC" );
-        $db->Consulta( "SELECT (YEAR(data_hora)||'/'|| MONTH(data_hora)) AS mes, COUNT( ref_cod_mailling_email ) AS total FROM mailling_historico, mailling_grupo_email WHERE $where mailling_grupo_email.ref_cod_mailling_grupo = mailling_historico.ref_cod_mailling_grupo GROUP BY mes ORDER BY mes ASC" );
-        $arr = array();
-        $meses = array( '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' );
-        while ( $db->ProximoRegistro() )
-        {
-            list( $nome, $qtd ) = $db->Tupla();
-            $dataContrato = explode( '/', $nome );
+        $db->Consulta("SELECT (YEAR(data_hora)||'/'|| MONTH(data_hora)) AS mes, COUNT( ref_cod_mailling_email ) AS total FROM mailling_historico, mailling_grupo_email WHERE $where mailling_grupo_email.ref_cod_mailling_grupo = mailling_historico.ref_cod_mailling_grupo GROUP BY mes ORDER BY mes ASC");
+        $arr = [];
+        $meses = [ '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
+        while ($db->ProximoRegistro()) {
+            list($nome, $qtd) = $db->Tupla();
+            $dataContrato = explode('/', $nome);
             $indice = "{$dataContrato[0]} - {$meses[$dataContrato[1]]}";
             $arr[$indice] = $qtd;
         }
-        if( count( $arr ) )
-        {
-            $titulo = "Gráfico de Mailling por quantidade";
-            if( $this->data_inicial )
-            {
-                if( ! $this->data_final )
-                {
+        if (count($arr)) {
+            $titulo = 'Gráfico de Mailling por quantidade';
+            if ($this->data_inicial) {
+                if (! $this->data_final) {
                     $titulo .= " - A partir de {$this->data_inicial}";
-                }
-                else 
-                {
+                } else {
                     $titulo .= " - De {$this->data_inicial} até {$this->data_final}";
                 }
-            }
-            else 
-            {
-                if( $this->data_final )
-                {
+            } else {
+                if ($this->data_final) {
                     $titulo .= " - Até {$this->data_final}";
                 }
             }
-            $grafico = new clsGrafico( $arr, $titulo, 500 );
-            $grafico->setAlign( "left" );
-            die( $grafico->graficoBarraHor() );
+            $grafico = new clsGrafico($arr, $titulo, 500);
+            $grafico->setAlign('left');
+            die($grafico->graficoBarraHor());
+        } else {
+            $this->campoRotulo('alerta', 'Alerta', 'Nenhum resultado foi encontrado com este filtro');
         }
-        else 
-        {
-            $this->campoRotulo( "alerta","Alerta", "Nenhum resultado foi encontrado com este filtro");
-        }
-        $this->largura = "100%";
+        $this->largura = '100%';
+
         return true;
     }
 
-    function Editar()
+    public function Editar()
     {
     }
 
-    function Excluir()
+    public function Excluir()
     {
     }
 }
@@ -148,7 +133,6 @@ class indice extends clsCadastro
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-?>

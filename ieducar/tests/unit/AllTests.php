@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   UnitTests
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -40,22 +45,28 @@ require_once 'Modules/AllTests.php';
  * Arquivo de definição de suíte de testes unitários.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   UnitTests
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Unit_AllTests
 {
-  public static function suite()
-  {
-    $suite = new PHPUnit_Framework_TestSuite('Suíte de testes unitários do projeto');
-    $suite->addTest(App_AllTests::suite());
-    $suite->addTest(Core_AllTests::suite());
-    $suite->addTest(CoreExt_AllTests::suite());
-    $suite->addTest(Utils_AllTests::suite());
-    $suite->addTest(Modules_AllTests::suite());
-    return $suite;
-  }
+    public static function suite()
+    {
+        $suite = new PHPUnit_Framework_TestSuite('Suíte de testes unitários do projeto');
+        $suite->addTest(App_AllTests::suite());
+        $suite->addTest(Core_AllTests::suite());
+        $suite->addTest(CoreExt_AllTests::suite());
+        $suite->addTest(Utils_AllTests::suite());
+        $suite->addTest(Modules_AllTests::suite());
+
+        return $suite;
+    }
 }

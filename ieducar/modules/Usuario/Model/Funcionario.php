@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -40,51 +45,58 @@ require_once 'CoreExt/Validate/Email.php';
  * ComponenteCurricular_Model_Componente class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Usuario_Model_Funcionario extends CoreExt_Entity
 {
-  protected $_data = array(
+    protected $_data = [
     #'ref_cod_pessoa_fj' => NULL,
-    'matricula'         => NULL,
-    'email'             => NULL,
-    'senha'             => NULL,
-    'data_troca_senha'  => NULL,
-    'status_token'      => NULL
-  );
+    'matricula'         => null,
+    'email'             => null,
+    'senha'             => null,
+    'data_troca_senha'  => null,
+    'status_token'      => null
+  ];
 
-  protected $_dataTypes = array(
+    protected $_dataTypes = [
     'matricula' => 'string'
-  );
+  ];
 
-  protected $_references = array(
-  );
+    protected $_references = [
+  ];
 
-  public function getDataMapper()
-  {
-    if (is_null($this->_dataMapper)) {
-      require_once 'Usuario/Model/FuncionarioDataMapper.php';
-      $this->setDataMapper(new Usuario_Model_FuncionarioDataMapper());
+    public function getDataMapper()
+    {
+        if (is_null($this->_dataMapper)) {
+            require_once 'Usuario/Model/FuncionarioDataMapper.php';
+            $this->setDataMapper(new Usuario_Model_FuncionarioDataMapper());
+        }
+
+        return parent::getDataMapper();
     }
-    return parent::getDataMapper();
-  }
 
-  public function getDefaultValidatorCollection()
-  {
-    return array(
+    public function getDefaultValidatorCollection()
+    {
+        return [
       'email' => new CoreExt_Validate_Email()
-    );
-  }
+    ];
+    }
 
-  protected function _createIdentityField()
-  {
-    $id = array('ref_cod_pessoa_fj' => NULL);
-    $this->_data = array_merge($id, $this->_data);
-    return $this;
-  }
+    protected function _createIdentityField()
+    {
+        $id = ['ref_cod_pessoa_fj' => null];
+        $this->_data = array_merge($id, $this->_data);
+
+        return $this;
+    }
 }

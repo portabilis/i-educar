@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       ?
+ *
  * @version     $Id$
  */
 
@@ -35,17 +40,21 @@ require_once 'CoreExt/Enum.php';
  * ComponenteCurricular_Model_CodigoEducacenso class.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     ComponenteCurricular
  * @subpackage  Modules
+ *
  * @since       ?
+ *
  * @version     @@package_version@@
  */
 class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
 {
-
-  protected $_data = array(
+    protected $_data = [
     null => 'Selecione',
     1    => 'Química',
     2    => 'Física',
@@ -74,14 +83,15 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
     26   => 'Ensino religioso',
     27   => 'Língua indígena',
     99   => 'Outras disciplinas'
-  );
+  ];
 
-  public function getData(){
-    return $this->_data;
-  }
+    public function getData()
+    {
+        return $this->_data;
+    }
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

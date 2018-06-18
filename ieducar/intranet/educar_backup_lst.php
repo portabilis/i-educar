@@ -24,18 +24,18 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmieducar/geral.inc.php");
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 require_once 'Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Backups" );
-        $this->processoAp = "9998858";
+        $this->SetTitulo("{$this->_instituicao} Backups");
+        $this->processoAp = '9998858';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -47,97 +47,92 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $__titulo;
+    public $__titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $__limite;
+    public $__limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $__offset;
+    public $__offset;
 
-    var $idBackup;
-    var $caminho;
-    var $data_backup;
+    public $idBackup;
+    public $caminho;
+    public $data_backup;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->__titulo = "Backups";
+        $this->__titulo = 'Backups';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        
-
-        $this->addCabecalhos( array(
-            "Download",
-            "Data backup"
-        ) );
+        $this->addCabecalhos([
+            'Download',
+            'Data backup'
+        ]);
 
         // Filtros de Foreign Keys
 
-
         // outros Filtros
-        $this->campoData( "data_backup", "Data backup", $this->data_backup, false);
-
+        $this->campoData('data_backup', 'Data backup', $this->data_backup, false);
 
         // Paginador
         $this->__limite = 10;
-        $this->__offset = ( $_GET["pagina_{$this->data_backup}"] ) ? $_GET["pagina_{$this->data_backup}"]*$this->__limite-$this->__limite: 0;
+        $this->__offset = ($_GET["pagina_{$this->data_backup}"]) ? $_GET["pagina_{$this->data_backup}"]*$this->__limite-$this->__limite: 0;
 
         $objBackup = new clsPmieducarBackup();
 
-        $objBackup->setOrderby( "data_backup DESC" );
-        $objBackup->setLimite( $this->__limite, $this->__offset );
+        $objBackup->setOrderby('data_backup DESC');
+        $objBackup->setLimite($this->__limite, $this->__offset);
 
         $lista = $objBackup->lista(null, null, Portabilis_Date_Utils::brToPgSQL($this->data_backup));
 
         $total = $objBackup->_total;
 
         // monta a lista
-        if(is_array($lista) && count($lista))
-        {
-            foreach ($lista AS $registro)
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 $dataBackup = Portabilis_Date_Utils::pgSQLToBr($registro['data_backup']);
 
-                $this->addLinhas( array(
-                    "<a href=\"{$registro["caminho"]}\">{$registro["caminho"]}</a>",
-                    "<a href=\"{$registro["caminho"]}\">{$dataBackup}</a>"
-                ) );
+                $this->addLinhas([
+                    "<a href=\"{$registro['caminho']}\">{$registro['caminho']}</a>",
+                    "<a href=\"{$registro['caminho']}\">{$dataBackup}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "educar_backup_lst.php", $total, $_GET, $this->data_backup, $this->__limite );
+        $this->addPaginador2('educar_backup_lst.php', $total, $_GET, $this->data_backup, $this->__limite);
 
-        $obj_permissao = new clsPermissoes();   
+        $obj_permissao = new clsPermissoes();
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"    => "Configurações",
-         ""                                  => "Backups"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_configuracoes_index.php'    => 'Configurações',
+         ''                                  => 'Backups'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
@@ -145,7 +140,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

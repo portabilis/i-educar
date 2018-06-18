@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Session
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -41,124 +46,130 @@ require_once 'CoreExt/Session/Storage/Abstract.php';
  *   usuário. Usa o valor configurado no php.ini caso não informado
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Session
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
 {
-  /**
-   * @see CoreExt_Session_Storage_Abstract#_init()
-   */
-  protected function _init(array $options = array())
-  {
-    $options = array_merge(array(
+    /**
+     * @see CoreExt_Session_Storage_Abstract#_init()
+     */
+    protected function _init(array $options = [])
+    {
+        $options = array_merge([
       'session_use_cookies' => ini_get('session.use_cookies')
-    ), $options);
+    ], $options);
 
-    parent::_init($options);
+        parent::_init($options);
 
-    if (!is_null($this->getOption('session_name'))) {
-      session_name($this->getOption('session_name'));
+        if (!is_null($this->getOption('session_name'))) {
+            session_name($this->getOption('session_name'));
+        }
+
+        if (!is_null(self::$_sessionId)) {
+            session_id(self::$_sessionId);
+        }
+
+        if (true == $this->getOption('session_auto_start')) {
+            $this->start();
+        }
     }
 
-    if (!is_null(self::$_sessionId)) {
-      session_id(self::$_sessionId);
+    /**
+     * @see CoreExt_Session_Storage_Interface#read($key)
+     */
+    public function read($key)
+    {
+        $returnValue = null;
+
+        if (isset($_SESSION[$key])) {
+            $returnValue = $_SESSION[$key];
+        }
+
+        return $returnValue;
     }
 
-    if (TRUE == $this->getOption('session_auto_start')) {
-      $this->start();
-    }
-  }
-
-  /**
-   * @see CoreExt_Session_Storage_Interface#read($key)
-   */
-  public function read($key)
-  {
-    $returnValue = NULL;
-
-    if (isset($_SESSION[$key])) {
-      $returnValue = $_SESSION[$key];
+    /**
+     * @see CoreExt_Session_Storage_Interface#write($key, $value)
+     */
+    public function write($key, $value)
+    {
+        $_SESSION[$key] = $value;
     }
 
-    return $returnValue;
-  }
-
-  /**
-   * @see CoreExt_Session_Storage_Interface#write($key, $value)
-   */
-  public function write($key, $value)
-  {
-    $_SESSION[$key] = $value;
-  }
-
-  /**
-   * @see CoreExt_Session_Storage_Interface#remove($key)
-   */
-  public function remove($key)
-  {
-    unset($_SESSION[$key]);
-  }
-
-  /**
-   * @see CoreExt_Session_Storage_Interface#start()
-   */
-  public function start()
-  {
-    if (!$this->isStarted() && session_start()) {
-      self::$_sessionStarted = TRUE;
-      self::$_sessionId = session_id();
+    /**
+     * @see CoreExt_Session_Storage_Interface#remove($key)
+     */
+    public function remove($key)
+    {
+        unset($_SESSION[$key]);
     }
-  }
 
-  /**
-   * @see CoreExt_Session_Storage_Interface#destroy()
-   */
-  public function destroy()
-  {
-    if ($this->isStarted()) {
-      return session_destroy();
+    /**
+     * @see CoreExt_Session_Storage_Interface#start()
+     */
+    public function start()
+    {
+        if (!$this->isStarted() && session_start()) {
+            self::$_sessionStarted = true;
+            self::$_sessionId = session_id();
+        }
     }
-  }
 
-  /**
-   * @see CoreExt_Session_Storage_Interface#regenerate()
-   */
-  public function regenerate($destroy = FALSE)
-  {
-    if ($this->isStarted()) {
-      session_regenerate_id($destroy);
-      self::$_sessionId = session_id();
+    /**
+     * @see CoreExt_Session_Storage_Interface#destroy()
+     */
+    public function destroy()
+    {
+        if ($this->isStarted()) {
+            return session_destroy();
+        }
     }
-  }
 
-  /**
-   * Persiste os dados da session no sistema de arquivos.
-   * @see CoreExt_Session_Storage_Interface#shutdown()
-   */
-  public function shutdown()
-  {
-    if ($this->isStarted()) {
-      session_write_close();
+    /**
+     * @see CoreExt_Session_Storage_Interface#regenerate()
+     */
+    public function regenerate($destroy = false)
+    {
+        if ($this->isStarted()) {
+            session_regenerate_id($destroy);
+            self::$_sessionId = session_id();
+        }
     }
-  }
 
-  /**
-   * @link http://br.php.net/manual/en/countable.count.php
-   */
-  public function count()
-  {
-    return count($_SESSION);
-  }
+    /**
+     * Persiste os dados da session no sistema de arquivos.
+     *
+     * @see CoreExt_Session_Storage_Interface#shutdown()
+     */
+    public function shutdown()
+    {
+        if ($this->isStarted()) {
+            session_write_close();
+        }
+    }
 
-  /**
-   * @see CoreExt_Session_Storage_Abstract#getSessionData()
-   */
-  public function getSessionData()
-  {
-    return $_SESSION;
-  }
+    /**
+     * @link http://br.php.net/manual/en/countable.count.php
+     */
+    public function count()
+    {
+        return count($_SESSION);
+    }
+
+    /**
+     * @see CoreExt_Session_Storage_Abstract#getSessionData()
+     */
+    public function getSessionData()
+    {
+        return $_SESSION;
+    }
 }

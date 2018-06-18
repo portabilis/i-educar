@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,39 +40,51 @@ require_once 'CoreExt/Controller/Dispatcher/Strategy/Interface.php';
  * CoreExt_Controller_Strategy_PageStrategy class.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   CoreExt_Controller
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class CoreExt_Controller_Dispatcher_Strategy_PageStrategy  extends CoreExt_Controller_Dispatcher_Abstract  implements CoreExt_Controller_Dispatcher_Strategy_Interface {
+class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Strategy_Interface
+{
     /**
      * Instância de CoreExt_Controller_Interface.
+     *
      * @var CoreExt_Controller_Interface
      */
-    protected $_controller = NULL;
+    protected $_controller = null;
 
     /**
      * Construtor.
+     *
      * @see CoreExt_Controller_Strategy_Interface#__construct($controller)
      */
-    public function __construct(CoreExt_Controller_Interface $controller) {
+    public function __construct(CoreExt_Controller_Interface $controller)
+    {
         $this->setController($controller);
     }
 
     /**
      * @see CoreExt_Controller_Strategy_Interface#setController($controller)
      */
-    public function setController(CoreExt_Controller_Interface $controller) {
+    public function setController(CoreExt_Controller_Interface $controller)
+    {
         $this->_controller = $controller;
+
         return $this;
     }
 
     /**
      * @see CoreExt_Controller_Strategy_Interface#getController()
      */
-    public function getController() {
+    public function getController()
+    {
         return $this->_controller;
     }
 
@@ -96,13 +113,18 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy  extends CoreExt_Contr
      * </code>
      *
      * @global DS Constante para DIRECTORY_SEPARATOR
+     *
      * @see    CoreExt_Controller_Strategy_Interface#dispatch()
+     *
      * @todo   Funções de controle de buffer não funcionam por conta de chamadas
      *         a die() e exit() nas classes clsDetalhe, clsCadastro e clsListagem.
+     *
      * @throws CoreExt_Exception_FileNotFoundException
+     *
      * @return bool
      */
-    public function dispatch() {
+    public function dispatch()
+    {
         if (extension_loaded('newrelic')) {
             newrelic_name_transaction($_SERVER['REDIRECT_URL']);
         }
@@ -115,7 +137,7 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy  extends CoreExt_Contr
         $controllerDir = $this->getController()->getOption('controller_dir');
         $controllerType = $this->getController()->getOption('controller_type');
 
-        $controllerFile = array($basepath, $controller, $controllerDir, $pageController);
+        $controllerFile = [$basepath, $controller, $controllerDir, $pageController];
         $controllerFile = sprintf('%s.php', implode(DS, $controllerFile));
 
         if (!file_exists($controllerFile)) {
@@ -137,6 +159,6 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy  extends CoreExt_Contr
         $this->getController()->getView()->setContents(ob_get_contents());
         ob_end_clean();
 
-        return TRUE;
+        return true;
     }
 }

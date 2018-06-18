@@ -24,17 +24,17 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmieducar/geral.inc.php');
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Suspens&atilde;o" );
-        $this->processoAp = "607";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Motivo Suspens&atilde;o");
+        $this->processoAp = '607';
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -46,63 +46,58 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_motivo_suspensao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_motivo;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_motivo_suspensao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_motivo;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Gerar()
+    public function Gerar()
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Motivo Suspens&atilde;o - Detalhe";
-        
+        $this->titulo = 'Motivo Suspens&atilde;o - Detalhe';
 
-        $this->cod_motivo_suspensao=$_GET["cod_motivo_suspensao"];
+        $this->cod_motivo_suspensao=$_GET['cod_motivo_suspensao'];
 
-        $tmp_obj = new clsPmieducarMotivoSuspensao( $this->cod_motivo_suspensao );
+        $tmp_obj = new clsPmieducarMotivoSuspensao($this->cod_motivo_suspensao);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: educar_motivo_suspensao_lst.php" );
+        if (! $registro) {
+            header('location: educar_motivo_suspensao_lst.php');
             die();
         }
 
-        if( $registro["nm_motivo"] )
-        {
-            $this->addDetalhe( array( "Motivo Suspens&atilde;o", "{$registro["nm_motivo"]}") );
+        if ($registro['nm_motivo']) {
+            $this->addDetalhe([ 'Motivo Suspens&atilde;o', "{$registro['nm_motivo']}"]);
         }
-        if( $registro["descricao"] )
-        {
-            $this->addDetalhe( array( "Descri&ccedil;&atilde;o", "{$registro["descricao"]}") );
+        if ($registro['descricao']) {
+            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11 ) )
-        {
-        $this->url_novo = "educar_motivo_suspensao_cad.php";
-        $this->url_editar = "educar_motivo_suspensao_cad.php?cod_motivo_suspensao={$registro["cod_motivo_suspensao"]}";
+        if ($obj_permissoes->permissao_cadastra(607, $this->pessoa_logada, 11)) {
+            $this->url_novo = 'educar_motivo_suspensao_cad.php';
+            $this->url_editar = "educar_motivo_suspensao_cad.php?cod_motivo_suspensao={$registro['cod_motivo_suspensao']}";
         }
 
-        $this->url_cancelar = "educar_motivo_suspensao_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'educar_motivo_suspensao_lst.php';
+        $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do motivo de suspens&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_biblioteca_index.php'                  => 'Biblioteca',
+         ''                                  => 'Detalhe do motivo de suspens&atilde;o'
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
@@ -111,7 +106,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

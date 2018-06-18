@@ -24,67 +24,59 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsListagem.inc.php');
+require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es!" );
-        $this->processoAp = "29";
+        $this->SetTitulo("{$this->_instituicao} Licita&ccedil;&otilde;es!");
+        $this->processoAp = '29';
     }
 }
 
 class indice extends clsListagem
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Licita&ccedil;&otilde;es - cadastro";
-        
-        
-        $this->addCabecalhos( array( "Data", "Objeto") );
-        
-        
+        $this->titulo = 'Licita&ccedil;&otilde;es - cadastro';
+
+        $this->addCabecalhos([ 'Data', 'Objeto']);
+
         $db = new clsBanco();
-        $db->Consulta( "SELECT count(*) FROM compras_licitacoes" );
+        $db->Consulta('SELECT count(*) FROM compras_licitacoes');
         $db->ProximoRegistro();
-        list ($total) = $db->Tupla();
+        list($total) = $db->Tupla();
         $total_tmp = $total;
-        $iniciolimit = (@$_GET['iniciolimit']) ? @$_GET['iniciolimit'] : "0";
+        $iniciolimit = (@$_GET['iniciolimit']) ? @$_GET['iniciolimit'] : '0';
         $limite = 10;
-        if ($total > $limite)
-        {
+        if ($total > $limite) {
             $iniciolimit_ = $iniciolimit *$limite;
             $limit = " LIMIT {$iniciolimit_}, $limite";
-        }       
-        
-        $db->Consulta( "SELECT l.data_hora, l.numero, l.cod_compras_licitacoes FROM compras_licitacoes l ORDER BY l.data_hora DESC {$limit}" );
-        while ($db->ProximoRegistro())
-        {
-            list ($data, $numero, $id_licitacao) = $db->Tupla();
-            $data= date('d/m/Y', strtotime(substr($data,0,19)));
-
-            $this->addLinhas( array( "<a href='licitacoes_det.php?id_licitacao=$id_licitacao'><img src='imagens/noticia.jpg' border=0>$data</a>", "<a href='licitacoes_det.php?id_licitacao=$id_licitacao'>$numero</a>" ) );
         }
-        $this->paginador("licitacoes_lst.php?",$total_tmp,$limite,@$_GET['pos_atual']);
 
-        $this->acao = "go(\"licitacoes_cad.php\")";
-        $this->nome_acao = "Novo";
+        $db->Consulta("SELECT l.data_hora, l.numero, l.cod_compras_licitacoes FROM compras_licitacoes l ORDER BY l.data_hora DESC {$limit}");
+        while ($db->ProximoRegistro()) {
+            list($data, $numero, $id_licitacao) = $db->Tupla();
+            $data= date('d/m/Y', strtotime(substr($data, 0, 19)));
 
-        $this->largura = "100%";
+            $this->addLinhas([ "<a href='licitacoes_det.php?id_licitacao=$id_licitacao'><img src='imagens/noticia.jpg' border=0>$data</a>", "<a href='licitacoes_det.php?id_licitacao=$id_licitacao'>$numero</a>" ]);
+        }
+        $this->paginador('licitacoes_lst.php?', $total_tmp, $limite, @$_GET['pos_atual']);
+
+        $this->acao = 'go("licitacoes_cad.php")';
+        $this->nome_acao = 'Novo';
+
+        $this->largura = '100%';
     }
 }
-
 
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
-
-?>

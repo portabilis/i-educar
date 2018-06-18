@@ -24,46 +24,42 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmiacoes/geral.inc.php");
+$desvio_diretorio = '';
+require_once('include/clsBase.inc.php');
+require_once('include/clsDetalhe.inc.php');
+require_once('include/clsBanco.inc.php');
+require_once('include/pmiacoes/geral.inc.php');
 class clsIndex extends clsBase
 {
-    
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Detalhe de Categorias" );
-        $this->processoAp = "552";
+        $this->SetTitulo("{$this->_instituicao} Sistema de Cadastro de Ações do Governo - Detalhe de Categorias");
+        $this->processoAp = '552';
     }
 }
 
 class indice extends clsDetalhe
 {
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Detalhe";
-        
+        $this->titulo = 'Detalhe';
 
         $cod_categoria = @$_GET['cod_categoria'];
         //Objeto categorias
         $obj = new clsPmiacoesCategoria($cod_categoria);
         $detalhe = $obj->detalhe();
-        
-        $this->addDetalhe( array("Nome do categoria", $detalhe['nm_categoria']) );
 
-        $this->url_novo = "acoes_categoria_cad.php";
+        $this->addDetalhe(['Nome do categoria', $detalhe['nm_categoria']]);
+
+        $this->url_novo = 'acoes_categoria_cad.php';
         $this->url_editar = "acoes_categoria_cad.php?cod_categoria={$cod_categoria}";
-        $this->url_cancelar = "acoes_categoria_lst.php";
+        $this->url_cancelar = 'acoes_categoria_lst.php';
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>

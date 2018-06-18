@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Transporte
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.2.0
+ *
  * @version     $Id$
  */
 
@@ -35,27 +40,32 @@ require_once 'CoreExt/Enum.php';
  * Transporte_Model_Responsavel class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Transporte
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.2.0
+ *
  * @version     @@package_version@@
  */
 class Transporte_Model_Responsavel extends CoreExt_Enum
 {
-  const NENHUM    = 0;
-  const ESTADUAL  = 1;
-  const MUNICIPAL = 2;
+    const NENHUM    = 0;
+    const ESTADUAL  = 1;
+    const MUNICIPAL = 2;
 
-  protected $_data = array(
+    protected $_data = [
     self::NENHUM    => 'Não utiliza',
     self::ESTADUAL  => 'Estadual',
     self::MUNICIPAL => 'Municipal'
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }

@@ -22,10 +22,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,50 +42,59 @@ require_once 'App/Model/NivelTipoUsuario.php';
  * Portabilis_View_Helper_DynamicInput_Escola class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_DynamicInput_CoreSelect {
-
-  protected function inputValue($value = null) {
-    return $this->getEscolaId($value);
-  }
-
-  protected function inputName() {
-    return 'ref_cod_escola';
-  }
-
-  protected function inputOptions($options) {
-    $resources            = $options['resources'];
-    $instituicaoId        = $this->getInstituicaoId($options['instituicaoId']);
-    $userId               = $this->getCurrentUserId();
-
-    if ($instituicaoId and empty($resources)) {
-      $permissao = new clsPermissoes();
-      $nivel = $permissao->nivel_acesso($userId);
-
-      if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
-          $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
-
-        $escolas_usuario = array();
-        $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
-        foreach ($escolasUser as $e)
-        {
-          $escolas_usuario[$e["ref_cod_escola"]] = $e["nome"];
-        }
-        return $this->insertOption(null, 'Selecione uma escola', $escolas_usuario);
-      }
-      $resources = App_Model_IedFinder::getEscolas($instituicaoId);
+class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputValue($value = null)
+    {
+        return $this->getEscolaId($value);
     }
-    return $this->insertOption(null, 'Selecione uma escola', $resources);
-  }
 
-  public function escola($options = array()) {
-    $this->select($options);
+    protected function inputName()
+    {
+        return 'ref_cod_escola';
+    }
 
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Escola.js');
-  }
+    protected function inputOptions($options)
+    {
+        $resources            = $options['resources'];
+        $instituicaoId        = $this->getInstituicaoId($options['instituicaoId']);
+        $userId               = $this->getCurrentUserId();
+
+        if ($instituicaoId and empty($resources)) {
+            $permissao = new clsPermissoes();
+            $nivel = $permissao->nivel_acesso($userId);
+
+            if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
+          $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
+                $escolas_usuario = [];
+                $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
+                foreach ($escolasUser as $e) {
+                    $escolas_usuario[$e['ref_cod_escola']] = $e['nome'];
+                }
+
+                return $this->insertOption(null, 'Selecione uma escola', $escolas_usuario);
+            }
+            $resources = App_Model_IedFinder::getEscolas($instituicaoId);
+        }
+
+        return $this->insertOption(null, 'Selecione uma escola', $resources);
+    }
+
+    public function escola($options = [])
+    {
+        $this->select($options);
+
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Escola.js');
+    }
 }
