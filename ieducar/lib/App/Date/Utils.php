@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Date
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -36,57 +41,68 @@ require_once 'App/Date/Exception.php';
  * Possui métodos
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Date
+ *
  * @since     Classe disponível desde a versão 1.2.0
+ *
  * @version   @@package_version@@
  */
 class App_Date_Utils
 {
-  /**
-   * Retorna o ano de uma string nos formatos dd/mm/yyyy e dd/mm/yyyy hh:ii:ss.
-   * @param string $date
-   * @param int
-   */
-  public static function getYear($date)
-  {
-    $parts = explode('/', $date);
-    $year  = explode(' ', $parts[2]);
+    /**
+     * Retorna o ano de uma string nos formatos dd/mm/yyyy e dd/mm/yyyy hh:ii:ss.
+     *
+     * @param string $date
+     * @param int
+     */
+    public static function getYear($date)
+    {
+        $parts = explode('/', $date);
+        $year  = explode(' ', $parts[2]);
 
-    if (is_array($year)) {
-      $year = $year[0];
+        if (is_array($year)) {
+            $year = $year[0];
+        }
+
+        return (int) $year;
     }
 
-    return (int) $year;
-  }
+    /**
+     * Verifica se ao menos uma das datas de um array é do ano especificado.
+     *
+     * @param array $dates Datas nos formatos dd/mm/yyyy [hh:ii:ss].
+     * @param int   $year  Ano esperado.
+     * @param int   $at    Quantidade mínima de datas esperadas no ano $year.
+     *
+     * @return bool TRUE se ao menos uma das datas estiver no ano esperado.
+     *
+     * @throws App_Date_Exception
+     */
+    public static function datesYearAtLeast(array $dates, $year, $at = 1)
+    {
+        $matches = 0;
 
-  /**
-   * Verifica se ao menos uma das datas de um array é do ano especificado.
-   * @param   array  $dates Datas nos formatos dd/mm/yyyy [hh:ii:ss].
-   * @param   int    $year  Ano esperado.
-   * @param   int    $at    Quantidade mínima de datas esperadas no ano $year.
-   * @return  bool   TRUE se ao menos uma das datas estiver no ano esperado.
-   * @throws  App_Date_Exception
-   */
-  public static function datesYearAtLeast(array $dates, $year, $at = 1)
-  {
-    $matches = 0;
+        foreach ($dates as $date) {
+            $dateYear = self::getYear($date);
+            if ($year == $dateYear) {
+                $matches++;
+            }
+        }
 
-    foreach ($dates as $date) {
-      $dateYear = self::getYear($date);
-      if ($year == $dateYear) {
-        $matches++;
-      }
-    }
+        if ($matches >= $at) {
+            return true;
+        }
 
-    if ($matches >= $at) {
-      return TRUE;
-    }
-
-    throw new App_Date_Exception(sprintf(
+        throw new App_Date_Exception(sprintf(
       'Ao menos "%d" das datas informadas deve ser do ano "%d". Datas: "%s".',
-      $at, $year, implode('", "', $dates)
+      $at,
+        $year,
+        implode('", "', $dates)
     ));
-  }
+    }
 }

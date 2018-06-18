@@ -21,10 +21,15 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @since     Arquivo disponível desde a versão 1.2.0
+ *
  * @version   $Id$
  */
 
@@ -34,26 +39,31 @@ require_once 'CoreExt/Enum.php';
  * App_Model_TipoDiaMotivo class.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   App_Model
+ *
  * @since     Classe disponível desde a versão 1.2.0
+ *
  * @version   @@package_version@@
  */
 class App_Model_TipoDiaMotivo extends CoreExt_Enum
 {
-  const DIA_LETIVO       = 'l';
-  const DIA_NAO_LETIVO   = 'n';
-  const DIA_EXTRA_LETIVO = 'e';
+    const DIA_LETIVO       = 'l';
+    const DIA_NAO_LETIVO   = 'n';
+    const DIA_EXTRA_LETIVO = 'e';
 
-  protected $_data = array(
+    protected $_data = [
     self::DIA_LETIVO       => 'Dia letivo',
     self::DIA_NAO_LETIVO   => 'Dia não letivo',
     self::DIA_EXTRA_LETIVO => 'Dia extra letivo',
-  );
+  ];
 
-  public static function getInstance()
-  {
-    return self::_getInstance(__CLASS__);
-  }
+    public static function getInstance()
+    {
+        return self::_getInstance(__CLASS__);
+    }
 }
