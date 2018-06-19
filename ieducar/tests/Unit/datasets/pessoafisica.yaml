@@ -1,0 +1,4 @@
+cadastro.pessoa:
+  -
+    idpes: 1
+    nome: "Fulano"
