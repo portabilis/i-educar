@@ -13,5 +13,14 @@
     "swiftmailer/swiftmailer": "^6.0",
     "cocur/slugify": "^3.1",
     "google/recaptcha": "~1.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "7.2.*",
+    "phpunit/dbunit": "4.0.*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "ieducar/tests/"
+    }
   }
 }
