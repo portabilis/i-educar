@@ -686,15 +686,19 @@ class indice extends clsCadastro
 
     // Cor/raça.
 
-    $racas         = new clsCadastroRaca();
-    $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+    $racas = new clsCadastroRaca();
+    $racas = $racas->lista(null, null, null, null, null, null, null, true);
 
-    foreach ($racas as $raca)
-      $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
+    $selectOptionsRaca = [];
 
-    $selectOptions = array(null => 'Selecione') + Portabilis_Array_Utils::sortByValue($selectOptions);
+    foreach ($racas as $raca) {
+        $selectOptionsRaca[$raca['cod_raca']] = $raca['nm_raca'];
+    }
 
-    $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
+    $selectOptionsRaca = Portabilis_Array_Utils::sortByValue($selectOptionsRaca);
+    $selectOptionsRaca = array_merge([null => 'Selecione'], $selectOptionsRaca);
+
+    $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
 
     // nacionalidade
