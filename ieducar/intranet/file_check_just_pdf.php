@@ -22,7 +22,7 @@
  *
  * @author      Paula Bonot <bonot@portabilis.com.br>
  * @category    i-Educar
- * @license     @@license@@
+ * @license     GPL-v2.0+
  * @package     Api
  * @subpackage  Modules
  * @since       Arquivo disponÃ­vel desde a versÃ£o ?

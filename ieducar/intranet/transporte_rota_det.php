@@ -22,7 +22,7 @@
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   Module
  * @since     07/2013
  * @version   $Id$
@@ -47,7 +47,7 @@ require_once 'Portabilis/View/Helper/Application.php';
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
@@ -67,7 +67,7 @@ class clsIndexBase extends clsBase
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@

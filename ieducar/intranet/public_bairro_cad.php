@@ -44,7 +44,7 @@ require_once 'App/Model/ZonaLocalizacao.php';
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Public
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
@@ -64,7 +64,7 @@ class clsIndexBase extends clsBase
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Public
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@

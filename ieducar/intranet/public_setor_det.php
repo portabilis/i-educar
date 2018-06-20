@@ -39,7 +39,7 @@ require_once 'include/public/clsPublicSetorBai.inc.php';
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Public
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
@@ -59,7 +59,7 @@ class clsIndexBase extends clsBase
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Public
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@

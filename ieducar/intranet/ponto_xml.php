@@ -22,7 +22,7 @@
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   TransporteEscolar
  * @subpackage  Modules
  * @since     Arquivo disponível desde a versão ?
