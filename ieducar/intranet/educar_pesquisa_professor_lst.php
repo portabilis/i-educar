@@ -21,7 +21,7 @@
  *
  * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version   $Id$
@@ -35,7 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
  *
  * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@
@@ -55,7 +55,7 @@ class clsIndexBase extends clsBase
  *
  * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@

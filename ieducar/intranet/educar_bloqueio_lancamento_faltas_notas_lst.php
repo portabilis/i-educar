@@ -23,7 +23,7 @@
  *
  * @author    Caroline Salib <caroline@portabillis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     ?
  * @version   $Id$
@@ -40,7 +40,7 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  *
  * @author    Caroline Salib <caroline@portabillis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     ?
  * @version   @@package_version@@
@@ -60,7 +60,7 @@ class clsIndexBase extends clsBase
  *
  * @author    Caroline Salib <caroline@portabillis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     ?
  * @version   @@package_version@@

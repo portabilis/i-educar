@@ -21,7 +21,7 @@
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @package   iEd_Pmieducar
  * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$

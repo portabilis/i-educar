@@ -2,7 +2,7 @@
 /*
 --
 -- @author   Isac Borgert <isac@portabilis.com.br>
--- @license  @@license@@
+-- @license  GPL-v2.0+
 -- @version  $Id$
 */
 
