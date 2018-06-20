@@ -22,7 +22,7 @@
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-v2.0+
  * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
