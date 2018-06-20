@@ -13,7 +13,9 @@ RUN apt-get -y update \
 	make \
 	rpl \
 	software-properties-common \
+	unzip \
 	wget \
+	zip \
 	zlib1g-dev \
 	&& wget https://github.com/portabilis/i-educar/archive/master.tar.gz \
 	&& tar zxf master.tar.gz -C /var/www/html \
