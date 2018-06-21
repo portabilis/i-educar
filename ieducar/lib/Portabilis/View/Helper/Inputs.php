@@ -393,6 +393,9 @@ class Portabilis_View_Helper_Inputs {
     $helper->$helperName($options);
   }
 
+  /**
+   * @param string $helperName
+   */
   protected function simpleSearchResourceInput($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $options = $this->mergeInputOptions($inputOptions, $helperOptions);

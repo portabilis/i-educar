@@ -174,6 +174,9 @@ class clsPDF
     }
   }
 
+  /**
+   * @param string $tamanhoFolha
+   */
   function MakeTamPage($tamanhoFolha)
   {
     $this->largura = 0;

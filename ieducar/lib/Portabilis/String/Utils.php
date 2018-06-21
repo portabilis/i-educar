@@ -153,6 +153,9 @@ class Portabilis_String_Utils {
   }
 
 
+  /**
+   * @param string $str
+   */
   public static function encoding($str) {
     return mb_detect_encoding($str, 'UTF-8, ', $strict = true);
   }

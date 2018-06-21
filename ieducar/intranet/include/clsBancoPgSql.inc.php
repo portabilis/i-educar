@@ -372,7 +372,7 @@ abstract class clsBancoSQL_
    * @param  string  $consulta    Consulta SQL.
    * @param  bool    $reescrever  (Opcional) SQL é reescrita para transformar
    *   sintaxe MySQL em PostgreSQL.
-   * @return resource FALSE em caso de erro ou o identificador da consulta
+   * @return boolean FALSE em caso de erro ou o identificador da consulta
    *   em caso de sucesso.
    */
   public function Consulta($consulta, $reescrever = true)
