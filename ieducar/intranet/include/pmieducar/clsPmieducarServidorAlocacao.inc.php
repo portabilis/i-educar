@@ -226,7 +226,7 @@ class clsPmieducarServidorAlocacao
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -401,6 +401,7 @@ class clsPmieducarServidorAlocacao
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $boo_professor
    * @return array
    */
   function lista($int_cod_servidor_alocacao = NULL, $int_ref_ref_cod_instituicao = NULL,
@@ -701,6 +702,7 @@ class clsPmieducarServidorAlocacao
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -728,6 +730,7 @@ class clsPmieducarServidorAlocacao
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

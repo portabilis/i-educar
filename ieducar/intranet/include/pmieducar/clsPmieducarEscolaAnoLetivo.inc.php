@@ -105,6 +105,8 @@ class clsPmieducarEscolaAnoLetivo
     /**
      * Construtor (PHP 4)
      *
+     * @param integer $andamento
+     * @param integer $ativo
      * @return object
      */
     function __construct( $ref_cod_escola = null, $ano = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $andamento = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $turmas_por_ano = null )
@@ -340,6 +342,8 @@ class clsPmieducarEscolaAnoLetivo
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_andamento
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_ref_cod_escola = null, $int_ano = null, $int_ref_usuario_cad = null, $int_ref_usuario_exc = null, $int_andamento = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null,$str_andamento_in = null )
@@ -547,6 +551,7 @@ class clsPmieducarEscolaAnoLetivo
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -577,6 +582,7 @@ class clsPmieducarEscolaAnoLetivo
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

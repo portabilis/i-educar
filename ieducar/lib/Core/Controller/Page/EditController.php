@@ -257,8 +257,8 @@ abstract class Core_Controller_Page_EditController
 
   /**
    * Setter.
-   * @param clsPemissoes $instance
-   * @return CoreExt_Controller_Page_Abstract Provê interface fluída
+   * @param clsPermissoes $instance
+   * @return Core_Controller_Page_EditController Provê interface fluída
    */
   public function setClsPermissoes(clsPermissoes $instance)
   {

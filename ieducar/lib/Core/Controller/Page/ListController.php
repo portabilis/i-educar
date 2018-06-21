@@ -113,6 +113,9 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
     }
   }
 
+  /**
+   * @return integer
+   */
   protected function getPessoaLogada(){
     return $_SESSION['id_pessoa'];
   }

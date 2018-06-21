@@ -56,7 +56,7 @@ class clsLogAcesso
     /**
      * Funcao que cadastra um novo registro com os valores atuais
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {

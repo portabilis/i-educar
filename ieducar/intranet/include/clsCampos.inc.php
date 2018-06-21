@@ -124,6 +124,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->__id_tab++;
     }
 
+    /**
+     * @param string $nome
+     */
     function campoTabelaInicio($nome, $titulo = '', $arr_campos = array(),
                                $arr_valores = array(array()), $largura = '', $array_valores_lista = array(array()))
     {
@@ -218,6 +221,10 @@ class clsCampos extends Core_Controller_Page_Abstract
             $largura_j, $altura_j, $redirecionamento);
     }
 
+    /**
+     * @param string $nome
+     * @param integer $tamanho
+     */
     function campoArquivo($nome, $campo, $valor, $tamanho,
                           $descricao = '', $tr_invisivel = FALSE)
     {
@@ -227,6 +234,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->form_enctype = " enctype='multipart/form-data'";
     }
 
+    /**
+     * @param string $nome
+     * @param string $campo
+     */
     function campoCep($nome, $campo, $valor, $obrigatorio = FALSE,
                       $hifen = '-', $descricao = FALSE, $disable = FALSE)
     {
@@ -249,6 +260,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    /**
+     * @param string $campo
+     * @param string $dica
+     */
     function campoCheck($nome, $campo, $valor, $desc = '', $duplo = FALSE,
                         $script = FALSE, $disable = FALSE, $dica = NULL)
     {
@@ -318,6 +333,11 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
+    /**
+     * @param string $nome
+     * @param string $campo
+     * @param string $valor
+     */
     function campoCpf($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = FALSE, $disabled = FALSE, $onChange = '')
     {
         $arr_componente = array(
@@ -340,6 +360,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    /**
+     * @param string $nome
+     */
     function campoRA($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = FALSE, $disabled = FALSE)// RA = Registro do Aluno, aluno_estado_id
     {
         $arr_componente = array(
@@ -654,6 +677,11 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
+    /**
+     * @param string $campo
+     * @param integer $colunas
+     * @param integer $linhas
+     */
     function campoMemo($nome, $campo, $valor, $colunas, $linhas, $obrigatorio = FALSE,
                        $descricao = '', $conta = '', $duplo = FALSE, $script = FALSE, $evento = 'onclick', $disabled = FALSE)
     {
@@ -673,6 +701,12 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
+    /**
+     * @param string $nome
+     * @param string $campo
+     * @param integer $tamanhovisivel
+     * @param integer $tamanhomaximo
+     */
     function campoNumero($nome, $campo, $valor, $tamanhovisivel, $tamanhomaximo,
                          $obrigatorio = FALSE, $descricao = '', $descricao2 = '', $script = FALSE,
                          $evento = FALSE, $duplo = FALSE, $disabled = FALSE)
@@ -724,6 +758,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    /**
+     * @param string $nome
+     */
     function campoOculto($nome, $valor)
     {
         $arr_componente = array(
@@ -740,6 +777,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    /**
+     * @param string $nome
+     * @param string $campo
+     */
     function campoRadio($nome, $campo, $valor, $default, $acao = '', $descricao = '')
     {
         $this->campos[$nome] = array(
@@ -771,6 +812,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    /**
+     * @param string $nome
+     * @param string $campo
+     */
     function campoSenha($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = '')
     {
         $this->campos[$nome] = array(
@@ -784,6 +829,12 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
+    /**
+     * @param string $nome
+     * @param string $campo
+     * @param integer $tamanhovisivel
+     * @param integer $tamanhomaximo
+     */
     function campoTexto($nome, $campo, $valor, $tamanhovisivel, $tamanhomaximo,
                         $obrigatorio = FALSE, $expressao = FALSE, $duplo = FALSE, $descricao = '',
                         $descricao2 = '', $script = '', $evento = 'onKeyUp', $disabled = FALSE)
@@ -898,6 +949,11 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
+    /**
+     * @param string $nome
+     * @param string $campo
+     * @param string $conteudo
+     */
     function campoAvulso($nome, $campo, $conteudo)
     {
         $this->campos[$nome] = array(
@@ -2669,6 +2725,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input {$class} type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" {$tamanhovisivel} {$tamanhomaximo} {$evento} {$disabled}> {$descricao}";
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoLista($nome, $id = '', $acao = '', $valor, $default,
                            $complemento = '', $desabilitado = FALSE, $class, $multiple = FALSE)
     {
@@ -2714,6 +2773,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return $retorno;
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoMonetario($nome, $id = '', $valor = '', $tamanhovisivel,
                                $tamanhomaximo, $disabled = FALSE, $descricao = '', $descricao2 = '',
                                $class, $evento = 'onChange', $script = '')
@@ -2733,6 +2795,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $evento = \"{$script}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}> {$descricao}";
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoHora($nome, $id = '', $valor = '', $class, $tamanhovisivel,
                           $tamanhomaximo, $acao = '', $descricao = '')
     {
@@ -2775,6 +2840,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return $retorno;
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoCNPJ($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo)
     {
         $id = $id ? $id : $nome;
@@ -2782,6 +2850,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\">";
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoCPF($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = FALSE, $onChange = '')
     {
         $id = $id ? $id : $nome;
@@ -2795,6 +2866,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input onChange=\"{$onChange}\"onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $disabled>";
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoIdFederal($nome, $id = '', $valor, $class, $tamanhovisivel,
                                $tamanhomaximo, $disabled = FALSE)
     {
@@ -2820,6 +2894,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input name='$nome' id='$id' type='hidden' value='{$valor}'>\n";
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoData($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = FALSE)
     {
         if ($disabled) {
@@ -2833,6 +2910,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}> \n";
     }
 
+    /**
+     * @param string $class
+     */
     function getCampoCep($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo,
                          $disabled = FALSE, $descricao = '')
     {
@@ -2855,6 +2935,7 @@ class clsCampos extends Core_Controller_Page_Abstract
      *
      * @see scripts/padrao.js::pesquisa_valores_f()
      * @see clsCampos::MakeCampos()
+     * @param string $class
      */
     function getCampoTextoPesquisa($nome, $id = '', $valor, $class, $tamanhovisivel,
                                    $tamanhomaximo, $disabled = FALSE, $caminho, $campos_serializados = NULL,

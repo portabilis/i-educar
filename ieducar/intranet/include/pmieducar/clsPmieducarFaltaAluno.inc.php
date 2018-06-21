@@ -297,7 +297,7 @@ class clsPmieducarFaltaAluno
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -456,6 +456,7 @@ class clsPmieducarFaltaAluno
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_falta_aluno = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_serie = null, $int_ref_cod_escola = null, $int_ref_cod_disciplina = null, $int_ref_cod_matricula = null, $int_faltas = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_modulo = null, $int_ref_cod_curso_disciplina = null )
@@ -728,6 +729,7 @@ class clsPmieducarFaltaAluno
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

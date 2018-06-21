@@ -169,6 +169,11 @@ class clsModulesComponenteCurricularAnoEscolar
         return false;
     }
     
+    /**
+     * @param integer $componente_curricular_id
+     * @param integer $carga_horaria
+     * @param integer $tipo_nota
+     */
     private function cadastraComponente($componente_curricular_id = NULL,
                                         $carga_horaria            = NULL,
                                         $tipo_nota                = NULL)
@@ -189,6 +194,11 @@ class clsModulesComponenteCurricularAnoEscolar
         return false;
     }
 
+    /**
+     * @param integer $componente_curricular_id
+     * @param integer $carga_horaria
+     * @param integer $tipo_nota
+     */
     private function editaComponente($componente_curricular_id = NULL,
                                      $carga_horaria            = NULL,
                                      $tipo_nota                = NULL)
@@ -225,6 +235,9 @@ class clsModulesComponenteCurricularAnoEscolar
         return false;
     }
 
+    /**
+     * @param integer $componente_curricular_id
+     */
     private function excluiComponente($componente_curricular_id = NULL)
     {
         if(is_numeric($componente_curricular_id)){

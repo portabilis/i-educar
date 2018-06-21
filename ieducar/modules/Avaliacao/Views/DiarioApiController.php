@@ -1649,6 +1649,9 @@ class DiarioApiController extends ApiCoreController
         return $opcoes;
     }
 
+    /**
+     * @return string
+     */
     protected function getNavegacaoTab()
     {
         return $this->getRequest()->navegacao_tab;

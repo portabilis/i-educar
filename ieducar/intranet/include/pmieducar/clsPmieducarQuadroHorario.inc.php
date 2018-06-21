@@ -105,6 +105,7 @@ class clsPmieducarQuadroHorario
     /**
      * Construtor (PHP 4)
      *
+     * @param integer $ativo
      * @return object
      */
     function __construct( $cod_quadro_horario = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_turma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ano = null )
@@ -227,7 +228,7 @@ class clsPmieducarQuadroHorario
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {

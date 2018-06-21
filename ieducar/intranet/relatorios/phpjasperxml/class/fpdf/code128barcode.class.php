@@ -431,6 +431,10 @@ class code128barcode {
     // }}}
 
     // {{{ function start($code)
+
+    /**
+     * @param string $code
+     */
     function start($code) {
         $this->_barcode[] = $this->_startcodes[$code];
         $this->_current_code = $this->_actual_code = $code;

@@ -254,6 +254,7 @@ class clsPmieducarCalendarioDiaAnotacao
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $is_ativo
      * @return array
      */
     function lista( $int_ref_dia = null, $int_ref_mes = null, $int_ref_ref_cod_calendario_ano_letivo = null, $int_ref_cod_calendario_anotacao = null,$is_ativo = null )
@@ -405,6 +406,7 @@ class clsPmieducarCalendarioDiaAnotacao
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )

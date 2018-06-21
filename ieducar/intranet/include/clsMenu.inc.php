@@ -44,6 +44,9 @@ class clsMenu
 {
   var $aberto;
 
+  /**
+   * @param string $categoriaTemplate
+   */
   function MakeMenu($linhaTemplate, $categoriaTemplate)
   {
     // Usa helper de Url para pegar o path da requisição

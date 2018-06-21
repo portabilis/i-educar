@@ -84,6 +84,9 @@ class Portabilis_View_Helper_Inputs {
 
   // input helpers
 
+  /**
+   * @param string $helperName
+   */
   public function input($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {
     $helperClassName = "Portabilis_View_Helper_Input_" . ucfirst($helperName);
 
@@ -379,6 +382,9 @@ class Portabilis_View_Helper_Inputs {
 
   // protected methods
 
+  /**
+   * @param string $helperName
+   */
   protected function resourceInput($helperName, $options = array()) {
     $helperClassName = "Portabilis_View_Helper_Input_Resource_" . ucfirst($helperName);
 
@@ -402,10 +408,16 @@ class Portabilis_View_Helper_Inputs {
 
   }
 
+  /**
+   * @param string $helperName
+   */
   protected function multipleSearchResourceInput($helperName, $attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->simpleSearchResourceInput($helperName, $attrName, $inputOptions, $helperOptions);
   }
 
+  /**
+   * @param string $helperClassName
+   */
   protected function includeHelper($helperClassName) {
     $classPath       = str_replace('_', '/', $helperClassName) . '.php';
 

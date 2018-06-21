@@ -18,6 +18,9 @@ class Portabilis_Mailer {
         $this->config = $GLOBALS['coreExt']['Config']->app->mailer;
     }
 
+    /**
+     * @param string $message
+     */
     public function sendMail($to, $subject, $message, $options = [])
     {
         $defaultOpts = [

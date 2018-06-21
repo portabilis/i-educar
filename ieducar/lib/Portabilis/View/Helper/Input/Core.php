@@ -135,10 +135,17 @@ class Portabilis_View_Helper_Input_Core {
     return Portabilis_Utils_User::getClsPermissoes();
   }
 
+  /**
+   * @param string $nivelAcessoType
+   */
   protected function hasNivelAcesso($nivelAcessoType) {
     return Portabilis_Utils_User::hasNivelAcesso($nivelAcessoType);
   }
 
+  /**
+   * @param string $packageName
+   * @param string $modelName
+   */
   protected function getDataMapperFor($packageName, $modelName){
     return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
   }
@@ -147,6 +154,9 @@ class Portabilis_View_Helper_Input_Core {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
+  /**
+   * @param null|integer $key
+   */
   protected static function insertOption($key, $value, $array) {
     return Portabilis_Array_Utils::insertIn($key, $value, $array);
   }
@@ -190,6 +200,9 @@ class Portabilis_View_Helper_Input_Core {
   }
 
 
+  /**
+   * @return integer|null
+   */
   protected function getBibliotecaId($bibliotecaId = null) {
     if (! $bibliotecaId && ! $this->viewInstance->ref_cod_biblioteca) {
       $biblioteca = $this->getPermissoes()->getBiblioteca($this->getCurrentUserId());
@@ -204,6 +217,9 @@ class Portabilis_View_Helper_Input_Core {
     return $bibliotecaId;
   }
 
+  /**
+   * @return integer|null
+   */
   protected function getCursoId($cursoId = null) {
     if (! $cursoId && $this->viewInstance->ref_cod_curso)
       $cursoId = $this->viewInstance->ref_cod_curso;

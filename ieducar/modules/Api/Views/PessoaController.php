@@ -343,6 +343,9 @@ class PessoaController extends ApiCoreController
     return $rg;
   }
 
+  /**
+   * @return string
+   */
   protected function loadDataNascimento($pessoaId) {
     $sql        = "select data_nasc from cadastro.fisica where idpes = $1";
     $nascimento = $this->fetchPreparedQuery($sql, $pessoaId, false, 'first-field');

@@ -201,6 +201,7 @@ class clsPmieducarAlunoCMF
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )

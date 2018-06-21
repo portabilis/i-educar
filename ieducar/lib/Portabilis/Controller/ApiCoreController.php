@@ -130,6 +130,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return true;
   }
 
+  /**
+   * @param string $resourceName
+   */
   protected function validatesId($resourceName, $options = array()) {
     $attrName = $resourceName . ($resourceName ? '_id' : 'id');
 
@@ -239,6 +242,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  /**
+   * @param string $oper
+   * @param string $resource
+   */
   protected function isRequestFor($oper, $resource) {
     return $this->getRequest()->resource == $resource &&
            $this->getRequest()->oper == $oper;
@@ -356,6 +363,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
                                                     $addMsgOnError        = $options['add_msg_on_error']);
   }
 
+  /**
+   * @param string $resourceName
+   */
   protected function validatesUniquenessOf($resourceName, $value, $options = array()) {
     $defaultOptions = array('schema_name'      => 'pmieducar',
                             'field_name'       => "cod_{$resourceName}",
@@ -372,6 +382,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
   }
 
 
+  /**
+   * @param string $expectedNumericParamNames
+   */
   protected function validatesIsNumeric($expectedNumericParamNames) {
     if (! is_array($expectedNumericParamNames))
       $expectedNumericParamNames = array($expectedNumericParamNames);
@@ -402,6 +415,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
   }
 
+  /**
+   * @param string $packageName
+   * @param string $modelName
+   */
   protected function getDataMapperFor($packageName, $modelName){
     return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
   }
@@ -458,6 +475,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
+  /**
+   * @return string
+   */
   protected function toUtf8($str, $options = array()) {
     return Portabilis_String_Utils::toUtf8($str, $options);
   }

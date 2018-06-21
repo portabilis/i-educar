@@ -45,6 +45,9 @@ class calendario
     var $url_uniao;
     var $url_var;
 
+    /**
+     * @param integer $time
+     */
     function __construct( $time, $url_default = '#', $url_var = "time" )
     {
         if( $time )

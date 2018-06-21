@@ -178,6 +178,10 @@ function __construct($orientation='P',$unit='mm',$format='A4')
     $this->PDFVersion='1.3';
 }
 
+/**
+ * @param double $left
+ * @param double $top
+ */
 function SetMargins($left,$top,$right=-1)
 {
     //Set left, top and right margins
@@ -208,6 +212,9 @@ function SetRightMargin($margin)
     $this->rMargin=$margin;
 }
 
+/**
+ * @param boolean $auto
+ */
 function SetAutoPageBreak($auto,$margin=0)
 {
     //Set auto page break mode and triggering margin
@@ -216,6 +223,9 @@ function SetAutoPageBreak($auto,$margin=0)
     $this->PageBreakTrigger=$this->h-$margin;
 }
 
+/**
+ * @param string $zoom
+ */
 function SetDisplayMode($zoom,$layout='continuous')
 {
     //Set display mode in viewer
@@ -229,6 +239,9 @@ function SetDisplayMode($zoom,$layout='continuous')
         $this->Error('Incorrect layout display mode: '.$layout);
 }
 
+/**
+ * @param boolean $compress
+ */
 function SetCompression($compress)
 {
     //Set page compression
@@ -505,6 +518,9 @@ function AddFont($family,$style='',$file='')
     }
 }
 
+/**
+ * @param string $family
+ */
 function SetFont($family,$style='',$size=0)
 {
     //Select a font; size given in points
@@ -594,6 +610,10 @@ function SetLink($link,$y=0,$page=-1)
     $this->links[$link]=array($page,$y);
 }
 
+/**
+ * @param double $y
+ * @param string $link
+ */
 function Link($x,$y,$w,$h,$link)
 {
     //Put a link on the page
@@ -1435,6 +1455,9 @@ function _enddoc()
     $this->state=3;
 }
 
+/**
+ * @param string $orientation
+ */
 function _beginpage($orientation)
 {
     $this->page++;

@@ -297,7 +297,7 @@ class clsPmieducarAcervoEditora
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra() {
         if(is_numeric($this->ref_usuario_cad ) && is_string( $this->nm_editora ) && is_numeric($this->ref_cod_biblioteca)) {
@@ -506,6 +506,7 @@ class clsPmieducarAcervoEditora
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_acervo_editora = null, $int_ref_usuario_cad = null, $int_ref_usuario_exc = null, $str_ref_idtlog = null, $str_ref_sigla_uf = null, $str_nm_editora = null, $int_cep = null, $str_cidade = null, $str_bairro = null, $str_logradouro = null, $int_numero = null, $int_telefone = null, $int_ddd_telefone = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null )
@@ -720,6 +721,7 @@ class clsPmieducarAcervoEditora
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
      *
+     * @param string $str_campos
      * @return null
      */
     function setCamposLista( $str_campos )
@@ -740,6 +742,7 @@ class clsPmieducarAcervoEditora
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -770,6 +773,7 @@ class clsPmieducarAcervoEditora
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

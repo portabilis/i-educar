@@ -346,7 +346,7 @@ class clsPmieducarExemplar
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -546,6 +546,8 @@ class clsPmieducarExemplar
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_permite_emprestimo
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null,$int_ref_cod_biblioteca = null, $str_titulo = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_tombo = null ) {
@@ -773,6 +775,7 @@ class clsPmieducarExemplar
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $date_data_exclusao_ini
      * @return array
      */
     function lista_com_acervos( $int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null,$int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_editora = null, $tombo) {
@@ -1045,6 +1048,7 @@ class clsPmieducarExemplar
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -1075,6 +1079,7 @@ class clsPmieducarExemplar
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

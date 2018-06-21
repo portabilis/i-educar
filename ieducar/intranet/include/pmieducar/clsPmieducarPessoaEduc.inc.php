@@ -310,7 +310,7 @@ class clsPmieducarPessoaEduc
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {echo "is_numeric( $this->cod_pessoa_educ ) && is_numeric( $this->ref_idpais_origem ) && is_numeric( $this->ref_idmun_natural ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->nome ) && is_string( $this->data_nascimento ) && is_string( $this->sexo ) && is_numeric( $this->nacionalidade )";

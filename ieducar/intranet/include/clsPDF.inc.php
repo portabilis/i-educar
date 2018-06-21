@@ -69,6 +69,11 @@ class clsPDF
 
   var $owner = "PMI - Prefeitura Municipal de Itajaí";
 
+  /**
+   * @param string $titulo
+   * @param string $tamanhoFolha
+   * @param string $palavrasChaves
+   */
   function __construct($nome, $titulo, $tamanhoFolha, $palavrasChaves,
     $depurar = FALSE, $reder = TRUE)
   {
@@ -297,6 +302,9 @@ class clsPDF
     return TRUE;
   }
 
+  /**
+   * @param double $largura
+   */
   function SetLine($largura)
   {
     PDF_setlinewidth($this->pdf, $largura);
@@ -306,6 +314,10 @@ class clsPDF
     }
   }
 
+  /**
+   * @param string $fonte
+   * @param string $tamanho
+   */
   function SetFont($fonte, $tamanho)
   {
     $f_user = '';
@@ -348,6 +360,13 @@ class clsPDF
     }
   }
 
+  /**
+   * @param string $tipo
+   * @param string $image
+   * @param integer $x
+   * @param integer $y
+   * @param double $tamanho
+   */
   public function InsertJpng($tipo, $image, $x, $y, $tamanho)
   {
     $y = $this->altura - $y;
@@ -366,9 +385,9 @@ class clsPDF
    *
    * @param   string     $tipo      Tipo de imagem a ser incorporada
    * @param   string     $image     Caminho para o arquivo da imagem
-   * @param   int|float  $x         Posição x (eixo horizontal)
-   * @param   int|float  $y         Posição y (eixo vertical)
-   * @param   int|float  $maxWidth  Largura máxima da imagem (usado para o cálculo de redução proporcional)
+   * @param   integer  $x         Posição x (eixo horizontal)
+   * @param   integer  $y         Posição y (eixo vertical)
+   * @param   integer  $maxWidth  Largura máxima da imagem (usado para o cálculo de redução proporcional)
    */
   public function insertImageScaled($tipo, $image, $x, $y, $maxWidth)
   {
@@ -416,6 +435,9 @@ class clsPDF
     return FALSE;
   }
 
+  /**
+   * @param string $tipo
+   */
   function Shape($tipo, $x, $y, $largura=0, $altura=0, $linha=0.001, $color="#000000", $color2="#FFFFFF")
   {
     $this->SetLine($linha);
@@ -600,7 +622,6 @@ class clsPDF
    * @param int $tamanho
    * @param string $color
    * @param string $align
-   * @param string $local
    */
   function escreve_relativo($texto, $x_topleft, $y_topleft, $largura, $altura,
     $fonte = 'arial', $tamanho = '10', $color = '#000000', $align = 'left')
@@ -630,7 +651,6 @@ class clsPDF
    * @param int $tamanho
    * @param string $color
    * @param string $align
-   * @param string $local
    */
   function escreve_absoluto( $texto, $x_topleft, $y_topleft, $x_bottomright,
     $y_bottomright, $fonte = 'arial', $tamanho = '10', $color = '#000000', $align = 'left')
@@ -659,6 +679,9 @@ class clsPDF
     $this->ClosePage();
   }
 
+  /**
+   * @param integer $l
+   */
   function printData($al, $dia_semana_v, $data_atual_v, $l)
   {
     $this->Shape('ret', 30, $al, $this->largura-60, 15, 2, '#000000', '#AAAAAA');

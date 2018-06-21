@@ -502,6 +502,7 @@ class clsPmieducarTurmaModulo
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )
@@ -532,7 +533,7 @@ class clsPmieducarTurmaModulo
     /**
      * Retorna um caracter indicando se o modulo encerrou
      *
-     * @return array
+     * @return string|false
      */
     function numModulo( $int_ref_sequencial, $int_disc_ref_ref_cod_serie, $int_disc_ref_ref_cod_escola, $arr_disc_ref_ref_cod_disciplina, $int_disc_ref_cod_turma, $int_ref_ref_cod_turma )
     {

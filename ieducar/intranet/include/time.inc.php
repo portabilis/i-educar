@@ -59,6 +59,9 @@ function segundosToDataExtenso( $seg )
 }
 
 
+/**
+ * @param integer $data_inicial
+ */
 function difTempo( $data_inicial, $data_final)
 {
     $seg = $data_final - $data_inicial;
@@ -93,6 +96,10 @@ function timeMakeArray( $listaAtividades )
 }
 
 
+/**
+ * @param integer $data_inicial
+ * @param integer $data_final
+ */
 function horasUteisInterval( $data_inicial, $data_final )
 {
     $hora_inicial = date("H:i:s", $data_inicial);

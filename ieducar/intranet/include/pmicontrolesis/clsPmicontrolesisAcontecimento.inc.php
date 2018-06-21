@@ -113,6 +113,7 @@ class clsPmicontrolesisAcontecimento
     /**
      * Construtor (PHP 4)
      *
+     * @param integer $ativo
      * @return object
      */
     function __construct( $cod_acontecimento = null, $ref_cod_tipo_acontecimento = null, $ref_cod_funcionario_cad = null, $ref_cod_funcionario_exc = null, $titulo = null, $descricao = null, $dt_inicio = null, $dt_fim = null, $hr_inicio = null, $hr_fim = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $local = null, $contato = null, $link = null )
@@ -269,7 +270,7 @@ class clsPmicontrolesisAcontecimento
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -468,6 +469,7 @@ class clsPmicontrolesisAcontecimento
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_acontecimento = null, $int_ref_cod_tipo_acontecimento = null, $int_ref_cod_funcionario_cad = null, $int_ref_cod_funcionario_exc = null, $str_titulo = null, $str_descricao = null, $date_dt_inicio_ini = null, $date_dt_inicio_fim = null, $date_dt_fim_ini = null, $date_dt_fim_fim = null, $time_hr_inicio_ini = null, $time_hr_inicio_fim = null, $time_hr_fim_ini = null, $time_hr_fim_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_local = null, $str_contato = null, $str_link = null )
@@ -711,6 +713,7 @@ class clsPmicontrolesisAcontecimento
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -741,6 +744,7 @@ class clsPmicontrolesisAcontecimento
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

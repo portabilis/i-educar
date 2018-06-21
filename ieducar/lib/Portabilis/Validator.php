@@ -44,6 +44,9 @@ require_once 'lib/Portabilis/Utils/Database.php';
  */
 class Portabilis_Validator {
 
+  /**
+   * @param Portabilis_Messenger $messenger
+   */
   public function __construct(&$messenger) {
     $this->messenger = $messenger;
   }

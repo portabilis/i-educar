@@ -294,6 +294,7 @@ class clsCadastroEscolaridade
 
   /**
    * Define limites de retorno para o método lista.
+   * @param integer $intLimiteQtd
    * @return null
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
@@ -323,6 +324,7 @@ class clsCadastroEscolaridade
 
   /**
    * Define campo para ser utilizado como ordenação no método lista.
+   * @param string $strNomeCampo
    * @return null
    */
   function setOrderby($strNomeCampo)

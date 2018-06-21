@@ -380,7 +380,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
    *
    * @param  int $serieId O código do ano escolar/série.
-   * @param  int $escola  O código da escola.
+   * @param  int $escolaId  O código da escola.
    * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper (Opcional)
    *   Instância do mapper para recuperar todas as instâncias persistidas de
    *   ComponenteCurricular_Model_Componente atribuídas no ano escolar/série da
@@ -1087,7 +1087,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    *
    * @param int $turma
    * @param int $componente
-   * @return array
+   * @return string
    * @throws App_Model_Exception
    */
   public static function getEtapasComponente($turma, $componente) {

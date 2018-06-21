@@ -240,7 +240,7 @@ class clsPmieducarCalendarioAnoLetivo
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -367,6 +367,7 @@ class clsPmieducarCalendarioAnoLetivo
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $date_data_exclusao_ini
      * @return array
      */
     function lista( $int_cod_calendario_ano_letivo = null, $int_ref_cod_escola = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ano = null, $date_data_cadastra_ini = null, $date_data_cadastra_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, /*$date_inicio_ano_letivo_ini = null, $date_inicio_ano_letivo_fim = null, $date_termino_ano_letivo_ini = null, $date_termino_ano_letivo_fim = null ,*/$max_ano = null, $int_ref_cod_instituicao = null )
@@ -613,6 +614,7 @@ class clsPmieducarCalendarioAnoLetivo
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

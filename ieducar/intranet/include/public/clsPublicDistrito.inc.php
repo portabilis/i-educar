@@ -274,7 +274,7 @@ class clsPublicDistrito
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -613,7 +613,7 @@ class clsPublicDistrito
 
   /**
    * Retorna um array com os dados de um registro.
-   * @return array
+   * @return boolean
    */
   function existe()
   {
@@ -675,6 +675,7 @@ class clsPublicDistrito
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -702,6 +703,7 @@ class clsPublicDistrito
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

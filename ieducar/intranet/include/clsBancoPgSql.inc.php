@@ -178,6 +178,7 @@ abstract class clsBancoSQL_
   /**
    * Construtor.
    * @link http://svn.softwarepublico.gov.br/trac/ieducar/ticket/58 Remover parâmetro não utilizado do construtor de clsBanco (ticket 58)
+   * @param boolean $options
    */
   public function __construct($options)
   {
@@ -371,7 +372,7 @@ abstract class clsBancoSQL_
    * @param  string  $consulta    Consulta SQL.
    * @param  bool    $reescrever  (Opcional) SQL é reescrita para transformar
    *   sintaxe MySQL em PostgreSQL.
-   * @return bool|resource FALSE em caso de erro ou o identificador da consulta
+   * @return resource FALSE em caso de erro ou o identificador da consulta
    *   em caso de sucesso.
    */
   public function Consulta($consulta, $reescrever = true)
@@ -633,7 +634,7 @@ abstract class clsBancoSQL_
    * tentar acessar o primeiro registro com uma chamada a Tupla(), para mover
    * o ponteiro interno do array de resultados.
    *
-   * @return bool|mixed
+   * @return boolean
    */
   function ProximoRegistro()
   {
@@ -792,8 +793,8 @@ abstract class clsBancoSQL_
 
   /**
    * Mostra a mensagem de erro e interrompe a execução do script.
-   * @param  string $msg
    * @param  bool   $getError
+   * @param string $appErrorMsg
    */
   function Interrompe($appErrorMsg, $getError = FALSE)
   {
@@ -816,7 +817,6 @@ abstract class clsBancoSQL_
    * Executa uma consulta SQL preparada ver: http://php.net/manual/en/function.pg-prepare.php
    * ex: $db->execPreparedQuery("select * from portal.funcionario where matricula = $1 and senha = $2", array('admin', '123'))
    *
-   * @param  string $name    nome da consulta
    * @param  string $query   sql para ser preparado
    * @param  array  $params  parametros para consulta
    *

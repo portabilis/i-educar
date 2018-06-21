@@ -125,6 +125,10 @@ class Portabilis_Utils_User {
     Destroi determinado tipo de status_token de um usuário, como ocorre por exemplo após fazer login,
     onde solicitações de redefinição de senha em aberto são destruidas.
   */
+
+  /**
+   * @param string $withType
+   */
   static function destroyStatusTokenFor($userId, $withType) {
     $sql     = "UPDATE portal.funcionario set status_token = '' WHERE ref_cod_pessoa_fj = $1 and status_token like $2";
     $options = array('params' => array($userId, "$withType-%"), 'show_errors' => false);

@@ -127,6 +127,11 @@ class clsPessoaFj
     return FALSE;
   }
 
+  /**
+   * @param integer $limite
+   * @param string $str_order_by
+   * @param integer $int_ref_cod_sistema
+   */
   function lista_rapida($idpes = NULL, $nome = NULL, $id_federal = NULL,
     $inicio_limite = NULL, $limite = NULL, $str_tipo_pessoa = NULL,
     $str_order_by = NULL, $int_ref_cod_sistema = NULL)

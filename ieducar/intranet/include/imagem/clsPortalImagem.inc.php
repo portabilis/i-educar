@@ -187,7 +187,7 @@ class clsPortalImagem
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -322,6 +322,13 @@ class clsPortalImagem
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param boolean $int_cod_imagem
+   * @param boolean $int_ref_cod_imagem_tipo
+   * @param boolean $int_altura
+   * @param boolean $int_largura
+   * @param boolean $int_ref_cod_pessoa_cad
+   * @param boolean $int_ref_cod_pessoa_exc
+   * @param boolean $str_caminho
    * @return array
    */
   function lista( $int_cod_imagem = NULL, $int_ref_cod_imagem_tipo = NULL,
@@ -485,6 +492,7 @@ class clsPortalImagem
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -512,6 +520,7 @@ class clsPortalImagem
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

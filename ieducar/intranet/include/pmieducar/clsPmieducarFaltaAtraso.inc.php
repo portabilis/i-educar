@@ -253,7 +253,7 @@ class clsPmieducarFaltaAtraso
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -695,6 +695,7 @@ class clsPmieducarFaltaAtraso
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -722,6 +723,7 @@ class clsPmieducarFaltaAtraso
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

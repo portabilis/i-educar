@@ -68,7 +68,7 @@ class clsFuncionarioSu
     /**
      * Remove o registro atual
      *
-     * @return bool
+     * @return boolean|null
      */
     function exclui()
     {

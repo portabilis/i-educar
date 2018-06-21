@@ -37,6 +37,9 @@ class LocalizacaoSistema {
         return $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
     }
 
+    /**
+     * @param string $url
+     */
     public function url( $url ) {
         $fragments  = array();
         $localizacao     = array();

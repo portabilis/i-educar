@@ -356,6 +356,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {

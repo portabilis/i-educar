@@ -203,7 +203,7 @@ class clsPmieducarAlunoBeneficio
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -306,6 +306,8 @@ class clsPmieducarAlunoBeneficio
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $date_data_exclusao_ini
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_aluno_beneficio = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, 
@@ -501,6 +503,7 @@ class clsPmieducarAlunoBeneficio
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -531,6 +534,7 @@ class clsPmieducarAlunoBeneficio
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

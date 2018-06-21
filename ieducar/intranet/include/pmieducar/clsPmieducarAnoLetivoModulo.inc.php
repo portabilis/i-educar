@@ -523,6 +523,7 @@ class clsPmieducarAnoLetivoModulo
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )
@@ -553,7 +554,7 @@ class clsPmieducarAnoLetivoModulo
     /**
      * Retorna a menor data dos modulos de uma escola e ano
      *
-     * @return array
+     * @return string
      */
     function menorData( $ref_ano, $ref_ref_cod_escola )
     {
@@ -575,7 +576,7 @@ class clsPmieducarAnoLetivoModulo
     /**
      * Retorna a maior data dos modulos de uma escola e ano
      *
-     * @return array
+     * @return string
      */
     function maiorData( $ref_ano, $ref_ref_cod_escola )
     {

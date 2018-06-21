@@ -60,7 +60,7 @@ class AnoController extends Core_Controller_Page_EditController
   /**
    * Setter.
    * @param array $entries
-   * @return Core_Controller_Page Provê interface fluída
+   * @return AnoController Provê interface fluída
    */
   public function setEntries(array $entries = array())
   {
