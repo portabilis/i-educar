@@ -84,6 +84,9 @@ $port="5432";
         }
     }
 
+    /**
+     * @param SimpleXMLElement $xml_path
+     */
     public function page_setting($xml_path)		//read level 0,Jasperreport page setting
     {
         $this->arrayPageSetting[orientation]="P";

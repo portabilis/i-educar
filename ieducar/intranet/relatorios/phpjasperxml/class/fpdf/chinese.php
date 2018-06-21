@@ -27,6 +27,9 @@ class PDF_Chinese extends FPDF
 {
 /**
  * @param string $style
+ * @param string $family
+ * @param string $name
+ * @param string $CMap
  */
 function AddCIDFont($family,$style,$name,$cw,$CMap,$registry)
 {
