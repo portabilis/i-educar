@@ -356,7 +356,7 @@ class clsPmieducarFaltas
     /**
      * Retorna o numero de faltas que o aluno possui
      *
-     * @return int
+     * @return unknown_type|null
      */
     function somaFaltas($int_ref_cod_matricula) 
     {
@@ -478,6 +478,7 @@ class clsPmieducarFaltas
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

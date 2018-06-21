@@ -57,6 +57,9 @@ class clsModulesAuditoriaGeral
 
   var $_campo_order_by;
 
+  /**
+   * @param string $rotina
+   */
   function __construct($rotina, $usuario_id, $codigo = 'null'){
     $this->_campos_lista = 'codigo,
                             usuario_id,
@@ -141,6 +144,9 @@ class clsModulesAuditoriaGeral
     return $array1;
   }
 
+  /**
+   * @param integer $operacao
+   */
   function insereAuditoria($operacao, $valorAntigo, $valorNovo) {
     if ($operacao == self::OPERACAO_ALTERACAO) {
       $keysEmComum = array_intersect_key($valorAntigo, $valorNovo);
@@ -263,6 +269,9 @@ class clsModulesAuditoriaGeral
     return false;
   }
 
+  /**
+   * @param integer $intLimiteQtd
+   */
   function setLimite( $intLimiteQtd, $intLimiteOffset = null )
   {
     $this->_limite_quantidade = $intLimiteQtd;
@@ -283,6 +292,9 @@ class clsModulesAuditoriaGeral
     return "";
   }
 
+  /**
+   * @param string $strNomeCampo
+   */
   function setOrderby($strNomeCampo)
   {
     if (is_string($strNomeCampo) && $strNomeCampo ) {

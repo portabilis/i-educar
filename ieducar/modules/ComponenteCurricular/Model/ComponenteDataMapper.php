@@ -78,7 +78,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
   /**
    * Setter.
    * @param ComponenteCurricular_Model_AnoEscolarDataMapper $mapper
-   * @return ComponenteCurricular_Model_ComponenteCurricular Provê interface fluída
+   * @return ComponenteCurricular_Model_ComponenteDataMapper Provê interface fluída
    */
   public function setAnoEscolarDataMapper(ComponenteCurricular_Model_AnoEscolarDataMapper $mapper)
   {
@@ -110,6 +110,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
 
   /**
    * @param int $componenteCurricular
+   * @param integer $anoEscolar
    * @return ComponenteCurricular_Model_Componente
    */
   public function findComponenteCurricularAnoEscolar($componenteCurricular, $anoEscolar)

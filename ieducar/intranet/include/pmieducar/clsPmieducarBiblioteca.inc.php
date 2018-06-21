@@ -259,7 +259,7 @@ class clsPmieducarBiblioteca
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -460,6 +460,8 @@ class clsPmieducarBiblioteca
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
+     * @param string $in_biblioteca
      * @return array
      */
     function lista( $int_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_nm_biblioteca = null, $int_valor_multa = null, $int_max_emprestimo = null, $int_valor_maximo_multa = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_requisita_senha = null, $int_ativo = null, $int_dias_espera = null, $in_biblioteca = null )
@@ -675,6 +677,7 @@ class clsPmieducarBiblioteca
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -705,6 +708,7 @@ class clsPmieducarBiblioteca
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

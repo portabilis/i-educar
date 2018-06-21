@@ -252,7 +252,7 @@ class clsPmieducarDisciplina
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -410,6 +410,7 @@ class clsPmieducarDisciplina
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_disciplina = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_desc_disciplina = null, $str_desc_resumida = null, $str_abreviatura = null, $int_carga_horaria = null, $int_apura_falta = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_nm_disciplina = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $arr_int_cod_disciplina = null )
@@ -668,6 +669,7 @@ class clsPmieducarDisciplina
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

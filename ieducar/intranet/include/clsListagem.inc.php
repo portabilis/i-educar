@@ -125,6 +125,10 @@ class clsListagem extends clsCampos
 
     $this->bannerClose = $boolFechaBanner;
   }
+
+  /**
+   * @param string $localizao
+   */
   function enviaLocalizacao($localizao, $appendInTop = FALSE){
     if($localizao)
       $this->locale = $localizao;
@@ -788,7 +792,6 @@ class clsListagem extends clsCampos
   /**
    * Exibe mensagem de DIE formatada;
    * @param String $msg
-   * @param String $url Redirecionar após 1 segundo
    */
   function erro($msg, $redir = 'index.php')
   {

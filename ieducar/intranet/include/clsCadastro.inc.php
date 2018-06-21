@@ -130,6 +130,9 @@ class clsCadastro extends clsCampos
     $this->tipoacao = @$_POST['tipoacao'];
   }
 
+  /**
+   * @param string $localizao
+   */
   function enviaLocalizacao($localizao){
     if($localizao)
       $this->locale = $localizao;

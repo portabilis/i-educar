@@ -107,6 +107,7 @@ class clsPmieducarDispensaDisciplina
 
   /**
    * Construtor.
+   * @param integer $cod_dispensa
    */
   function __construct($ref_cod_matricula = NULL,
     $ref_cod_serie = NULL, $ref_cod_escola = NULL, $ref_cod_disciplina = NULL,
@@ -324,6 +325,7 @@ class clsPmieducarDispensaDisciplina
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_ativo
    * @return array
    */
   function lista($int_ref_cod_matricula = NULL, $int_ref_cod_serie = NULL,
@@ -576,6 +578,7 @@ class clsPmieducarDispensaDisciplina
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -603,6 +606,7 @@ class clsPmieducarDispensaDisciplina
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

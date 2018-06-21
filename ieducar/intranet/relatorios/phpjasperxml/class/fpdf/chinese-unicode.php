@@ -123,6 +123,9 @@ class PDF_Unicode extends PDF_Chinese
 
   // implementation in Unicode version 
 
+  /**
+   * @param string $s
+   */
   function GetUniStringWidth ($s)
   {
     //Unicode version of GetStringWidth()
@@ -143,6 +146,9 @@ class PDF_Unicode extends PDF_Chinese
     return $l*$this->FontSize/1000;
   }
 
+  /**
+   * @param string $txt
+   */
   function UniText ($x, $y, $txt)
   {
     // copied from parent::Text but just modify the line below
@@ -234,6 +240,9 @@ class PDF_Unicode extends PDF_Chinese
       $this->x+=$w;
   }
 
+  /**
+   * @param string $txt
+   */
   function UniMultiCell($w,$h,$txt,$border=0,$align='L',$fill=0)
   {
     //Unicode version of MultiCell()
@@ -328,6 +337,9 @@ class PDF_Unicode extends PDF_Chinese
     $this->x=$this->lMargin;
   }
 
+  /**
+   * @param string $txt
+   */
   function UniWrite($h,$txt,$link='')
   {
     //Unicode version of Write()

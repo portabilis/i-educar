@@ -69,6 +69,10 @@
         imageline ( $im, 0, $i, $width, $i, $back_line );
     }
     
+    /**
+     * @param double[] $coords
+     * @param integer $tipo
+     */
     function drawdot( $coords, $tipo, $valor ) {
         global $im, $mapHTML, $inner_text, $linecolor;
         imageline ( $im, $coords[0], $coords[1], $coords[2], $coords[3], $linecolor[$tipo] );

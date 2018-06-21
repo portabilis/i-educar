@@ -6,6 +6,9 @@ class PHPJasperXML {
         $this->lang=$lang;
     }
 
+    /**
+     * @param SimpleXMLElement $xml
+     */
     public function xml_dismantle($xml) {
         $this->page_setting($xml);
         foreach ($xml as $k=>$out) {
@@ -47,6 +50,9 @@ class PHPJasperXML {
         }
     }
 
+    /**
+     * @param SimpleXMLElement $xml_path
+     */
     public function page_setting($xml_path)		//read level 0,Jasperreport page setting
     {
         $this->arrayPageSetting[orientation]="P";
@@ -595,6 +601,9 @@ class PHPJasperXML {
     }
 
 
+    /**
+     * @param string $txt
+     */
     public function NbLines($w,$txt) {
         //Computes the number of lines a MultiCell of width w will take
         $cw=&$this->pdf->CurrentFont['cw'];
@@ -834,6 +843,9 @@ class PHPJasperXML {
         $this->display($path,$extra);
     }
 
+    /**
+     * @return string
+     */
     public function updatePageNo($s) {
         return str_replace('$this->PageNo()', $this->pdf->PageNo(),$s);
     }

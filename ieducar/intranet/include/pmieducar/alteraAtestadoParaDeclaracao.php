@@ -13,7 +13,7 @@ class alteraAtestadoParaDeclaracao
     }
 
     /**
-     * @return bool
+     * @return boolean|null
      * @throws Exception
      * Altera de  atestado para declaração e
      * declaração para atestado submenus

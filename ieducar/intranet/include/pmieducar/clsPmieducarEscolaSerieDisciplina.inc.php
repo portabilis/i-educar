@@ -104,6 +104,7 @@ class clsPmieducarEscolaSerieDisciplina
 
     /**
      * Construtor.
+     * @param integer $ativo
      */
     function __construct(
         $ref_ref_cod_serie = NULL,
@@ -287,6 +288,7 @@ class clsPmieducarEscolaSerieDisciplina
 
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+     * @param integer $int_ativo
      * @return array
      * @todo Refatorar o primeiro if, tabela referenciada não armazena mais os
      *   componentes curriculares
@@ -477,6 +479,7 @@ class clsPmieducarEscolaSerieDisciplina
 
     /**
      * Define o campo para ser utilizado como ordenação no método Lista().
+     * @param string $strNomeCampo
      */
     function setOrderby($strNomeCampo)
     {

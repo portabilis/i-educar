@@ -253,7 +253,7 @@ abstract class CoreExt_Session_Abstract
    * Implementa o método mágico __set().
    * @link  http://php.net/manual/en/language.oop5.overloading.php
    * @param string|int $key
-   * @param mixed $val
+   * @param mixed $value
    */
   public function __set($key, $value)
   {

@@ -323,6 +323,9 @@ class OrdenacaoAlunosApiController extends ApiCoreController
   }
 
 
+  /**
+   * @param string $flag
+   */
   protected function getSituacaoForFlag($flag) {
     $situacoes = array(
       'indisponivel'           => array('flag'  => 'indisponivel', 'label' => 'Indisponível'),

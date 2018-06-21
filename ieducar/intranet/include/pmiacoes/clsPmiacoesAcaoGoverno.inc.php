@@ -259,7 +259,7 @@ class clsPmiacoesAcaoGoverno
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -455,6 +455,7 @@ class clsPmiacoesAcaoGoverno
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_acao_governo = null, $int_ref_funcionario_exc = null, $int_ref_funcionario_cad = null, $int_valor = null, $int_destaque = null, $int_status_acao = null, $int_ativo = null, $str_nm_acao = null, $str_descricao = null, $str_data_inauguracao_inicio = null, $str_data_inauguracao_fim = null, $int_categoria = null, $int_idbai = null )
@@ -638,6 +639,7 @@ class clsPmiacoesAcaoGoverno
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -668,6 +670,7 @@ class clsPmiacoesAcaoGoverno
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )
@@ -698,7 +701,7 @@ class clsPmiacoesAcaoGoverno
     /**
      * Retorna o numero do registro
      *
-     * @return string
+     * @return boolean
      */
     function calculaNumeroAcoes($numero_acao)
     {

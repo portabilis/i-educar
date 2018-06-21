@@ -198,7 +198,7 @@ class clsPmicontrolesisSistema
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -296,6 +296,7 @@ class clsPmicontrolesisSistema
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $date_data_exclusao_ini
      * @return array
      */
     function lista( $int_cod_sistema = null, $str_nm_sistema = null, $int_ref_cod_funcionario_cad = null, $int_ref_cod_funcionario_exc = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null )
@@ -474,6 +475,7 @@ class clsPmicontrolesisSistema
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -504,6 +506,7 @@ class clsPmicontrolesisSistema
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

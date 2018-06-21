@@ -198,7 +198,7 @@ class clsPmieducarReligiao
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -290,6 +290,8 @@ class clsPmieducarReligiao
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $date_data_exclusao_ini
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_religiao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_religiao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null )
@@ -468,6 +470,7 @@ class clsPmieducarReligiao
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -498,6 +501,7 @@ class clsPmieducarReligiao
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

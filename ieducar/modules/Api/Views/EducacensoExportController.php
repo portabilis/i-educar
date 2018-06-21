@@ -2200,6 +2200,9 @@ protected function cnpjToCenso($cnpj){
     return $string;
   }
 
+  /**
+   * @param null|string $string
+   */
   protected function convertStringToCertNovoFormato($string){
     $string = $this->upperAndUnaccent($string);
 

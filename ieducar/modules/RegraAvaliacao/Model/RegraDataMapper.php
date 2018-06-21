@@ -180,7 +180,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
 
   /**
    * Getter.
-   * @return RegraAvaliacao_Model_RegraRecuperacaoDataMappers
+   * @return null|RegraAvaliacao_Model_RegraRecuperacaoDataMapper
    */
   public function getRegraRecuperacaoDataMapper()
   {

@@ -232,7 +232,7 @@ abstract class Core_Controller_Page_Abstract
   /**
    * Setter.
    * @param CoreExt_Entity $entity
-   * @return CoreExt_Controller_Page_Abstract Provê interface fluída
+   * @return Core_Controller_Page_Abstract Provê interface fluída
    */
   public function setEntity(CoreExt_Entity $entity)
   {

@@ -155,6 +155,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
 
   /**
    * @see CoreExt_Validate_Interface#isValid($value)
+   * @param string $value
    */
   public function isValid($value)
   {
@@ -234,7 +235,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
    * // plural (@value = 4): 4 problemas encontrados
    * </code>
    *
-   * @param  array|string  $key      O identificador da mensagem no array $_options
+   * @param  string  $key      O identificador da mensagem no array $_options
    * @param  array         $options  Array associativo para substituição de valores
    * @return string
    * @todo   Implementar substituição com formatação padrão, semelhante ao

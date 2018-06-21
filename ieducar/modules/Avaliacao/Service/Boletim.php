@@ -412,7 +412,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param ComponenteCurricular_Model_ComponenteDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setComponenteDataMapper(ComponenteCurricular_Model_ComponenteDataMapper $mapper)
   {
@@ -436,7 +436,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param ComponenteCurricular_Model_TurmaDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setComponenteTurmaDataMapper(ComponenteCurricular_Model_TurmaDataMapper $mapper)
   {
@@ -460,7 +460,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param $id
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setComponenteCurricularId($componenteCurricularId)
   {
@@ -480,7 +480,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param RegraAvaliacao_Model_RegraDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setRegraDataMapper(RegraAvaliacao_Model_RegraDataMapper $mapper)
   {
@@ -504,7 +504,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param Avaliacao_Model_NotaAlunoDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setNotaAlunoDataMapper(Avaliacao_Model_NotaAlunoDataMapper $mapper)
   {
@@ -528,7 +528,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param Avaliacao_Model_NotaComponenteDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setNotaComponenteDataMapper(Avaliacao_Model_NotaComponenteDataMapper $mapper)
   {
@@ -564,8 +564,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Setter.
-   * @param setNotaGeralDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @param Avaliacao_Model_NotaGeralDataMapper $mapper
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setNotaGeralDataMapper(Avaliacao_Model_NotaGeralDataMapper $mapper)
   {
@@ -588,8 +588,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Setter.
-   * @param setMediaGeralDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @param Avaliacao_Model_MediaGeralDataMapper $mapper
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setMediaGeralDataMapper(Avaliacao_Model_MediaGeralDataMapper $mapper)
   {
@@ -599,8 +599,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Setter.
-   * @param Avaliacao_Model_NotaMediaComponenteDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @param Avaliacao_Model_NotaComponenteMediaDataMapper $mapper
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setNotaComponenteMediaDataMapper(Avaliacao_Model_NotaComponenteMediaDataMapper $mapper)
   {
@@ -624,7 +624,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param Avaliacao_Model_FaltaAlunoDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setFaltaAlunoDataMapper(Avaliacao_Model_FaltaAlunoDataMapper $mapper)
   {
@@ -634,7 +634,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Getter.
-   * @return Avaliacao_Model_NotaAlunoDataMapper
+   * @return null|Avaliacao_Model_FaltaAlunoDataMapper
    */
   public function getFaltaAlunoDataMapper()
   {
@@ -648,7 +648,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param Avaliacao_Model_FaltaAbstractDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setFaltaAbstractDataMapper(Avaliacao_Model_FaltaAbstractDataMapper $mapper)
   {
@@ -682,7 +682,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setParecerDescritivoAlunoDataMapper(Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper)
   {
@@ -706,7 +706,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function setParecerDescritivoAbstractDataMapper(Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper)
   {
@@ -882,7 +882,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Retorna uma instância de Avaliacao_Model_NotaGeral.
    *
-   * @param int $id O identificador de ComponenteCurricular_Model_Componente
    * @param int $etapa A etapa para o qual a nota foi lançada
    * @return Avaliacao_Model_NotaComponente|NULL
    */
@@ -976,7 +975,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Setter.
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   protected function _setMatriculaInfo()
   {
@@ -1010,7 +1009,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * Carrega todas as notas e médias já lançadas para a matrícula atual.
    *
    * @param bool $loadMedias FALSE caso não seja necessário carregar as médias
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   protected function _loadNotas($loadMedias = TRUE)
   {
@@ -1054,7 +1053,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega as médias dos componentes curriculares já lançadas.
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   protected function _loadMedias()
   {
@@ -1087,7 +1086,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega as faltas do aluno, sejam gerais ou por componente.
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   protected function _loadFalta()
   {
@@ -1130,7 +1129,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega os pareceres do aluno, sejam gerais ou por componentes.
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   protected function _loadParecerDescritivo()
   {
@@ -1184,7 +1183,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Setter.
    * @param RegraAvaliacao_Model_Regra $regra
-   * @return App_Service_Boletim Provê interface fluída
+   * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   protected function _setRegra(RegraAvaliacao_Model_Regra $regra)
   {
@@ -2041,7 +2040,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Getter.
-   * @return Avaliacao_Model_FaltaAluno|NULL
+   * @return Avaliacao_Model_NotaAluno|null
    */
   protected function _getFaltaAluno()
   {
@@ -2206,7 +2205,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Adiciona um array de instâncias Avaliacao_Model_NotaComponente.
    *
-   * @param array $notas
+   * @param Avaliacao_Model_NotaComponente[] $notas
    * @return Avaliacao_Service_Boletim Provê interface fluída
    */
   public function addNotas(array $notas)
@@ -2423,7 +2422,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * CoreExt_Validate_Validatable, com os valores permitidos para os atributos
    * 'componenteCurricular' e 'etapa'.
    *
-   * @param CoreExt_Validate_Validatable $nota
    * @return CoreExt_Validate_Validatable
    * @todo Substituir variável estática por uma de instância {@see _updateParecerEtapa()}
    */
@@ -2531,7 +2529,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   /**
    * Atualiza a etapa de uma instância de Avaliacao_Model_Etapa.
    *
-   * @param Avaliacao_Model_Etapa $nota
    * @return Avaliacao_Model_Etapa
    */
   protected function _updateEtapa(Avaliacao_Model_Etapa $instance)
@@ -2683,7 +2680,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
-   * @param Avaliacao_Model_NotaComponente|int $nota
    * @return mixed
    * @throws CoreExt_Exception_InvalidArgumentException
    */
@@ -2986,8 +2982,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * necessário estabelecido por tipoProgressao de
    * RegraAvaliacao_Model_Regra.
    *
-   * @param bool $ok Caso a progressão não seja automática, é necessário uma
-   *   confirmação externa para a promoção do aluno.
    * @return bool
    */
 

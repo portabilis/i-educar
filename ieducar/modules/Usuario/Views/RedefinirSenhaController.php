@@ -192,6 +192,9 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
   }
 
 
+  /**
+   * @param null|CoreExt_Entity $user
+   */
   protected function canUpdate($user)
   {
     return UsuarioValidator::validatePassword($this->messenger(),
@@ -221,6 +224,9 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
   }
 
 
+  /**
+   * @param string $statusToken
+   */
   protected function loadUserByStatusToken($statusToken) {
     $result = false;
     try {

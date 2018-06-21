@@ -9,6 +9,9 @@ class SequencialEnturmacao {
   var $dataEnturmacao;
   var $sequencial;
 
+  /**
+   * @param string $dataEnturmacao
+   */
   public function __construct($refCodMatricula, $refCodTurma, $dataEnturmacao, $sequencial) {
     $this->refCodMatricula = $refCodMatricula;
     $this->refCodTurma = $refCodTurma;
@@ -179,6 +182,9 @@ class SequencialEnturmacao {
     $db->Consulta($sql);
   }
 
+  /**
+   * @param unknown_type|null $sequencial
+   */
   private function subtraiSequencialPosterior($sequencial) {
     $sql =
     "UPDATE pmieducar.matricula_turma

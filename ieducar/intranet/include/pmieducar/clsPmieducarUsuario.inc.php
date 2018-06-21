@@ -422,6 +422,7 @@ class clsPmieducarUsuario
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_usuario = null, $int_ref_cod_escola = null, $int_ref_cod_instituicao = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $int_ref_cod_tipo_usuario = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_nivel = null )
@@ -721,6 +722,7 @@ class clsPmieducarUsuario
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

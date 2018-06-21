@@ -254,7 +254,7 @@ class clsPmicontrolesisSoftwareAlteracao
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -403,6 +403,7 @@ class clsPmicontrolesisSoftwareAlteracao
      * @param string date_data_exclusao_fim
      * @param bool bool_ativo
      * @param string str_script_banco
+     * @param integer $date_data_exclusao_ini
      *
      * @return array
      */
@@ -606,6 +607,7 @@ class clsPmicontrolesisSoftwareAlteracao
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -636,6 +638,7 @@ class clsPmicontrolesisSoftwareAlteracao
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

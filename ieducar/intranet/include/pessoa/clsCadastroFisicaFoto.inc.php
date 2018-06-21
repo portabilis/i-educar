@@ -98,6 +98,7 @@ class clsCadastroFisicaFoto
     /**
      * Construtor (PHP 5)
      *
+     * @param string $caminho
      * @return object
      */
     function __construct( $idpes = null, $caminho = null )

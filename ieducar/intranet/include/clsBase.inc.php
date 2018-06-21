@@ -110,6 +110,9 @@ class clsBase extends clsConfig
         }
     }
 
+    /**
+     * @param string $template
+     */
     function OpenTpl($template)
     {
 
@@ -190,11 +193,17 @@ class clsBase extends clsConfig
         return $saida;
     }
 
+    /**
+     * @param string $estilo_nome
+     */
     function addEstilo($estilo_nome)
     {
         $this->estilos[$estilo_nome] = $estilo_nome;
     }
 
+    /**
+     * @param string $script_nome
+     */
     function addScript($script_nome)
     {
         $this->scripts[$script_nome] = $script_nome;
@@ -329,7 +338,7 @@ class clsBase extends clsConfig
      * Cria o menu suspenso dos subsistemas Escola e Biblioteca.
      *
      * @todo Refatorar lógica do primeiro par if/else, duplicação
-     * @return bool|string Retorna FALSE em caso de erro
+     * @return string|false Retorna FALSE em caso de erro
      */
     function makeMenuSuspenso()
     {

@@ -52,7 +52,7 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
 
   /**
    * Getter.
-   * @return TabelaArredondamento_Model_TabelaValorDataMappers
+   * @return null|TabelaArredondamento_Model_TabelaValorDataMapper
    */
   public function getTabelaValorDataMapper()
   {

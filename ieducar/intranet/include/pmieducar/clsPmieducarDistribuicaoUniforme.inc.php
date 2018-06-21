@@ -114,6 +114,7 @@ class clsPmieducarDistribuicaoUniforme
 
   /**
    * Construtor.
+   * @param string $ano
    */
   function __construct( $cod_distribuicao_uniforme = NULL, $ref_cod_aluno = NULL, $ano = NULL,
         $kit_completo = NULL, $agasalho_qtd = NULL, $camiseta_curta_qtd = NULL,
@@ -188,7 +189,7 @@ class clsPmieducarDistribuicaoUniforme
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -570,6 +571,7 @@ class clsPmieducarDistribuicaoUniforme
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -597,6 +599,7 @@ class clsPmieducarDistribuicaoUniforme
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

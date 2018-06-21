@@ -457,6 +457,7 @@ class clsPmieducarQuadroHorarioHorarios
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_ativo
    * @return array
    */
   function lista($int_ref_cod_quadro_horario         = NULL,
@@ -804,6 +805,9 @@ class clsPmieducarQuadroHorarioHorarios
     return FALSE;
   }
 
+  /**
+   * @param integer $int_dia_semana
+   */
   function retornaHorario($int_ref_cod_instituicao_servidor, $int_ref_ref_cod_escola,
     $int_ref_ref_cod_serie, $int_ref_ref_cod_turma, $int_dia_semana)
     {

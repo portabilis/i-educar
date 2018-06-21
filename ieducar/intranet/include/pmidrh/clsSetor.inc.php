@@ -322,7 +322,7 @@ class clsSetor
     /**
      * Função que cadastra um novo registro com os valores atuais
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -507,6 +507,9 @@ class clsSetor
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
+     * @param integer $intNivel
+     * @param string $strOrderBy
+     * @param string $strNotIn
      * @return Array
      */
     function lista( $intRefCodSetor = null, $intRefCodPessoaExc = null, $intRefCodPessoaCad = null, $strNmSetor = null, $strSglSetor = null, $strDataCadastroIni = null, $strDataCadastroFim = null, $strDataExclusaoIni = null, $strDataExclusaoFim = null, $intAtivo = 1, $intNivel = null, $intLimiteIni = null, $intLimiteQtd = null, $strOrderBy = null, $intCodSetor = null, $boolNoPaco = null, $strEndereco = null, $charTipo = null, $intRefIdpesResp = null ,$strNotIn = null,$intCodSetor_ = null)

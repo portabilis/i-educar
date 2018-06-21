@@ -203,7 +203,7 @@ class clsPmiacoesCategoria
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -298,6 +298,7 @@ class clsPmiacoesCategoria
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_categoria = null, $int_ref_funcionario_exc = null, $int_ref_funcionario_cad = null, $int_ativo = null, $str_nm_categoria = null, $str_data_cadastro_inicio = null, $str_data_cadastro_fim = null, $str_data_exclusao_inicio = null, $str_data_exclusao_fim = null )
@@ -451,6 +452,7 @@ class clsPmiacoesCategoria
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )

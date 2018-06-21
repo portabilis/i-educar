@@ -28,6 +28,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected $_titulo = '';
     var $DISCIPLINA_DISPENSADA = "Disp";
 
+    /**
+     * @param string $name
+     */
     protected function validatesPresenceOf(&$value, $name, $raiseExceptionOnEmpty = false, $msg = '', $addMsgOnEmpty = true)
     {
         if (!isset($value) || (empty($value) && !is_numeric($value))) {
@@ -45,6 +48,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return true;
     }
 
+    /**
+     * @param string $name
+     */
     protected function validatesValueIsNumeric(&$value, $name, $raiseExceptionOnError = false, $msg = '', $addMsgOnError = true)
     {
         if (!is_numeric($value)) {
@@ -62,6 +68,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return true;
     }
 
+    /**
+     * @param string $name
+     */
     protected function validatesValueIsArray(&$value, $name, $raiseExceptionOnError = false, $msg = '', $addMsgOnError = true)
     {
 
@@ -80,6 +89,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return true;
     }
 
+    /**
+     * @param string $name
+     */
     protected function validatesValueInSetOf(&$value, $setExpectedValues, $name, $raiseExceptionOnError = false, $msg = '')
     {
         if (!in_array($value, $setExpectedValues)) {
@@ -96,16 +108,25 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     }
 
 
+    /**
+     * @param boolean $raiseExceptionOnEmpty
+     */
     protected function requiresLogin($raiseExceptionOnEmpty)
     {
         return $this->validatesPresenceOf($this->getSession()->id_pessoa, '', $raiseExceptionOnEmpty, 'Usuário deve estar logado');
     }
 
+    /**
+     * @param boolean $raiseExceptionOnEmpty
+     */
     protected function validatesPresenceOfInstituicaoId($raiseExceptionOnEmpty)
     {
         return $this->validatesPresenceOf($this->getRequest()->instituicao_id, 'instituicao_id', $raiseExceptionOnEmpty);
     }
 
+    /**
+     * @param boolean $raiseExceptionOnEmpty
+     */
     protected function validatesPresenceOfEscolaId($raiseExceptionOnEmpty)
     {
         return $this->validatesPresenceOf($this->getRequest()->escola_id, 'escola_id', $raiseExceptionOnEmpty);
@@ -116,21 +137,35 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return $this->validatesPresenceOf($this->getRequest()->curso_id, 'curso_id', $raiseExceptionOnEmpty);
     }
 
+    /**
+     * @param boolean $raiseExceptionOnEmpty
+     */
     protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty, $addMsgOnEmpty = true)
     {
         return $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty, '', $addMsgOnEmpty);
     }
 
+    /**
+     * @param boolean $raiseExceptionOnEmpty
+     */
     protected function validatesPresenceOfAno($raiseExceptionOnEmpty)
     {
         return $this->validatesPresenceOf($this->getRequest()->ano, 'ano', $raiseExceptionOnEmpty);
     }
 
+    /**
+     * @param boolean $raiseExceptionOnEmpty
+     */
     protected function validatesPresenceOfMatriculaId($raiseExceptionOnEmpty)
     {
         return $this->validatesPresenceOf($this->getRequest()->matricula_id, 'matricula_id', $raiseExceptionOnEmpty);
     }
 
+    /**
+     * @param string $fieldName
+     * @param string $schemaName
+     * @param string $tableName
+     */
     protected function validatesValueIsInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnError = true)
     {
         $sql = "select 1 from $schemaName.$tableName where $fieldName = $1";
@@ -150,12 +185,18 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return true;
     }
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueInDbOfGradeCursoId($raiseExceptionOnError)
     {
         return $this->validatesPresenceOf($this->getRequest()->grade_curso_id, 'grade_curso_id', $raiseExceptionOnError) &&
             $this->validatesValueIsInBd('id', $this->getRequest()->grade_curso_id, 'pmieducar', 'historico_grade_curso', $raiseExceptionOnError);
     }
 
+    /**
+     * @param boolean $raiseExceptionOnEmpty
+     */
     protected function validatesPresenceOfDiasLetivos($raiseExceptionOnEmpty)
     {
         return $this->validatesPresenceOf($this->getRequest()->dias_letivos, 'dias_letivos', $raiseExceptionOnEmpty);
@@ -172,6 +213,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     }
 
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueInSetOfAtt($raiseExceptionOnError)
     {
         $result = $this->validatesPresenceOf($this->getRequest()->att, 'att', $raiseExceptionOnError);
@@ -184,6 +228,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     }
 
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueInSetOfOper($raiseExceptionOnError)
     {
         $result = $this->validatesPresenceOf($this->getRequest()->oper, 'oper', $raiseExceptionOnError);
@@ -196,6 +243,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     }
 
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueInSetOfExtraCurricular($raiseExceptionOnError)
     {
         $result = $this->validatesPresenceOf($this->getRequest()->extra_curricular, 'extra_curricular', $raiseExceptionOnError);
@@ -207,6 +257,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return $result;
     }
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueOfPercentualFrequencia($raiseExceptionOnError)
     {
         $name = 'percentual_frequencia';
@@ -219,11 +272,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return $isValid;
     }
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceOfNotas($raiseExceptionOnError)
     {
         return $this->validatesPresenceOf($this->getRequest()->notas, 'notas', $raiseExceptionOnError);
     }
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueOfFaltas($raiseExceptionOnError)
     {
         $name = 'faltas';
@@ -237,6 +296,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     }
 
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueOfDisciplinas($raiseExceptionOnError)
     {
         $name = 'disciplinas';
@@ -257,6 +319,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return $isValid;
     }
 
+    /**
+     * @param boolean $raiseExceptionOnError
+     */
     protected function validatesPresenceAndValueInSetOfSituacao($raiseExceptionOnError)
     {
         $name = 'situacao';
@@ -476,6 +541,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         return str_replace(',', '.', $percentual);
     }
 
+    /**
+     * @param string $defaultValue
+     */
     protected function getFaltaGlobalizada($defaultValue = null)
     {
         $faltaGeral = $this->getService()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::GERAL;
@@ -1110,6 +1178,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         echo $this->prepareResponse();
     }
 
+    /**
+     * @param string $name
+     */
     protected function appendResponse($name, $value)
     {
         $this->response[$name] = $value;

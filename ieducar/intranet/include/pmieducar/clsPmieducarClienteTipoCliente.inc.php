@@ -351,6 +351,7 @@ class clsPmieducarClienteTipoCliente
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_ref_cod_cliente_tipo = null, $int_ref_cod_cliente = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ref_usuario_cad = null, $int_ref_usuario_exc = null, $int_ref_cod_biblioteca = null, $int_ativo = null )

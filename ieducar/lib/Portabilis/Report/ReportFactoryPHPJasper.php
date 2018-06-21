@@ -115,6 +115,9 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
     $this->destroyPDF($outputFile);
   }
 
+  /**
+   * @param string $file
+   */
   function showPDF($file){
     header("Pragma: public");
     header("Expires: 0");
@@ -131,6 +134,9 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
     readfile($file);
   }
 
+  /**
+   * @param string $file
+   */
   function destroyPDF($file){
     unlink($file);
   }

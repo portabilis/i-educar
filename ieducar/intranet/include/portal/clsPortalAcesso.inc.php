@@ -102,6 +102,7 @@ class clsPortalAcesso
     /**
      * Construtor (PHP 4)
      *
+     * @param string $sucesso
      * @return object
      */
     function __construct( $cod_acesso = null, $data_hora = null, $ip_externo = null, $ip_interno = null, $cod_pessoa = null, $obs = null, $sucesso = null )
@@ -148,7 +149,7 @@ class clsPortalAcesso
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -269,6 +270,7 @@ class clsPortalAcesso
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param string $bool_sucesso
      * @return array
      */
     function lista( $date_data_hora_ini = null, $date_data_hora_fim = null, $str_ip_externo = null, $str_ip_interno = null, $int_cod_pessoa = null, $str_obs = null, $bool_sucesso = null )
@@ -542,6 +544,7 @@ SELECT COUNT(0) FROM (
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
      *
+     * @param string $str_campos
      * @return null
      */
     function setCamposLista( $str_campos )
@@ -562,6 +565,7 @@ SELECT COUNT(0) FROM (
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -592,6 +596,7 @@ SELECT COUNT(0) FROM (
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

@@ -245,6 +245,7 @@ class clsPmieducarDisciplinaSerie
 /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_ref_cod_disciplina = null, $int_ref_cod_serie = null, $int_ativo = null )

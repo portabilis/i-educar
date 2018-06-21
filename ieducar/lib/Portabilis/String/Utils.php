@@ -43,6 +43,10 @@ require_once 'lib/Portabilis/Array/Utils.php';
 class Portabilis_String_Utils {
 
   // wrapper for Portabilis_Array_Utils::merge
+
+  /**
+   * @return string
+   */
   protected static function mergeOptions($options, $defaultOptions) {
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
@@ -82,6 +86,10 @@ class Portabilis_String_Utils {
 
   /* scapes a string, adding backslashes before characters that need to be quoted,
      this method is useful to scape values to be inserted via database queries. */
+
+  /**
+   * @param string $str
+   */
   public static function escape($str) {
     return addslashes($str);
   }
@@ -136,12 +144,18 @@ class Portabilis_String_Utils {
     return $str;
   }
 
+  /**
+   * @param string $str
+   */
   public static function unaccent($str) {
     $fromEncoding = Portabilis_String_Utils::encoding($str);
     return iconv($fromEncoding, 'US-ASCII//TRANSLIT', $str);
   }
 
 
+  /**
+   * @param string $str
+   */
   public static function encoding($str) {
     return mb_detect_encoding($str, 'UTF-8, ', $strict = true);
   }
@@ -157,6 +171,9 @@ class Portabilis_String_Utils {
   }
 
 
+  /**
+   * @param string $str
+   */
   public static function humanize($str) {
     $robotWords = array('_id', 'ref_cod_', 'ref_ref_cod_');
 

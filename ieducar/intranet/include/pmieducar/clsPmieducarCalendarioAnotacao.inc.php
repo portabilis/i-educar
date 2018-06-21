@@ -105,6 +105,7 @@ class clsPmieducarCalendarioAnotacao
     /**
      * Construtor (PHP 4)
      *
+     * @param integer $ativo
      * @return object
      */
     function __construct( $cod_calendario_anotacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_anotacao = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
@@ -203,7 +204,7 @@ class clsPmieducarCalendarioAnotacao
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {

@@ -25,6 +25,12 @@ $GB_widths=array(' '=>207,'!'=>270,'"'=>342,'#'=>467,'$'=>462,'%'=>797,'&'=>710,
 
 class PDF_Chinese extends FPDF
 {
+/**
+ * @param string $style
+ * @param string $family
+ * @param string $name
+ * @param string $CMap
+ */
 function AddCIDFont($family,$style,$name,$cw,$CMap,$registry)
 {
     $fontkey=strtolower($family).strtoupper($style);
@@ -35,6 +41,11 @@ function AddCIDFont($family,$style,$name,$cw,$CMap,$registry)
     $this->fonts[$fontkey]=array('i'=>$i,'type'=>'Type0','name'=>$name,'up'=>-130,'ut'=>40,'cw'=>$cw,'CMap'=>$CMap,'registry'=>$registry);
 }
 
+/**
+ * @param string $family
+ * @param string $name
+ * @param string $CMap
+ */
 function AddCIDFonts($family,$name,$cw,$CMap,$registry)
 {
     $this->AddCIDFont($family,'',$name,$cw,$CMap,$registry);

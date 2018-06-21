@@ -65,6 +65,9 @@ class Portabilis_Utils_User {
 
   // database helpers
 
+  /**
+   * @param string $password
+   */
   static function loadUsingCredentials($username, $password) {
     $sql     = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2";
     $options = array('params' => array($username, $password), 'show_errors' => false, 'return_only' => 'first-field');
@@ -125,6 +128,10 @@ class Portabilis_Utils_User {
     Destroi determinado tipo de status_token de um usuário, como ocorre por exemplo após fazer login,
     onde solicitações de redefinição de senha em aberto são destruidas.
   */
+
+  /**
+   * @param string $withType
+   */
   static function destroyStatusTokenFor($userId, $withType) {
     $sql     = "UPDATE portal.funcionario set status_token = '' WHERE ref_cod_pessoa_fj = $1 and status_token like $2";
     $options = array('params' => array($userId, "$withType-%"), 'show_errors' => false);
@@ -161,6 +168,10 @@ class Portabilis_Utils_User {
 
 
   # TODO verificar se é possivel usar a logica de App_Model_NivelAcesso
+
+  /**
+   * @param string $nivelAcessoType
+   */
   static function hasNivelAcesso($nivelAcessoType) {
     $niveisAcesso = array('POLI_INSTITUCIONAL' => 1,
                           'INSTITUCIONAL'      => 2,

@@ -31,6 +31,9 @@
 
 class UsuarioValidator
 {
+  /**
+   * @param string $encriptedPassword
+   */
   static function validatePassword($messenger,
                                              $oldPassword,
                                              $newPassword,

@@ -397,6 +397,9 @@ class PreMatriculaController extends ApiCoreController
     return $matriculaId;
   }
 
+  /**
+   * @param boolean $maeIsResponsavel
+   */
   protected function enturmaPreMatricula($alunoId, $turmaId, $matriculaId, $maeIsResponsavel){
     // $this->messenger->append($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId);
 
@@ -525,6 +528,9 @@ class PreMatriculaController extends ApiCoreController
       $fisica->edita();
   }
 
+  /**
+   * @param integer $ativo
+   */
   protected function createOrUpdateAluno($pessoaId, $ativo) {
     $aluno                       = new clsPmieducarAluno();
     $aluno->ref_idpes            = $pessoaId;

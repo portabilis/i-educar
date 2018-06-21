@@ -177,7 +177,7 @@ class clsPortalMenuSubmenu
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -284,6 +284,7 @@ class clsPortalMenuSubmenu
      * @param string str_nm_submenu
      * @param string str_arquivo
      * @param string str_title
+     * @param integer $int_cod_sistema
      *
      * @return array
      */
@@ -473,6 +474,7 @@ class clsPortalMenuSubmenu
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

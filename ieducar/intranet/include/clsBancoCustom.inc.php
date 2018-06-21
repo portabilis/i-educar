@@ -120,7 +120,7 @@ class clsBancoCustom extends clsBancoSQL_
    *
    * @link   http://www.postgresql.org/docs/8.2/interactive/datatype-boolean.html
    * @link   http://www.php.net/manual/en/function.pg-query-params.php#78072
-   * @param  mixed $val
+   * @param  boolean $val
    * @return string "t" para TRUE e "f" para false
    */
   protected function _formatBool($val)

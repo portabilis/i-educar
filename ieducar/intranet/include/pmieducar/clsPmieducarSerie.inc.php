@@ -301,7 +301,7 @@ class clsPmieducarSerie
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -581,6 +581,7 @@ class clsPmieducarSerie
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_ativo
    * @return array
    */
   function lista($int_cod_serie = NULL, $int_ref_usuario_exc = NULL,
@@ -732,6 +733,9 @@ class clsPmieducarSerie
     return FALSE;
   }
 
+  /**
+   * @param integer $int_ativo
+   */
   function listaSeriesComComponentesVinculados($int_cod_serie = NULL,
                                                $int_ref_cod_curso = NULL,
                                                $int_ref_cod_instituicao = NULL,
@@ -870,6 +874,7 @@ class clsPmieducarSerie
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -897,6 +902,7 @@ class clsPmieducarSerie
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

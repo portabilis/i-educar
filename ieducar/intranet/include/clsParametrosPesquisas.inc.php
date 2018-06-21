@@ -133,7 +133,7 @@ class clsParametrosPesquisas
     /**
      * Pega todos os atributos da classe e joga num array e retorna este array serializado e codificado para url.
      *
-     * @return array
+     * @return string
      */
     function serializaCampos() {
         $parametros_serializados["submit"]          = $this->submit;
@@ -385,7 +385,7 @@ class clsParametrosPesquisas
     /**
      * Deve ser passado 'S' se deseja que apareça o botão de novo na pesquisa de pessoa ou 'N' caso não deseje.
      *
-     * @param char $pessoa_novo
+     * @param string $pessoa_novo
      */
     function setPessoaNovo( $pessoa_novo ) {
         $this->pessoa_novo = $pessoa_novo;
@@ -439,7 +439,7 @@ class clsParametrosPesquisas
     /**
      * Deve ser passado 'S' para indicar se deseja que após o usuário selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informações da pessoa selecionada ou 'N' caso não deseje.
      *
-     * @param char $pessoa_editar
+     * @param string $pessoa_editar
      */
     function setPessoaEditar( $pessoa_editar ) {
         $this->pessoa_editar = $pessoa_editar;
@@ -485,7 +485,7 @@ class clsParametrosPesquisas
     /**
      * Retorna o "S" se o CPF for obrigatório na inclusão de uma pessoa ou "N" caso não seja.
      *
-     * @return char
+     * @return integer
      */
     function  getPessoaCPF() {
         return $this->pessoa_cpf;
