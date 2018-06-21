@@ -2,12 +2,10 @@
 
 namespace Tests\SuiteTestCase;
 
-require_once __DIR__ . '/../../intranet/include/clsBanco.inc.php';
-
 use clsBanco;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
-use PHPUnit\DbUnit\DataSet\IDataSet;
+use PHPUnit\DbUnit\Operation\Composite;
 use PHPUnit\DbUnit\TestCase;
 
 class IeducarTestCase extends TestCase
@@ -17,6 +15,13 @@ class IeducarTestCase extends TestCase
      * @var Connection
      */
     private static $connection;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        @session_start();
+        $_SESSION['id_pessoa'] = 1;
+    }
 
     /**
      * Returns the test database connection.
@@ -29,7 +34,7 @@ class IeducarTestCase extends TestCase
             $banco = new clsBanco();
             $banco->FraseConexao();
             $pdo = new \PDO('pgsql:' . $banco->getFraseConexao());
-            self::$connection =  $this->createDefaultDBConnection($pdo);
+            self::$connection = $this->createDefaultDBConnection($pdo);
         }
 
         return self::$connection;
@@ -41,7 +46,7 @@ class IeducarTestCase extends TestCase
      */
     protected function getDataSet()
     {
-        return new IeducarDataSet($this);
+        return (new IeducarDataSet($this))->getDataSet();
     }
 
     public function getYamlDataSet()
@@ -49,9 +54,14 @@ class IeducarTestCase extends TestCase
         return new DefaultDataSet();
     }
 
-    public function getSetUpOperation()
+    protected function getSetUpOperation()
     {
-        return new IeducarForeignKeysCheckDisable();
+        return new Composite(
+            [
+                new IeducarForeignKeysCheckDisable(),
+                new IeducarInsertTriggerEnable()
+            ]
+        );
     }
 
     public function getTearDownOperation()

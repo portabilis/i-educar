@@ -10,7 +10,7 @@ use PHPUnit\DbUnit\DataSet\ITableMetadata;
 use PHPUnit\DbUnit\DataSet\YamlDataSet;
 use Traversable;
 
-class IeducarDataSet implements IDataSet
+class IeducarDataSet
 {
     private $dataSet;
     private $suiteName;
@@ -62,68 +62,10 @@ class IeducarDataSet implements IDataSet
     }
 
     /**
-     * Retrieve an external iterator
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
-     * @since 5.0.0
+     * @return YamlDataSet
      */
-    public function getIterator()
+    public function getDataSet()
     {
-        return $this->dataSet->getIterator();
-    }
-
-    /**
-     * Returns an array of table names contained in the dataset.
-     *
-     * @return array
-     */
-    public function getTableNames()
-    {
-        return $this->dataSet->getTableNames();
-    }
-
-    /**
-     * Returns a table meta data object for the given table.
-     *
-     * @param string $tableName
-     *
-     * @return ITableMetadata
-     */
-    public function getTableMetaData($tableName)
-    {
-        $this->dataSet->getTableMetaData($tableName);
-    }
-
-    /**
-     * Returns a table object for the given table.
-     *
-     * @param string $tableName
-     *
-     * @return ITable
-     */
-    public function getTable($tableName)
-    {
-        return $this->dataSet->getTable($tableName);
-    }
-
-    /**
-     * Returns a reverse iterator for all table objects in the given dataset.
-     *
-     * @return ITableIterator
-     */
-    public function getReverseIterator()
-    {
-        return $this->dataSet->getReverseIterator();
-    }
-
-    /**
-     * Asserts that the given data set matches this data set.
-     *
-     * @param IDataSet $other
-     */
-    public function matches(IDataSet $other)
-    {
-        return $this->dataSet->matches($other);
+        return $this->dataSet;
     }
 }
