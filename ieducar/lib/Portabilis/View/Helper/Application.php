@@ -107,7 +107,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
    * $applicationHelper->stylesheet($viewInstance, array('/modules/ModuleName/Assets/Stylesheets/StyleName.css', '...'));
    * </code>
    *
-   * @param   object   $viewInstance1  Istancia da view a ser adicionado os links para os estilos.
+   * @param   object   $viewInstance  Istancia da view a ser adicionado os links para os estilos.
    * @param   array ou string  $files  Lista de estilos a serem carregados.
    * @return  null
    */
@@ -143,6 +143,9 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
   }
 
 
+  /**
+   * @param string $css
+   */
   public static function embedStylesheet($viewInstance, $css) {
     $viewInstance->appendOutput("<style type='text/css'>$css</style>");
   }

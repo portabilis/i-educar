@@ -430,7 +430,6 @@ abstract class CoreExt_DataMapper
    * DELETE FROM [schema.]table WHERE id = 'idValue';
    * </code>
    *
-   * @param mixed $instance
    * @return string
    */
   protected function _getDeleteStatment($pkToDelete)
@@ -547,7 +546,7 @@ abstract class CoreExt_DataMapper
      * o valor dado por $pkey.
      *
      * @param  array|long $pkey
-     * @return CoreExt_Entity
+     * @return boolean
      * @throws Exception
      */
     public function exists($pkey)

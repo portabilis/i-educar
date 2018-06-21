@@ -118,6 +118,9 @@ class ReservaApiController extends ApiCoreController
   }
 
 
+  /**
+   * @param string[] $situacoes
+   */
   protected function validatesSituacaoExemplarIsIn($situacoes) {
     if (! is_array($situacoes))
       $situacoes = array($situacoes);
@@ -239,6 +242,9 @@ class ReservaApiController extends ApiCoreController
   }
 
 
+  /**
+   * @param string $flag
+   */
   protected function getSituacaoForFlag($flag) {
     $situacoes = array(
       'indisponivel'           => array('flag'  => 'indisponivel', 'label' => 'Indisponível'),
@@ -426,6 +432,9 @@ class ReservaApiController extends ApiCoreController
   }
 
 
+  /**
+   * @return string
+   */
   protected function loadQtdDiasEmprestimoForExemplar($exemplar = null) {
     if (is_null($exemplar))
       $exemplar = $this->loadExemplar();

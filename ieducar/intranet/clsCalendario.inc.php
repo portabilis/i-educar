@@ -247,7 +247,7 @@ class clsCalendario
   }
 
   /**
-   * @param array  $arr_dia_semana
+   * @param integer[]  $arr_dia_semana
    * @param string $str_cor
    */
   function setCorDiaSemana($arr_dia_semana, $str_cor)
@@ -739,7 +739,7 @@ class clsCalendario
    * @access protected
    * @param  array   $formValues     Array associativo onde a chave torna-se o
    *   o valor dos atributos id e name do campo hidden.
-   * @param  array   $invalidNames   Array com nomes inválidos para campos. Útil
+   * @param  string[]   $invalidNames   Array com nomes inválidos para campos. Útil
    *   para evitar que sejam criados campos duplicados.
    * @return string  String com o HTML dos campos hidden gerados.
    * @since  Método disponível desde a versão 1.2.0

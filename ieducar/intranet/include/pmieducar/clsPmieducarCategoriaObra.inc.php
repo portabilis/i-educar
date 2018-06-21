@@ -238,6 +238,9 @@ class clsPmieducarCategoriaObra
         $this->_campos_lista = $this->_todos_campos;
     }
 
+    /**
+     * @param string $strNomeCampo
+     */
     function setOrderby($strNomeCampo){
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
@@ -253,6 +256,9 @@ class clsPmieducarCategoriaObra
         return "";
     }
 
+    /**
+     * @param integer $intLimiteQtd
+     */
     function setLimite($intLimiteQtd, $intLimiteOffset = null){
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;

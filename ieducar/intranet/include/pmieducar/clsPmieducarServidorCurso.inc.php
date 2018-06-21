@@ -164,7 +164,7 @@ class clsPmieducarServidorCurso
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {

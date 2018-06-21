@@ -52,6 +52,10 @@ if($grafico)
     unset($_SESSION['grafico']);
     @session_write_close();
 }
+/**
+ * @param double[] $coords
+ * @param integer $tipo
+ */
 function drawdot( $coords, $tipo, $valor, $im, $linecolor ) {
 
         $inner_text = $linecolor[$tipo];// imagecolorallocate ( $im, 255, 255, 255 );

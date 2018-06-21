@@ -126,6 +126,10 @@ class clsControlador
 
 
   // novo metodo login, logica quebrada em metodos menores
+
+  /**
+   * @param boolean $validateUserCredentials
+   */
   public function Logar($validateUserCredentials) {
     if ($validateUserCredentials) {
       $user = $this->validateUserCredentials($username = @$_POST['login'], $password = md5(@$_POST['senha']));
@@ -141,6 +145,10 @@ class clsControlador
 
 
   // valida se o usuário e senha informados, existem no banco de dados.
+
+  /**
+   * @param string $password
+   */
   protected function validateUserCredentials($username, $password) {
     if (! $this->validateHumanAccess()) {
       $msg = "Você errou a senha muitas vezes, por favor, preencha o campo de " .

@@ -224,6 +224,9 @@ class PromocaoApiController extends ApiCoreController
     return $etapaDefault;
   }
 
+  /**
+   * @return string
+   */
   protected function getParecerDescritivo($etapa, $componenteCurricularId) {
     if ($this->boletimService()->getRegra()->get('parecerDescritivo') ==
         RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE ||
@@ -312,6 +315,9 @@ class PromocaoApiController extends ApiCoreController
 
   // api responders
 
+    /**
+     * @return string
+     */
     protected function getQuantidadeMatriculas(){
         if($this->canGetQuantidadeMatriculas()) {
             $escolaId = empty($this->getRequest()->escola) ? 0 : $this->getRequest()->escola;

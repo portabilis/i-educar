@@ -371,6 +371,8 @@ class clsPmieducarMenuTipoUsuario
     /**
      * Retorna um array com os dados de um registro
      *
+     * @param integer $cod_usuario
+     * @param integer $ref_cod_menu_submenu
      * @return array
      */
     function detalhePorUsuario($cod_usuario, $ref_cod_menu_submenu)
@@ -432,6 +434,7 @@ class clsPmieducarMenuTipoUsuario
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
      *
+     * @param string $str_campos
      * @return null
      */
     function setCamposLista( $str_campos )

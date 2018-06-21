@@ -466,7 +466,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * Setter para o arquivo da classe CoreExt_DataMapper da classe de reference
    * informada por setReferenceClass.
    * @param  string $key
-   * @param  int    $value
    * @return CoreExt_Entity Provê interface fluída
    */
   public function setReferenceFile($key, $file)
@@ -678,7 +677,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   /**
    * Setter.
    * @param CoreExt_Locale $instance
-   * @return CoreExt_DataMapper Provê interface fluída
+   * @return CoreExt_Entity Provê interface fluída
    */
   public function setLocale(CoreExt_Locale $instance)
   {
@@ -709,7 +708,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * @link    http://martinfowler.com/eaaCatalog/lazyLoad.html Lazy initialization
    * @param   string  $key  Propriedade a ser validade. Caso seja string vazia,
    *   executa todos os validadores da instância
-   * @return  bool
+   * @return  boolean|null
    * @see     CoreExt_Validate_Validatable#isValid($key)
    */
   public function isValid($key = '')

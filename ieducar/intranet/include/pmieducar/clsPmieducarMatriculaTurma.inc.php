@@ -113,6 +113,9 @@ class clsPmieducarMatriculaTurma
 
   /**
    * Construtor.
+   * @param integer $ref_usuario_cad
+   * @param string $data_exclusao
+   * @param integer $ativo
    */
   function __construct($ref_cod_matricula = NULL,
     $ref_cod_turma = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
@@ -432,6 +435,11 @@ class clsPmieducarMatriculaTurma
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_ativo
+   * @param false $mes
+   * @param integer[] $mes_menor_que
+   * @param false $bool_aprovados_reprovados
+   * @param integer $int_ultima_matricula
    * @return array
    */
   function lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
@@ -890,6 +898,9 @@ class clsPmieducarMatriculaTurma
     return FALSE;
   }
 
+  /**
+   * @param integer $int_ativo
+   */
   function lista3($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
     $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
     $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
@@ -1260,6 +1271,7 @@ class clsPmieducarMatriculaTurma
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1287,6 +1299,7 @@ class clsPmieducarMatriculaTurma
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

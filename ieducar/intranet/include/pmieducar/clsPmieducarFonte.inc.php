@@ -208,7 +208,7 @@ class clsPmieducarFonte
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -322,6 +322,7 @@ class clsPmieducarFonte
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_fonte = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_fonte = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null )
@@ -495,6 +496,7 @@ class clsPmieducarFonte
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
      *
+     * @param string $str_campos
      * @return null
      */
     function setCamposLista( $str_campos )
@@ -515,6 +517,7 @@ class clsPmieducarFonte
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -545,6 +548,7 @@ class clsPmieducarFonte
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

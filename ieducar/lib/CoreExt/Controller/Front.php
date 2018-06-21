@@ -206,7 +206,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
 
   /**
    * Getter para a estratégia de controller, definida em runtime.
-   * @return CoreExt_Controller_Strategy
+   * @return CoreExt_Controller_Dispatcher_Interface
    */
   protected function _getControllerStrategy()
   {

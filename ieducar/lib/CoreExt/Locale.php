@@ -154,7 +154,7 @@ class CoreExt_Locale extends CoreExt_Singleton
    * Chama a fun��o setlocale().
    *
    * @param  string $category
-   * @param  array  $locale
+   * @param  string[]  $locale
    * @return NULL|string  Retorna NULL em caso de erro
    */
   protected function _setLocale($category, array $locale)

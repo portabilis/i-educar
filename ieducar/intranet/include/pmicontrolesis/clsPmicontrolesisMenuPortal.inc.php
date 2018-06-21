@@ -223,7 +223,7 @@ class clsPmicontrolesisMenuPortal
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -372,6 +372,7 @@ class clsPmicontrolesisMenuPortal
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_menu_portal = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $str_nm_menu = null, $str_title = null, $str_caminho = null, $str_cor = null, $str_posicao = null, $int_ordem = null, $date_data_cadastro = null, $date_data_exclusao = null, $int_ativo = null )
@@ -570,6 +571,7 @@ class clsPmicontrolesisMenuPortal
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -600,6 +602,7 @@ class clsPmicontrolesisMenuPortal
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

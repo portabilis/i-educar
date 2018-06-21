@@ -114,6 +114,7 @@ class clsPmieducarServidor
   var $_campo_order_by;
   /**
    * Construtor.
+   * @param integer $ativo
    */
   function __construct(
     $cod_servidor = NULL,
@@ -575,40 +576,9 @@ class clsPmieducarServidor
    *  de aula para uma turma
    * @see intranet/educar_turma_cad.php  Cadastro de turma
    *
-   * @param  int         $int_cod_servidor             Código do servidor
-   * @param  int         $int_ref_cod_deficiencia      Código da deficiência do servidor
-   * @param  int         $int_ref_idesco               Código da escolaridade do servidor
-   * @param  int         $int_carga_horaria            Carga horária do servidor
-   * @param  string      $date_data_cadastro_ini       Data de cadastro inicial (busca por intervalo >= ao valor)
-   * @param  string      $date_data_cadastro_fim       Data de cadastro final (busca por intervalo <= ao valor)
-   * @param  string      $date_data_exclusao_ini       Data da exclusão inicial (busca por intervalo >= ao valor)
-   * @param  string      $date_data_exclusao_fim       Data da exclusão final (busca por intervalo <= ao valor)
-   * @param  int         $int_ativo                    '1' para buscar apenas por servidores ativos
-   * @param  int         $int_ref_cod_instituicao      Código da instituição do servidor
-   * @param  string      $str_tipo                     'livre' para buscar apenas por servidores não alocados (subquery)
-   * @param  array       $array_horario                Busca por horário de alocação do servidor (subquery)
-   * @param  int         $str_not_in_servidor          Código de servidor a excluir
+   * @param  int         $cod_instituicao      Código da instituição do servidor
    * @param  string      $str_nome_servidor            Busca do tipo LIKE pelo padrão de nome do servidor (subquery)
-   * @param  int|string  $boo_professor                Qualquer valor que avalie para TRUE para buscar por servidores professores (subquery)
-   * @param  string      $str_horario                  'S' para buscar se o servidor está alocado em um dos horários (indicados $matutino, $vespertino ou $noturno) (subquery)
-   * @param  bool        $bool_ordena_por_nome         TRUE para ordenar os resultados pelo campo nome por ordem alfabética crescente
-   * @param  string      $lst_matriculas               Verifica se o servidor não está na lista de matriculas (string com inteiros separados por vírgula: 54, 55, 60).
-   *                                                   Apenas verifica quando a buscar por horário de alocação é realizada
-   * @param  bool        $matutino                     Busca por professores com horário livre no período matutino
-   * @param  bool        $vespertino                   Busca por professores com horário livre no período vespertino
-   * @param  bool        $noturno                      Busca por professores com horário livre no período noturno
-   * @param  int         $int_ref_cod_escola           Código da escola para verificar se o servidor está alocado nela (usado em várias das subqueries)
-   * @param  string      $str_hr_mat                   Duração da aula (formato HH:MM) para o período matutino
-   * @param  string      $str_hr_ves                   Duração da aula (formato HH:MM) para o período vespertino
-   * @param  string      $str_hr_not                   Duração da aula (formato HH:MM) para o período noturno
-   * @param  int         $int_dia_semana               Inteiro para o dia da semana (1 = domingo, 7 = sábado)
-   * @param  int         $alocacao_escola_instituicao  Código da instituição ao qual o servidor deve estar cadastrado (subquery)
-   * @param  int         $int_identificador            Campo identificado para busca na tabela pmieducar.quadro_horario_horarios_aux (subquery)
-   * @param  int         $int_ref_cod_curso            Código do curso que o professor deve estar cadastrado (subquery)
-   * @param  int         $int_ref_cod_disciplina       Código da disciplina que o professor deve ser habilitado (subquery).
-   *                                                   Somente verifica quando o curso passado por $int_ref_cod_curso não
-   *                                                   possui sistema de falta globalizada
-   * @param  int         $int_ref_cod_subnivel         Código de subnível que o servidor deve possuir
+   * @param  int         $cod_escola           Código da escola para verificar se o servidor está alocado nela (usado em várias das subqueries)
    * @return array|bool  Array com os resultados da query SELECT ou FALSE caso
    *                     nenhum registro tenha sido encontrado
    */
@@ -672,6 +642,13 @@ class clsPmieducarServidor
     return false;
   }
 
+  /**
+   * @param integer $int_ativo
+   * @param string|boolean $lst_matriculas
+   * @param string $str_hr_mat
+   * @param string $str_hr_ves
+   * @param string $str_hr_not
+   */
   function lista(
     $int_cod_servidor            = NULL,
     $int_ref_cod_deficiencia     = NULL,
@@ -1241,7 +1218,7 @@ class clsPmieducarServidor
     *   usa o código disponível no objeto atual
     * @param   int  $codInstituicao  Código da instituição, caso não seja
     *   informado, usa o código disponível no objeto atual
-    * @return  array|bool  (codServidor => (int), codInstituicao => (int))
+    * @return  string  (codServidor => (int), codInstituicao => (int))
     */
   function _getCodServidorInstituicao($codServidor = NULL, $codInstituicao = NULL)
   {
@@ -1397,6 +1374,7 @@ class clsPmieducarServidor
   }
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1422,6 +1400,7 @@ class clsPmieducarServidor
   }
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

@@ -452,6 +452,9 @@ class clsModulesItinerarioTransporteEscolar
     return FALSE;
   }
 
+  /**
+   * @param string $time
+   */
   function checktime($time)
   {
     list($hour,$minute) = explode(':',$time);
@@ -508,6 +511,7 @@ class clsModulesItinerarioTransporteEscolar
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

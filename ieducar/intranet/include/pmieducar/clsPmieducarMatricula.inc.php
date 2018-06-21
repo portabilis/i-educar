@@ -121,6 +121,11 @@ class clsPmieducarMatricula
   var $_campo_order_by;
   /**
    * Construtor.
+   * @param integer $ref_usuario_cad
+   * @param integer $aprovado
+   * @param integer $ativo
+   * @param integer $ultima_matricula
+   * @param string $data_matricula
    */
   function __construct($cod_matricula = NULL, $ref_cod_reserva_vaga = NULL,
     $ref_ref_cod_escola = NULL, $ref_ref_cod_serie = NULL, $ref_usuario_exc = NULL,
@@ -300,7 +305,7 @@ class clsPmieducarMatricula
   }
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -554,6 +559,9 @@ class clsPmieducarMatricula
   }
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_aprovado
+   * @param integer $int_ativo
+   * @param integer $int_ultima_matricula
    * @return array
    */
   function lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
@@ -768,6 +776,10 @@ class clsPmieducarMatricula
     return FALSE;
   }
 
+/**
+ * @param string $int_aprovado
+ * @param integer $int_ativo
+ */
 function lista_transferidos($int_cod_matricula = NULL,
                  $int_ref_cod_reserva_vaga = NULL,
                  $int_ref_ref_cod_escola = NULL,
@@ -1169,6 +1181,7 @@ function lista_transferidos($int_cod_matricula = NULL,
   }
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1194,6 +1207,7 @@ function lista_transferidos($int_cod_matricula = NULL,
   }
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

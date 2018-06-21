@@ -5,6 +5,9 @@
 * Date:    2004-12-31                                                          *
 *******************************************************************************/
 
+/**
+ * @param string $enc
+ */
 function ReadMap($enc)
 {
     //Read a map file
@@ -132,6 +135,9 @@ function ReadAFM($file,&$map)
     return $fm;
 }
 
+/**
+ * @param boolean $symbolic
+ */
 function MakeFontDescriptor($fm,$symbolic)
 {
     //Ascent
@@ -227,6 +233,10 @@ function MakeFontEncoding($map)
     return rtrim($s);
 }
 
+/**
+ * @param string $file
+ * @param string $s
+ */
 function SaveToFile($file,$s,$mode='t')
 {
     $f=fopen($file,'w'.$mode);

@@ -107,6 +107,7 @@ class clsPmieducarTipoAvaliacao
     /**
      * Construtor (PHP 4)
      *
+     * @param integer $ativo
      * @return object
      */
     function __construct( $cod_tipo_avaliacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $conceitual = null, $ref_cod_instituicao = null )
@@ -234,7 +235,7 @@ class clsPmieducarTipoAvaliacao
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {

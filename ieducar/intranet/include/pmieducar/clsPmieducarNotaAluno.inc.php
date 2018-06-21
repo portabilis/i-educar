@@ -332,7 +332,7 @@ class clsPmieducarNotaAluno
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -512,6 +512,7 @@ class clsPmieducarNotaAluno
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_nota_aluno = null, $int_ref_sequencial = null, $int_ref_ref_cod_tipo_avaliacao = null, $int_ref_cod_serie = null, $int_ref_cod_escola = null, $int_ref_cod_disciplina = null, $int_ref_cod_matricula = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_modulo = null, $int_ref_cod_curso_disciplina = null, $int_nota = null)
@@ -761,6 +762,7 @@ class clsPmieducarNotaAluno
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )
@@ -958,7 +960,6 @@ class clsPmieducarNotaAluno
      * calculo = (quantidade de disciplinas acima da media / quantidades de disciplinas) * 10 ) tem que ser maior que a media
      * se for maior o aluno esta aprovado
      * @param int  $cod_matricula
-     * @param int  $cod_disciplina
      *
      * @return boolean
      */
@@ -1062,7 +1063,7 @@ class clsPmieducarNotaAluno
      * os que estão abaixo da média ($media) e retorna as disciplinas
      *
      * @param int $cod_matricula
-     * @param int $qtd_modulos
+     * @param int $qtd_modulos_normais
      * @param int $media
      *
      * @return array

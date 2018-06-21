@@ -233,7 +233,6 @@ class S3 {
     /**
     * Use a resource for input
     *
-    * @param string $file Input file
     * @param integer $bufferSize Input byte size
     * @param string $md5sum MD5 hash to send (optional)
     * @return array | false
@@ -591,7 +590,7 @@ class S3 {
     *
     * @param string $bucket Bucket name
     * @param string $uri Object URI
-    * @return mixed
+    * @return boolean
     */
     public static function deleteObject($bucket = '', $uri = '') {
         $rest = new S3Request('DELETE', $bucket, $uri);
@@ -687,7 +686,7 @@ final class S3Request {
     * @param string $verb Verb
     * @param string $bucket Bucket name
     * @param string $uri Object URI
-    * @return mixed
+    * @return string
     */
     function __construct($verb, $bucket = '', $uri = '') {
         $this->verb = $verb;
@@ -751,7 +750,7 @@ final class S3Request {
     /**
     * Get the S3 response
     *
-    * @return object | false
+    * @return stdClass | false
     */
     public function getResponse() {
         $query = '';

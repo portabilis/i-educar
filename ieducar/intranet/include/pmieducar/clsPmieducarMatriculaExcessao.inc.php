@@ -220,7 +220,7 @@ class clsPmieducarMatriculaExcessao
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -399,6 +399,9 @@ class clsPmieducarMatriculaExcessao
      * @param bool bool_reprovado_faltas
      * @param bool bool_precisa_exame
      * @param bool bool_permite_exame
+     * @param boolean $bool_reprovado_faltas
+     * @param boolean $bool_precisa_exame
+     * @param string $bool_permite_exame
      *
      * @return array
      */

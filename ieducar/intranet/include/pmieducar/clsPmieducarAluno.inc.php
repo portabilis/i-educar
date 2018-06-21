@@ -300,7 +300,7 @@ class clsPmieducarAluno
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -715,6 +715,7 @@ class clsPmieducarAluno
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_ativo
    * @return array
    */
   function lista(
@@ -959,6 +960,7 @@ class clsPmieducarAluno
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_ativo
    * @return array
    */
   function lista2($int_cod_aluno = NULL, $int_ref_cod_aluno_beneficio = NULL,
@@ -1531,6 +1533,7 @@ class clsPmieducarAluno
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1558,6 +1561,7 @@ class clsPmieducarAluno
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

@@ -250,7 +250,7 @@ class clsPmieducarReservaVaga
 
   /**
    * Cria um novo registro.
-   * @return int|bool Retorna o valor da sequence ou FALSE em caso de erro.
+   * @return boolean|string Retorna o valor da sequence ou FALSE em caso de erro.
    */
   function cadastra()
   {
@@ -400,6 +400,7 @@ class clsPmieducarReservaVaga
    * @var int $int_ref_cod_curso
    * @var string $str_nm_aluno
    * @var int $int_cpf_responsavel
+   * @param integer $int_ativo
    * @return array|bool Retorna um array com registro(s) ou FALSE em caso de erro.
    */
   function lista($int_cod_reserva_vaga = NULL, $int_ref_ref_cod_escola = NULL,

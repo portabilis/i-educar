@@ -305,7 +305,7 @@ class clsPmieducarTransferenciaSolicitacao
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -506,6 +506,7 @@ class clsPmieducarTransferenciaSolicitacao
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_transferencia_solicitacao = null, $int_ref_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_matricula_entrada = null, $int_ref_cod_matricula_saida = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_transferencia_ini = null, $date_data_transferencia_fim = null, $int_ref_cod_aluno = null, $entrada_aluno = false, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $mes = null, $transferido = null, $bool_matricula_entrada = null, $parar=false )

@@ -433,6 +433,7 @@ class clsPmieducarAcervoAcervoAutor
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

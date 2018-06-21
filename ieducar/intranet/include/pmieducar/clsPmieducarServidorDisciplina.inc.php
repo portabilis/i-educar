@@ -295,7 +295,7 @@ class clsPmieducarServidorDisciplina
 
   /**
    * Retorna um array com os dados de um registro.
-   * @return array
+   * @return boolean
    */
   function existe()
   {

@@ -396,6 +396,9 @@ class EmprestimoApiController extends ApiCoreController
   }
 
 
+  /**
+   * @param string $flag
+   */
   protected function getSituacaoForFlag($flag) {
     $situacoes = array(
       'indisponivel'           => array('flag'  => 'indisponivel', 'label' => 'Indisponível'),
@@ -715,6 +718,9 @@ class EmprestimoApiController extends ApiCoreController
     $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
   }
 
+  /**
+   * @param clsPmieducarExemplarEmprestimo $emprestimo
+   */
   protected function verificaEmprestimoEmAtraso($emprestimo){
     $emprestimo->em_atraso = true;
     $emprestimosEmAtraso = $emprestimo->lista(null, null, null, $this->getRequest()->cliente_id);

@@ -324,7 +324,7 @@ class clsPmieducarCurso
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -576,6 +576,8 @@ class clsPmieducarCurso
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $date_data_cadastro_fim
+   * @param integer $int_ativo
    * @return array
    * @todo Os argumentos $int_ref_cod_tipo_avaliacao, $int_media,
    *   $int_media_exame, $int_falta_ch_globalizada, $int_edicao_final,
@@ -825,6 +827,7 @@ class clsPmieducarCurso
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -852,6 +855,7 @@ class clsPmieducarCurso
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

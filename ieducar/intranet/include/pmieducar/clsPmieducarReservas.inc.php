@@ -108,6 +108,9 @@ class clsPmieducarReservas
     /**
      * Construtor (PHP 4)
      *
+     * @param string $data_prevista_disponivel
+     * @param string $data_retirada
+     * @param integer $ativo
      * @return object
      */
     function __construct( $cod_reserva = null, $ref_usuario_libera = null, $ref_usuario_cad = null, $ref_cod_cliente = null, $data_reserva = null, $data_prevista_disponivel = null, $data_retirada = null, $ref_cod_exemplar = null, $ativo = null )
@@ -262,7 +265,7 @@ class clsPmieducarReservas
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -403,6 +406,8 @@ class clsPmieducarReservas
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
+     * @param boolean $data_retirada_null
      * @return array
      */
     function lista( $int_cod_reserva = null, $int_ref_usuario_libera = null, $int_ref_usuario_cad = null, $int_ref_cod_cliente = null, $date_data_reserva_ini = null, $date_data_reserva_fim = null, $date_data_prevista_disponivel_ini = null, $date_data_prevista_disponivel_fim = null, $date_data_retirada_ini = null, $date_data_retirada_fim = null, $int_ref_cod_exemplar = null, $int_ativo = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $data_retirada_null = null )
@@ -620,6 +625,7 @@ class clsPmieducarReservas
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -650,6 +656,7 @@ class clsPmieducarReservas
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )
@@ -680,6 +687,7 @@ class clsPmieducarReservas
     /**
      * Retorna uma lista com as ultimas reservas de cada exemplar
      *
+     * @param integer $int_limite
      * @return string
      */
     function getUltimasReservas( $int_ref_cod_acervo, $int_limite = null )

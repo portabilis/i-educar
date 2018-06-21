@@ -237,7 +237,7 @@ class clsPmicontrolesisTopoPortal
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -368,6 +368,7 @@ class clsPmicontrolesisTopoPortal
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $date_data_exclusao_ini
      * @return array
      */
     function lista( $int_cod_topo_portal = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $int_ref_cod_menu_portal = null, $str_caminho1 = null, $str_caminho2 = null, $str_caminho3 = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null )
@@ -561,6 +562,7 @@ class clsPmicontrolesisTopoPortal
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -591,6 +593,7 @@ class clsPmicontrolesisTopoPortal
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

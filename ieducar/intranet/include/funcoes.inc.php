@@ -76,6 +76,9 @@ function int2CPF($int)
   return substr($str, 0, 3) . '.' . substr($str, 3, 3). '.' . substr($str, 6, 3) . '-' . substr($str, 9, 2);
 }
 
+/**
+ * @param string $file
+ */
 function loadJson($file)
 {
   $jsonFile = file_get_contents($file);   
@@ -149,6 +152,9 @@ function transforma_minusculo($str_nome)
   return $nome;
 }
 
+/**
+ * @return string
+ */
 function quebra_linhas_pdf($str_texto, $qtd_letras_linha = 60)
 {
   $comp_comp = str_replace("\n", ' ', $str_texto);
@@ -617,6 +623,7 @@ function dataToBrasil($data_original, $h_m = FALSE, $h_m_s = FALSE)
  * Formata a data para o formato do banco
  *
  * @param string $data_original data que será transformada
+ * @param boolean $inicial
  * @return string
  * @todo $data_original = NULL sempre será TRUE. Verificar que código chama
  *   esta função. Lógica falha.
@@ -659,7 +666,7 @@ function dataToBanco($data_original, $inicial = NULL)
  * Formata uma data vinda do postgre
  *
  * @param string $data_original data que será transformada
- * @return string
+ * @return integer
  */
 function dataFromPgToTime($data_original)
 {

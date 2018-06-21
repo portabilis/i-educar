@@ -73,6 +73,7 @@ class Portabilis_Date_Utils
   /**
    * Recebe uma data no formato postgres yyyy-mm-dd hh:mm:ss.uuuu e retorna no formato br dd/mm/yyyy hh:mm:ss.
    * @param string $timestamp
+   * @return string
    */
   public static function pgSQLToBr($timestamp) {
     $pgFormat = 'Y-m-d';
@@ -122,7 +123,6 @@ class Portabilis_Date_Utils
 
   /**
    * Recebe uma data no formato yyyy-mm-dd e verifica se é uma data válida considerando o ano bissexto.
-   * @param string $timestamp
    */
   public static function checkDateBissexto($data) {
     $data  = date_parse_from_format("Y-m-d", $data);

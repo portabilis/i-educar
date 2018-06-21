@@ -156,7 +156,7 @@ class clsModulesRotaTransporteEscolar
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -527,6 +527,7 @@ class clsModulesRotaTransporteEscolar
 
   /**
    * Define o campo para ser utilizado como ordenação no método Lista().
+   * @param string $strNomeCampo
    */
   function setOrderby($strNomeCampo)
   {

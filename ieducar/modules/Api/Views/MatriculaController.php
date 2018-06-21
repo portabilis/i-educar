@@ -148,6 +148,9 @@ class MatriculaController extends ApiCoreController
     return $this->safeString($nome);
   }
 
+  /**
+   * @param string $resourceName
+   */
   protected function loadNameFor($resourceName, $id){
     $sql = "select nm_{$resourceName} from pmieducar.{$resourceName} where cod_{$resourceName} = $1";
     $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');

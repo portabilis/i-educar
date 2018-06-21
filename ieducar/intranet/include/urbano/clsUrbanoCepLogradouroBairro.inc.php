@@ -387,7 +387,7 @@ class clsUrbanoCepLogradouroBairro
     /**
      * Edita os dados de um registro
      *
-     * @return bool
+     * @return null|boolean
      */
     function edita()
     {

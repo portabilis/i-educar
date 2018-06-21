@@ -58,6 +58,9 @@ class Portabilis_Messenger {
   }
 
 
+  /**
+   * @param string $type
+   */
   public function hasMsgWithType($type) {
     $hasMsg = false;
 

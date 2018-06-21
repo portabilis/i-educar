@@ -80,6 +80,9 @@
             $this->maxVal = 100;
         }
         
+        /**
+         * @param integer $valor
+         */
         function addZero( $valor )
         {
             if( $valor < 10 )
@@ -117,6 +120,9 @@
             return $retorno;
         }
         
+        /**
+         * @param integer $diasUteis
+         */
         function insereMedia( $ultimoDia, $somaVals, $diasUteis )
         {
             $retorno = "";

@@ -223,7 +223,7 @@ class clsPmicontrolesisItinerario
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -370,6 +370,7 @@ class clsPmicontrolesisItinerario
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_itinerario = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $int_numero = null, $str_itinerario = null, $str_retorno = null, $str_horarios = null, $str_descricao_horario = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_nome = null )
@@ -573,6 +574,7 @@ class clsPmicontrolesisItinerario
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -603,6 +605,7 @@ class clsPmicontrolesisItinerario
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

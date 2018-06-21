@@ -205,6 +205,7 @@ class clsPmieducarEscola
 
   /**
    * Construtor.
+   * @param integer $ativo
    */
   function __construct($cod_escola = NULL,
                               $ref_usuario_cad = NULL,
@@ -372,7 +373,7 @@ class clsPmieducarEscola
 
   /**
    * Cria um novo registro.
-   * @return bool
+   * @return boolean|string
    */
   function cadastra()
   {
@@ -1605,6 +1606,7 @@ class clsPmieducarEscola
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * @param integer $int_ativo
    * @return array
    */
   public function lista($int_cod_escola = NULL, $int_ref_usuario_cad = NULL,
@@ -1881,6 +1883,7 @@ class clsPmieducarEscola
 
   /**
    * Define quais campos da tabela serão selecionados no método Lista().
+   * @param string $str_campos
    */
   function setCamposLista($str_campos)
   {
@@ -1897,6 +1900,7 @@ class clsPmieducarEscola
 
   /**
    * Define limites de retorno para o método Lista().
+   * @param integer $intLimiteQtd
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {

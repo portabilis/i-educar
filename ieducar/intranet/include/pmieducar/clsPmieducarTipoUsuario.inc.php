@@ -106,6 +106,7 @@ class clsPmieducarTipoUsuario
     /**
      * Construtor (PHP 4)
      *
+     * @param integer $ativo
      * @return object
      */
     function __construct( $cod_tipo_usuario = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $nm_tipo = null, $descricao = null, $nivel = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
@@ -208,7 +209,7 @@ class clsPmieducarTipoUsuario
     /**
      * Cria um novo registro
      *
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -325,6 +326,7 @@ class clsPmieducarTipoUsuario
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
+     * @param integer $int_ativo
      * @return array
      */
     function lista( $int_cod_tipo_usuario = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $str_nm_tipo = null, $str_descricao = null, $int_nivel = null, $date_data_cadastro = null, $date_data_exclusao = null, $int_ativo = null, $int_nivel_menor = null )
@@ -513,6 +515,7 @@ class clsPmieducarTipoUsuario
     /**
      * Define limites de retorno para o metodo lista
      *
+     * @param integer $intLimiteQtd
      * @return null
      */
     function setLimite( $intLimiteQtd, $intLimiteOffset = null )
@@ -543,6 +546,7 @@ class clsPmieducarTipoUsuario
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
+     * @param string $strNomeCampo
      * @return null
      */
     function setOrderby( $strNomeCampo )

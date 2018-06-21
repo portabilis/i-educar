@@ -160,6 +160,9 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
     );
   }
 
+  /**
+   * @return integer
+   */
   protected function getPessoaLogada(){
     return $_SESSION['id_pessoa'];
   }

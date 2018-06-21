@@ -83,6 +83,11 @@
         }
         
         // monta as linhas recursivamente
+
+        /**
+         * @param integer $nivel
+         * @param integer $nmPai
+         */
         function getLinha( $arr, $nivel, $nmPai )
         {
             $retorno = "";

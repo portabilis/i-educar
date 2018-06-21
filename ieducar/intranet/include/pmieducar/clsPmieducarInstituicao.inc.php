@@ -322,7 +322,7 @@ class clsPmieducarInstituicao
 
     /**
      * Cria um novo registro.
-     * @return bool
+     * @return boolean|string
      */
     function cadastra()
     {
@@ -970,6 +970,10 @@ class clsPmieducarInstituicao
         return false;
     }
 
+    /**
+     * @param string $ponto_inicio
+     * @param string $ponto_final
+     */
     function parteString($string, $ponto_inicio, $ponto_final)
     {
         $num = 1;
@@ -1178,6 +1182,7 @@ class clsPmieducarInstituicao
 
     /**
      * Define limites de retorno para o método Lista().
+     * @param integer $intLimiteQtd
      */
     function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
@@ -1205,6 +1210,7 @@ class clsPmieducarInstituicao
 
     /**
      * Define o campo para ser utilizado como ordenação no método Lista().
+     * @param string $strNomeCampo
      */
     function setOrderby($strNomeCampo)
     {
