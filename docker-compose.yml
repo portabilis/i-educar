@@ -18,7 +18,7 @@ services:
     volumes:
       - /var/lib/postgresql/data
       - ./docker/postgres_95/init.sql:/docker-entrypoint-initdb.d/00-init.sql
-    image: postgres:9
+    image: postgres:9.5
     environment:
       - POSTGRES_PASSWORD=postgres
     ports:
