@@ -2278,12 +2278,22 @@ protected function cnpjToCenso($cnpj){
       $this->notImplementedOperationError();
   }
 
-    private function isCursoSuperiorBachareladoOuTecnologoCompleto($grauAcademico, $situacao)
+    /**
+     * Retorna true se o grau acadêmido informado for bacharelado ou tecnólogo e se a situação informada for concluído
+     *
+     * @param $grauAcademico
+     * @param $situacao
+     * @return bool
+     */
+    private function isCursoSuperiorBachareladoOuTecnologoCompleto($grauAcademico, $situacao): bool
     {
-        if ($situacao == Ieducar\App\Model\Servidor::SITUACAO_CURSO_SUPERIOR_CONCLUIDO && ($grauAcademico == self::BACHARELADO || $grauAcademico == self::TECNOLOGO)) {
-            return true;
+        if ($situacao != iEducar\App\Model\Servidor::SITUACAO_CURSO_SUPERIOR_CONCLUIDO) {
+            return false;
         }
 
-        return false;
+        return in_array($grauAcademico, [
+            self::BACHARELADO,
+            self::TECNOLOGO
+        ]);
     }
 }

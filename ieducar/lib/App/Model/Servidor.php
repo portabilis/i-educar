@@ -1,6 +1,6 @@
 <?php
 
-namespace Ieducar\App\Model;
+namespace iEducar\App\Model;
 
 class Servidor
 {
