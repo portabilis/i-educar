@@ -41,6 +41,7 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
+require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 
 /**
  * Class EducacensoExportController
@@ -1067,7 +1068,10 @@ class EducacensoExportController extends ApiCoreController
         (ARRAY[13] <@ curso_formacao_continuada)::INT AS r50s40,
         (ARRAY[14] <@ curso_formacao_continuada)::INT AS r50s41,
         (ARRAY[15] <@ curso_formacao_continuada)::INT AS r50s42,
-        (ARRAY[16] <@ curso_formacao_continuada)::INT AS r50s43
+        (ARRAY[16] <@ curso_formacao_continuada)::INT AS r50s43,
+        s.situacao_curso_superior_1,
+        s.situacao_curso_superior_2,
+        s.situacao_curso_superior_3 
         FROM    pmieducar.servidor s
         INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
@@ -1102,7 +1106,7 @@ SQL;
             $return = '';
             $numeroRegistros = 43;
 
-            if ($grau_academico_curso_superior_1 == self::BACHARELADO || $grau_academico_curso_superior_1 == self::TECNOLOGO)) {
+            if ($this->isCursoSuperiorBachareladoOuTecnologoCompleto($grau_academico_curso_superior_1, $situacao_curso_superior_1)) {
                 if (is_null($r50s7)) {
                     $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
                     $this->error = true;
@@ -1111,7 +1115,7 @@ SQL;
                 $r50s7 = null;
             }
 
-            if ($grau_academico_curso_superior_2 == self::BACHARELADO || $grau_academico_curso_superior_2 == self::TECNOLOGO) {
+            if ($this->isCursoSuperiorBachareladoOuTecnologoCompleto($grau_academico_curso_superior_2, $situacao_curso_superior_2)) {
                 if (is_null($r50s13)) {
                     $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
                     $this->error = true;
@@ -1120,7 +1124,7 @@ SQL;
                 $r50s13 = null;
             }
 
-            if ($grau_academico_curso_superior_3 == self::BACHARELADO || $grau_academico_curso_superior_3 == self::TECNOLOGO) {
+            if ($this->isCursoSuperiorBachareladoOuTecnologoCompleto($grau_academico_curso_superior_3, $situacao_curso_superior_3)) {
                 if (is_null($r50s19)) {
                     $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
                     $this->error = true;
@@ -2273,4 +2277,13 @@ protected function cnpjToCenso($cnpj){
     else
       $this->notImplementedOperationError();
   }
+
+    private function isCursoSuperiorBachareladoOuTecnologoCompleto($grauAcademico, $situacao)
+    {
+        if ($situacao == Ieducar\App\Model\Servidor::SITUACAO_CURSO_SUPERIOR_CONCLUIDO && ($grauAcademico == self::BACHARELADO || $grauAcademico == self::TECNOLOGO)) {
+            return true;
+        }
+
+        return false;
+    }
 }
