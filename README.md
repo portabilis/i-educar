@@ -1,3 +1,5 @@
+![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master)
+
 # i-Educar
 
 _“Lançando o maior software livre educacional do Brasil!”._
