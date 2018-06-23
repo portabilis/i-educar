@@ -2,7 +2,11 @@ filter:
     excluded_paths:
         - 'ieducar/tests/*'
         - 'ieducar/misc/**/*'
-        - '/ieducar/intranet/scripts/jquery'
+        - 'ieducar/intranet/scripts/jquery'
+        - 'ieducar/intranet/scripts/scriptaculous'
+        - 'ieducar/intranet/scripts/prototype'
+        - 'ieducar/intranet/scripts/select2'
+        - 'ieducar/intranet/scripts/graficos'
 
 checks:
     php:
