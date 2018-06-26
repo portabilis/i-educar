@@ -148,11 +148,15 @@ class indice extends clsCadastro
 //          $this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];
 //          $this->campoOculto( "ref_cod_instituicao", $this->ref_cod_instituicao );
 //      }
+        $option = false;
+        if ($this->validarAnoLetivoEscola() or $this->validarAnoLetivoTurma()){
+            $option = true;
+        }
 
         // text
         $this->campoTexto( "nm_tipo", "Etapa", $this->nm_tipo, 30, 255, true );
         $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
-        $this->campoNumero( "num_etapas", "N&uacute;mero de etapas", $this->num_etapas, 2, 2, true );
+        $this->campoNumero( "num_etapas", "N&uacute;mero de etapas", $this->num_etapas, 2, 2, true, null, null, null, null, null, $option);
         $this->campoNumero( "num_meses", "N&uacute;mero de meses", $this->num_meses, 2, 2, false );
         $this->campoNumero( "num_semanas", "N&uacute;mero de semanas", $this->num_semanas, 2, 2, false );
     }
@@ -247,6 +251,36 @@ class indice extends clsCadastro
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao excluir clsPmieducarModulo\nvalores obrigatorios\nif( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
         return false;
+    }
+
+    function validarAnoLetivoEscola(){
+        if (! $this->cod_modulo) {
+            return false;
+        }
+
+        $obj = new clsPmieducarAnoLetivoModulo($this->cod_modulo);
+        $result = $obj->lista(null, null, null, $this->cod_modulo);
+
+        if (! $result > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function validarAnoLetivoTurma(){
+        if (! $this->cod_modulo) {
+            return false;
+        }
+
+        $obj = new clsPmieducarTurmaModulo($this->cod_modulo);
+        $result = $obj->lista(null, $this->cod_modulo);
+
+        if (! $result > 0) {
+            return false;
+        }
+
+        return true;
     }
 }
 
