@@ -474,20 +474,16 @@ class clsPmieducarTipoUsuario
      */
     function excluir()
     {
-        if( is_numeric( $this->cod_tipo_usuario ) && is_numeric( $this->ref_funcionario_exc ) )
-        {
-
-        /*
-            delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_tipo_usuario = '{$this->cod_tipo_usuario}'" );
-        return true;
-        */
-
-        $this->ativo = 0;
-            return $this->edita();
+        if (!is_numeric($this->cod_tipo_usuario)) {
+            return false;
         }
-        return false;
+
+        if (!is_numeric($this->ref_funcionario_exc)) {
+            return false;
+        }
+        
+        $this->ativo = 0;
+        return $this->edita();
     }
     
     /**
@@ -569,6 +565,14 @@ class clsPmieducarTipoUsuario
         }
         return "";
     }
-    
+
+    public function possuiUsuarioRelacionado()
+    {
+        $db = new clsBanco();
+        $resultado = $db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE ref_cod_tipo_usuario = {$this->cod_tipo_usuario}");
+
+        return (bool)$resultado;
+    }
+
 }
 ?>

@@ -335,30 +335,35 @@ class indice extends clsCadastro
     die();
   }
 
-  function Excluir()
-  {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    function Excluir()
+    {
+        session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-    $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada);
-    $detalhe = $tipoUsuario->detalhe();
+        $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, null, $this->pessoa_logada);
+        $detalhe = $tipoUsuario->detalhe();
 
-    if ($tipoUsuario->excluir()) {
-      $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
-      $auditoria->exclusao($detalhe);
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+        if ($tipoUsuario->possuiUsuarioRelacionado()) {
+            $this->mensagem = 'Não é possível excluir um Tipo de Usuário com usuários relacionados<br>';
+            return false;
+        }
 
-      $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
-      $menuTipoUsuario->excluirTudo();
+        if ($tipoUsuario->excluir()) {
+            $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+            $auditoria->exclusao($detalhe);
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
 
-      header('Location: educar_tipo_usuario_lst.php');
-      die();
+            $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
+            $menuTipoUsuario->excluirTudo();
+
+            header('Location: educar_tipo_usuario_lst.php');
+            die();
+        }
+
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        return false;
     }
-
-    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-    return FALSE;
-  }
 }
 
 // Instancia objeto de página
