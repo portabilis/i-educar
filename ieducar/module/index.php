@@ -82,7 +82,7 @@ catch (Exception $e) {
   @session_write_close();
 
   error_log("Erro inesperado (pego em /module/index.php): " . $e->getMessage());
-  NotificationMailer::unexpectedError($e->getMessage());
+  (new NotificationMailer)->unexpectedError($e->getMessage());
 
   die("<script>document.location.href = '/module/Error/unexpected';</script>");
 }

@@ -49,7 +49,9 @@ class Avaliacao_Model_ParecerDescritivoGeralDataMapper
   protected $_entityClass = 'Avaliacao_Model_ParecerDescritivoGeral';
   protected $_tableName   = 'parecer_geral';
 
-  protected $_attributeMap = array(
-    'componenteCurricular' => 'componente_curricular_id',
+
+  protected $_primaryKey = array(
+      'parecerDescritivoAluno' => 'parecer_aluno_id',
+      'etapa' => 'etapa'
   );
 }
