@@ -7,6 +7,8 @@ filter:
         - 'ieducar/intranet/scripts/prototype'
         - 'ieducar/intranet/scripts/select2'
         - 'ieducar/intranet/scripts/graficos'
+        - 'ieducar/modules/Portabilis/Assets/Plugins/AjaxChosen/'
+        - 'ieducar/modules/Portabilis/Assets/Plugins/Chosen/'
 
 checks:
     php:
