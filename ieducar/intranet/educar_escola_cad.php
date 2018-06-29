@@ -911,28 +911,7 @@ class indice extends clsCadastro
             $options = array('disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('condicao', $options);
 
-            $options = array('label' => 'Código da escola que compartilha o prédio 1',
-                'disabled' => $disabled,
-                'label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
-                'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false,
-                'size' => 8, 'max_length' => 8, 'placeholder' => '');
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada', $options);
-            $options['label'] = 'Código da escola que compartilha o prédio 2';
-            $options['value'] = $this->codigo_inep_escola_compartilhada2;
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada2', $options);
-            $options['label'] = 'Código da escola que compartilha o prédio 3';
-            $options['value'] = $this->codigo_inep_escola_compartilhada3;
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada3', $options);
-            $options['label'] = 'Código da escola que compartilha o prédio 4';
-            $options['value'] = $this->codigo_inep_escola_compartilhada4;
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada4', $options);
-            $options['label'] = 'Código da escola que compartilha o prédio 5';
-            $options['value'] = $this->codigo_inep_escola_compartilhada5;
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada5', $options);
-            $options['label'] = 'Código da escola que compartilha o prédio 6';
-            $options['value'] = $this->codigo_inep_escola_compartilhada6;
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada6', $options);
-
+            $this->geraCamposCodigoInepEscolaCompartilhada();
 
             $resources = array(null => 'Selecione',
                 1 => 'Difícil',
@@ -2315,6 +2294,20 @@ class indice extends clsCadastro
             return false;
         }
         return true;
+    }
+
+    protected function geraCamposCodigoInepEscolaCompartilhada() {
+        $options = array('label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
+                        'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => '');
+
+        for ( $i = 1; $i <= 6; $i++){
+            $seq = $i == 1 ? '' : $i;
+            $options['label'] = 'Código da escola que compartilha o prédio '.$seq;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $options['value'] = $this->$campo;
+            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
+        }
+
     }
 }
 
