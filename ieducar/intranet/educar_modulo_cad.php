@@ -104,7 +104,7 @@ class indice extends clsCadastro
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $option = false;
-        if ($this->validarAnoLetivoEscola() or $this->validarAnoLetivoTurma())
+        if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma())
         {
             $option = true;
         }
@@ -206,7 +206,7 @@ class indice extends clsCadastro
         return false;
     }
 
-    function validarAnoLetivoEscola()
+    function existeEtapaNaEscola()
     {
         if (! $this->cod_modulo)
         {
@@ -223,7 +223,7 @@ class indice extends clsCadastro
         return true;
     }
 
-    function validarAnoLetivoTurma()
+    function existeEtapaNaTurma()
     {
         if (! $this->cod_modulo) {
             return false;
