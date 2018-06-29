@@ -590,15 +590,14 @@ class EducacensoExportController extends ApiCoreController
           ${'r10s'.$i} = 0;
       }
 
-      $isEscolaCompartilhada = false;
+      $existeEscolaCompartilhada = false;
       for ($i=14; $i <= 19 ; $i++){
-        ${'r10s'.$i} = ${'r10s'.$i};
-        if (${'r10s'.$i} != null && !$isEscolaCompartilhada){
-          $isEscolaCompartilhada = true;
+        if (${'r10s'.$i} != null && !$existeEscolaCompartilhada){
+          $existeEscolaCompartilhada = true;
         }
       }
 
-      if($isEscolaCompartilhada){
+      if($existeEscolaCompartilhada){
         $r10s13 = 1;
       }else
         $r10s13 = 0;
