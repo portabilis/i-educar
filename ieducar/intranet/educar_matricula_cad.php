@@ -211,64 +211,184 @@ class indice extends clsCadastro
     $curso = new clsPmieducarCurso($id);
     return $curso->detalhe();
   }
-  function Enturmar(){
-    $enturmacoes_turma_dest = Portabilis_Utils_Database::fetchPreparedQuery("
-                                                                  select * from pmieducar.matricula_turma
-                                                                  where ref_cod_turma = {$this->ref_cod_turma} and ativo = 1");
-    $qtq_alunos = count($enturmacoes_turma_dest);
-    $db = new clsBanco();
-    $max_aluno = $db->CampoUnico("select max_aluno from pmieducar.turma where cod_turma = $this->ref_cod_turma");
-    $saldo_turma = $max_aluno - $qtq_alunos;
-//echo $this->ref_cod_turma;die;
-    $enturmacoes = Portabilis_Utils_Database::fetchPreparedQuery("
-                                                                  select * from pmieducar.matricula_turma
-                                                                  where ref_cod_turma = {$this->ref_cod_turma_copiar_enturmacoes} and ativo = 1");
-    $qtd_alunos_new = count($enturmacoes);
-    if ($qtd_alunos_new < $saldo_turma){
-      foreach ($enturmacoes as $enturmar) {
-         //echo $enturmar['ref_cod_matricula']."fd".$this->ref_cod_turma;die;
-        $dado_matricula_old = Portabilis_Utils_Database::fetchPreparedQuery("
-                                                                  select * from pmieducar.matricula where cod_matricula = {$enturmar['ref_cod_matricula']} limit 1");
-        if (!$existe){
-        $data = date( "Y-m-d");
-        $datah = date( "Y-m-d H:i:s");
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        //print_r($dado_matricula_old[0]['ref_ref_cod_escola']);die;
-        $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
-        $obj = new clsPmieducarMatricula(NULL, NULL,
-          $dado_matricula_old[0]['ref_ref_cod_escola'], $dado_matricula_old[0]['ref_ref_cod_serie'], NULL,
-          $this->pessoa_logada, $dado_matricula_old[0]['ref_cod_aluno'], 3, NULL, NULL, 1, $dado_matricula_old[0]['ano'],
-          1, NULL, NULL, NULL, NULL, $dado_matricula_old[0]['ref_cod_curso'],
-          NULL, 1, $datah);
-        $matricula_new = $obj->cadastra();
-        $db = new clsBanco();
-        $existe = $db->CampoUnico("select 1 from pmieducar.matricula_turma, pmieducar.matricula
-                                      where ref_cod_matricula = cod_matricula
-                                      and ref_cod_turma = {$this->ref_cod_turma}
-                                      and ref_cod_aluno = {$dado_matricula_old[0]['ref_cod_aluno']}");
-          $db = new clsBanco();
-          $db->CampoUnico("insert into pmieducar.matricula_turma
-                           (ref_cod_matricula,
-                            ref_cod_turma,
-                            sequencial,
-                            ref_usuario_exc,
-                            ref_usuario_cad,
-                            data_cadastro,
-                            ativo,
-                            data_enturmacao)
-                           values
-                           ({$matricula_new}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL,
-                            {$enturmar['ref_usuario_cad']}, '{$datah}', {$enturmar['ativo']}, '{$data}')");
-        }
-      }
-      header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
-        die;
-    }else{
-      $this->mensagem = Portabilis_String_Utils::toLatin1("A turma não tem saldo de vagas suficiente.");
-      //header("Location: educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes= {$this->ref_cod_turma_copiar_enturmacoes}");
-      return FALSE;
+
+    /**
+     * Retorna todas enturmações ativas na turma. Consulta e retorna `todos` os
+     * campos da tabela `matricula_turma`.
+     *
+     * TODO mover este método para uma camada de serviço/repositório
+     *
+     * @param int $turma ID da turma
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    private function getEnturmacoesNaTurma($turma)
+    {
+        return (array) Portabilis_Utils_Database::fetchPreparedQuery(
+            "
+                select * 
+                from pmieducar.matricula_turma
+                where ref_cod_turma = {$turma} 
+                and ativo = 1
+            "
+        );
     }
-  }
+
+    /**
+     * Retorna a quantidade máxima de alunos permitido na turma. Consulta e
+     * retorna o campo `max_aluno` da tabela `turma`.
+     *
+     * TODO mover este método para uma camada de serviço/repositório
+     *
+     * @param int $turma ID da turma
+     *
+     * @return int
+     */
+    private function getMaximoAlunosNaTurma($turma)
+    {
+        return (int) (new clsBanco())->CampoUnico(
+            "
+                select max_aluno 
+                from pmieducar.turma 
+                where cod_turma = $turma
+            "
+        );
+    }
+
+    /**
+     * Retorna os dados de uma matrícula. Consulta e retorna `todos` os campos
+     * da tabela `matricula`.
+     *
+     * TODO mover este método para uma camada de serviço/repositório
+     *
+     * @param int $matricula ID da matrícula (cod_matricula)
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    private function getMatricula($matricula)
+    {
+        $matriculas = Portabilis_Utils_Database::fetchPreparedQuery(
+            "
+                    select * 
+                    from pmieducar.matricula 
+                    where cod_matricula = {$matricula} 
+                    limit 1
+                "
+        );
+
+        if (is_array($matriculas) && count($matriculas)) {
+            return array_shift($matriculas);
+        }
+
+        throw new Exception("A matrícula {$matricula} não foi encontrada.");
+    }
+
+    /**
+     * Cria uma nova matrícula e retorna o ID criado (cod_matricula).
+     *
+     * TODO mover este método para uma camada de serviço/repositório
+     *
+     * @param int $escola ID da escola (cod_escola)
+     * @param int $curso  ID do curso (cod_curso)
+     * @param int $serie  ID da série (cod_serie)
+     * @param int $aluno  ID do aluno (cod_aluno)
+     * @param int $ano    Ano da matrícula
+     *
+     * @return int ID da matrícula criada (cod_matricula)
+     */
+    private function addMatricula($escola, $curso, $serie, $aluno, $ano)
+    {
+        $datahora = date('Y-m-d H:i:s');
+
+        $obj = new clsPmieducarMatricula(
+            null, null, $escola, $serie, null, $_SESSION['id_pessoa'], $aluno, 3, null, null, 1, $ano, 1, null, null,
+            null, null, $curso, null, 1, $datahora
+        );
+
+        return $obj->cadastra();
+    }
+
+    /**
+     * Cria uma enturmação.
+     *
+     * TODO mover este método para uma camada de serviço/repositório
+     *
+     * @param int $matricula  ID da matrícula
+     * @param int $turma      ID da matrícula
+     * @param int $sequencial Sequencial da matrícula
+     * @param int $ativo      Status da matrícula 0: inativo 1: ativo
+     *
+     * @return bool
+     */
+    private function addEnturmacao($matricula, $turma, $sequencial, $ativo)
+    {
+        $data = date('Y-m-d');
+        $datahora = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_pessoa'];
+
+        (new clsBanco)->CampoUnico(
+            "
+                    insert into pmieducar.matricula_turma (
+                        ref_cod_matricula, ref_cod_turma, sequencial, ref_usuario_exc, ref_usuario_cad, data_cadastro,
+                        ativo, data_enturmacao
+                    )
+                    values ({$matricula}, {$turma}, {$sequencial}, NULL, {$usuario}, '{$datahora}', {$ativo}, '{$data}')
+                "
+        );
+
+        return true;
+    }
+
+    /**
+     * Copia todos os alunos enturmados na turma `$this->ref_cod_turma_copiar_enturmacoes`
+     * para a turma `$this->ref_cod_turma`. Estes parâmetros são passados por
+     * $_GET para a aplicação.
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function Enturmar()
+    {
+        try {
+            $enturmacoesNaTurmaDestino = $this->getEnturmacoesNaTurma($this->ref_cod_turma);
+            $enturmacoesParaCopiar = $this->getEnturmacoesNaTurma($this->ref_cod_turma_copiar_enturmacoes);
+        } catch (Exception $e) {
+            $this->mensagem = 'Houve um erro ao buscar informações das turmas.';
+            return false;
+        }
+
+        $maximoDeAlunosTurmaDestino = $this->getMaximoAlunosNaTurma($this->ref_cod_turma);
+        $quantidadeAlunosNaTurmaDestino = count($enturmacoesNaTurmaDestino);
+        $quantidadeAlunosParaCopiar = count($enturmacoesParaCopiar);
+        $vagasDisponiveisTurmaDestino = $maximoDeAlunosTurmaDestino - $quantidadeAlunosNaTurmaDestino;
+
+        if ($quantidadeAlunosParaCopiar > $vagasDisponiveisTurmaDestino) {
+            $this->mensagem = 'A turma não tem saldo de vagas suficiente.';
+            return false;
+        }
+
+        foreach ($enturmacoesParaCopiar as $enturmar) {
+            $dadosDaMatricula = $this->getMatricula($enturmar['ref_cod_matricula']);
+
+            $matricula = $this->addMatricula(
+                $this->ref_cod_escola,
+                $this->ref_cod_curso,
+                $this->ref_cod_serie,
+                $dadosDaMatricula['ref_cod_aluno'],
+                $this->ano
+            );
+
+            $this->addEnturmacao($matricula, $this->ref_cod_turma, $enturmar['sequencial'], $enturmar['ativo']);
+        }
+
+        header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
+        die();
+    }
 
   function Novo()
   {

@@ -277,7 +277,7 @@ class indice extends clsCadastro
         if (validaControlePosicaoHistorico()) {
             $this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2' );
         }
-        $this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
+        $this->campoNumero( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
         $this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
         $this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
         $this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, false);
@@ -341,7 +341,7 @@ class indice extends clsCadastro
         }
 
 
-        $this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", '<p title="Informe a carga horária somente se a disciplina não pertencer à grade curricular do município.">C.H (?)</p>', "Ordem", "Dependência"),$this->historico_disciplinas);
+        $this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", 'C.H', "Ordem", "Dependência"),$this->historico_disciplinas);
 
         //$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
         $this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
