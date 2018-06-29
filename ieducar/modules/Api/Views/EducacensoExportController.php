@@ -497,7 +497,6 @@ class EducacensoExportController extends ApiCoreController
       e.computadores_administrativo as r10s84,
       e.computadores_alunos as r10s85,
       e.acesso_internet as r10s86,
-      e.banda_larga as r10s87,
 
       total_funcionario as r10s88,
       1 as r10s89,
@@ -616,8 +615,10 @@ class EducacensoExportController extends ApiCoreController
       }
 
       if (!$r10s82) {
-        $r10s86 = $r10s87 = NULL;
+        $r10s86 = NULL;
       }
+
+      $r10s87 = $r10s86 == 1 ? 1 : null;
 
       $r10s96 = $etapa_ensino_fundamental ? $r10s96 : NULL;
 
