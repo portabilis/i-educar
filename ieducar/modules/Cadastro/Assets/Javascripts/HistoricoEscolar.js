@@ -2,16 +2,6 @@ $j(document).ready(function(){
 	var codigoEscola = document.getElementById('codigoEscola').value;
 	var nomeEscola = document.getElementById('escola').value;
 	var numeroSequencial = document.getElementById('numeroSequencial').value;
-	var aprovadoDependencia = $j('#aprovado').val() == 12;
-	
-	if(!aprovadoDependencia){
-		$j('.disciplinaDependencia').hide();
-		$j('#td_Dependência').hide();
-	}
-	else{
-		$j('.disciplinaDependencia').show();
-		$j('#td_Dependência').show();
-	}
 
 	//Quando for novo cadastro
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
@@ -59,17 +49,6 @@ $j(document).ready(function(){
 		}
 	});
 
-	$j('#aprovado').change(function (){
-		var aprovadoDependencia = $j('#aprovado').val() == 12;
-		if(!aprovadoDependencia){
-			$j('.disciplinaDependencia').hide();
-			$j('#td_Dependência').hide();
-		}
-		else{
-			$j('.disciplinaDependencia').show();
-			$j('#td_Dependência').show();
-		}
-	});	
 });
 
 document.getElementById('cb_faltas_globalizadas').onclick =function()

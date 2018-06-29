@@ -122,48 +122,43 @@ class clsJuridica
     function edita()
     {
         // verifica campos obrigatorios para edicao
-        if(is_numeric($this->idpes) && is_numeric($this->idpes_rev))
-        {
-            $set = "";
-            $gruda = "";
-            if(is_string($this->fantasia) )
-            {
-                $set = " fantasia = '$this->fantasia' ";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->insc_estadual ) )
-            {
-                if( $this->insc_estadual )
-                {
-                    $set .= "$gruda insc_estadual = '$this->insc_estadual' ";
-                }
-                else
-                {
-                    $set .= "$gruda insc_estadual = NULL ";
-                }
-            }
-            else
-            {
-                $set .= "$gruda insc_estadual = NULL ";
+        if (is_numeric($this->idpes) && is_numeric($this->idpes_rev)) {
+
+            $set = [];
+            if (is_string($this->fantasia)) {
+                $set[] = " fantasia = '$this->fantasia' ";
             }
 
-            if(is_string($this->capital_social) )
-            {
-                $set .= "{$gruda} capital_social = '$this->capital_social' ";
-                $gruda = ", ";
+            if (is_numeric($this->insc_estadual)) {
+                if ($this->insc_estadual) {
+                    $set[] = " insc_estadual = '$this->insc_estadual' ";
+                } else {
+                    $set[] = " insc_estadual = NULL ";
+                }
+            } else {
+                $set[] = " insc_estadual = NULL ";
             }
-            if($this->idpes_rev)
-            {
-                $set .= "{$gruda} idpes_rev = '$this->idpes_rev' ";
+
+            if (is_string($this->capital_social)) {
+                $set[] = " capital_social = '$this->capital_social' ";
             }
-            if($set)
-            {
+
+            if ($this->idpes_rev) {
+                $set[] = " idpes_rev = '$this->idpes_rev' ";
+            }
+
+            if (is_numeric($this->cnpj)) {
+                $set[] = " cnpj = '$this->cnpj' ";
+            }
+
+            if ($set) {
+                $campos = implode(', ', $set);
                 $db = new clsBanco();
                 $detalheAntigo = $this->detalhe();
-                $db->Consulta( "UPDATE {$this->schema}.{$this->tabela} SET $set WHERE idpes = '$this->idpes' " );
+                $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET $campos WHERE idpes = '$this->idpes' ");
 
-        $auditoria = new clsModulesAuditoriaGeral("juridica", $this->pessoa_logada, $this->idpes);
-        $auditoria->alteracao($detalheAntigo, $this->detalhe());
+                $auditoria = new clsModulesAuditoriaGeral("juridica", $this->pessoa_logada, $this->idpes);
+                $auditoria->alteracao($detalheAntigo, $this->detalhe());
                 return true;
             }
         }
