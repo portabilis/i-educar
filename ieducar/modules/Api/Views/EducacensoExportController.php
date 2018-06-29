@@ -1767,7 +1767,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r70s'.$i}.$d;
 
-      $return = substr_replace($return, "", -1);
+      $return = $this->upperAndUnaccent(substr_replace($return, "", -1));
 
       $return .= "\n";
     }
