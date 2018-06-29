@@ -623,7 +623,11 @@ class clsPmieducarEscolaSerieDisciplina
                                                     FROM pmieducar.dispensa_disciplina
                                                    WHERE dispensa_disciplina.ref_cod_disciplina NOT IN ({$componentesSelecionados})
                                                      AND dispensa_disciplina.ref_cod_escola = {$this->_tabela}.ref_ref_cod_escola
-                                                     AND dispensa_disciplina.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie))";
+                                                     AND dispensa_disciplina.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie
+                                                     AND dispensa_disciplina.ref_cod_disciplina IN (SELECT ref_cod_disciplina
+                                                                                                      FROM pmieducar.escola_serie_disciplina esd
+                                                                                                     WHERE dispensa_disciplina.ref_cod_escola = esd.ref_ref_cod_escola
+                                                                                                       AND dispensa_disciplina.ref_cod_serie = esd.ref_ref_cod_serie)))";
             return dbBool($db->CampoUnico($sql));
         }
         return FALSE;
