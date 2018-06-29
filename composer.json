@@ -23,12 +23,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Ieducar\\": "src"
+      "iEducar\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Ieducar\\": "tests"
+      "Tests\\": "tests"
     }
   },
   "scripts": {
