@@ -1335,30 +1335,14 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio 1')) {
-            return false;
+        for ( $i = 1; $i <= 6; $i++) {
+            $seq = $i == 1 ? '' : $i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            if (!$ret) {
+                return false;
+            }
         }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada2, 'Código da escola que compartilha o prédio 2')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada3, 'Código da escola que compartilha o prédio 3')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada4, 'Código da escola que compartilha o prédio 4')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada5, 'Código da escola que compartilha o prédio 5')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada6, 'Código da escola que compartilha o prédio 6')) {
-            return false;
-        }
-
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
@@ -1726,28 +1710,13 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio 1')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada2, 'Código da escola que compartilha o prédio 2')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada3, 'Código da escola que compartilha o prédio 3')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada4, 'Código da escola que compartilha o prédio 4')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada5, 'Código da escola que compartilha o prédio 5')) {
-            return false;
-        }
-
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada6, 'Código da escola que compartilha o prédio 6')) {
-            return false;
+        for ( $i = 1; $i <= 6; $i++) {
+            $seq = $i == 1 ? '' : $i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            if (!$ret) {
+                return false;
+            }
         }
 
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
@@ -2302,7 +2271,7 @@ class indice extends clsCadastro
 
         for ( $i = 1; $i <= 6; $i++){
             $seq = $i == 1 ? '' : $i;
-            $options['label'] = 'Código da escola que compartilha o prédio '.$seq;
+            $options['label'] = 'Código da escola que compartilha o prédio '.$i;
             $campo = 'codigo_inep_escola_compartilhada'.$seq;
             $options['value'] = $this->$campo;
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
