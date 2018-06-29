@@ -379,7 +379,6 @@ class indice extends clsCadastro
       'computadores_administrativo' => $dadosRegistro[84-1],
       'computadores_alunos' => $dadosRegistro[85-1],
       'acesso_internet' => $dadosRegistro[86-1],
-      'banda_larga' => $dadosRegistro[87-1],
       'total_funcionario' => $dadosRegistro[88-1],
       'atendimento_aee' => $dadosRegistro[90-1],
       'atividade_complementar' => $dadosRegistro[91-1],
