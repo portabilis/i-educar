@@ -306,10 +306,10 @@ class EducacensoExportController extends ApiCoreController
         COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) as r00s14,
         COALESCE(ep.numero, ee.numero) as r00s15,
         COALESCE(ep.complemento, ee.complemento) as r00s16,
-        COALESCE(b.nome, ee.bairro) as r00s17,
+        COALESCE(bairro.nome, ee.bairro) as r00s17,
         uf.cod_ibge as r00s18,
-        m.cod_ibge as r00s19,
-        d.cod_ibge as r00s20,
+        municipio.cod_ibge as r00s19,
+        distrito.cod_ibge as r00s20,
 
         (SELECT COALESCE(
           (SELECT min(fone_pessoa.ddd)
@@ -371,14 +371,19 @@ class EducacensoExportController extends ApiCoreController
         INNER JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = gestor_p.idpes)
          LEFT JOIN cadastro.endereco_externo ee ON (ee.idpes = p.idpes)
          LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-         LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-         LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
-         LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-         LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
-         LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
-         LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-         LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
-         LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+         LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(ep.idbai, (SELECT b.idbai
+                                                                   FROM public.bairro b
+                                                                       INNER JOIN cadastro.endereco_externo ee
+                                                                           ON (UPPER(ee.bairro) = UPPER(b.nome))
+                                                                   WHERE ee.idpes = e.ref_idpes
+                                                                   LIMIT 1)))
+        LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
+        LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
+        LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
+    
+        LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+        LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+        LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
         WHERE e.cod_escola = $1
     ';
     // Transforma todos resultados em variáveis
