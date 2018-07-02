@@ -380,7 +380,7 @@ class EducacensoExportController extends ApiCoreController
         LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
         LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
         LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
-    
+
         LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
         LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
         LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
@@ -395,7 +395,7 @@ class EducacensoExportController extends ApiCoreController
       $r00s2 = substr($r00s2, 0, 8);
       $r00s3 = $this->cpfToCenso($r00s3);
       $r00s4 = $this->convertStringToCenso($r00s4);
-      $r00s6 = strtoupper($r00s6);
+      $r00s6 = $this->convertEmailToCenso($r00s6);
 
       $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
       $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
@@ -405,7 +405,7 @@ class EducacensoExportController extends ApiCoreController
       $r00s15 = $this->convertStringToCenso($r00s15);
       $r00s16 = $this->convertStringToCenso($r00s16);
       $r00s17 = $this->convertStringToCenso($r00s17);
-      $r00s26 = strtoupper($r00s26);
+      $r00s26 = $this->convertEmailToCenso($r00s26);
       $r00s27 = ($r00s27 ? str_pad($r00s27, 5, "0", STR_PAD_LEFT) : NULL);
 
       $r00s37 = $this->cnpjToCenso($r00s37);
@@ -887,7 +887,7 @@ class EducacensoExportController extends ApiCoreController
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
     if ($r30s1){
       $r30s5 = $this->convertStringToCenso($r30s5);
-      $r30s6 = strtoupper($r30s6);
+      $r30s6 = $this->convertEmailToCenso($r30s6);
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
@@ -1077,7 +1077,7 @@ class EducacensoExportController extends ApiCoreController
         (ARRAY[16] <@ curso_formacao_continuada)::INT AS r50s43,
         s.situacao_curso_superior_1,
         s.situacao_curso_superior_2,
-        s.situacao_curso_superior_3 
+        s.situacao_curso_superior_3
         FROM    pmieducar.servidor s
         INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
@@ -1719,6 +1719,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       extract($reg);
 
       $r70s8 = Portabilis_Date_Utils::pgSQLToBr($r70s8);
+
+      // deixa apenas dígitos no livro da certidão civil (formato antigo) - sistema do Educacenso está recusando outros caracteres
+      $r70s13 = preg_replace('/\D/', '', $r70s13);
+
       $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
       $r70s18 = $this->convertStringToCertNovoFormato($r70s18);
