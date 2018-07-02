@@ -16,6 +16,7 @@
     "portabilis/jasperphp": "v1.2.0",
     "robmorgan/phinx": "v0.8.1",
     "swiftmailer/swiftmailer": "^6.0",
+    "symfony/routing": "^3.4",
     "symfony/symfony": "^3.4"
   },
   "require-dev": {
