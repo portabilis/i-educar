@@ -153,7 +153,7 @@ class clsDocumento
         $objUj = new clsUf($str_sigla_uf_cart_trabalho);
 
         if ($objUj->detalhe()) {
-            $this->sigla_uf_cart_trabalho= $str_sigla_uf_cart_trabalho;
+            $this->sigla_uf_cart_trabalho = $str_sigla_uf_cart_trabalho;
         }
 
         $this->num_tit_eleitor = $int_num_tit_eleitor;
