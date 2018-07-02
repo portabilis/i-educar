@@ -35,6 +35,7 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'lib/Portabilis/Utils/Validation.php';
 
 /**
  * Class EducacensoAnaliseController
@@ -1145,6 +1146,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    municipio.idmun AS idmun,
                    aluno.cod_aluno AS cod_aluno,
                    aluno.recursos_prova_inep[1] AS recursos_prova_inep,
+                   eca.cod_aluno_inep AS inep_aluno,
                    EXISTS (SELECT 1
                              FROM cadastro.fisica_deficiencia fd,
                                   cadastro.deficiencia d
@@ -1164,6 +1166,7 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = fisica.idpes)
               LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+              LEFT JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = aluno.cod_aluno)
              WHERE aluno.ativo = 1
                AND turma.ativo = 1
                AND turma.visivel = TRUE
@@ -1196,6 +1199,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $codAluno = $aluno["cod_aluno"];
       $siglaUF = $aluno["sigla_uf"];
       $codMunicipio = $aluno["idmun"];
+      $inepAluno = trim($aluno["inep_aluno"]);
 
       if (is_null($aluno["cor_raca"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) aluno(a) {$nomeAluno} foi informada.",
@@ -1219,6 +1223,12 @@ class EducacensoAnaliseController extends ApiCoreController
           $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) aluno(a) {$nomeAluno} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
                               "path" => "(Endereçamento > Cadastros > Municípios > Editar > Campo: Código INEP)",
                               "linkPath" => "/intranet/public_municipio_cad.php?idmun={$codMunicipio}",
+                              "fail" => true);
+        }
+        if (!empty($inepAluno) && strlen($inepAluno) !== 12) {
+          $mensagem[] = array("text" => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que o INEP do(a) aluno(a) {$nomeAluno} possui tamanho inválido.",
+                              "path" => "(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Dados pessoais > Campo: Código INEP)",
+                              "linkPath" => "/module/Cadastro/aluno?id={$codAluno}",
                               "fail" => true);
         }
         if (dbBool($aluno["possui_deficiencia"]) && empty($aluno["recursos_prova_inep"])) {
@@ -1247,9 +1257,13 @@ class EducacensoAnaliseController extends ApiCoreController
                    documento.rg AS rg,
                    documento.sigla_uf_exp_rg AS sigla_uf_rg,
                    documento.idorg_exp_rg AS orgao_emissor_rg,
+                   documento.data_exp_rg as data_exp_rg,
                    documento.tipo_cert_civil AS tipo_cert_civil,
                    documento.num_termo AS num_termo,
+                   documento.num_livro AS num_livro,
                    documento.sigla_uf_cert_civil AS uf_cartorio,
+                   documento.data_emissao_cert_civil AS data_emissao_cert_civil,
+                   documento.certidao_nascimento AS certidao_nascimento_novo_formato,
                    codigo_cartorio_inep.id_cartorio AS cod_cartorio,
                    uf.cod_ibge AS uf_inep,
                    uf.sigla_uf AS sigla_uf,
@@ -1259,7 +1273,9 @@ class EducacensoAnaliseController extends ApiCoreController
                    uf_rg.cod_ibge AS uf_inep_rg,
                    fisica.nacionalidade AS nacionalidade,
                    endereco_pessoa.cep AS cep,
-                   fisica.zona_localizacao_censo AS zona_localizacao
+                   fisica.zona_localizacao_censo AS zona_localizacao,
+                   fisica.nis_pis_pasep AS nis_aluno,
+                   fisica.data_nasc AS data_nasc
               FROM pmieducar.aluno
               JOIN pmieducar.escola ON escola.cod_escola = $2
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
@@ -1307,6 +1323,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $nascimentoAntigoFormato = 91;
     $casamentoAntigoFormato  = 92;
     $estrangeiro = 3;
+    $dataAtual = date("Y-m-d");
 
     foreach ($alunos as $aluno) {
       $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
@@ -1314,6 +1331,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $idpesAluno = $aluno["idpes_aluno"];
       $siglaUF = $aluno["sigla_uf"];
       $codMunicipio = $aluno["idmun"];
+      $nisAluno = trim($aluno["nis_aluno"]);
+      $certidaoAlunoNovoFormato = trim($aluno["certidao_nascimento_novo_formato"]);
 
       if ($aluno["rg"]) {
         if (!$aluno["orgao_emissor_rg"]) {
@@ -1334,6 +1353,17 @@ class EducacensoAnaliseController extends ApiCoreController
                               "linkPath" => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}",
                               "fail" => true);
         }
+        if (empty($aluno["data_exp_rg"])) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também a data de emissão da identidade.",
+                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: RG / Data emissão)",
+                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                              "fail" => true);
+        } else if ($aluno["data_exp_rg"] <= $aluno["data_nasc"] || $aluno["data_exp_rg"] >= $dataAtual) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que a data de emissão da identidade do(a) aluno(a) {$nomeAluno} foi informada anterior/igual à sua data de nascimento ou posterior/igual à data corrente.",
+                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: RG / Data emissão)",
+                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                              "fail" => true);
+        }
       }
       $certidaoAntigoFormato = ($aluno["tipo_cert_civil"] == $nascimentoAntigoFormato || $aluno["tipo_cert_civil"] == $casamentoAntigoFormato);
       if ($certidaoAntigoFormato && $aluno["nacionalidade"] != $estrangeiro) {
@@ -1342,6 +1372,12 @@ class EducacensoAnaliseController extends ApiCoreController
                               "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Termo)",
                               "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
                               "fail" => true);
+        }
+        if (strlen(preg_replace('/\d/', '', $aluno["num_livro"])) !== 0) {
+          $mensagem[] = array("text" => "<span class='avisos-educacenso'><b>Aviso!</b> Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informada, porém o campo livro contém outros caracteres além de dígitos. O sistema do Educacenso está recusando registros que não possuem apenas dígitos neste campo.</span>",
+                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Livro)",
+                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                              "fail" => false);
         }
         if (!$aluno["uf_cartorio"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número do termo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário informar também o estado de emissão.",
@@ -1357,6 +1393,30 @@ class EducacensoAnaliseController extends ApiCoreController
         if (!$aluno["cod_cartorio"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da certidão civil do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o código do cartório conforme a 'Tabela de Cartórios'.",
                               "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Estado emissão / Data emissão)",
+                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                              "fail" => true);
+        }
+        if (empty($aluno["data_emissao_cert_civil"])) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informada como formato antigo, portanto é necessário informar também a data de emissão da certidão.",
+                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Estado emissão / Data emissão)",
+                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                              "fail" => true);
+        } else if ($aluno["data_emissao_cert_civil"] <= $aluno["data_nasc"] || $aluno["data_emissao_cert_civil"] >= $dataAtual) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que a data de emissão da certidão civil do(a) aluno(a) {$nomeAluno} foi informada anterior à sua data de nascimento ou posterior à data corrente.",
+                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Estado emissão / Data emissão)",
+                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                              "fail" => true);
+        }
+      } else if (!$certidaoAntigoFormato && !empty($certidaoAlunoNovoFormato)) {
+        $certidaoNovoFormatoMotivo = mb_strtolower(Portabilis_Utils_Validation::validatesCertidaoNovoFormato($certidaoAlunoNovoFormato, true));
+        if (!empty($certidaoNovoFormatoMotivo)) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado como formato novo, mas a certidão informada possui {$certidaoNovoFormatoMotivo}.",
+                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Tipo certidão civil)",
+                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                              "fail" => true);
+        } else if (substr($certidaoAlunoNovoFormato, 10, 4) < substr($aluno["data_nasc"], 0, 4) || substr($certidaoAlunoNovoFormato, 10, 4) > substr($dataAtual, 0, 4)) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado como formato novo, mas a certidão informada possui ano de registro anterior à sua data de nascimento ou posterior à data corrente.",
+                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Tipo certidão civil)",
                               "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
                               "fail" => true);
         }
@@ -1377,7 +1437,14 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verifique se a zona/localização do (a) aluno(a) $nomeAluno foi informada.",
                             "path" => "(Pessoas > Cadastros > Pessoas físicas > Campo: Zona localização)",
                             "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
-                            "fail" => true);}
+                            "fail" => true);
+      }
+      if (!empty($nisAluno) && strlen($nisAluno) !== 11) {
+        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o Número de Identificação Social (NIS) do(a) aluno(a) {$nomeAluno} possui tamanho inválido.",
+                            "path" => "(Pessoas > Cadastros > Pessoas físicas > Campo: NIS (PIS/PASEP))",
+                            "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                            "fail" => true);
+      }
     }
 
     return array('mensagens' => $mensagem,
