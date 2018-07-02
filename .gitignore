@@ -5,7 +5,6 @@
 /deploy
 /phinx.php
 /phinx.yml
-Vagrantfile
 deploy/.ruby-version
 ieducar/configuration/ieducar.ini
 *.vscode
