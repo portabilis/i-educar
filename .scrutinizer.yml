@@ -27,5 +27,6 @@ build:
             before:
                 - psql -c "CREATE DATABASE ieducar_test WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
                 - composer install
+                - cp phinx.php.sample phinx.php
                 - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
                 - ieducar/vendor/bin/phinx migrate
