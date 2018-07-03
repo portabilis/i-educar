@@ -1,4 +1,4 @@
-![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/coverage.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
+[![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/coverage.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
 
 # i-Educar
 
