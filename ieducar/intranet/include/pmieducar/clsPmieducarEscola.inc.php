@@ -70,6 +70,11 @@ class clsPmieducarEscola
   var $local_funcionamento;
   var $condicao;
   var $codigo_inep_escola_compartilhada;
+  var $codigo_inep_escola_compartilhada2;
+  var $codigo_inep_escola_compartilhada3;
+  var $codigo_inep_escola_compartilhada4;
+  var $codigo_inep_escola_compartilhada5;
+  var $codigo_inep_escola_compartilhada6;
   var $decreto_criacao;
   var $area_terreno_total;
   var $area_disponivel;
@@ -231,8 +236,11 @@ class clsPmieducarEscola
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, e.email_gestor
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
+          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
+          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
+          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
+          e.email_gestor
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -511,6 +519,36 @@ class clsPmieducarEscola
       if (is_numeric($this->codigo_inep_escola_compartilhada)) {
         $campos .= "{$gruda}codigo_inep_escola_compartilhada";
         $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada2)) {
+        $campos .= "{$gruda}codigo_inep_escola_compartilhada2";
+        $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada2}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada3)) {
+        $campos .= "{$gruda}codigo_inep_escola_compartilhada3";
+        $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada3}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada4)) {
+        $campos .= "{$gruda}codigo_inep_escola_compartilhada4";
+        $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada4}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada5)) {
+        $campos .= "{$gruda}codigo_inep_escola_compartilhada5";
+        $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada5}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada6)) {
+        $campos .= "{$gruda}codigo_inep_escola_compartilhada6";
+        $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada6}'";
         $gruda = ", ";
       }
 
@@ -1158,6 +1196,46 @@ class clsPmieducarEscola
         $gruda = ", ";
       }else{
         $set .= "{$gruda}codigo_inep_escola_compartilhada = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada2)) {
+        $set .= "{$gruda}codigo_inep_escola_compartilhada2 = '{$this->codigo_inep_escola_compartilhada2}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_inep_escola_compartilhada2 = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada3)) {
+        $set .= "{$gruda}codigo_inep_escola_compartilhada3 = '{$this->codigo_inep_escola_compartilhada3}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_inep_escola_compartilhada3 = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada4)) {
+        $set .= "{$gruda}codigo_inep_escola_compartilhada4 = '{$this->codigo_inep_escola_compartilhada4}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_inep_escola_compartilhada4 = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada5)) {
+        $set .= "{$gruda}codigo_inep_escola_compartilhada5 = '{$this->codigo_inep_escola_compartilhada5}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_inep_escola_compartilhada5 = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_inep_escola_compartilhada6)) {
+        $set .= "{$gruda}codigo_inep_escola_compartilhada6 = '{$this->codigo_inep_escola_compartilhada6}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_inep_escola_compartilhada6 = NULL ";
         $gruda = ", ";
       }
 
