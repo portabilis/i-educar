@@ -124,7 +124,7 @@ class clsBairro
 
             $this->checkSequenceofBairro();
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, idsis_cad, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '9', '{$this->nome}', NOW()$values )" );
+            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, idsis_cad, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '9', '{pg_escape_string($this->nome)}', NOW()$values )" );
             return $db->InsertId("{$this->schema}.seq_bairro");
         }
         return false;
@@ -139,7 +139,7 @@ class clsBairro
         // verifica campos obrigatorios para edicao
         if( is_numeric( $this->idmun ) && is_string( $this->nome ) )
         {
-            $set = "SET idmun = '{$this->idmun}', nome = '{$this->nome}'";
+            $set = "SET idmun = '{$this->idmun}', nome = '{pg_escape_string($this->nome)}'";
             if( is_string( $this->geom ) )
             {
                 $set .= ", geom = '{$this->geom}'";
