@@ -434,7 +434,12 @@ class EducacensoExportController extends ApiCoreController
 
       e.local_funcionamento,
       e.condicao as r10s12,
-      e.codigo_inep_escola_compartilhada,
+      e.codigo_inep_escola_compartilhada as r10s14,
+      e.codigo_inep_escola_compartilhada2 as r10s15,
+      e.codigo_inep_escola_compartilhada3 as r10s16,
+      e.codigo_inep_escola_compartilhada4 as r10s17,
+      e.codigo_inep_escola_compartilhada5 as r10s18,
+      e.codigo_inep_escola_compartilhada6 as r10s19,
       e.agua_consumida as r10s20,
       (ARRAY[1] <@ e.abastecimento_agua)::int as r10s21,
       (ARRAY[2] <@ e.abastecimento_agua)::int as r10s22,
@@ -589,9 +594,15 @@ class EducacensoExportController extends ApiCoreController
           ${'r10s'.$i} = 0;
       }
 
-      if($codigo_inep_escola_compartilhada !=null){
+      $existeEscolaCompartilhada = false;
+      for ($i=14; $i <= 19 ; $i++){
+        if (${'r10s'.$i} != null && !$existeEscolaCompartilhada){
+          $existeEscolaCompartilhada = true;
+        }
+      }
+
+      if($existeEscolaCompartilhada){
         $r10s13 = 1;
-        $r10s14 = $codigo_inep_escola_compartilhada;
       }else
         $r10s13 = 0;
 
