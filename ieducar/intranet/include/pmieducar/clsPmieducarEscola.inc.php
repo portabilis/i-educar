@@ -147,7 +147,6 @@ class clsPmieducarEscola
   var $computadores_alunos;
   var $impressoras_multifuncionais;
   var $acesso_internet;
-  var $banda_larga;
   var $ato_criacao;
   var $ato_autorizativo;
   var $ref_idpes_secretario_escolar;
@@ -239,7 +238,7 @@ class clsPmieducarEscola
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
           e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
-          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, 
+          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
           e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
           e.email_gestor
           ';
@@ -985,12 +984,6 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->banda_larga)) {
-        $campos .= "{$gruda}banda_larga";
-        $valores .= "{$gruda}'{$this->banda_larga}'";
-        $gruda = ", ";
-      }
-
       if (is_string($this->ato_criacao)) {
         $campos .= "{$gruda}ato_criacao";
         $valores .= "{$gruda}'{$this->ato_criacao}'";
@@ -1614,11 +1607,6 @@ class clsPmieducarEscola
 
       if (is_numeric($this->acesso_internet)) {
         $set .= "{$gruda}acesso_internet = '{$this->acesso_internet}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->banda_larga)) {
-        $set .= "{$gruda}banda_larga = '{$this->banda_larga}'";
         $gruda = ", ";
       }
 
