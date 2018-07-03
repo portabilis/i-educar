@@ -35,7 +35,7 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
     ];
 
     /**
-     * @see CoreExt_Entity#getDataMapper()
+     * @see CoreExt_Entity::getDataMapper()
      */
     public function getDataMapper()
     {
@@ -50,7 +50,7 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
     }
 
     /**
-     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     * @see CoreExt_Entity_Validatable::getDefaultValidatorCollection()
      *
      * @todo Implementar validador que retorne um String ou Numeric, dependendo
      *   do valor do atributo (assim como validateIfEquals().

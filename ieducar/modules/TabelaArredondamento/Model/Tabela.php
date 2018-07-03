@@ -35,7 +35,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     protected $_tabelaValores = [];
 
     /**
-     * @see CoreExt_Entity#getDataMapper()
+     * @see CoreExt_Entity::getDataMapper()
      */
     public function getDataMapper()
     {
@@ -48,7 +48,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     }
 
     /**
-     * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
+     * @see CoreExt_Entity_Validatable::getDefaultValidatorCollection()
      */
     public function getDefaultValidatorCollection()
     {
@@ -265,7 +265,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     }
 
     /**
-     * @see CoreExt_Entity#__toString()
+     * @see CoreExt_Entity::__toString()
      */
     public function __toString()
     {
