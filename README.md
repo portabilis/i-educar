@@ -202,6 +202,10 @@ intuito de facilitar o processo de debug durante o desenvolvimento. Para
 configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo `.env` 
 conforme orientações da sua IDE de desenvolvimento.
 
+## Perguntas frequentes (FAQ)
+
+Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](docs/faq.md)
+
 ---
 
 Powered by [Portabilis Tecnologia](http://www.portabilis.com.br/)
