@@ -12,6 +12,7 @@ país por meio da educação. Junte-se a nós!**
 3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
 4. [Como contribuir](#como-contribuir)
 5. [Instalação](#instalação)
+6. [FAQ](#perguntas-frequentes-(FAQ))
 
 ## Sobre i-Educar
 
@@ -44,9 +45,6 @@ colaboradores do projeto.
 | [Fórum](https://forum.ieducar.org) | - Tirar dúvidas <br>- Discussões de como instalar a plataforma<br> - Discussões de como usar funcionalidades<br> - Suporte entre membros de comunidade<br> - FAQ da comunidade (sobre o produto e funcionalidades) |
 | [Issues do Github](https://github.com/portabilis/i-educar/issues/new/choose) | - Sugestão de novas funcionalidades<br> - Reportar bugs<br> - Discussões técnicas |
 | [Telegram](https://t.me/ieducar ) | - Comunicar novidades sobre o projeto<br> - Movimentar a comunidade<br>  - Falar tópicos que **não** demandem discussões profundas |
-
-
-Toda ajuda é bem vinda! Veja como contribur [aqui](https://github.com/portabilis/i-educar/blob/master/CONTRIBUTING.md).
 
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
 comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
