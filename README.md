@@ -12,6 +12,7 @@ país por meio da educação. Junte-se a nós!**
 3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
 4. [Como contribuir](#como-contribuir)
 5. [Instalação](#instalação)
+6. [FAQ](#perguntas-frequentes-(FAQ))
 
 ## Sobre i-Educar
 
@@ -35,35 +36,15 @@ políticas para que estas interações nos ajudem a crescer juntos! Você pode
 consultar algumas destas boas práticas em nosso [código de
 conduta](https://github.com/portabilis/i-educar/blob/master/CODE_OF_CONDUCT.md).
 
-### Issues do Github
-
-Acreditamos no meio de comunicação assíncrona, onde não há necessidade de
+Além disso, gostamos de meios de comunicação assíncrona, onde não há necessidade de
 respostas em tempo real. Isso facilita a produtividade individual dos
 colaboradores do projeto.
 
-Em breve iremos liberar um fórum, mas até lá, vamos usar as ferramentas que
-temos disponíveis.
-
-Usamos a ferramenta de issues do Github para:
-- tirar dúvidas;
-- reportar bugs;
-- pedir recursos;
-- discussões gerais.
-
-Para mais informações de como fazer [leia
-aqui](https://github.com/portabilis/i-educar/blob/master/CONTRIBUTING.md).
-
-### Telegram
-
-Mantemos um grupo oficial no Telegram desde dezembro de 2016 e que pode ser usado para:
-  - comunicar novidades sobre o projeto;
-  - movimentar a comunidade;
-  - compartilhar conhecimento;
-  - falar tópicos que **não** demandem discussões profundas (para essas, usar o
-  Github).
-
-Vamos fazer parte? [Acesse aqui](https://t.me/ieducar)!
-
+| Canal de comunicação | Objetivos |
+|----------------------|-----------|
+| [Fórum](https://forum.ieducar.org) | - Tirar dúvidas <br>- Discussões de como instalar a plataforma<br> - Discussões de como usar funcionalidades<br> - Suporte entre membros de comunidade<br> - FAQ da comunidade (sobre o produto e funcionalidades) |
+| [Issues do Github](https://github.com/portabilis/i-educar/issues/new/choose) | - Sugestão de novas funcionalidades<br> - Reportar bugs<br> - Discussões técnicas |
+| [Telegram](https://t.me/ieducar ) | - Comunicar novidades sobre o projeto<br> - Movimentar a comunidade<br>  - Falar tópicos que **não** demandem discussões profundas |
 
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
 comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
