@@ -1408,14 +1408,24 @@ class EducacensoAnaliseController extends ApiCoreController
                               "fail" => true);
         }
       } else if (!$certidaoAntigoFormato && !empty($certidaoAlunoNovoFormato)) {
-        $certidaoNovoFormatoMotivo = mb_strtolower(Portabilis_Utils_Validation::validatesCertidaoNovoFormato($certidaoAlunoNovoFormato, true));
-        if (!empty($certidaoNovoFormatoMotivo)) {
+        try {
+          Portabilis_Utils_Validation::validatesCertidaoNovoFormato($certidaoAlunoNovoFormato, true);
+
+          if (!Portabilis_Utils_Validation::validatesAnoCertidaoNovoFormato($certidaoAlunoNovoFormato, substr($aluno["data_nasc"], 0, 4))) {
+            $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado como formato novo, mas a certidão informada possui ano de registro anterior à sua data de nascimento ou posterior à data corrente.",
+                                "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Tipo certidão civil)",
+                                "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                                "fail" => true);
+          }
+          if (!Portabilis_Utils_Validation::validatesTipoCertidaoNovoFormato($certidaoAlunoNovoFormato, '1')) {
+            $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado como formato novo, mas a certidão informada não é do tipo nascimento.",
+                                "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Tipo certidão civil)",
+                                "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
+                                "fail" => true);
+          }
+        } catch (\Exception $e) {
+          $certidaoNovoFormatoMotivo = mb_strtolower($e->getMessage());
           $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado como formato novo, mas a certidão informada possui {$certidaoNovoFormatoMotivo}.",
-                              "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Tipo certidão civil)",
-                              "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
-                              "fail" => true);
-        } else if (substr($certidaoAlunoNovoFormato, 10, 4) < substr($aluno["data_nasc"], 0, 4) || substr($certidaoAlunoNovoFormato, 10, 4) > substr($dataAtual, 0, 4)) {
-          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado como formato novo, mas a certidão informada possui ano de registro anterior à sua data de nascimento ou posterior à data corrente.",
                               "path" => "(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Tipo certidão civil)",
                               "linkPath" => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
                               "fail" => true);
