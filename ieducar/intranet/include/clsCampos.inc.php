@@ -898,6 +898,15 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
+    function campoAvulso($nome, $campo, $conteudo)
+    {
+        $this->campos[$nome] = array(
+            'avulso',
+            $campo,
+            $conteudo
+        );
+    }
+
     function campoQuebra()
     {
         $this->campos['espaco' . $this->num_espaco] = array('espaco', '', '', '', '', '', '', '');
@@ -2514,6 +2523,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $theEditorHeight = $componente[3];
                         $theEditorWidth = $componente[4];
                         require_once 'include/clsEditor.inc.php';
+                        break;
+
+                    case 'avulso':
+                        $retorno .= '<div>' . $componente[2] . '</div>';
                         break;
                 } // endswitch
 

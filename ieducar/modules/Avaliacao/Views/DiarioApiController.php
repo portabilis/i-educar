@@ -1,5 +1,7 @@
 <?php
 
+use Cocur\Slugify\Slugify;
+
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
@@ -17,6 +19,9 @@ require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Object/Utils.php';
+
+//todo: Mover pra algum outro lugar
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 class DiarioApiController extends ApiCoreController
 {
@@ -1158,6 +1163,9 @@ class DiarioApiController extends ApiCoreController
 
         $turmaId = $this->getRequest()->turma_id;
         $situacoes = $this->getSituacaoComponentes();
+
+        $slugify = new Slugify();
+
         foreach ($_componentesCurriculares as $_componente) {
             $componente = array();
             $componenteId = $_componente->get('id');
@@ -1204,8 +1212,8 @@ class DiarioApiController extends ApiCoreController
             //criando chave para ordenamento temporário
             //área de conhecimento + componente curricular
 
-            $componente['ordem_nome_area_conhecimento'] = strtr($nomeArea, "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC");
-            $componente['ordem_componente_curricular'] = strtr(($_componente->get('nome')), "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC");
+            $componente['ordem_nome_area_conhecimento'] = $slugify->slugify($nomeArea);
+            $componente['ordem_componente_curricular'] = $slugify->slugify($_componente->get('nome'));
             $componentesCurriculares[] = $componente;
         }
 

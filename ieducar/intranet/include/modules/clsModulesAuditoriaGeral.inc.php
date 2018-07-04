@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Utils/SafeJson.php';
 
 /**
  * clsModulesAuditoriaGeral class.
@@ -108,7 +109,7 @@ class clsModulesAuditoriaGeral
   function converteArrayDadosParaJson($dados) {
     $dados = $this->removeKeyNaoNumerica($dados);
     $dados = $this->removeKeysDesnecessarias($dados);
-    $dados = json_encode($dados);
+    $dados = SafeJson::encode($dados);
     $dados = str_replace("'", "''", $dados);
     return $dados;
   }

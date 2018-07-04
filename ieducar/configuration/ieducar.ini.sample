@@ -168,6 +168,7 @@ app.mailer.smtp.port       = 587
 app.mailer.smtp.auth       = true
 app.mailer.smtp.username   = username@domain.com.br
 app.mailer.smtp.password   =
+app.mailer.smtp.encryption =
 app.mailer.debug           = false
 
 ; define dominios com envio de email permitido, senão definido ou vazio permite todos, ex:

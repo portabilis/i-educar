@@ -14,3 +14,5 @@ ieducar/vendor
 ieducar/intranet/filaunica
 ieducar/intranet/reservavaga
 ieducar/misc/database/migrations/portabilis
+.env
+.php_cs.cache

@@ -445,9 +445,8 @@ class AlunoController extends ApiCoreController
     {
         $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
 
-        if (empty($this->getRequest()->aluno_inep_id)) {
-            $result = $this->deleteEntityOf($dataMapper, $alunoId);
-        } else {
+        $result = $this->deleteEntityOf($dataMapper, $alunoId);
+        if (!empty($this->getRequest()->aluno_inep_id)) {
             $data = array(
                 'aluno' => $alunoId,
                 'alunoInep' => $this->getRequest()->aluno_inep_id,
@@ -461,7 +460,6 @@ class AlunoController extends ApiCoreController
 
             $result = $this->saveEntity($dataMapper, $entity);
         }
-
         return $result;
     }
 

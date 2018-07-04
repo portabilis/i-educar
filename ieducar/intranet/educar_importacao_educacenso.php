@@ -379,7 +379,6 @@ class indice extends clsCadastro
       'computadores_administrativo' => $dadosRegistro[84-1],
       'computadores_alunos' => $dadosRegistro[85-1],
       'acesso_internet' => $dadosRegistro[86-1],
-      'banda_larga' => $dadosRegistro[87-1],
       'total_funcionario' => $dadosRegistro[88-1],
       'atendimento_aee' => $dadosRegistro[90-1],
       'atividade_complementar' => $dadosRegistro[91-1],
@@ -501,6 +500,7 @@ class indice extends clsCadastro
       'turma_mais_educacao' => $dadosRegistro[19-1],
       'etapa_educacenso' => $dadosRegistro[38-1],
       'cod_curso_profissional' => $dadosRegistro[39-1],
+      'tipo_mediacao_didatico_pedagogico' => $dadosRegistro[6-1]
     );
 
     $camposTurma['dias_semana'] = array();
@@ -530,6 +530,7 @@ class indice extends clsCadastro
 
     $modalidadeEnsinoCenso = $dadosRegistro[37-1];
     $etapaEnsinoCenso = $dadosRegistro[38-1];
+    $tipoAtendimento = $dadosRegistro[18-1];
     $codEscola = $this->existeEscola($inepEscola);
 
     if($codEscola){
@@ -541,8 +542,8 @@ class indice extends clsCadastro
       if(!$codTurma){
 
         $codTurmaTipo = $this->getOrCreateTurmaTipo();
-        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidadeEnsinoCenso);
-        $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso);
+        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidadeEnsinoCenso, $tipoAtendimento);
+        $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso, $tipoAtendimento);
 
         $turma = new clsPmieducarTurma();
         $turma->ref_cod_instituicao = $this->ref_cod_instituicao;
@@ -705,9 +706,17 @@ class indice extends clsCadastro
     return $codTurmaTipo;
   }
 
-  function getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso){
+  function getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso, $tipoAtendimento){
     $dadosSerie = $this->etapasCenso[$etapaEnsinoCenso];
     $codSerie = null;
+
+    if ($this->isAtividadeComplementar($tipoAtendimento)) {
+      $dadosSerie = $this->etapasCenso['atividade_complementar'];
+    }
+
+    if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
+      $dadosSerie = $this->etapasCenso['atendimento_educacional_especializado'];
+    }
 
     $series = new clsPmieducarSerie();
     $series = $series->lista(null, null, null, $codCurso, null, $dadosSerie['etapa'], null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
@@ -746,9 +755,17 @@ class indice extends clsCadastro
     return $codSerie;
   }
 
-  function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade){
+  function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade, $tipoAtendimento){
     $dadosCurso = $this->etapasCenso[$etapaEnsinoCenso];
 
+    if ($this->isAtividadeComplementar($tipoAtendimento)) {
+      $dadosCurso = $this->etapasCenso['atividade_complementar'];
+    }
+
+    if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
+      $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
+    }
+    
     $codCurso = $this->getCurso($dadosCurso['curso']);
 
     if (!$codCurso) {
@@ -782,8 +799,7 @@ class indice extends clsCadastro
         $vinculo->cadastra();
       }
     }
-
-
+ 
     return $codCurso;
   }
 
@@ -1911,10 +1927,25 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
+  function isAtividadeComplementar($tipoAtendimento) {
+    return $tipoAtendimento == 4;
+  }
+
+  function isAtendimentoEspecializado($tipoAtendimento) {
+    return $tipoAtendimento == 5;
+  }
+
   private $etapasCenso = array(
-      0 => array(
+      'atividade_complementar' => array(
         'curso' => "Atividade complementar",
         'serie' => "Atividade complementar",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Outros'
+      ),
+      'atendimento_educacional_especializado' => array(
+        'curso' => "Atendimento educacional especializado (AEE)",
+        'serie' => "Atendimento educacional especializado (AEE)",
         'etapa' => 1,
         'etapas' => 1,
         'nivel' => 'Outros'

@@ -40,6 +40,7 @@ function abriCampoCinco() {
 }
 
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+let obrigarDocumentoPessoa = $j('#obrigar_documento_pessoa').val() == '1';
 
 var editar_pessoa = false;
 var person_details;
@@ -184,7 +185,7 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
-    if (!possuiDocumentoObrigatorio()) {
+    if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
         messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
         return false;
     }
