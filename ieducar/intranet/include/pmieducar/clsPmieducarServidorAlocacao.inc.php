@@ -129,7 +129,6 @@ class clsPmieducarServidorAlocacao
         $ano = null,
         $dataAdmissao = null
     ) {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor_alocacao';
 
@@ -203,7 +202,7 @@ class clsPmieducarServidorAlocacao
             $datetime = explode(':', $carga_horaria);
             $minutos  = (((int) $datetime[0]) * 60) + (int) $datetime[1];
 
-            if ((self::$cargaHorariaMax * 60) >= $minutos) {
+            if (self::$cargaHorariaMax * 60 >= $minutos) {
                 $this->carga_horaria = $carga_horaria;
             }
         }
@@ -215,6 +214,7 @@ class clsPmieducarServidorAlocacao
         if (is_numeric($ano)) {
             $this->ano = $ano;
         }
+
         if (is_string($dataAdmissao)) {
             $this->dataAdmissao = $dataAdmissao;
         }
@@ -308,7 +308,6 @@ class clsPmieducarServidorAlocacao
 
             $campos  .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
-            $gruda    = ', ';
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
@@ -327,84 +326,81 @@ class clsPmieducarServidorAlocacao
      */
     public function edita()
     {
-        if (is_numeric($this->cod_servidor_alocacao) && is_numeric($this->ref_usuario_exc)) {
-            $db = new clsBanco();
-            $set = '';
-
-            if (is_numeric($this->ref_ref_cod_instituicao)) {
-                $set .= "{$gruda}ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_usuario_exc)) {
-                $set  .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_usuario_cad)) {
-                $set  .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_escola)) {
-                $set  .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_servidor)) {
-                $set  .= "{$gruda}ref_cod_servidor = '{$this->ref_cod_servidor}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->carga_horaria)) {
-                $set  .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_servidor_funcao)) {
-                $set  .= "{$gruda}ref_cod_servidor_funcao = '{$this->ref_cod_servidor_funcao}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_funcionario_vinculo)) {
-                $set  .= "{$gruda}ref_cod_funcionario_vinculo = '{$this->ref_cod_funcionario_vinculo}'";
-                $gruda = ', ';
-            }
-
-            if (($this->periodo)) {
-                $set  .= "{$gruda}periodo = '{$this->periodo}'";
-                $gruda = ', ';
-            }
-
-            if (is_string($this->data_cadastro)) {
-                $set  .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ', ';
-            }
-
-            $set  .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ', ';
-
-            if (is_numeric($this->ativo)) {
-                $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ', ';
-            }
-
-            if (is_string($this->dataAdmissao) && !empty($this->dataAdmissao)) {
-                $set .= "{$gruda}data_admissao = '{$this->dataAdmissao}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}data_admissao = NULL ";
-                $gruda = ', ';
-            }
-
-            if ($set) {
-                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
-
-                return true;
-            }
+        if (! is_numeric($this->cod_servidor_alocacao) || ! is_numeric($this->ref_usuario_exc)) {
+            return false;
         }
 
-        return false;
+        $db = new clsBanco();
+        $set = '';
+        $gruda = '';
+
+        if (is_numeric($this->ref_ref_cod_instituicao)) {
+            $set .= "{$gruda}ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}'";
+            $gruda = ', ';
+        }
+
+        if (is_numeric($this->ref_usuario_exc)) {
+            $set  .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
+            $gruda = ', ';
+        }
+
+        if (is_numeric($this->ref_usuario_cad)) {
+            $set  .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
+            $gruda = ', ';
+        }
+
+        if (is_numeric($this->ref_cod_escola)) {
+            $set  .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
+            $gruda = ', ';
+        }
+
+        if (is_numeric($this->ref_cod_servidor)) {
+            $set  .= "{$gruda}ref_cod_servidor = '{$this->ref_cod_servidor}'";
+            $gruda = ', ';
+        }
+
+        if (is_numeric($this->carga_horaria)) {
+            $set  .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
+            $gruda = ', ';
+        }
+
+        if (is_numeric($this->ref_cod_servidor_funcao)) {
+            $set  .= "{$gruda}ref_cod_servidor_funcao = '{$this->ref_cod_servidor_funcao}'";
+            $gruda = ', ';
+        }
+
+        if (is_numeric($this->ref_cod_funcionario_vinculo)) {
+            $set  .= "{$gruda}ref_cod_funcionario_vinculo = '{$this->ref_cod_funcionario_vinculo}'";
+            $gruda = ', ';
+        }
+
+        if (($this->periodo)) {
+            $set  .= "{$gruda}periodo = '{$this->periodo}'";
+            $gruda = ', ';
+        }
+
+        if (is_string($this->data_cadastro)) {
+            $set  .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+            $gruda = ', ';
+        }
+
+        $set  .= "{$gruda}data_exclusao = NOW()";
+        $gruda = ', ';
+
+        if (is_numeric($this->ativo)) {
+            $set .= "{$gruda}ativo = '{$this->ativo}'";
+            $gruda = ', ';
+        }
+
+        if (is_string($this->dataAdmissao) && !empty($this->dataAdmissao)) {
+            $set .= "{$gruda}data_admissao = '{$this->dataAdmissao}'";
+        } else {
+            $set .= "{$gruda}data_admissao = NULL ";
+        }
+
+        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
+
+        return true;
     }
 
     /**
@@ -526,7 +522,6 @@ class clsPmieducarServidorAlocacao
         if (is_bool($boo_professor)) {
             $not = $boo_professor? '=' : '!=';
             $filtros .= "{$whereAnd} EXISTS(SELECT 1 FROM pmieducar.servidor_funcao,pmieducar.funcao WHERE ref_cod_servidor_funcao = cod_funcao AND ref_cod_servidor = sa.ref_cod_servidor AND sa.ref_ref_cod_instituicao = ref_ref_cod_instituicao AND professor $not 1)";
-            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
@@ -539,18 +534,17 @@ class clsPmieducarServidorAlocacao
 
         $db->Consulta($sql);
 
-        if ($countCampos > 1) {
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
 
+            if ($countCampos > 1) {
                 $tupla['_total'] = $this->_total;
                 $resultado[]     = $tupla;
+
+                continue;
             }
-        } else {
-            while ($db->ProximoRegistro()) {
-                $tupla       = $db->Tupla();
-                $resultado[] = $tupla[$this->_campos_lista];
-            }
+
+            $resultado[] = $tupla[$this->_campos_lista];
         }
 
         if (count($resultado)) {
@@ -562,24 +556,24 @@ class clsPmieducarServidorAlocacao
 
     public function listaEscolas($int_ref_ref_cod_instituicao = null)
     {
-        if (is_numeric($int_ref_ref_cod_instituicao)) {
-            $sql = "SELECT DISTINCT ref_cod_escola FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$int_ref_ref_cod_instituicao}' AND ativo = '1'";
-
-            $db = new clsBanco();
-            $resultado = [];
-
-            $db->Consulta($sql);
-
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-                $resultado[] = $tupla;
-            }
-
-            if (count($resultado)) {
-                return $resultado;
-            }
-
+        if (! is_numeric($int_ref_ref_cod_instituicao)) {
             return false;
+        }
+
+        $sql = "SELECT DISTINCT ref_cod_escola FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$int_ref_ref_cod_instituicao}' AND ativo = '1'";
+
+        $db = new clsBanco();
+        $resultado = [];
+
+        $db->Consulta($sql);
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $resultado[] = $tupla;
+        }
+
+        if (count($resultado)) {
+            return $resultado;
         }
 
         return false;
@@ -776,6 +770,7 @@ class clsPmieducarServidorAlocacao
     {
         if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
+
             if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
@@ -847,6 +842,7 @@ class clsPmieducarServidorAlocacao
     {
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
             $db = new clsBanco();
+
             $sql = "SELECT SUM(carga_horaria::interval)
                 FROM pmieducar.servidor_alocacao
                WHERE ref_cod_servidor = {$this->ref_cod_servidor}
@@ -855,6 +851,7 @@ class clsPmieducarServidorAlocacao
             if ($this->cod_servidor_alocacao) {
                 $sql .= "AND cod_servidor_alocacao != {$this->cod_servidor_alocacao}";
             }
+
             $db->Consulta($sql);
             $db->ProximoRegistro();
             $registro = $db->Tupla();
@@ -873,6 +870,7 @@ class clsPmieducarServidorAlocacao
             && is_numeric($this->ref_cod_servidor)
         ) {
             $db = new clsBanco();
+
             $sql = "SELECT *
                 FROM pmieducar.servidor_alocacao
                WHERE ref_cod_escola = {$this->ref_cod_escola}
