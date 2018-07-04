@@ -97,6 +97,8 @@ ajudar a alcançar nossos objetivos.
 
 ## Instalação
 
+> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e desenvolvimento. Não é recomendado para ambientes de produção!
+
 Antes de começar você vai precisar instalar o Docker e o Docker Compose em sua
 máquina. Para mais informações veja estes links:
 
