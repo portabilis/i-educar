@@ -31,6 +31,10 @@ class indice extends clsCadastro
     public $ativo;
     public $carga_horaria_alocada;
     public $carga_horaria_disponivel;
+    public $hora_inicial;
+    public $hora_final;
+    public $hora_atividade;
+    public $horas_excedentes;
     public $periodo;
     public $ref_cod_funcionario_vinculo;
     public $ano;
@@ -68,6 +72,10 @@ class indice extends clsCadastro
             $this->ativo                       = $servidorAlocacao['ativo'];
             $this->ano                         = $servidorAlocacao['ano'];
             $this->data_admissao               = $servidorAlocacao['data_admissao'];
+            $this->hora_inicial                = $servidorAlocacao['hora_inicial'];
+            $this->hora_final                  = $servidorAlocacao['hora_final'];
+            $this->hora_atividade              = $servidorAlocacao['hora_atividade'];
+            $this->horas_excedentes            = $servidorAlocacao['horas_excedentes'];
         } elseif (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
             $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
             $this->ref_cod_servidor        = $ref_cod_servidor;
@@ -159,9 +167,6 @@ class indice extends clsCadastro
 
         $this->campoLista('periodo', 'Período', $periodo, $this->periodo, null, false, '', '', false, true);
 
-        // Carga horária
-        $this->campoHoraServidor('carga_horaria_alocada', 'Carga horária', $this->carga_horaria_alocada, true);
-
         $options = [
             'label' => 'Data de admissão',
             'placeholder' => 'dd/mm/yyyy',
@@ -191,6 +196,13 @@ class indice extends clsCadastro
         $opcoes = ['' => 'Selecione', 5 => 'Comissionado', 4 => 'Contratado', 3 => 'Efetivo', 6 => 'Estagi&aacute;rio'];
 
         $this->campoLista('ref_cod_funcionario_vinculo', 'V&iacute;nculo', $opcoes, $this->ref_cod_funcionario_vinculo, null, false, '', '', false, false);
+
+        $this->campoRotulo('informacao_carga_horaria','<b>Informações sobre carga horária</b>');
+        $this->campoHora('hora_inicial', 'Hora de início', $this->hora_inicial);
+        $this->campoHora('hora_final', 'Hora de término', $this->hora_final);
+        $this->campoHoraServidor('carga_horaria_alocada', 'Carga horária', $this->carga_horaria_alocada, true);
+        $this->campoHora('hora_atividade', 'Hora atividade', $this->hora_atividade);
+        $this->campoHora('horas_excedentes', 'Horas excedentes', $this->horas_excedentes);
     }
 
     public function Novo()
@@ -247,7 +259,11 @@ class indice extends clsCadastro
                 $this->cod_servidor_funcao,
                 $this->ref_cod_funcionario_vinculo,
                 $this->ano,
-                $dataAdmissao
+                $dataAdmissao,
+                $this->hora_inicial,
+                $this->hora_final,
+                $this->hora_atividade,
+                $this->horas_excedentes
             );
 
             if ($obj_novo->periodoAlocado()) {
@@ -260,9 +276,6 @@ class indice extends clsCadastro
 
             if (!$cadastrou) {
                 $this->mensagem = 'Cadastro não realizado.<br />';
-                echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) &&
-              is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) &&
-              is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
 
                 return false;
             }
@@ -332,14 +345,6 @@ class indice extends clsCadastro
     }
 }
 
-// Instancia objeto de página
 $pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
+$pagina->addForm(new indice());
 $pagina->MakeAll();

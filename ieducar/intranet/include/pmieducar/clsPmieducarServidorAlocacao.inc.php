@@ -20,6 +20,10 @@ class clsPmieducarServidorAlocacao
     public $ano;
     public $codUsuario;
     public $dataAdmissao;
+    public $hora_inicial;
+    public $hora_final;
+    public $hora_atividade;
+    public $horas_excedentes;
 
     /**
      * Carga horária máxima para um período de alocação (em horas).
@@ -111,6 +115,10 @@ class clsPmieducarServidorAlocacao
      * @param null $ref_cod_funcionario_vinculo
      * @param null $ano
      * @param null $dataAdmissao
+     * @param null $hora_inicial
+     * @param null $hora_final
+     * @param null $hora_atividade
+     * @param null $horas_excedentes
      */
     public function __construct(
         $cod_servidor_alocacao = null,
@@ -127,12 +135,16 @@ class clsPmieducarServidorAlocacao
         $ref_cod_servidor_funcao = null,
         $ref_cod_funcionario_vinculo = null,
         $ano = null,
-        $dataAdmissao = null
+        $dataAdmissao = null,
+        $hora_inicial = null,
+        $hora_final = null,
+        $hora_atividade = null,
+        $horas_excedentes = null
     ) {
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor_alocacao';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano, data_admissao ';
+        $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano, data_admissao, hora_inicial, hora_final, hora_atividade, horas_excedentes ';
 
         if (is_numeric($ref_usuario_cad)) {
             $usuario = new clsPmieducarUsuario($ref_usuario_cad);
@@ -205,6 +217,22 @@ class clsPmieducarServidorAlocacao
             if (self::$cargaHorariaMax * 60 >= $minutos) {
                 $this->carga_horaria = $carga_horaria;
             }
+        }
+
+        if ($hora_inicial) {
+            $this->hora_inicial = $hora_inicial;
+        }
+
+        if ($hora_final) {
+            $this->hora_final = $hora_final;
+        }
+
+        if ($hora_atividade) {
+            $this->hora_atividade = $hora_atividade;
+        }
+
+        if ($horas_excedentes) {
+            $this->horas_excedentes = $horas_excedentes;
         }
 
         if (is_numeric($periodo)) {
@@ -281,6 +309,30 @@ class clsPmieducarServidorAlocacao
             if (is_string($this->carga_horaria)) {
                 $campos  .= "{$gruda}carga_horaria";
                 $valores .= "{$gruda}'{$this->carga_horaria}'";
+                $gruda    = ', ';
+            }
+
+            if ($this->hora_inicial) {
+                $campos  .= "{$gruda}hora_inicial";
+                $valores .= "{$gruda}'{$this->hora_inicial}'";
+                $gruda    = ', ';
+            }
+
+            if ($this->hora_final) {
+                $campos  .= "{$gruda}hora_final";
+                $valores .= "{$gruda}'{$this->hora_final}'";
+                $gruda    = ', ';
+            }
+
+            if ($this->hora_atividade) {
+                $campos  .= "{$gruda}hora_atividade";
+                $valores .= "{$gruda}'{$this->hora_atividade}'";
+                $gruda    = ', ';
+            }
+
+            if ($this->horas_excedentes) {
+                $campos  .= "{$gruda}horas_excedentes";
+                $valores .= "{$gruda}'{$this->horas_excedentes}'";
                 $gruda    = ', ';
             }
 
@@ -361,6 +413,26 @@ class clsPmieducarServidorAlocacao
 
         if (is_numeric($this->carga_horaria)) {
             $set  .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
+            $gruda = ', ';
+        }
+
+        if ($this->hora_inicial) {
+            $set  .= "{$gruda}hora_inicial = '{$this->hora_inicial}'";
+            $gruda = ', ';
+        }
+
+        if ($this->hora_final) {
+            $set  .= "{$gruda}hora_final = '{$this->hora_final}'";
+            $gruda = ', ';
+        }
+
+        if ($this->hora_atividade) {
+            $set  .= "{$gruda}hora_atividade = '{$this->hora_atividade}'";
+            $gruda = ', ';
+        }
+
+        if ($this->horas_excedentes) {
+            $set  .= "{$gruda}horas_excedentes = '{$this->horas_excedentes}'";
             $gruda = ', ';
         }
 
