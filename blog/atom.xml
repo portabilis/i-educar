@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://ieducar.org/blog</id>
+    <title>i-Educar Blog</title>
+    <updated>2018-05-18T06:00:00Z</updated>
+    <generator>Feed for Node.js</generator>
+    <link rel="alternate" href="http://ieducar.org/blog"/>
+    <subtitle>The best place to stay up-to-date with the latest i-Educar news and events.</subtitle>
+    <logo>http://ieducar.org/img/i-educar-logo.png</logo>
+    <rights>Copyright © 2018 Your Name or Your Company Name</rights>
+    <entry>
+        <title type="html"><![CDATA[Inicio da documentação do i-Educar]]></title>
+        <id>http://ieducar.org/blog/2018/05/18/inicio-documentacao.html</id>
+        <link href="http://ieducar.org/blog/2018/05/18/inicio-documentacao.html">
+        </link>
+        <updated>2018-05-18T06:00:00Z</updated>
+        <summary type="html"><![CDATA[<p>Estamos iniciando a documentação do i-Educar, esperando ansiosamente pela abertura de código com a atualização do i-Educar.</p>
+<p>A documentação ainda terá um grande trabalho para fique boa, mas nunca ficará completa. Apoiem para que a documentação fique</p>
+]]></summary>
+        <author>
+            <name>Vinicius Celms</name>
+            <uri>https://twitter.com/viniciuscelms</uri>
+        </author>
+    </entry>
+</feed>
