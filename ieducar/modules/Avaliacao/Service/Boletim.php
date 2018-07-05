@@ -1786,7 +1786,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->componentesCurriculares = $faltasComponentes;
 
     // Na última etapa seta situação presença como aprovado ou reprovado.
-    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc' || $tipoFaltaGeral) {
+    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
       $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
       $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                         App_Model_MatriculaSituacao::REPROVADO;
