@@ -86,7 +86,7 @@ class ComponenteCurricularController extends ApiCoreController
       $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
 
       $areaConhecimentoId ? $where = 'AND area_conhecimento_id = '. $areaConhecimentoId : '';
-      
+
       $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area, ordenamento
                 FROM modules.componente_curricular
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
@@ -111,7 +111,7 @@ function getComponentesCurricularesPorSerie(){
 
       $instituicaoId = $this->getRequest()->instituicao_id;
       $serieId       = $this->getRequest()->serie_id;
-      
+
       $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, tipo_nota, area_conhecimento_id, area_conhecimento.nome AS nome_area
                 FROM modules.componente_curricular
                INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
@@ -132,6 +132,7 @@ function getComponentesCurricularesPorSerie(){
     if ($this->canGetComponentesCurriculares()) {
       $turmaId       = $this->getRequest()->turma_id;
       $ano           = $this->getRequest()->ano;
+      $areaConhecimentoId           = $this->getRequest()->area_conhecimento_id;
 
       $sql = "SELECT cc.id,
                        cc.nome
@@ -142,14 +143,20 @@ function getComponentesCurricularesPorSerie(){
                  INNER JOIN modules.area_conhecimento ac ON (ac.id = cc.area_conhecimento_id)
                  INNER JOIN pmieducar.escola_ano_letivo al ON (al.ref_cod_escola = turma.ref_ref_cod_escola)
                  WHERE turma.cod_turma = $1
-                   AND al.ano = $2
-                 ORDER BY ac.secao,
+                   AND al.ano = $2 ";
+      $params = [$turmaId, $ano];
+
+      if ($areaConhecimentoId) {
+        $params[] = $areaConhecimentoId;
+        $sql .= ' AND area_conhecimento_id = $3 ';
+      }
+
+      $sql .= ' ORDER BY ac.secao,
                           ac.nome,
                           cc.ordenamento,
-                          cc.nome";
+                          cc.nome ';
 
-
-      $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
+      $componentesCurriculares = $this->fetchPreparedQuery($sql, $params);
 
       if(count($componentesCurriculares) < 1){
         $sql = "SELECT cc.id,
@@ -164,13 +171,20 @@ function getComponentesCurricularesPorSerie(){
                                                           AND al.ativo = 1)
                 WHERE t.cod_turma = $1
                   AND al.ano = $2
-                  AND t.ativo = 1
-                ORDER BY ac.secao,
+                  AND t.ativo = 1 ";
+
+        $params = [$turmaId, $ano];
+
+        if ($areaConhecimentoId) {
+          $params[] = $areaConhecimentoId;
+          $sql .= ' AND area_conhecimento_id = $3 ';
+        }
+        $sql .= ' ORDER BY ac.secao,
                          ac.nome,
                          cc.ordenamento,
-                         cc.nome";
+                         cc.nome ';
 
-        $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
+        $componentesCurriculares = $this->fetchPreparedQuery($sql, $params);
       }
 
       $componentesCurriculares = Portabilis_Array_Utils::setAsIdValue($componentesCurriculares, 'id', 'nome');
