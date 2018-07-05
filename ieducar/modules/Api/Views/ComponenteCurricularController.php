@@ -147,8 +147,7 @@ function getComponentesCurricularesPorSerie(){
       $params = [$turmaId, $ano];
 
       if ($areaConhecimentoId) {
-        $params[] = $areaConhecimentoId;
-        $sql .= ' AND area_conhecimento_id = $3 ';
+        $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
       }
 
       $sql .= ' ORDER BY ac.secao,
@@ -176,8 +175,7 @@ function getComponentesCurricularesPorSerie(){
         $params = [$turmaId, $ano];
 
         if ($areaConhecimentoId) {
-          $params[] = $areaConhecimentoId;
-          $sql .= ' AND area_conhecimento_id = $3 ';
+          $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
         }
         $sql .= ' ORDER BY ac.secao,
                          ac.nome,

@@ -36,11 +36,17 @@ $j(document).ready(function() {
 
   $j('body').append(htmlFormModal());
 
+  $j('#area_conhecimento').chosen({
+    width: '231px',
+    placeholder_text_multiple: "Selecione as opções",
+  });
+
   $j("#dialog_area_conhecimento").dialog({
     autoOpen: false,
     height: 'auto',
     width: 'auto',
     modal: true,
+    zIndex: 500,
     resizable: false,
     draggable: false,
     title: 'Selecionar por área de conhecimento',
@@ -71,6 +77,7 @@ $j(document).ready(function() {
       }
     }
     $j("#dialog_area_conhecimento").dialog("open");
+    $j('#area_conhecimento').trigger('chosen:updated')
   }
 
   function modalOpen(){
@@ -96,9 +103,9 @@ $j(document).ready(function() {
 
   function htmlFormModal(){
     return `<div id="dialog_area_conhecimento">
-              <form>
+              <form style="height:200px;">
                 <label for="area_conhecimento">Área de conhecimento</label>
-                <select name="area_conhecimento" id="area_conhecimento">
+                <select multiple="multiple" name="area_conhecimento" id="area_conhecimento">
               </form>
             </div>`;
   }
