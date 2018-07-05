@@ -19,16 +19,16 @@ $j(document).ready(function() {
       return false;
     }
     urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular', 'componentes-curriculares-for-multiple-search', {
-      turma_id  : $turmaField.val(),
+      turma_id: $turmaField.val(),
       ano: $anoField.val(),
       instituicao_id: $instituicaoField.val(),
       area_conhecimento_id: areaConhecimento
     });
 
     var options = {
-      url : urlForGetAreaConhecimento,
-      dataType : 'json',
-      success  : handleGetComponentesArea
+      url: urlForGetAreaConhecimento,
+      dataType: 'json',
+      success: handleGetComponentesArea
     };
 
     getResources(options);
@@ -74,7 +74,7 @@ $j(document).ready(function() {
   }
 
   function modalOpen(){
-    var turma            = $turmaField.val();
+    var turma = $turmaField.val();
 
     if (!turma) {
       alert('Informe uma turma');
@@ -82,13 +82,13 @@ $j(document).ready(function() {
     }
 
     urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areaconhecimento-turma', {
-      turma_id  : turma
+      turma_id: turma
     });
 
     var options = {
-      url : urlForGetAreaConhecimento,
-      dataType : 'json',
-      success  : handleGetAreaConhecimento
+      url: urlForGetAreaConhecimento,
+      dataType: 'json',
+      success: handleGetAreaConhecimento
     };
 
     getResources(options);
