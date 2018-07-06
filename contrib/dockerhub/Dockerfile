@@ -10,6 +10,12 @@ RUN apt-get -y update \
 	curl \
 	gcc \
 	git \
+	libcurl4-gnutls-dev \
+	libedit-dev \
+	libpq-dev \
+	libreadline-dev \
+	libxml2-dev \
+	openjdk-8-jre \
 	make \
 	rpl \
 	software-properties-common \
@@ -39,6 +45,12 @@ RUN apt-get -y update \
 	&& mv composer.phar /usr/local/bin/composer \
 	&& cd /var/www/html/i-educar \
 	&& composer install \
+	&& docker-php-ext-install zip \
+	&& docker-php-ext-install pgsql \
+	&& docker-php-ext-install mbstring \
+	&& docker-php-ext-install curl \
+	&& docker-php-ext-install xmlrpc \
+	&& docker-php-ext-install readline \
 	&& apt-get clean \
 	&& apt-get purge --auto-remove -y \
 	&& rm -rf /var/lib/apt/lists/*
