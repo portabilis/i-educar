@@ -165,6 +165,7 @@ li + li {
   margin: 0;
   padding: 0;
   padding: 6px 10px;
+  border-radius: 4px;
 }
 
 
@@ -237,7 +238,8 @@ li + li {
   padding-right: 26px;
   padding-top: 31px;
   padding-bottom: 23px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.16);
+  border-radius: 4px;
 }
 
 .featureContainerHeader.paddingBottom {
@@ -399,23 +401,67 @@ li + li {
   letter-spacing: normal;
 }
 
-.docsContainer {
+.docsContainerHeader {
   height: 614px;
   background-color: #2696ff;
+  background-image: url();
+}
+
+.docsContainerHeader.paddingTop {
+  padding-top: 101px;
+}
+
+.docsContainerHeader.paddingBottom {
+  padding-bottom: 0px;
 }
 
 .docsContainer.paddingTop {
-  padding-top: 101px;
+  padding-top: 0px;
 }
 
 .docsContainer.paddingBottom {
   padding-bottom: 0px;
 }
 
+.docsContainer {
+  height: 282px;
+}
+
+.docsGrid {
+  position: relative;
+  top: -223px;
+  background: #ffffff;
+  border-radius: 4px;
+  padding-left: 24px;
+  padding-top: 25px;
+  padding-right: 24px;
+  padding-bottom: 25px;
+  box-shadow: 0 3px 90px 0 rgba(0, 0, 0, 0.16);
+}
+
 .gridBlock .docsGridHeader {
   flex-grow: 0;
   flex-basis: 60%;
   flex-shrink: 0;
+}
+
+.docsText {
+  display: flex;
+  text-align: justify;
+  flex-direction: column;
+  margin-top: -143px;
+}
+
+.wrapper .docsText p {
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #4e5666;
 }
 
 .docsGridHeader h2 p {
@@ -441,6 +487,8 @@ font-family: $titleFont;
   color: #ffffff;
   text-align: justify;
 }
+
+.containerTop
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 

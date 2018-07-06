@@ -53,6 +53,20 @@ const BlockHeader = props => (
   </Container>
 );
 
+const Block = props => (
+  <Container
+    padding={['bottom', 'top']}
+    id={props.id}
+    background={props.background}
+    className={props.className}>
+    <GridBlock className={props.classNameGrid} align="left" contents={props.children} layout={props.layout} />
+    <div className='docsText'>
+      <p>Veja algo que precisa ser corrigido? Propor uma mudança na <em>fonte</em></p>
+      <p>Precisa de uma versão diferente dos documentos? Veja as versões disponíveis.</p>
+    </div>
+  </Container>
+);
+
 
 
 
@@ -66,7 +80,7 @@ class Docs extends React.Component {
 
     return (
       <div>
-        <BlockHeader class="docsContainer" classNameGrid="docsGridHeader">
+        <BlockHeader class="docsContainerHeader" classNameGrid="docsGridHeader">
         {[
           {
             title: 'Manual',
@@ -75,6 +89,28 @@ class Docs extends React.Component {
           }
         ]}
         </BlockHeader>
+        <Block layout='threeColumn' className='docsContainer' classNameGrid='docsGrid'>
+        {[
+          {
+            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt sed lectus non auctor. Duis eu vulputate neque, eu eleifend justo. Curabitur eleifend nisi eu porta laoreet.',
+            image: imgUrl('funcionalidades/book.svg'),
+            imageAlign: 'top',
+            title: 'Professores',
+          },
+          {
+            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt sed lectus non auctor. Duis eu vulputate neque, eu eleifend justo. Curabitur eleifend nisi eu porta laoreet.',
+            image: imgUrl('funcionalidades/book.svg'),
+            imageAlign: 'top',
+            title: 'Secretários da Escola',
+          },
+          {
+            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt sed lectus non auctor. Duis eu vulputate neque, eu eleifend justo. Curabitur eleifend nisi eu porta laoreet.',
+            image: imgUrl('funcionalidades/book.svg'),
+            imageAlign: 'top',
+            title: 'Administradores',
+          }
+        ]}
+        </Block>
       </div>
     );
   }
