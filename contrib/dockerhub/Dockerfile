@@ -37,6 +37,7 @@ RUN apt-get -y update \
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
 	&& mv composer.phar /usr/local/bin/composer \
+	&& cd /var/www/html/i-educar \
 	&& composer install \
 	&& apt-get clean \
 	&& apt-get purge --auto-remove -y \
