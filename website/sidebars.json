@@ -1,12 +1,8 @@
 {
-  "admin": {
-    "i-Educar": ["admin-intro"]
-  },
-  "dev": {
-    "i-Educar": ["dev-intro"]
-  },
-  "user": {
-    "i-Educar": [
+  "docs" : {
+    "Administrador": ["admin-intro"],
+    "Desenvolvedor": ["dev-intro"],
+    "Usuário": [
       "user-intro",
       "user-conhecendo-sistema",
       "user-modulo-enderecamento-pessoas",

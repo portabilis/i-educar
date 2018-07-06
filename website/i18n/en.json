@@ -3,10 +3,11 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "Documentação i-Educar",
+    "tagline": "",
     "admin-intro": "Documentação para Administradores",
     "Sobre o i-Educar": "Sobre o i-Educar",
     "dev-intro": "Documentação para Desenvolvedores",
+    "faq": "faq",
     "user-ano-letivo-escolar-matriculas": "Ano Letivo Escolar e Matrículas",
     "user-cadastros-sistema-educacional": "Cadastros do Sistema Educacional",
     "user-configuracoes": "Configurações",
@@ -15,12 +16,14 @@
     "user-modulo-enderecamento-pessoas": "Módulo Endereçamento e Pessoas",
     "user-regras-avaliacao-notas": "Regras de Avaliação e Notas",
     "user-servidores-e-professores": "Servidores e Professores",
+    "Home": "Home",
+    "Quem Usa?": "Quem Usa?",
+    "Blog": "Blog",
+    "Fórum": "Fórum",
+    "Documentação": "Documentação",
     "Administrador": "Administrador",
     "Desenvolvedor": "Desenvolvedor",
-    "Usuário": "Usuário",
-    "Help": "Help",
-    "Blog": "Blog",
-    "i-Educar": "i-Educar"
+    "Usuário": "Usuário"
   },
   "pages-strings": {
     "Help Translate|recruit community translators for your project": "Help Translate",

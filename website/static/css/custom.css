@@ -1,16 +1,467 @@
 /* your custom css */
+@import url('https://fonts.googleapis.com/css?family=Hind|Muli');
+
+
+.navPusher {
+  padding-top: 80px;
+}
+
+.homeContainer {
+  height: 614px;
+  background-image: linear-gradient(67deg, #2696ff, #8100f7);
+}
+
+.nav-footer {
+  height: auto;
+  display: block;
+  justify-content: center;
+  padding-top: 0px;
+  padding: 0px;
+  background-color: #2c3a55;
+}
+
+.subfooteritens{
+  display:flex;
+  max-width: 1440px;
+  width: 100%;
+  padding: 0 32px;
+  padding-top: 14px;
+}
+.subfooter {
+    display: flex;
+    justify-content: center;
+    background-color: #253147;
+}
+
+.subfooter p {
+  font-family: $descriptionFont;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #ffffff;
+
+}
+
+li + li {
+  margin-top: 0px;
+}
+
+.footerVersion {
+  display: flex;
+  flex: 1;
+  justify-content:flex-end;
+}
+
+
+.nav-footer .sitemap {
+  max-width: 1440px;
+  width: 1440px;
+  padding: 0 32px;
+  padding-top: 40px;
+}
+
+.nav-footer .sitemap .nav-home {
+  width: auto;
+  padding: 0px;
+  padding-right: 10px;
+  margin: 0px 20px 0 0;
+}
+
+.footerNav nav ul {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 5px;
+  list-style: none;
+}
+
+.sitemap .footerNav nav{
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+}
+.footerDescription em {
+  color:blue;
+}
+
+.sitemap .footerNav{
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.footerNav nav ul li{
+  padding-left: 5px;
+  margin-left: 16px;
+  list-style: none;
+}
+
+.footerNav nav ul li a{
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  margin-left: 36px;
+}
+
+.fixedHeaderContainer > .wrapper {
+  margin: 0 auto;
+  width: 1440px;
+  padding: 0 32px;
+  height: 80px;
+  margin: 0px;
+  max-width: 1440px;
+}
+.fixedHeaderContainer {
+  height: 80px;
+  background: #ffffff;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.fixedHeaderContainer header {
+  height: 42px;
+  position: relative;
+  top: 19px;
+  margin: 0px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.fixedHeaderContainer a {
+  height: 42px;
+}
+
+.fixedHeaderContainer header img {
+  width: 115px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.navigationSlider {
+  height: 42px;
+  min-height: 8px;
+}
+
+.navigationSlider nav.slidingNav{
+  top: 10px;
+}
+
+.navigationSlider .slidingNav ul li a {
+  color: #4e5666;
+  border: 0;
+  display: flex;
+  font-size: 16px;
+  font-family: $descriptionFont;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  padding: 6px 10px;
+}
+
+
+.productShowcaseSection h2 {
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #4e5666;
+}
+
+.productShowcaseSection {
+  background: #ffffff;
+}
+
+.blockHeader h2 p{
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #4e5666;
+}
+
+.blogBlockHeader h2 p{
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #4e5666;
+
+}
+.blogBlockHeader p{
+  font-family: $descriptionFont;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.blogContainerHeader {
+  background: #ffffff;
+}
+
+.blogContainerHeader.paddingBottom {
+  padding-bottom: 19px;
+}
+
+.featureContainerHeader,
+.featureContainer,
+.featureContainerLast{
+  background: #f8fbff;
+}
+
+
+.featureBlock {
+  background: #ffffff;
+  padding-left: 24px;
+  padding-right: 26px;
+  padding-top: 31px;
+  padding-bottom: 23px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.featureContainerHeader.paddingBottom {
+  padding-bottom: 19px;
+}
+
+.featureContainer.paddingBottom {
+  padding-bottom: 30px;
+}
+
+.featureContainerLast.paddingBottom {
+  padding-bottom: 144px;
+}
+
+.featureContainerLast.paddingTop {
+  padding-top: 0px;
+}
+
+.featureContainer.paddingTop {
+  padding-top: 0px;
+}
+
+.featureBlock h2 p{
+  font-family: $titleFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.featureBlock h2{
+  margin-top: 16px;
+}
+
+.imageAlignTop .blockImage {
+  max-width: 32px;
+  margin-bottom: 0px;
+}
+
+.featureBlock p{
+  font-family: $descriptionFont;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+  text-align: justify;
+}
+
+
+
+
+.blogBlock {
+  margin-right: 30px;
+}
+
+.blogContainerLast {
+  background: #ffffff;
+}
+
+.blogContainerLast.paddingBottom {
+  padding-bottom: 144px;
+}
+
+.blogContainerLast.paddingTop {
+  padding-top: 0px;
+}
+
+.blogBlock h2 p{
+  font-family: $titleFont;
+  font-size: 24px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #2696ff;
+}
+
+.blogBlock p{
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+  text-align: justify;
+}
+
+.blogBlock p.blogdate {
+  font-size: 14px;
+  font-family: $descriptionFont;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #4e5666;
+  opacity: 0.7;
+}
+
+
+.navigationSlider .slidingNav ul li.siteNavItemActive a {
+  color: #4e5666;
+  background: none;
+}
+
+.mainContainer {
+  background: #ffffff;
+  padding: 0px;
+}
+
+.postHeaderTitle  {
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+.post-content p {
+  font-family: $descriptionFont;
+  font-size: 21px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.read-more .button {
+  height: 48px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  border: solid 1px #2696ff;
+  text-align: center;
+  color: #2696ff;
+  padding-top: 14px;
+  padding-bottom: 10px;
+}
+
+.read-more .button a {
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+
+.docsContainer {
+  height: 614px;
+  background-color: #2696ff;
+}
+
+.docsContainer.paddingTop {
+  padding-top: 101px;
+}
+
+.docsContainer.paddingBottom {
+  padding-bottom: 0px;
+}
+
+.gridBlock .docsGridHeader {
+  flex-grow: 0;
+  flex-basis: 60%;
+  flex-shrink: 0;
+}
+
+.docsGridHeader h2 p {
+font-family: $titleFont;
+ font-size: 48px;
+ font-weight: normal;
+ font-style: normal;
+ font-stretch: normal;
+ line-height: normal;
+ letter-spacing: -0.5px;
+ color: #ffffff;
+ margin-bottom: 19px;
+}
+
+.docsGridHeader p {
+  font-family: $descriptionFont;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #ffffff;
+  text-align: justify;
+}
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+
 }
 
 @media only screen and (min-width: 1024px) {
+  .fixedHeaderContainer header img {
+    width: 115px;
+    height: 42px;
+    object-fit: contain;
+  }
 }
 
 @media only screen and (max-width: 1023px) {
+
 }
 
 @media only screen and (min-width: 1400px) {
+
 }
 
 @media only screen and (min-width: 1500px) {
+
 }
