@@ -44,7 +44,7 @@
 # e arquivos SQL são protegidos assim como os diretórios misc, test e
 # diretórios comuns a SCMs como CVS e SVN (para proteger deployments desse tipo).
 <FilesMatch "\.(.*sql|ini|svn-base)$|^(misc|tests|configuration|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
-  Order allow,deny
+  Require all denied
 </FilesMatch>
 
 # Não mostra listagem de diretórios para URLs que mapeiam para um diretório.
@@ -54,7 +54,7 @@ Options -Indexes
 # overhead ao ter que verificar em toda requisição se um dado arquivo é
 # diretório ou link (fazendo chamadas stat).
 # @link http://www.ibm.com/developerworks/linux/library/l-tune-lamp-2.html#listing2
-Options +FollowSymLinks
+Options +SymLinksIfOwnerMatch
 
 # Força mensagem de erro 404 simples para requisições a favicon.ico inexistente.
 <Files favicon.ico>
@@ -87,8 +87,7 @@ DirectoryIndex index.php index.html index.htm
 
 # Desabilita acesso para qualquer arquivo caso o
 <IfModule !mod_php7.c>
-  Order allow,deny
-  Deny from all
+  Require all granted
 </IfModule>
 
 
@@ -99,4 +98,4 @@ DirectoryIndex index.php index.html index.htm
 # configuration/ieducar.ini será carregada pelo arquivo includes/bootstrap.php
 
 # comentado definiÃ§Ã£o (uma vez que o ambiente padrÃ£o jÃ¡ Ã© production), permitindo assim definir o ambiente via virtual host.
-#SetEnv CORE_EXT_CONFIGURATION_ENV production
+SetEnv CORE_EXT_CONFIGURATION_ENV development
