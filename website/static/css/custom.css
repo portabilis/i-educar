@@ -1,5 +1,5 @@
 /* your custom css */
-@import url('https://fonts.googleapis.com/css?family=Hind|Muli');
+@import url('https://fonts.googleapis.com/css?family=Hind:300,400,700|Muli:400,700');
 
 
 .navPusher {
@@ -41,8 +41,7 @@
   font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
-  color: #ffffff;
-
+  color: #506899;
 }
 
 li + li {
@@ -61,6 +60,7 @@ li + li {
   width: 1440px;
   padding: 0 32px;
   padding-top: 40px;
+  margin: 0px;
 }
 
 .nav-footer .sitemap .nav-home {
@@ -265,7 +265,7 @@ li + li {
 .featureBlock h2 p{
   font-family: $titleFont;
   font-size: 16px;
-  font-weight: normal;
+  font-weight: bold;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
@@ -404,8 +404,43 @@ li + li {
 .docsContainerHeader {
   height: 614px;
   background-color: #2696ff;
-  background-image: url();
+  background-image: url('../img/docs_background.svg');
+  background-repeat: no-repeat;
+  background-position: 90% 100%;
 }
+.docsGridTitle {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #e3ecff;
+  margin-bottom: 25px;
+  padding-bottom: 24px;
+  padding-left: 24px;
+  padding-top: 25px;
+  padding-right: 24px;
+}
+
+.docsGridTitle h2{
+  margin: 0;
+  margin-left: 24px;
+  font-family: $titleFont;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.docsGridTitle h2 p{
+  margin: 0;
+}
+
+.docsGridTitle .blockImage {
+  width: 32px;
+}
+
 
 .docsContainerHeader.paddingTop {
   padding-top: 101px;
@@ -432,12 +467,38 @@ li + li {
   top: -223px;
   background: #ffffff;
   border-radius: 4px;
-  padding-left: 24px;
-  padding-top: 25px;
-  padding-right: 24px;
-  padding-bottom: 25px;
+
   box-shadow: 0 3px 90px 0 rgba(0, 0, 0, 0.16);
 }
+
+.docsGrid .blockContent {
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 25px;
+}
+
+.docsGrid .blockContent p {
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.docsLink a {
+ font-family: $descriptionFont;
+ font-size: 16px;
+ font-weight: normal;
+ font-style: normal;
+ font-stretch: normal;
+ line-height: 1.5;
+ letter-spacing: normal;
+ text-align: right;
+}
+
 
 .gridBlock .docsGridHeader {
   flex-grow: 0;
@@ -450,6 +511,11 @@ li + li {
   text-align: justify;
   flex-direction: column;
   margin-top: -143px;
+}
+
+.docsText p a {
+  font-weight: bold;
+  color: #2696ff;
 }
 
 .wrapper .docsText p {
