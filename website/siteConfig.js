@@ -62,7 +62,7 @@ const users = [
 
 const siteConfig = {
   title: 'i-Educar' /* title for your website */,
-  tagline: '',
+  tagline: 'O i-Educar é um software público totalmente on-line que torna mais fácil e prática a gestão dos processos das escolas, matrículas e dados de alunos, apoiando os profissionais da rede de ensino e gestores.',
   disableHeaderTitle: true,
   url: 'https://portabilis.github.io' /* your website url */,
   baseUrl: '/i-educar-docs/' /* base url for your project */,

@@ -20,6 +20,27 @@
   background-color: #2c3a55;
 }
 
+.textEmail {
+  display: flex;
+  justify-content: left;
+  opacity: 0.9;
+  border: none;
+  border-radius: 5px;
+}
+
+.inner {
+  text-align: left;
+  display: block;
+}
+
+.promoSection .promoRow {
+  padding: 0px;
+}
+
+.promoSection .promoRow .pluginRowBlock{
+  justify-content: left;
+}
+
 .subfooteritens{
   display:flex;
   max-width: 1440px;
@@ -27,10 +48,15 @@
   padding: 0 32px;
   padding-top: 14px;
 }
+
 .subfooter {
     display: flex;
     justify-content: center;
     background-color: #253147;
+}
+
+.homeContainer .homeWrapper {
+  padding-top: 161px;
 }
 
 .subfooter p {
@@ -42,6 +68,30 @@
   line-height: normal;
   letter-spacing: normal;
   color: #506899;
+}
+
+.projectTitle {
+  font-family: $titleFont;
+  font-size: 48px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin: 0px;
+}
+
+.projectTitle small {
+  font-family: $descriptionFont;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #ffffff;
+  margin: 0px;
 }
 
 li + li {
@@ -113,6 +163,7 @@ li + li {
   margin: 0px;
   max-width: 1440px;
 }
+
 .fixedHeaderContainer {
   height: 80px;
   background: #ffffff;

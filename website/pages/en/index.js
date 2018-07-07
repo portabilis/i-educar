@@ -35,13 +35,25 @@ class Button extends React.Component {
   render() {
     return (
       <div className="pluginWrapper buttonWrapper">
-        <a className="button" href={this.props.href} target={this.props.target}>
+        <a className={this.props.className} href={this.props.href} target={this.props.target}>
           {this.props.children}
         </a>
       </div>
     );
   }
 }
+
+class InputText extends React.Component {
+  render() {
+    return (
+      <div className="pluginWrapper buttonWrapper">
+        <label className={this.props.classNameLabel}>{this.props.labelName}</label>
+        <input type="text" id={this.props.id} className={this.props.className}/>
+      </div>
+    );
+  }
+}
+
 
 Button.defaultProps = {
   target: '_self',
@@ -83,12 +95,9 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         {/* <Logo img_src={imgUrl('i-educar-logo.png')} /> */}
         <div className="inner">
-          <Logo img_src={imgUrl('logo.svg')} />
           <ProjectTitle />
           <PromoSection>
-            <Button href="#try">Try It Out</Button>
-            <Button href={docUrl('doc1.html', language)}>Example Link</Button>
-            <Button href={docUrl('doc2.html', language)}>Example Link 2</Button>
+            
           </PromoSection>
         </div>
       </SplashContainer>
