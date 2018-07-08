@@ -88,7 +88,7 @@ class clsConfig
     $this->_instituicao = $config->template->vars->instituicao . ' - ';
 
     // E-mails dos administradores para envio de relatórios de performance
-    $emails = $config->admin->reports->emails->toArray();
+    $emails = explode(',', $config->admin->reports->emails);
     $this->arrayConfig['ArrStrEmailsAdministradores'] = $emails;
 
     // Diretório dos templates de e-mail

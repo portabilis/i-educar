@@ -55,7 +55,7 @@ class Portabilis_Mailer {
                 ->setBody($message, $options['mime']);
 
             $allowedDomains = !empty($this->configs->allowed_domains)
-                ? $this->configs->allowed_domains
+                ? explode(',', $this->configs->allowed_domains)
                 : ['*'];
 
             $result = false;

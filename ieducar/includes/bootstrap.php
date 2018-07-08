@@ -63,27 +63,9 @@ $paths[] = join(DIRECTORY_SEPARATOR, array($root, '.'));
 // Configura o include_path.
 set_include_path(join(PATH_SEPARATOR, $paths) . PATH_SEPARATOR . get_include_path());
 
-/*
- * Define o ambiente de configuração desejado. Verifica se existe uma variável
- * de ambiente configurada ou define 'production' como padrão.
- */
-if (getenv('CORE_EXT_CONFIGURATION_ENV')) {
-  define('CORE_EXT_CONFIGURATION_ENV', getenv('CORE_EXT_CONFIGURATION_ENV'));
-}
-else {
-  define('CORE_EXT_CONFIGURATION_ENV', 'production');
-}
-
-// por padrão busca uma configuração para o ambiente atual definido em CORE_EXT_CONFIGURATION_ENV
-$configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
-
-// caso não exista o ini para o ambiente atual, usa o arquivo padrão ieducar.ini
-if (! file_exists($configFile))
-  $configFile = realpath(dirname(__FILE__) . '/../') . '/configuration/ieducar.ini';
-
-// Classe de configuração
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'CoreExt/Config.class.php';
-require_once 'CoreExt/Config/Ini.class.php';
+require_once 'CoreExt/Config/Env.php';
 require_once 'CoreExt/Locale.php';
 
 // Array global de objetos de classes do pacote CoreExt
@@ -94,22 +76,31 @@ $coreExt = array();
 $locale = CoreExt_Locale::getInstance();
 $locale->setCulture('pt_BR')->setLocale();
 
-// Instancia objeto CoreExt_Configuration
-$coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
+$tenantEnvFile = $_SERVER['HTTP_HOST'] . '.env';
+
+$ambientesDesenvolvimento = [
+    'local',
+    'staging',
+];
+
+$tenants = [];
+if (file_exists(__DIR__ . '/../configuration/' . $tenantEnvFile)) {
+    $tenants[] = new Dotenv\Dotenv(__DIR__ . '/../configuration/', $tenantEnvFile);
+}
+
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../configuration/');
+
+$config = new \iEducar\Config\Env($dotenv, $tenants);
+
+$coreExt['Config'] = $config;
 $coreExt['Locale'] = $locale;
+
+if (!in_array(getenv('ambiente'), $ambientesDesenvolvimento) && !file_exists(__DIR__ . '/../configuration/' . $tenantEnvFile)){
+    header("Location: /404.html");
+}
 
 // Timezone
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
-
-$tenantEnv = $_SERVER['HTTP_HOST'];
-
-// tenta carregar as configurações da seção especifica do tenant,
-// ex: ao acessar http://tenant.ieducar.com.br será carregado a seção tenant.ieducar.com.br caso exista
-if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
-    $coreExt['Config']->changeEnviroment($tenantEnv);
-} else if (!$coreExt['Config']->hasEnviromentSection($tenantEnv) && CORE_EXT_CONFIGURATION_ENV !== "development"){
-    $coreExt['Config']->app->ambiente_inexistente = true;
-}
 
 /**
  * Altera o diretório da aplicação. chamadas a fopen() na aplicação não
