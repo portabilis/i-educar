@@ -241,7 +241,7 @@ class clsControlador
         $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
     }
 
-    $templateText = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
+    $templateText = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", getenv('ambiente'), $templateText);
     $templateText = str_replace("<!-- #&BRASAO&# -->", $this->getLoginLogo($configuracoes), $templateText);
     $templateText = str_replace("<!-- #&NOME_ENTIDADE&# -->", $configuracoes["ieducar_entity_name"], $templateText);
     $templateText = str_replace("<!-- #&RODAPE_LOGIN&# -->", $configuracoes["ieducar_login_footer"], $templateText);

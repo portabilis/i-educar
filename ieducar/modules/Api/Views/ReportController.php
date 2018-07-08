@@ -97,7 +97,7 @@ class ReportController extends ApiCoreController
       $boletimReport->addArg('turma',       (int)$dadosMatricula['turma_id']);
       $boletimReport->addArg('situacao_matricula', 10);
 
-      if (CORE_EXT_CONFIGURATION_ENV == "production") {
+      if (getenv('ambiente') == "production") {
         $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
       } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
         $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
@@ -139,7 +139,7 @@ class ReportController extends ApiCoreController
       $boletimProfessorReport->addArg('modelo', $modelo);
       $boletimProfessorReport->addArg('linha', 0);
 
-      if (CORE_EXT_CONFIGURATION_ENV == "production") {
+      if (getenv('ambiente') == "production") {
         $boletimProfessorReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
       } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
         $boletimProfessorReport->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
