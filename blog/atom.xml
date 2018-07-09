@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ieducar.org/i-educar/blog</id>
+    <id>https://portabilis.github.io/i-educar/blog</id>
     <title>i-Educar Blog</title>
     <updated>2018-05-20T06:00:00Z</updated>
     <generator>Feed for Node.js</generator>
-    <link rel="alternate" href="https://ieducar.org/i-educar/blog"/>
+    <link rel="alternate" href="https://portabilis.github.io/i-educar/blog"/>
     <subtitle>The best place to stay up-to-date with the latest i-Educar news and events.</subtitle>
-    <logo>https://ieducar.org/i-educar/img/logo_horizontal.svg</logo>
+    <logo>https://portabilis.github.io/i-educar/img/logo_horizontal.svg</logo>
     <rights>Copyright © 2018 Your Name or Your Company Name</rights>
     <entry>
         <title type="html"><![CDATA[Lorem Ipsum]]></title>
-        <id>https://ieducar.org/i-educar/blog/2018/05/20/lorem-ipsum.html</id>
-        <link href="https://ieducar.org/i-educar/blog/2018/05/20/lorem-ipsum.html">
+        <id>https://portabilis.github.io/i-educar/blog/2018/05/20/lorem-ipsum.html</id>
+        <link href="https://portabilis.github.io/i-educar/blog/2018/05/20/lorem-ipsum.html">
         </link>
         <updated>2018-05-20T06:00:00Z</updated>
         <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
@@ -23,8 +23,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[Lorem Ipsum]]></title>
-        <id>https://ieducar.org/i-educar/blog/2018/05/19/lorem-ipsum.html</id>
-        <link href="https://ieducar.org/i-educar/blog/2018/05/19/lorem-ipsum.html">
+        <id>https://portabilis.github.io/i-educar/blog/2018/05/19/lorem-ipsum.html</id>
+        <link href="https://portabilis.github.io/i-educar/blog/2018/05/19/lorem-ipsum.html">
         </link>
         <updated>2018-05-19T06:00:00Z</updated>
         <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
@@ -36,8 +36,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[Lorem Ipsum]]></title>
-        <id>https://ieducar.org/i-educar/blog/2018/05/18/lorem-ipsum.html</id>
-        <link href="https://ieducar.org/i-educar/blog/2018/05/18/lorem-ipsum.html">
+        <id>https://portabilis.github.io/i-educar/blog/2018/05/18/lorem-ipsum.html</id>
+        <link href="https://portabilis.github.io/i-educar/blog/2018/05/18/lorem-ipsum.html">
         </link>
         <updated>2018-05-18T06:00:00Z</updated>
         <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
