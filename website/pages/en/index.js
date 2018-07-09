@@ -11,6 +11,11 @@ const CompLibrary = require('../../core/CompLibrary.js');
 const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
 const Container = CompLibrary.Container;
 const GridBlock = CompLibrary.GridBlock;
+const BlogGridBlock = require(process.cwd() + '/core/BlogGridBlock.js')
+
+//const MetadataBlog = require('./MetadataBlog.js');
+//var threeLastPost = MetadataBlog.slice(0,3);
+
 
 const siteConfig = require(process.cwd() + '/siteConfig.js');
 
@@ -30,13 +35,25 @@ class Button extends React.Component {
   render() {
     return (
       <div className="pluginWrapper buttonWrapper">
-        <a className="button" href={this.props.href} target={this.props.target}>
+        <a className={this.props.className} href={this.props.href} target={this.props.target}>
           {this.props.children}
         </a>
       </div>
     );
   }
 }
+
+class InputText extends React.Component {
+  render() {
+    return (
+      <div className="pluginWrapper buttonWrapper">
+        <label className={this.props.classNameLabel}>{this.props.labelName}</label>
+        <input type="text" id={this.props.id} className={this.props.className}/>
+      </div>
+    );
+  }
+}
+
 
 Button.defaultProps = {
   target: '_self',
@@ -80,9 +97,7 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle />
           <PromoSection>
-            <Button href="#try">Try It Out</Button>
-            <Button href={docUrl('doc1.html', language)}>Example Link</Button>
-            <Button href={docUrl('doc2.html', language)}>Example Link 2</Button>
+
           </PromoSection>
         </div>
       </SplashContainer>
@@ -94,76 +109,124 @@ const Block = props => (
   <Container
     padding={['bottom', 'top']}
     id={props.id}
-    background={props.background}>
-    <GridBlock align="center" contents={props.children} layout={props.layout} />
+    background={props.background}
+    className={props.className}>
+    <GridBlock className={props.classNameGrid} align="left" contents={props.children} layout={props.layout} />
+  </Container>
+);
+
+const BlogBlock = props => (
+  <Container
+    padding={['bottom', 'top']}
+    id={props.id}
+    background={props.background}
+    className={props.className}>
+    <BlogGridBlock className={props.classNameGrid} align="left" layout={props.layout} />
+  </Container>
+)
+
+const BlockHeader = props => (
+  <Container
+    padding={['bottom', 'top']}
+    id={props.id}
+    background={props.background}
+    className={props.class}
+    >
+    <GridBlock className={props.classNameGrid} align="left" contents={props.children} layout={props.layout} />
   </Container>
 );
 
 const Features = props => (
-  <Block layout="fourColumn">
+  <div>
+  <BlockHeader layout="OneColumn" class="featureContainerHeader" classNameGrid="blockHeader">
     {[
       {
-        content: 'This is the content of my feature',
-        image: imgUrl('i-educar-logo.png'),
+        title: 'Principais Funcionalidades',
+        textAlign: 'left',
+      }
+    ]}
+  </BlockHeader>
+  <Block layout="threeColumn" className="featureContainer" classNameGrid="featureBlock">
+    {[
+      {
+        content: 'Acessivel de qualquer lugar e com cadastro único do aluno disponível para toda a rede de ensino. Economia de tempo para todos!',
+        image: imgUrl('funcionalidades/wifi.png'),
         imageAlign: 'top',
-        title: 'Feature One',
+        title: 'Totalmente Online',
       },
       {
-        content: 'The content of my second feature',
-        image: imgUrl('i-educar-logo.png'),
+        content: 'Obtenha dados quantitativos, financeiros e estatisticos sempre atuais de todos os processos, na hora e lugar que você deseja!',
+        image: imgUrl('funcionalidades/page-clock.png'),
         imageAlign: 'top',
-        title: 'Feature Two',
+        title: 'Informações em tempo real',
       },
+      {
+        content: 'Sistema de avaliação e relatórios adaptados para as dferentes realidades do pais, com notas numéricas, conceituais ou avaliação descritiva.',
+        image: imgUrl('funcionalidades/page.png'),
+        imageAlign: 'top',
+        title: 'Sistema de avaliação flexivel',
+      }
     ]}
   </Block>
-);
-
-const FeatureCallout = props => (
-  <div
-    className="productShowcaseSection paddingBottom"
-    style={{textAlign: 'center'}}>
-    <h2>Feature Callout</h2>
-    <MarkdownBlock>These are features of this project</MarkdownBlock>
+  <Block layout="threeColumn" className="featureContainer" classNameGrid="featureBlock">
+    {[
+      {
+        content: 'Gerenciamento de alocações, afastamentos, substituições, faltas e atrasos, oferecendo uma visão integrada de todos os profissionais.',
+        image: imgUrl('funcionalidades/user.png'),
+        imageAlign: 'top',
+        title: 'Gestão de servidores',
+      },
+      {
+        content: 'Gereção de quadro de horário para análise das demandas e disponibilidades de profissionais na rede de ensino em cada periodo letivo.',
+        image: imgUrl('funcionalidades/calendar-clock.png'),
+        imageAlign: 'top',
+        title: 'Quadro de horário',
+      },
+      {
+        content: 'Controle de veiculos, motoristas, rotas, itinerários, emissão de carteirinha e controle de usuários do tranporte.',
+        image: imgUrl('funcionalidades/bus.png'),
+        imageAlign: 'top',
+        title: 'Transporte escolar',
+      }
+    ]}
+  </Block>
+  <Block layout="threeColumn" className="featureContainerLast" classNameGrid="featureBlock">
+    {[
+      {
+        content: 'Gestão completa de acervo com controle de reservas, emprestimos e devolução .Recibos de controle disponiveis para cada fase do processo.',
+        image: imgUrl('funcionalidades/book.png'),
+        imageAlign: 'top',
+        title: 'Biblioteca',
+      },
+      {
+        content: 'Usufrua de uma  coleção  de mais 150 modelos de relatórios e documentos Boletins, historia, ficha, atestados e gráficos.',
+        image: imgUrl('funcionalidades/graph.png'),
+        imageAlign: 'top',
+        title: 'Relatórios e indicadores ',
+      },
+      {
+        content: 'Controle de todas as informaçoes para o Censo Escolar com recursos para importação e exportação automatizada dos dados.',
+        image: imgUrl('funcionalidades/e-clip.png'),
+        imageAlign: 'top',
+        title: 'Educacenso/INEP',
+      }
+    ]}
+  </Block>
   </div>
 );
-
-const LearnHow = props => (
-  <Block background="light">
+const Blog = props => (
+  <div>
+  <BlockHeader layout="OneColumn"  class="blogContainerHeader" classNameGrid="blogBlockHeader">
     {[
       {
-        content: 'Talk about learning how to use this',
-        image: imgUrl('i-educar-logo.png'),
-        imageAlign: 'right',
-        title: 'Learn How',
-      },
+        title: 'Blog',
+        content: 'Fique por dentro das novidades do i-Educar!',
+        textAlign: 'left',
+      }
     ]}
-  </Block>
-);
-
-const TryOut = props => (
-  <Block id="try">
-    {[
-      {
-        content: 'Talk about trying this out',
-        image: imgUrl('i-educar-logo.png'),
-        imageAlign: 'left',
-        title: 'Try it Out',
-      },
-    ]}
-  </Block>
-);
-
-const Description = props => (
-  <Block background="dark">
-    {[
-      {
-        content: 'This is another description of how this project is useful',
-        image: imgUrl('i-educar-logo.png'),
-        imageAlign: 'right',
-        title: 'Description',
-      },
-    ]}
-  </Block>
+  </BlockHeader>
+  <BlogBlock layout="threeColumn" className="blogContainerLast" classNameGrid="blogBlock" />
+  </div>
 );
 
 const Showcase = props => {
@@ -183,15 +246,9 @@ const Showcase = props => {
     });
 
   return (
-    <div className="productShowcaseSection paddingBottom">
-      <h2>{"Who's Using This?"}</h2>
-      <p>This project is used by all these people</p>
+    <div className="productShowcaseSection paddingBottom" id="quemusa">
+      <h2>{"Redes de ensino que usam o i-Educar"}</h2>
       <div className="logos">{showcase}</div>
-      <div className="more-users">
-        <a className="button" href={pageUrl('users.html', props.language)}>
-          More {siteConfig.title} Users
-        </a>
-      </div>
     </div>
   );
 };
@@ -205,10 +262,7 @@ class Index extends React.Component {
         <HomeSplash language={language} />
         <div className="mainContainer">
           <Features />
-          <FeatureCallout />
-          <LearnHow />
-          <TryOut />
-          <Description />
+          <Blog />
           <Showcase language={language} />
         </div>
       </div>
