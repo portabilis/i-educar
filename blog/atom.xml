@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>http://ieducar.org/blog</id>
+    <id>https://ieducar.org/i-educar/blog</id>
     <title>i-Educar Blog</title>
-    <updated>2018-05-18T06:00:00Z</updated>
+    <updated>2018-05-20T06:00:00Z</updated>
     <generator>Feed for Node.js</generator>
-    <link rel="alternate" href="http://ieducar.org/blog"/>
+    <link rel="alternate" href="https://ieducar.org/i-educar/blog"/>
     <subtitle>The best place to stay up-to-date with the latest i-Educar news and events.</subtitle>
-    <logo>http://ieducar.org/img/i-educar-logo.png</logo>
+    <logo>https://ieducar.org/i-educar/img/logo_horizontal.svg</logo>
     <rights>Copyright © 2018 Your Name or Your Company Name</rights>
     <entry>
-        <title type="html"><![CDATA[Inicio da documentação do i-Educar]]></title>
-        <id>http://ieducar.org/blog/2018/05/18/inicio-documentacao.html</id>
-        <link href="http://ieducar.org/blog/2018/05/18/inicio-documentacao.html">
+        <title type="html"><![CDATA[Lorem Ipsum]]></title>
+        <id>https://ieducar.org/i-educar/blog/2018/05/20/lorem-ipsum.html</id>
+        <link href="https://ieducar.org/i-educar/blog/2018/05/20/lorem-ipsum.html">
         </link>
-        <updated>2018-05-18T06:00:00Z</updated>
-        <summary type="html"><![CDATA[<p>Estamos iniciando a documentação do i-Educar, esperando ansiosamente pela abertura de código com a atualização do i-Educar.</p>
-<p>A documentação ainda terá um grande trabalho para fique boa, mas nunca ficará completa. Apoiem para que a documentação fique</p>
+        <updated>2018-05-20T06:00:00Z</updated>
+        <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
 ]]></summary>
         <author>
-            <name>Vinicius Celms</name>
-            <uri>https://twitter.com/viniciuscelms</uri>
+            <name>Rodrigo Sanches Devigo</name>
+            <uri>https://github.com/rsdevigo</uri>
+        </author>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Lorem Ipsum]]></title>
+        <id>https://ieducar.org/i-educar/blog/2018/05/19/lorem-ipsum.html</id>
+        <link href="https://ieducar.org/i-educar/blog/2018/05/19/lorem-ipsum.html">
+        </link>
+        <updated>2018-05-19T06:00:00Z</updated>
+        <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
+]]></summary>
+        <author>
+            <name>Rodrigo Sanches Devigo</name>
+            <uri>https://github.com/rsdevigo</uri>
+        </author>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Lorem Ipsum]]></title>
+        <id>https://ieducar.org/i-educar/blog/2018/05/18/lorem-ipsum.html</id>
+        <link href="https://ieducar.org/i-educar/blog/2018/05/18/lorem-ipsum.html">
+        </link>
+        <updated>2018-05-18T06:00:00Z</updated>
+        <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
+]]></summary>
+        <author>
+            <name>Rodrigo Sanches Devigo</name>
+            <uri>https://github.com/rsdevigo</uri>
         </author>
     </entry>
 </feed>
