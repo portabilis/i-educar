@@ -11,6 +11,94 @@
   background-image: linear-gradient(67deg, #2696ff, #8100f7);
 }
 
+#mapBlock .wrapper{
+  height: 704px;
+  padding: 0;
+  display: flex;
+}
+
+#mapBlock.paddingTop {
+  padding-top: 0;
+}
+
+#map {
+  height: 100%;
+  flex-grow: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
+}
+
+.numbers {
+  flex-grow: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
+  padding-right: 25px;
+}
+
+.numbersBoxUse {
+  height: 140px;
+  background-color: #f8fbff;
+  margin-bottom: 70px;
+  margin-top: 70px;
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.numbersBoxUse h2,
+.numbersBoxStates h2 {
+  font-size: 50px;
+  opacity: 0.7;
+  font-family: $titleFont;
+  line-height: 1.5;
+  margin: 0;
+}
+.numbersBoxUse p,
+.numbersBoxStates p {
+  font-size: 18px;
+  font-family: $descriptionFont;
+  line-height: 1.5;
+  font-weight: 500;
+  margin: 0;
+}
+
+.numbersBoxStates {
+  height: 140px;
+  background-color: #3ee4cf;
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.mapsBlockHeader h2 p{
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #4e5666;
+
+}
+.mapsBlockHeader p{
+  font-family: $descriptionFont;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+.mapsBlockHeader h2{
+  margin: 0;
+}
+
 .nav-footer {
   height: auto;
   display: block;
