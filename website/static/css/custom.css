@@ -7,8 +7,10 @@
 }
 
 .homeContainer {
-  height: 614px;
-  background-image: linear-gradient(67deg, #2696ff, #8100f7);
+  height: 620px;
+  background-image: url('../img/FB_cover.png');
+  background-repeat: no-repeat;
+  
 }
 
 #mapBlock .wrapper{

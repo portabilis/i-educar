@@ -96,10 +96,7 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         {/* <Logo img_src={imgUrl('i-educar-logo.png')} /> */}
         <div className="inner">
-          <ProjectTitle />
-          <PromoSection>
-
-          </PromoSection>
+          
         </div>
       </SplashContainer>
     );
