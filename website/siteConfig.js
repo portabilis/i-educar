@@ -13,49 +13,49 @@ const users = [
     caption: 'Prefeitura de Duque de Caxias',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/i-educar-docs/img/parceiros/duquecaxias@3x.png',
+    image: '/i-educar/img/parceiros/duquecaxias@3x.png',
     pinned: true,
   },
   {
     caption: 'Prefeitura de Botucatu',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/i-educar-docs/img/parceiros/botucatu@3x.png',
+    image: '/i-educar/img/parceiros/botucatu@3x.png',
     pinned: true,
   },
   {
     caption: 'Prefeitura de Criciúma',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/i-educar-docs/img/parceiros/criciuma@3x.png',
+    image: '/i-educar/img/parceiros/criciuma@3x.png',
     pinned: true,
   },
   {
     caption: 'Prefeitura de Balneário de Camburiú',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/i-educar-docs/img/parceiros/balneario-camboriu@3x.png',
+    image: '/i-educar/img/parceiros/balneario-camboriu@3x.png',
     pinned: true,
   },
   {
     caption: 'Prefeitura de Monte Alegre',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/i-educar-docs/img/parceiros/montealegre@3x.png',
+    image: '/i-educar/img/parceiros/montealegre@3x.png',
     pinned: true,
   },
   {
     caption: 'Prefeitura de Paragominas',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/i-educar-docs/img/parceiros/paragominas@3x.png',
+    image: '/i-educar/img/parceiros/paragominas@3x.png',
     pinned: true,
   },
   {
     caption: 'Prefeitura de São Miguel dos Campos',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/i-educar-docs/img/parceiros/sa-omigueldoscampos@3x.png',
+    image: '/i-educar/img/parceiros/sa-omigueldoscampos@3x.png',
     pinned: true,
   },
 ];
@@ -65,13 +65,13 @@ const siteConfig = {
   tagline: 'O i-Educar é um software público totalmente on-line que torna mais fácil e prática a gestão dos processos das escolas, matrículas e dados de alunos, apoiando os profissionais da rede de ensino e gestores.',
   disableHeaderTitle: true,
   url: 'https://portabilis.github.io' /* your website url */,
-  baseUrl: '/i-educar-docs/' /* base url for your project */,
+  baseUrl: '/i-educar/' /* base url for your project */,
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'i-educar-docs',
+  projectName: 'i-educar',
   organizationName: 'portabilis',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
