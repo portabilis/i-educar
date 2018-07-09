@@ -96,7 +96,7 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         {/* <Logo img_src={imgUrl('i-educar-logo.png')} /> */}
         <div className="inner">
-          
+
         </div>
       </SplashContainer>
     );
@@ -262,7 +262,7 @@ class Index extends React.Component {
           <Features />
           <Blog />
           <Showcase language={language} />
-          <MapBlock id="mapBlock" />
+          <MapBlock id="mapBlock" apikey={siteConfig.mapsApiKey} students={siteConfig.statistics.numberOfStudents} schools={siteConfig.statistics.numberOfSchools} cities={siteConfig.statistics.numberOfCities}/>
         </div>
       </div>
     );

@@ -19,7 +19,7 @@ const Container = CompLibrary.Container;
 class MapBlock extends React.Component{
 
   render() {
-    return (
+    var render = (
       <Container
         padding={['bottom', 'top']}
         id={this.props.id}
@@ -33,19 +33,24 @@ class MapBlock extends React.Component{
               content: 'O i-Educar ajuda várias instituições a administrarem seu dia-a-dia e a economizarem em seus negócios. Descubra os números.'
             }
           ]} layout="OneColumn" />
-          <div className="numbersBoxUse">
-            <h2>62</h2>
-            <p>Instituições que usam</p>
+          <div className="numbersBoxCities">
+            <h2>{this.props.cities}</h2>
+            <p>Municípios que usam</p>
           </div>
-          <div className="numbersBoxStates">
-            <h2>14</h2>
-            <p>Estados atendidos</p>
+          <div className="numbersBoxSchools">
+            <h2>{this.props.schools}</h2>
+            <p>Escolas atendidas</p>
+          </div>
+          <div className="numbersBoxStudents">
+            <h2>{this.props.students}</h2>
+            <p>Alunos atingidos</p>
           </div>
         </div>
         <div id="map"></div>
+        <script src={"https://maps.googleapis.com/maps/api/js?key="+this.props.apikey+"&callback=initMap"}></script>
       </Container>
     );
+    return render;
   }
 }
-
 module.exports = MapBlock;

@@ -60,6 +60,12 @@ const users = [
   },
 ];
 
+const statistics = {
+  numberOfCities: 62,
+  numberOfSchools: 10,
+  numberOfStudents: 100
+}
+
 const siteConfig = {
   title: 'i-Educar' /* title for your website */,
   tagline: 'O i-Educar é um software livre e público totalmente on-line que torna mais fácil e prática a gestão dos processos das escolas, matrículas e dados de alunos, apoiando os profissionais da rede de ensino e gestores.',
@@ -88,6 +94,7 @@ const siteConfig = {
 
   // If you have users set above, you add it here:
   users,
+  statistics,
 
   /* path to images for header/footer */
   headerIcon: 'img/logo_horizontal.svg',
@@ -147,7 +154,8 @@ const siteConfig = {
   scripts: [
     'js/mailchimp.js',
     'js/map.js'
-  ]
+  ],
+  mapsApiKey: 'AIzaSyCIThOGkNPz5Kxk1CH5on42LzEMpVLGhho',
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
