@@ -11,7 +11,8 @@ const CompLibrary = require('../../core/CompLibrary.js');
 const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
 const Container = CompLibrary.Container;
 const GridBlock = CompLibrary.GridBlock;
-const BlogGridBlock = require(process.cwd() + '/core/BlogGridBlock.js')
+const BlogGridBlock = require(process.cwd() + '/core/BlogGridBlock.js');
+const MapBlock = require(process.cwd() + '/core/MapBlock.js');
 
 //const MetadataBlog = require('./MetadataBlog.js');
 //var threeLastPost = MetadataBlog.slice(0,3);
@@ -95,10 +96,7 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         {/* <Logo img_src={imgUrl('i-educar-logo.png')} /> */}
         <div className="inner">
-          <ProjectTitle />
-          <PromoSection>
 
-          </PromoSection>
         </div>
       </SplashContainer>
     );
@@ -264,6 +262,7 @@ class Index extends React.Component {
           <Features />
           <Blog />
           <Showcase language={language} />
+          <MapBlock id="mapBlock" apikey={siteConfig.mapsApiKey} students={siteConfig.statistics.numberOfStudents} schools={siteConfig.statistics.numberOfSchools} cities={siteConfig.statistics.numberOfCities}/>
         </div>
       </div>
     );
