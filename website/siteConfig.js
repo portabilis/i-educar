@@ -61,9 +61,9 @@ const users = [
 ];
 
 const statistics = {
-  numberOfCities: 62,
-  numberOfSchools: 10,
-  numberOfStudents: 100
+  numberOfCities: '+80',
+  numberOfSchools: '+2050',
+  numberOfStudents: '+500.000'
 }
 
 const siteConfig = {
