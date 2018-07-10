@@ -43,13 +43,16 @@ class Footer extends React.Component {
                   <a href="index.html#quemusa" >Quem Usa?</a>
                 </li>
                 <li>
-                  <a href = "">Blog</a>
+                  <a href ={this.pageUrl('blog')}>Blog</a>
                 </li>
                 <li>
                   <a href="https://forum.ieducar.org">Fórum</a>
                 </li>
                 <li>
-                  <a href="" >Documentação</a>
+                  <a href="docs" >Documentação</a>
+                </li>
+                <li>
+                  <a href="https://github.com/portabilis/i-educar" >Github</a>
                 </li>
               </ul>
             </nav>
@@ -58,7 +61,7 @@ class Footer extends React.Component {
         <section className='subfooter'>
           <div className='subfooteritens'>
               <div className = "footerDescription">
-                <p>Mantido pela <img src={this.props.config.baseUrl+'/img/logo-portabilis.svg'} /> e Comunidade i-Educar para educação do Brasil <img src={this.props.config.baseUrl +'/img/coracao.svg'} /> </p>
+                <p>Mantido pela <img src={this.props.config.baseUrl+'img/logo-portabilis.svg'} /> e Comunidade i-Educar para educação do Brasil <img src={this.props.config.baseUrl +'img/coracao.svg'} /> </p>
               </div>
               <div className ="footerVersion">
                 <p>v. i-Educar</p>
