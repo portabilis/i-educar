@@ -2,37 +2,37 @@
 <rss version="2.0">
     <channel>
         <title>i-Educar Blog</title>
-        <link>https://portabilis.github.io/i-educar/blog</link>
+        <link>http://ieducar.org/blog</link>
         <description>The best place to stay up-to-date with the latest i-Educar news and events.</description>
         <lastBuildDate>Sun, 20 May 2018 06:00:00 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Feed for Node.js</generator>
         <image>
             <title>i-Educar Blog</title>
-            <url>https://portabilis.github.io/i-educar/img/logo_horizontal.svg</url>
-            <link>https://portabilis.github.io/i-educar/blog</link>
+            <url>http://ieducar.org/img/logo_horizontal.svg</url>
+            <link>http://ieducar.org/blog</link>
         </image>
         <copyright>Copyright © 2018 Your Name or Your Company Name</copyright>
         <item>
             <title><![CDATA[Lorem Ipsum]]></title>
-            <link>https://portabilis.github.io/i-educar/blog/2018/05/20/lorem-ipsum.html</link>
-            <guid>https://portabilis.github.io/i-educar/blog/2018/05/20/lorem-ipsum.html</guid>
+            <link>http://ieducar.org/blog/2018/05/20/lorem-ipsum.html</link>
+            <guid>http://ieducar.org/blog/2018/05/20/lorem-ipsum.html</guid>
             <pubDate>Sun, 20 May 2018 06:00:00 GMT</pubDate>
             <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
 ]]></description>
         </item>
         <item>
             <title><![CDATA[Lorem Ipsum]]></title>
-            <link>https://portabilis.github.io/i-educar/blog/2018/05/19/lorem-ipsum.html</link>
-            <guid>https://portabilis.github.io/i-educar/blog/2018/05/19/lorem-ipsum.html</guid>
+            <link>http://ieducar.org/blog/2018/05/19/lorem-ipsum.html</link>
+            <guid>http://ieducar.org/blog/2018/05/19/lorem-ipsum.html</guid>
             <pubDate>Sat, 19 May 2018 06:00:00 GMT</pubDate>
             <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
 ]]></description>
         </item>
         <item>
             <title><![CDATA[Lorem Ipsum]]></title>
-            <link>https://portabilis.github.io/i-educar/blog/2018/05/18/lorem-ipsum.html</link>
-            <guid>https://portabilis.github.io/i-educar/blog/2018/05/18/lorem-ipsum.html</guid>
+            <link>http://ieducar.org/blog/2018/05/18/lorem-ipsum.html</link>
+            <guid>http://ieducar.org/blog/2018/05/18/lorem-ipsum.html</guid>
             <pubDate>Fri, 18 May 2018 06:00:00 GMT</pubDate>
             <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan tempus neque sed posuere.</p>
 ]]></description>
