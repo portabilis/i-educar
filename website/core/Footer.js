@@ -58,7 +58,7 @@ class Footer extends React.Component {
         <section className='subfooter'>
           <div className='subfooteritens'>
               <div className = "footerDescription">
-                <p>Mantido pela <img src={this.props.config.baseUrl+'/img/logo-portabilis.svg'} /> e Comunidade i-Educar para educação do Brasil <img src={this.props.config.baseUrl +'/img/coracao.svg'} /> </p>
+                <p>Mantido pela <img src={this.props.config.baseUrl+'img/logo-portabilis.svg'} /> e Comunidade i-Educar para educação do Brasil <img src={this.props.config.baseUrl +'img/coracao.svg'} /> </p>
               </div>
               <div className ="footerVersion">
                 <p>v. i-Educar</p>

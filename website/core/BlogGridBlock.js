@@ -60,9 +60,11 @@ class BlogGridBlock extends GridBlock {
       </div>
     );
   }
-
-  render() {
+  componentWillMount () {
     this.loadPosts();
+    return this;
+  }
+  render() {
     return (
       <div className="gridBlock">
         {this.props.contents.map(this.renderBlock, this)}
@@ -93,7 +95,10 @@ class BlogGridBlock extends GridBlock {
 
   loadPosts () {
     let lastThreePosts = MetadataBlog.slice(0,3);
-    lastThreePosts.map(function(post) {
+    delete this.props.contents[0];
+    delete this.props.contents[1];
+    delete this.props.contents[2];
+    lastThreePosts.forEach(function(post) {
       this.props.contents.push ({title: post.title, content: post.content, date: new Date(post.seconds*1000), path: post.path});
     }, this);
   }

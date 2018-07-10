@@ -1,7 +1,3 @@
-const siteConfig = require(process.cwd() + '/../siteConfig.js');
-
-
-
 function initMap() {
   // Styles a map in night mode.
 	var cities = [
