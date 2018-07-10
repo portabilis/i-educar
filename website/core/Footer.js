@@ -43,13 +43,13 @@ class Footer extends React.Component {
                   <a href="index.html#quemusa" >Quem Usa?</a>
                 </li>
                 <li>
-                  <a href = "">Blog</a>
+                  <a href ={this.pageUrl('blog')}>Blog</a>
                 </li>
                 <li>
                   <a href="https://forum.ieducar.org">Fórum</a>
                 </li>
                 <li>
-                  <a href="" >Documentação</a>
+                  <a href="docs" >Documentação</a>
                 </li>
               </ul>
             </nav>

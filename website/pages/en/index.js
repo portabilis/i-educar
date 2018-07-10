@@ -14,9 +14,6 @@ const GridBlock = CompLibrary.GridBlock;
 const BlogGridBlock = require(process.cwd() + '/core/BlogGridBlock.js');
 const MapBlock = require(process.cwd() + '/core/MapBlock.js');
 
-//const MetadataBlog = require('./MetadataBlog.js');
-//var threeLastPost = MetadataBlog.slice(0,3);
-
 
 const siteConfig = require(process.cwd() + '/siteConfig.js');
 
@@ -99,6 +96,47 @@ class HomeSplash extends React.Component {
 
         </div>
       </SplashContainer>
+    );
+  }
+}
+
+class ConversionSplash extends React.Component {
+  render() {
+    let language = this.props.language || '';
+    return (
+      <div className="mailContainer">
+        <div className="mailSplashFade">
+          <div className="wrapper homeWrapper">
+            <div className="inner">
+              <h2 className="projectTitle">
+                Participe da comunidade
+                <small>Quer ficar atualizado com todos os lançamentos e atualizações do i-Educar? Assine nossa news e receba em primeira mão</small>
+              </h2>
+              <form id="conversion">
+                <div>
+                  <label>NOME</label>
+                  <input type="text" id="conversion_name" name="nome" placeholder="Nome"/>
+                </div>
+
+                <div>
+                  <label>SOBRENOME</label>
+                  <input type="text" id="conversion_lname" name="sobrenome" placeholder="Sobrenome"/>
+                </div>
+
+                <div>
+                  <label>EMAIL</label>
+                  <input type="text" id="conversion_email" name="email" placeholder="Email"/>
+                </div>
+                <button type="submit"id="submit-form">RECEBER</button>
+              </form>
+
+              <div id="conversionSuccess" className="hide">
+                <p>Seu email foi cadastrado com sucesso</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }
@@ -263,6 +301,7 @@ class Index extends React.Component {
           <Blog />
           <Showcase language={language} />
           <MapBlock id="mapBlock" apikey={siteConfig.mapsApiKey} students={siteConfig.statistics.numberOfStudents} schools={siteConfig.statistics.numberOfSchools} cities={siteConfig.statistics.numberOfCities}/>
+          <ConversionSplash />
         </div>
       </div>
     );

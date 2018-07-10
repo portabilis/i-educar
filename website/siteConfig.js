@@ -154,7 +154,8 @@ const siteConfig = {
   gaGtag: true,
   scripts: [
     'js/mailchimp.js',
-    'js/map.js'
+    'js/map.js',
+    'js/conversao.js',
   ],
   mapsApiKey: 'AIzaSyCIThOGkNPz5Kxk1CH5on42LzEMpVLGhho',
 
