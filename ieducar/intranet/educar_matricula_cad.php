@@ -955,7 +955,7 @@ class indice extends clsCadastro
   }
 
   function atendeSolicitacaoTransferencia($codTranferencia, $codMatriculaEntrada) {
-    $obj_transferencia = new clsPmieducarTransferenciaSolicitacao($codTranferencia, NULL, $this->pessoa_logada, NULL, $codMatriculaEntrada, NULL, NULL, NULL, NULL, NULL);
+    $obj_transferencia = new clsPmieducarTransferenciaSolicitacao($codTranferencia, NULL, $this->pessoa_logada, NULL, $codMatriculaEntrada);
     $obj_transferencia->edita();
   }
 
