@@ -1957,6 +1957,12 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         $r80s8 = '';
       }
 
+      $etapasEducacensoMulti = array(12, 13, 22, 23, 24, 56, 64, 72);
+
+      if (!in_array($etapa_educacenso, $etapasEducacensoMulti)) {
+        $r80s9 = NULL;
+      }
+
       $r80s10 = ($r80s10 == 0 ? NULL : $r80s10);
 
       for ($i=13; $i <= 23 ; $i++)
