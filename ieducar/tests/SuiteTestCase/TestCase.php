@@ -6,17 +6,16 @@ use clsBanco;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 use PHPUnit\DbUnit\Operation\Composite;
-use PHPUnit\DbUnit\TestCase;
+use PHPUnit\DbUnit\TestCase as AbstractTestCase;
 
-class IeducarTestCase extends TestCase
+class TestCase extends AbstractTestCase
 {
-
     /**
      * @var Connection
      */
     private static $connection;
 
-    public function setUp(): void
+    public function setUp()
     {
         echo getenv('CORE_EXT_CONFIGURATION_ENV');
         parent::setUp();
@@ -47,7 +46,7 @@ class IeducarTestCase extends TestCase
      */
     protected function getDataSet()
     {
-        return (new IeducarDataSet($this))->getDataSet();
+        return (new DataSet($this))->getDataSet();
     }
 
     public function getYamlDataSet()
@@ -59,14 +58,14 @@ class IeducarTestCase extends TestCase
     {
         return new Composite(
             [
-                new IeducarForeignKeysCheckDisable(),
-                new IeducarInsertTriggerEnable()
+                new ForeignKeysCheckDisable(),
+                new InsertTriggerEnable()
             ]
         );
     }
 
     public function getTearDownOperation()
     {
-        return new IeducarForeignKeysCheckDisable();
+        return new ForeignKeysCheckDisable();
     }
 }

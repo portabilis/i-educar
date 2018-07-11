@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Model;
 
-use Tests\SuiteTestCase\IeducarTestCase;
+use Tests\SuiteTestCase\TestCase;
 
-class PessoaFjTest extends IeducarTestCase
+class PessoaFjTest extends TestCase
 {
     public function getYamlDataSet()
     {
@@ -20,6 +20,4 @@ class PessoaFjTest extends IeducarTestCase
         $this->assertEquals($pessoa['nome'], 'Fulano');
         $this->assertEquals($pessoa['idpes'], 2);
     }
-
-
 }

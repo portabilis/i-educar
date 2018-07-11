@@ -2,20 +2,16 @@
 
 namespace Tests\SuiteTestCase;
 
+use Exception;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
-use PHPUnit\DbUnit\DataSet\IDataSet;
-use PHPUnit\DbUnit\DataSet\ITable;
-use PHPUnit\DbUnit\DataSet\ITableIterator;
-use PHPUnit\DbUnit\DataSet\ITableMetadata;
 use PHPUnit\DbUnit\DataSet\YamlDataSet;
-use Traversable;
 
-class IeducarDataSet
+class DataSet
 {
     private $dataSet;
     private $suiteName;
 
-    public function __construct(IeducarTestCase $test)
+    public function __construct(TestCase $test)
     {
         $this->suiteName = $this->extractSuiteName($test->toString());
         $this->dataSet = $this->createYamlDataSet($test->getYamlDataSet());
@@ -47,13 +43,20 @@ class IeducarDataSet
         return false;
     }
 
+    /**
+     * @param $filename
+     *
+     * @return YamlDataSet
+     *
+     * @throws \Exception
+     */
     private function getYamlDataSet($filename)
     {
-        if (!\is_array($filename)) {
+        if (! is_array($filename)) {
             return new YamlDataSet($this->getDirDataSet() . $filename);
         }
 
-        throw \Exception('Não implementado');
+        throw new Exception('Não implementado');
     }
 
     private function getDirDataSet()
