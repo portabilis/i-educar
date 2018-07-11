@@ -54,9 +54,9 @@
 ; Configurações de banco de dados
 app.database.dbname   = ieducar
 app.database.username = postgres
-app.database.hostname = postgres_95
+app.database.hostname = localhost
 app.database.password = postgres
-app.database.port     = 5432
+app.database.port     = 5434
 app.name              = "i-Educar"
 
 ; Define mensagem de pendência administrativa
