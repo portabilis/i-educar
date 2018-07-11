@@ -138,7 +138,7 @@ class clsBase extends clsConfig
     {
 
         $saida = $this->OpenTpl('htmlhead');
-        $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
+        $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", getenv('ambiente'), $saida);
         $saida = str_replace("<!-- #&USER_ID&# -->", $_SESSION['id_pessoa'], $saida);
         $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
 
