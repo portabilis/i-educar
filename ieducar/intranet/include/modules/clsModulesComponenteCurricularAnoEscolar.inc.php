@@ -33,6 +33,7 @@
 */
 
 require_once( "include/pmieducar/geral.inc.php" );
+require_once( "lib/Portabilis/Utils/Database.php" );
 
 class clsModulesComponenteCurricularAnoEscolar
 {
@@ -66,7 +67,8 @@ class clsModulesComponenteCurricularAnoEscolar
 
         $this->_campos_lista = $this->_todos_campos = "componente_curricular_id,
                                                        ano_escolar_id,
-                                                       carga_horaria";
+                                                       carga_horaria,
+                                                       array_to_json(anos_letivos) as anos_letivos ";
         if(is_numeric($componente_curricular_id)){
             $this->componente_curricular_id = $componente_curricular_id;
         }
@@ -90,12 +92,13 @@ class clsModulesComponenteCurricularAnoEscolar
     function atualizaComponentesDaSerie(){
 
         $this->updateInfo();
-        
+
         if ($this->updateInfo['update']) {
             foreach ($this->updateInfo['update'] as $componenteUpdate) {
                 $this->editaComponente(intval($componenteUpdate['id']),
                                        intval($componenteUpdate['carga_horaria']),
-                                       intval($componenteUpdate['tipo_nota']));
+                                       intval($componenteUpdate['tipo_nota']),
+                                       $componenteUpdate['anos_letivos']);
             }
         }
 
@@ -103,7 +106,8 @@ class clsModulesComponenteCurricularAnoEscolar
             foreach ($this->updateInfo['insert'] as $componenteInsert) {
                 $this->cadastraComponente(intval($componenteInsert['id']),
                                           intval($componenteInsert['carga_horaria']),
-                                          intval($componenteInsert['tipo_nota']));
+                                          intval($componenteInsert['tipo_nota']),
+                                          $componenteInsert['anos_letivos']);
             }
         }
 
@@ -118,7 +122,7 @@ class clsModulesComponenteCurricularAnoEscolar
     }
 
     function updateInfo(){
-        
+
         $c = $u = $i = $d = 0;
 
         foreach ($this->componentes as $componente) {
@@ -128,11 +132,13 @@ class clsModulesComponenteCurricularAnoEscolar
                 $this->updateInfo['update'][$u]['id'] = $componente['id'];
                 $this->updateInfo['update'][$u]['carga_horaria'] = $componente['carga_horaria'];
                 $this->updateInfo['update'][$u]['tipo_nota'] = $componente['tipo_nota'];
+                $this->updateInfo['update'][$u]['anos_letivos'] = $componente['anos_letivos'];
                 $u++;
             }else{
                 $this->updateInfo['insert'][$i]['id'] = $componente['id'];
                 $this->updateInfo['insert'][$i]['carga_horaria'] = $componente['carga_horaria'];
                 $this->updateInfo['insert'][$i]['tipo_nota'] = $componente['tipo_nota'];
+                $this->updateInfo['insert'][$i]['anos_letivos'] = $componente['anos_letivos'];
                 $i++;
             }
         }
@@ -143,7 +149,7 @@ class clsModulesComponenteCurricularAnoEscolar
                 $d++;
             }
         }
-        
+
         return $this->updateInfo;
     }
 
@@ -168,19 +174,22 @@ class clsModulesComponenteCurricularAnoEscolar
 
         return false;
     }
-    
+
     private function cadastraComponente($componente_curricular_id = NULL,
                                         $carga_horaria            = NULL,
-                                        $tipo_nota                = NULL)
+                                        $tipo_nota                = NULL,
+                                        $anosLetivos              = NULL)
     {
         if(is_numeric($componente_curricular_id) && is_numeric($carga_horaria)){
-            
+
             $db = new clsBanco();
-            
+
             $sql = "INSERT INTO {$this->_tabela} VALUES( $componente_curricular_id,
                                                          $this->ano_escolar_id,
                                                          $carga_horaria,
-                                                         $tipo_nota)";
+                                                         $tipo_nota,
+                                                         " . Portabilis_Utils_Database::arrayToPgArray($anosLetivos) . "
+                                                     )";
             $db->Consulta( $sql );
 
             return true;
@@ -191,7 +200,8 @@ class clsModulesComponenteCurricularAnoEscolar
 
     private function editaComponente($componente_curricular_id = NULL,
                                      $carga_horaria            = NULL,
-                                     $tipo_nota                = NULL)
+                                     $tipo_nota                = NULL,
+                                     $anosLetivos              = NULL)
     {
         $db = new clsBanco();
         $set = "";
@@ -210,13 +220,19 @@ class clsModulesComponenteCurricularAnoEscolar
                 $gruda = ", ";
             }
 
+            if( is_array( $anosLetivos ) )
+            {
+                $set .= "{$gruda}anos_letivos = " . Portabilis_Utils_Database::arrayToPgArray($anosLetivos) . ' ';
+                $gruda = ", ";
+            }
+
             if( $set )
             {
                 $sql = "UPDATE {$this->_tabela}
                            SET $set
                          WHERE componente_curricular_id = {$componente_curricular_id}
                            AND ano_escolar_id           = {$this->ano_escolar_id}";
-                
+
                 $db->Consulta( $sql );
                 return true;
             }
@@ -228,9 +244,9 @@ class clsModulesComponenteCurricularAnoEscolar
     private function excluiComponente($componente_curricular_id = NULL)
     {
         if(is_numeric($componente_curricular_id)){
-            
+
             $db = new clsBanco();
-            
+
             $sql = "DELETE FROM {$this->_tabela}
                      WHERE componente_curricular_id = {$componente_curricular_id}
                        AND ano_escolar_id = {$this->ano_escolar_id}";
@@ -244,13 +260,13 @@ class clsModulesComponenteCurricularAnoEscolar
 
     function cadastra(){
         if(is_numeric($this->componente_curricular_id) && is_numeric($this->ano_escolar_id)){
-            
+
             $db = new clsBanco();
 
             $campos  = '';
             $valores = '';
             $gruda   = '';
-            
+
             if (is_numeric($this->ano_escolar_id)) {
                 $campos .= "{$gruda}ano_escolar_id";
                 $valores .= "{$gruda}'{$this->ano_escolar_id}'";
@@ -262,7 +278,7 @@ class clsModulesComponenteCurricularAnoEscolar
                 $valores .= "{$gruda}'{$this->componente_curricular_id}'";
                 $gruda = ", ";
             }
-            
+
             if (is_numeric($this->carga_horaria)) {
                 $campos .= "{$gruda}carga_horaria";
                 $valores .= "{$gruda}'{$this->carga_horaria}'";
@@ -274,7 +290,7 @@ class clsModulesComponenteCurricularAnoEscolar
                 $valores .= "{$gruda}'{$this->tipo_nota}'";
                 $gruda = ", ";
             }
-            
+
             $sql = "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )";
 
             $db->Consulta( $sql );
@@ -288,9 +304,9 @@ class clsModulesComponenteCurricularAnoEscolar
     function exclui()
     {
         if(is_numeric($this->ano_escolar_id)){
-            
+
             $db = new clsBanco();
-            
+
             $sql = "DELETE FROM {$this->_tabela}
                      WHERE ano_escolar_id = {$this->ano_escolar_id}";
 

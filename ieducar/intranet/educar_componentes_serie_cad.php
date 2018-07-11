@@ -109,9 +109,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->url_cancelar = ($retorno == "Editar") ?
-      "educar_componentes_serie_lst.php" :
-      "educar_componentes_serie_lst.php";
+    $this->url_cancelar = "educar_componentes_serie_lst.php";
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
@@ -127,9 +125,9 @@ class indice extends clsCadastro
     $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
     $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
     $this->exigir_inep  = dbBool($this->exigir_inep);
-    
+
     $this->retorno = $retorno;
-    
+
     return $retorno;
   }
 
@@ -148,6 +146,7 @@ class indice extends clsCadastro
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('retorno', $this->retorno);
+    $this->campoOculto('sugestao_anos_letivos', json_encode(array_values($this->sugestaoAnosLetivos())));
 
     $this->inputsHelper()->dynamic('instituicao', array('value' => $this->instituicao_id));
 
@@ -176,7 +175,7 @@ class indice extends clsCadastro
     // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
     header("Location: educar_componentes_serie_lst.php");
     die();
-    
+
   }
 
   function Editar()
