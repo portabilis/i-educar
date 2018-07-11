@@ -4,9 +4,7 @@ authorURL: https://www.linkedin.com/in/giustin
 title: Em 2018, queremos o i-Educar por todo o Brasil
 ---
 
-## Em 2018, queremos o i-Educar por todo o Brasil
-
-Esta mensagem é diferente das de [retrospectiva](https://softwarepublico.gov.br/social/i-educar/blog/retrospectiva-i-educar-2016-o-que-conseguimos-realizar) dos anos anteriores. Vamos abordar primeiro sobre o futuro, encerrando com um resumo de como foi 2017.
+Esta mensagem é diferente das de [retrospectiva](https://softwarepublico.gov.br/social/i-educar/blog/retrospectiva-i-educar-2016-o-que-conseguimos-realizar) dos anos anteriores. <!--truncate-->Vamos abordar primeiro sobre o futuro, encerrando com um resumo de como foi 2017.
 
 Quando escrevo aqui, tenho uma grande responsabilidade, pois represento todos os membros da Comunidade i-Educar, a Política do Portal do Software Público Brasileiro e todas as pessoas que acreditam que podemos transformar o Brasil por meio da educação. O i-Educar é, sem dúvida alguma, a ponte para alcançarmos esta transformação.
 
