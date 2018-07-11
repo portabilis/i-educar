@@ -3,12 +3,12 @@
 $environments = array(
 	"development" => array(
 		"adapter" => "pgsql",
-		"host" => "postgres_95",
-		"user" => "ieducar",
-		"pass" => "ieducar",
+		"host" => "localhost",
+		"user" => "scrutinizer",
+		"pass" => "scrutinizer",
 		"port" => "5432",
 		"charset" => "utf8",
-		"name" => "ieducar",
+		"name" => "ieducar_test",
 	),
 );
 
