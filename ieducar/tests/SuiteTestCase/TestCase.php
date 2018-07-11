@@ -17,7 +17,6 @@ class TestCase extends AbstractTestCase
 
     public function setUp()
     {
-        echo getenv('CORE_EXT_CONFIGURATION_ENV');
         parent::setUp();
         @session_start();
         $_SESSION['id_pessoa'] = 1;
