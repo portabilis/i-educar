@@ -4,9 +4,7 @@ authorURL: https://www.linkedin.com/in/giustin
 title: i-Educar por todo o Brasil: Portabilis e Fundação Lemann
 ---
 
-## Preparação do lançamento do maior software livre de educação do Brasil!
-
-Tenho muitas novidades para contar. Mas, por hora, vou comunicar o mais relevante e então, nos próximos períodos, vou trazendo mais atualizações para vocês.
+Tenho muitas novidades para contar. Mas, por hora, vou comunicar o mais relevante <!--truncate-->e então, nos próximos períodos, vou trazendo mais atualizações para vocês.
 
 Esta mensagem é para todos que acompanham a Comunidade i-Educar todos esses anos e acreditam, fortemente, que podemos fazer a diferença na educação do País com esta solução.
 
