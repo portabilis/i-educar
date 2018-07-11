@@ -12,21 +12,21 @@ tools:
     php_analyzer: true
     php_changetracking: true
     php_code_sniffer:
-        config:
-            standard: "PSR2"
+      config:
+        standard: "PSR2"
     php_cpd: true
     php_mess_detector: true
     php_pdepend: true
     sensiolabs_security_checker: true
 
 build:
-    environment:
-            postgresql: true
+  environment:
+    postgresql: true
 
-    dependencies:
-            before:
-                - psql -c "CREATE DATABASE ieducar_test WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
-                - composer install
-                - cp phinx.php.sample phinx.php
-                - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
-                - ieducar/vendor/bin/phinx migrate
+  dependencies:
+    after:
+      - psql -c "CREATE DATABASE ieducar_test WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
+      - cp phinx.php.sample phinx.php
+      - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
+      - ieducar/vendor/bin/phinx migrate
+
