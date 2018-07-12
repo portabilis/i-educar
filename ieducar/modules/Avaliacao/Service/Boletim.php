@@ -1302,9 +1302,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         break;
       case App_Model_MatriculaSituacao::REPROVADO:
         $situacao->retidoFalta = TRUE;
-        // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
-        $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
-        $situacao->andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
+        $andamento = FALSE;
+        if ($this->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
+            $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
+            $andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
+        }
+        $situacao->andamento = FALSE;
         break;
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
@@ -1786,7 +1790,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->componentesCurriculares = $faltasComponentes;
 
     // Na última etapa seta situação presença como aprovado ou reprovado.
-    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc' || $tipoFaltaGeral) {
+    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
       $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
       $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                         App_Model_MatriculaSituacao::REPROVADO;
