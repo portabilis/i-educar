@@ -223,12 +223,10 @@ class indice extends clsCadastro
     // Regra de avaliação
     $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     $regras = array();
-    if (!is_null($this->ref_cod_instituicao)) {
-      $regras = $mapper->findAll(array(),
-        array('instituicao' => $this->ref_cod_instituicao)
-      );
-      $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
-    }
+    // @TODO entender como funciona a tabela para poder popular os campos de regra
+    // baseado na instituição escolhida
+    $regras = $mapper->findAll([],[]);
+    $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
 
     $regras = array('' => 'Selecione') + $regras;
 
@@ -412,6 +410,9 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
+// @TODO entender como funciona a tabela para poder popular os campos de regra
+// baseado na instituição escolhida
+/*
 function getRegra()
 {
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -429,7 +430,7 @@ function getRegra()
   var xml_qtd_etapas = new ajax(RegrasInstituicao);
   xml_qtd_etapas.envia("educar_serie_regra_xml.php?ins=" + campoInstituicao);
 }
-
+*/
 function EtapasCurso(xml_qtd_etapas)
 {
   var campoEtapas = document.getElementById('etapa_curso');
@@ -522,6 +523,6 @@ document.getElementById('ref_cod_instituicao').onchange = function()
   getCurso();
 
   // Requisição Ajax para as Regras de Avaliação
-  getRegra();
+  //getRegra();
 }
 </script>

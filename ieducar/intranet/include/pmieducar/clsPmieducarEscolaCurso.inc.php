@@ -115,7 +115,7 @@ class clsPmieducarEscolaCurso
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}escola_curso";
 
-        $this->_campos_lista = $this->_todos_campos = "ec.ref_cod_escola, ec.ref_cod_curso, ec.ref_usuario_exc, ec.ref_usuario_cad, ec.data_cadastro, ec.data_exclusao, ec.ativo, ec.autorizacao, ARRAY_TO_JSON(anos_letivos) AS anos_letivos ";
+        $this->_campos_lista = $this->_todos_campos = "ec.ref_cod_escola, ec.ref_cod_curso, ec.ref_usuario_exc, ec.ref_usuario_cad, ec.data_cadastro, ec.data_exclusao, ec.ativo, ec.autorizacao, ARRAY_TO_JSON(ec.anos_letivos) AS anos_letivos ";
 
         if( is_numeric( $ref_usuario_exc ) )
         {

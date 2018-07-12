@@ -2299,7 +2299,8 @@ class indice extends clsCadastro
         return true;
     }
 
-    protected function geraCamposCodigoInepEscolaCompartilhada() {
+    protected function geraCamposCodigoInepEscolaCompartilhada()
+    {
         $options = array('label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
                         'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => '');
 
