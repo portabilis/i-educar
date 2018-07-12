@@ -7,15 +7,15 @@ require_once 'CoreExt/Validate/Email.php';
 class Usuario_Model_Usuario extends CoreExt_Entity
 {
     protected $_data = [
-        'id'               => null,
-        'escolaId'         => null,
-        'instituicaoId'    => null,
+        'id' => null,
+        'escolaId' => null,
+        'instituicaoId' => null,
         'funcionarioCadId' => null,
         'funcionarioExcId' => null,
-        'tipoUsuarioId'    => null,
-        'dataCadastro'     => null,
-        'dataExclusao'     => null,
-        'ativo'            => null
+        'tipoUsuarioId' => null,
+        'dataCadastro' => null,
+        'dataExclusao' => null,
+        'ativo' => null
     ];
 
     public function getDataMapper()
