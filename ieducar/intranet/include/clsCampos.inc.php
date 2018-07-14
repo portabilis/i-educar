@@ -467,7 +467,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $duplo = false,
         $acao = '',
         $disabled = false,
-        $teste,
+        $teste = null,
         $dica = 'dd/mm/aaaa'
     ) {
         $arr_componente = [
@@ -928,7 +928,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoRotulo($nome, $campo, $valor, $duplo = false, $descricao = '', $separador = ':')
+    public function campoRotulo($nome, $campo, $valor = '', $duplo = false, $descricao = '', $separador = ':')
     {
         $arr_componente = [
             $duplo ? 'rotuloDuplo' : 'rotulo',
@@ -946,7 +946,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
-    public function campoSenha($nome, $campo, $valor, $obrigatorio = false, $descricao = '')
+    public function campoSenha($nome, $campo, $valor = '', $obrigatorio = false, $descricao = '')
     {
         $this->campos[$nome] = [
             'senha',
@@ -1024,7 +1024,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     public function campoSuggest(
         $nome,
         $campo,
-        $valor,
+        $valor = '',
         $obrigatorio = false,
         $expressao = false,
         $duplo = false,
