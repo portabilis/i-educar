@@ -216,6 +216,8 @@ class clsFisica
         $this->data_uniao               = $data_uniao;
         $this->data_obito               = $data_obito;
         $this->nacionalidade            = $nacionalidade;
+
+        // todo Remover variável não usada
         $this->data_chegada_brasil      = $data_chegada_brasil ?? null;
         $this->ultima_empresa           = $ultima_empresa;
         $this->nome_mae                 = $nome_mae;

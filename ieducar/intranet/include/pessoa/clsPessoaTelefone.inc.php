@@ -181,7 +181,7 @@ class clsPessoaTelefone
             $whereAnd = " AND ";
         }
 
-        $limite = null;
+        $limite = '';
         if( $int_inicio_limite !== false && $int_qtd_registros)
         {
             $limite = "LIMIT $int_qtd_registros OFFSET $int_inicio_limite ";
