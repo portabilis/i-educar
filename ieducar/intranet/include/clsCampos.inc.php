@@ -1163,9 +1163,8 @@ class clsCampos extends Core_Controller_Page_Abstract
         $start_md = null
     ) {
         $retorno = '';
-        $gerou_script = false;
 
-        if (!$arr_campos) {
+        if (!$array_campos) {
             $arr_campos = $this->campos;
         }
 
@@ -1182,7 +1181,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         // Marca quantos valores foram passados para o prenchimento das repetições
         $adicionador_total_valores = 5;
 
-        $javascript .= '
+        $javascript = '
   function tabela(name, counter)
   {
     // Seta variavel para não reordenar id dos campos
@@ -1436,31 +1435,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
+            $existe_tab_aberta = false;
             if (preg_match('/^(tab_name_[0-9]+)/', $nome) === 1) {
-                if ($existe_tab_aberta) {
-                    if ($this->__segue_fluxo) {
-                        $colspan = 2;
-                        $sequencia = unserialize($this->__sequencia_fluxo);
-
-                        if (isset($sequencia[$index - 1])) {
-                            $prox_id = array_flip($sequencia);
-                            $prox_id = $prox_id[$index] * 2;
-
-                            $retorno .= "<tr><td align=left><img onclick='LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_anterior.gif' border='0' /></td>";
-                            $colspan = 1;
-                        }
-                        if ($sequencia[$index] != 0) {
-                            $prox_id = $sequencia[$index++] * 2;
-                            $retorno .= "<td colspan=$colspan align=right><img onclick='validaTab(" . ($componente['id'] - 1) . ");LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_proximo.gif' border='0' /></td></tr>";
-                        } else {
-                            $retorno .= "<td colspan=$colspan align=right><img onclick='{$this->__acao_enviar_abas}' style='cursor:pointer' src='imagens/bot_salvar.gif' border='0' /></td></tr>";
-                        }
-                    }
-
-                    $retorno .= '<!-- FIM TABELA 3 --></table></div>';
-                }
-
-                $existe_tab_aberta = true;
                 $retorno .= "<div id=\"content{$componente['id']}\" style=\"visibility: hidden;\" class=\"tabPage\">";
                 $retorno .= '<!-- INICIO TABELA 3 --><table cellpadding="2" cellspacing="0" border="0" width=100%  align=center>';
 
@@ -1768,19 +1744,16 @@ class clsCampos extends Core_Controller_Page_Abstract
             } elseif ($componente[0] != 'oculto') {
                 $tipo = $componente[0];
 
-                if (!($componente['separador'])) {
+                if (!isset($componente['separador'])) {
                     $campo = $componente[1];
                 } else {
                     $campo = $componente[1] . "{$componente['separador']}";
                 }
 
-                $validador = $componente[2];
-
                 if (($campo == $campo_anterior) && ($campo != '-:')) {
                     $campo = '';
                 } else {
                     $campo_anterior = $campo;
-                    $tipo_anterior = $tipo;
 
                     if (!$foiDuplo) {
                         $md = !$md;
@@ -1797,7 +1770,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $name = '';
                     }
 
-                    $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><span class='form'>$campo</span>{$obrigatorio}{$explicacao}</td><td class='$classe' valign='top'><span class='form'>\n";
+                    $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><span class='form'>$campo</span>{$obrigatorio}</td><td class='$classe' valign='top'><span class='form'>\n";
                 } elseif (!$foiDuplo) {
                     if ($campo == '-:') {
                         if (empty($componente[3])) {
@@ -2588,7 +2561,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                     case 'listaativarpeso':
                         $retorno .= '<input type=\'checkbox\' ';
                         $retorno .= ($componente[5]) ? 'checked' : '';
-                        $retorno .= " name='{$nome_chk}' onclick='ativaCampo(\"{$nome}\")'>&nbsp;&nbsp;<select ";
+                        $retorno .= " name='' onclick='ativaCampo(\"{$nome}\")'>&nbsp;&nbsp;<select ";
                         $retorno .= ($componente[5]) ? '' : 'disabled';
                         $retorno .= " class='{$class}' name='{$nome}_lst' id='{$nome}_lst'>";
 
@@ -2615,7 +2588,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                     case 'listaativarpesoselect':
                         $retorno .= '<input type=\'checkbox\' ';
                         $retorno .= ($componente[5]) ? 'checked' : '';
-                        $retorno .= " name='{$nome_chk}' onclick='ativaCampo(\"{$nome}\")'>&nbsp;&nbsp;<select ";
+                        $retorno .= " name='' onclick='ativaCampo(\"{$nome}\")'>&nbsp;&nbsp;<select ";
                         $retorno .= ($componente[5]) ? '' : 'disabled';
                         $retorno .= " class='{$class}' name='{$nome}_lst' id='{$nome}_lst'>";
 
@@ -2782,7 +2755,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function MakeFormat()
     {
-        $ret = " \n{$onload} \n
+        $ret = "
     function CarregaDetalhe(id_div, endereco)
     {
       var elemento_div = document.getElementById(id_div);
@@ -2808,20 +2781,20 @@ class clsCampos extends Core_Controller_Page_Abstract
         elemento_div.style.overflow = 'visible';
         if (goodIE) {
           elemento_div.style.height = '0px';
-          elemento_img.src =  '" . $config['urlImagens'] . 'excluir_1.gif\';
-          elemento_img.alt =  \'Fechar\';
+          elemento_img.src =  'excluir_1.gif';
+          elemento_img.alt =  'Fechar';
         }
         else {
-          elemento_div.style.height = \'100%\';
-          elemento_img.src =  \'' . $config['urlImagens'] . 'excluir_1.gif\';
-          elemento_img.alt =  \'Fechar\';
+          elemento_div.style.height = '100%';
+          elemento_img.src =  'excluir_1.gif';
+          elemento_img.alt =  'Fechar';
         }
       }
       else {
-        elemento_img.src =  \'' . $config['urlImagens'] . 'log-info.gif\';
-        elemento_div.style.overflow = \'hidden\';
-        elemento_div.style.height = \'1px\';
-        elemento_img.alt =  \'Visualizar detalhes\';
+        elemento_img.src =  'log-info.gif';
+        elemento_div.style.overflow = 'hidden';
+        elemento_div.style.height = '1px';
+        elemento_img.alt =  'Visualizar detalhes';
       }
 
       aberto = !aberto;
@@ -2831,16 +2804,16 @@ class clsCampos extends Core_Controller_Page_Abstract
     {
       var x = document.getElementById(nome_pai);
 
-      opt = document.createElement(\'OPTION\');
+      opt = document.createElement('OPTION');
       opt.value = chave;
       opt.selected = true;
       opt.appendChild(document.createTextNode(item));
 
       x.appendChild(opt);
       if (submete) {
-    ';
+    ";
 
-        if ($this->executa_submete) {
+        if (isset($this->executa_submete)) {
             $ret .= '
         document.' . $this->__nome . '.' . $this->executa_submete;
         }

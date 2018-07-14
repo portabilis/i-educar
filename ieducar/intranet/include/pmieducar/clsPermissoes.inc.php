@@ -95,7 +95,7 @@ class clsPermissoes
       $ok = TRUE;
     }
 
-    if ((!$detalhe['cadastra'] && !$detalhe_super_usuario)) {
+    if (!$detalhe_super_usuario && !$detalhe['cadastra']) {
       $ok = FALSE;
     }
 
