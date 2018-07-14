@@ -640,7 +640,7 @@ class clsMenuSuspenso
 
     while ($db->ProximoRegistro()) {
       $tupla = $db->Tupla();
-      $tupla['total'] = $total;
+      $tupla['total'] = null;
       $resultado[] = $tupla;
     }
 

@@ -310,7 +310,6 @@ class clsMenu
           $title_acao = 'Abrir a categoria';
         }
 
-        $saida    = str_replace('<!-- #&MENUS&# -->', $submenus, $saida);
         $submenus = '';
 
         $faIcon = empty($item[9]) ? '' : '<i class="fa '. $item[9] .'" aria-hidden="true"></i>';
