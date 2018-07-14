@@ -73,7 +73,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         parent::__construct();
     }
 
-    public function campoTabInicio($nome, $largura = '', $segue_fluxo = false, $array_sequencia = null)
+    public function campoTabInicio($nome, $segue_fluxo = false, $array_sequencia = null)
     {
         $this->__id_tab = 1;
         $this->__nm_tab = $nome;
