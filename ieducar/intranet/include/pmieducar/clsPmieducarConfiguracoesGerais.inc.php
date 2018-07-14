@@ -170,7 +170,7 @@ class clsPmieducarConfiguracoesGerais
         $this->url_cadastro_usuario = $campos['url_cadastro_usuario'];
     }
 
-    if (is_numeric($campos['active_on_ieducar'])) {
+    if (isset($campos['active_on_ieducar']) && is_numeric($campos['active_on_ieducar'])) {
         $this->active_on_ieducar = $campos['active_on_ieducar'];
     }
 
