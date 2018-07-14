@@ -63,8 +63,10 @@ class Portabilis_View_Helper_Input_Core {
   }
 
 
-  protected function helperName() {
-    return end(explode('_', get_class($this)));
+  protected function helperName()
+  {
+      $arrayClassName = explode('_', get_class($this));
+      return end($arrayClassName);
   }
 
 
