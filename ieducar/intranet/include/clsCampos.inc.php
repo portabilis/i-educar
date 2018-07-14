@@ -68,11 +68,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $ref_cod_instituicao;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function campoTabInicio($nome, $segue_fluxo = false, $array_sequencia = null)
     {
         $this->__id_tab = 1;
