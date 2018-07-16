@@ -67,9 +67,8 @@ class EscolaController extends ApiCoreController
   protected function createUpdateOrDestroyEducacensoEscola($escolaId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'escola');
 
-    if (empty($this->getRequest()->escola_inep_id))
-      $result = $this->deleteEntityOf($dataMapper, $escolaId);
-    else {
+    $result = $this->deleteEntityOf($dataMapper, $escolaId);
+    if (!empty($this->getRequest()->escola_inep_id)){
       $data = array(
         'escola'      => $escolaId,
         'escolaInep'  => $this->getRequest()->escola_inep_id,
