@@ -203,14 +203,15 @@ class App_Model_IedFinder extends CoreExt_Entity
    * @param int $cursoId
    * @return array
    */
-  public static function getSeries($instituicaoId = NULL, $escolaId = NULL, $cursoId = NULL)
+  public static function getSeries($instituicaoId = NULL, $escolaId = NULL, $cursoId = NULL, $ano = NULL)
   {
     $series = self::addClassToStorage('clsPmieducarSerie', NULL,
                                        'include/pmieducar/clsPmieducarSerie.inc.php');
 
     $series->setOrderby(' nm_serie ASC, ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
     $series = $series->lista(NULL, NULL, NULL, $cursoId, NULL, NULL, NULL, NULL, NULL,
-                             NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, $escolaId);
+                             NULL, NULL, NULL, NULL, $instituicaoId, NULL, NULL, $escolaId,
+                            NULL, NULL, $ano);
 
     $_series = array();
 

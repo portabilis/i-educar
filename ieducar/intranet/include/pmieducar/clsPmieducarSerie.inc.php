@@ -590,7 +590,7 @@ class clsPmieducarSerie
     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
     $int_ativo = NULL, $int_ref_cod_instituicao = NULL,
     $int_idade_inicial = NULL, $int_idade_final = NULL, $int_ref_cod_escola = NULL,
-    $regra_avaliacao_id = NULL, $int_idade_ideal = NULL)
+    $regra_avaliacao_id = NULL, $int_idade_ideal = NULL, $ano = NULL)
   {
     $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao FROM {$this->_tabela} s, {$this->_schema}curso c";
 
@@ -692,12 +692,25 @@ class clsPmieducarSerie
     }
 
     if (is_numeric($int_ref_cod_escola)) {
-      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1
                                          FROM pmieducar.escola_serie es
                                         WHERE s.cod_serie = es.ref_cod_serie
                                           AND es.ativo = 1
-                                          AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
-      $whereAnd = " AND ";
+                                          AND es.ref_cod_escola = '{$int_ref_cod_escola}' ";
+
+        if (is_numeric($ano)) {
+            $filtros .= " AND {$ano} = ANY(es.anos_letivos) ";
+        }
+        $filtros .= ' ) ';
+        $whereAnd = " AND ";
+    } elseif (is_numeric($ano)) {
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_serie es
+                                        WHERE s.cod_serie = es.ref_cod_serie
+                                          AND es.ativo = 1
+                                          AND {$ano} = ANY(es.anos_letivos) ";
+
+        $whereAnd = " AND ";
     }
 
     $db = new clsBanco();

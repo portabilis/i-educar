@@ -8,6 +8,7 @@
 
     var $cursoField = getElementFor('curso');
     var $serieField = getElementFor('serie');
+    var $ano = getElementFor('ano');
 
     var handleGetSeries = function(resources) {
       var selectOptions = jsonResourcesToSelectOptions(resources['options']);
@@ -21,15 +22,16 @@
         $serieField.children().first().html('Aguarde carregando...');
 
         var urlForGetSeries = getResourceUrlBuilder.buildUrl('/module/DynamicInput/serie', 'series', {
-          instituicao_id   : $instituicaoField.val(),
-          escola_id        : $escolaField.val(),
-          curso_id         : $cursoField.val()
+          instituicao_id: $instituicaoField.val(),
+          escola_id: $escolaField.val(),
+          curso_id: $cursoField.val(),
+          ano: $ano.val()
         });
 
         var options = {
-          url : urlForGetSeries,
-          dataType : 'json',
-          success  : handleGetSeries
+          url: urlForGetSeries,
+          dataType: 'json',
+          success: handleGetSeries
         };
 
         getResources(options);
@@ -40,6 +42,7 @@
 
     // bind onchange event
     $cursoField.change(updateSeries);
+    $ano.change(updateSeries);
 
   }); // ready
 })(jQuery);
