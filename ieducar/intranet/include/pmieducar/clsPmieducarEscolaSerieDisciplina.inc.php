@@ -312,12 +312,12 @@ class clsPmieducarEscolaSerieDisciplina
      *   componentes curriculares
      */
     function lista(
-        $int_ref_ref_cod_serie = NULL,
-        $int_ref_ref_cod_escola = NULL,
-        $int_ref_cod_disciplina = NULL,
-        $int_ativo = NULL,
-        $boo_nome_disc = FALSE,
-        $int_etapa = NULL,
+        $int_ref_ref_cod_serie = null,
+        $int_ref_ref_cod_escola = null,
+        $int_ref_cod_disciplina = null,
+        $int_ativo = null,
+        $boo_nome_disc = false,
+        $int_etapa = null,
         $anoLetivo = null
     )
     {
