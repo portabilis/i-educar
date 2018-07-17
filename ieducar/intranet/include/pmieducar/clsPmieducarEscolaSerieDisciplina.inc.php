@@ -317,7 +317,8 @@ class clsPmieducarEscolaSerieDisciplina
         $int_ref_cod_disciplina = NULL,
         $int_ativo = NULL,
         $boo_nome_disc = FALSE,
-        $int_etapa = NULL
+        $int_etapa = NULL,
+        $anoLetivo = null
     )
     {
         $whereAnd = " WHERE ";
@@ -356,6 +357,10 @@ class clsPmieducarEscolaSerieDisciplina
             $whereAnd = " AND ";
         }
 
+        if (is_numeric($anoLetivo)) {
+            $filtros .= "{$whereAnd} {$anoLetivo} = ANY (escola_serie_disciplina.anos_letivos) ";
+            $whereAnd = " AND ";
+        }
 
         $db = new clsBanco();
         $countCampos = count(explode(",", $this->_campos_lista));

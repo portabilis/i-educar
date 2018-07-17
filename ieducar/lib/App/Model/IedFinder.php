@@ -392,7 +392,8 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getEscolaSerieDisciplina($serieId, $escolaId,
     ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL,
-    $disciplinaId = null, $etapa = null, $trazerDetalhes = true)
+    $disciplinaId = null, $etapa = null, $trazerDetalhes = true,
+    $ano = null)
   {
     if (is_null($serieId))
       throw new App_Model_Exception('O parametro serieId não pode ser nulo');
@@ -404,7 +405,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
-    $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa);
+    $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
 
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
@@ -446,7 +447,8 @@ class App_Model_IedFinder extends CoreExt_Entity
   public static function getComponentesTurma($serieId, $escola, $turma,
     ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
-    $componenteCurricularId = null, $etapa = null, $trazerDetalhes = true)
+    $componenteCurricularId = null, $etapa = null, $trazerDetalhes = true,
+    $ano = null)
   {
     if (is_null($mapper)) {
       require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
@@ -463,7 +465,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     // Não existem componentes específicos para a turma
     if (0 == count($componentesTurma)) {
       return self::getEscolaSerieDisciplina($serieId, $escola, $componenteMapper,
-        $componenteCurricularId, $etapa, $trazerDetalhes);
+        $componenteCurricularId, $etapa, $trazerDetalhes, $ano);
     }
 
     $componentes = array();
@@ -581,8 +583,8 @@ class App_Model_IedFinder extends CoreExt_Entity
                    c.nm_curso AS curso_nome,
                    s.nm_serie AS serie_nome,
                    s.concluinte AS serie_concluinte,
-                   s.regra_avaliacao_diferenciada_id as serie_regra_avaliacao_diferenciada_id,
-                   s.regra_avaliacao_id as serie_regra_avaliacao_id,
+                   rasa.regra_avaliacao_diferenciada_id as serie_regra_avaliacao_diferenciada_id,
+                   rasa.regra_avaliacao_id as serie_regra_avaliacao_id,
                    e.utiliza_regra_diferenciada as escola_utiliza_regra_diferenciada
 
             FROM pmieducar.matricula m
@@ -593,6 +595,9 @@ class App_Model_IedFinder extends CoreExt_Entity
             JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
             JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso
             JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
+            JOIN modules.regra_avaliacao_serie_ano rasa
+            ON rasa.ano_letivo = m.ano
+            AND rasa.serie_id = s.cod_serie
             WHERE m.cod_matricula = $1
               AND a.ativo = 1
               AND (mt.ativo = 1
@@ -711,6 +716,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $codEscola = $matricula['ref_ref_cod_escola'];
     $codSerie  = $matricula['ref_ref_cod_serie'];
+    $ano  = $matricula['ano'];
 
     if (!$turma) {
       $turma = $matricula['ref_cod_turma'];
@@ -725,7 +731,7 @@ class App_Model_IedFinder extends CoreExt_Entity
       // Disciplinas da escola na série em que o aluno está matriculado
       $componentes = self::getComponentesTurma(
         $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper,
-        $componenteCurricularId, $etapa, $trazerDetalhes
+        $componenteCurricularId, $etapa, $trazerDetalhes, $ano
       );
 
       // Dispensas do aluno
