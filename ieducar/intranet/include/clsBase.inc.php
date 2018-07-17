@@ -222,6 +222,11 @@ class clsBase extends clsConfig
     {
         if ($this->processoAp) {
             $permite = true;
+
+            if (!is_array($this->processoAp))  {
+                return true;
+            }
+
             foreach ($this->processoAp as $processo) {
                 if (!$this->VerificaPermicaoNumerico($processo)) {
                     $permite = false;
@@ -231,6 +236,7 @@ class clsBase extends clsConfig
                     break;
                 }
             }
+
             if (!$permite) {
                 header("location: index.php?negado=1&err=1");
                 die("Acesso negado para este usu&acute;rio");
@@ -319,7 +325,7 @@ class clsBase extends clsConfig
     {
         $menu = $this->openTpl("htmlmenu");
         $menuObj = new clsMenu();
-        $saida .= $this->buscaRapida();
+        $saida = $this->buscaRapida();
         $saida .= $menuObj->MakeMenu(null, $this->openTpl("htmllinhamenusubtitulo"));
         $saida = str_replace("<!-- #&LINHAS&# -->", $saida, $menu);
         return $saida;
@@ -364,7 +370,7 @@ class clsBase extends clsConfig
             } else {
                 $this->prog_alert .= "O menu pai do processo AP {$this->processoAp} está voltando vazio (cod_menu inexistente?).<br>";
             }
-        } elseif ($_SESSION['menu_atual']) {
+        } elseif (isset($_SESSION['menu_atual'])) {
             $this->db()->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$_SESSION['menu_atual']}'");
 
             while ($this->db()->ProximoRegistro()) {
@@ -432,7 +438,7 @@ class clsBase extends clsConfig
                         $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
                     }
 
-                    $saida .= "array_menu[array_menu.length] = new Array(\"{$menu_suspenso['tt_menu']} {$tipo_menu} \",{$menu_suspenso['cod_menu']},'{$menu_suspenso['ref_cod_menu_pai']}','', '$ico_menu', '{$menu_suspenso['caminho']}', '{$alvo}');";
+                    $saida .= "array_menu[array_menu.length] = new Array(\"{$menu_suspenso['tt_menu']} \",{$menu_suspenso['cod_menu']},'{$menu_suspenso['ref_cod_menu_pai']}','', '$ico_menu', '{$menu_suspenso['caminho']}', '{$alvo}');";
                     if (!$menu_suspenso['ref_cod_menu_pai']) {
                         $saida .= "array_id[array_id.length] = {$menu_suspenso['cod_menu']};";
                     }
@@ -542,6 +548,10 @@ class clsBase extends clsConfig
             // Append output.
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
+            }
+
+            if (!isset($form->prog_alert)) {
+                continue;
             }
 
             if (is_string($form->prog_alert) && $form->prog_alert) {
@@ -784,12 +794,15 @@ class clsBase extends clsConfig
 
                 $saida_geral .= $this->MakeFootHtml();
 
-                if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
+                $suspenso = $_GET['suspenso'] ?? $_SESSION['suspenso'] ?? null;
+                $tipoMenu = $_SESSION["tipo_menu"] ?? null;
+
+                if ($suspenso == 1 || $tipoMenu == 1) {
                     if ($this->renderMenuSuspenso) {
                         $saida_geral = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_geral);
                     }
 
-                    if ($_GET['suspenso'] == 1) {
+                    if ($suspenso == 1) {
                         @session_start();
                         $_SESSION['suspenso'] = 1;
                         @session_write_close();
@@ -843,7 +856,7 @@ class clsBase extends clsConfig
                     $conteudo .= "</td></tr>";
                 }
 
-                if ($_SERVER['HTTP_REFERER']) {
+                if (isset($_SERVER['HTTP_REFERER'])) {
                     $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
                 }
 
@@ -884,15 +897,15 @@ class clsBase extends clsConfig
     function buscaRapida()
     {
 
-        $css .= "<link rel=stylesheet type='text/css' href='/intranet/styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+        $css = "<link rel=stylesheet type='text/css' href='/intranet/styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
         $css .= "<link rel=stylesheet type='text/css' href='/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
 
-        $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>";
+        $js = "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>";
         $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Utils.js'></script>";
         $js .= "<script type='text/javascript' src='/intranet/scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
         $js .= "<script type='text/javascript' src='/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
 
-        $titulo .= "<div title='Busca rápida' class='title-busca-rapida'>";
+        $titulo = "<div title='Busca rápida' class='title-busca-rapida'>";
         $titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
         $titulo .= "<tbody style='-moz-user-select: none;'>";
         $titulo .= "<tr style='-moz-user-select: none;'>";
@@ -904,7 +917,7 @@ class clsBase extends clsConfig
         $titulo .= "</table>";
         $titulo .= "</div>";
 
-        $campoBusca .= "<ul class='menu'>";
+        $campoBusca = "<ul class='menu'>";
         $campoBusca .= "<li id='busca-menu'>";
         $campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='busca-menu-input' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
         $campoBusca .= "</li>";

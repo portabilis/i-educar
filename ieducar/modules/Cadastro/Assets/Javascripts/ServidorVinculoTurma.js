@@ -1,6 +1,118 @@
 $j(document).ready(function() {
 
+  var $turmaField = getElementFor('turma');
+  var $anoField = getElementFor('ano');
+  var $instituicaoField = getElementFor('instituicao');
+
   let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+
+  var handleGetComponentesArea = function(response){
+    let componentes = Object.keys(response['options']||{});
+    $j('#componentecurricular').val(componentes.concat($j('#componentecurricular').val()||[])).trigger('chosen:updated');
+    $j("#dialog_area_conhecimento").dialog("close");
+  }
+
+  var preenchePorAreaConhecimento = function(){
+    let areaConhecimento = $j('#area_conhecimento').val();
+    if (!areaConhecimento) {
+      alert('Área de conhecimento deve ser preenchida');
+      return false;
+    }
+    urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular', 'componentes-curriculares-for-multiple-search', {
+      turma_id: $turmaField.val(),
+      ano: $anoField.val(),
+      instituicao_id: $instituicaoField.val(),
+      area_conhecimento_id: areaConhecimento
+    });
+
+    var options = {
+      url: urlForGetAreaConhecimento,
+      dataType: 'json',
+      success: handleGetComponentesArea
+    };
+
+    getResources(options);
+  }
+
+  $j('body').append(htmlFormModal());
+
+  $j('#area_conhecimento').chosen({
+    width: '231px',
+    placeholder_text_multiple: "Selecione as opções",
+  });
+
+  $j("#dialog_area_conhecimento").dialog({
+    autoOpen: false,
+    height: 'auto',
+    width: 'auto',
+    modal: true,
+    zIndex: 500,
+    resizable: false,
+    draggable: false,
+    title: 'Selecionar por área de conhecimento',
+    buttons: {
+        "Preencher": preenchePorAreaConhecimento,
+        "Cancelar": function(){
+            $j(this).dialog("close");
+        }
+    },
+    create: function () {
+        $j(this)
+            .closest(".ui-dialog")
+            .find(".ui-button-text:first")
+            .addClass("btn-green");
+    },
+    close: function () {
+        $j('#area_conhecimento').val("");
+    }
+  });
+
+
+  var handleGetAreaConhecimento = function(response) {
+    $j('#area_conhecimento').html('').val('');
+    var selectOptions = response['options'];
+    for(let key in selectOptions){
+      if (selectOptions.hasOwnProperty(key)) {
+        $j('#area_conhecimento').append($j('<option/>').val(key).text(selectOptions[key]));
+      }
+    }
+    $j("#dialog_area_conhecimento").dialog("open");
+    $j('#area_conhecimento').trigger('chosen:updated')
+  }
+
+  function modalOpen(){
+    var turma = $turmaField.val();
+
+    if (!turma) {
+      alert('Informe uma turma');
+      return false;
+    }
+
+    urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areaconhecimento-turma', {
+      turma_id: turma
+    });
+
+    var options = {
+      url: urlForGetAreaConhecimento,
+      dataType: 'json',
+      success: handleGetAreaConhecimento
+    };
+
+    getResources(options);
+  }
+
+  function htmlFormModal(){
+    return `<div id="dialog_area_conhecimento">
+              <form style="height:200px;">
+                <label for="area_conhecimento">Área de conhecimento</label>
+                <select multiple="multiple" name="area_conhecimento" id="area_conhecimento">
+              </form>
+            </div>`;
+  }
+
+  let $linkModalArea = $j('<a/>').attr('href','#').text('Selecionar por área de conhecimento').on('click', modalOpen);
+
+  $j('#tr_componentecurricular td:last-child').append($linkModalArea);
 
   function fiupMultipleSearchSize(){
     $j('.search-field input').css('height', '25px');
