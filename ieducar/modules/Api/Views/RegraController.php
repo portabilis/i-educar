@@ -125,9 +125,13 @@ class RegraController extends ApiCoreController
                 nota_maxima_exame_final as nota_maxima_exame,
                 COALESCE(ra.regra_diferenciada_id,0) AS regra_diferenciada_id
                 FROM modules.regra_avaliacao ra
-                LEFT JOIN pmieducar.serie s
-                ON s.regra_avaliacao_id = ra.id
-                LEFT JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
+                JOIN modules.regra_avaliacao_serie_ano rasa
+                ON rasa.regra_avaliacao_id = ra.id
+                JOIN pmieducar.serie s
+                ON rasa.serie_id = s.cod_serie
+                JOIN pmieducar.turma t
+                ON t.ref_ref_cod_serie = s.cod_serie
+                AND rasa.ano_letivo = t.ano
                 WHERE s.ativo = 1
                 AND t.ativo = 1
                 AND ra.instituicao_id = $1
@@ -151,21 +155,23 @@ class RegraController extends ApiCoreController
                         FROM modules.regra_avaliacao ra
                         JOIN modules.regra_avaliacao ra_join
                         ON ra.id = ra_join.regra_diferenciada_id
+                        JOIN modules.regra_avaliacao_serie_ano rasa
+                        ON rasa.regra_avaliacao_id = ra_join.id
                         JOIN pmieducar.serie s
-                        ON s.regra_avaliacao_id = ra_join.id
-                        JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
+                        ON rasa.serie_id = s.cod_serie
+                        JOIN pmieducar.turma t
+                        ON t.ref_ref_cod_serie = s.cod_serie
+                        AND rasa.ano_letivo = t.ano
                         WHERE s.ativo = 1
                         AND t.ativo = 1
-                        AND ra.instituicao_id = $3
-                        AND t.ano = $4
+                        AND ra.instituicao_id = $1
+                        AND t.ano = $2
 
                         ORDER BY regra_diferenciada_id, id, turma_id
 
                 ";
 
-            $_regras = $this->fetchPreparedQuery($sql, array(
-                $instituicaoId, $ano,$instituicaoId, $ano
-            ));
+            $_regras = $this->fetchPreparedQuery($sql, [ $instituicaoId, $ano ]);
 
             $attrs = array(
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
