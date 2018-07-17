@@ -1430,12 +1430,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                        <tr>
                            <td valign=top width=1><img src="imagens/img/blank.gif" width=1 height=1></td>
                            <td valign=top width=100% class="tabPage" height="auto">';
-
-                $existe_tab_iniciada = true;
                 continue;
             }
-
-            $existe_tab_aberta = false;
+            
             if (preg_match('/^(tab_name_[0-9]+)/', $nome) === 1) {
                 $retorno .= "<div id=\"content{$componente['id']}\" style=\"visibility: hidden;\" class=\"tabPage\">";
                 $retorno .= '<!-- INICIO TABELA 3 --><table cellpadding="2" cellspacing="0" border="0" width=100%  align=center>';
@@ -1444,34 +1441,6 @@ class clsCampos extends Core_Controller_Page_Abstract
             }
 
             if ($nome === 'fim_tab') {
-                if ($existe_tab_aberta) {
-                    if ($this->__segue_fluxo) {
-                        $colspan = 2;
-                        $sequencia = unserialize($this->__sequencia_fluxo);
-
-                        if (isset($sequencia[$index - 1])) {
-                            $prox_id = array_flip($sequencia);
-                            $prox_id = $prox_id[$index] * 2;
-
-                            $retorno .= "<tr><td align=left><img onclick='LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_anterior.gif' border='0' /></td>";
-                            $colspan = 1;
-                        }
-
-                        if (!$this->__sequencia_default) {
-                            if ($sequencia[$index] != 0) {
-                                $prox_id = $sequencia[$index] * 2;
-                                $retorno .= "<td colspan=$colspan align=right><img onclick='validaTab(" . ($componente['id'] - 1) . ");LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_proximo.gif' border='0' /></td></tr>";
-                            } else {
-                                $retorno .= "<td colspan=$colspan align=right><img onclick='{$this->__acao_enviar_abas}' style='cursor:pointer' src='imagens/bot_salvar.gif' border='0' /></td></tr>";
-                            }
-                        } else {
-                            $retorno .= "<td colspan=$colspan align=right><img onclick='{$this->__acao_enviar_abas}' style='cursor:pointer' src='imagens/bot_salvar.gif' border='0' /></td></tr>";
-                        }
-                    }
-
-                    $retorno .= '<!-- FIM TABELA 3 --></table></div>';
-                }
-
                 $retorno .= '        </td>
                            <td valign=top width=1><img src=\'imagens/img/blank.gif\' width=1 height=1></td>
                        </tr>
