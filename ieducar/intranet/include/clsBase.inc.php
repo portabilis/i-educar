@@ -30,7 +30,7 @@
  */
 
 // Inclui arquivo de bootstrapping
-require_once __DIR__.'/../../includes/bootstrap.php';
+require_once __DIR__ . '/../../includes/bootstrap.php';
 
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';

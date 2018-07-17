@@ -1,0 +1,11 @@
+cadastro.pessoa:
+  -
+    idpes: 2
+    nome: "Fulano"
+    situacao: "P"
+    origem_gravacao: "U"
+    tipo: "F"
+    data_cad: "NOW()"
+    operacao: "I"
+    idsis_cad: 17
+cadastro.pessoa_fonetico:
