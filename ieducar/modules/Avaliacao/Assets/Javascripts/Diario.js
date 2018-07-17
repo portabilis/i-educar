@@ -789,8 +789,8 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
     var $linha = $j('<tr />').addClass('cellColor');
 
     if (componenteCurricularSelected) {
-      $j('<td />').html(($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").parent().attr('label'))).appendTo($linha);
-      $j('<td />').html(($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").html())).appendTo($linha);
+      $j('<td />').html(($j('#ref_cod_componente_curricular :selected').parent().attr('label'))).appendTo($linha);
+      $j('<td />').html(($j('#ref_cod_componente_curricular :selected').html())).appendTo($linha);
     }
 
     $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
