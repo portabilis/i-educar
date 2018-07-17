@@ -43,10 +43,6 @@ class AdicionaDependenciasSchemaRelatorio extends AbstractMigration
           FROM pmieducar.escola
          WHERE escola.cod_escola = $1;$_$;
 
-
-        ALTER FUNCTION relatorio.get_nome_escola(integer) OWNER TO current_user;
-
-
         CREATE OR REPLACE VIEW relatorio.view_componente_curricular AS
         ( SELECT escola_serie_disciplina.ref_cod_disciplina AS id,
             turma.cod_turma,
@@ -78,9 +74,6 @@ class AdicionaDependenciasSchemaRelatorio extends AbstractMigration
              JOIN modules.componente_curricular ON ((componente_curricular.id = componente_curricular_turma.componente_curricular_id)))
              JOIN modules.area_conhecimento ON ((area_conhecimento.id = componente_curricular.area_conhecimento_id)))
           ORDER BY area_conhecimento.ordenamento_ac, area_conhecimento.nome, componente_curricular.ordenamento, componente_curricular.nome);
-
-
-        ALTER TABLE relatorio.view_componente_curricular OWNER TO current_user;
 
 SQL;
 
