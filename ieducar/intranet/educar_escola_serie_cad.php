@@ -224,17 +224,6 @@ class indice extends clsCadastro
             $this->ref_cod_serie ? true : false
         );
 
-        $anosLetivosDisponiveis = [];
-
-        if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso)) {
-            $objEscolaCurso = new clsPmieducarEscolaCurso($this->ref_cod_escola, $this->ref_cod_curso);
-            if ($escolaCurso = $objEscolaCurso->detalhe()) {
-                $anosLetivosDisponiveis = json_decode($escolaCurso['anos_letivos']) ?: [];
-            }
-        }
-
-        $anosLetivosDisponiveis = array_combine($anosLetivosDisponiveis, $anosLetivosDisponiveis);
-
         $helperOptions = [
             'objectName' => 'anos_letivos'
         ];
@@ -245,7 +234,7 @@ class indice extends clsCadastro
             'size' => 50,
             'options' => [
                 'values' => $this->anos_letivos,
-                'all_values' => $anosLetivosDisponiveis
+                'all_values' => $this->getAnosLetivosDisponiveis()
             ]
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
@@ -659,6 +648,20 @@ class indice extends clsCadastro
         );
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    private function getAnosLetivosDisponiveis()
+    {
+        $anosLetivosDisponiveis = [];
+
+        if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso)) {
+            $objEscolaCurso = new clsPmieducarEscolaCurso($this->ref_cod_escola, $this->ref_cod_curso);
+            if ($escolaCurso = $objEscolaCurso->detalhe()) {
+                $anosLetivosDisponiveis = json_decode($escolaCurso['anos_letivos']) ?: [];
+            }
+        }
+
+        return array_combine($anosLetivosDisponiveis, $anosLetivosDisponiveis);
     }
 }
 
