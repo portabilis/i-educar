@@ -280,7 +280,7 @@ class indice extends clsCadastro
 
     if ($cadastrou) {
 
-        $this->cadastraOuAtualizaRegraSerieAno();
+        $this->persisteRegraSerieAno();
 
       $serie = new clsPmieducarSerie($this->cod_serie);
       $serie = $serie->detalhe();
@@ -317,7 +317,7 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
 
-        $this->cadastraOuAtualizaRegraSerieAno();
+        $this->persisteRegraSerieAno();
 
       $detalheAtual = $obj->detalhe();
       $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
@@ -333,13 +333,13 @@ class indice extends clsCadastro
     return FALSE;
   }
 
-    protected function cadastraOuAtualizaRegraSerieAno()
+    protected function persisteRegraSerieAno()
     {
         $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
-        $manterAnos = [];
+        $anosParaManter = [];
 
         foreach ($this->regras_avaliacao_id as $key => $regraAvaliacao) {
-            $manterAnos[] = $this->anos_letivos[$key];
+            $anosParaManter[] = $this->anos_letivos[$key];
             $dados = [
                 'regraAvaliacao' => $regraAvaliacao,
                 'regraAvaliacaoDiferenciada' => $this->regras_avaliacao_diferenciada_id[$key],
@@ -350,9 +350,14 @@ class indice extends clsCadastro
             $entity = $serieAnoMapper->createNewEntityInstance($dados);
             $serieAnoMapper->save($entity);
         }
+        $this->deletaRegraSerieAnoNaoEnviada($anosParaManter);
+    }
 
-        $manterAnos = implode(',',$manterAnos);
+    protected function deletaRegraSerieAnoNaoEnviada(array $anosParaManter)
+    {
 
+        $anosParaManter = implode(',',$anosParaManter);
+        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
         $regrasSerieAnoDeletar = $serieAnoMapper->findAll([
             'regraAvaliacao',
             'regraAvaliacaoDiferenciada',
@@ -360,7 +365,7 @@ class indice extends clsCadastro
             'anoLetivo',
         ],[
             'serie' => $this->cod_serie,
-            " not ano_letivo = any('{".$manterAnos."}') "
+            " not ano_letivo = any('{".$anosParaManter."}') "
         ], [], false);
 
         foreach ($regrasSerieAnoDeletar as $regra)
