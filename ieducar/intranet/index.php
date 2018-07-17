@@ -82,8 +82,7 @@ class indice
     if ($id_pessoa) {
       $endScript = '<script>var x = new Array();' . PHP_EOL;
 
-      $height = 70;
-      $width  = 40;
+      $temp = '';
 
       if (isset($_GET['negado'])) {
         $temp .= "<center><h3>Acesso negado para este usu&aacute;rio.</h3><br>Caso persista nas tentativas sua conta na intranet poder&aacute; ser bloqueada por tempo indeterminado.</center>";
@@ -145,9 +144,8 @@ class indice
           <td class="fundoCalendarioTopo" style="padding:0px;">SAB</td>
         </tr>';
 
-      $mes = ($_GET['mes']) ? $_GET['mes'] : date('m');
-      $ano = ($_GET['ano']) ? $_GET['ano'] : date('Y');
-      $diaDaSemanaUltimo = date('w', mktime(0, 0, 0, $mes, date('t', mktime(0, 0, 0, $mes, 1, $ano)), $ano));
+      $mes = $_GET['mes'] ?? date('m');
+      $ano = $_GET['ano'] ?? date('Y');
 
       $temp_var = 0;
 
@@ -368,9 +366,6 @@ class indice
             $temp .= "<td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
           }
         }
-
-        $compromisso = '';
-        $compromisso_geral = '';
       }
 
       $endScript .= "setInterval('pisca();', 1000);";
