@@ -58,6 +58,8 @@ class CursoController extends ApiCoreController
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
             $turnoId = $this->getRequest()->turno_id;
 
+            $params = [ $this->getRequest()->instituicao_id ];
+
             if ($escolaId) {
                 if (is_array($escolaId)) {
                     $escolaId = implode(",", $escolaId);
@@ -69,8 +71,14 @@ class CursoController extends ApiCoreController
                   WHERE c.ativo = 1
                   AND ec.ativo = 1
                   AND c.ref_cod_instituicao = $1
-                  AND ec.ref_cod_escola IN ($escolaId)
-                  ORDER BY c.nm_curso ASC ";
+                  AND ec.ref_cod_escola IN ($escolaId) ";
+
+                if (!empty($ano)) {
+                    $params[] = $ano;
+                    $sql .= ' AND $2 = ANY(ec.anos_letivos) ';
+                }
+
+                $sql .= ' ORDER BY c.nm_curso ASC ';
             } else {
                 $sql = "SELECT cod_curso, nm_curso
                   FROM pmieducar.curso
@@ -78,7 +86,6 @@ class CursoController extends ApiCoreController
                     AND ativo = 1
                     ORDER BY nm_curso ASC ";
             }
-            $params = array($this->getRequest()->instituicao_id);
 
             $cursos = $this->fetchPreparedQuery($sql, $params);
 
@@ -90,6 +97,11 @@ class CursoController extends ApiCoreController
             if ($escolaId) {
                 $sqlSerie .= " AND es.ref_cod_escola IN ({$escolaId}) ";
             }
+            $paramsSerie = [];
+            if (!empty($ano)) {
+                $paramsSerie[] = $ano;
+                $sqlSerie .= ' AND $1 = ANY(es.anos_letivos) ';
+            }
 
             $sqlTurma = "SELECT DISTINCT t.cod_turma, t.nm_turma, t.ref_ref_cod_escola as escola_id, t.turma_turno_id, t.ano as ano
                     FROM pmieducar.turma t
@@ -100,7 +112,7 @@ class CursoController extends ApiCoreController
             foreach ($cursos as &$curso) {
                 $curso['nm_curso'] = Portabilis_String_Utils::toUtf8($curso['nm_curso']);
                 if ($getSeries) {
-                    $series = $this->fetchPreparedQuery($sqlSerie . " AND s.ref_cod_curso = {$curso['cod_curso']} ORDER BY s.nm_serie ASC");
+                    $series = $this->fetchPreparedQuery($sqlSerie . " AND s.ref_cod_curso = {$curso['cod_curso']} ORDER BY s.nm_serie ASC", $paramsSerie);
 
                     $attrs = array('cod_serie' => 'id', 'nm_serie' => 'nome');
                     foreach ($series as &$serie) {
