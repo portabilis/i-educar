@@ -1154,6 +1154,12 @@ class indice extends clsCadastro
     $obj = new clsPmieducarTurma($this->cod_turma, $this->pessoa_logada, null,
       null, null, null, null, null, null, null, null, null, 0);
 
+    if ($obj->possuiAlunosVinculados()) {
+      $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+
+      return false;
+    }
+
     $turma = $obj->detalhe();
 
     $excluiu = $obj->excluir();
