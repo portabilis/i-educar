@@ -15,7 +15,6 @@ class AdicionaAnosLetivosEmEscolaSerie extends AbstractMigration
     {
         $this->execute('
              ALTER TABLE pmieducar.escola_serie DROP COLUMN anos_letivos;
-
         ');
     }
 }
