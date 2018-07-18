@@ -125,6 +125,11 @@ class indice extends clsCadastro
         $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
         $obj_curso_det = $obj_curso->detalhe();
         $this->ref_cod_instituicao = $obj_curso_det['ref_cod_instituicao'];
+
+        if ($obj->possuiTurmasVinculadas()) {
+          $this->script_excluir = "excluir_serie_com_turmas();";
+        }
+
         $this->fexcluir = $obj_permissoes->permissao_excluir(583,
           $this->pessoa_logada,3);
 
@@ -306,6 +311,12 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
 
+    if ($obj->possuiTurmasVinculadas()) {
+      $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+
+      return false;
+    }
+
     $serie = $obj->detalhe();
     $excluiu = $obj->excluir();
 
@@ -403,6 +414,11 @@ function RegrasInstituicao(xml_qtd_regras)
     campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
       campoRegrasDiferenciadas.options[0].text = 'A instituição não possui uma Regra de Avaliação';
   }
+}
+
+function excluir_serie_com_turmas() {
+  document.formcadastro.reset();
+  alert(stringUtils.toUtf8('Não foi possível excluir a série, pois a mesma possui turmas vinculadas.'));
 }
 
 document.getElementById('ref_cod_curso').onchange = function()

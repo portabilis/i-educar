@@ -2,6 +2,7 @@
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarSerie
 {
@@ -1004,5 +1005,23 @@ class clsPmieducarSerie
         $detCurso = $objCurso->detalhe();
 
         return $detCurso['ref_cod_instituicao'];
+    }
+
+    public function possuiTurmasVinculadas()
+    {
+        $sql = 'SELECT
+            1
+        FROM
+            pmieducar.turma
+        WHERE TRUE
+            AND turma.ref_ref_cod_serie = $1
+            AND turma.ativo = 1';
+
+        $params = [
+            'params' => $this->cod_serie,
+            'return_only' => 'first-field'
+        ];
+
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
     }
 }
