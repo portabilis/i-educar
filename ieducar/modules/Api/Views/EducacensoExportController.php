@@ -32,6 +32,10 @@
  * @version   $Id$
  */
 
+use iEducar\App\Model\Educacenso\DeficienciaMultiplaAluno;
+use iEducar\App\Model\Educacenso\MapeamentoDeficiencias;
+use iEducar\App\Model\Educacenso\ValidaDeficienciaMultipla;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
@@ -1559,7 +1563,7 @@ SQL;
                 && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
 
       // Define 'tipodeficiencia' => 'seqleiaute'
-      $deficienciaToSeq = $this->getArrayMapeamentoDeficiencias();
+      $deficienciaToSeq = MapeamentoDeficiencias::getArrayMapeamentoDeficiencias();
 
       if (count($deficiencias) == 0) {
         $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = NULL;
@@ -1599,7 +1603,8 @@ SQL;
             $r60s39 = 1;
         }
 
-        $r60s24 = (int) $this->possuiDeficienciaMultipla($deficiencias);
+        $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new MapeamentoDeficiencias(), new DeficienciaMultiplaAluno());
+        $r60s24 = (int) $validaDeficienciaMultipla->possuiDeficienciaMultipla($deficiencias);
 
       //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
       for($i=30; $i <= 38; $i++){
@@ -1627,7 +1632,7 @@ SQL;
   }
 
   protected function precisaDeAuxilioEmProvaPorDeficiencia($deficiencias) {
-    $deficienciasLayout = $this->getArrayMapeamentoDeficiencias();
+    $deficienciasLayout = MapeamentoDeficiencias::getArrayMapeamentoDeficiencias();
 
     unset($deficienciasLayout[13]);
 
@@ -2304,93 +2309,5 @@ protected function cnpjToCenso($cnpj){
             self::BACHARELADO,
             self::TECNOLOGO
         ]);
-    }
-
-    private function possuiDeficienciaMultipla($deficiencias)
-    {
-        $deficienciasAluno = [];
-        foreach ($deficiencias as $deficiencia) {
-            $deficienciasAluno[$this->getArrayMapeamentoDeficiencias()[$deficiencia['id']]] = true;
-        }
-
-        if ($deficienciasAluno['17'] && $deficienciasAluno['22']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['17'] && $deficienciasAluno['23']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['18'] && $deficienciasAluno['22']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['18'] && $deficienciasAluno['23']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['19'] && $deficienciasAluno['22']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['19'] && $deficienciasAluno['23']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['20'] && $deficienciasAluno['22']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['20'] && $deficienciasAluno['23']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['21'] && $deficienciasAluno['22']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['21'] && $deficienciasAluno['23']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['17'] && $deficienciasAluno['20']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['18'] && $deficienciasAluno['19']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['18'] && $deficienciasAluno['20']) {
-            return true;
-        }
-
-        if ($deficienciasAluno['22'] && $deficienciasAluno['23']) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return array
-     */
-    private function getArrayMapeamentoDeficiencias()
-    {
-        return [
-            1 => '17',
-            2 => '18',
-            3 => '19',
-            4 => '20',
-            5 => '21',
-            6 => '22',
-            7 => '23',
-            8 => '24',
-            9 => '25',
-            10 => '26',
-            11 => '27',
-            12 => '28',
-            13 => '29'
-        ];
     }
 }
