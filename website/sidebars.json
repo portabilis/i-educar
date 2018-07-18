@@ -1,0 +1,16 @@
+{
+  "docs" : {
+    "Administrador": ["admin-intro"],
+    "Desenvolvedor": ["dev-intro"],
+    "Usuário": [
+      "user-intro",
+      "user-conhecendo-sistema",
+      "user-modulo-enderecamento-pessoas",
+      "user-cadastros-sistema-educacional",
+      "user-servidores-e-professores",
+      "user-configuracoes",
+      "user-ano-letivo-escolar-matriculas",
+      "user-regras-avaliacao-notas"
+    ]
+  }
+}

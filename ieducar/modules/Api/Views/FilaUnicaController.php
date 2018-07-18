@@ -1,47 +1,11 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Caroline Salib <caroline@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Api
- * @subpackage  Modules
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
- */
-
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'include/funcoes.inc.php';
 
-/**
- * Class FilaUnicaController
- * @deprecated Essa versão da API pública será descontinuada
- */
 class FilaUnicaController extends ApiCoreController
 {
 
@@ -93,7 +57,7 @@ class FilaUnicaController extends ApiCoreController
                             ELSE certidao_nascimento = '{$numNovaCeridao}'
                         END";
 
-        $attrs = array(
+        $attrs = [
             'cod_aluno',
             'nome',
             'idpes',
@@ -117,62 +81,77 @@ class FilaUnicaController extends ApiCoreController
             'bloco',
             'andar',
             'apartamento'
-        );
+        ];
+
         $aluno = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
-        return array('aluno' => $aluno[0]);
+
+        return ['aluno' => $aluno[0]];
     }
 
-    protected function getMatriculaAlunoAndamento() {
+    protected function getMatriculaAlunoAndamento()
+    {
         $anoLetivo = $this->getRequest()->ano_letivo;
         $aluno = $this->getRequest()->aluno_id;
 
-        if($aluno && $anoLetivo){
-            $sql = "SELECT cod_matricula,
+        if ($aluno && $anoLetivo) {
+            $sql = 'SELECT cod_matricula,
                            ref_cod_aluno AS cod_aluno
                       FROM pmieducar.matricula
                      WHERE ativo = 1
                        AND aprovado = 3
                        AND ano = $1
-                       AND ref_cod_aluno = $2";
-            $matricula = $this->fetchPreparedQuery($sql, array($anoLetivo, $aluno), false, 'first-line');
+                       AND ref_cod_aluno = $2';
+            $matricula = $this->fetchPreparedQuery($sql, [$anoLetivo, $aluno], false, 'first-line');
+
             return $matricula;
         }
+
         return false;
     }
 
-    protected function getSolicitacaoAndamento() {
+    protected function getSolicitacaoAndamento()
+    {
         $anoLetivo = $this->getRequest()->ano_letivo;
         $aluno = $this->getRequest()->aluno_id;
 
-        if($aluno && $anoLetivo){
-            $sql = "SELECT ref_cod_aluno AS cod_aluno,
+        if ($aluno && $anoLetivo) {
+            $sql = 'SELECT ref_cod_aluno AS cod_aluno,
                            cod_candidato_fila_unica AS cod_candidato
                       FROM pmieducar.candidato_fila_unica
                      WHERE ativo = 1
                        AND ano_letivo = $1
-                       AND ref_cod_aluno = $2";
-            $matricula = $this->fetchPreparedQuery($sql, array($anoLetivo, $aluno), false, 'first-line');
+                       AND ref_cod_aluno = $2';
+
+            $matricula = $this->fetchPreparedQuery($sql, [$anoLetivo, $aluno], false, 'first-line');
+
             return $matricula;
         }
+
         return false;
     }
 
-    protected function getSeriesSugeridas() {
+    protected function getSeriesSugeridas()
+    {
         $idade = $this->getRequest()->idade;
-        if($idade){
-            $sql = "SELECT nm_serie
+
+        if ($idade) {
+            $sql = 'SELECT nm_serie
                       FROM pmieducar.serie
                      WHERE ativo = 1
-                       AND $1 BETWEEN idade_inicial AND idade_final";
+                       AND $1 BETWEEN idade_inicial AND idade_final';
             $series = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql, $idade), 'nm_serie');
-            return array('series' => $series);
+
+            return ['series' => $series];
         }
+
         return false;
     }
 
-    protected function getDadosResponsaveisAluno() {
+    protected function getDadosResponsaveisAluno()
+    {
         $aluno = $this->getRequest()->aluno_id;
-        if($aluno){
+
+        if ($aluno) {
             $sql = "SELECT pessoa.idpes,
                            vinculo_familiar,
                            pessoa.nome,
@@ -195,7 +174,8 @@ class FilaUnicaController extends ApiCoreController
                       LEFT JOIN cadastro.fone_pessoa fpc ON (fpc.idpes = responsaveis_aluno.ref_idpes
                                                              AND fpc.tipo = 2)
                      WHERE ref_cod_aluno = {$aluno}";
-            $attrs = array(
+
+            $attrs = [
                 'idpes',
                 'vinculo_familiar',
                 'nome',
@@ -209,54 +189,62 @@ class FilaUnicaController extends ApiCoreController
                 'telefone',
                 'ddd_telefone_celular',
                 'telefone_celular'
-            );
+            ];
+
             $responsaveis = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
-            return array('responsaveis' => $responsaveis);
+
+            return ['responsaveis' => $responsaveis];
         }
+
         return false;
     }
 
-    protected function getMontaSelectEscolasCandidato(){
+    protected function getMontaSelectEscolasCandidato()
+    {
         $cod_candidato_fila_unica = $this->getRequest()->cod_candidato_fila_unica;
-        $user                     = $this->currentUser();
+        $user = $this->currentUser();
         $userId = $user['id'];
         $nivelAcesso = $this->getNivelAcesso();
         $acessoEscolar = $nivelAcesso == 4;
-        if($cod_candidato_fila_unica){
 
+        if ($cod_candidato_fila_unica) {
             $sql = "SELECT ecdu.ref_cod_escola AS ref_cod_escola,
-                           juridica.fantasia AS nome 
+                           juridica.fantasia AS nome
                       FROM pmieducar.escola_candidato_fila_unica AS ecdu
                 INNER JOIN pmieducar.escola AS esc ON esc.cod_escola = ecdu.ref_cod_escola
                 INNER JOIN cadastro.juridica ON juridica.idpes = esc.ref_idpes
                      WHERE ecdu.ref_cod_candidato_fila_unica = {$cod_candidato_fila_unica}";
-            if ($acessoEscolar){
-                $sql .= " AND EXISTS( SELECT 1 
-                                        FROM pmieducar.escola_usuario 
-                                       WHERE escola_usuario.ref_cod_usuario = {$userId} 
+
+            if ($acessoEscolar) {
+                $sql .= " AND EXISTS( SELECT 1
+                                        FROM pmieducar.escola_usuario
+                                       WHERE escola_usuario.ref_cod_usuario = {$userId}
                                          AND escola_usuario.ref_cod_escola = esc.cod_escola )";
             }
+
             $escolas_candidato = Portabilis_Utils_Database::fetchPreparedQuery($sql);
-            return array('escolas' => $escolas_candidato);
+
+            return ['escolas' => $escolas_candidato];
         }
 
         return false;
     }
 
-    public function Gerar() {
+    public function Gerar()
+    {
         if ($this->isRequestFor('get', 'get-aluno-by-certidao')) {
             $this->appendResponse($this->getDadosAlunoByCertidao());
-        }else if ($this->isRequestFor('get', 'matricula-andamento')){
+        } elseif ($this->isRequestFor('get', 'matricula-andamento')) {
             $this->appendResponse($this->getMatriculaAlunoAndamento());
-        }else if ($this->isRequestFor('get', 'solicitacao-andamento')){
+        } elseif ($this->isRequestFor('get', 'solicitacao-andamento')) {
             $this->appendResponse($this->getSolicitacaoAndamento());
-        }else if ($this->isRequestFor('get', 'series-sugeridas')){
+        } elseif ($this->isRequestFor('get', 'series-sugeridas')) {
             $this->appendResponse($this->getSeriesSugeridas());
-        }else if ($this->isRequestFor('get', 'responsaveis-aluno')){
+        } elseif ($this->isRequestFor('get', 'responsaveis-aluno')) {
             $this->appendResponse($this->getDadosResponsaveisAluno());
-        }else if ($this->isRequestFor('get', 'escolas-candidato')){
+        } elseif ($this->isRequestFor('get', 'escolas-candidato')) {
             $this->appendResponse($this->getMontaSelectEscolasCandidato());
-        }else{
+        } else {
             $this->notImplementedOperationError();
         }
     }
