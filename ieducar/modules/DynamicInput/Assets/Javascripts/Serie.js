@@ -35,7 +35,7 @@
         getResources(options);
       }
 
-      $serieField.change();   
+      $serieField.change();
     };
 
     // bind onchange event

@@ -80,21 +80,35 @@ function checkAll(id){
     }
 }
 
+function reloadChosenAnosLetivos($element){
+  if ($element.parent().find('.chosen-container').length > 0) {
+      $element.chosen('destroy');
+  }
+  $element.chosen({
+    no_results_text: "Sem resultados para ",
+    width: '231px',
+    placeholder_text_multiple: "Selecione as opções",
+    placeholder_text_single: "Selecione uma opção"
+  });
+}
+
 function habilitaCampos(componente_id){
     var isChecked = !$j( '#componente_' + componente_id).is(':checked');
     $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked).val('');
     $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked).val('');
+    $j( '#anos_letivos_' + componente_id ).prop("disabled", isChecked).val('');
+    reloadChosenAnosLetivos($j( '#anos_letivos_' + componente_id ));
 }
 
 function cloneValues(area_id, componente_id, classe){
     var valor = $j('#' + classe + '_' + componente_id).val();
     var classeClone = '.area_conhecimento_' + area_id + ' .' + classe;
 
-    console.log(classeClone);
-    
-    $j(classeClone).each(function(componente) {
-        if(!$j(this).prop('disabled'))
-            $j(this).val(valor);
+    $j(classeClone+':enabled').each(function(componente) {
+        $j(this).val(valor);
+        if (classe == 'anos_letivos') {
+          $j(this).trigger('chosen:updated');
+        }
     }, this);
 }
 
@@ -124,7 +138,7 @@ function getCursos(){
 function handleGetCursos(response){
     var cursos   = response.cursos;
     var selected = '';
-    
+
     comboCurso.empty();
     comboCurso.append('<option value="">Selecione um curso</option>');
 
@@ -168,7 +182,7 @@ function handleGetSeries(response){
     var series   = response.series;
     var selected = '';
     comboSerie.empty();
-    if(series.length == 0){
+    if(series === undefined || series.length == 0){
         comboSerie.append('<option value="">Sem opções</option>');
     }else{
         comboSerie.append('<option value="">Selecione uma série</option>');
@@ -203,6 +217,8 @@ function handleCarregaDadosComponentesSerie(response){
         $j( '#componente_' + componente.id).prop( "checked", true );
         $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
         $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
+        $j( '#anos_letivos_' + componente.id ).val(componente.anos_letivos || []).prop("disabled", false);
+        reloadChosenAnosLetivos($j( '#anos_letivos_' + componente.id ));
     }, this);
 }
 
@@ -235,6 +251,7 @@ function handleCarregaComponentesDaArea(response){
     if(serie_id != ''){
         carregaDadosComponentesSerie();
     }
+    reloadChosenAnosLetivos($j('.anos_letivos'));
 }
 
 function handleGetAreaConhecimento(response) {
@@ -245,10 +262,10 @@ function handleGetAreaConhecimento(response) {
     response['areas'].forEach((area) => {
     selectOptions[area.id] = area.nome
     }, {});
-    
+
     updateChozen(areaConhecimentoField, selectOptions);
 
-    if (serie_id != '') { 
+    if (serie_id != '') {
         getAreaConhecimentoSerie();
     }
 }
@@ -304,7 +321,7 @@ function htmlCabecalhoAreaConhecimento(id, nome){
                 <td colspan="2">` + nome + `</td>
                 <td class="td_check_all">
                 </td>
-                <td style="text-align: right;">
+                <td colspan="2" style="text-align: right;">
                      <div id="expandClose_` + id + `"
                           onClick="expandClose(` + id + `)"
                           style="background-image: url(/intranet/imagens/arrow-up2.png);
@@ -332,13 +349,27 @@ function htmlSubCabecalhoAreaConhecimento(id){
                 <td>
                     <b>Tipo de nota</b>
                 </td>
+                <td>
+                    <b>Anos letivos</b>
+                </td>
             </tr>`;
+}
+
+let _optionsAnoLetivo = undefined;
+
+function optionsAnoLetivo() {
+  if(_optionsAnoLetivo === undefined ){
+    _optionsAnoLetivo = JSON.parse(decodeURIComponent($j('#sugestao_anos_letivos').val()));
+    _optionsAnoLetivo = _optionsAnoLetivo.map((ano) => `<option>${ano}</option>`).join('');
+  }
+  return _optionsAnoLetivo;
 }
 
 function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, firstLine){
 
     var iconCloneCargaHoraria = '';
     var iconCloneTipoNota = '';
+    var iconCloneAnosLetivos = '';
 
     if(firstLine){
         iconCloneCargaHoraria = `<a class="clone-values"
@@ -348,7 +379,11 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
         iconCloneTipoNota = `<a class="clone-values"
                                 onclick="cloneValues(` + id + `,` + componente_id + `, 'tipo_nota')">
                                 <i class="fa fa-clone" aria-hidden="true"></i>
-                             </a>`;    
+                             </a>`;
+        iconCloneAnosLetivos = `<a class="clone-values"
+                                onclick="cloneValues(${id}, ${componente_id}, 'anos_letivos')">
+                                <i class="fa fa-clone" aria-hidden="true"></i>
+                             </a>`;
     }
 
     return `<tr class="area_conhecimento_` + id + `">
@@ -384,6 +419,18 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, fir
                         <option value="2">Numérica</option>
                     </select>
                     ` + iconCloneTipoNota + `
+                </td>
+                <td>
+                    <select name="componentes[` + id + componente_id + `][anos_letivos]"
+                            class="anos_letivos"
+                            style="width: 231px;"
+                            disabled="disabled"
+                            multiple="multiple"
+                            id="anos_letivos_` + componente_id + `"
+                             >`+
+                    optionsAnoLetivo()
+                    +` </select>
+                    ` + iconCloneAnosLetivos + `
                 </td>
             </tr>`;
 }

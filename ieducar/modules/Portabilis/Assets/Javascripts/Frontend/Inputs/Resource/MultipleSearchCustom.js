@@ -18,6 +18,10 @@
         element.val(values);
         element.trigger('chosen:updated');
       }, 500);
+      setTimeout(function() {
+        element.val(values);
+        element.trigger('chosen:updated');
+      }, 100);
     });
   });
 })(jQuery);

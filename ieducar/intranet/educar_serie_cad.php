@@ -1,4 +1,6 @@
 <?php
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -33,6 +35,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+require_once 'RegraAvaliacao/Model/SerieAnoDataMapper.php';
+require_once 'RegraAvaliacao/Model/SerieAno.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
@@ -81,6 +85,11 @@ class indice extends clsCadastro
   var $data_exclusao;
   var $ativo;
 
+  var $regras_ano_letivo;
+  var $regras_avaliacao_id;
+  var $regras_avaliacao_diferenciada_id;
+  var $anos_letivos;
+
   var $ref_cod_instituicao;
 
   var $disciplina_serie;
@@ -91,9 +100,6 @@ class indice extends clsCadastro
   var $idade_inicial;
   var $idade_ideal;
   var $idade_final;
-
-  var $regra_avaliacao_id;
-  var $regra_avaliacao_diferenciada_id;
 
   var $alerta_faixa_etaria;
   var $bloquear_matricula_faixa_etaria;
@@ -111,6 +117,8 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3,
       'educar_serie_lst.php');
+
+    $this->regras_ano_letivo = [];
 
     if (is_numeric($this->cod_serie)) {
       $obj = new clsPmieducarSerie($this->cod_serie);
@@ -130,6 +138,26 @@ class indice extends clsCadastro
 
         $retorno = 'Editar';
       }
+
+        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
+        $regrasSerieAno = [];
+
+        if (!is_null($this->ref_cod_instituicao)) {
+            $regrasSerieAno = $serieAnoMapper->findAll([
+                'regraAvaliacao',
+                'regraAvaliacaoDiferenciada',
+                'serie',
+                'anoLetivo',
+            ],[
+                'serie' => $this->cod_serie
+            ], [], false);
+        }
+
+        foreach ($regrasSerieAno as $key => $regra) {
+            $this->regras_ano_letivo[$key][] = $regra->regraAvaliacao;
+            $this->regras_ano_letivo[$key][] = $regra->regraAvaliacaoDiferenciada;
+            $this->regras_ano_letivo[$key][] = $regra->anoLetivo;
+        }
     }
 
     $this->url_cancelar = ($retorno == "Editar") ?
@@ -195,17 +223,19 @@ class indice extends clsCadastro
     // Regra de avaliação
     $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     $regras = array();
-    if (!is_null($this->ref_cod_instituicao)) {
-      $regras = $mapper->findAll(array(),
-        array('instituicao' => $this->ref_cod_instituicao)
-      );
-      $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
-    }
+    // @TODO entender como funciona a tabela para poder popular os campos de regra
+    // baseado na instituição escolhida
+    $regras = $mapper->findAll([],[]);
+    $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
 
     $regras = array('' => 'Selecione') + $regras;
 
-    $this->campoLista('regra_avaliacao_id', 'Regra de avaliação', $regras, $this->regra_avaliacao_id);
-    $this->campoLista('regra_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regra_avaliacao_diferenciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
+    $this->campoTabelaInicio("regras","Regras de avaliação",["Regra de avaliação","Regra de avaliação diferenciada", "Ano escolar"],$this->regras_ano_letivo);
+    $this->campoLista('regras_avaliacao_id', 'Regra de avaliação', $regras, $this->regras_avaliacao_id);
+    $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regras_avaliacao_diferenciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
+
+    $this->campoNumero("anos_letivos", "Ano letivo", $this->anos_letivos, 4, 4, true);
+    $this->campoTabelaFim();
 
     $opcoes = array('' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim');
 
@@ -249,6 +279,9 @@ class indice extends clsCadastro
     $this->cod_serie = $cadastrou = $obj->cadastra();
 
     if ($cadastrou) {
+
+        $this->persisteRegraSerieAno();
+
       $serie = new clsPmieducarSerie($this->cod_serie);
       $serie = $serie->detalhe();
 
@@ -283,6 +316,9 @@ class indice extends clsCadastro
     $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
     if ($editou) {
+
+        $this->persisteRegraSerieAno();
+
       $detalheAtual = $obj->detalhe();
       $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
@@ -296,6 +332,48 @@ class indice extends clsCadastro
     echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
   }
+
+    protected function persisteRegraSerieAno()
+    {
+        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
+        $anosParaManter = [];
+
+        foreach ($this->regras_avaliacao_id as $key => $regraAvaliacao) {
+            $anosParaManter[] = $this->anos_letivos[$key];
+            $dados = [
+                'regraAvaliacao' => $regraAvaliacao,
+                'regraAvaliacaoDiferenciada' => $this->regras_avaliacao_diferenciada_id[$key],
+                'serie' => $this->cod_serie,
+                'anoLetivo' => $this->anos_letivos[$key],
+            ];
+
+            $entity = $serieAnoMapper->createNewEntityInstance($dados);
+            $serieAnoMapper->save($entity);
+        }
+        $this->deletaRegraSerieAnoNaoEnviada($anosParaManter);
+    }
+
+    protected function deletaRegraSerieAnoNaoEnviada(array $anosParaManter)
+    {
+
+        $anosParaManter = implode(',',$anosParaManter);
+        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
+        $regrasSerieAnoDeletar = $serieAnoMapper->findAll([
+            'regraAvaliacao',
+            'regraAvaliacaoDiferenciada',
+            'serie',
+            'anoLetivo',
+        ],[
+            'serie' => $this->cod_serie,
+            " not ano_letivo = any('{".$anosParaManter."}') "
+        ], [], false);
+
+        foreach ($regrasSerieAnoDeletar as $regra)
+        {
+            $serieAnoMapper->delete($regra);
+        }
+    }
+
 
   function Excluir()
   {
@@ -337,6 +415,9 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
+// @TODO entender como funciona a tabela para poder popular os campos de regra
+// baseado na instituição escolhida
+/*
 function getRegra()
 {
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -354,7 +435,7 @@ function getRegra()
   var xml_qtd_etapas = new ajax(RegrasInstituicao);
   xml_qtd_etapas.envia("educar_serie_regra_xml.php?ins=" + campoInstituicao);
 }
-
+*/
 function EtapasCurso(xml_qtd_etapas)
 {
   var campoEtapas = document.getElementById('etapa_curso');
@@ -418,6 +499,26 @@ document.getElementById('ref_cod_curso').onchange = function()
   xml_qtd_etapas.envia("educar_curso_xml2.php?cur=" + campoCurso);
 }
 
+var validaAnosLetivos = function(){
+  let elementoAlterado = $(this);
+
+  $j.each($j('input[name^="anos_letivos["]'), function(){
+    if (this.id != elementoAlterado.id && this.value == elementoAlterado.value) {
+        elementoAlterado.value = '';
+        alert('Não é permitido informar o mesmo ano mais em mais de uma linha');
+        elementoAlterado.focus();
+    }
+  })
+}
+
+$j('body').on('change', 'input[name^="anos_letivos["]', validaAnosLetivos);
+/*$j('body').on('keyup', 'input[name^="anos_letivos["]', function(){
+  elementoAlterado = this;
+  if (this.value && this.value.length == 4) {
+    validaAnosLetivos.call(elementoAlterado);
+  }
+});*/
+
 /**
  * Dispara eventos durante onchange da select ref_cod_instituicao.
  */
@@ -427,6 +528,6 @@ document.getElementById('ref_cod_instituicao').onchange = function()
   getCurso();
 
   // Requisição Ajax para as Regras de Avaliação
-  getRegra();
+  //getRegra();
 }
 </script>

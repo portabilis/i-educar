@@ -56,17 +56,18 @@ class ComponentesSerieController extends ApiCoreController
             $arrayComponentes[$key]['id'] = $componente->id;
             $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
             $arrayComponentes[$key]['tipo_nota'] = $componente->tipo_nota;
+            $arrayComponentes[$key]['anos_letivos'] = $componente->anos_letivos;
         }
 
         $obj = new clsModulesComponenteCurricularAnoEscolar(NULL, $serieId, NULL, NULL,  $arrayComponentes);
 
-        $updateInfo = $obj->updateInfo();            
+        $updateInfo = $obj->updateInfo();
         $componentesAtualizados = $updateInfo['update'];
         $componentesInseridos   = $updateInfo['insert'];
         $componentesExcluidos   = $updateInfo['delete'];
-        
+
         if ($obj->atualizaComponentesDaSerie()) {
-        
+
             if ($componentesExcluidos) {
               $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
             }
@@ -82,7 +83,7 @@ class ComponentesSerieController extends ApiCoreController
         $serieId     = $this->getRequest()->serie_id;
         $componentes = json_decode($this->getRequest()->componentes);
         $arrayComponentes = array();
-        
+
         foreach ($componentes as $key => $componente) {
             $arrayComponentes[$key]['id'] = $componente->id;
             $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
@@ -142,7 +143,7 @@ class ComponentesSerieController extends ApiCoreController
         $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
         $where = array('componente_curricular_id' => $componenteId, 'turma_id' => $turmaId);
         $componente = $mapper->findAll(array('componente_curricular_id', 'turma_id'), $where, array(), false);
-        
+
         if($componente && $mapper->delete($componente[0])){
             return true;
         }

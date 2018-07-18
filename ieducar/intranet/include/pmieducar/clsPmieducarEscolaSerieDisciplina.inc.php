@@ -50,6 +50,7 @@ class clsPmieducarEscolaSerieDisciplina
     var $carga_horaria;
     var $etapas_especificas;
     var $etapas_utilizadas;
+    var $anos_letivos;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -112,14 +113,15 @@ class clsPmieducarEscolaSerieDisciplina
         $ativo = NULL,
         $carga_horaria = NULL,
         $etapas_especificas = NULL,
-        $etapas_utilizadas = NULL
+        $etapas_utilizadas = NULL,
+        $anos_letivos = []
     )
     {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola_serie_disciplina';
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas';
+        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas, ARRAY_TO_JSON(anos_letivos) AS anos_letivos ';
 
         if (is_numeric($ref_cod_disciplina)) {
             $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
@@ -170,6 +172,11 @@ class clsPmieducarEscolaSerieDisciplina
 
         if (is_string($etapas_utilizadas)) {
             $this->etapas_utilizadas = $etapas_utilizadas;
+        }
+
+        if( is_array( $anos_letivos ) )
+        {
+            $this->anos_letivos = $anos_letivos;
         }
     }
 
@@ -230,6 +237,13 @@ class clsPmieducarEscolaSerieDisciplina
                 $gruda = ", ";
             }
 
+            if( is_array( $this->anos_letivos ) )
+            {
+                $campos.= "{$gruda}anos_letivos";
+                $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
+                $grupo = ", ";
+            }
+
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ", ";
@@ -274,6 +288,12 @@ class clsPmieducarEscolaSerieDisciplina
                 $gruda = ", ";
             } else if (is_null($this->etapas_utilizadas)) {
                 $set .= "{$gruda}etapas_utilizadas = NULL";
+            }
+
+            if( is_array( $this->anos_letivos ) )
+            {
+                $set .= "{$gruda} anos_letivos = " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
+                $gruda = ", ";
             }
 
             if ($set) {
