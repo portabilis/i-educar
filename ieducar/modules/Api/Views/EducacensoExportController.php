@@ -32,9 +32,11 @@
  * @version   $Id$
  */
 
-use iEducar\App\Model\Educacenso\DeficienciaMultiplaAluno;
-use iEducar\App\Model\Educacenso\MapeamentoDeficiencias;
-use iEducar\App\Model\Educacenso\ValidaDeficienciaMultipla;
+use iEducar\App\Model\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
+use iEducar\App\Model\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
+use iEducar\App\Model\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
+use iEducar\App\Model\Educacenso\Deficiencia\ValidaDeficienciaMultipla;
+
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/clsBanco.inc.php';
@@ -932,7 +934,7 @@ class EducacensoExportController extends ApiCoreController
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($r30s4)));
 
-      $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = 0;
+      $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = 0;
 
       $deficienciaToSeq = array( 1 => '19',
                                  2 => '20',
@@ -943,17 +945,19 @@ class EducacensoExportController extends ApiCoreController
                                  7 => '25' );
       $r30s18 = 0;
 
-      $qtde_deficiencia = 0;
+      $arrayDeficienciasProfessor = [];
       foreach ($deficiencias as $deficiencia_educacenso) {
         $deficiencia_educacenso = $deficiencia_educacenso['id'];
         if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)){
           ${ 'r30s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
           $r30s18 = 1;
-          $qtde_deficiencia++;
         }
+
+        $arrayDeficienciasProfessor[] = $deficienciaToSeq[$deficiencia_educacenso];
       }
 
-      if ($qtde_deficiencia > 1) $r30s26 = 1;
+      $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new DeficienciaMultiplaProfessor());
+      $r60s26 = (int) $validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasProfessor);
 
       if($r30s18 == 0)
         $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = NULL;
@@ -1563,12 +1567,13 @@ SQL;
                 && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
 
       // Define 'tipodeficiencia' => 'seqleiaute'
-      $deficienciaToSeq = MapeamentoDeficiencias::getArrayMapeamentoDeficiencias();
+      $deficienciaToSeq = MapeamentoDeficienciasAluno::getArrayMapeamentoDeficiencias();
 
       if (count($deficiencias) == 0) {
         $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = NULL;
       }
 
+      $arrayDeficienciasAluno = [];
       // Se tiver alguma deficiência, a seq 16 deve ser 1
       if (count($deficiencias)>0) {
         $r60s16 = 1;
@@ -1580,6 +1585,8 @@ SQL;
           if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)){
             ${ 'r60s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
           }
+
+          $arrayDeficienciasAluno[] = $deficienciaToSeq[$deficiencia_educacenso];
         }
       }
       // Se o aluno não tiver deficiências não pode ser informado recursos para provas
@@ -1603,8 +1610,8 @@ SQL;
             $r60s39 = 1;
         }
 
-        $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new MapeamentoDeficiencias(), new DeficienciaMultiplaAluno());
-        $r60s24 = (int) $validaDeficienciaMultipla->possuiDeficienciaMultipla($deficiencias);
+        $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new DeficienciaMultiplaAluno());
+        $r60s24 = (int) $validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasAluno);
 
       //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
       for($i=30; $i <= 38; $i++){
@@ -1632,7 +1639,7 @@ SQL;
   }
 
   protected function precisaDeAuxilioEmProvaPorDeficiencia($deficiencias) {
-    $deficienciasLayout = MapeamentoDeficiencias::getArrayMapeamentoDeficiencias();
+    $deficienciasLayout = MapeamentoDeficienciasAluno::getArrayMapeamentoDeficiencias();
 
     unset($deficienciasLayout[13]);
 

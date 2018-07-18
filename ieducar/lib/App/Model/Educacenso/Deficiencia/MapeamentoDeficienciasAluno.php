@@ -1,9 +1,9 @@
 <?php
 
-namespace iEducar\App\Model\Educacenso;
+namespace iEducar\App\Model\Educacenso\Deficiencia;
 
 
-class MapeamentoDeficiencias
+class MapeamentoDeficienciasAluno
 {
     /**
      * @return array

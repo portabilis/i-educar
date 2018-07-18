@@ -1,7 +1,7 @@
 <?php
 
 
-namespace iEducar\App\Model\Educacenso;
+namespace iEducar\App\Model\Educacenso\Deficiencia;
 
 
 class DeficienciaMultiplaAluno implements CombinacaoDeficienciaMultipla
