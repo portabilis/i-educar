@@ -59,6 +59,7 @@ class CursoController extends ApiCoreController
       $userId        = $this->getSession()->id_pessoa;
       $instituicaoId = $this->getRequest()->instituicao_id;
       $escolaId      = $this->getRequest()->escola_id;
+      $ano = $this->getRequest()->ano;
 
       $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
@@ -66,11 +67,20 @@ class CursoController extends ApiCoreController
         $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
 
       else {
-        $sql    = "select c.cod_curso as id, c.nm_curso as nome FROM pmieducar.curso c,
-                   pmieducar.escola_curso ec WHERE ec.ref_cod_escola = $1 AND ec.ref_cod_curso =
-                   c.cod_curso AND ec.ativo = 1 AND c.ativo = 1 ORDER BY c.nm_curso ASC";
+        $params = [ $escolaId ];
 
-        $cursos = $this->fetchPreparedQuery($sql, $escolaId);
+        $sql    = ' SELECT c.cod_curso as id, c.nm_curso as nome
+                    FROM pmieducar.curso c, pmieducar.escola_curso ec
+                   WHERE ec.ref_cod_escola = $1 AND ec.ref_cod_curso =
+                   c.cod_curso AND ec.ativo = 1 AND c.ativo = 1 ';
+
+        if (!empty($ano)) {
+            $params[] = $ano;
+            $sql .= ' AND $2 = ANY(ec.anos_letivos) ';
+        }
+        $sql .= ' ORDER BY c.nm_curso ASC ';
+
+        $cursos = $this->fetchPreparedQuery($sql, $params);
       }
 
       $options = array();
