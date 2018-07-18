@@ -32,11 +32,10 @@
  * @version   $Id$
  */
 
-use iEducar\App\Model\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
-use iEducar\App\Model\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
-use iEducar\App\Model\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
-use iEducar\App\Model\Educacenso\Deficiencia\ValidaDeficienciaMultipla;
-
+use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
+use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
+use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
+use iEducar\Modules\Educacenso\Deficiencia\ValidaDeficienciaMultipla;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/clsBanco.inc.php';

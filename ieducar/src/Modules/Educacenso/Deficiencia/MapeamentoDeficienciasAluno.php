@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\App\Model\Educacenso\Deficiencia;
+namespace iEducar\Modules\Educacenso\Deficiencia;
 
 
 class MapeamentoDeficienciasAluno
