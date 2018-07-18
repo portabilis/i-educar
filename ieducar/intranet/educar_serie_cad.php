@@ -1,34 +1,4 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
-
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -39,299 +9,369 @@ require_once 'RegraAvaliacao/Model/SerieAnoDataMapper.php';
 require_once 'RegraAvaliacao/Model/SerieAno.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
-/**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
-    $this->processoAp = '583';
-    $this->addEstilo("localizacaoSistema");
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+        $this->processoAp = '583';
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 /**
  * indice class.
  *
  * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   iEd_Pmieducar
+ *
  * @since     Classe disponível desde a versão 1.0.0
+ *
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $cod_serie;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $ref_cod_curso;
-  var $nm_serie;
-  var $etapa_curso;
-  var $concluinte;
-  var $carga_horaria;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
+    public $cod_serie;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_curso;
+    public $nm_serie;
+    public $etapa_curso;
+    public $concluinte;
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-  var $regras_ano_letivo;
-  var $regras_avaliacao_id;
-  var $regras_avaliacao_diferenciada_id;
-  var $anos_letivos;
+    public $regras_ano_letivo;
+    public $regras_avaliacao_id;
+    public $regras_avaliacao_diferenciada_id;
+    public $anos_letivos;
 
-  var $ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
-  var $disciplina_serie;
-  var $ref_cod_disciplina;
-  var $incluir_disciplina;
-  var $excluir_disciplina;
+    public $disciplina_serie;
+    public $ref_cod_disciplina;
+    public $incluir_disciplina;
+    public $excluir_disciplina;
 
-  var $idade_inicial;
-  var $idade_ideal;
-  var $idade_final;
+    public $idade_inicial;
+    public $idade_ideal;
+    public $idade_final;
 
-  var $alerta_faixa_etaria;
-  var $bloquear_matricula_faixa_etaria;
-  var $exigir_inep;
+    public $alerta_faixa_etaria;
+    public $bloquear_matricula_faixa_etaria;
+    public $exigir_inep;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    $this->cod_serie=$_GET['cod_serie'];
+        $this->cod_serie=$_GET['cod_serie'];
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3,
-      'educar_serie_lst.php');
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+        583,
+        $this->pessoa_logada,
+        3,
+      'educar_serie_lst.php'
+    );
 
-    $this->regras_ano_letivo = [];
+        $this->regras_ano_letivo = [];
 
-    if (is_numeric($this->cod_serie)) {
-      $obj = new clsPmieducarSerie($this->cod_serie);
-      $registro  = $obj->detalhe();
+        if (is_numeric($this->cod_serie)) {
+            $obj = new clsPmieducarSerie($this->cod_serie);
+            $registro  = $obj->detalhe();
 
-      if ($registro) {
-        // passa todos os valores obtidos no registro para atributos do objeto
-        foreach ($registro as $campo => $val) {
-          $this->$campo = $val;
-        }
+            if ($registro) {
+                // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {
+                    $this->$campo = $val;
+                }
 
-        $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-        $obj_curso_det = $obj_curso->detalhe();
-        $this->ref_cod_instituicao = $obj_curso_det['ref_cod_instituicao'];
-        $this->fexcluir = $obj_permissoes->permissao_excluir(583,
-          $this->pessoa_logada,3);
+                $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+                $obj_curso_det = $obj_curso->detalhe();
+                $this->ref_cod_instituicao = $obj_curso_det['ref_cod_instituicao'];
+                $this->fexcluir = $obj_permissoes->permissao_excluir(
+            583,
+          $this->pessoa_logada,
+            3
+        );
 
-        $retorno = 'Editar';
-      }
+                $retorno = 'Editar';
+            }
 
-        $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
-        $regrasSerieAno = [];
+            $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
+            $regrasSerieAno = [];
 
-        if (!is_null($this->ref_cod_instituicao)) {
-            $regrasSerieAno = $serieAnoMapper->findAll([
+            if (!is_null($this->ref_cod_instituicao)) {
+                $regrasSerieAno = $serieAnoMapper->findAll([
                 'regraAvaliacao',
                 'regraAvaliacaoDiferenciada',
                 'serie',
                 'anoLetivo',
-            ],[
+            ], [
                 'serie' => $this->cod_serie
             ], [], false);
+            }
+
+            foreach ($regrasSerieAno as $key => $regra) {
+                $this->regras_ano_letivo[$key][] = $regra->regraAvaliacao;
+                $this->regras_ano_letivo[$key][] = $regra->regraAvaliacaoDiferenciada;
+                $this->regras_ano_letivo[$key][] = $regra->anoLetivo;
+            }
         }
 
-        foreach ($regrasSerieAno as $key => $regra) {
-            $this->regras_ano_letivo[$key][] = $regra->regraAvaliacao;
-            $this->regras_ano_letivo[$key][] = $regra->regraAvaliacaoDiferenciada;
-            $this->regras_ano_letivo[$key][] = $regra->anoLetivo;
+        $this->url_cancelar = ($retorno == 'Editar') ?
+      "educar_serie_det.php?cod_serie={$registro['cod_serie']}" :
+      'educar_serie_lst.php';
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos([
+         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+         'educar_index.php'                  => 'Escola',
+         ''        => "{$nomeMenu} s&eacute;rie"
+    ]);
+        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->nome_url_cancelar = 'Cancelar';
+
+        $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
+        $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
+        $this->exigir_inep  = dbBool($this->exigir_inep);
+
+        return $retorno;
+    }
+
+    public function Gerar()
+    {
+        if ($_POST) {
+            foreach ($_POST as $campo => $val) {
+                $this->$campo = ($this->$campo) ? $this->$campo : $val;
+            }
         }
-    }
 
-    $this->url_cancelar = ($retorno == "Editar") ?
-      "educar_serie_det.php?cod_serie={$registro["cod_serie"]}" :
-      "educar_serie_lst.php";
+        // primary keys
+        $this->campoOculto('cod_serie', $this->cod_serie);
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} s&eacute;rie"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $obrigatorio = true;
+        $get_curso = true;
+        include('include/pmieducar/educar_campo_lista.php');
 
-    $this->nome_url_cancelar = "Cancelar";
+        $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, true);
 
-    $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
-    $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
-    $this->exigir_inep  = dbBool($this->exigir_inep);
+        $opcoes = ['' => 'Selecione'];
 
-    return $retorno;
-  }
+        if ($this->ref_cod_curso) {
+            $objTemp = new clsPmieducarCurso();
+            $lista = $objTemp->lista(
+          $this->ref_cod_curso,
+          null,
+          null,
+          null,
+          null,
+        null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+        null,
+          null,
+          null,
+          null,
+          null,
+          1
+      );
 
-  function Gerar()
-  {
-    if ($_POST) {
-      foreach($_POST as $campo => $val) {
-        $this->$campo = ($this->$campo) ? $this->$campo : $val;
-      }
-    }
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes_["{$registro['cod_curso']}"] = "{$registro['qtd_etapas']}";
+                }
+            }
 
-    // primary keys
-    $this->campoOculto("cod_serie", $this->cod_serie);
-
-    $obrigatorio = TRUE;
-    $get_curso = TRUE;
-    include('include/pmieducar/educar_campo_lista.php');
-
-    $this->campoTexto("nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, TRUE);
-
-    $opcoes = array("" => "Selecione");
-
-    if ($this->ref_cod_curso) {
-      $objTemp = new clsPmieducarCurso();
-      $lista = $objTemp->lista($this->ref_cod_curso, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, 1);
-
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes_["{$registro['cod_curso']}"] = "{$registro['qtd_etapas']}";
+            for ($i=1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++) {
+                $opcoes[$i] = "Etapa {$i}";
+            }
         }
-      }
 
-      for ($i=1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++) {
-        $opcoes[$i] = "Etapa {$i}";
-      }
+        $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
+
+        // Regra de avaliação
+        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+        $regras = [];
+        // @TODO entender como funciona a tabela para poder popular os campos de regra
+        // baseado na instituição escolhida
+        $regras = $mapper->findAll([], []);
+        $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
+
+        $regras = ['' => 'Selecione'] + $regras;
+
+        $this->campoTabelaInicio('regras', 'Regras de avaliação', ['Regra de avaliação','Regra de avaliação diferenciada', 'Ano escolar'], $this->regras_ano_letivo);
+        $this->campoLista('regras_avaliacao_id', 'Regra de avaliação', $regras, $this->regras_avaliacao_id);
+        $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regras_avaliacao_diferenciada_id, '', false, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', false, false);
+
+        $this->campoNumero('anos_letivos', 'Ano letivo', $this->anos_letivos, 4, 4, true);
+        $this->campoTabelaFim();
+
+        $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim'];
+
+        $this->campoLista('concluinte', 'Concluinte', $opcoes, $this->concluinte);
+
+        $this->campoMonetario('carga_horaria', 'Carga Hor&aacute;ria', $this->carga_horaria, 7, 7, true);
+
+        $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, true);
+
+        $this->campoNumero('idade_ideal', 'Idade padrão', $this->idade_ideal, 2, 2, false);
+
+        $this->campoNumero(
+        'idade_inicial',
+        'Faixa et&aacute;ria',
+        $this->idade_inicial,
+      2,
+        2,
+        false,
+        '',
+        '',
+        false,
+        false,
+        true
+    );
+
+        $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
+
+        $this->campoMemo('observacao_historico', 'Observa&ccedil;&atilde;o histórico', $this->observacao_historico, 60, 5, false);
+
+        $this->campoCheck('alerta_faixa_etaria', 'Exibir alerta ao tentar matricular alunos fora da faixa etária da série/ano', $this->alerta_faixa_etaria);
+        $this->campoCheck('bloquear_matricula_faixa_etaria', 'Bloquear matrículas de alunos fora da faixa etária da série/ano', $this->bloquear_matricula_faixa_etaria);
+
+        $this->campoCheck('exigir_inep', 'Exigir INEP para a matrícula?', $this->exigir_inep);
     }
 
-    $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
+    public function Novo()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-    // Regra de avaliação
-    $mapper = new RegraAvaliacao_Model_RegraDataMapper();
-    $regras = array();
-    // @TODO entender como funciona a tabela para poder popular os campos de regra
-    // baseado na instituição escolhida
-    $regras = $mapper->findAll([],[]);
-    $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
+        $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
+        $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
-    $regras = array('' => 'Selecione') + $regras;
+        $obj = new clsPmieducarSerie(
+        null,
+        null,
+        $this->pessoa_logada,
+        $this->ref_cod_curso,
+      $this->nm_serie,
+        $this->etapa_curso,
+        $this->concluinte,
+        $this->carga_horaria,
+      null,
+        null,
+        1,
+        $this->idade_inicial,
+        $this->idade_final,
+      $this->regra_avaliacao_id,
+        $this->observacao_historico,
+        $this->dias_letivos,
+      $this->regra_avaliacao_diferenciada_id,
+        !is_null($this->alerta_faixa_etaria),
+        !is_null($this->bloquear_matricula_faixa_etaria),
+        $this->idade_ideal,
+        !is_null($this->exigir_inep)
+    );
 
-    $this->campoTabelaInicio("regras","Regras de avaliação",["Regra de avaliação","Regra de avaliação diferenciada", "Ano escolar"],$this->regras_ano_letivo);
-    $this->campoLista('regras_avaliacao_id', 'Regra de avaliação', $regras, $this->regras_avaliacao_id);
-    $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regras_avaliacao_diferenciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
+        $this->cod_serie = $cadastrou = $obj->cadastra();
 
-    $this->campoNumero("anos_letivos", "Ano letivo", $this->anos_letivos, 4, 4, true);
-    $this->campoTabelaFim();
+        if ($cadastrou) {
+            $this->persisteRegraSerieAno();
 
-    $opcoes = array('' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim');
+            $serie = new clsPmieducarSerie($this->cod_serie);
+            $serie = $serie->detalhe();
 
-    $this->campoLista('concluinte', 'Concluinte', $opcoes, $this->concluinte);
+            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
+            $auditoria->inclusao($serie);
 
-    $this->campoMonetario('carga_horaria', 'Carga Hor&aacute;ria', $this->carga_horaria, 7, 7, TRUE);
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            header('Location: educar_serie_lst.php');
+            die();
+        }
 
-    $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, TRUE);
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) \n-->";
 
-    $this->campoNumero('idade_ideal', 'Idade padrão', $this->idade_ideal, 2, 2, false);
-
-    $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial,
-      2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
-
-    $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, FALSE);
-
-        $this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histórico", $this->observacao_historico, 60, 5, false );
-
-    $this->campoCheck("alerta_faixa_etaria", "Exibir alerta ao tentar matricular alunos fora da faixa etária da série/ano", $this->alerta_faixa_etaria);
-    $this->campoCheck("bloquear_matricula_faixa_etaria", "Bloquear matrículas de alunos fora da faixa etária da série/ano", $this->bloquear_matricula_faixa_etaria);
-
-    $this->campoCheck("exigir_inep", "Exigir INEP para a matrícula?", $this->exigir_inep);
-
-  }
-
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-
-    $this->carga_horaria = str_replace(".", "", $this->carga_horaria);
-    $this->carga_horaria = str_replace(",", ".", $this->carga_horaria);
-
-    $obj = new clsPmieducarSerie(NULL, NULL, $this->pessoa_logada, $this->ref_cod_curso,
-      $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria,
-      NULL, NULL, 1, $this->idade_inicial, $this->idade_final,
-      $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria), $this->idade_ideal, !is_null($this->exigir_inep));
-
-    $this->cod_serie = $cadastrou = $obj->cadastra();
-
-    if ($cadastrou) {
-
-        $this->persisteRegraSerieAno();
-
-      $serie = new clsPmieducarSerie($this->cod_serie);
-      $serie = $serie->detalhe();
-
-      $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
-      $auditoria->inclusao($serie);
-
-      $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-      header("Location: educar_serie_lst.php");
-      die();
+        return false;
     }
 
-    $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-    echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) \n-->";
-    return FALSE;
-  }
+    public function Editar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Editar()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
+        $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
-    $this->carga_horaria = str_replace(".", "", $this->carga_horaria);
-    $this->carga_horaria = str_replace(",", ".", $this->carga_horaria);
+        $obj = new clsPmieducarSerie(
+        $this->cod_serie,
+        $this->pessoa_logada,
+        null,
+      $this->ref_cod_curso,
+        $this->nm_serie,
+        $this->etapa_curso,
+        $this->concluinte,
+      $this->carga_horaria,
+        null,
+        null,
+        1,
+        $this->idade_inicial,
+      $this->idade_final,
+        $this->regra_avaliacao_id,
+        $this->observacao_historico,
+        $this->dias_letivos,
+      $this->regra_avaliacao_diferenciada_id,
+        !is_null($this->alerta_faixa_etaria),
+        !is_null($this->bloquear_matricula_faixa_etaria),
+        $this->idade_ideal,
+        !is_null($this->exigir_inep)
+    );
 
-    $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
-      $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte,
-      $this->carga_horaria, NULL, NULL, 1, $this->idade_inicial,
-      $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria),$this->idade_ideal, !is_null($this->exigir_inep));
+        $detalheAntigo = $obj->detalhe();
+        $editou = $obj->edita();
+        if ($editou) {
+            $this->persisteRegraSerieAno();
 
-    $detalheAntigo = $obj->detalhe();
-    $editou = $obj->edita();
-    if ($editou) {
+            $detalheAtual = $obj->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
+            $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
-        $this->persisteRegraSerieAno();
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_serie_lst.php');
+            die();
+        }
 
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
-      $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header("Location: educar_serie_lst.php");
-      die();
+        return false;
     }
-
-    $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-    echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
-    return FALSE;
-  }
 
     protected function persisteRegraSerieAno()
     {
@@ -355,51 +395,60 @@ class indice extends clsCadastro
 
     protected function deletaRegraSerieAnoNaoEnviada(array $anosParaManter)
     {
-
-        $anosParaManter = implode(',',$anosParaManter);
+        $anosParaManter = implode(',', $anosParaManter);
         $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
         $regrasSerieAnoDeletar = $serieAnoMapper->findAll([
             'regraAvaliacao',
             'regraAvaliacaoDiferenciada',
             'serie',
             'anoLetivo',
-        ],[
+        ], [
             'serie' => $this->cod_serie,
-            " not ano_letivo = any('{".$anosParaManter."}') "
+            ' not ano_letivo = any(\'{'.$anosParaManter.'}\') '
         ], [], false);
 
-        foreach ($regrasSerieAnoDeletar as $regra)
-        {
+        foreach ($regrasSerieAnoDeletar as $regra) {
             $serieAnoMapper->delete($regra);
         }
     }
 
+    public function Excluir()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-  function Excluir()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+        $obj = new clsPmieducarSerie(
+        $this->cod_serie,
+        $this->pessoa_logada,
+        null,
+      null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        0
+    );
 
-    $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
+        $serie = $obj->detalhe();
+        $excluiu = $obj->excluir();
 
-    $serie = $obj->detalhe();
-    $excluiu = $obj->excluir();
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
+            $auditoria->exclusao($serie);
 
-    if ($excluiu) {
-      $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
-      $auditoria->exclusao($serie);
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            header('Location: educar_serie_lst.php');
+            die();
+        }
 
-      $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header( "Location: educar_serie_lst.php" );
-      die();
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        echo "<!--\nErro ao excluir clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
+        return false;
     }
-
-    $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-    echo "<!--\nErro ao excluir clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
-    return FALSE;
-  }
 }
 
 // Instancia objeto de página
