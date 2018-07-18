@@ -246,9 +246,15 @@ class EscolaController extends ApiCoreController
 
       $sql = " SELECT DISTINCT cod_escola
                 FROM pmieducar.escola e
-                INNER JOIN pmieducar.escola_curso ec ON (e.cod_escola = ec.ref_cod_escola)
+                INNER JOIN pmieducar.escola_curso ec
+                ON (e.cod_escola = ec.ref_cod_escola
+                AND $1 = ANY(ec.anos_letivos)
+                )
                 INNER JOIN pmieducar.curso c ON (c.cod_curso = ec.ref_cod_curso)
-                INNER JOIN pmieducar.escola_serie es ON (es.ref_cod_escola = e.cod_escola)
+                INNER JOIN pmieducar.escola_serie es ON (
+                es.ref_cod_escola = e.cod_escola
+                AND $1 = ANY(es.anos_letivos)
+                )
                 INNER JOIN pmieducar.serie s ON (s.cod_serie = es.ref_cod_serie)
                 INNER JOIN pmieducar.turma t ON (s.cod_serie = t.ref_ref_cod_serie AND t.ref_ref_cod_escola = e.cod_escola )
                 INNER JOIN pmieducar.escola_ano_letivo eal ON(e.cod_escola = eal.ref_cod_escola)

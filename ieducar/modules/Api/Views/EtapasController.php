@@ -22,6 +22,7 @@ class EtapasController extends ApiCoreController
                         ON esd.ref_ref_cod_serie = t.ref_ref_cod_serie
                        AND esd.ref_ref_cod_escola = t.ref_ref_cod_escola
                        AND esd.ativo = 1
+                       AND t.ano = ANY(esd.anos_letivos)
                      WHERE t.ativo = 1
                        AND esd.etapas_especificas = 1
                        AND NOT EXISTS(SELECT 1
@@ -70,6 +71,7 @@ class EtapasController extends ApiCoreController
                         ON esd.ref_ref_cod_serie = t.ref_ref_cod_serie
                        AND esd.ref_ref_cod_escola = t.ref_ref_cod_escola
                        AND esd.ativo = 1
+                       AND t.ano = ANY(esd.anos_letivos)
                      WHERE t.cod_turma = $1
                        AND esd.etapas_especificas = 1
                        AND NOT EXISTS(SELECT 1
