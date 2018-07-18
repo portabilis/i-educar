@@ -11,7 +11,7 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Série');
         $this->processoAp = '583';
         $this->addEstilo('localizacaoSistema');
     }
@@ -104,9 +104,9 @@ class indice extends clsCadastro
         $localizacao = new LocalizacaoSistema();
 
         $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+            $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
             'educar_index.php' => 'Escola',
-            '' => "{$nomeMenu} s&eacute;rie"
+            '' => "{$nomeMenu} série"
         ]);
 
         $this->enviaLocalizacao($localizacao->montar());
@@ -135,7 +135,7 @@ class indice extends clsCadastro
         $get_curso = true;
         include('include/pmieducar/educar_campo_lista.php');
 
-        $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, true);
+        $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, true);
 
         $opcoes = ['' => 'Selecione'];
 
@@ -198,11 +198,11 @@ class indice extends clsCadastro
         $this->campoLista('regra_avaliacao_id', 'Regra de avaliação', $regras, $this->regra_avaliacao_id);
         $this->campoLista('regra_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regra_avaliacao_diferenciada_id, '', false, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', false, false);
 
-        $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim'];
+        $opcoes = ['' => 'Selecione', 1 => 'não', 2 => 'sim'];
 
         $this->campoLista('concluinte', 'Concluinte', $opcoes, $this->concluinte);
 
-        $this->campoMonetario('carga_horaria', 'Carga Hor&aacute;ria', $this->carga_horaria, 7, 7, true);
+        $this->campoMonetario('carga_horaria', 'Carga Horária', $this->carga_horaria, 7, 7, true);
 
         $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, true);
 
@@ -210,7 +210,7 @@ class indice extends clsCadastro
 
         $this->campoNumero(
             'idade_inicial',
-            'Faixa et&aacute;ria',
+            'Faixa etária',
             $this->idade_inicial,
             2,
             2,
@@ -224,7 +224,7 @@ class indice extends clsCadastro
 
         $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
 
-        $this->campoMemo('observacao_historico', 'Observa&ccedil;&atilde;o histórico', $this->observacao_historico, 60, 5, false);
+        $this->campoMemo('observacao_historico', 'Observação histórico', $this->observacao_historico, 60, 5, false);
 
         $this->campoCheck('alerta_faixa_etaria', 'Exibir alerta ao tentar matricular alunos fora da faixa etária da série/ano', $this->alerta_faixa_etaria);
         $this->campoCheck('bloquear_matricula_faixa_etaria', 'Bloquear matrículas de alunos fora da faixa etária da série/ano', $this->bloquear_matricula_faixa_etaria);
@@ -279,8 +279,8 @@ class indice extends clsCadastro
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-        echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) \n-->";
+        $this->mensagem = 'Cadastro não realizado.<br>';
+        echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigatórios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) \n-->";
 
         return false;
     }
@@ -326,13 +326,13 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             header('Location: educar_serie_lst.php');
             die();
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = 'Edição não realizada.<br>';
+        echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigatórios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
         return false;
     }
@@ -370,13 +370,13 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
             $auditoria->exclusao($serie);
 
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             header('Location: educar_serie_lst.php');
             die();
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao excluir clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = 'Exclusão não realizada.<br>';
+        echo "<!--\nErro ao excluir clsPmieducarSerie\nvalores obrigatórios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
         return false;
     }
