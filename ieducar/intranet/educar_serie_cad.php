@@ -13,27 +13,12 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Série');
         $this->processoAp = '583';
         $this->addEstilo('localizacaoSistema');
     }
 }
 
-/**
- * indice class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
 class indice extends clsCadastro
 {
     public $pessoa_logada;
@@ -81,17 +66,17 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-        583,
-        $this->pessoa_logada,
-        3,
-      'educar_serie_lst.php'
-    );
+            583,
+            $this->pessoa_logada,
+            3,
+            'educar_serie_lst.php'
+        );
 
         $this->regras_ano_letivo = [];
 
         if (is_numeric($this->cod_serie)) {
             $obj = new clsPmieducarSerie($this->cod_serie);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -102,11 +87,16 @@ class indice extends clsCadastro
                 $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
                 $obj_curso_det = $obj_curso->detalhe();
                 $this->ref_cod_instituicao = $obj_curso_det['ref_cod_instituicao'];
+
+                if ($obj->possuiTurmasVinculadas()) {
+                    $this->script_excluir = 'excluirSerieComTurmas();';
+                }
+
                 $this->fexcluir = $obj_permissoes->permissao_excluir(
-            583,
-          $this->pessoa_logada,
-            3
-        );
+                    583,
+                    $this->pessoa_logada,
+                    3
+                );
 
                 $retorno = 'Editar';
             }
@@ -115,14 +105,18 @@ class indice extends clsCadastro
             $regrasSerieAno = [];
 
             if (!is_null($this->ref_cod_instituicao)) {
-                $regrasSerieAno = $serieAnoMapper->findAll([
-                'regraAvaliacao',
-                'regraAvaliacaoDiferenciada',
-                'serie',
-                'anoLetivo',
-            ], [
-                'serie' => $this->cod_serie
-            ], [], false);
+                $regrasSerieAno = $serieAnoMapper->findAll(
+                    [
+                        'regraAvaliacao',
+                        'regraAvaliacaoDiferenciada',
+                        'serie',
+                        'anoLetivo',
+                    ],[
+                        'serie' => $this->cod_serie
+                    ],
+                    [],
+                    false
+                );
             }
 
             foreach ($regrasSerieAno as $key => $regra) {
@@ -132,24 +126,26 @@ class indice extends clsCadastro
             }
         }
 
-        $this->url_cancelar = ($retorno == 'Editar') ?
-      "educar_serie_det.php?cod_serie={$registro['cod_serie']}" :
-      'educar_serie_lst.php';
+        $this->url_cancelar = ($retorno == 'Editar')
+            ? "educar_serie_det.php?cod_serie={$registro['cod_serie']}"
+            : 'educar_serie_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
         $localizacao = new LocalizacaoSistema();
+
         $localizacao->entradaCaminhos([
-         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-         'educar_index.php'                  => 'Escola',
-         ''        => "{$nomeMenu} s&eacute;rie"
-    ]);
+            $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
+            'educar_index.php' => 'Escola',
+            '' => "{$nomeMenu} série"
+        ]);
+
         $this->enviaLocalizacao($localizacao->montar());
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
-        $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
-        $this->exigir_inep  = dbBool($this->exigir_inep);
+        $this->alerta_faixa_etaria = dbBool($this->alerta_faixa_etaria);
+        $this->bloquear_matricula_faixa_etaria = dbBool($this->bloquear_matricula_faixa_etaria);
+        $this->exigir_inep = dbBool($this->exigir_inep);
 
         return $retorno;
     }
@@ -169,37 +165,37 @@ class indice extends clsCadastro
         $get_curso = true;
         include('include/pmieducar/educar_campo_lista.php');
 
-        $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, true);
+        $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, true);
 
         $opcoes = ['' => 'Selecione'];
 
         if ($this->ref_cod_curso) {
             $objTemp = new clsPmieducarCurso();
             $lista = $objTemp->lista(
-          $this->ref_cod_curso,
-          null,
-          null,
-          null,
-          null,
-        null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-        null,
-          null,
-          null,
-          null,
-          null,
-          1
-      );
+                $this->ref_cod_curso,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                1
+            );
 
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
@@ -217,47 +213,47 @@ class indice extends clsCadastro
         // Regra de avaliação
         $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         $regras = [];
+
         // @TODO entender como funciona a tabela para poder popular os campos de regra
         // baseado na instituição escolhida
-        $regras = $mapper->findAll([], []);
+        $regras = $mapper->findAll([],[]);
         $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
 
         $regras = ['' => 'Selecione'] + $regras;
 
-        $this->campoTabelaInicio('regras', 'Regras de avaliação', ['Regra de avaliação','Regra de avaliação diferenciada', 'Ano escolar'], $this->regras_ano_letivo);
+        $this->campoTabelaInicio("regras","Regras de avaliação",["Regra de avaliação","Regra de avaliação diferenciada", "Ano escolar"],$this->regras_ano_letivo);
         $this->campoLista('regras_avaliacao_id', 'Regra de avaliação', $regras, $this->regras_avaliacao_id);
-        $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regras_avaliacao_diferenciada_id, '', false, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', false, false);
-
-        $this->campoNumero('anos_letivos', 'Ano letivo', $this->anos_letivos, 4, 4, true);
+        $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regras_avaliacao_diferenciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
+        $this->campoNumero("anos_letivos", "Ano letivo", $this->anos_letivos, 4, 4, true);
         $this->campoTabelaFim();
 
-        $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim'];
+        $opcoes = ['' => 'Selecione', 1 => 'não', 2 => 'sim'];
 
         $this->campoLista('concluinte', 'Concluinte', $opcoes, $this->concluinte);
 
-        $this->campoMonetario('carga_horaria', 'Carga Hor&aacute;ria', $this->carga_horaria, 7, 7, true);
+        $this->campoMonetario('carga_horaria', 'Carga Horária', $this->carga_horaria, 7, 7, true);
 
         $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, true);
 
         $this->campoNumero('idade_ideal', 'Idade padrão', $this->idade_ideal, 2, 2, false);
 
         $this->campoNumero(
-        'idade_inicial',
-        'Faixa et&aacute;ria',
-        $this->idade_inicial,
-      2,
-        2,
-        false,
-        '',
-        '',
-        false,
-        false,
-        true
-    );
+            'idade_inicial',
+            'Faixa etária',
+            $this->idade_inicial,
+            2,
+            2,
+            false,
+            '',
+            '',
+            false,
+            false,
+            true
+        );
 
         $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
 
-        $this->campoMemo('observacao_historico', 'Observa&ccedil;&atilde;o histórico', $this->observacao_historico, 60, 5, false);
+        $this->campoMemo('observacao_historico', 'Observação histórico', $this->observacao_historico, 60, 5, false);
 
         $this->campoCheck('alerta_faixa_etaria', 'Exibir alerta ao tentar matricular alunos fora da faixa etária da série/ano', $this->alerta_faixa_etaria);
         $this->campoCheck('bloquear_matricula_faixa_etaria', 'Bloquear matrículas de alunos fora da faixa etária da série/ano', $this->bloquear_matricula_faixa_etaria);
@@ -275,34 +271,33 @@ class indice extends clsCadastro
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
         $obj = new clsPmieducarSerie(
-        null,
-        null,
-        $this->pessoa_logada,
-        $this->ref_cod_curso,
-      $this->nm_serie,
-        $this->etapa_curso,
-        $this->concluinte,
-        $this->carga_horaria,
-      null,
-        null,
-        1,
-        $this->idade_inicial,
-        $this->idade_final,
-      $this->regra_avaliacao_id,
-        $this->observacao_historico,
-        $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id,
-        !is_null($this->alerta_faixa_etaria),
-        !is_null($this->bloquear_matricula_faixa_etaria),
-        $this->idade_ideal,
-        !is_null($this->exigir_inep)
-    );
+            null,
+            null,
+            $this->pessoa_logada,
+            $this->ref_cod_curso,
+            $this->nm_serie,
+            $this->etapa_curso,
+            $this->concluinte,
+            $this->carga_horaria,
+            null,
+            null,
+            1,
+            $this->idade_inicial,
+            $this->idade_final,
+            $this->regra_avaliacao_id,
+            $this->observacao_historico,
+            $this->dias_letivos,
+            $this->regra_avaliacao_diferenciada_id,
+            !is_null($this->alerta_faixa_etaria),
+            !is_null($this->bloquear_matricula_faixa_etaria),
+            $this->idade_ideal,
+            !is_null($this->exigir_inep)
+        );
 
         $this->cod_serie = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
             $this->persisteRegraSerieAno();
-
             $serie = new clsPmieducarSerie($this->cod_serie);
             $serie = $serie->detalhe();
 
@@ -314,8 +309,8 @@ class indice extends clsCadastro
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-        echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) \n-->";
+        $this->mensagem = 'Cadastro não realizado.<br>';
+        echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigatórios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) \n-->";
 
         return false;
     }
@@ -330,45 +325,89 @@ class indice extends clsCadastro
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
         $obj = new clsPmieducarSerie(
-        $this->cod_serie,
-        $this->pessoa_logada,
-        null,
-      $this->ref_cod_curso,
-        $this->nm_serie,
-        $this->etapa_curso,
-        $this->concluinte,
-      $this->carga_horaria,
-        null,
-        null,
-        1,
-        $this->idade_inicial,
-      $this->idade_final,
-        $this->regra_avaliacao_id,
-        $this->observacao_historico,
-        $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id,
-        !is_null($this->alerta_faixa_etaria),
-        !is_null($this->bloquear_matricula_faixa_etaria),
-        $this->idade_ideal,
-        !is_null($this->exigir_inep)
-    );
+            $this->cod_serie,
+            $this->pessoa_logada,
+            null,
+            $this->ref_cod_curso,
+            $this->nm_serie,
+            $this->etapa_curso,
+            $this->concluinte,
+            $this->carga_horaria,
+            null,
+            null,
+            1,
+            $this->idade_inicial,
+            $this->idade_final,
+            $this->regra_avaliacao_id,
+            $this->observacao_historico,
+            $this->dias_letivos,
+            $this->regra_avaliacao_diferenciada_id,
+            !is_null($this->alerta_faixa_etaria),
+            !is_null($this->bloquear_matricula_faixa_etaria),
+            $this->idade_ideal,
+            !is_null($this->exigir_inep)
+        );
 
         $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
+
         if ($editou) {
             $this->persisteRegraSerieAno();
-
             $detalheAtual = $obj->detalhe();
             $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             header('Location: educar_serie_lst.php');
             die();
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = 'Edição não realizada.<br>';
+        echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigatórios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
+        return false;
+    }
+
+    public function Excluir()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $obj = new clsPmieducarSerie(
+            $this->cod_serie,
+            $this->pessoa_logada,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            0
+        );
+
+        if ($obj->possuiTurmasVinculadas()) {
+            $this->mensagem = 'Não foi possível excluir a série, pois a mesma possui turmas vinculadas.';
+
+            return false;
+        }
+
+        $serie = $obj->detalhe();
+        $excluiu = $obj->excluir();
+
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
+            $auditoria->exclusao($serie);
+
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+            header('Location: educar_serie_lst.php');
+            die();
+        }
+
+        $this->mensagem = 'Exclusão não realizada.<br>';
+        echo "<!--\nErro ao excluir clsPmieducarSerie\nvalores obrigatórios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
         return false;
     }
@@ -395,59 +434,23 @@ class indice extends clsCadastro
 
     protected function deletaRegraSerieAnoNaoEnviada(array $anosParaManter)
     {
-        $anosParaManter = implode(',', $anosParaManter);
+
+        $anosParaManter = implode(',',$anosParaManter);
         $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
         $regrasSerieAnoDeletar = $serieAnoMapper->findAll([
             'regraAvaliacao',
             'regraAvaliacaoDiferenciada',
             'serie',
             'anoLetivo',
-        ], [
+        ],[
             'serie' => $this->cod_serie,
-            ' not ano_letivo = any(\'{'.$anosParaManter.'}\') '
+            " not ano_letivo = any('{".$anosParaManter."}') "
         ], [], false);
 
-        foreach ($regrasSerieAnoDeletar as $regra) {
+        foreach ($regrasSerieAnoDeletar as $regra)
+        {
             $serieAnoMapper->delete($regra);
         }
-    }
-
-    public function Excluir()
-    {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
-        $obj = new clsPmieducarSerie(
-        $this->cod_serie,
-        $this->pessoa_logada,
-        null,
-      null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        0
-    );
-
-        $serie = $obj->detalhe();
-        $excluiu = $obj->excluir();
-
-        if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
-            $auditoria->exclusao($serie);
-
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-            header('Location: educar_serie_lst.php');
-            die();
-        }
-
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao excluir clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
-
-        return false;
     }
 }
 
@@ -457,126 +460,118 @@ $pagina = new clsIndexBase();
 // Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
-// @TODO entender como funciona a tabela para poder popular os campos de regra
-// baseado na instituição escolhida
-/*
-function getRegra()
-{
-  var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    function getRegra()
+    {
+        var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
 
-  var campoRegras = document.getElementById('regra_avaliacao_id');
-  campoRegras.length = 1;
-  campoRegras.disabled = true;
-  campoRegras.options[0].text = 'Carregando regras';
+        var campoRegras = document.getElementById('regra_avaliacao_id');
+        campoRegras.length = 1;
+        campoRegras.disabled = true;
+        campoRegras.options[0].text = 'Carregando regras';
 
-  var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
-  campoRegrasDiferenciadas.length = 1;
-  campoRegrasDiferenciadas.disabled = true;
-  campoRegrasDiferenciadas.options[0].text = 'Carregando regras';
+        var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
+        campoRegrasDiferenciadas.length = 1;
+        campoRegrasDiferenciadas.disabled = true;
+        campoRegrasDiferenciadas.options[0].text = 'Carregando regras';
 
-  var xml_qtd_etapas = new ajax(RegrasInstituicao);
-  xml_qtd_etapas.envia("educar_serie_regra_xml.php?ins=" + campoInstituicao);
-}
-*/
-function EtapasCurso(xml_qtd_etapas)
-{
-  var campoEtapas = document.getElementById('etapa_curso');
-  var DOM_array = xml_qtd_etapas.getElementsByTagName('curso');
-
-  if (DOM_array.length) {
-    campoEtapas.length = 1;
-    campoEtapas.options[0].text = 'Selecione uma etapa';
-    campoEtapas.disabled = false;
-
-    var etapas;
-    etapas = DOM_array[0].getAttribute("qtd_etapas");
-
-    for (var i = 1; i<=etapas;i++) {
-      campoEtapas.options[i] = new Option("Etapa "+i , i, false, false);
+        var xml_qtd_etapas = new ajax(RegrasInstituicao);
+        xml_qtd_etapas.envia("educar_serie_regra_xml.php?ins=" + campoInstituicao);
     }
-  }
-  else {
-    campoEtapas.options[0].text = 'O curso não possui nenhuma etapa';
-  }
-}
 
-function RegrasInstituicao(xml_qtd_regras)
-{
-  var campoRegras = document.getElementById('regra_avaliacao_id');
-  var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
-  var DOM_array = xml_qtd_regras.getElementsByTagName('regra');
+    function EtapasCurso(xml_qtd_etapas)
+    {
+        var campoEtapas = document.getElementById('etapa_curso');
+        var DOM_array = xml_qtd_etapas.getElementsByTagName('curso');
 
-  if (DOM_array.length) {
-    campoRegras.length = 1;
-    campoRegras.options[0].text = 'Selecione uma regra';
-    campoRegras.disabled = false;
+        if (DOM_array.length) {
+            campoEtapas.length = 1;
+            campoEtapas.options[0].text = 'Selecione uma etapa';
+            campoEtapas.disabled = false;
 
-    campoRegrasDiferenciadas.length = 1;
-    campoRegrasDiferenciadas.options[0].text = 'Selecione uma regra';
-    campoRegrasDiferenciadas.disabled = false;
+            var etapas;
+            etapas = DOM_array[0].getAttribute("qtd_etapas");
 
-    var loop = DOM_array.length;
-
-    for (var i = 0; i < loop;i++) {
-      campoRegras.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
-      campoRegrasDiferenciadas.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
+            for (var i = 1; i<=etapas;i++) {
+                campoEtapas.options[i] = new Option("Etapa "+i , i, false, false);
+            }
+        } else {
+            campoEtapas.options[0].text = 'O curso não possui nenhuma etapa';
+        }
     }
-  }
-  else {
-    campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
-      campoRegrasDiferenciadas.options[0].text = 'A instituição não possui uma Regra de Avaliação';
-  }
-}
 
-document.getElementById('ref_cod_curso').onchange = function()
-{
-  var campoCurso = document.getElementById('ref_cod_curso').value;
+    var validaAnosLetivos = function(){
+        let elementoAlterado = $(this);
 
-  var campoEtapas = document.getElementById('etapa_curso');
-  campoEtapas.length = 1;
-  campoEtapas.disabled = true;
-  campoEtapas.options[0].text = 'Carregando etapas';
-
-  var xml_qtd_etapas = new ajax(EtapasCurso);
-  xml_qtd_etapas.envia("educar_curso_xml2.php?cur=" + campoCurso);
-}
-
-var validaAnosLetivos = function(){
-  let elementoAlterado = $(this);
-
-  $j.each($j('input[name^="anos_letivos["]'), function(){
-    if (this.id != elementoAlterado.id && this.value == elementoAlterado.value) {
-        elementoAlterado.value = '';
-        alert('Não é permitido informar o mesmo ano mais em mais de uma linha');
-        elementoAlterado.focus();
+        $j.each($j('input[name^="anos_letivos["]'), function(){
+            if (this.id != elementoAlterado.id && this.value == elementoAlterado.value) {
+                elementoAlterado.value = '';
+                alert('Não é permitido informar o mesmo ano mais em mais de uma linha');
+                elementoAlterado.focus();
+            }
+        });
     }
-  })
-}
+    $j('body').on('change', 'input[name^="anos_letivos["]', validaAnosLetivos);
 
-$j('body').on('change', 'input[name^="anos_letivos["]', validaAnosLetivos);
-/*$j('body').on('keyup', 'input[name^="anos_letivos["]', function(){
-  elementoAlterado = this;
-  if (this.value && this.value.length == 4) {
-    validaAnosLetivos.call(elementoAlterado);
-  }
-});*/
+    function RegrasInstituicao(xml_qtd_regras)
+    {
+        var campoRegras = document.getElementById('regra_avaliacao_id');
+        var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
+        var DOM_array = xml_qtd_regras.getElementsByTagName('regra');
 
-/**
- * Dispara eventos durante onchange da select ref_cod_instituicao.
- */
-document.getElementById('ref_cod_instituicao').onchange = function()
-{
-  // Essa ação é a padrão do item, via include
-  getCurso();
+        if (DOM_array.length) {
+            campoRegras.length = 1;
+            campoRegras.options[0].text = 'Selecione uma regra';
+            campoRegras.disabled = false;
 
-  // Requisição Ajax para as Regras de Avaliação
-  //getRegra();
-}
+            campoRegrasDiferenciadas.length = 1;
+            campoRegrasDiferenciadas.options[0].text = 'Selecione uma regra';
+            campoRegrasDiferenciadas.disabled = false;
+
+            var loop = DOM_array.length;
+
+            for (var i = 0; i < loop;i++) {
+            campoRegras.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
+            campoRegrasDiferenciadas.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
+            }
+        }
+        else {
+            campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
+            campoRegrasDiferenciadas.options[0].text = 'A instituição não possui uma Regra de Avaliação';
+        }
+    }
+
+    function excluirSerieComTurmas()
+    {
+        document.formcadastro.reset();
+        alert(stringUtils.toUtf8('Não foi possível excluir a série, pois a mesma possui turmas vinculadas.'));
+    }
+
+    document.getElementById('ref_cod_curso').onchange = function()
+    {
+        var campoCurso = document.getElementById('ref_cod_curso').value;
+        var campoEtapas = document.getElementById('etapa_curso');
+
+        campoEtapas.length = 1;
+        campoEtapas.disabled = true;
+        campoEtapas.options[0].text = 'Carregando etapas';
+
+        var xml_qtd_etapas = new ajax(EtapasCurso);
+        xml_qtd_etapas.envia("educar_curso_xml2.php?cur=" + campoCurso);
+    }
+
+    /**
+    * Dispara eventos durante onchange da select ref_cod_instituicao.
+    */
+    document.getElementById('ref_cod_instituicao').onchange = function()
+    {
+        // Essa ação é a padrão do item, via include
+        getCurso();
+    }
 </script>
