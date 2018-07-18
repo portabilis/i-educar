@@ -1559,19 +1559,7 @@ SQL;
                 && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
 
       // Define 'tipodeficiencia' => 'seqleiaute'
-      $deficienciaToSeq = array(  1 => '17',
-                                  2 => '18',
-                                  3 => '19',
-                                  4 => '20',
-                                  5 => '21',
-                                  6 => '22',
-                                  7 => '23',
-                                  8 => '24',
-                                  9 => '25',
-                                 10 => '26',
-                                 11 => '27',
-                                 12 => '28',
-                                 13 => '29');
+      $deficienciaToSeq = $this->getArrayMapeamentoDeficiencias();
 
       if (count($deficiencias) == 0) {
         $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = NULL;
@@ -1594,16 +1582,24 @@ SQL;
       if ($r60s16)
         $r60s39 = NULL;
       else
-        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 =
                   $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
-      if(!$this->transtornoGlobalDesenvolvimento($deficiencias)) {
-        for($i=30; $i <= 39; $i++){
-          ${'r60s'.$i} = NULL;
+        if (!$this->precisaDeAuxilioEmProvaPorDeficiencia($deficiencias)) {
+            $r60s30 = null;
+            $r60s31 = null;
+            $r60s32 = null;
+            $r60s33 = null;
+            $r60s34 = null;
+            $r60s35 = null;
+            $r60s36 = null;
+            $r60s37 = null;
+            $r60s38 = null;
+        } else {
+            $r60s39 = 1;
         }
-      }else{
-        $r60s39 = 1;
-      }
+
+        $r60s24 = (int) $this->possuiDeficienciaMultipla($deficiencias);
 
       //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
       for($i=30; $i <= 38; $i++){
@@ -1630,31 +1626,21 @@ SQL;
     return $return;
   }
 
-  protected function transtornoGlobalDesenvolvimento($deficiencias) {
-    $deficienciasLayout = array(1 => '17',
-                                2 => '18',
-                                3 => '19',
-                                4 => '20',
-                                5 => '21',
-                                6 => '22',
-                                7 => '23',
-                                8 => '24',
-                                9 => '25',
-                               10 => '26',
-                               11 => '27',
-                               12 => '28');
+  protected function precisaDeAuxilioEmProvaPorDeficiencia($deficiencias) {
+    $deficienciasLayout = $this->getArrayMapeamentoDeficiencias();
 
-    $existeDeficienciaTranstornoGlobal = FALSE;
+    unset($deficienciasLayout[13]);
 
     if (count($deficiencias)>0){
       foreach ($deficiencias as $deficiencia) {
         $deficiencia = $deficiencia['id'];
         if (array_key_exists($deficiencia, $deficienciasLayout)){
-          $existeDeficienciaTranstornoGlobal = TRUE;
+          return true;
         }
       }
     }
-    return $existeDeficienciaTranstornoGlobal;
+
+    return false;
   }
 
 protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId){
@@ -2318,5 +2304,93 @@ protected function cnpjToCenso($cnpj){
             self::BACHARELADO,
             self::TECNOLOGO
         ]);
+    }
+
+    private function possuiDeficienciaMultipla($deficiencias)
+    {
+        $deficienciasAluno = [];
+        foreach ($deficiencias as $deficiencia) {
+            $deficienciasAluno[$this->getArrayMapeamentoDeficiencias()[$deficiencia['id']]] = true;
+        }
+
+        if ($deficienciasAluno['17'] && $deficienciasAluno['22']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['17'] && $deficienciasAluno['23']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['18'] && $deficienciasAluno['22']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['18'] && $deficienciasAluno['23']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['19'] && $deficienciasAluno['22']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['19'] && $deficienciasAluno['23']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['20'] && $deficienciasAluno['22']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['20'] && $deficienciasAluno['23']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['21'] && $deficienciasAluno['22']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['21'] && $deficienciasAluno['23']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['17'] && $deficienciasAluno['20']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['18'] && $deficienciasAluno['19']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['18'] && $deficienciasAluno['20']) {
+            return true;
+        }
+
+        if ($deficienciasAluno['22'] && $deficienciasAluno['23']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    private function getArrayMapeamentoDeficiencias()
+    {
+        return [
+            1 => '17',
+            2 => '18',
+            3 => '19',
+            4 => '20',
+            5 => '21',
+            6 => '22',
+            7 => '23',
+            8 => '24',
+            9 => '25',
+            10 => '26',
+            11 => '27',
+            12 => '28',
+            13 => '29'
+        ];
     }
 }
