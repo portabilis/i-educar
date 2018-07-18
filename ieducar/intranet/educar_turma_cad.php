@@ -628,12 +628,9 @@ class indice extends clsCadastro
       $disciplinas = '';
       $conteudo    = '';
 
-      // Instancia o mapper de componente curricular
-      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-
-      // Instancia o mapper de ano escolar
-      $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-      $lista = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
+      $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
+        $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, true, $this->ano
+      );
 
       // Instancia o mapper de turma
       $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
@@ -742,26 +739,7 @@ class indice extends clsCadastro
       }
     }
 
-    $componentes = $help = array();
-
-    try {
-      $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
-        $this->ref_cod_serie, $this->ref_cod_escola
-      );
-    }
-    catch (Exception $e) {
-    }
-
-    foreach ($componentes as $componente) {
-      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->abreviatura, $componente->cargaHoraria);
-    }
-
-    if (count($componentes)) {
-      $help = '<ul><li>' . implode('</li><li>', $help) . '</li></ul>';
-    }
-    else {
-      $help = '';
-    }
+    $help = [];
 
     $label = 'Componentes curriculares definidos em s&eacute;ries da escola';
 
@@ -1508,10 +1486,7 @@ document.getElementById('ref_cod_serie').onchange = function()
 {
   if (this.value) {
     codEscola = document.getElementById('ref_cod_escola').value;
-
     getHoraEscolaSerie();
-    getComponentesCurriculares(this.value);
-    getComponentesEscolaSerie(codEscola, this.value);
   }
 
   if (document.getElementById('multiseriada').checked == true) {
@@ -1519,81 +1494,6 @@ document.getElementById('ref_cod_serie').onchange = function()
   }
 
   hideMultiSerie();
-}
-
-function getComponentesCurriculares(campoSerie)
-{
-  var xml_disciplina = new ajax(parseComponentesCurriculares);
-  xml_disciplina.envia("educar_disciplina_xml.php?ser=" + campoSerie);
-}
-
-function getComponentesEscolaSerie(codEscola, codSerie)
-{
-  var xml_disciplina = new ajax(parseComponentesCurricularesEscolaSerie);
-  xml_disciplina.envia("educar_disciplina_xml.php?esc=" + codEscola + "&ser=" + codSerie);
-}
-
-function parseComponentesCurriculares(xml_disciplina)
-{
-  var campoDisciplinas = document.getElementById('disciplinas');
-  var DOM_array = xml_disciplina.getElementsByTagName('disciplina');
-  var conteudo = '';
-
-  if (DOM_array.length) {
-    conteudo += '<div style="margin-bottom: 10px; float: left">';
-    conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
-    conteudo += '  <span style="display: block; float: left; width: 250px;">Abreviatura</span>';
-    conteudo += '  <label> <span style="display: block; float: left; width: 100px">Carga hor&aacute;ria </span></label>';
-    conteudo += '  <label> <span style="display: block; float: left; width: 200px">Usar padr&atilde;o do componente?</span></label>';
-    conteudo += '  <label> <span style="display: block; float: left">Possui docente vinculado?</span></label>';
-    conteudo += '</div>';
-    conteudo += '<br style="clear: left" />';
-
-    for (var i = 0; i < DOM_array.length; i++) {
-      id = DOM_array[i].getAttribute("cod_disciplina");
-
-      conteudo += '<div style="margin-bottom: 10px; float: left" class="linha-disciplina">';
-      conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas['+ id +']" class="check-disciplina" id="disciplinas[]" value="'+ id +'">'+ DOM_array[i].firstChild.data +'</label>';
-      conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria['+ id +']" value="" size="5" maxlength="7"></label>';
-      conteudo += '  <label style="display: block; float: left;width: 200px;"><input type="checkbox" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';
-      conteudo += '  <label style="display: block; float: left;"><input type="checkbox" name="docente_vinculado['+ id +']" value="1"></label>';
-      conteudo += '</div>';
-      conteudo += '<br style="clear: left" />';
-    }
-  }
-  else {
-    campoDisciplinas.innerHTML = 'A s\u00e9rie/ano escolar n\u00e3o possui componentes '
-                               + 'curriculares cadastrados.';
-  }
-
-  if (conteudo) {
-    campoDisciplinas.innerHTML = '<table cellspacing="0" cellpadding="0" border="0">';
-    campoDisciplinas.innerHTML += '<tr align="left"><td>'+ conteudo +'</td></tr>';
-    campoDisciplinas.innerHTML += '</table>';
-  }
-}
-
-function parseComponentesCurricularesEscolaSerie(xml)
-{
-  var helpSpan = document.getElementById('_escola_serie_componentes');
-  var elements = xml.getElementsByTagName('disciplina');
-
-  ret = '';
-
-  if (elements.length) {
-    ret = '<ul>';
-
-    for (var i = 0; i < elements.length; i++) {
-      carga = elements[i].getAttribute('carga_horaria');
-      name  = elements[i].firstChild.data;
-
-      ret += '<li>' + name + ' (' + carga + ' h)</li>';
-    }
-
-    ret += '</ul>';
-  }
-
-  helpSpan.innerHTML = ret;
 }
 
 function hideMultiSerie()

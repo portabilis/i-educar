@@ -15,11 +15,10 @@
 
       if ($instituicaoField.val() && $escolaField.val() && $escolaField.is(':enabled')) {
         $cursoField.children().first().html('Aguarde carregando...');
-
         var urlForGetCursos = getResourceUrlBuilder.buildUrl('/module/DynamicInput/Curso', 'cursos', {
           escola_id: $escolaField.attr('value'),
           instituicao_id: $instituicaoField.attr('value'),
-          ano: $ano.val()
+          ano: ($ano.val() && $ano.val() != "NaN" ? $ano.val() : '')
         });
 
         var options = {
