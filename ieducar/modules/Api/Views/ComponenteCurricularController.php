@@ -201,6 +201,7 @@ function getComponentesCurricularesPorSerie(){
                                                           AND al.ativo = 1)
                 WHERE t.cod_turma = $1
                   AND al.ano = $2
+                  AND $2 = ANY(esd.anos_letivos)
                   AND t.ativo = 1 ";
 
         $params = [$turmaId, $ano];
