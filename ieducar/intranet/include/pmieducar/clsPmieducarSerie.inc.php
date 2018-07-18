@@ -290,125 +290,106 @@ class clsPmieducarSerie
         ) {
             $db = new clsBanco();
 
-            $campos = '';
-            $valores = '';
-            $gruda = '';
+            $campos = [];
+            $valores = [];
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $campos .= "{$gruda}ref_usuario_cad";
-                $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-                $gruda = ', ';
+                $campos[] = "ref_usuario_cad";
+                $valores[] = "'{$this->ref_usuario_cad}'";
             }
 
             if (is_numeric($this->ref_cod_curso)) {
-                $campos .= "{$gruda}ref_cod_curso";
-                $valores .= "{$gruda}'{$this->ref_cod_curso}'";
-                $gruda = ', ';
+                $campos[] = "ref_cod_curso";
+                $valores[] = "'{$this->ref_cod_curso}'";
             }
 
             if (is_string($this->nm_serie)) {
-                $campos .= "{$gruda}nm_serie";
-                $valores .= "{$gruda}'{$this->nm_serie}'";
-                $gruda = ', ';
+                $campos[] = "nm_serie";
+                $valores[] = "'{$this->nm_serie}'";
             }
 
             if (is_numeric($this->etapa_curso)) {
-                $campos .= "{$gruda}etapa_curso";
-                $valores .= "{$gruda}'{$this->etapa_curso}'";
-                $gruda = ', ';
+                $campos[] = "etapa_curso";
+                $valores[] = "'{$this->etapa_curso}'";
             }
 
             if (is_numeric($this->concluinte)) {
-                $campos .= "{$gruda}concluinte";
-                $valores .= "{$gruda}'{$this->concluinte}'";
-                $gruda = ', ';
+                $campos[] = "concluinte";
+                $valores[] = "'{$this->concluinte}'";
             }
 
             if (is_numeric($this->carga_horaria)) {
-                $campos .= "{$gruda}carga_horaria";
-                $valores .= "{$gruda}'{$this->carga_horaria}'";
-                $gruda = ', ';
+                $campos[] = "carga_horaria";
+                $valores[] = "'{$this->carga_horaria}'";
             }
 
             if (is_numeric($this->idade_inicial)) {
-                $campos .= "{$gruda}idade_inicial";
-                $valores .= "{$gruda}'{$this->idade_inicial}'";
-                $gruda = ', ';
+                $campos[] = "idade_inicial";
+                $valores[] = "'{$this->idade_inicial}'";
             }
 
             if (is_numeric($this->idade_final)) {
-                $campos .= "{$gruda}idade_final";
-                $valores .= "{$gruda}'{$this->idade_final}'";
-                $gruda = ', ';
+                $campos[] = "idade_final";
+                $valores[] = "'{$this->idade_final}'";
             }
 
             if (is_numeric($this->regra_avaliacao_id)) {
-                $campos .= "{$gruda}regra_avaliacao_id";
-                $valores .= "{$gruda}'{$this->regra_avaliacao_id}'";
-                $gruda = ', ';
+                $campos[] = "regra_avaliacao_id";
+                $valores[] = "'{$this->regra_avaliacao_id}'";
             }
 
             if (is_numeric($this->regra_avaliacao_diferenciada_id)) {
-                $campos .= "{$gruda}regra_avaliacao_diferenciada_id";
-                $valores .= "{$gruda}'{$this->regra_avaliacao_diferenciada_id}'";
-                $gruda = ', ';
+                $campos[] = "regra_avaliacao_diferenciada_id";
+                $valores[] = "'{$this->regra_avaliacao_diferenciada_id}'";
             }
 
-            $campos .= "{$gruda}data_cadastro";
-            $valores .= "{$gruda}NOW()";
-            $gruda = ', ';
+            $campos[] = "data_cadastro";
+            $valores[] = "NOW()";
 
-            $campos .= "{$gruda}ativo";
-            $valores .= "{$gruda}'1'";
-            $gruda = ', ';
+            $campos[] = "ativo";
+            $valores[] = "'1'";
 
             if (is_string($this->observacao_historico)) {
-                $campos .= "{$gruda}observacao_historico";
-                $valores .= "{$gruda}'{$this->observacao_historico}'";
-                $gruda = ', ';
+                $campos[] = "observacao_historico";
+                $valores[] = "'{$this->observacao_historico}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
-                $campos .= "{$gruda}dias_letivos";
-                $valores .= "{$gruda}'{$this->dias_letivos}'";
-                $gruda = ', ';
+                $campos[] = "dias_letivos";
+                $valores[] = "'{$this->dias_letivos}'";
             }
 
             if (is_numeric($this->idade_ideal)) {
-                $campos .= "{$gruda}idade_ideal";
-                $valores .= "{$gruda}'{$this->idade_ideal}'";
-                $gruda = ', ';
+                $campos[] = "idade_ideal";
+                $valores[] = "'{$this->idade_ideal}'";
             }
 
             if (dbBool($this->alerta_faixa_etaria)) {
-                $campos .= "{$gruda}alerta_faixa_etaria";
-                $valores .= "{$gruda} true ";
-                $gruda = ', ';
+                $campos[] = "alerta_faixa_etaria";
+                $valores[] = " true ";
             } else {
-                $campos .= "{$gruda}alerta_faixa_etaria";
-                $valores .= "{$gruda} false ";
-                $gruda = ', ';
+                $campos[] = "alerta_faixa_etaria";
+                $valores[] = " false ";
             }
 
             if (dbBool($this->bloquear_matricula_faixa_etaria)) {
-                $campos .= "{$gruda}bloquear_matricula_faixa_etaria";
-                $valores .= "{$gruda} true ";
-                $gruda = ', ';
+                $campos[] = "bloquear_matricula_faixa_etaria";
+                $valores[] = " true ";
             } else {
-                $campos .= "{$gruda}bloquear_matricula_faixa_etaria";
-                $valores .= "{$gruda} false ";
-                $gruda = ', ';
+                $campos[] = "bloquear_matricula_faixa_etaria";
+                $valores[] = " false ";
             }
 
             if (dbBool($this->exigir_inep)) {
-                $campos .= "{$gruda}exigir_inep";
-                $valores .= "{$gruda} true ";
-                $gruda = ', ';
+                $campos[] = "exigir_inep";
+                $valores[] = " true ";
             } else {
-                $campos .= "{$gruda}exigir_inep";
-                $valores .= "{$gruda} false ";
-                $gruda = ', ';
+                $campos[] = "exigir_inep";
+                $valores[] = " false ";
             }
+
+            $campos = join (', ', $campos);
+            $valores = join(', ', $valores);
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
@@ -427,126 +408,101 @@ class clsPmieducarSerie
     {
         if (is_numeric($this->cod_serie) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-            $set = '';
+            $set = [];
 
             if (is_numeric($this->ref_usuario_exc)) {
-                $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-                $gruda = ', ';
+                $set[] = "ref_usuario_exc = '{$this->ref_usuario_exc}'";
             }
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-                $gruda = ', ';
+                $set[] = "ref_usuario_cad = '{$this->ref_usuario_cad}'";
             }
 
             if (is_numeric($this->ref_cod_curso)) {
-                $set .= "{$gruda}ref_cod_curso = '{$this->ref_cod_curso}'";
-                $gruda = ', ';
+                $set[] = "ref_cod_curso = '{$this->ref_cod_curso}'";
             }
 
             if (is_string($this->nm_serie)) {
-                $set .= "{$gruda}nm_serie = '{$this->nm_serie}'";
-                $gruda = ', ';
+                $set[] = "nm_serie = '{$this->nm_serie}'";
             }
 
             if (is_numeric($this->etapa_curso)) {
-                $set .= "{$gruda}etapa_curso = '{$this->etapa_curso}'";
-                $gruda = ', ';
+                $set[] = "etapa_curso = '{$this->etapa_curso}'";
             }
 
             if (is_numeric($this->concluinte)) {
-                $set .= "{$gruda}concluinte = '{$this->concluinte}'";
-                $gruda = ', ';
+                $set[] = "concluinte = '{$this->concluinte}'";
             }
 
             if (is_numeric($this->carga_horaria)) {
-                $set .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
-                $gruda = ', ';
+                $set[] = "carga_horaria = '{$this->carga_horaria}'";
             }
 
             if (is_string($this->data_cadastro)) {
-                $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ', ';
+                $set[] = "data_cadastro = '{$this->data_cadastro}'";
             }
 
-            $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ', ';
+            $set[] = "data_exclusao = NOW()";
 
             if (is_numeric($this->ativo)) {
-                $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ', ';
+                $set[] = "ativo = '{$this->ativo}'";
             }
 
             if (is_numeric($this->idade_inicial)) {
-                $set .= "{$gruda}idade_inicial = '{$this->idade_inicial}'";
-                $gruda = ', ';
+                $set[] = "idade_inicial = '{$this->idade_inicial}'";
             } else {
-                $set .= "{$gruda}idade_inicial = NULL";
-                $gruda = ', ';
+                $set[] = "idade_inicial = NULL";
             }
 
             if (is_numeric($this->idade_final)) {
-                $set .= "{$gruda}idade_final = '{$this->idade_final}'";
-                $gruda = ', ';
+                $set[] = "idade_final = '{$this->idade_final}'";
             } else {
-                $set .= "{$gruda}idade_final = NULL";
-                $gruda = ', ';
+                $set[] = "idade_final = NULL";
             }
 
             if (is_numeric($this->regra_avaliacao_id)) {
-                $set .= "{$gruda}regra_avaliacao_id = '{$this->regra_avaliacao_id}'";
-                $gruda = ', ';
+                $set[] = "regra_avaliacao_id = '{$this->regra_avaliacao_id}'";
             }
 
             if (is_numeric($this->regra_avaliacao_diferenciada_id)) {
-                $set .= "{$gruda}regra_avaliacao_diferenciada_id = '{$this->regra_avaliacao_diferenciada_id}' ";
+                $set[] = "regra_avaliacao_diferenciada_id = '{$this->regra_avaliacao_diferenciada_id}' ";
             } else {
-                $set .= "{$gruda}regra_avaliacao_diferenciada_id = NULL ";
+                $set[] = "regra_avaliacao_diferenciada_id = NULL ";
             }
 
-            $gruda = ', ';
-
             if (is_string($this->observacao_historico)) {
-                $set .= "{$gruda}observacao_historico = '{$this->observacao_historico}'";
-                $gruda = ', ';
+                $set[] = "observacao_historico = '{$this->observacao_historico}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
-                $set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
-                $gruda = ', ';
+                $set[] = "dias_letivos = '{$this->dias_letivos}'";
             }
 
             if (is_numeric($this->idade_ideal)) {
-                $set .= "{$gruda}idade_ideal = '{$this->idade_ideal}'";
-                $gruda = ', ';
+                $set[] = "idade_ideal = '{$this->idade_ideal}'";
             } else {
-                $set .= "{$gruda}idade_ideal = NULL";
-                $gruda = ', ';
+                $set[] = "idade_ideal = NULL";
             }
 
             if (dbBool($this->alerta_faixa_etaria)) {
-                $set .= "{$gruda}alerta_faixa_etaria = true ";
-                $gruda = ', ';
+                $set[] = "alerta_faixa_etaria = true ";
             } else {
-                $set .= "{$gruda}alerta_faixa_etaria = false ";
-                $gruda = ', ';
+                $set[] = "alerta_faixa_etaria = false ";
             }
 
             if (dbBool($this->bloquear_matricula_faixa_etaria)) {
-                $set .= "{$gruda}bloquear_matricula_faixa_etaria = true ";
-                $gruda = ', ';
+                $set[] = "bloquear_matricula_faixa_etaria = true ";
             } else {
-                $set .= "{$gruda}bloquear_matricula_faixa_etaria = false ";
-                $gruda = ', ';
+                $set[] = "bloquear_matricula_faixa_etaria = false ";
             }
 
             if (dbBool($this->exigir_inep)) {
-                $set .= "{$gruda}exigir_inep = true ";
-                $gruda = ', ';
+                $set[] = "exigir_inep = true ";
             } else {
-                $set .= "{$gruda}exigir_inep = false ";
-                $gruda = ', ';
+                $set[] = "exigir_inep = false ";
             }
+
+            $set = join(', ', $set);
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_serie = '{$this->cod_serie}'");
@@ -586,114 +542,97 @@ class clsPmieducarSerie
     ) {
         $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao FROM {$this->_tabela} s, {$this->_schema}curso c";
 
-        $whereAnd = ' AND ';
-        $filtros = ' WHERE s.ref_cod_curso = c.cod_curso';
+        $filtros = [' WHERE s.ref_cod_curso = c.cod_curso'];
 
         if (is_numeric($int_cod_serie)) {
-            $filtros .= "{$whereAnd} s.cod_serie = '{$int_cod_serie}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.cod_serie = '{$int_cod_serie}'";
         }
 
         if (is_numeric($int_ref_usuario_exc)) {
-            $filtros .= "{$whereAnd} s.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.ref_usuario_exc = '{$int_ref_usuario_exc}'";
         }
 
         if (is_numeric($int_ref_usuario_cad)) {
-            $filtros .= "{$whereAnd} s.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.ref_usuario_cad = '{$int_ref_usuario_cad}'";
         }
 
         if (is_numeric($int_ref_cod_curso)) {
-            $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = ' AND ';
+            $filtros[] = " s.ref_cod_curso = '{$int_ref_cod_curso}'";
         }
 
         if (is_string($str_nm_serie)) {
-            $filtros .= "{$whereAnd} translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = ' AND ';
+            $filtros[] = "translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
         }
 
         if (is_numeric($int_etapa_curso)) {
-            $filtros .= "{$whereAnd} s.etapa_curso = '{$int_etapa_curso}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.etapa_curso = '{$int_etapa_curso}'";
         }
 
         if (is_numeric($int_concluinte)) {
-            $filtros .= "{$whereAnd} s.concluinte = '{$int_concluinte}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.concluinte = '{$int_concluinte}'";
         }
 
         if (is_numeric($int_carga_horaria)) {
-            $filtros .= "{$whereAnd} s.carga_horaria = '{$int_carga_horaria}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.carga_horaria = '{$int_carga_horaria}'";
         }
 
         if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} s.data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.data_cadastro >= '{$date_data_cadastro_ini}'";
         }
 
         if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} s.data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.data_cadastro <= '{$date_data_cadastro_fim}'";
         }
 
         if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} s.data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.data_exclusao >= '{$date_data_exclusao_ini}'";
         }
 
         if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} s.data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.data_exclusao <= '{$date_data_exclusao_fim}'";
         }
 
         if (is_numeric($regra_avaliacao_id)) {
-            $filtros .= "{$whereAnd} s.regra_avaliacao_id = '{$regra_avaliacao_id}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.regra_avaliacao_id = '{$regra_avaliacao_id}'";
         }
 
         if (is_null($int_ativo) || $int_ativo) {
-            $filtros .= "{$whereAnd} s.ativo = '1'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.ativo = '1'";
         } else {
-            $filtros .= "{$whereAnd} s.ativo = '0'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.ativo = '0'";
         }
 
         if (is_numeric($int_ref_cod_instituicao)) {
-            $filtros .= "{$whereAnd} c.ref_cod_instituicao = '$int_ref_cod_instituicao'";
-            $whereAnd = ' AND ';
+            $filtros[] = "c.ref_cod_instituicao = '$int_ref_cod_instituicao'";
         }
 
         if (is_numeric($int_idade_inicial)) {
-            $filtros .= "{$whereAnd} idade_inicial = '{$int_idade_inicial}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "idade_inicial = '{$int_idade_inicial}'";
         }
 
         if (is_numeric($int_idade_ideal)) {
-            $filtros .= "{$whereAnd} idade_ideal = '{$int_idade_ideal}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "idade_ideal = '{$int_idade_ideal}'";
         }
 
         if (is_numeric($int_idade_final)) {
-            $filtros .= "{$whereAnd} idade_final= '{$int_idade_final}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "idade_final= '{$int_idade_final}'";
         }
 
         if (is_numeric($int_ref_cod_escola)) {
-            $filtros .= "{$whereAnd} EXISTS (SELECT 1
-                                         FROM pmieducar.escola_serie es
-                                        WHERE s.cod_serie = es.ref_cod_serie
-                                          AND es.ativo = 1
-                                          AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
-            $whereAnd = ' AND ';
+            $filtros[] = "EXISTS (SELECT
+                    1
+                FROM
+                    pmieducar.escola_serie es
+                WHERE
+                    s.cod_serie = es.ref_cod_serie
+                    AND es.ativo = 1
+                    AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
         }
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
+        $filtros = join(' AND ', $filtros);
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
@@ -732,37 +671,30 @@ class clsPmieducarSerie
             c.ref_cod_instituicao FROM {$this->_tabela} s,
             {$this->_schema}curso c";
 
-        $whereAnd = ' AND ';
-        $filtros = ' WHERE s.ref_cod_curso = c.cod_curso';
+        $filtros = [' WHERE s.ref_cod_curso = c.cod_curso'];
 
         if (is_numeric($int_cod_serie)) {
-            $filtros .= "{$whereAnd} s.cod_serie = '{$int_cod_serie}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.cod_serie = '{$int_cod_serie}'";
         }
 
         if (is_numeric($int_ref_cod_curso)) {
-            $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.ref_cod_curso = '{$int_ref_cod_curso}'";
         }
 
         if (is_numeric($int_ref_cod_instituicao)) {
-            $filtros .= "{$whereAnd} c.ref_cod_instituicao = '$int_ref_cod_instituicao'";
-            $whereAnd = ' AND ';
+            $filtros[] = "c.ref_cod_instituicao = '$int_ref_cod_instituicao'";
         }
 
         if (is_null($int_ativo) || $int_ativo) {
-            $filtros .= "{$whereAnd} s.ativo = '1'";
-            $whereAnd = ' AND ';
+            $filtros[] = "s.ativo = '1'";
         }
 
-        $filtros .= "{$whereAnd} s.cod_serie IN (SELECT DISTINCT ano_escolar_id
-            FROM modules.componente_curricular_ano_escolar)";
-
-        $whereAnd = ' AND ';
+        $filtros[] = "s.cod_serie IN (SELECT DISTINCT ano_escolar_id FROM modules.componente_curricular_ano_escolar)";
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
+        $filtros = join(' AND ', $filtros);
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
