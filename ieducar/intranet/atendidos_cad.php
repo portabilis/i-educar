@@ -696,7 +696,7 @@ class indice extends clsCadastro
     }
 
     $selectOptionsRaca = Portabilis_Array_Utils::sortByValue($selectOptionsRaca);
-    $selectOptionsRaca = array_merge([null => 'Selecione'], $selectOptionsRaca);
+    $selectOptionsRaca = array_replace([null => 'Selecione'], $selectOptionsRaca);
 
     $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 

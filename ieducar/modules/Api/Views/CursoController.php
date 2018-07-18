@@ -1,34 +1,4 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Api
- * @subpackage  Modules
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
- */
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
@@ -36,10 +6,6 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
-/**
- * Class CursoController
- * @deprecated Essa versão da API pública será descontinuada
- */
 class CursoController extends ApiCoreController
 {
 
@@ -126,17 +92,17 @@ class CursoController extends ApiCoreController
                                 $turma['nm_turma'] = Portabilis_String_Utils::toUtf8($turma['nm_turma']);
                             }
                             $attrs['turmas'] = 'turmas';
-                            $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, array('cod_turma', 'nm_turma', 'escola_id', 'turma_turno_id', 'ano'));
+                            $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, ['cod_turma', 'nm_turma', 'escola_id', 'turma_turno_id', 'ano']);
                         }
                     }
                     $curso['series'] = Portabilis_Array_Utils::filterSet($series, $attrs);
                 }
             }
 
-            $attrs = array(
+            $attrs = [
                 'cod_curso' => 'id',
-                'nm_curso' => 'nome',
-            );
+                'nm_curso' => 'nome'
+            ];
 
             if ($getSeries) {
                 $attrs['series'] = 'series';
@@ -144,7 +110,7 @@ class CursoController extends ApiCoreController
 
             $cursos = Portabilis_Array_Utils::filterSet($cursos, $attrs);
 
-            return array('cursos' => $cursos);
+            return ['cursos' => $cursos ];
         }
     }
 
@@ -153,7 +119,7 @@ class CursoController extends ApiCoreController
         $instituicaoId = $this->getRequest()->instituicao_id;
 
         $sql = "SELECT cod_curso AS id,
-                   nm_curso  AS nome
+                   nm_curso AS nome
               FROM pmieducar.curso
              INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = curso.ref_cod_instituicao)
              WHERE curso.ativo = 1
@@ -167,7 +133,7 @@ class CursoController extends ApiCoreController
 
         $cursos = Portabilis_Array_Utils::setAsIdValue($cursos, 'id', 'nome');
 
-        return array('options' => $cursos);
+        return ['options' => $cursos];
     }
 
     protected function getModalidadeCurso()
@@ -175,11 +141,12 @@ class CursoController extends ApiCoreController
         $cursoId = $this->getRequest()->curso_id;
 
         if (is_numeric($cursoId)) {
-            $sql = "SELECT modalidade_curso
+            $sql = 'SELECT modalidade_curso
                 FROM pmieducar.curso
-               WHERE cod_curso = $1;";
-            $modalidade = $this->fetchPreparedQuery($sql, array($cursoId), false, 'first-line');
+               WHERE cod_curso = $1;';
+            $modalidade = $this->fetchPreparedQuery($sql, [$cursoId], false, 'first-line');
         }
+
         return $modalidade;
     }
 
@@ -194,6 +161,5 @@ class CursoController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
-
     }
 }

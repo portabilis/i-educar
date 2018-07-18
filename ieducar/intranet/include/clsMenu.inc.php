@@ -93,15 +93,18 @@ class clsMenu
 
     $strAutorizado = implode(', ', $autorizado_menu);
 
-    if (@$_SESSION['convidado']) {
-      $strAutorizado = '999999';
+    if (isset($_SESSION['convidado'])) {
+        $strAutorizado = '999999';
     }
     session_write_close();
 
     $db = new clsBanco();
 
     if ($strAutorizado == '0' || $super_usuario) {
-      if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION['tipo_menu'] == 1) {
+
+      $suspenso = $_GET['suspenso'] ?? $_SESSION['suspenso'] ?? $_SESSION['tipo_menu'];
+
+      if ($suspenso) {
         $sql = "
           SELECT
             pai.nm_menu,
@@ -310,7 +313,6 @@ class clsMenu
           $title_acao = 'Abrir a categoria';
         }
 
-        $saida    = str_replace('<!-- #&MENUS&# -->', $submenus, $saida);
         $submenus = '';
 
         $faIcon = empty($item[9]) ? '' : '<i class="fa '. $item[9] .'" aria-hidden="true"></i>';

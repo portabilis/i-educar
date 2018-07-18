@@ -9,7 +9,6 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class SerieController extends ApiCoreController
 {
-
     protected function canGetSeries()
     {
         return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('escola_id') && $this->validatesPresenceOf('curso_id');
@@ -23,11 +22,11 @@ class SerieController extends ApiCoreController
             $cursoId = $this->getRequest()->curso_id;
 
             if (is_array($escolaId)) {
-                $escolaId = implode(",", $escolaId);
+                $escolaId = implode(',', $escolaId);
             }
 
             if (is_array($cursoId)) {
-                $cursoId = implode(",", $cursoId);
+                $cursoId = implode(',', $cursoId);
             }
 
             $sql = "SELECT distinct s.cod_serie, s.nm_serie, s.idade_ideal
@@ -42,7 +41,7 @@ class SerieController extends ApiCoreController
                 AND c.cod_curso IN ({$cursoId})
                 ORDER BY s.nm_serie ASC ";
 
-            $params = array($this->getRequest()->instituicao_id);
+            $params = [$this->getRequest()->instituicao_id];
 
             $series = $this->fetchPreparedQuery($sql, $params);
 
@@ -50,15 +49,15 @@ class SerieController extends ApiCoreController
                 $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
             }
 
-            $attrs = array(
+            $attrs = [
                 'cod_serie' => 'id',
                 'nm_serie' => 'nome',
-                'idade_ideal' => 'idade_padrao',
-            );
+                'idade_ideal' => 'idade_padrao'
+            ];
 
             $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-            return array('series' => $series);
+            return ['series' => $series ];
         }
     }
 
@@ -66,15 +65,15 @@ class SerieController extends ApiCoreController
     {
         $cursoId = $this->getRequest()->curso_id;
 
-        $sql = "SELECT distinct s.cod_serie, s.nm_serie
+        $sql = 'SELECT distinct s.cod_serie, s.nm_serie
                   FROM pmieducar.serie s
                   WHERE s.ativo = 1
                   AND s.ref_cod_curso = $1
                   AND s.cod_serie NOT IN (SELECT DISTINCT ano_escolar_id
                                             FROM modules.componente_curricular_ano_escolar)
-                  ORDER BY s.nm_serie ASC ";
+                  ORDER BY s.nm_serie ASC ';
 
-        $params = array($cursoId);
+        $params = [$cursoId];
 
         $series = $this->fetchPreparedQuery($sql, $params);
 
@@ -82,14 +81,14 @@ class SerieController extends ApiCoreController
             $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
         }
 
-        $attrs = array(
-            'cod_serie' => 'id',
-            'nm_serie' => 'nome',
-        );
+        $attrs = [
+          'cod_serie' => 'id',
+          'nm_serie' => 'nome'
+        ];
 
         $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-        return array('series' => $series);
+        return ['series' => $series ];
     }
 
     protected function getSeriesPorEscola()
@@ -105,8 +104,9 @@ class SerieController extends ApiCoreController
                                AND s.ativo = 1
                                AND es.ref_cod_escola = $escola ";
             }
+
             $query = implode("\n INTERSECT \n", $query);
-            $orderBy = " ORDER BY nm_serie ASC ";
+            $orderBy = ' ORDER BY nm_serie ASC ';
             $sql = $query . $orderBy;
         } else {
             $sql = "SELECT distinct s.cod_serie, s.nm_serie
@@ -124,62 +124,59 @@ class SerieController extends ApiCoreController
             $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
         }
 
-        $attrs = array(
+        $attrs = [
             'cod_serie' => 'id',
-            'nm_serie' => 'nome',
-        );
+            'nm_serie' => 'nome'
+        ];
 
         $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-        return array('series' => $series);
+        return ['series' => $series ];
     }
 
     protected function getSeriesPorCurso()
     {
         $cursoId = $this->getRequest()->curso_id;
 
-        $sql = "SELECT distinct s.cod_serie, s.nm_serie
+        $sql = 'SELECT distinct s.cod_serie, s.nm_serie
               FROM pmieducar.serie s
               WHERE s.ativo = 1
               AND s.ref_cod_curso = $1
-              ORDER BY s.nm_serie ASC ";
+              ORDER BY s.nm_serie ASC ';
 
-        $params = array($cursoId);
-
+        $params = [$cursoId];
         $series = $this->fetchPreparedQuery($sql, $params);
 
         foreach ($series as &$serie) {
             $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
         }
 
-        $attrs = array(
+        $attrs = [
             'cod_serie' => 'id',
-            'nm_serie' => 'nome',
-        );
+            'nm_serie' => 'nome'
+        ];
 
         $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
-        return array('series' => $series);
+        return ['series' => $series ];
     }
 
     protected function getSeriesCursoGrouped()
     {
-        $sql = "SELECT c.cod_curso AS cod_curso, c.nm_curso AS nm_curso, s.cod_serie AS id, s.nm_serie AS nome
+        $sql = 'SELECT c.cod_curso AS cod_curso, c.nm_curso AS nm_curso, s.cod_serie AS id, s.nm_serie AS nome
                 FROM pmieducar.serie s
           INNER JOIN pmieducar.curso c ON c.cod_curso = s.ref_cod_curso
-            ORDER BY c.nm_curso, s.nm_serie";
+            ORDER BY c.nm_curso, s.nm_serie';
 
         $series = $this->fetchPreparedQuery($sql);
-
-        $attrs = array('id', 'nome', 'cod_curso', 'nm_curso');
+        $attrs = ['id', 'nome', 'cod_curso', 'nm_curso'];
         $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
         foreach ($series as $serie) {
             $seriePorCurso[$serie['cod_curso']]['nome'] = $serie['nm_curso'];
             $seriePorCurso[$serie['cod_curso']]['series'][$serie['id']] = $serie['nome'];
         }
-
-        return array('options' => $seriePorCurso);
+        return ['options' => $seriePorCurso ];
     }
 
     protected function canGetBloqueioFaixaEtaria()
@@ -193,24 +190,25 @@ class SerieController extends ApiCoreController
             $instituicaoId = $this->getRequest()->instituicao_id;
             $serieId = $this->getRequest()->serie_id;
             $dataNascimento = $this->getRequest()->data_nascimento;
-            $ano = isset($this->getRequest()->ano) ? $this->getRequest()->ano : date("Y");
+            $ano = isset($this->getRequest()->ano) ? $this->getRequest()->ano : date('Y');
 
             $objSerie = new clsPmieducarSerie($serieId);
             $detSerie = $objSerie->detalhe();
 
             $permiteFaixaEtaria = $objSerie->verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano);
 
-            $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'] == "t";
-            $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'] == "t";
+            $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'] == 't';
+            $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'] == 't';
 
-            $retorno = array('bloqueado' => false, 'mensagem_bloqueio' => '');
+            $retorno = ['bloqueado' => false, 'mensagem_bloqueio' => ''];
+
             if (!$permiteFaixaEtaria) {
                 if ($alertaFaixaEtaria || $bloquearMatriculaFaixaEtaria) {
                     $retorno['bloqueado'] = $bloquearMatriculaFaixaEtaria;
                     $retorno['mensagem_bloqueio'] = 'A idade do aluno encontra-se fora da faixa etária pré-definida para esta série.';
-
                 }
             }
+
             return $retorno;
         }
     }
@@ -232,6 +230,5 @@ class SerieController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
-
     }
 }

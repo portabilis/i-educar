@@ -1,18 +1,18 @@
 <?php
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
-/**
- * Class EtapasController
- * @deprecated Essa versão da API pública será descontinuada
- */
 class EtapasController extends ApiCoreController
 {
-    protected function canGetTurmasComEtapasEspecificas() {
+
+    protected function canGetTurmasComEtapasEspecificas()
+    {
         return $this->validatesPresenceOf('instituicao_id');
     }
 
-    protected function getTurmasComEtapasEspecificas() {
+    protected function getTurmasComEtapasEspecificas()
+    {
         if ($this->canGetTurmasComEtapasEspecificas()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
 
@@ -46,19 +46,23 @@ class EtapasController extends ApiCoreController
                                      AND i.componente_curricular_turma)
                   GROUP BY cct.turma_id';
 
-            $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+            $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
             $turmas = Portabilis_Array_Utils::filterSet($turmas, 'turma_id');
 
-            return array('turmas' => $turmas);
+            return ['turmas' => $turmas];
         }
     }
 
-    protected function canGetEtapasEspecificasPorDisciplina() {
-        return $this->validatesPresenceOf('instituicao_id') &&
-               $this->validatesPresenceOf('turma_id');
+    protected function canGetEtapasEspecificasPorDisciplina()
+    {
+        return (
+            $this->validatesPresenceOf('instituicao_id') &&
+            $this->validatesPresenceOf('turma_id')
+        );
     }
 
-    protected function getEtapasEspecificasPorDisciplina() {
+    protected function getEtapasEspecificasPorDisciplina()
+    {
         if ($this->canGetEtapasEspecificasPorDisciplina()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
             $turmaId = $this->getRequest()->turma_id;
@@ -92,19 +96,20 @@ class EtapasController extends ApiCoreController
                                    WHERE i.cod_instituicao = $2
                                      AND i.componente_curricular_turma)';
 
-            $etapas = $this->fetchPreparedQuery($sql, array($turmaId, $instituicaoId));
+            $etapas = $this->fetchPreparedQuery($sql, [$turmaId, $instituicaoId]);
 
-            $attrs = array('disciplina_id', 'etapas_utilizadas', 'updated_at');
+            $attrs = ['disciplina_id', 'etapas_utilizadas', 'updated_at'];
             $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs);
 
-            return array('etapas' => $etapas);
+            return ['etapas' => $etapas];
         }
     }
 
-    public function Gerar() {
+    public function Gerar()
+    {
         if ($this->isRequestFor('get', 'turmas-com-etapas-especificas')) {
             $this->appendResponse($this->getTurmasComEtapasEspecificas());
-        } else if ($this->isRequestFor('get', 'etapas-especificas-por-disciplina')) {
+        } elseif ($this->isRequestFor('get', 'etapas-especificas-por-disciplina')) {
             $this->appendResponse($this->getEtapasEspecificasPorDisciplina());
         } else {
             $this->notImplementedOperationError();
