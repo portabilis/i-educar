@@ -128,7 +128,7 @@ class clsPublicBairro
   function __construct($idmun = NULL, $geom = NULL, $idbai = NULL,
     $nome = NULL, $idpes_rev = NULL, $data_rev = NULL, $origem_gravacao = NULL,
     $idpes_cad = NULL, $data_cad = NULL, $operacao = NULL, $idsis_rev = NULL,
-    $idsis_cad = NULL, $zona_localizacao = 1, $iddis)
+    $idsis_cad = NULL, $zona_localizacao = 1, $iddis = null)
   {
     $db = new clsBanco();
     $this->_schema = 'public.';
