@@ -25,7 +25,7 @@
   },
   "autoload": {
     "psr-4": {
-      "iEducar\\": "ieducar/src"
+      "iEducar\\": "src"
     }
   },
   "autoload-dev": {
