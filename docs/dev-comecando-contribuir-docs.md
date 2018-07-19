@@ -28,7 +28,37 @@ Ao iniciar o servidor local, o Docusaurus compila os arquivos Markdown, para con
 - Adicione o *Docusaurus* ao projeto: `yarn add docusaurus --latest`
 - Inicie o serviço do Docusaurus na sua máquina: `yarn start`
 
-### Publicando alterações de documentação no GitHub Pages
+## 1, 2, 3... Documentando!
+
+### Colocando a mão na massa
+
+Para que a documentação seja criada, é preciso compreender como o Docusaurus funciona, para que ele possa trabalhar com as suas informações. Explicarei o básico para que isso aconteça, mas se desejar aprofundar o conhecimento, veja a seção [Mesa de ferramentas (guias)](#mesa-ferramentas) abaixo.
+
+#### Criando uma nova página de documentação
+
+- Navegue até o diretório *docs* do projeto: `cd i-educar/docs`
+- Crie um arquivo com a extensão `.md`
+    - Veja o padrão de nomeação do arquivo ao criá-lo: [Padrões de documentação - Padrões definidos](dev-padroes-docs.md#padrões-definidos)
+- Insira o cabeçalho no arquivo para que seja processado pelo Docusaurus
+```bash
+---
+id: [PERFIL]-funcionalidade
+title: Título da página
+sidebar_label: Nome que será exibido no menu lateral esquerdo
+---
+```
+> *sidebar_label* é um informação opcional. Se for omitida, assumirá o valor de *title*.
+
+- Edite o arquivo **i-educar/website/sidebars.json** e inclua o **id** definido no cabeçalho do arquivo
+- Inicie o Docusaurus:
+    - `cd i-educar/website`
+    - `yarn start`
+
+### <a class="anchor" aria-hidden="true" id="mesa-ferramentas"></a> Mesa de ferramentas (guias)
+- [Documentação Docusaurus (em Inglês)](https://docusaurus.io/docs/en/installation)
+- [Guia Markdown (em Inglês)](https://www.markdownguide.org/)
+
+## Publicando alterações de documentação no GitHub Pages
 
 Dependẽncias para executar este procedimento:
 1. Docusaurus instalado e funcional
