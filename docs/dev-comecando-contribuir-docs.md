@@ -81,6 +81,6 @@ Tendo em vista estes problemas, se estiver lendo a documentação e encontrar al
 
 ### Ainda não sei perfeitamente como ajudar, o que eu faço?
 
-Abra um tópico no fórum do projeto **i-Educar** e compartilhe a sua dificuldade para que você seja capaz de ajudar. Ser capaz de ajudar é importante para todos!
+Abra um tópico no [Fórum do i-Educar](https://forum.ieducar.org/) e compartilhe a sua dificuldade para que você seja capaz de ajudar. Ser capaz de ajudar é importante para todos!
 
 > **Fique atento:** A sua necessidade de ajuda pode se tornar parte de nossa documentação, então não perca a oportunidade de ajudar!
