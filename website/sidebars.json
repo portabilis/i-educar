@@ -6,7 +6,8 @@
     "i-Educar": ["dev-intro"],
     "Documentação" : [
         "dev-contribuindo-docs",
-        "dev-padroes-docs"
+        "dev-padroes-docs",
+        "dev-comecando-contribuir-docs"
     ]
   },
   "user": {

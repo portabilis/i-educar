@@ -25,6 +25,8 @@ A documentação será feita utilizando o projeto Open Source [Docusaurus](https
 
 O *Docusaurus* é um projeto criado pelo [Facebook](https://opensource.fb.com/) para ajudar a manter documentações de projetos Open Source, que está disponível em seu [repositório no GitHub](https://github.com/facebook/Docusaurus).
 
+Comece a contribuir com a documentação: [Começando a contribuir com a documentação](dev-comecando-contribuir-docs.md)
+
 ### Padrões definidos
 
 As definições tiveram como base a evolução do projeto, evitando obstáculos para isto.
