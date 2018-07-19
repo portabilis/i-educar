@@ -106,6 +106,7 @@ class indice extends clsCadastro
         ];
         
         $this->inputsHelper()->select('deficiencia_educacenso', $options);
+        $this->campoCheck('desconsidera_regra_diferenciada', 'Desconsiderar deficiência na regra de avaliação diferenciada', dbBool($this->desconsidera_regra_diferenciada));
     }
 
     public function Novo()
@@ -114,7 +115,11 @@ class indice extends clsCadastro
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia, $this->deficiencia_educacenso);
+        $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
+        $obj->nm_deficiencia = $this->nm_deficiencia;
+        $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
+        $obj->desconsidera_regra_diferenciada = is_null($this->desconsidera_regra_diferenciada) ? false : true;
+        
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $deficiencia = new clsCadastroDeficiencia($cadastrou);
@@ -145,7 +150,11 @@ class indice extends clsCadastro
         $deficienciaDetalhe = new clsCadastroDeficiencia($this->cod_deficiencia);
         $deficienciaDetalheAntes = $deficienciaDetalhe->detalhe();
 
-        $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia, $this->deficiencia_educacenso);
+        $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
+        $obj->nm_deficiencia = $this->nm_deficiencia;
+        $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
+        $obj->desconsidera_regra_diferenciada = is_null($this->desconsidera_regra_diferenciada) ? false : true;
+
         $editou = $obj->edita();
         if ($editou) {
             $deficienciaDetalheDepois = $deficienciaDetalhe->detalhe();

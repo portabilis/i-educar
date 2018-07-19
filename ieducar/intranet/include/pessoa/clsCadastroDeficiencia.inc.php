@@ -4,6 +4,7 @@ class clsCadastroDeficiencia
     public $cod_deficiencia;
     public $nm_deficiencia;
     public $deficiencia_educacenso;
+    public $desconsidera_regra_diferenciada;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -66,13 +67,13 @@ class clsCadastroDeficiencia
     /**
      * Construtor.
      */
-    public function __construct($cod_deficiencia = null, $nm_deficiencia = null, $deficiencia_educacenso = null)
+    public function __construct($cod_deficiencia = null, $nm_deficiencia = null, $deficiencia_educacenso = null, $desconsidera_regra_diferenciada = null)
     {
         $db = new clsBanco();
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}deficiencia";
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_deficiencia, nm_deficiencia, deficiencia_educacenso';
+        $this->_campos_lista = $this->_todos_campos = 'cod_deficiencia, nm_deficiencia, deficiencia_educacenso, desconsidera_regra_diferenciada ';
 
         if (is_numeric($cod_deficiencia)) {
             $this->cod_deficiencia = $cod_deficiencia;
@@ -84,6 +85,10 @@ class clsCadastroDeficiencia
 
         if (is_numeric($deficiencia_educacenso)) {
             $this->deficiencia_educacenso = $deficiencia_educacenso;
+        }
+
+        if (is_bool($desconsidera_regra_diferenciada)) {
+            $this->desconsidera_regra_diferenciada = $desconsidera_regra_diferenciada;
         }
     }
 
@@ -119,6 +124,13 @@ class clsCadastroDeficiencia
                 $gruda = ', ';
             }
 
+            if (is_bool($this->desconsidera_regra_diferenciada)) {
+                $desconsidera_regra_diferenciada = $this->desconsidera_regra_diferenciada ? 'true' : 'false';
+                $campos .= "{$gruda}desconsidera_regra_diferenciada";
+                $valores .= "{$gruda}'{$desconsidera_regra_diferenciada}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $db->InsertId("{$this->_tabela}_cod_deficiencia_seq");
@@ -145,6 +157,12 @@ class clsCadastroDeficiencia
 
             if (is_numeric($this->deficiencia_educacenso)) {
                 $set .= "{$gruda}deficiencia_educacenso = '{$this->deficiencia_educacenso}'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->desconsidera_regra_diferenciada)) {
+                $desconsidera_regra_diferenciada = $this->desconsidera_regra_diferenciada ? 'true' : 'false';
+                $set .= "{$gruda}desconsidera_regra_diferenciada = '{$desconsidera_regra_diferenciada}'";
                 $gruda = ', ';
             }
 
