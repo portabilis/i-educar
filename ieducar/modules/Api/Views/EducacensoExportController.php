@@ -1720,7 +1720,7 @@ SQL;
         \'70\' AS r70s1,
         ece.cod_escola_inep AS r70s2,
         eca.cod_aluno_inep AS r70s3,
-        fd.rg AS r70s5,
+        REGEXP_REPLACE(fd.rg,\'[^a-zA-Z0-9ª°-]\',\'\',\'g\') AS r70s5,
         oer.codigo_educacenso AS r70s6,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) AS r70s7,
         fd.data_exp_rg AS r70s8,
