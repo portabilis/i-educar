@@ -241,7 +241,7 @@ class indice extends clsCadastro
   function Gerar()
   {
     $this->fexcluir = FALSE;
-    $this->campoTabInicio('educar_cad', '', TRUE);
+    $this->campoTabInicio('educar_cad', true);
     $this->campoOculto('retorno', $this->retorno);
     $this->campoOculto('bloqueado', 1);
 

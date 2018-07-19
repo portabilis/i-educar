@@ -175,7 +175,7 @@ class clsPublicSetorBai
     $sql = $select;
 
     $whereAnd = ' WHERE ';
-
+    $filtros = '';
     if (is_numeric($int_idsetorbai)) {
       $filtros .= "{$whereAnd} idsetorbai = '{$int_idsetorbai}'";      
       $whereAnd = ' AND ';
@@ -194,7 +194,7 @@ class clsPublicSetorBai
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
     $this->_total = $db->CampoUnico(sprintf(
-      'SELECT COUNT(0) FROM %s %s %s', $this->_tabela, $from, $filtros
+      'SELECT COUNT(0) FROM %s %s', $this->_tabela, $filtros
     ));
 
     $db->Consulta($sql);

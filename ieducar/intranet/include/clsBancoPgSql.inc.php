@@ -637,6 +637,13 @@ abstract class clsBancoSQL_
    */
   function ProximoRegistro()
   {
+      if (empty($this->bConsulta_ID)) {
+          $this->strErro = 'Nenhuma conexão informada.';
+          $this->bErro_no = false;
+
+          return false;
+      }
+
     // Fetch do resultado
     if ($this->getFetchMode() == self::FETCH_ARRAY) {
       $this->arrayStrRegistro = @pg_fetch_array($this->bConsulta_ID);
@@ -834,7 +841,7 @@ abstract class clsBancoSQL_
 
       $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
       $resultError = @pg_result_error($this->bConsulta_ID);
-      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($this->bConsulta_ID);
+      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($dbConn);
 
       }
       catch(Exception $e) {

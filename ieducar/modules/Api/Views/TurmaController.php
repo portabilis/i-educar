@@ -1,133 +1,117 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Api
- * @subpackage  Modules
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
- */
-
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Reports/Tipos/TipoBoletim.php';
-require_once "App/Model/IedFinder.php";
+require_once 'App/Model/IedFinder.php';
 require_once 'include/funcoes.inc.php';
 
-/**
- * Class TurmaController
- * @deprecated Essa versão da API pública será descontinuada
- */
 class TurmaController extends ApiCoreController
 {
-  // validators
 
-  protected function validatesTurmaId() {
-    return  $this->validatesPresenceOf('id') &&
-            $this->validatesExistenceOf('turma', $this->getRequest()->id);
-  }
+    // validators
+    protected function validatesTurmaId()
+    {
+        return (
+            $this->validatesPresenceOf('id') &&
+            $this->validatesExistenceOf('turma', $this->getRequest()->id)
+        );
+    }
 
-  protected function canGetTurmasPorEscola() {
-    return  $this->validatesPresenceOf('ano') &&
-            $this->validatesPresenceOf('instituicao_id');
-  }
+    protected function canGetTurmasPorEscola()
+    {
+        return (
+            $this->validatesPresenceOf('ano') &&
+            $this->validatesPresenceOf('instituicao_id')
+        );
+    }
 
-  // validations
+    // validations
+    protected function canGet()
+    {
+        return (
+            $this->canAcceptRequest() &&
+            $this->validatesTurmaId()
+        );
+    }
 
-  protected function canGet() {
-    return $this->canAcceptRequest() &&
-           $this->validatesTurmaId();
-  }
+    protected function canGetAlunosMatriculadosTurma()
+    {
+        return (
+            $this->validatesPresenceOf('instituicao_id') &&
+            $this->validatesPresenceOf('turma_id')
+        );
+    }
 
-  protected function canGetAlunosMatriculadosTurma(){
-    return  $this->validatesPresenceOf('instituicao_id') &&
-            $this->validatesPresenceOf('turma_id');
-  }
-
-  protected function canGetAlunosExameTurma(){
-    return  $this->validatesPresenceOf('instituicao_id') &&
+    protected function canGetAlunosExameTurma()
+    {
+        return (
+            $this->validatesPresenceOf('instituicao_id') &&
             $this->validatesPresenceOf('turma_id') &&
-            $this->validatesPresenceOf('disciplina_id');
-  }
-
-  // api
-
-  protected function ordenaAlunosDaTurmaAlfabetica(){
-    $codTurma           = $this->getRequest()->id;
-    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
-    $lstMatriculaTurma  = $objMatriculaTurma->lista(null, $codTurma);
-
-    foreach ($lstMatriculaTurma as $matricula) {
-      $lstNomes[] = array('nome'              => limpa_acentos(strtoupper($matricula['nome'])),
-                          'ref_cod_matricula' => $matricula['ref_cod_matricula'],
-                          'sequencial'        => $matricula['sequencial']
-                        );
+            $this->validatesPresenceOf('disciplina_id')
+        );
     }
-    sort($lstNomes); //echo "<pre>";print_r($lstNomes);die;
-    array_unshift($lstNomes, "indice zero");
-    $quantidadeAlunos   = count($lstNomes);
 
-    for ($i=1; $i < $quantidadeAlunos; $i++) {
-      $sql ="UPDATE pmieducar.matricula_turma
-                SET sequencial_fechamento =".$i."
-              WHERE matricula_turma.ref_cod_turma = ". $codTurma ."
-                AND matricula_turma.ref_cod_matricula = ". $lstNomes[$i]['ref_cod_matricula'];
-      $this->fetchPreparedQuery($sql);
+    // api
+    protected function ordenaAlunosDaTurmaAlfabetica()
+    {
+        $codTurma = $this->getRequest()->id;
+        $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+        $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma);
+
+        foreach ($lstMatriculaTurma as $matricula) {
+            $lstNomes[] = [
+                'nome' => limpa_acentos(strtoupper($matricula['nome'])),
+                'ref_cod_matricula' => $matricula['ref_cod_matricula'],
+                'sequencial' => $matricula['sequencial']
+            ];
+        }
+
+        sort($lstNomes); //echo "<pre>";print_r($lstNomes);die;
+        array_unshift($lstNomes, 'indice zero');
+        $quantidadeAlunos = count($lstNomes);
+
+        for ($i=1; $i < $quantidadeAlunos; $i++) {
+            $sql ='UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento ='.$i.'
+              WHERE matricula_turma.ref_cod_turma = '. $codTurma .'
+                AND matricula_turma.ref_cod_matricula = '. $lstNomes[$i]['ref_cod_matricula'];
+
+            $this->fetchPreparedQuery($sql);
+        }
     }
-  }
 
-  protected function ordenaSequencialAlunosTurma(){
-      $this->ordenaAlunosDaTurmaAlfabetica();
-  }
-
-  protected function getTipoBoletim() {
-    $turma = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
-    $tipo = $turma['tipo_boletim'];
-    $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
-
-    $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
-    $tipos = Portabilis_Array_Utils::insertIn(null, "indefinido", $tipos);
-
-    if ($tipoDiferenciado && $tipoDiferenciado != $tipo ) {
-        $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+    protected function ordenaSequencialAlunosTurma()
+    {
+        $this->ordenaAlunosDaTurmaAlfabetica();
     }
-    return array('tipo-boletim' => $tipos[$tipo]);
-  }
 
-  protected function getTurmasPorEscola(){
-    if($this->canGetTurmasPorEscola()){
+    protected function getTipoBoletim()
+    {
+        $turma = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
+        $tipo = $turma['tipo_boletim'];
+        $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
 
-      $ano = $this->getRequest()->ano;
-      $instituicaoId = $this->getRequest()->instituicao_id;
-      $turnoId = $this->getRequest()->turno_id;
+        $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
+        $tipos = Portabilis_Array_Utils::insertIn(null, 'indefinido', $tipos);
 
-      if ($turnoId) {
-        $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
+        if ($tipoDiferenciado && $tipoDiferenciado != $tipo) {
+            $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+        }
+
+        return ['tipo-boletim' => $tipos[$tipo]];
+    }
+
+    protected function getTurmasPorEscola()
+    {
+        if ($this->canGetTurmasPorEscola()) {
+            $ano = $this->getRequest()->ano;
+            $instituicaoId = $this->getRequest()->instituicao_id;
+            $turnoId = $this->getRequest()->turno_id;
+
+            if ($turnoId) {
+                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
                   FROM pmieducar.turma
                   WHERE ref_cod_instituicao = $1
                   AND ano = $2
@@ -135,37 +119,38 @@ class TurmaController extends ApiCoreController
                   AND turma_turno_id = $3
                   ORDER BY ref_ref_cod_escola, nm_turma';
 
-        $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano, $turnoId));
-      } else {
-        $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
+                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano, $turnoId]);
+            } else {
+                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
                   FROM pmieducar.turma
                   WHERE ref_cod_instituicao = $1
                   AND ano = $2
                   AND ativo = 1
                   ORDER BY ref_ref_cod_escola, nm_turma';
 
-        $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
-      }
+                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano]);
+            }
 
-      $attrs = array('id', 'nome', 'escola_id', 'turno_id');
-      $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
+            $attrs = ['id', 'nome', 'escola_id', 'turno_id'];
+            $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
 
-      foreach ($turmas as &$turma) {
-        $turma['nome'] = Portabilis_String_Utils::toUtf8($turma['nome']);
-      }
+            foreach ($turmas as &$turma) {
+                $turma['nome'] = Portabilis_String_Utils::toUtf8($turma['nome']);
+            }
 
-      return array('turmas' => $turmas);
+            return ['turmas' => $turmas];
+        }
     }
-  }
 
-  protected function getAlunosMatriculadosTurma(){
-    if($this->canGetAlunosMatriculadosTurma()){
-      $instituicaoId = $this->getRequest()->instituicao_id;
-      $turmaId       = $this->getRequest()->turma_id;
-      $disciplinaId  = $this->getRequest()->disciplina_id;
-      $dataMatricula = $this->getRequest()->data_matricula;
+    protected function getAlunosMatriculadosTurma()
+    {
+        if ($this->canGetAlunosMatriculadosTurma()) {
+            $instituicaoId = $this->getRequest()->instituicao_id;
+            $turmaId = $this->getRequest()->turma_id;
+            $disciplinaId = $this->getRequest()->disciplina_id;
+            $dataMatricula = $this->getRequest()->data_matricula;
 
-      $sql = "SELECT a.cod_aluno as id,
+            $sql = 'SELECT a.cod_aluno as id,
                      m.dependencia,
                      mt.sequencial_fechamento as sequencia,
                      mt.data_enturmacao
@@ -202,13 +187,13 @@ class TurmaController extends ApiCoreController
                           ($3::date >= mt.data_enturmacao::date
                           and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
                        END)
-                      END)";
+                      END)';
 
-      $params = array($instituicaoId, $turmaId, $dataMatricula);
+            $params = [$instituicaoId, $turmaId, $dataMatricula];
 
-      if(is_numeric($disciplinaId)){
-        $params[] = $disciplinaId;
-        $sql .= 'AND
+            if (is_numeric($disciplinaId)) {
+                $params[] = $disciplinaId;
+                $sql .= 'AND
                   CASE WHEN m.dependencia THEN
                     (
                       SELECT 1 FROM pmieducar.disciplina_dependencia dd
@@ -224,30 +209,30 @@ class TurmaController extends ApiCoreController
                     AND dd.ref_cod_disciplina = $4
                     LIMIT 1
                   ) IS NULL
-                END
-        ';
-      }
+                END';
+            }
 
-      $sql .= " ORDER BY m.dependencia, (upper(p.nome))";
+            $sql .= ' ORDER BY m.dependencia, (upper(p.nome))';
 
-      $alunos = $this->fetchPreparedQuery($sql, $params);
+            $alunos = $this->fetchPreparedQuery($sql, $params);
 
-      $attrs = array('id','dependencia', 'sequencia', 'data_enturmacao');
-      $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+            $attrs = ['id','dependencia', 'sequencia', 'data_enturmacao'];
+            $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
-      foreach ($alunos as &$aluno) {
-        $aluno['dependencia'] = dbBool($aluno['dependencia']);
-      }
+            foreach ($alunos as &$aluno) {
+                $aluno['dependencia'] = dbBool($aluno['dependencia']);
+            }
 
-      return array('alunos' => $alunos);
+            return ['alunos' => $alunos];
+        }
     }
-  }
-  protected function getAlunosExameTurma(){
-    $instituicaoId = $this->getRequest()->instituicao_id;
-    $turmaId       = $this->getRequest()->turma_id;
-    $disciplinaId  = $this->getRequest()->disciplina_id;
+    protected function getAlunosExameTurma()
+    {
+        $instituicaoId = $this->getRequest()->instituicao_id;
+        $turmaId = $this->getRequest()->turma_id;
+        $disciplinaId = $this->getRequest()->disciplina_id;
 
-    $sql = "SELECT aluno.cod_aluno as id,
+        $sql = 'SELECT aluno.cod_aluno as id,
                    nota_exame.nota_exame as nota_exame
               from pmieducar.aluno
              inner join cadastro.pessoa on(aluno.ref_idpes = pessoa.idpes)
@@ -264,33 +249,32 @@ class TurmaController extends ApiCoreController
                and turma.ref_cod_instituicao = $1
                and matricula_turma.ref_cod_turma = $2
                and (case when $3 = 0 then true else $3 = nota_exame.ref_cod_componente_curricular end)
-               and nota_componente_curricular_media.situacao = 7";
+               and nota_componente_curricular_media.situacao = 7';
 
-    $sql .= " ORDER BY matricula_turma.sequencial_fechamento, translate(upper(pessoa.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
+        $sql .= ' ORDER BY matricula_turma.sequencial_fechamento, translate(upper(pessoa.nome),\'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ\',\'AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC\')';
 
-    $params = array($instituicaoId, $turmaId, $disciplinaId);
+        $params = [$instituicaoId, $turmaId, $disciplinaId];
+        $alunos = $this->fetchPreparedQuery($sql, $params);
+        $attrs = ['id','nota_exame'];
+        $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
-    $alunos = $this->fetchPreparedQuery($sql, $params);
+        return ['alunos' => $alunos];
+    }
 
-    $attrs = array('id','nota_exame');
-
-    $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
-
-    return array('alunos' => $alunos);
-  }
-
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'tipo-boletim'))
-      $this->appendResponse($this->getTipoBoletim());
-    else if($this->isRequestFor('get', 'ordena-turma-alfabetica'))
-      $this->appendResponse($this->ordenaSequencialAlunosTurma());
-    else if($this->isRequestFor('get', 'turmas-por-escola'))
-      $this->appendResponse($this->getTurmasPorEscola());
-    else if($this->isRequestFor('get', 'alunos-matriculados-turma'))
-      $this->appendResponse($this->getAlunosMatriculadosTurma());
-    else if($this->isRequestFor('get', 'alunos-exame-turma'))
-      $this->appendResponse($this->getAlunosExameTurma());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'tipo-boletim')) {
+            $this->appendResponse($this->getTipoBoletim());
+        } elseif ($this->isRequestFor('get', 'ordena-turma-alfabetica')) {
+            $this->appendResponse($this->ordenaSequencialAlunosTurma());
+        } elseif ($this->isRequestFor('get', 'turmas-por-escola')) {
+            $this->appendResponse($this->getTurmasPorEscola());
+        } elseif ($this->isRequestFor('get', 'alunos-matriculados-turma')) {
+            $this->appendResponse($this->getAlunosMatriculadosTurma());
+        } elseif ($this->isRequestFor('get', 'alunos-exame-turma')) {
+            $this->appendResponse($this->getAlunosExameTurma());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

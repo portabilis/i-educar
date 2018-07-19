@@ -686,15 +686,19 @@ class indice extends clsCadastro
 
     // Cor/raça.
 
-    $racas         = new clsCadastroRaca();
-    $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+    $racas = new clsCadastroRaca();
+    $racas = $racas->lista(null, null, null, null, null, null, null, true);
 
-    foreach ($racas as $raca)
-      $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
+    $selectOptionsRaca = [];
 
-    $selectOptions = array(null => 'Selecione') + Portabilis_Array_Utils::sortByValue($selectOptions);
+    foreach ($racas as $raca) {
+        $selectOptionsRaca[$raca['cod_raca']] = $raca['nm_raca'];
+    }
 
-    $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
+    $selectOptionsRaca = Portabilis_Array_Utils::sortByValue($selectOptionsRaca);
+    $selectOptionsRaca = array_replace([null => 'Selecione'], $selectOptionsRaca);
+
+    $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
 
     // nacionalidade
@@ -1238,7 +1242,7 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdate($pessoaIdOrNull = null) {
-    if (!$this->possuiDocumentoObrigatorio()) {
+    if ($this->obrigarDocumentoPessoa() && !$this->possuiDocumentoObrigatorio()) {
       $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
       return false;
     }
@@ -1314,7 +1318,19 @@ class indice extends clsCadastro
 
   }
 
-  function possuiDocumentoObrigatorio() {
+  protected function obrigarDocumentoPessoa() {
+    $clsInstituicao = new clsPmieducarInstituicao();
+    $instituicao = $clsInstituicao->primeiraAtiva();
+    $obrigarDocumentoPessoa = FALSE;
+
+    if ($instituicao && isset($instituicao['obrigar_documento_pessoa'])) {
+        $obrigarDocumentoPessoa = dbBool($instituicao['obrigar_documento_pessoa']);
+    }
+
+    return $obrigarDocumentoPessoa;
+  }
+
+  protected function possuiDocumentoObrigatorio() {
     $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
     $certidaoNascimentoNovoFormato = $this->certidao_nascimento;
     $certidaoCasamentoNovoFormato = $this->certidao_casamento;
