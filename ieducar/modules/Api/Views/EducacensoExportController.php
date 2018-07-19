@@ -989,7 +989,7 @@ class EducacensoExportController extends ApiCoreController
             }
 
             $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new DeficienciaMultiplaProfessor());
-            $r60s26 = (int)$validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasProfessor);
+            $r30s26 = (int)$validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasProfessor);
 
             if ($r30s18 == 0) {
                 $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = null;
