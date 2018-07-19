@@ -23,15 +23,15 @@ class ValidaDeficienciaMultipla
     public function possuiDeficienciaMultipla($deficiencias)
     {
         if (empty($deficiencias)) {
-            return false;
+            return null;
         }
 
         foreach ($this->combinacaoDeficiencias as $combinacao) {
             if (in_array($combinacao[0], $deficiencias) && in_array($combinacao[1], $deficiencias)) {
-                return true;
+                return 1;
             }
         }
 
-        return false;
+        return 0;
     }
 }
