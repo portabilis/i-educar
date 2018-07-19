@@ -1168,6 +1168,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             ON d.cod_deficiencia = fd.ref_cod_deficiencia
             WHERE a.cod_aluno = $1
             AND d.nm_deficiencia NOT ILIKE \'nenhuma\'
+            AND d.desconsidera_regra_diferenciada = false
             LIMIT 1 ';
 
     return Portabilis_Utils_Database::selectField($sql,array('params' => array($alunoId))) == 1;
