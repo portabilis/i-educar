@@ -30,7 +30,7 @@
  */
 
 // Inclui arquivo de bootstrapping
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
+require_once __DIR__ . '/../../includes/bootstrap.php';
 
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
@@ -370,7 +370,7 @@ class clsBase extends clsConfig
             } else {
                 $this->prog_alert .= "O menu pai do processo AP {$this->processoAp} está voltando vazio (cod_menu inexistente?).<br>";
             }
-        } elseif ($_SESSION['menu_atual']) {
+        } elseif (isset($_SESSION['menu_atual'])) {
             $this->db()->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$_SESSION['menu_atual']}'");
 
             while ($this->db()->ProximoRegistro()) {
@@ -856,7 +856,7 @@ class clsBase extends clsConfig
                     $conteudo .= "</td></tr>";
                 }
 
-                if ($_SERVER['HTTP_REFERER']) {
+                if (isset($_SERVER['HTTP_REFERER'])) {
                     $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
                 }
 

@@ -1,107 +1,71 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     TabelaArredondamento
- * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
- * @version     $Id$
- */
-
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/IedFinder.php';
 
-/**
- * TabelaArredondamento_Model_TabelaValor class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     TabelaArredondamento
- * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
- * @version     @@package_version@@
- */
 class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
 {
-  protected $_data = array(
-    'tabelaArredondamento' => NULL,
-    'nome'                 => NULL,
-    'descricao'            => NULL,
-    'valorMinimo'          => NULL,
-    'valorMaximo'          => NULL,
-    'acao'                 => NULL,
-    'casaDecimalExata'     => NULL
-  );
+    protected $_data = [
+        'tabelaArredondamento' => null,
+        'nome' => null,
+        'descricao' => null,
+        'valorMinimo' => null,
+        'valorMaximo' => null,
+        'acao' => null,
+        'casaDecimalExata' => null
+    ];
 
-  protected $_dataTypes = array(
-    'valorMinimo' => 'numeric',
-    'valorMaximo' => 'numeric'
-  );
+    protected $_dataTypes = [
+        'valorMinimo' => 'numeric',
+        'valorMaximo' => 'numeric'
+    ];
 
-  protected $_references = array(
-    'tabelaArredondamento' => array(
-      'value' => NULL,
-      'class' => 'TabelaArredondamento_Model_TabelaDataMapper',
-      'file'  => 'TabelaArredondamento/Model/TabelaDataMapper.php'
-    ),
-    'acao' => array(
-      'value' => 0,
-      'class' => 'TabelaArredondamento_Model_TipoArredondamentoMedia',
-      'file'  => 'TabelaArredondamento/Model/TipoArredondamentoMedia.php',
-      'null'  => true
-    )
-  );
+    protected $_references = [
+        'tabelaArredondamento' => [
+            'value' => null,
+            'class' => 'TabelaArredondamento_Model_TabelaDataMapper',
+            'file' => 'TabelaArredondamento/Model/TabelaDataMapper.php'
+        ],
+        'acao' => [
+            'value' => 0,
+            'class' => 'TabelaArredondamento_Model_TipoArredondamentoMedia',
+            'file' => 'TabelaArredondamento/Model/TipoArredondamentoMedia.php',
+            'null' => true
+        ]
+    ];
 
-  /**
-   * @see CoreExt_Entity#getDataMapper()
-   */
-  public function getDataMapper()
-  {
-    if (is_null($this->_dataMapper)) {
-      require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
-      $this->setDataMapper(new TabelaArredondamento_Model_TabelaValorDataMapper());
+    /**
+     * @see CoreExt_Entity::getDataMapper()
+     */
+    public function getDataMapper()
+    {
+        if (is_null($this->_dataMapper)) {
+            require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
+            $this->setDataMapper(
+                new TabelaArredondamento_Model_TabelaValorDataMapper()
+            );
+        }
+
+        return parent::getDataMapper();
     }
-    return parent::getDataMapper();
-  }
 
-  /**
-   * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
-   * @todo Implementar validador que retorne um String ou Numeric, dependendo
-   *   do valor do atributo (assim como validateIfEquals().
-   * @todo Implementar validador que aceite um valor de comparação como
-   *   alternativa a uma chave de atributo. (COMENTADO ABAIXO)
-   */
-  public function getDefaultValidatorCollection()
-  {
-    $validators = array();
+    /**
+     * @see CoreExt_Entity_Validatable::getDefaultValidatorCollection()
+     *
+     * @todo Implementar validador que retorne um String ou Numeric, dependendo
+     *   do valor do atributo (assim como validateIfEquals().
+     * @todo Implementar validador que aceite um valor de comparação como
+     *   alternativa a uma chave de atributo. (COMENTADO ABAIXO)
+     */
+    public function getDefaultValidatorCollection()
+    {
+        $validators = [];
 
-    return $validators;
-  }
+        return $validators;
+    }
 
-  public function __toString()
-  {
-    return $this->nome;
-  }
+    public function __toString()
+    {
+        return $this->nome;
+    }
 }
