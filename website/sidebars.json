@@ -3,7 +3,10 @@
     "i-Educar": ["admin-intro"]
   },
   "dev": {
-    "i-Educar": ["dev-intro"]
+    "i-Educar": ["dev-intro"],
+    "Documentação" : [
+        "dev-contribuindo-docs"
+    ]
   },
   "user": {
     "i-Educar": [
