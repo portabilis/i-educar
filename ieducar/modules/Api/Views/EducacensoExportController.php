@@ -737,7 +737,7 @@ class EducacensoExportController extends ApiCoreController
 
         // Transforma todos resultados em variáveis
         extract(Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('return_only' => 'first-row', 'params' => array(3588, $data_ini, $data_fim))));
+            array('return_only' => 'first-row', 'params' => array($turmaId, $data_ini, $data_fim))));
         if ($r20s1) {
 
             $r20s5 = $this->convertStringToCenso($r20s5);
