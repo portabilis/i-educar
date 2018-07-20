@@ -47,7 +47,8 @@ class MigraValoresIniciaisParaAnosLetivos extends AbstractMigration
             FROM pmieducar.escola_serie
             ) AS myqq
             JOIN pmieducar.serie s
-            ON s.cod_serie = serie;
+            ON s.cod_serie = serie
+            WHERE s.regra_avaliacao_id IS NOT NULL;
         ");
     }
 
