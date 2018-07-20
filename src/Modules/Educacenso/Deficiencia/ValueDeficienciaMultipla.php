@@ -29,7 +29,7 @@ class ValueDeficienciaMultipla implements ValueInterface
     public function getValue()
     {
         if (empty($this->deficiencias)) {
-            return 0;
+            return null;
         }
 
         foreach ($this->combinacaoDeficiencias as $combinacao) {

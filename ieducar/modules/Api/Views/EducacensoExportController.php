@@ -988,6 +988,7 @@ class EducacensoExportController extends ApiCoreController
                 $arrayDeficienciasProfessor[] = $deficienciaToSeq[$deficiencia_educacenso];
             }
 
+
             $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor(), $arrayDeficienciasProfessor);
             $r30s26 = $validaDeficienciaMultipla->getValue();
 
@@ -1610,10 +1611,8 @@ SQL;
             $r60s16 = 0;
             $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
             $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = null;
-
-            // Caso não exista nenhum curso seta seq 40 como 1
-            $r60s39 = (int)is_null($r60s30) && is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
-                && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
+            
+            $r60s39 = null;
 
             // Define 'tipodeficiencia' => 'seqleiaute'
             $deficienciaToSeq = MapeamentoDeficienciasAluno::getArrayMapeamentoDeficiencias();
@@ -1662,6 +1661,7 @@ SQL;
 
             $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaAluno(), $arrayDeficienciasAluno);
             $r60s24 = $validaDeficienciaMultipla->getValue();
+
 
             //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
             for ($i = 30; $i <= 38; $i++) {
