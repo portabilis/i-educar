@@ -228,11 +228,11 @@ class indice extends clsDetalhe
             $registro['ddd_fone_2'] = $det_pessoa_fj['ddd_2'];
             $registro['fone_2'] = $det_pessoa_fj['fone_2'];
 
-            $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'];
-            $registro['fone_fax'] = $det_pessoa_fj['fone_fax'];
+            $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'] ?? null;
+            $registro['fone_fax'] = $det_pessoa_fj['fone_fax'] ?? null;
 
-            $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'];
-            $registro['fone_mov'] = $det_pessoa_fj['fone_mov'];
+            $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
+            $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
 
             $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
@@ -285,10 +285,10 @@ class indice extends clsDetalhe
             }
 
             $registro['sigla_uf_cart_trabalho'] = $detalheDocumento['sigla_uf_cart_trabalho'];
-            $registro['num_tit_eleitor'] = $detalheDocumento['num_titulo_eleitor'];
-            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_titulo_eleitor'];
-            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'];
-            $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'];
+            $registro['num_tit_eleitor'] = $detalheDocumento['num_titulo_eleitor'] ?? null;
+            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_titulo_eleitor'] ?? null;
+            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'] ?? null;
+            $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'] ?? null;
 
             $obj_endereco = new clsPessoaEndereco($this->ref_idpes);
 
@@ -302,7 +302,7 @@ class indice extends clsDetalhe
                 $registro['andar'] = $obj_endereco_det['andar'];
                 $registro['apartamento'] = $obj_endereco_det['apartamento'];
                 $registro['bloco'] = $obj_endereco_det['bloco'];
-                $registro['nm_logradouro'] = $obj_endereco_det['logradouro'];
+                $registro['nm_logradouro'] = $obj_endereco_det['logradouro'] ?? null;
                 $registro['cep_'] = int2CEP($registro['id_cep']);
 
                 $obj_bairro = new clsBairro($registro['id_bairro']);
@@ -352,7 +352,7 @@ class indice extends clsDetalhe
                     $registro['idtlog'] = $registro['idtlog']['descricao'];
 
                     $det_uf = $obj_endereco_det['sigla_uf']->detalhe();
-                    $registro['ref_sigla_uf'] = $det_uf['nome'];
+                    $registro['ref_sigla_uf'] = $det_uf['nome'] ?? null;
 
                     $registro['cep_'] = int2CEP($registro['id_cep']);
                 }
@@ -425,8 +425,8 @@ class indice extends clsDetalhe
             $this->addDetalhe(array('CEP', $registro['cep_']));
         }
 
-        if ($registro['ref_sigla_uf']) {
-            $this->addDetalhe(array('UF', $registro['ref_sigla_uf']));
+        if (isset($registro['ref_sigla_uf']) && !empty($registro['ref_sigla_uf'])) {
+            $this->addDetalhe(array('UF', $registro['ref_sigla_uf'] ?? null));
         }
 
         if ($registro['cidade']) {
