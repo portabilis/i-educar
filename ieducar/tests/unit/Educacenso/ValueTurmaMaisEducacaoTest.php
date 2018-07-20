@@ -3,7 +3,7 @@
 namespace Tests\Unit\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
-use iEducar\Modules\Educacenso\Model\ModalidadeTurma;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
@@ -36,7 +36,7 @@ class ValueTurmaMaisEducacaoTest extends TestCase
     {
         $value = $this->getValueObject();
         $value->setTipoAtendimento(3);
-        $value->setModalidade(ModalidadeTurma::EJA);
+        $value->setModalidade(ModalidadeCurso::EJA);
         $this->assertNull($value->getValue());
     }
 

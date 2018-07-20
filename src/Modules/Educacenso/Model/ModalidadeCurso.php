@@ -2,7 +2,7 @@
 
 namespace iEducar\Modules\Educacenso\Model;
 
-class ModalidadeTurma
+class ModalidadeCurso
 {
     const EJA = 3;
 }

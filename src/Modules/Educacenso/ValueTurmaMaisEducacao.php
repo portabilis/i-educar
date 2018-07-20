@@ -3,7 +3,7 @@
 namespace iEducar\Modules\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
-use iEducar\Modules\Educacenso\Model\ModalidadeTurma;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 
@@ -102,7 +102,7 @@ class ValueTurmaMaisEducacao implements ValueInterface
             return true;
         }
 
-        if ($this->modalidade == ModalidadeTurma::EJA) {
+        if ($this->modalidade == ModalidadeCurso::EJA) {
             return false;
         }
 
