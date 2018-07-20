@@ -24,7 +24,7 @@ class ValueDeficienciaMultipla implements ValueInterface
     }
 
     /**
-     * @return integer
+     * @return integer|null
      */
     public function getValue()
     {

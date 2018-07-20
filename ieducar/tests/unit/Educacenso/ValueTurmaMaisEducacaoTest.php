@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\unit\Educacenso;
+namespace Tests\Unit\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\ModalidadeTurma;
@@ -15,21 +15,21 @@ class ValueTurmaMaisEducacaoTest extends TestCase
     {
         $value = $this->getValueObject();
         $value->setTipoMediacao(2);
-        $this->assertEquals(null, $value->getValue());
+        $this->assertNull($value->getValue());
     }
 
     public function testDependenciaAdministrativaInvalidoValueNull()
     {
         $value = $this->getValueObject();
         $value->setDependenciaAdministrativa(1);
-        $this->assertEquals(null, $value->getValue());
+        $this->assertNull($value->getValue());
     }
 
     public function testTipoAtendimentoInvalidoValueNull()
     {
         $value = $this->getValueObject();
         $value->setTipoAtendimento(TipoAtendimentoTurma::CLASSE_HOSPITALAR);
-        $this->assertEquals(null, $value->getValue());
+        $this->assertNull($value->getValue());
     }
 
     public function testTipoAtendimentoValidoModalidadeInvalidaValueNull()
@@ -37,7 +37,7 @@ class ValueTurmaMaisEducacaoTest extends TestCase
         $value = $this->getValueObject();
         $value->setTipoAtendimento(3);
         $value->setModalidade(ModalidadeTurma::EJA);
-        $this->assertEquals(null, $value->getValue());
+        $this->assertNull($value->getValue());
     }
 
     public function testTipoAtendimentoValidoModalidadeValidaEtapaEnsinoInvalidaValueNull()
@@ -45,7 +45,7 @@ class ValueTurmaMaisEducacaoTest extends TestCase
         $value = $this->getValueObject();
         $value->setTipoAtendimento(3);
         $value->setEtapaEnsino(3);
-        $this->assertEquals(null, $value->getValue());
+        $this->assertNull($value->getValue());
     }
 
     public function testValueNaoNulo()
