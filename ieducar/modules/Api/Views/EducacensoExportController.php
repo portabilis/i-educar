@@ -765,7 +765,14 @@ class EducacensoExportController extends ApiCoreController
              * @var integer $r20s19 Turma mais educacao
              * @var integer $r20s6 Tipo mediação
              */
-            $turmaMaisEducacao = new ValueTurmaMaisEducacao($dependencia_administrativa, $r20s18, $r20s37, $r20s38, $r20s19, $r20s6);
+            $turmaMaisEducacao = new ValueTurmaMaisEducacao();
+            $turmaMaisEducacao->setDependenciaAdministrativa($dependencia_administrativa);
+            $turmaMaisEducacao->setTipoAtendimento($r20s18);
+            $turmaMaisEducacao->setModalidade($r20s37);
+            $turmaMaisEducacao->setEtapaEnsino($r20s38);
+            $turmaMaisEducacao->setTurmaMaisEducacao($r20s19);
+            $turmaMaisEducacao->setTipoMediacao($r20s6);
+
             $r20s19 = $turmaMaisEducacao->getValue();
 
             $coddigoEducacensoToSeq =

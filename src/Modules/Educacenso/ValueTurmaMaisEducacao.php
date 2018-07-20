@@ -17,22 +17,6 @@ class ValueTurmaMaisEducacao implements ValueInterface
     private $turmaMaisEducacao;
     private $tipoMediacao;
 
-    public function __construct(
-        $dependenciaAdministrativa,
-        $tipoAtendimento,
-        $modalidade,
-        $etapaEnsino,
-        $turmaMaisEducacao,
-        $tipoMediacao
-    ) {
-        $this->dependenciaAdministrativa = $dependenciaAdministrativa;
-        $this->tipoAtendimento = $tipoAtendimento;
-        $this->modalidade = $modalidade;
-        $this->etapaEnsino = $etapaEnsino;
-        $this->turmaMaisEducacao = $turmaMaisEducacao;
-        $this->tipoMediacao = $tipoMediacao;
-    }
-
     public function getValue()
     {
         if ($this->tipoMediacao != TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
@@ -127,5 +111,53 @@ class ValueTurmaMaisEducacao implements ValueInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param integer $dependenciaAdministrativa
+     */
+    public function setDependenciaAdministrativa($dependenciaAdministrativa)
+    {
+        $this->dependenciaAdministrativa = $dependenciaAdministrativa;
+    }
+
+    /**
+     * @param integer $tipoAtendimento
+     */
+    public function setTipoAtendimento($tipoAtendimento)
+    {
+        $this->tipoAtendimento = $tipoAtendimento;
+    }
+
+    /**
+     * @param integer $modalidade
+     */
+    public function setModalidade($modalidade)
+    {
+        $this->modalidade = $modalidade;
+    }
+
+    /**
+     * @param integer $etapaEnsino
+     */
+    public function setEtapaEnsino($etapaEnsino)
+    {
+        $this->etapaEnsino = $etapaEnsino;
+    }
+
+    /**
+     * @param integer $turmaMaisEducacao
+     */
+    public function setTurmaMaisEducacao($turmaMaisEducacao)
+    {
+        $this->turmaMaisEducacao = $turmaMaisEducacao;
+    }
+
+    /**
+     * @param integer $tipoMediacao
+     */
+    public function setTipoMediacao($tipoMediacao)
+    {
+        $this->tipoMediacao = $tipoMediacao;
     }
 }
