@@ -410,14 +410,14 @@ class indice extends clsCadastro
         $this->hora_fim_intervalo = "";
         $this->dias_semana = array();
     }
-    $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
+    $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, FALSE, NULL, NULL, NULL);
 
-    $this->campoHora('hora_final', 'Hora final', $this->hora_final, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
+    $this->campoHora('hora_final', 'Hora final', $this->hora_final, FALSE, NULL, NULL, NULL);
 
     $this->campoHora('hora_inicio_intervalo', 'Hora início intervalo',
-      $this->hora_inicio_intervalo, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
+      $this->hora_inicio_intervalo, FALSE, NULL, NULL, NULL);
 
-    $this->campoHora( 'hora_fim_intervalo', 'Hora fim intervalo', $this->hora_fim_intervalo, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
+    $this->campoHora( 'hora_fim_intervalo', 'Hora fim intervalo', $this->hora_fim_intervalo, FALSE, NULL, NULL, NULL);
 
     $helperOptions = array('objectName'  => 'dias_semana');
     $options       = array('label' => 'Dias da semana',
