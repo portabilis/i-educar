@@ -627,11 +627,11 @@ class indice extends clsDetalhe
 
             $cor = '#D1DADF';
 
-            $urlLaudoMedico = explode(",", $registro['url_laudo_medico']);
-            for ($i = 0; $i < count($urlLaudoMedico); $i++) {
+            $arrayLaudoMedico = json_decode($registro['url_laudo_medico']);
+            foreach ($arrayLaudoMedico as $key => $laudoMedico) {
                 $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
-                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlLaudoMedico[$i]}' target='_blank' > Visualizar laudo " . (count($urlLaudoMedico) > 1 ? ($i + 1) : "") . " </a></td></tr>";
+                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedico->url}' target='_blank' > Visualizar laudo " . (count($arrayLaudoMedico) > 1 ? ($key + 1) : "") . " </a></td></tr>";
             }
 
             $tabela .= '</table>';
