@@ -114,14 +114,16 @@ class ValueTurmaMaisEducacao implements ValueInterface
 
     private function atendeQuartaRegra()
     {
-        if ($this->tipoAtendimento != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
-            if ($this->modalidade == ModalidadeTurma::EJA) {
-                return false;
-            }
+        if ($this->tipoAtendimento == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
+            return true;
+        }
 
-            if (!in_array($this->etapaEnsino, $this->getArrayEtapas())) {
-                return false;
-            }
+        if ($this->modalidade == ModalidadeTurma::EJA) {
+            return false;
+        }
+
+        if (!in_array($this->etapaEnsino, $this->getArrayEtapas())) {
+            return false;
         }
 
         return true;
