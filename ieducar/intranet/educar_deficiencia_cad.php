@@ -118,8 +118,8 @@ class indice extends clsCadastro
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
         $obj->nm_deficiencia = $this->nm_deficiencia;
         $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
-        $obj->desconsidera_regra_diferenciada = is_null($this->desconsidera_regra_diferenciada) ? false : true;
-        
+        $obj->desconsidera_regra_diferenciada = !is_null($this->desconsidera_regra_diferenciada);
+
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $deficiencia = new clsCadastroDeficiencia($cadastrou);
@@ -153,7 +153,7 @@ class indice extends clsCadastro
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
         $obj->nm_deficiencia = $this->nm_deficiencia;
         $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
-        $obj->desconsidera_regra_diferenciada = is_null($this->desconsidera_regra_diferenciada) ? false : true;
+        $obj->desconsidera_regra_diferenciada = !is_null($this->desconsidera_regra_diferenciada);
 
         $editou = $obj->edita();
         if ($editou) {
