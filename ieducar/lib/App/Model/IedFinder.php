@@ -1167,7 +1167,6 @@ class App_Model_IedFinder extends CoreExt_Entity
             JOIN cadastro.deficiencia d
             ON d.cod_deficiencia = fd.ref_cod_deficiencia
             WHERE a.cod_aluno = $1
-            AND d.nm_deficiencia NOT ILIKE \'nenhuma\'
             AND d.desconsidera_regra_diferenciada = false
             LIMIT 1 ';
 
