@@ -3,7 +3,8 @@
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
-use iEducar\Modules\Educacenso\Deficiencia\ValidaDeficienciaMultipla;
+use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
+use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/clsBanco.inc.php';
@@ -756,17 +757,23 @@ class EducacensoExportController extends ApiCoreController
                 $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = null;
             }
 
-            if (!in_array($dependencia_administrativa, array(2, 3))) {
-                $r20s19 = null;
-            }
+            /**
+             * @var integer $dependencia_administrativa
+             * @var integer $r20s18 Tipo de atendimento
+             * @var integer $r20s37 Modalidade
+             * @var integer $r20s38 Etapa de ensino
+             * @var integer $r20s19 Turma mais educacao
+             * @var integer $r20s6 Tipo mediação
+             */
+            $turmaMaisEducacao = new ValueTurmaMaisEducacao();
+            $turmaMaisEducacao->setDependenciaAdministrativa($dependencia_administrativa);
+            $turmaMaisEducacao->setTipoAtendimento($r20s18);
+            $turmaMaisEducacao->setModalidade($r20s37);
+            $turmaMaisEducacao->setEtapaEnsino($r20s38);
+            $turmaMaisEducacao->setTurmaMaisEducacao($r20s19);
+            $turmaMaisEducacao->setTipoMediacao($r20s6);
 
-            if (in_array($r20s18, array(1, 5))) {
-                $r20s19 = null;
-            }
-
-            if (($r20s37 == 3) || !(($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41)) {
-                $r20s19 = null;
-            }
+            $r20s19 = $turmaMaisEducacao->getValue();
 
             $coddigoEducacensoToSeq =
                 array(
@@ -988,8 +995,9 @@ class EducacensoExportController extends ApiCoreController
                 $arrayDeficienciasProfessor[] = $deficienciaToSeq[$deficiencia_educacenso];
             }
 
-            $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new DeficienciaMultiplaProfessor());
-            $r30s26 = $validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasProfessor);
+
+            $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor(), $arrayDeficienciasProfessor);
+            $r30s26 = $validaDeficienciaMultipla->getValue();
 
             if ($r30s18 == 0) {
                 $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = null;
@@ -1658,8 +1666,9 @@ SQL;
                 $r60s39 = 1;
             }
 
-            $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new DeficienciaMultiplaAluno());
-            $r60s24 = $validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasAluno);
+            $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaAluno(), $arrayDeficienciasAluno);
+            $r60s24 = $validaDeficienciaMultipla->getValue();
+
 
             //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
             for ($i = 30; $i <= 38; $i++) {
