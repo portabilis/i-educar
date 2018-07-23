@@ -5,6 +5,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'Portabilis/View/Helper/Application.php';
 require_once 'App/Date/Utils.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
@@ -13,7 +14,7 @@ class clsIndexBase extends clsBase
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Ano Letivo Módulo');
+        $this->SetTitulo($this->_instituicao . ' Ano Letivo Etapa');
         $this->processoAp = 561;
         $this->addEstilo('localizacaoSistema');
     }
@@ -38,6 +39,10 @@ class indice extends clsCadastro
 
     public $ano_letivo_modulo;
 
+    public $modulos = [];
+
+    public $etapas = [];
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -51,6 +56,7 @@ class indice extends clsCadastro
         $this->ref_ano = $_GET['ano'];
 
         $obj_permissoes = new clsPermissoes();
+
         $obj_permissoes->permissao_cadastra(
             561,
             $this->pessoa_logada,
@@ -60,7 +66,7 @@ class indice extends clsCadastro
 
         if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
             $obj = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola, $this->ref_ano);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
 
             if ($registro) {
                 if ($obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 7)) {
@@ -68,6 +74,11 @@ class indice extends clsCadastro
                 }
 
                 $retorno = 'Editar';
+
+                $etapasObj = new clsPmieducarAnoLetivoModulo();
+                $etapasObj->setOrderBy('sequencial ASC');
+                $this->etapas = $etapasObj->lista($this->ref_ano, $this->ref_ref_cod_escola);
+                $this->ref_cod_modulo = $this->etapas[0]['ref_cod_modulo'];
             }
         }
 
@@ -79,7 +90,7 @@ class indice extends clsCadastro
         $localizacao->entradaCaminhos([
             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
             'educar_index.php' => 'Escola',
-            '' => 'Módulos do ano letivo'
+            '' => 'Etapas do ano letivo'
         ]);
 
         $this->enviaLocalizacao($localizacao->montar());
@@ -127,7 +138,7 @@ class indice extends clsCadastro
                 $ano = $ano['year'];
 
                 $novaDataInicio = str_replace($ano, $this->ref_ano, $campo['data_inicio']);
-                $novaDataFim    = str_replace($ano, $this->ref_ano, $campo['data_fim']);
+                $novaDataFim = str_replace($ano, $this->ref_ano, $campo['data_fim']);
 
                 if (
                     Portabilis_Date_Utils::checkDateBissexto($novaDataInicio)
@@ -145,7 +156,7 @@ class indice extends clsCadastro
             }
 
             $tabela .='</table>';
-            $tabela .= "<tr><td colspan='2'><b> Adicione os módulos abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
+            $tabela .= "<tr><td colspan='2'><b> Adicione as etapas abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
             $tabela .= '</table>';
         }
 
@@ -167,17 +178,7 @@ class indice extends clsCadastro
             true
         );
 
-        $this->campoQuebra();
-
-        if ($tabela) {
-            $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
-        }
-
-        $this->campoQuebra();
-
-        // Novo módulos do ano letivo
-
-        $opcoesCampoModulo = ['' => 'Selecione'];
+        $opcoesCampoModulo = [];
 
         if (class_exists('clsPmieducarModulo')) {
             $objTemp = new clsPmieducarModulo();
@@ -200,49 +201,60 @@ class indice extends clsCadastro
             );
 
             if (is_array($lista) && count($lista)) {
+                $this->modulos = $lista;
+
                 foreach ($lista as $registro) {
                     $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
                 }
             }
         } else {
+            // TODO: redirecionar para a página de criação de módulos com uma mensagem?
             $opcoesCampoModulo = ['' => 'Erro na geração'];
         }
 
-        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && !$_POST) {
-            $obj = new clsPmieducarAnoLetivoModulo();
-            $obj->setOrderBy('sequencial ASC');
-            $registros = $obj->lista($this->ref_ano, $this->ref_ref_cod_escola);
+        $this->campoLista(
+            'ref_cod_modulo',
+            'Módulo',
+            $opcoesCampoModulo,
+            $this->ref_cod_modulo,
+            null,
+            null,
+            null,
+            null,
+            null,
+            true
+        );
 
+        Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/etapas.js');
+
+        if ($tabela) {
+            $this->campoQuebra();
+            $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
+        }
+
+        $this->campoQuebra();
+
+        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && !$_POST) {
             $qtd_registros = 0;
 
-            if ($registros) {
-                foreach ($registros as $campo) {
-                    $this->ano_letivo_modulo[$qtd_registros][] = $campo['ref_cod_modulo'];
-                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
-                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
-                    $this->ano_letivo_modulo[$qtd_registros][] = $campo['dias_letivos'];
-                    $qtd_registros++;
-                }
+            foreach ($this->etapas as $campo) {
+                $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
+                $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
+                $this->ano_letivo_modulo[$qtd_registros][] = $campo['dias_letivos'];
+                $qtd_registros++;
             }
 
-            $this->campoTabelaInicio('modulos_ano_letivo', 'M&oacute;dulos do ano letivo', ['M&oacute;dulo','Data inicial','Data final', 'Dias Letivos'], $this->ano_letivo_modulo);
-
-            $this->campoLista(
-                'ref_cod_modulo',
-                'Módulo',
-                $opcoesCampoModulo,
-                $this->ref_cod_modulo,
-                null,
-                null,
-                null,
-                null,
-                null,
-                true
+            $this->campoTabelaInicio(
+                'modulos_ano_letivo',
+                'Etapas do ano letivo',
+                ['Data inicial', 'Data final', 'Dias Letivos'],
+                $this->ano_letivo_modulo
             );
 
             $this->campoData('data_inicio', 'Hora', $this->data_inicio, true);
             $this->campoData('data_fim', 'Hora', $this->data_fim, true);
             $this->campoNumero('dias_letivos', 'Dias Letivos', $this->dias_letivos, 6, 3, false);
+
             $this->campoTabelaFim();
         }
     }
@@ -280,7 +292,7 @@ class indice extends clsCadastro
             $cadastrou = $obj->cadastra();
 
             if ($cadastrou) {
-                foreach ($this->ref_cod_modulo as $key => $campo) {
+                foreach ($this->data_inicio as $key => $campo) {
                     $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
                     $this->data_fim[$key] = dataToBanco($this->data_fim[$key]);
 
@@ -291,8 +303,8 @@ class indice extends clsCadastro
                     $obj = new clsPmieducarAnoLetivoModulo(
                         $this->ref_ano,
                         $this->ref_ref_cod_escola,
-                        $key+1,
-                        $this->ref_cod_modulo[$key],
+                        $key + 1,
+                        $this->ref_cod_modulo,
                         $this->data_inicio[$key],
                         $this->data_fim[$key],
                         $this->dias_letivos[$key]
@@ -308,7 +320,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-                header('Location: educar_escola_det.php?cod_escola='.$this->ref_ref_cod_escola.'#ano_letivo');
+                header('Location: educar_escola_det.php?cod_escola=' . $this->ref_ref_cod_escola . '#ano_letivo');
 
                 die();
             }
@@ -318,7 +330,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        echo '<script>alert("É necessário adicionar pelo menos um módulo!")</script>';
+        echo '<script>alert("É necessário adicionar pelo menos uma etapa!")</script>';
         $this->mensagem = 'Cadastro não realizado.<br />';
 
         return false;
@@ -339,13 +351,13 @@ class indice extends clsCadastro
         );
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
-            $obj  = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
+            $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
             $excluiu = $obj->excluirTodos();
 
             if ($excluiu) {
-                foreach ($this->ref_cod_modulo as $key => $campo) {
+                foreach ($this->data_inicio as $key => $campo) {
                     $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
-                    $this->data_fim[$key]    = dataToBanco($this->data_fim[$key]);
+                    $this->data_fim[$key] = dataToBanco($this->data_fim[$key]);
 
                     if ($this->dias_letivos[$key] == '') {
                         $this->dias_letivos[$key] = '0';
@@ -354,8 +366,8 @@ class indice extends clsCadastro
                     $obj = new clsPmieducarAnoLetivoModulo(
                         $this->ref_ano,
                         $this->ref_ref_cod_escola,
-                        $key+1,
-                        $this->ref_cod_modulo[$key],
+                        $key + 1,
+                        $this->ref_cod_modulo,
                         $this->data_inicio[$key],
                         $this->data_fim[$key],
                         $this->dias_letivos[$key]
@@ -376,7 +388,7 @@ class indice extends clsCadastro
             }
         }
 
-        echo '<script>alert(\'É necessário adicionar pelo menos um módulo!\')</script>';
+        echo '<script>alert(\'É necessário adicionar pelo menos uma etapa!\')</script>';
         $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
@@ -411,7 +423,7 @@ class indice extends clsCadastro
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $obj  = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
+            $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
             $excluiu1 = $obj->excluirTodos();
 
             if ($excluiu1) {
@@ -609,6 +621,24 @@ class indice extends clsCadastro
             $moduloDestino->cadastra();
         }
     }
+
+    public function gerarJsonDosModulos()
+    {
+        $retorno = [];
+
+        if (empty($this->modulos)) {
+            return json_encode($retorno);
+        }
+
+        foreach ($this->modulos as $modulo) {
+            $retorno[$modulo['cod_modulo']] = [
+                'label' => $modulo['nm_tipo'],
+                'etapas' => (int)$modulo['num_etapas']
+            ];
+        }
+
+        return json_encode($retorno);
+    }
 }
 
 // Instancia objeto de página
@@ -617,10 +647,12 @@ $pagina = new clsIndexBase();
 // Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteúdo à página
 $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript"></script>
+<script type="text/javascript">
+    var modulosDisponiveis = <?php echo $miolo->gerarJsonDosModulos(); ?>;
+</script>
