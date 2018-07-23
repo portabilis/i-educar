@@ -11,7 +11,8 @@ país por meio da educação. Junte-se a nós!**
 2. [Comunicação](#comunicação)
 3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
 4. [Como contribuir](#como-contribuir)
-5. [FAQ](#perguntas-frequentes-(FAQ))
+5. [Instalação](#instalação)
+6. [FAQ](#perguntas-frequentes-(FAQ))
 
 ## Sobre i-Educar
 
@@ -74,6 +75,10 @@ Contribuições são **super bem vindas**! Se você tem vontade de construir o
 i-Educar junto conosco, veja o nosso [guia de contribuição](./CONTRIBUTING.md)
 onde explicamos detalhadamente como trabalhamos e de que formas você pode nos
 ajudar a alcançar nossos objetivos.
+
+## Instalação
+
+Ver em http://ieducar.org/docs/admin-intro
 
 ## Perguntas frequentes (FAQ)
 
