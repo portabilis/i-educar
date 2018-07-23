@@ -210,8 +210,7 @@ class indice extends clsDetalhe
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
 
             $obj_beneficios = new clsPmieducarAlunoBeneficio();
-            $obj_beneficios_lista = $obj_beneficios->lista(null, null, null, null, null, null, null, null, null, null,
-                $this->cod_aluno);
+            $obj_beneficios_lista = $obj_beneficios->lista(null, null, null, null, null, null, null, null, null, null, $this->cod_aluno);
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = array();
