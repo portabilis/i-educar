@@ -565,14 +565,6 @@ class indice extends clsCadastro
     $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
 
-    $resources = array(
-      null => 'Selecione',
-      1    => 'Creche',
-      2    => Portabilis_String_Utils::toLatin1('Pré-escola'),
-    );
-    $options = array('label' => 'Turma unificada', 'resources' => $resources,'label_hint' => 'Selecione somente se a turma for unificada', 'value' => $this->turma_unificada, 'required' => false, 'size' => 70,);
-    $this->inputsHelper()->select('turma_unificada', $options);
-
     $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
     $helperOptions = array('objectName'  => 'cod_curso_profissional',
                            'type' => 'single');
@@ -1025,7 +1017,6 @@ class indice extends clsCadastro
       $objTurma->tipo_atendimento = $this->tipo_atendimento;
       $objTurma->turma_mais_educacao = $this->turma_mais_educacao;
       $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
-      $objTurma->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $objTurma->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
       $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult == "" ? NULL : $this->ref_cod_serie_mult;
       $objTurma->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
