@@ -2671,11 +2671,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
    $componenteId = $nota->get('componenteCurricular');
 
-   if ($nota instanceof Avaliacao_Model_NotaComponente) {
-      $nota = $nota->nota;
-    }elseif($nota instanceof Avaliacao_Model_NotaGeral){
-      $nota = $nota->nota;
-    }
+   if (($nota instanceof Avaliacao_Model_NotaComponente) || ($nota instanceof Avaliacao_Model_NotaGeral)) {
+       $nota = $nota->nota;
+   }
 
     if (!is_numeric($nota)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
