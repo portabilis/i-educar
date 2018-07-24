@@ -208,7 +208,6 @@ class indice extends clsCadastro
                 }
             }
         } else {
-            // TODO: redirecionar para a página de criação de módulos com uma mensagem?
             $opcoesCampoModulo = ['' => 'Erro na geração'];
         }
 

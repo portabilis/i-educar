@@ -271,6 +271,11 @@ $j(function () {
                 etapas = moduleInfo.etapas,
                 rows = this.countRows();
 
+            if (Boolean(etapas) === false) {
+                alert("Este módulo não possui o número de etapas definido.\nRealize esta alteração no seguinte caminho:\nCadastros > Tipos > Escolas > Tipos de etapas");
+                history.back();
+            }
+
             if (etapas > rows) {
                 var diff = etapas - rows;
 
