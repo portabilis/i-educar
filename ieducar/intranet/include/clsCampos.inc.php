@@ -958,8 +958,8 @@ class clsCampos extends Core_Controller_Page_Abstract
         $nome,
         $campo,
         $valor,
-        $tamanhovisivel,
-        $tamanhomaximo,
+        $tamanhovisivel = null,
+        $tamanhomaximo = null,
         $obrigatorio = false,
         $expressao = false,
         $duplo = false,
@@ -1432,7 +1432,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                            <td valign=top width=100% class="tabPage" height="auto">';
                 continue;
             }
-            
+
             if (preg_match('/^(tab_name_[0-9]+)/', $nome) === 1) {
                 $retorno .= "<div id=\"content{$componente['id']}\" style=\"visibility: hidden;\" class=\"tabPage\">";
                 $retorno .= '<!-- INICIO TABELA 3 --><table cellpadding="2" cellspacing="0" border="0" width=100%  align=center>';
