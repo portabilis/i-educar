@@ -121,7 +121,6 @@ class indice extends clsCadastro
   var $atividades_complementares;
   var $atividades_aee;
   var $cod_curso_profissional;
-  var $turma_unificada;
   var $etapa_educacenso;
   var $ref_cod_disciplina_dispensada;
   var $codigo_inep_educacenso;

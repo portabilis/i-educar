@@ -60,6 +60,7 @@ class clsPmieducarMatriculaTurma
   var $removerSequencial;
   var $reabrirMatricula;
   var $etapa_educacenso;
+  var $turma_unificada;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -128,7 +129,7 @@ class clsPmieducarMatriculaTurma
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -296,6 +297,12 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
+      if(is_numeric($this->turma_unificada)) {
+        $campos .= "{$gruda}turma_unificada";
+        $valores .= "{$gruda}{$this->turma_unificada}";
+        $gruda = ", ";
+      }
+
       $this->sequencial = $this->buscaSequencialMax();
 
       $campos .= "{$gruda}sequencial";
@@ -380,6 +387,11 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
+      if (is_numeric($this->turma_unificada)){
+        $set .= "{$gruda}turma_unificada = {$this->turma_unificada}";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->ativo)) {
         $set .= "{$gruda}ativo = '{$this->ativo}'";
         $gruda = ", ";
@@ -448,7 +460,7 @@ class clsPmieducarMatriculaTurma
     $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
     $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE,
     $int_turma_turno_id = FALSE, $int_ano_turma = FALSE, $dependencia = NULL,
-    $apenasTurmasMultiSeriadas = FALSE)
+    $apenasTurmasMultiSeriadas = FALSE, $apenasTurmasUnificadas = FALSE)
   {
     if ($bool_get_nome_aluno === true) {
       $nome = " ,(SELECT (nome)
@@ -482,7 +494,7 @@ class clsPmieducarMatriculaTurma
       }
     }
 
-    $sql = "SELECT {$this->_campos_lista}, mt.sequencial_fechamento, c.nm_curso, t.nm_turma, i.nm_instituicao, m.ref_ref_cod_serie, m.ref_cod_curso, m.ref_ref_cod_escola, c.ref_cod_instituicao, m.ref_cod_aluno,t.hora_inicial, t.etapa_educacenso as etapa_ensino $nome FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t,{$this->_schema}aluno al, {$this->_schema}instituicao i{$tab_aluno} {$from}, cadastro.pessoa ";
+    $sql = "SELECT {$this->_campos_lista}, mt.sequencial_fechamento, c.nm_curso, t.nm_turma, i.nm_instituicao, m.ref_ref_cod_serie, m.ref_cod_curso, m.ref_ref_cod_escola, c.ref_cod_instituicao, m.ref_cod_aluno,t.hora_inicial, mt.turma_unificada, t.etapa_educacenso as etapa_ensino $nome FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t,{$this->_schema}aluno al, {$this->_schema}instituicao i{$tab_aluno} {$from}, cadastro.pessoa ";
 
     $whereAnd = " AND ";
     $filtros = " WHERE mt.ref_cod_matricula = m.cod_matricula AND idpes = al.ref_idpes AND al.cod_aluno = m.ref_cod_aluno AND al.ativo=1 AND m.ref_cod_curso = c.cod_curso AND t.cod_turma = mt.ref_cod_turma AND i.cod_instituicao = c.ref_cod_instituicao {$where_nm_aluno} {$where}";
@@ -601,6 +613,12 @@ class clsPmieducarMatriculaTurma
         $etapas = implode(',', App_Model_Educacenso::etapas_multisseriadas());
         $filtros .= "{$whereAnd} t.etapa_educacenso IN ({$etapas}) ";
         $whereAnd = " AND ";
+    }
+
+    if ($apenasTurmasUnificadas === TRUE) {
+      $etapas = implode(',', App_Model_Educacenso::etapasEnsinoUnificadas());
+      $filtros .= "{$whereAnd} t.etapa_educacenso IN ({$etapas}) ";
+      $whereAnd = " AND ";
     }
 
     if (is_array($aprovado)) {
