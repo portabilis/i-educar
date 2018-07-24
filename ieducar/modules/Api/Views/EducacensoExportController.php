@@ -2074,7 +2074,7 @@ SQL;
             }
 
             if (in_array($etapa_educacenso, App_Model_Educacenso::etapasEnsinoUnificadas())) {
-                if (is_null($r80s8)) {
+                if (empty($r80s8)) {
                     $this->msg .= "Dados para formular o registro 80 campo 8 da escola {$escolaId} com problemas. Verifique se o campo etapa da turma unificada foi preenchido para aluno {$alunoId}.<br/>";
                     $this->error = true;
                 }

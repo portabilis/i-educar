@@ -1486,7 +1486,7 @@ class EducacensoAnaliseController extends ApiCoreController
         }
       }
       if (in_array($aluno["etapa_ensino"], App_Model_Educacenso::etapasEnsinoUnificadas())) {
-        if (is_null($aluno["turma_unificada"])) {
+        if (empty($aluno["turma_unificada"])) {
           $mensagem[] = array("text" => "Dados para formular o registro 80 do(a) aluno(a) {$nomeAluno} não encontrados. Verificamos que a etapa da turma unificada do aluno não foi informada.",
               "path" => "(Escola > Cadastros > Alunos > Visualizar (matrícula do ano atual) > Etapa da turma unificada)",
               "linkPath" => "/intranet/educar_matricula_turma_unificada_cad.php?ref_cod_matricula={$codMatricula}&ref_cod_aluno={$codAluno}",
