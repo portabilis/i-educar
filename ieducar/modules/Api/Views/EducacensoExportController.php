@@ -15,6 +15,7 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
+require_once 'lib/App/Model/Educacenso.php';
 require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 
 /**
@@ -1618,7 +1619,7 @@ SQL;
             $r60s16 = 0;
             $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
             $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = null;
-            
+
             $r60s39 = null;
 
             // Define 'tipodeficiencia' => 'seqleiaute'
@@ -1873,7 +1874,7 @@ SQL;
         eca.cod_aluno_inep AS r80s3,
         a.cod_aluno AS r80s4,
         t.cod_turma AS r80s6,
-        t.turma_unificada AS r80s8,
+        mt.turma_unificada AS r80s8,
         mt.etapa_educacenso AS r80s9,
         a.recebe_escolarizacao_em_outro_espaco AS r80s10,
         ta.responsavel AS transporte_escolar,
@@ -2015,7 +2016,6 @@ SQL;
         $numeroRegistros = 24;
         $atividadeComplementar = 4;
         $atendimentoEducEspecializado = 5;
-        $educacaoInfantilUnificada = 3;
 
         foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql,
             array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
@@ -2025,7 +2025,7 @@ SQL;
                 $r80s10 = '';
             }
 
-            if ($etapa_educacenso != $educacaoInfantilUnificada) {
+            if (!in_array($etapa_educacenso, App_Model_Educacenso::etapasEnsinoUnificadas())) {
                 $r80s8 = '';
             }
 
@@ -2069,6 +2069,13 @@ SQL;
             if ($this->turma_presencial_ou_semi == 1 || $this->turma_presencial_ou_semi == 2) {
                 if (is_null($r80s11)) {
                     $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido para aluno {$alunoId}.<br/>";
+                    $this->error = true;
+                }
+            }
+
+            if (in_array($etapa_educacenso, App_Model_Educacenso::etapasEnsinoUnificadas())) {
+                if (is_null($r80s8)) {
+                    $this->msg .= "Dados para formular o registro 80 campo 8 da escola {$escolaId} com problemas. Verifique se o campo etapa da turma unificada foi preenchido para aluno {$alunoId}.<br/>";
                     $this->error = true;
                 }
             }

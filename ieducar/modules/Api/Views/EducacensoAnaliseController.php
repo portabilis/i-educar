@@ -35,6 +35,7 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'lib/App/Model/Educacenso.php';
 
 /**
  * Class EducacensoAnaliseController
@@ -1400,6 +1401,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    a.recebe_escolarizacao_em_outro_espaco AS recebe_escolarizacao_em_outro_espaco,
                    t.etapa_educacenso AS etapa_ensino,
                    mt.etapa_educacenso AS etapa_turma,
+                   mt.turma_unificada AS turma_unificada,
                    m.cod_matricula AS cod_matricula
               FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1481,6 +1483,14 @@ class EducacensoAnaliseController extends ApiCoreController
                               "path" => "(Escola > Cadastros > Alunos > Visualizar (matrícula do ano atual) > Etapa do aluno)",
                               "linkPath" => "/intranet/educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$codMatricula}&ref_cod_aluno={$codAluno}",
                               "fail" => true);
+        }
+      }
+      if (in_array($aluno["etapa_ensino"], App_Model_Educacenso::etapasEnsinoUnificadas())) {
+        if (is_null($aluno["turma_unificada"])) {
+          $mensagem[] = array("text" => "Dados para formular o registro 80 do(a) aluno(a) {$nomeAluno} não encontrados. Verificamos que a etapa da turma unificada do aluno não foi informada.",
+              "path" => "(Escola > Cadastros > Alunos > Visualizar (matrícula do ano atual) > Etapa da turma unificada)",
+              "linkPath" => "/intranet/educar_matricula_turma_unificada_cad.php?ref_cod_matricula={$codMatricula}&ref_cod_aluno={$codAluno}",
+              "fail" => true);
         }
       }
     }
