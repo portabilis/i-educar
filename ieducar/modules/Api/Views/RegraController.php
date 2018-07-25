@@ -107,60 +107,32 @@ class RegraController extends ApiCoreController
             $instituicaoId = $this->getRequest()->instituicao_id;
             $ano = $this->getRequest()->ano;
 
-            $sql = 'SELECT
-                ra.id,
-                tabela_arredondamento_id,
-                tabela_arredondamento_id_conceitual,
-                tipo_nota,
-                tipo_presenca,
-                parecer_descritivo,
-                cod_turma as turma_id,
-                tipo_recuperacao_paralela AS tipo_recuperacao,
-                media_recuperacao_paralela,
-                nota_maxima_geral,
-                nota_maxima_exame_final as nota_maxima_exame,
-                COALESCE(ra.regra_diferenciada_id,0) AS regra_diferenciada_id
-                FROM modules.regra_avaliacao ra
-                LEFT JOIN pmieducar.serie s
-                ON s.regra_avaliacao_id = ra.id
-                LEFT JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
-                WHERE s.ativo = 1
-                AND t.ativo = 1
-                AND ra.instituicao_id = $1
-                AND t.ano = $2
-
-                UNION
-
-                SELECT
-                        ra.id,
-                        ra.tabela_arredondamento_id,
-                        ra.tabela_arredondamento_id_conceitual,
-                        ra.tipo_nota,
-                        ra.tipo_presenca,
-                        ra.parecer_descritivo,
-                        cod_turma as turma_id,
-                        ra.tipo_recuperacao_paralela AS tipo_recuperacao,
-                        ra.media_recuperacao_paralela,
-                        ra.nota_maxima_geral,
-                        ra.nota_maxima_exame_final as nota_maxima_exame,
-                        COALESCE(ra.regra_diferenciada_id,0) AS regra_diferenciada_id
-                        FROM modules.regra_avaliacao ra
-                        JOIN modules.regra_avaliacao ra_join
-                        ON ra.id = ra_join.regra_diferenciada_id
-                        JOIN pmieducar.serie s
-                        ON s.regra_avaliacao_id = ra_join.id
-                        JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
-                        WHERE s.ativo = 1
-                        AND t.ativo = 1
-                        AND ra.instituicao_id = $3
-                        AND t.ano = $4
-
-                        ORDER BY regra_diferenciada_id, id, turma_id
-
-                ';
+            $sql = '
+              SELECT DISTINCT regra_avaliacao.id,
+                              tabela_arredondamento_id,
+                              tabela_arredondamento_id_conceitual,
+                              tipo_nota,
+                              tipo_presenca,
+                              parecer_descritivo,
+                              cod_turma AS turma_id,
+                              tipo_recuperacao_paralela AS tipo_recuperacao,
+                              media_recuperacao_paralela,
+                              nota_maxima_geral,
+                              nota_maxima_exame_final AS nota_maxima_exame,
+                              COALESCE(regra_avaliacao.regra_diferenciada_id, 0) AS regra_diferenciada_id
+              FROM modules.regra_avaliacao
+              LEFT JOIN pmieducar.serie serie ON serie.regra_avaliacao_id = regra_avaliacao.id
+              AND serie.ativo = 1
+              LEFT JOIN pmieducar.turma turma ON turma.ref_ref_cod_serie = serie.cod_serie
+              AND turma.ativo = 1
+              AND regra_avaliacao.instituicao_id = $1
+              AND turma.ano = $2
+              ORDER BY COALESCE(regra_avaliacao.regra_diferenciada_id,0),
+                       regra_avaliacao.id,
+                       cod_turma';
 
             $_regras = $this->fetchPreparedQuery($sql, [
-                $instituicaoId, $ano,$instituicaoId, $ano
+                $instituicaoId, $ano
             ]);
 
             $attrs = [
@@ -186,9 +158,13 @@ class RegraController extends ApiCoreController
                 $__regras[$regra['id']]['media_recuperacao_paralela'] = $regra['media_recuperacao_paralela'];
                 $__regras[$regra['id']]['nota_maxima_geral'] = $regra['nota_maxima_geral'];
                 $__regras[$regra['id']]['nota_maxima_exame'] = $regra['nota_maxima_exame'];
-                $__regras[$regra['id']]['turmas'][] = [
-                    'turma_id' => $regra['turma_id'],
-                ];
+                $__regras[$regra['id']]['turmas'] || $__regras[$regra['id']]['turmas'] = [];
+
+                if ($regra['turma_id']) {
+                    $__regras[$regra['id']]['turmas'][] = [
+                        'turma_id' => $regra['turma_id'],
+                    ];
+                }
             }
 
             foreach ($__regras as $regra) {
