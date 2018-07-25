@@ -69,7 +69,7 @@ class indice extends clsCadastro
 
         foreach ($enturmacoes as $enturmacao) {
             $resources = array(
-                0 => 'Selecione',
+                0 => 'Nenhuma',
                 1    => 'Creche',
                 2    => Portabilis_String_Utils::toLatin1('Pré-escola'),
             );
