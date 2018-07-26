@@ -870,6 +870,11 @@ class clsBase extends clsConfig
                 );
             }
         } catch (Exception $e) {
+
+            if (getenv('APP_DEBUG')) {
+                throw new \Exception($e->getMessage(), 0, $e);
+            }
+
             $lastError = error_get_last();
 
             @session_start();

@@ -72,6 +72,11 @@ try
   print $frontController->getViewContents();
 }
 catch (Exception $e) {
+
+    if (getenv('APP_DEBUG')) {
+        throw $e;
+    }
+
   $lastError = error_get_last();
 
   @session_start();
