@@ -1,11 +1,43 @@
 $j(function () {
     var etapasHandler = {
+        env: 'ano',
         module: 0,
+        selectors: {
+            'ano': {
+                'stepsRows': 'tr[id^="tr_modulos_ano_letivo["]',
+                'year': '#ref_ano_'
+            },
+            'turma': {
+                'stepsRows': 'tr[id^="tr_turma_modulo["]',
+                'year': '#ano_letivo'
+            }
+        },
         init: function () {
+            this.setupEnv();
             this.removeTableCellsAndRows();
+            this.setCurrentModule();
             this.setupModule();
             this.selectModule();
             this.submit();
+        },
+        getSelector: function (key) {
+            return this.selectors[this.env][key] || undefined;
+        },
+        setCurrentModule: function () {
+            var val = $j('#ref_cod_modulo').val();
+
+            if (val === '') {
+                val = 0;
+            }
+
+            this.module = parseInt(val, 10);
+
+            return this.module;
+        },
+        setupEnv: function () {
+            if ($j('tr[id^="tr_turma_modulo["]').length > 0) {
+                this.env = 'turma';
+            }
         },
         submit: function () {
             var that = this;
@@ -35,7 +67,14 @@ $j(function () {
                 });
 
                 if (valid) {
-                    acao();
+                    if (typeof window.valida !== "undefined") {
+                        // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
+                        if (validationUtils.validatesFields(true)) {
+                            window.valida();
+                        }
+                    } else {
+                        window.acao();
+                    }
                 } else {
                     alert('Ocorreram erros na validação dos campos. Verifique as mensagens e tente novamente.');
                 }
@@ -159,7 +198,7 @@ $j(function () {
                     dateParts = that.getDateParts(val),
                     ts = that.makeTimestamp(dateParts),
                     parentLine = $elm.closest('tr'),
-                    nextLine = parentLine.next('[id^="tr_modulos_ano_letivo["]'),
+                    nextLine = parentLine.next(that.getSelector('stepsRows')),
                     startDateElm = parentLine.find('[id^="data_inicio["]'),
                     startDateTs = that.makeTimestamp(that.getDateParts(startDateElm.val()));
 
@@ -204,7 +243,7 @@ $j(function () {
                     dateParts = that.getDateParts(val),
                     ts = that.makeTimestamp(dateParts),
                     parentLine = $elm.closest('tr'),
-                    previousLine = parentLine.prev('[id^="tr_modulos_ano_letivo["]');
+                    previousLine = parentLine.prev(that.getSelector('stepsRows'));
 
                 if (previousLine.length < 1) {
                     var validYears = [currentYear, previousYear];
@@ -253,7 +292,8 @@ $j(function () {
         },
         removeTableCellsAndRows: function () {
             var removeLinks = $j('[id^=link_remove'),
-                addLink = $j('[id^=btn_add]');
+                addLink = $j('[id^=btn_add]'),
+                sendBtn = $j('#btn_enviar');
 
             $j('td#td_acao').hide();
             $j('[id^=link_remove').parent().hide();
@@ -261,20 +301,28 @@ $j(function () {
 
             removeLinks.removeAttr('onclick');
             addLink.removeAttr('onclick');
-            $j('#btn_enviar').removeAttr('onclick');
+            sendBtn.removeAttr('onclick');
+            sendBtn.unbind('click');
         },
         setupModule: function () {
             var $select = $j('#ref_cod_modulo'),
-                val = parseInt($select.val(), 10),
-                availableModules = window.modulosDisponiveis,
-                moduleInfo = availableModules[val],
-                etapas = moduleInfo.etapas,
+                val = $select.val(),
+                availableModules = window.modulosDisponiveis || [],
+                moduleInfo = availableModules[val] || {},
+                etapas = moduleInfo.etapas || undefined,
                 rows = this.countRows();
 
-            if (Boolean(etapas) === false) {
+            val = (val === '') ? 0 : parseInt(val, 10);
+
+            if (val && Boolean(etapas) === false) {
                 alert("Este módulo não possui o número de etapas definido.\nRealize esta alteração no seguinte caminho:\nCadastros > Tipos > Escolas > Tipos de etapas");
-                history.back();
+
+                $select.val((this.module === 0) ? '' : this.module);
+
+                return;
             }
+
+            this.setCurrentModule();
 
             if (etapas > rows) {
                 var diff = etapas - rows;
@@ -295,7 +343,7 @@ $j(function () {
             }
         },
         removeRows: function (qtt) {
-            var rows = $j('tr[id^="tr_modulos_ano_letivo["]').get().reverse(),
+            var rows = $j(this.getSelector('stepsRows')).get().reverse(),
                 count = 0;
 
             rows.each(function (elm) {
@@ -309,17 +357,19 @@ $j(function () {
             var that = this,
                 $select = $j('#ref_cod_modulo');
 
-            $select.change(function () {
+            $select.focus(function () {
+                that.setCurrentModule();
+            }).change(function () {
                 that.setupModule();
             })
         },
         countRows: function () {
-            var rows = $j('tr[id^="tr_modulos_ano_letivo["]');
+            var rows = $j(this.getSelector('stepsRows'));
 
             return rows.length;
         },
         getYear: function () {
-            return parseInt($j('#ref_ano_').val(), 10);
+            return parseInt($j(this.getSelector('year')).val(), 10);
         }
     };
 
