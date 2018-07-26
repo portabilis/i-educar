@@ -255,7 +255,10 @@ class indice extends clsCadastro
             $this->campoTabelaFim();
         }
 
-        Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/etapas.js');
+        Portabilis_View_Helper_Application::loadJavascript($this, [
+            '/modules/Portabilis/Assets/Javascripts/Validator.js',
+            '/intranet/scripts/etapas.js'
+        ]);
     }
 
     public function Novo()
