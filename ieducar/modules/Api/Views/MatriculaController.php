@@ -267,7 +267,11 @@ class MatriculaController extends ApiCoreController
                   INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
                   INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE cod_matricula = $1';
+                  WHERE cod_matricula = $1
+                  AND CASE
+                  WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, false) = false
+                  ELSE true
+                  END';
 
                     $params = [$matriculas[$key]['matricula_id']];
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
