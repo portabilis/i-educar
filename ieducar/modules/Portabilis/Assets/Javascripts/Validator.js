@@ -6,9 +6,90 @@ var validationUtils = {
     return /(^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$)/.test(date);
   },
 
+  validatesLeapYear: function (year) {
+    return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+  },
+
+  validatesDateFieldAlt: function (elm) {
+    var $elm = $j(elm),
+        val = $elm.val(),
+        regex = /[0-3]{1}[0-9]{1}\/[0-1]{1}[0-9]{1}\/[0-9]{4}/,
+        match = val.match(regex);
+
+    if (match === null) {
+      messageUtils.error('Adicione uma data no seguinte formato: dd/mm/aaaa.', elm);
+      return false;
+    }
+
+    var parts = val.split('/'),
+        dateParts = {
+          day: parseInt(parts[0], 10),
+          month: parseInt(parts[1], 10),
+          year: parseInt(parts[2], 10)
+        },
+        isLeapYear = this.validatesLeapYear(dateParts.year);
+
+    if (dateParts.month > 12) {
+      messageUtils.error('O mês "' + dateParts.month + '" informado não é valido.', elm);
+
+      return false;
+    }
+
+    if (dateParts.day > 31) {
+      messageUtils.error('O dia "' + dateParts.day + '" não é válido.', elm);
+
+      return false;
+    }
+
+    if (
+      dateParts.month === 2
+      && dateParts.day > 29
+      && isLeapYear === true
+    ) {
+      messageUtils.error('O dia "' + dateParts.day + '" não é válido.', elm);
+
+      return false;
+    }
+
+    if (
+      dateParts.month === 2
+      && dateParts.day > 28
+      && isLeapYear === false
+    ) {
+      messageUtils.error('O dia "' + dateParts.day + '" não é válido em anos não bissextos.', elm);
+
+      return false;
+    }
+
+    var module = dateParts.month % 2;
+
+    if (
+      dateParts.month <= 7
+      && dateParts.month !== 2
+      && dateParts.day > 30
+      && module === 0
+    ) {
+      messageUtils.error('O dia "' + dateParts.day + '" não é válido.', elm);
+
+      return false;
+    }
+
+    if (
+      dateParts.month >= 8
+      && dateParts.day > 30
+      && module !== 0
+    ) {
+      messageUtils.error('O dia "' + dateParts.day + '" não é válido.', elm);
+
+      return false;
+    }
+
+    return true;
+  },
+
   validatesDateFields : function() {
     var allValid = true;
-    var fields   = $j("input[id^='data_'][value!=''], input[id^='dt_'][value!='']");
+    var fields = $j("input[id^='data_'][value!=''], input[id^='dt_'][value!='']");
 
     $j.each(fields, function(index, field) {
       if (! validationUtils.validatesDate(field.value)) {

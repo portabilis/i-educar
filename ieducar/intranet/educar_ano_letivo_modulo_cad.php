@@ -224,8 +224,6 @@ class indice extends clsCadastro
             true
         );
 
-        Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/etapas.js');
-
         if ($tabela) {
             $this->campoQuebra();
             $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
@@ -256,6 +254,11 @@ class indice extends clsCadastro
 
             $this->campoTabelaFim();
         }
+
+        Portabilis_View_Helper_Application::loadJavascript($this, [
+            '/modules/Portabilis/Assets/Javascripts/Validator.js',
+            '/intranet/scripts/etapas.js'
+        ]);
     }
 
     public function Novo()
@@ -329,7 +332,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        echo '<script>alert("É necessário adicionar pelo menos uma etapa!")</script>';
         $this->mensagem = 'Cadastro não realizado.<br />';
 
         return false;

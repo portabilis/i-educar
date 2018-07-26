@@ -82,15 +82,11 @@ $j(function () {
                 return false;
             });
         },
-        addError: function ($elm, msg) {
-            var parent = $elm.closest('td'),
-                msg = '<p class="validation-error">' + msg + '</p>';
-
-            parent.append(msg).addClass('has-error');
+        addError: function (elm, msg) {
+            messageUtils.error(msg, elm);
         },
         resetErrors: function () {
-            $j('.validation-error').remove();
-            $j('.has-error').removeClass('has-error');
+            $j('input.error').removeClass('error');
         },
         validateDates: function () {
             var that = this,
@@ -98,92 +94,12 @@ $j(function () {
                 valid = true;
 
             fields.each(function (i, elm) {
-                var $elm = $j(elm),
-                    val = $elm.val(),
-                    regex = /[0-3]{1}[0-9]{1}\/[0-1]{1}[0-9]{1}\/[0-9]{4}/,
-                    match = val.match(regex);
-
-                if (match === null) {
+                if (!validationUtils.validatesDateFieldAlt(elm)) {
                     valid = false;
-                    that.addError($elm, 'Adicione uma data no seguinte formato: dd/mm/aaaa.');
-
-                    return;
-                }
-
-                var parts = val.split('/'),
-                    dateParts = {
-                        day: parseInt(parts[0], 10),
-                        month: parseInt(parts[1], 10),
-                        year: parseInt(parts[2], 10)
-                    },
-                    isLeapYear = that.isLeapYear(dateParts.year);
-
-                if (dateParts.month > 12) {
-                    valid = false;
-                    that.addError($elm, 'O mês "' + dateParts.month + '" informado não é valido.');
-
-                    return;
-                }
-
-                if (dateParts.day > 31) {
-                    valid = false;
-                    that.addError($elm, 'O dia "' + dateParts.day + '" não é válido.');
-
-                    return;
-                }
-
-                if (
-                    dateParts.month === 2
-                    && dateParts.day > 29
-                    && isLeapYear === true
-                ) {
-                    valid = false;
-                    that.addError($elm, 'O dia "' + dateParts.day + '" não é válido.');
-
-                    return;
-                }
-
-                if (
-                    dateParts.month === 2
-                    && dateParts.day > 28
-                    && isLeapYear === false
-                ) {
-                    valid = false;
-                    that.addError($elm, 'O dia "' + dateParts.day + '" não é válido em anos não bissextos.');
-
-                    return;
-                }
-
-                var module = dateParts.month % 2;
-
-                if (
-                    dateParts.month <= 7
-                    && dateParts.month !== 2
-                    && dateParts.day > 30
-                    && module === 0
-                ) {
-                    valid = false;
-                    that.addError($elm, 'O dia "' + dateParts.day + '" não é válido.');
-
-                    return;
-                }
-
-                if (
-                    dateParts.month >= 8
-                    && dateParts.day > 30
-                    && module !== 0
-                ) {
-                    valid = false;
-                    that.addError($elm, 'O dia "' + dateParts.day + '" não é válido.');
-
-                    return;
                 }
             });
 
             return valid;
-        },
-        isLeapYear: function (year) {
-            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
         },
         validateEndDates: function () {
             var that = this,
@@ -207,14 +123,14 @@ $j(function () {
 
                     if (validYears.indexOf(dateParts.year) === -1) {
                         valid = false;
-                        that.addError($elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado ou próximo.');
+                        that.addError(elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado ou próximo.');
 
                         return;
                     }
                 } else {
                     if (dateParts.year !== currentYear) {
                         valid = false;
-                        that.addError($elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado.');
+                        that.addError(elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado.');
 
                         return;
                     }
@@ -222,7 +138,7 @@ $j(function () {
 
                 if (ts <= startDateTs) {
                     valid = false;
-                    that.addError($elm, 'A data final precisa ser maior que a data inicial desta etapa.');
+                    that.addError(elm, 'A data final precisa ser maior que a data inicial desta etapa.');
 
                     return;
                 }
@@ -250,14 +166,14 @@ $j(function () {
 
                     if (validYears.indexOf(dateParts.year) === -1) {
                         valid = false;
-                        that.addError($elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado ou anterior.');
+                        that.addError(elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado ou anterior.');
 
                         return;
                     }
                 } else {
                     if (dateParts.year !== currentYear) {
                         valid = false;
-                        that.addError($elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado.');
+                        that.addError(elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado.');
 
                         return;
                     }
@@ -267,7 +183,7 @@ $j(function () {
 
                     if (ts <= previousTs) {
                         valid = false;
-                        that.addError($elm, 'A data inicial precisa ser maior que a data final da etapa anterior.');
+                        that.addError(elm, 'A data inicial precisa ser maior que a data final da etapa anterior.');
 
                         return;
                     }
