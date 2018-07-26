@@ -281,7 +281,7 @@ class clsPessoaFj
         $this->logradouro       = $detalheEndereco['logradouro'];
         $this->sigla_uf         = $detalheEndereco['sigla_uf'];
         $this->cidade           = $detalheEndereco['cidade'];
-        $this->reside_desde     = $detalheEndereco['reside_desde'];
+        $this->reside_desde     = $detalheEndereco['reside_desde'] ?? null;
         $this->idtlog           = $detalheEndereco['idtlog'];
         $this->complemento      = $detalheEndereco['complemento'];
         $this->numero           = $detalheEndereco['numero'];

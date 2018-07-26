@@ -183,6 +183,7 @@ class indice extends clsDetalhe
 
     $existeTurma = false;
     $existeTurmaMulti = false;
+    $existeTurmaUnificada = false;
     $nomesTurmas = array();
     $datasEnturmacoes = array();
     foreach ($enturmacoes as $enturmacao) {
@@ -192,6 +193,9 @@ class indice extends clsDetalhe
       $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
       if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
         $existeTurmaMulti = true;
+      }
+      if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapasEnsinoUnificadas())) {
+        $existeTurmaUnificada = true;
       }
     }
     $nomesTurmas = implode('<br />', $nomesTurmas);
@@ -342,6 +346,10 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "go(\"educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
       }
 
+      if ($existeTurmaUnificada) {
+        $this->array_botao[] = 'Etapa da turma unificada';
+        $this->array_botao_url_script[] = "go(\"educar_matricula_turma_unificada_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+      }
       if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
         if (is_array($lst_transferencia) && isset($data_transferencia)) {
           $this->array_botao[]            = 'Cancelar solicitação transferência';
