@@ -449,24 +449,19 @@ class indice extends clsCadastro
 
     $this->montaListaComponentesSerieEscola();
 
+    $objTemp = new clsPmieducarModulo();
+    $objTemp->setOrderby('nm_tipo ASC');
 
-    $opcoesCampoModulo = array('' => 'Selecione');
-    if (class_exists("clsPmieducarModulo")) {
-      $objTemp = new clsPmieducarModulo();
-      $objTemp->setOrderby('nm_tipo ASC');
+    $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, 1, $ref_cod_instituicao);
 
-      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, 1, $ref_cod_instituicao);
+    $opcoesCampoModulo = [];
 
-      if (is_array($lista) && count($lista)) {
-        $this->modulos = $lista;
-        foreach ($lista as $registro) {
-          $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
-        }
+    if (is_array($lista) && count($lista)) {
+      $this->modulos = $lista;
+      foreach ($lista as $registro) {
+        $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
       }
-    }
-    else {
-      $opcoesCampoModulo = array('' => 'Erro na geração');
     }
 
     if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->cod_turma)) {
@@ -494,7 +489,6 @@ class indice extends clsCadastro
 
         foreach ( $registros AS $campo )
         {
-          //$this->turma_modulo[$qtd_registros][] = $campo["ref_cod_modulo"];
           $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
           $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
           $this->turma_modulo[$qtd_registros][] = $campo["dias_letivos"];
@@ -520,8 +514,6 @@ class indice extends clsCadastro
       );
 
       $this->campoTabelaInicio("turma_modulo","Etapas",array("Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
-
-      //$this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
 
       $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
       $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
@@ -1078,9 +1070,9 @@ class indice extends clsCadastro
 
   function montaModulos()
   {
-      foreach ($this->ref_cod_modulo as $key => $modulo) {
-          $turmaModulo[$key]['sequencial'] = $key+1;
-          $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo[$key];
+      foreach ($this->data_inicio as $key => $modulo) {
+          $turmaModulo[$key]['sequencial'] = $key + 1;
+          $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo;
           $turmaModulo[$key]['data_inicio'] = $this->data_inicio[$key];
           $turmaModulo[$key]['data_fim'] = $this->data_fim[$key];
           $turmaModulo[$key]['dias_letivos'] = $this->dias_letivos[$key];
@@ -1092,7 +1084,7 @@ class indice extends clsCadastro
   function cadastraModulo($modulo)
   {
       $modulo['data_inicio'] = dataToBanco($modulo['data_inicio']);
-      $modulo['data_fim']    = dataToBanco($modulo['data_fim']);
+      $modulo['data_fim'] = dataToBanco($modulo['data_fim']);
 
       $objModulo = new clsPmieducarTurmaModulo($this->cod_turma);
       $objModulo->ref_cod_modulo = $modulo['ref_cod_modulo'];
@@ -1113,14 +1105,13 @@ class indice extends clsCadastro
   function verificaModulos()
   {
       $cursoPadraoAnoEscolar = $this->padrao_ano_escolar == 1;
-      $possuiModulosInformados = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+      $possuiModulosInformados = (count($this->data_inicio) > 1 || $this->data_inicio[0] != '');
 
       if ($cursoPadraoAnoEscolar) {
           return true;
       }
 
       if (!$possuiModulosInformados) {
-          echo '<script type="text/javascript">alert("É necessario adicionar pelo menos 1 módulo!")</script>';
           $this->mensagem = 'Edição não realizada.';
           return false;
       }
