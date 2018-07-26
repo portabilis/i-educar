@@ -139,6 +139,8 @@ class indice extends clsCadastro
   var $etapas_utilizadas;
   var $definirComponentePorEtapa;
 
+  var $modulos;
+
   var $retorno;
 
   var $dias_da_semana = array(
@@ -458,6 +460,7 @@ class indice extends clsCadastro
         NULL, NULL, NULL, 1, $ref_cod_instituicao);
 
       if (is_array($lista) && count($lista)) {
+        $this->modulos = $lista;
         foreach ($lista as $registro) {
           $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
         }
@@ -484,28 +487,49 @@ class indice extends clsCadastro
     if ($this->padrao_ano_escolar != 1) {
 
       $qtd_registros = 0;
+      $moduloSelecionado = 0;
+
       if( $registros )
       {
+        $moduloSelecionado = $registros[0]['ref_cod_modulo'];
+
         foreach ( $registros AS $campo )
         {
-          $this->turma_modulo[$qtd_registros][] = $campo["ref_cod_modulo"];
+          //$this->turma_modulo[$qtd_registros][] = $campo["ref_cod_modulo"];
           $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
           $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
           $this->turma_modulo[$qtd_registros][] = $campo["dias_letivos"];
           $qtd_registros++;
         }
       }
+
+      $this->campoQuebra2();
+
+      $this->campoRotulo('cabecalho', '<b style="font-size: 18px;">Etapas da turma</b>');
+
+      $this->campoLista(
+        'ref_cod_modulo',
+        'Módulo',
+        $opcoesCampoModulo,
+        $moduloSelecionado,
+        null,
+        null,
+        null,
+        null,
+        null,
+        true
+      );
+
+      $this->campoTabelaInicio("turma_modulo","Etapas",array("Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
+
+      //$this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
+
+      $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
+      $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
+      $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+
+      $this->campoTabelaFim();
     }
-
-    $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
-
-    $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
-
-    $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
-    $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
-    $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
-
-    $this->campoTabelaFim();
 
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
@@ -607,6 +631,11 @@ class indice extends clsCadastro
     $scripts = array(
       '/modules/Cadastro/Assets/Javascripts/Turma.js'
     );
+
+    if ($this->padrao_ano_escolar != 1) {
+      $scripts[] = '/intranet/scripts/etapas.js';
+    }
+
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
     $styles = array ('/modules/Cadastro/Assets/Stylesheets/Turma.css');
@@ -1253,6 +1282,24 @@ class indice extends clsCadastro
 
     return true;
   }
+
+  public function gerarJsonDosModulos()
+  {
+    $retorno = [];
+
+    if (empty($this->modulos)) {
+      return json_encode($retorno);
+    }
+
+    foreach ($this->modulos as $modulo) {
+      $retorno[$modulo['cod_modulo']] = [
+        'label' => $modulo['nm_tipo'],
+        'etapas' => (int)$modulo['num_etapas']
+      ];
+    }
+
+    return json_encode($retorno);
+  }
 }
 
 // Instancia objeto de página
@@ -1268,6 +1315,8 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type='text/javascript'>
+var modulosDisponiveis = <?php echo $miolo->gerarJsonDosModulos(); ?>;
+
 function getComodo()
 {
   var campoEscola      = document.getElementById('ref_cod_escola').value;
@@ -1734,15 +1783,6 @@ function valida_xml(xml)
     var campoHoraFimIntervalo = document.getElementById('hora_fim_intervalo').value;
 
 
-  }
-  else if (document.getElementById('padrao_ano_escolar').value == 0) {
-    var qtdModulo = document.getElementsByName('ref_cod_modulo').length;
-
-    if (qtdModulo == 1) {
-      alert("ATEN\u00c7\u00c3O!\n\u00c9 necess\u00e1rio incluir um 'M\u00f3dulo'!");
-      document.getElementById('ref_cod_modulo').focus();
-      return false;
-    }
   }
 
   if (document.getElementById('padrao_ano_escolar') == 1) {
