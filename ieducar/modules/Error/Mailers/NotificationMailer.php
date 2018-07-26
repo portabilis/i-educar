@@ -122,25 +122,8 @@ class NotificationMailer extends Portabilis_Mailer
         return $user;
     }
 
-    protected function stackTrace() {
-        $stack = debug_backtrace();
-        $output = '';
-
-        $stackLen = count($stack);
-        for ($i = 1; $i < $stackLen; $i++) {
-            $entry = $stack[$i];
-
-            $func = $entry['function'] . '(';
-            $argsLen = count($entry['args']);
-            for ($j = 0; $j < $argsLen; $j++) {
-                $func .= $entry['args'][$j];
-                if ($j < $argsLen - 1) $func .= ', ';
-            }
-            $func .= ')';
-
-            $output .= '#' . ($i - 1) . ' ' . $entry['file'] . ':' . $entry['line'] . ' - ' . $func . PHP_EOL;
-        }
-
-        return $output;
+    protected function stackTrace()
+    {
+        return json_encode(debug_backtrace());
     }
 }
