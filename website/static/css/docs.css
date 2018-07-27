@@ -1,0 +1,152 @@
+.docsContainerHeader {
+  height: 614px;
+  background-color: #2696ff;
+  background-image: url('../img/docs_background.svg');
+  background-repeat: no-repeat;
+  background-position: 90% 100%;
+}
+.docsGridTitle {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #e3ecff;
+  margin-bottom: 25px;
+  padding-bottom: 24px;
+  padding-left: 24px;
+  padding-top: 25px;
+  padding-right: 24px;
+}
+
+.docsGridTitle h2{
+  margin: 0;
+  margin-left: 24px;
+  font-family: $titleFont;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.docsGridTitle h2 p{
+  margin: 0;
+}
+
+.docsGridTitle .blockImage {
+  width: 32px;
+}
+
+
+.docsContainerHeader.paddingTop {
+  padding-top: 101px;
+}
+
+.docsContainerHeader.paddingBottom {
+  padding-bottom: 0px;
+}
+
+.docsContainer.paddingTop {
+  padding-top: 0px;
+}
+
+.docsContainer.paddingBottom {
+  padding-bottom: 0px;
+}
+
+.docsContainer {
+  height: 282px;
+}
+
+.docsGrid {
+  position: relative;
+  top: -223px;
+  background: #ffffff;
+  border-radius: 4px;
+
+  box-shadow: 0 3px 90px 0 rgba(0, 0, 0, 0.16);
+}
+
+.docsGrid .blockContent {
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 25px;
+}
+
+.docsGrid .blockContent p {
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.docsLink a {
+ font-family: $descriptionFont;
+ font-size: 16px;
+ font-weight: normal;
+ font-style: normal;
+ font-stretch: normal;
+ line-height: 1.5;
+ letter-spacing: normal;
+ text-align: right;
+}
+
+
+.gridBlock .docsGridHeader {
+  flex-grow: 0;
+  flex-basis: 60%;
+  flex-shrink: 0;
+}
+
+.docsText {
+  display: flex;
+  text-align: justify;
+  flex-direction: column;
+  margin-top: -143px;
+}
+
+.docsText p a {
+  font-weight: bold;
+  color: #2696ff;
+}
+
+.wrapper .docsText p {
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #4e5666;
+}
+
+.docsGridHeader h2 p {
+font-family: $titleFont;
+ font-size: 48px;
+ font-weight: normal;
+ font-style: normal;
+ font-stretch: normal;
+ line-height: normal;
+ letter-spacing: -0.5px;
+ color: #ffffff;
+ margin-bottom: 19px;
+}
+
+.docsGridHeader p {
+  font-family: $descriptionFont;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #ffffff;
+  text-align: justify;
+}

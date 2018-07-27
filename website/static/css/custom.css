@@ -10,207 +10,7 @@
   height: 620px;
   background-image: url('../img/FB_cover.png');
   background-repeat: no-repeat;
-}
-
-.mailContainer {
-  height: 620px;
-  background-image: linear-gradient(67deg, #2696ff, #8100f7);
-}
-
-.mailContainer .homeWrapper {
-  padding-top: 161px;
-}
-
-#mapBlock .wrapper{
-  height: 704px;
-  padding: 0;
-  display: flex;
-}
-
-#mapBlock.paddingTop {
-  padding-top: 0;
-}
-
-#map {
-  height: 100%;
-  flex-grow: 0;
-  flex-basis: 50%;
-  flex-shrink: 0;
-}
-
-.numbers {
-  flex-grow: 0;
-  flex-basis: 50%;
-  flex-shrink: 0;
-  padding-right: 25px;
-}
-
-.numbersBoxCities {
-  height: 140px;
-  background-color: #f8fbff;
-  margin-bottom: 35px;
-  margin-top: 67px;
-  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-
-.numbersBoxSchools {
-  height: 140px;
-  background-color: #3ee4cf;
-  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-bottom: 35px;
-}
-
-.numbersBoxStudents {
-  height: 140px;
-  background-color: #2c91f7;
-  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.numbersBoxCities h2,
-.numbersBoxSchools h2,
-.numbersBoxStudents h2 {
-  font-size: 50px;
-  opacity: 0.7;
-  font-family: $titleFont;
-  line-height: 1.5;
-  margin: 0;
-}
-.numbersBoxCities p,
-.numbersBoxSchools p,
-.numbersBoxStudents p {
-  font-size: 18px;
-  font-family: $descriptionFont;
-  line-height: 1.5;
-  font-weight: 500;
-  margin: 0;
-}
-
-
-.mapsBlockHeader h2 p{
-  font-family: $titleFont;
-  font-size: 32px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: -0.5px;
-  color: #4e5666;
-
-}
-.mapsBlockHeader p{
-  font-family: $descriptionFont;
-  font-size: 18px;
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #4e5666;
-}
-.mapsBlockHeader h2{
-  margin: 0;
-}
-
-#conversion {
-  display: flex;
-  width: 100%;
-  padding-top: 79px;
-  justify-content: center;
-  align-items:flex-end;
-}
-
-#conversion div {
-  flex-grow: 2;
-  padding-top: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px;
-}
-
-#conversion button {
-  height: 54px;
-  border-radius: 5px;
-  background-color: #ffffff;
-  width: 100px;
-  font-family: $titleFont;
-  font-size: 14px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: 1px;
-  color: #2696ff;
-  margin-bottom: 10px;
-}
-
-#conversion input {
-  display: block;
-  height: 54px;
-  opacity: 0.9;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 0;
-  font-family: $descriptionFont;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #ffffff;
-  width: 100%;
-  padding: 16px;
-}
-
-#conversion label {
-  font-family: $titleFont;
-  font-size: 12px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #ffffff;
-}
-
-.hide {
-  display: none;
-}
-
-.show {
-  display: block;
-}
-
-#conversionSuccess p{
-  font-family: $titleFont;
-  font-size: 18px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #ffffff;
-}
-
-.nav-footer {
-  height: auto;
-  display: block;
-  justify-content: center;
-  padding-top: 0px;
-  padding: 0px;
-  background-color: #2c3a55;
+  background-size: cover;
 }
 
 .textEmail {
@@ -234,33 +34,8 @@
   justify-content: left;
 }
 
-.subfooteritens{
-  display:flex;
-  max-width: 1440px;
-  width: 100%;
-  padding: 0 32px;
-  padding-top: 14px;
-}
-
-.subfooter {
-    display: flex;
-    justify-content: center;
-    background-color: #253147;
-}
-
 .homeContainer .homeWrapper {
   padding-top: 161px;
-}
-
-.subfooter p {
-  font-family: $descriptionFont;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #506899;
 }
 
 .projectTitle {
@@ -285,67 +60,6 @@
   letter-spacing: normal;
   color: #ffffff;
   margin: 0px;
-}
-
-li + li {
-  margin-top: 0px;
-}
-
-.footerVersion {
-  display: flex;
-  flex: 1;
-  justify-content:flex-end;
-}
-
-
-.nav-footer .sitemap {
-  max-width: 1440px;
-  width: 1440px;
-  padding: 0 32px;
-  padding-top: 40px;
-  margin: 0px;
-}
-
-.nav-footer .sitemap .nav-home {
-  width: auto;
-  padding: 0px;
-  padding-right: 10px;
-  margin: 0px 20px 0 0;
-}
-
-.footerNav nav ul {
-  display: flex;
-  justify-content: flex-end;
-  padding: 5px 5px;
-  list-style: none;
-}
-
-.sitemap .footerNav nav{
-  display: flex;
-  flex-direction:column;
-  align-items: center;
-}
-.footerDescription em {
-  color:blue;
-}
-
-.sitemap .footerNav{
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.footerNav nav ul li{
-  padding-left: 5px;
-  margin-left: 16px;
-  list-style: none;
-}
-
-.footerNav nav ul li a{
-  display: flex;
-  justify-content: center;
-  text-decoration: none;
-  margin-left: 36px;
 }
 
 .fixedHeaderContainer > .wrapper {
@@ -412,7 +126,6 @@ li + li {
   border-radius: 4px;
 }
 
-
 .productShowcaseSection h2 {
   font-family: $titleFont;
   font-size: 32px;
@@ -439,160 +152,6 @@ li + li {
   color: #4e5666;
 }
 
-.blogBlockHeader h2 p{
-  font-family: $titleFont;
-  font-size: 32px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: -0.5px;
-  color: #4e5666;
-
-}
-.blogBlockHeader p{
-  font-family: $descriptionFont;
-  font-size: 18px;
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #4e5666;
-}
-
-.blogContainerHeader {
-  background: #ffffff;
-}
-
-.blogContainerHeader.paddingBottom {
-  padding-bottom: 19px;
-}
-
-.featureContainerHeader,
-.featureContainer,
-.featureContainerLast{
-  background: #f8fbff;
-}
-
-
-.featureBlock {
-  background: #ffffff;
-  padding-left: 24px;
-  padding-right: 26px;
-  padding-top: 31px;
-  padding-bottom: 23px;
-  box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.16);
-  border-radius: 4px;
-}
-
-.featureContainerHeader.paddingBottom {
-  padding-bottom: 19px;
-}
-
-.featureContainer.paddingBottom {
-  padding-bottom: 30px;
-}
-
-.featureContainerLast.paddingBottom {
-  padding-bottom: 144px;
-}
-
-.featureContainerLast.paddingTop {
-  padding-top: 0px;
-}
-
-.featureContainer.paddingTop {
-  padding-top: 0px;
-}
-
-.featureBlock h2 p{
-  font-family: $titleFont;
-  font-size: 16px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #4e5666;
-}
-
-.featureBlock h2{
-  margin-top: 16px;
-}
-
-.imageAlignTop .blockImage {
-  max-width: 32px;
-  margin-bottom: 0px;
-}
-
-.featureBlock p{
-  font-family: $descriptionFont;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #4e5666;
-  text-align: justify;
-}
-
-
-
-
-.blogBlock {
-  margin-right: 30px;
-}
-
-.blogContainerLast {
-  background: #ffffff;
-}
-
-.blogContainerLast.paddingBottom {
-  padding-bottom: 144px;
-}
-
-.blogContainerLast.paddingTop {
-  padding-top: 0px;
-}
-
-.blogBlock h2 p{
-  font-family: $titleFont;
-  font-size: 24px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #2696ff;
-}
-
-.blogBlock p{
-  font-family: $descriptionFont;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #4e5666;
-  text-align: justify;
-}
-
-.blogBlock p.blogdate {
-  font-size: 14px;
-  font-family: $descriptionFont;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #4e5666;
-  opacity: 0.7;
-}
-
-
 .navigationSlider .slidingNav ul li.siteNavItemActive a {
   color: #4e5666;
   background: none;
@@ -603,205 +162,19 @@ li + li {
   padding: 0px;
 }
 
-.postHeaderTitle  {
-  font-family: $titleFont;
-  font-size: 32px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
+@media only screen and (max-device-width: 390px) {
+  .navigationSlider .slidingNav ul li a {
+    font-size: 14px;
+  }
 }
 
-.post-content p {
-  font-family: $descriptionFont;
-  font-size: 21px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #4e5666;
-}
-
-.read-more .button {
-  height: 48px;
-  border-radius: 5px;
-  background-color: #ffffff;
-  border: solid 1px #2696ff;
-  text-align: center;
-  color: #2696ff;
-  padding-top: 14px;
-  padding-bottom: 10px;
-}
-
-.read-more .button a {
-  font-family: $descriptionFont;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-}
-
-.docsContainerHeader {
-  height: 614px;
-  background-color: #2696ff;
-  background-image: url('../img/docs_background.svg');
-  background-repeat: no-repeat;
-  background-position: 90% 100%;
-}
-.docsGridTitle {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-bottom: 1px solid #e3ecff;
-  margin-bottom: 25px;
-  padding-bottom: 24px;
-  padding-left: 24px;
-  padding-top: 25px;
-  padding-right: 24px;
-}
-
-.docsGridTitle h2{
-  margin: 0;
-  margin-left: 24px;
-  font-family: $titleFont;
-  font-size: 16px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #4e5666;
-}
-
-.docsGridTitle h2 p{
-  margin: 0;
-}
-
-.docsGridTitle .blockImage {
-  width: 32px;
-}
-
-
-.docsContainerHeader.paddingTop {
-  padding-top: 101px;
-}
-
-.docsContainerHeader.paddingBottom {
-  padding-bottom: 0px;
-}
-
-.docsContainer.paddingTop {
-  padding-top: 0px;
-}
-
-.docsContainer.paddingBottom {
-  padding-bottom: 0px;
-}
-
-.docsContainer {
-  height: 282px;
-}
-
-.docsGrid {
-  position: relative;
-  top: -223px;
-  background: #ffffff;
-  border-radius: 4px;
-
-  box-shadow: 0 3px 90px 0 rgba(0, 0, 0, 0.16);
-}
-
-.docsGrid .blockContent {
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-bottom: 25px;
-}
-
-.docsGrid .blockContent p {
-  font-family: $descriptionFont;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #4e5666;
-}
-
-.docsLink a {
- font-family: $descriptionFont;
- font-size: 16px;
- font-weight: normal;
- font-style: normal;
- font-stretch: normal;
- line-height: 1.5;
- letter-spacing: normal;
- text-align: right;
-}
-
-
-.gridBlock .docsGridHeader {
-  flex-grow: 0;
-  flex-basis: 60%;
-  flex-shrink: 0;
-}
-
-.docsText {
-  display: flex;
-  text-align: justify;
-  flex-direction: column;
-  margin-top: -143px;
-}
-
-.docsText p a {
-  font-weight: bold;
-  color: #2696ff;
-}
-
-.wrapper .docsText p {
-  font-family: $descriptionFont;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  text-align: center;
-  color: #4e5666;
-}
-
-.docsGridHeader h2 p {
-font-family: $titleFont;
- font-size: 48px;
- font-weight: normal;
- font-style: normal;
- font-stretch: normal;
- line-height: normal;
- letter-spacing: -0.5px;
- color: #ffffff;
- margin-bottom: 19px;
-}
-
-.docsGridHeader p {
-  font-family: $descriptionFont;
-  font-size: 18px;
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #ffffff;
-  text-align: justify;
-}
-
-.containerTop
-
-@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
-
+@media only screen and (max-device-width: 776px) {
+  .homeContainer {
+    height: 100%;
+    background-image: url('../img/FB_cover_logo.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -810,10 +183,46 @@ font-family: $titleFont;
     height: 42px;
     object-fit: contain;
   }
+  .fixedHeaderContainer {
+    width: 100%;
+  }
+  .fixedHeaderContainer > .wrapper {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 32px;
+    height: 80px;
+    margin: 0px;
+  }
 }
 
 @media only screen and (max-width: 1023px) {
+  .fixedHeaderContainer header img {
+    width: 115px;
+    height: 42px;
+    object-fit: contain;
+  }
+  .fixedHeaderContainer {
+    width: 100%;
+  }
+  .fixedHeaderContainer > .wrapper {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 32px;
+    height: 80px;
+    margin: 0px;
+  }
 
+  .navigationSlider nav.slidingNav {
+    top: 28px;
+  }
+
+  .navigationSlider .slidingNav ul {
+    background-color: #ffffff;
+  }
+
+  .navPusher {
+    padding-top: 100px;
+  }
 }
 
 @media only screen and (min-width: 1400px) {
@@ -821,5 +230,8 @@ font-family: $titleFont;
 }
 
 @media only screen and (min-width: 1500px) {
+  .fixedHeaderContainer > .wrapper {
+    max-width: 100%;
+  }
 
 }
