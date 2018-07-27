@@ -1046,12 +1046,11 @@ class AlunoController extends ApiCoreController
                 p.nome as nome_aluno,
                 f.data_nasc as data_nascimento,
                 ff.caminho as foto_aluno,
-                EXISTS(SELECT 1
-                         FROM cadastro.fisica_deficiencia fd
-                         JOIN cadastro.deficiencia d
-                           ON d.cod_deficiencia = fd.ref_cod_deficiencia
-                        WHERE fd.ref_idpes = p.idpes
-                          AND d.nm_deficiencia NOT ILIKE \'nenhuma\') as utiliza_regra_diferenciada
+                COALESCE((SELECT NOT cadastro.deficiencia.desconsidera_regra_diferenciada
+                            FROM cadastro.fisica_deficiencia fd
+                            JOIN cadastro.deficiencia d ON (d.cod_deficiencia = fd.ref_cod_deficiencia)
+                            WHERE fd.ref_idpes = p.idpes AND
+                                    d.nm_deficiencia NOT ILIKE \'nenhuma\'), false) as utiliza_regra_diferenciada
                 FROM pmieducar.aluno a
                 INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
                 INNER JOIN cadastro.fisica f ON f.idpes = p.idpes
