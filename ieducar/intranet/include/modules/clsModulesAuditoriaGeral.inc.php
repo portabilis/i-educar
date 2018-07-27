@@ -199,13 +199,23 @@ class clsModulesAuditoriaGeral
     $this->insereAuditoria(self::OPERACAO_EXCLUSAO, $dados, NULL);
   }
 
-  function lista($rotina, $usuario, $dataInicial, $dataFinal) {
+  function lista($rotina, $usuario, $dataInicial, $dataFinal, $operacao, $codigo) {
     $filtros = "";
 
     $whereAnd = " WHERE ";
 
     if(is_string($rotina)) {
-      $filtros .= "{$whereAnd} rotina LIKE '%{$rotina}%'";
+      $filtros .= "{$whereAnd} rotina ILIKE '%{$rotina}%'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_numeric($operacao)) {
+      $filtros .= "{$whereAnd} operacao = {$operacao}";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($codigo)) {
+      $filtros .= "{$whereAnd} codigo = '{$codigo}'";
       $whereAnd = " AND ";
     }
 

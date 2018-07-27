@@ -61,8 +61,25 @@ class indice extends clsListagem
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->campoTexto('usuario', 'Matrícula usuário', $this->usuario, 35, 50);
-        $this->campoTexto('rotina', 'Rotina', $this->rotina, 35, 50);
+        $this->campoTexto('usuario', 'Matrícula usuário', $this->usuario, 50, 50);
+
+        $options = [
+            'label' => 'Rotinas',
+            'required'   => false
+        ];
+        $helperOptions = [
+            'objectName' => 'rotinas_auditoria'
+        ];
+        $this->inputsHelper()->simpleSearchRotinasAuditoria(null, $options, $helperOptions);
+
+        $operacoes = [
+            null => 'Todas',
+            1 => 'Novo',
+            2 => 'Edição',
+            3 => 'Exclusão' 
+        ];
+        $this->campoTexto('codigo', 'Código do registro', $this->codigo, 10, 50);
+        $this->campoLista('operacao', 'Operação', $operacoes, null, null, null, null, null, null, false);
         $this->inputsHelper()->dynamic(['dataInicial','dataFinal']);
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
@@ -78,10 +95,12 @@ class indice extends clsListagem
         $auditoria->setOrderby('data_hora DESC');
         $auditoria->setLimite($this->limite, $this->offset);
         $auditoriaLst = $auditoria->lista(
-            $this->rotina,
+            $this->rotinas_auditoria,
             $this->usuario,
             Portabilis_Date_Utils::brToPgSQL($this->data_inicial),
-            Portabilis_Date_Utils::brToPgSQL($this->data_final)
+            Portabilis_Date_Utils::brToPgSQL($this->data_final),
+            $this->operacao,
+            $this->codigo
         );
         $total = $auditoria->_total;
 
