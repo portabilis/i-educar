@@ -464,18 +464,24 @@ class indice extends clsCadastro
       }
     }
 
-    if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->cod_turma)) {
-      $objAno = new clsPmieducarAnoLetivoModulo();
-      $objAno->setOrderBy('sequencial ASC');
+    $registros = [];
 
+    if (is_numeric($this->cod_turma)) {
       $objTurma = new clsPmieducarTurmaModulo();
       $objTurma->setOrderBy('sequencial ASC');
 
-      if (is_array($objTurma->lista($this->cod_turma))) {
-        $registros = $objTurma->lista($this->cod_turma);
-      }else{
-        $registros = $objAno->lista($this->ano, $this->ref_cod_escola);
-      }
+      $registros = $objTurma->lista($this->cod_turma);
+    }
+
+    if (
+      empty($registros)
+      && is_numeric($this->ano)
+      && is_numeric($this->ref_cod_escola)
+    ) {
+      $objAno = new clsPmieducarAnoLetivoModulo();
+      $objAno->setOrderBy('sequencial ASC');
+
+      $registros = $objAno->lista($this->ano, $this->ref_cod_escola);
     }
 
     if ($this->padrao_ano_escolar != 1) {
