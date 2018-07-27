@@ -116,12 +116,12 @@ class indice extends clsListagem
             $dataAuditoria = Portabilis_Date_Utils::pgSQLToBr($a['data_hora']);
 
             $this->addLinhas([
-                $usuario['matricula'],
-                ucwords($a['rotina']),
-                $operacao,
+                $this->retornaLinkDaAuditoria($a['id'], $usuario['matricula']),
+                $this->retornaLinkDaAuditoria($a['id'], ucwords($a['rotina'])),
+                $this->retornaLinkDaAuditoria($a['id'], $operacao),
                 $valorAntigo,
                 $valorNovo,
-                $dataAuditoria
+                $this->retornaLinkDaAuditoria($a['id'], $dataAuditoria)
             ]);
         }
 
@@ -186,6 +186,11 @@ class indice extends clsListagem
         }
 
         return $operacao;
+    }
+
+    public function retornaLinkDaAuditoria($idAuditoria, $campo)
+    {
+        return "<a href='educar_auditoria_geral_det.php?id={$idAuditoria}'>{$campo}</a>";
     }
 }
 
