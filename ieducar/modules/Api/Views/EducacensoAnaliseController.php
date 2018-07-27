@@ -1391,34 +1391,43 @@ class EducacensoAnaliseController extends ApiCoreController
     $data_ini = $this->getRequest()->data_ini;
     $data_fim = $this->getRequest()->data_fim;
 
-    $sql = "SELECT aluno.cod_aluno AS cod_aluno,
+    $sql = "SELECT a.cod_aluno AS cod_aluno,
                    juridica.fantasia AS nome_escola,
-                   pessoa.nome AS nome_aluno,
-                   transporte_aluno.responsavel AS transporte_escolar,
-                   aluno.veiculo_transporte_escolar AS veiculo_transporte_escolar,
-                   turma.tipo_atendimento AS tipo_atendimento,
-                   aluno.recebe_escolarizacao_em_outro_espaco AS recebe_escolarizacao_em_outro_espaco,
-                   turma.etapa_educacenso AS etapa_ensino,
-                   matricula_turma.etapa_educacenso AS etapa_turma,
-                   matricula.cod_matricula AS cod_matricula
-              FROM pmieducar.aluno
-             INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
-             INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
-             INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
-             INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
-             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-              LEFT JOIN modules.transporte_aluno ON (transporte_aluno.aluno_id = aluno.cod_aluno)
-             WHERE aluno.ativo = 1
-               AND turma.ativo = 1
-               AND turma.visivel = TRUE
-               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-               AND matricula.ativo = 1
-               AND matricula.ano = $1
-               AND escola.cod_escola = $2
-               AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-               AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))
-             ORDER BY nome_aluno";
+                   pe.nome AS nome_aluno,
+                   ta.responsavel AS transporte_escolar,
+                   a.veiculo_transporte_escolar AS veiculo_transporte_escolar,
+                   t.tipo_atendimento AS tipo_atendimento,
+                   a.recebe_escolarizacao_em_outro_espaco AS recebe_escolarizacao_em_outro_espaco,
+                   t.etapa_educacenso AS etapa_ensino,
+                   mt.etapa_educacenso AS etapa_turma,
+                   m.cod_matricula AS cod_matricula
+              FROM  pmieducar.aluno a
+        INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
+        INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+        INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
+        INNER JOIN pmieducar.turma t ON (t.cod_turma = mt.ref_cod_turma)
+        INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
+        INNER JOIN cadastro.juridica ON (juridica.idpes = e.ref_idpes)
+        INNER JOIN cadastro.pessoa pe ON (pe.idpes = a.ref_idpes)
+        INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+         LEFT JOIN modules.transporte_aluno ta ON (ta.aluno_id = a.cod_aluno)
+         LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
+             WHERE e.cod_escola = $2
+               AND COALESCE(t.nao_informar_educacenso, 0) = 0
+               AND t.ativo = 1
+               AND t.visivel = TRUE
+               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+               AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
+               AND m.ano = $1
+               AND m.ativo = 1
+               AND COALESCE(mt.remanejado, FALSE) = FALSE
+               AND (CASE WHEN m.aprovado = 3
+                    THEN mt.ativo = 1
+                    ELSE mt.sequencial = (SELECT MAX(sequencial)
+                                          FROM pmieducar.matricula_turma
+                                         WHERE matricula_turma.ref_cod_matricula = m.cod_matricula)
+                    END)
+          ORDER BY pe.nome";
 
     $alunos = $this->fetchPreparedQuery($sql, array($ano,
                                                     $escola,

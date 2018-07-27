@@ -87,6 +87,11 @@ class indice extends clsCadastro
     public $local_funcionamento;
     public $condicao;
     public $codigo_inep_escola_compartilhada;
+    public $codigo_inep_escola_compartilhada2;
+    public $codigo_inep_escola_compartilhada3;
+    public $codigo_inep_escola_compartilhada4;
+    public $codigo_inep_escola_compartilhada5;
+    public $codigo_inep_escola_compartilhada6;
     public $decreto_criacao;
     public $area_terreno_total;
     public $area_construida;
@@ -906,12 +911,7 @@ class indice extends clsCadastro
             $options = array('disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('condicao', $options);
 
-            $options = array('label' => 'Código da escola que compartilha o prédio',
-                'disabled' => $disabled,
-                'label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
-                'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false,
-                'size' => 8, 'max_length' => 8, 'placeholder' => '');
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada', $options);
+            $this->geraCamposCodigoInepEscolaCompartilhada();
 
             $resources = array(null => 'Selecione',
                 1 => 'Difícil',
@@ -1335,8 +1335,13 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
-            return false;
+        for ( $i = 1; $i <= 6; $i++) {
+            $seq = $i == 1 ? '' : $i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            if (!$ret) {
+                return false;
+            }
         }
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
@@ -1379,6 +1384,11 @@ class indice extends clsCadastro
                     $obj->local_funcionamento = $this->local_funcionamento;
                     $obj->condicao = $this->condicao;
                     $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+                    $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+                    $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+                    $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+                    $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+                    $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
                     $obj->decreto_criacao = $this->decreto_criacao;
                     $obj->area_terreno_total = $this->area_terreno_total;
                     $obj->area_construida = $this->area_construida;
@@ -1547,6 +1557,11 @@ class indice extends clsCadastro
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
             $obj->decreto_criacao = $this->decreto_criacao;
             $obj->area_terreno_total = $this->area_terreno_total;
             $obj->area_construida = $this->area_construida;
@@ -1695,8 +1710,13 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
-            return false;
+        for ( $i = 1; $i <= 6; $i++) {
+            $seq = $i == 1 ? '' : $i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            if (!$ret) {
+                return false;
+            }
         }
 
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
@@ -1741,8 +1761,11 @@ class indice extends clsCadastro
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-            $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-            $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
             $obj->decreto_criacao = $this->decreto_criacao;
             $obj->area_terreno_total = $this->area_terreno_total;
             $obj->area_construida = $this->area_construida;
@@ -1843,6 +1866,11 @@ class indice extends clsCadastro
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
             $obj->decreto_criacao = $this->decreto_criacao;
             $obj->area_terreno_total = $this->area_terreno_total;
             $obj->area_construida = $this->area_construida;
@@ -2235,6 +2263,20 @@ class indice extends clsCadastro
             return false;
         }
         return true;
+    }
+
+    protected function geraCamposCodigoInepEscolaCompartilhada() {
+        $options = array('label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
+                        'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => '');
+
+        for ( $i = 1; $i <= 6; $i++){
+            $seq = $i == 1 ? '' : $i;
+            $options['label'] = 'Código da escola que compartilha o prédio '.$i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $options['value'] = $this->$campo;
+            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
+        }
+
     }
 }
 

@@ -101,7 +101,7 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
     $textHelperOptions = array('objectName' => $objectName);
 
     $options['options']['placeholder'] = Portabilis_String_Utils::toLatin1(
-      $this->inputPlaceholder(),
+      $this->inputPlaceholder([]),
       array('escape' => false)
     );
 

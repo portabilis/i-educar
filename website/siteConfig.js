@@ -100,7 +100,7 @@ const siteConfig = {
   /* path to images for header/footer */
   headerIcon: 'img/logo_horizontal.svg',
   footerIcon: 'img/logo_ieducar_horizontal_footer.svg',
-  favicon: 'img/i-educar-logo.ico',
+  favicon: 'img/favicon/favicon.ico',
 
   /* colors for website */
   colors: {

@@ -1,6 +1,7 @@
 *.idea
 *~
 # Vagrant
+/.gitkeep
 /.vagrant
 /deploy
 /phinx.php

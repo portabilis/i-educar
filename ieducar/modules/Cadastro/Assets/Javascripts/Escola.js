@@ -125,6 +125,11 @@ $j('#local_funcionamento').change(
       var disabled = this.value != 3;
       $j('#condicao').prop("disabled",disabled);
       $j('#codigo_inep_escola_compartilhada').prop("disabled",disabled);
+      $j('#codigo_inep_escola_compartilhada2').prop("disabled",disabled);
+      $j('#codigo_inep_escola_compartilhada3').prop("disabled",disabled);
+      $j('#codigo_inep_escola_compartilhada4').prop("disabled",disabled);
+      $j('#codigo_inep_escola_compartilhada5').prop("disabled",disabled);
+      $j('#codigo_inep_escola_compartilhada6').prop("disabled",disabled);
       $j('#condicao').makeUnrequired();
       $j('#dependencia_numero_salas_existente').makeUnrequired();
       if (!disabled && obrigarCamposCenso) {

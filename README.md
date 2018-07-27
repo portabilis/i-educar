@@ -8,7 +8,7 @@ país por meio da educação. Junte-se a nós!**
 ## Conteúdo
 
 1. [Sobre o i-Educar](#sobre-o-i-educar)
-2. [Comunicação](#comunicacao)
+2. [Comunicação](#comunicação)
 3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
 4. [Como contribuir](#como-contribuir)
 5. [Instalação](#instalação)

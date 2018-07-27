@@ -101,7 +101,7 @@ $coreExt['Locale'] = $locale;
 // Timezone
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 
-$tenantEnv = $_SERVER['HTTP_HOST'];
+$tenantEnv = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
 
 // tenta carregar as configurações da seção especifica do tenant,
 // ex: ao acessar http://tenant.ieducar.com.br será carregado a seção tenant.ieducar.com.br caso exista
@@ -119,12 +119,15 @@ if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
 chdir($root . DS . 'intranet');
 unset($root, $paths);
 
-// função pra ajudar no debug
-function debug($var) {
-    $backtrace = debug_backtrace();
-    $template = '<div><strong>%s</strong> linha <strong>%d</strong></div>';
-    echo sprintf($template, $backtrace[0]['file'], $backtrace[0]['line']);
-    echo '<pre>';
-    print_r($var);
-    echo '</pre>';
+if (! function_exists('debug')) {
+
+    // função pra ajudar no debug
+    function debug($var) {
+        $backtrace = debug_backtrace();
+        $template = '<div><strong>%s</strong> linha <strong>%d</strong></div>';
+        echo sprintf($template, $backtrace[0]['file'], $backtrace[0]['line']);
+        echo '<pre>';
+        print_r($var);
+        echo '</pre>';
+    }
 }

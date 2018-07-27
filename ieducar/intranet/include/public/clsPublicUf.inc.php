@@ -210,7 +210,7 @@ class clsPublicUf
                 $campos .= "{$gruda}cod_ibge";
                 $valores .= "{$gruda}'{$this->cod_ibge}'";
                 $gruda = ", ";
-            }           
+            }
 
 
             $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
@@ -471,7 +471,7 @@ class clsPublicUf
         return "";
     }
 
-    function verificaDuplicidade($sigla_uf){
+    function verificaDuplicidade(){
     $db = new clsBanco();
     $sql = "SELECT sigla_uf
               FROM public.uf

@@ -951,6 +951,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
     );
 
+    $pareceres = [];
+
     if (in_array($parecerDescritivo, $gerais)) {
       $pareceres = $this->getPareceresGerais();
     }
@@ -1300,9 +1302,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         break;
       case App_Model_MatriculaSituacao::REPROVADO:
         $situacao->retidoFalta = TRUE;
-        // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
-        $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
-        $situacao->andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
+        $andamento = FALSE;
+        if ($this->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
+            $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
+            $andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
+        }
+        $situacao->andamento = FALSE;
         break;
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
@@ -1433,10 +1439,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
        $mediaGeral = $this->getMediasGerais();
 
-      if (0 == count($mediasGerais)) {
-        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-      }
-
       if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
         $media = $mediaGeral->mediaArredondada;
       }
@@ -1466,6 +1468,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
 
       foreach($mediasComponentes as $id => $mediaComponente){
+        $situacao->componentesCurriculares[$id] = new stdClass();
         $situacao->componentesCurriculares[$id]->situacao = $situacaoGeral;
       }
 
@@ -1496,6 +1499,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $qtdComponenteReprovado = 0;
     $qtdComponentes = 0;
     $somaMedias = 0;
+    $media = 0;
     $turmaId = $this->getOption('ref_cod_turma');
     foreach ($mediasComponentes as $id => $mediaComponente) {
 
@@ -1786,7 +1790,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->componentesCurriculares = $faltasComponentes;
 
     // Na última etapa seta situação presença como aprovado ou reprovado.
-    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc' || $tipoFaltaGeral) {
+    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
       $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
       $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                         App_Model_MatriculaSituacao::REPROVADO;
