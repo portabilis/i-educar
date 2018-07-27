@@ -20,8 +20,9 @@ class DeficienciaController extends ApiCoreController
 
     protected function getDeficiencias()
     {
-        $sql = ' SELECT cod_deficiencia, nm_deficiencia
-              FROM cadastro.deficiencia ';
+        $sql = " SELECT cod_deficiencia, nm_deficiencia
+                   FROM cadastro.deficiencia
+                  WHERE desconsidera_regra_diferenciada = 'TRUE'";
 
         $deficiencias = $this->fetchPreparedQuery($sql);
 
