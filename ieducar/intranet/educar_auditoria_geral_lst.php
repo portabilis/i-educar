@@ -47,8 +47,6 @@ class indice extends clsListagem
      */
     public $offset;
 
-    public $rotina;
-
     public function Gerar()
     {
         @session_start();
@@ -68,7 +66,10 @@ class indice extends clsListagem
             'required'   => false
         ];
         $helperOptions = [
-            'objectName' => 'rotinas_auditoria'
+            'objectName' => 'rotinas_auditoria',
+            'hiddenInputOptions' => [
+                'options' => ['value' => $this->rotinas_auditoria]
+            ]
         ];
         $this->inputsHelper()->simpleSearchRotinasAuditoria(null, $options, $helperOptions);
 
