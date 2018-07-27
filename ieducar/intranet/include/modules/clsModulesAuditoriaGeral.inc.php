@@ -51,14 +51,16 @@ class clsModulesAuditoriaGeral
   var $_campos_lista;
   var $_tabela;
 
+  var $id;
   var $usuario_id;
   var $codigo;
   var $rotina;
 
   var $_campo_order_by;
 
-  function __construct($rotina, $usuario_id, $codigo = 'null'){
-    $this->_campos_lista = 'codigo,
+  function __construct($rotina, $usuario_id, $codigo = 'null', $id){
+    $this->_campos_lista = 'id,
+                            codigo,
                             usuario_id,
                             operacao,
                             rotina,
@@ -70,6 +72,7 @@ class clsModulesAuditoriaGeral
     $this->rotina = $rotina;
     $this->usuario_id = $usuario_id;
     $this->codigo = $codigo;
+    $this->id = $id;
 
     // Seta usuário admin quando não houver usuário pois pode ser API/Novo educação
     if (!$this->usuario_id) $this->usuario_id = 1;
@@ -203,6 +206,11 @@ class clsModulesAuditoriaGeral
     $filtros = "";
 
     $whereAnd = " WHERE ";
+
+    if(is_numeric($this->id)) {
+      $filtros .= "{$whereAnd} id = {$this->id}";
+      $whereAnd = " AND ";
+    }
 
     if(is_string($rotina)) {
       $filtros .= "{$whereAnd} rotina ILIKE '%{$rotina}%'";
