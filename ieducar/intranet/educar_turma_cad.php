@@ -1274,10 +1274,6 @@ class indice extends clsCadastro
   {
     $retorno = [];
 
-    if (empty($this->modulos)) {
-      return json_encode($retorno);
-    }
-
     foreach ($this->modulos as $modulo) {
       $retorno[$modulo['cod_modulo']] = [
         'label' => $modulo['nm_tipo'],
