@@ -8,27 +8,22 @@
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($anoLetivoField, selectOptions, "Selecione um ano escolar");
 
-$j('#ref_cod_curso').change(selecionaAno);
+      $j('#ref_cod_curso').change(selecionaAno);
 
+      function selecionaAno(){
+        var numeroElementos = $j('#ano option').length;
+        posicaoElemento = numeroElementos - 1;
+        var ultimoAno = $('#ano option').eq(posicaoElemento).val();
 
+        $j('#ano option').each(function(){
+          var $this = $(this);
 
-
-            function selecionaAno(){
-var numeroElementos = $j('#ano option').length;
-posicaoElemento = numeroElementos - 1;
-     var ultimoAno = $('#ano option').eq(posicaoElemento).val();
-
-
-$j('#ano option').each(function(){
-    var $this = $(this); 
-
-    if ($this.val() == ultimoAno) { 
-        $this.prop('selected', true); 
-        return false; 
-    }
-});
-}
-
+          if ($this.val() == ultimoAno) {
+            $this.prop('selected', true);
+            return false;
+          }
+        });
+      }
     }
 
     var updateAnoEscolares = function(){
@@ -46,7 +41,7 @@ $j('#ano option').each(function(){
         });
 
         var urlForGetAnosEscolares = getResourceUrlBuilder.buildUrl('/module/DynamicInput/AnoLetivo',
-                                                                    'anos_letivos', data);
+          'anos_letivos', data);
 
         var options = {
           url : urlForGetAnosEscolares,
@@ -62,6 +57,5 @@ $j('#ano option').each(function(){
 
     // bind onchange event
     $escolaField.change(updateAnoEscolares);
-
   }); // ready
 })(jQuery);
