@@ -493,6 +493,17 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
   }
 
+  public static function getTipoNotaComponenteSerie($componenteId, $serieId)
+  {
+      $sql = "SELECT tipo_nota
+                FROM modules.componente_curricular_ano_escolar
+               WHERE ano_escolar_id = $1
+                 AND componente_curricular_id = $2";
+
+      $tipoNota = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($serieId, $componenteId), 'return_only' => 'first-row'));
+      return $tipoNota['tipo_nota'];
+  }
+
   /**
    * Recupera instâncias persistidas de ComponenteCurricular_Model_Componente,
    * retornando-as com a carga horária padrão caso o componente identificado
