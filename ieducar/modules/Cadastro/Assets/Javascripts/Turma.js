@@ -39,13 +39,6 @@ let verificaEtapaEducacenso = ()=>{
   }
 }
 
-let verificaTurmaUnificada = () => {
-  $j('#turma_unificada').makeUnrequired();
-  if (obrigarCamposCenso && $j('#etapa_educacenso').val() == '3') {
-    $j('#turma_unificada').makeRequired();
-  }
-}
-
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   mostraAtividadesAee();
@@ -55,8 +48,7 @@ $j('#tipo_atendimento').change(function() {
 verificaEtapaEducacenso();
 
 $j('#etapa_educacenso').change(function() {
-  mostraCursoTecnico();
-  verificaTurmaUnificada();
+  mostraCursoTecnico();;
 });
 
 function mostraAtividadesComplementares(){
@@ -304,7 +296,6 @@ $j(document).ready(function() {
       mostraAtividadesComplementares();
       mostraAtividadesAee();
       mostraCursoTecnico();
-      mostraTurmaUnificada();
       habilitaEtapaEducacenso();
     });
 
@@ -314,20 +305,6 @@ $j(document).ready(function() {
       $j('#'+row.id).find('input:checked').val('on');
     }
   });
-
-  $j("#etapa_educacenso").change(function() {
-    mostraTurmaUnificada();
-  });
-
-  function mostraTurmaUnificada() {
-    var etapaUnificada = $j("#etapa_educacenso").val() == 3;
-
-    $j("#tr_turma_unificada").hide();
-
-    if (etapaUnificada) {
-      $j("#tr_turma_unificada").show();
-    }
-  }
 
   var submitForm = function(){
     let canSubmit = validationUtils.validatesFields(true);
