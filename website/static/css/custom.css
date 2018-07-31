@@ -12,6 +12,9 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+.homeContainer .inner {
+  display: none;
+}
 
 .textEmail {
   display: flex;
@@ -171,9 +174,10 @@
 @media only screen and (max-device-width: 776px) {
   .homeContainer {
     height: 100%;
-    background-image: url('../img/FB_cover_logo.png');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: none;
+  }
+  .homeContainer .inner {
+    display: block;
   }
 }
 

@@ -38,7 +38,6 @@
   width: 32px;
 }
 
-
 .docsContainerHeader.paddingTop {
   padding-top: 101px;
 }
@@ -53,6 +52,7 @@
 
 .docsContainer.paddingBottom {
   padding-bottom: 0px;
+  height: 100%;
 }
 
 .docsContainer {
@@ -64,7 +64,7 @@
   top: -223px;
   background: #ffffff;
   border-radius: 4px;
-
+  margin-bottom: 24px;
   box-shadow: 0 3px 90px 0 rgba(0, 0, 0, 0.16);
 }
 
@@ -108,6 +108,7 @@
   text-align: justify;
   flex-direction: column;
   margin-top: -143px;
+  margin-bottom: 80px;
 }
 
 .docsText p a {
@@ -149,4 +150,29 @@ font-family: $titleFont;
   letter-spacing: normal;
   color: #ffffff;
   text-align: justify;
+}
+
+@media only screen and ( max-width: 745px ) {
+
+    .docsContainerHeader {
+      background-image: none;
+      height: 742px;
+    }
+
+    .docsContainerHeader.paddingTop {
+      padding-top: 19px;
+    }
+
+    .docsGridHeader {
+      margin-bottom: 71px;
+    }
+    .docsGrid {
+      top: -349px;
+      height: 297px;
+    }
+
+    .docsText {
+      margin-top: -316px;
+      margin-bottom: 56px;
+    }
 }
