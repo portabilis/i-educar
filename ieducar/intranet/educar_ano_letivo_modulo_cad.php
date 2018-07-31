@@ -263,6 +263,7 @@ class indice extends clsCadastro
     if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
 
       $this->copiarTurmasUltimoAno($this->ref_ref_cod_escola, $this->ref_ano);
+      Portabilis_Utils_Database::selectField("SELECT pmieducar.copiaAnosLetivos({$this->ref_ano}::smallint, {$this->ref_ref_cod_escola});");
 
       $obj = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola,
         $this->ref_ano, $this->pessoa_logada, NULL, 0, NULL, NULL, 1, 1
