@@ -138,6 +138,8 @@ class indice extends clsCadastro
   var $etapas_utilizadas;
   var $definirComponentePorEtapa;
 
+  var $modulos = [];
+
   var $retorno;
 
   var $dias_da_semana = array(
@@ -447,64 +449,84 @@ class indice extends clsCadastro
 
     $this->montaListaComponentesSerieEscola();
 
+    $objTemp = new clsPmieducarModulo();
+    $objTemp->setOrderby('nm_tipo ASC');
 
-    $opcoesCampoModulo = array('' => 'Selecione');
-    if (class_exists("clsPmieducarModulo")) {
-      $objTemp = new clsPmieducarModulo();
-      $objTemp->setOrderby('nm_tipo ASC');
+    $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, 1, $ref_cod_instituicao);
 
-      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, 1, $ref_cod_instituicao);
+    $opcoesCampoModulo = [];
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
-        }
+    if (is_array($lista) && count($lista)) {
+      $this->modulos = $lista;
+      foreach ($lista as $registro) {
+        $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
       }
     }
-    else {
-      $opcoesCampoModulo = array('' => 'Erro na geração');
-    }
 
-    if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->cod_turma)) {
-      $objAno = new clsPmieducarAnoLetivoModulo();
-      $objAno->setOrderBy('sequencial ASC');
+    $registros = [];
 
+    if (is_numeric($this->cod_turma)) {
       $objTurma = new clsPmieducarTurmaModulo();
       $objTurma->setOrderBy('sequencial ASC');
 
-      if (is_array($objTurma->lista($this->cod_turma))) {
-        $registros = $objTurma->lista($this->cod_turma);
-      }else{
-        $registros = $objAno->lista($this->ano, $this->ref_cod_escola);
-      }
+      $registros = $objTurma->lista($this->cod_turma);
+    }
+
+    if (
+      empty($registros)
+      && is_numeric($this->ano)
+      && is_numeric($this->ref_cod_escola)
+    ) {
+      $objAno = new clsPmieducarAnoLetivoModulo();
+      $objAno->setOrderBy('sequencial ASC');
+
+      $registros = $objAno->lista($this->ano, $this->ref_cod_escola);
     }
 
     if ($this->padrao_ano_escolar != 1) {
 
       $qtd_registros = 0;
+      $moduloSelecionado = 0;
+
       if( $registros )
       {
+        $moduloSelecionado = $registros[0]['ref_cod_modulo'];
+
         foreach ( $registros AS $campo )
         {
-          $this->turma_modulo[$qtd_registros][] = $campo["ref_cod_modulo"];
           $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
           $this->turma_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
           $this->turma_modulo[$qtd_registros][] = $campo["dias_letivos"];
           $qtd_registros++;
         }
       }
+
+      $this->campoQuebra2();
+
+      $this->campoRotulo('cabecalho', '<b style="font-size: 18px;">Etapas da turma</b>');
+
+      $this->campoLista(
+        'ref_cod_modulo',
+        'Módulo',
+        $opcoesCampoModulo,
+        $moduloSelecionado,
+        null,
+        null,
+        null,
+        null,
+        null,
+        true
+      );
+
+      $this->campoTabelaInicio("turma_modulo","Etapas",array("Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
+
+      $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
+      $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
+      $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+
+      $this->campoTabelaFim();
     }
-
-    $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
-
-    $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
-
-    $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
-    $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
-    $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
-
-    $this->campoTabelaFim();
 
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
@@ -598,6 +620,11 @@ class indice extends clsCadastro
     $scripts = array(
       '/modules/Cadastro/Assets/Javascripts/Turma.js'
     );
+
+    if ($this->padrao_ano_escolar != 1) {
+      $scripts[] = '/intranet/scripts/etapas.js';
+    }
+
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
     $styles = array ('/modules/Cadastro/Assets/Stylesheets/Turma.css');
@@ -1049,9 +1076,11 @@ class indice extends clsCadastro
 
   function montaModulos()
   {
-      foreach ($this->ref_cod_modulo as $key => $modulo) {
-          $turmaModulo[$key]['sequencial'] = $key+1;
-          $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo[$key];
+      // itera pelo campo `data_inicio`, um dos campos referentes às etapas,
+      // para definir sequencialmente os dados de cada etapa
+      foreach ($this->data_inicio as $key => $modulo) {
+          $turmaModulo[$key]['sequencial'] = $key + 1;
+          $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo;
           $turmaModulo[$key]['data_inicio'] = $this->data_inicio[$key];
           $turmaModulo[$key]['data_fim'] = $this->data_fim[$key];
           $turmaModulo[$key]['dias_letivos'] = $this->dias_letivos[$key];
@@ -1063,7 +1092,7 @@ class indice extends clsCadastro
   function cadastraModulo($modulo)
   {
       $modulo['data_inicio'] = dataToBanco($modulo['data_inicio']);
-      $modulo['data_fim']    = dataToBanco($modulo['data_fim']);
+      $modulo['data_fim'] = dataToBanco($modulo['data_fim']);
 
       $objModulo = new clsPmieducarTurmaModulo($this->cod_turma);
       $objModulo->ref_cod_modulo = $modulo['ref_cod_modulo'];
@@ -1084,14 +1113,13 @@ class indice extends clsCadastro
   function verificaModulos()
   {
       $cursoPadraoAnoEscolar = $this->padrao_ano_escolar == 1;
-      $possuiModulosInformados = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+      $possuiModulosInformados = (count($this->data_inicio) > 1 || $this->data_inicio[0] != '');
 
       if ($cursoPadraoAnoEscolar) {
           return true;
       }
 
       if (!$possuiModulosInformados) {
-          echo '<script type="text/javascript">alert("É necessario adicionar pelo menos 1 módulo!")</script>';
           $this->mensagem = 'Edição não realizada.';
           return false;
       }
@@ -1243,6 +1271,20 @@ class indice extends clsCadastro
 
     return true;
   }
+
+  public function gerarJsonDosModulos()
+  {
+    $retorno = [];
+
+    foreach ($this->modulos as $modulo) {
+      $retorno[$modulo['cod_modulo']] = [
+        'label' => $modulo['nm_tipo'],
+        'etapas' => (int)$modulo['num_etapas']
+      ];
+    }
+
+    return json_encode($retorno);
+  }
 }
 
 // Instancia objeto de página
@@ -1258,6 +1300,8 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type='text/javascript'>
+var modulosDisponiveis = <?php echo $miolo->gerarJsonDosModulos(); ?>;
+
 function getComodo()
 {
   var campoEscola      = document.getElementById('ref_cod_escola').value;
@@ -1724,15 +1768,6 @@ function valida_xml(xml)
     var campoHoraFimIntervalo = document.getElementById('hora_fim_intervalo').value;
 
 
-  }
-  else if (document.getElementById('padrao_ano_escolar').value == 0) {
-    var qtdModulo = document.getElementsByName('ref_cod_modulo').length;
-
-    if (qtdModulo == 1) {
-      alert("ATEN\u00c7\u00c3O!\n\u00c9 necess\u00e1rio incluir um 'M\u00f3dulo'!");
-      document.getElementById('ref_cod_modulo').focus();
-      return false;
-    }
   }
 
   if (document.getElementById('padrao_ano_escolar') == 1) {
