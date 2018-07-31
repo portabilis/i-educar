@@ -138,7 +138,7 @@ class indice extends clsCadastro
   var $etapas_utilizadas;
   var $definirComponentePorEtapa;
 
-  var $modulos;
+  var $modulos = [];
 
   var $retorno;
 
@@ -1076,6 +1076,8 @@ class indice extends clsCadastro
 
   function montaModulos()
   {
+      // itera pelo campo `data_inicio`, um dos campos referentes às etapas,
+      // para definir sequencialmente os dados de cada etapa
       foreach ($this->data_inicio as $key => $modulo) {
           $turmaModulo[$key]['sequencial'] = $key + 1;
           $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo;
