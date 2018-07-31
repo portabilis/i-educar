@@ -228,6 +228,8 @@ class indice extends clsCadastro
             'objectName' => 'anos_letivos'
         ];
 
+        $this->anos_letivos = array_values(array_intersect($this->anos_letivos, $this->getAnosLetivosDisponiveis()));
+
         $options = [
             'label' => 'Anos letivos',
             'required' => true,

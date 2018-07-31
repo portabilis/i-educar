@@ -376,6 +376,20 @@ class App_Model_IedFinder extends CoreExt_Entity
     );
   }
 
+  public static function getAnosLetivosEscolaSerie($escolaId, $serieId)
+  {
+    $params = [ $escolaId, $serieId ];
+    $sql = "SELECT array_to_json(escola_serie.anos_letivos) as anos_letivos
+            FROM pmieducar.escola_serie
+            WHERE escola_serie.ref_cod_escola = $1
+            AND escola_serie.ref_cod_serie = $2
+            AND escola_serie.ativo = 1
+            LIMIT 1 ";
+
+    $anosLetivos = json_decode(Portabilis_Utils_Database::selectField($sql, $params) ?: '[]');
+    return array_combine($anosLetivos, $anosLetivos);
+  }
+
   /**
    * Retorna array com as referências de pmieducar.escola_serie_disciplina
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
@@ -595,7 +609,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
             JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso
             JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
-            JOIN modules.regra_avaliacao_serie_ano rasa
+            LEFT JOIN modules.regra_avaliacao_serie_ano rasa
             ON rasa.ano_letivo = m.ano
             AND rasa.serie_id = s.cod_serie
             WHERE m.cod_matricula = $1
@@ -619,7 +633,9 @@ class App_Model_IedFinder extends CoreExt_Entity
     $matricula = Portabilis_Utils_Database::selectRow($sql,array('params' => $codMatricula));;
 
     if (!$matricula) {
-      throw new App_Model_Exception('Aluno não enturmado.');
+        throw new App_Model_Exception('Aluno não enturmado.');
+    } elseif(empty($matricula['serie_regra_avaliacao_id'])) {
+        throw new App_Model_Exception('Regra de avaliação não informada na série para o ano letivo informado.');
     }
 
     return $matricula;

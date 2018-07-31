@@ -1558,10 +1558,10 @@ function atualizaTurmaCad_EscolaSerie(xml)
   var DOM_escola_serie_hora = xml.getElementsByTagName('item');
 
   if (DOM_escola_serie_hora.length) {
-    campoHoraInicial.value         = DOM_escola_serie_hora[0].firstChild.data;
-    campoHoraFinal.value           = DOM_escola_serie_hora[1].firstChild.data;
-    campoHoraInicioIntervalo.value = DOM_escola_serie_hora[2].firstChild.data;
-    campoHoraFimIntervalo.value    = DOM_escola_serie_hora[3].firstChild.data;
+    campoHoraInicial.value         = (DOM_escola_serie_hora[0].firstChild || {}).data;
+    campoHoraFinal.value           = (DOM_escola_serie_hora[1].firstChild || {}).data;
+    campoHoraInicioIntervalo.value = (DOM_escola_serie_hora[2].firstChild || {}).data;
+    campoHoraFimIntervalo.value    = (DOM_escola_serie_hora[3].firstChild || {}).data;
   }
 }
 

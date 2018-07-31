@@ -2,6 +2,7 @@
   $(document).ready(function(){
 
     var $escolaField       = getElementFor('escola');
+    var $serieField        = getElementFor('serie');
     var $anoLetivoField    = getElementFor('ano_letivo');
 
     var handleGetAnoEscolares = function(response) {
@@ -26,10 +27,37 @@
       }
     }
 
+    var fetchAnosEscolares = function(resource, data){
+      var urlForGetAnosEscolares = getResourceUrlBuilder.buildUrl('/module/DynamicInput/AnoLetivo',
+        resource, data);
+
+      var options = {
+        url : urlForGetAnosEscolares,
+        dataType : 'json',
+        success  : handleGetAnoEscolares
+      };
+
+      getResources(options);
+    }
+
     var updateAnoEscolares = function(){
       resetSelect($anoLetivoField);
 
-      if ($escolaField.val() && $escolaField.is(':enabled')) {
+      if ($serieField.length) {
+        if ($escolaField.val() && $escolaField.is(':enabled') &&
+              $serieField.val() && $serieField.is(':enabled')) {
+
+          $anoLetivoField.children().first().html('Aguarde carregando...');
+
+          var data = {
+            escola_id: $escolaField.attr('value'),
+            serie_id: $serieField.attr('value')
+          };
+
+          fetchAnosEscolares('anos_letivos_escola_serie', data);
+        }
+
+      } else if($escolaField.val() && $escolaField.is(':enabled')) {
         $anoLetivoField.children().first().html('Aguarde carregando...');
 
         var data = {
@@ -40,16 +68,7 @@
           data['situacao_' + $j(input).val()] = true;
         });
 
-        var urlForGetAnosEscolares = getResourceUrlBuilder.buildUrl('/module/DynamicInput/AnoLetivo',
-          'anos_letivos', data);
-
-        var options = {
-          url : urlForGetAnosEscolares,
-          dataType : 'json',
-          success  : handleGetAnoEscolares
-        };
-
-        getResources(options);
+        fetchAnosEscolares('anos_letivos', data);
       }
 
       $anoLetivoField.change();
@@ -57,5 +76,8 @@
 
     // bind onchange event
     $escolaField.change(updateAnoEscolares);
+    if ($serieField.length) {
+      $serieField.on('change', updateAnoEscolares);
+    }
   }); // ready
 })(jQuery);

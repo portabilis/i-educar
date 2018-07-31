@@ -246,7 +246,6 @@ submitButton.click(function(){
 
 });
 
-
 (function($){
   $(document).ready(function(){
     let ajustaDisciplinas = () => {

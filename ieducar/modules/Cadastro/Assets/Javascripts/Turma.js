@@ -322,7 +322,6 @@ $j(document).ready(function() {
     let escola_id = $j('#ref_cod_escola').val();
     let serie_id = $j('#ref_cod_serie').val();
     let ano = $j('#ano_letivo').val();
-    console.log(escola_id && serie_id && ano);
     if (escola_id && serie_id && ano) {
       let parametros = {
         escola_id: escola_id,
