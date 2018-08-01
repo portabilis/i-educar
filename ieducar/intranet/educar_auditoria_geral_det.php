@@ -23,10 +23,6 @@ class indice extends clsDetalhe
 
     public function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Auditoria geral - Detalhe';
         $this->addBanner(
             'imagens/nvp_top_intranet.jpg',
@@ -39,17 +35,13 @@ class indice extends clsDetalhe
         $objAuditoriaGeral = new clsModulesAuditoriaGeral();
         $objAuditoriaGeral->id = $this->id;
         $registro = array_shift($objAuditoriaGeral->lista());
+        $this->redirectIf(!$registro, 'educar_auditoria_geral_lst.php');
 
         $usuario = new clsFuncionario($registro['usuario_id']);
         $usuario = $usuario->detalhe();
 
         foreach ($registro as $key => $value) {
             $this->$key = $value;
-        }
-
-        if (!$registro) {
-            header('Location: auditoria_geral_lst.php');
-            die();
         }
 
         $this->addDetalhe([

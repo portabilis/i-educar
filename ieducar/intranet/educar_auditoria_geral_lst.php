@@ -49,10 +49,6 @@ class indice extends clsListagem
 
     public function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Auditoria geral';
 
         foreach ($_GET as $var => $val) {

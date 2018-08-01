@@ -135,11 +135,17 @@ abstract class Core_Controller_Page_Abstract
   private $_output = array();
 
   /**
+   * @var integer
+   */
+  public $pessoa_logada = NULL;
+
+  /**
    * Construtor.
    */
   public function __construct()
   {
     $this->_options['id_usuario'] = $this->getSession()->id_pessoa;
+    $this->pessoa_logada = $this->getSession()->id_pessoa ?? null;
   }
 
   /**
