@@ -186,7 +186,7 @@ class indice extends clsCadastro
     $cep = $dadosRegistro[12]; // ep.cep
     $logradouro = $dadosRegistro[13]; // l.idtlog l.nome
     $enderecoNumero = $dadosRegistro[14]; // ep.numero
-    $complemento = $dadosRegistro[15]; // ep.complemento
+    $complemento = utf8_encode($dadosRegistro[15]); // ep.complemento
     $nomeBairro = $dadosRegistro[16]; // b.nome
     $ufIbge = $dadosRegistro[17]; // uf.cod_ibge
     $municipioIbge = $dadosRegistro[18]; // m.cod_ibge
@@ -926,7 +926,7 @@ class indice extends clsCadastro
     $cep = $dadosRegistro[7-1];
     $endereco = $dadosRegistro[8-1];
     $numero = $dadosRegistro[9-1];
-    $complemento = $dadosRegistro[10-1];
+    $complemento = utf8_encode($dadosRegistro[10-1]);
     $bairro = $dadosRegistro[11-1];
     $ufIbge = $dadosRegistro[12-1];
     $municipioIbge = $dadosRegistro[13-1];
@@ -1190,7 +1190,7 @@ class indice extends clsCadastro
     $cep = $dadosRegistro[23-1];
     $endereco = $dadosRegistro[24-1];
     $numero = $dadosRegistro[25-1];
-    $complemento = $dadosRegistro[26-1];
+    $complemento = utf8_encode($dadosRegistro[26-1]);
     $bairro = $dadosRegistro[27-1];
     $ufIbge = $dadosRegistro[28-1];
     $municipioIbge = $dadosRegistro[29-1];
