@@ -125,7 +125,7 @@ class indice extends clsCadastro
     $registros = explode("\n", $arquivo);
 
     foreach ($registros as $registro) {
-      header_remove('Set-Cookie');
+      @header_remove('Set-Cookie');
       $dadosRegistro = explode("|", $registro);
       $numeroRegistro = $dadosRegistro[0];
 
@@ -165,7 +165,7 @@ class indice extends clsCadastro
       }
       //echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
     }
-    header_remove('Set-Cookie');
+    @header_remove('Set-Cookie');
     $this->mensagem = "Arquivo importado!";
     return true;
   }
@@ -642,7 +642,7 @@ class indice extends clsCadastro
   }
 
   function getOrCreateAreaConhecimento(){
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('areaConhecimento', 'area');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('areaConhecimento', 'area');
     $areas = $dataMapper->findAll(array());
 
     $codArea = null;
