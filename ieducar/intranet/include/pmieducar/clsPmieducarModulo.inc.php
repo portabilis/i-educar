@@ -413,6 +413,10 @@ class clsPmieducarModulo
             $filtros[] = "ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
         }
 
+        if (empty($filtros)) {
+            return false;
+        }
+
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
@@ -438,11 +442,7 @@ class clsPmieducarModulo
             }
         }
 
-        if (count($resultado)) {
-            return $resultado;
-        }
-
-        return false;
+        return !empty($resultado) ? $resultado : false;
     }
 
     /**

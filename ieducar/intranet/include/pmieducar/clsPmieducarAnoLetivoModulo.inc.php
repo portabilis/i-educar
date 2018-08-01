@@ -324,6 +324,10 @@ class clsPmieducarAnoLetivoModulo
             $filtros[] = "data_fim <= '{$date_data_fim_fim}'";
         }
 
+        if (empty($filtros)) {
+            return false;
+        }
+
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
@@ -392,16 +396,12 @@ class clsPmieducarAnoLetivoModulo
     }
 
     /**
-     * Exclui um registro
+     * Exclui um registro (mantido apenas por questão de BC)
      *
      * @return bool
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->sequencial) && is_numeric($this->ref_cod_modulo)) {
-            //...
-        }
-
         return false;
     }
 

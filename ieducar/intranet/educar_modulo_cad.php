@@ -75,7 +75,7 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_modulo_det.php?cod_modulo={$registro["cod_modulo"]}" : "educar_modulo_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos(
@@ -124,7 +124,7 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3,  "educar_modulo_lst.php");
-        
+
         $obj = new clsPmieducarModulo( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
         if ($cadastrou)
@@ -157,7 +157,7 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3,  "educar_modulo_lst.php");
-        
+
         $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao );
         $editou = $obj->edita();
         if ($editou)
@@ -216,11 +216,7 @@ class indice extends clsCadastro
         $obj = new clsPmieducarAnoLetivoModulo($this->cod_modulo);
         $result = $obj->lista(null, null, null, $this->cod_modulo);
 
-        if (! $result > 0) {
-            return false;
-        }
-
-        return true;
+        return !empty($result);
     }
 
     function existeEtapaNaTurma()
