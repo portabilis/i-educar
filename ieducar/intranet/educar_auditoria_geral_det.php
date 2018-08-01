@@ -127,7 +127,7 @@ class indice extends clsDetalhe
                             <td class=\'formdktd\' valign=\'top\' align=\'left\' style=\'font-weight:bold;\'>Valor</td>
                         <tr>';
         foreach ($dataJson as $key => $value) {
-            if ($this->isDate($value)) {
+            if (Portabilis_Date_Utils::isDateValid($value)) {
                 $value = date('d/m/Y', strtotime($value));
             }
             $tabela .= '<tr>';
@@ -139,13 +139,6 @@ class indice extends clsDetalhe
         return $tabela;
     }
 
-    public function isDate($value)
-    {
-        if (preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value)) {
-            return true;
-        }
-        return false;
-    }
 }
 
 // Instancia objeto de página
