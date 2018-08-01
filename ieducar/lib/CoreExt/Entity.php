@@ -482,7 +482,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    */
   protected function _getReferenceValue($key)
   {
-    return $this->_references[$key]['value'];
+    return isset($this->_references[$key]['value']) ? $this->_references[$key]['value'] : null;
   }
 
   /**
@@ -492,7 +492,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    */
   protected function _getReferenceClass($key)
   {
-    return $this->_references[$key]['class'];
+    return isset($this->_references[$key]['class']) ? $this->_references[$key]['class'] : null;
   }
 
   /**

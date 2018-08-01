@@ -394,6 +394,7 @@ class clsPmieducarServidor
     if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
       $db = new clsBanco();
       $set = "";
+      $gruda = '';
       if (is_numeric($this->ref_idesco)) {
         $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";
         $gruda = ", ";
