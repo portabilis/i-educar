@@ -5,7 +5,7 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
+require_once 'Portabilis/Auditor/FromJsonToHtmlTable.php';
 
 class clsIndex extends clsBase
 {
@@ -19,6 +19,7 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
+    use JsonToHtmlTable;
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -102,8 +103,8 @@ class indice extends clsListagem
         $total = $auditoria->_total;
 
         foreach ($auditoriaLst as $a) {
-            $valorAntigo = $this->transformaJsonEmTabela($a['valor_antigo']);
-            $valorNovo = $this->transformaJsonEmTabela($a['valor_novo']);
+            $valorAntigo = $this->transformJsonToHtmlTable($a['valor_antigo']);
+            $valorNovo = $this->transformJsonToHtmlTable($a['valor_novo']);
 
             $usuario = new clsFuncionario($a['usuario_id']);
             $usuario = $usuario->detalhe();
@@ -133,30 +134,6 @@ class indice extends clsListagem
             '' => 'Auditoria geral'
         ]);
         $this->enviaLocalizacao($localizacao->montar());
-    }
-
-    public function transformaJsonEmTabela($json)
-    {
-        $dataJson = json_decode($json);
-        $tabela = '<table class=\'tablelistagem auditoria-tab\' width=\'100%\' border=\'0\' cellpadding=\'4\' cellspacing=\'1\'>
-                        <tr>
-                            <td class=\'formdktd\' valign=\'top\' align=\'left\' style=\'font-weight:bold;\'>Campo</td>
-                            <td class=\'formdktd\' valign=\'top\' align=\'left\' style=\'font-weight:bold;\'>Valor</td>
-                        <tr>';
-
-        foreach ($dataJson as $key => $value) {
-            if (Portabilis_Date_Utils::isDateValid($value)) {
-                $value = date('d/m/Y', strtotime($value));
-            }
-            $tabela .= '<tr>';
-            $tabela .= "<td class='formlttd'>$key</td>";
-            $tabela .= "<td class='formlttd'>$value</td>";
-            $tabela .= '</tr>';
-        }
-
-        $tabela .= '</table>';
-
-        return $tabela;
     }
 
     public function getNomeOperacao($operacap)

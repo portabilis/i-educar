@@ -4,7 +4,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
+require_once 'Portabilis/Auditor/FromJsonToHtmlTable.php';
 
 class clsIndexBase extends clsBase
 {
@@ -17,6 +17,7 @@ class clsIndexBase extends clsBase
 }
 class indice extends clsDetalhe
 {
+    use JsonToHtmlTable;
     public $titulo;
 
     public $id;
@@ -76,12 +77,12 @@ class indice extends clsDetalhe
 
         $this->addDetalhe([
             'Valor Antigo',
-            $this->transformaJsonEmTabela($registro['valor_antigo'])
+            $this->transformJsonToHtmlTable($registro['valor_antigo'])
         ]);
 
         $this->addDetalhe([
             'Valor Novo',
-            $this->transformaJsonEmTabela($registro['valor_novo'])
+            $this->transformJsonToHtmlTable($registro['valor_novo'])
         ]);
 
         $this->addDetalhe([
@@ -116,27 +117,6 @@ class indice extends clsDetalhe
             "" => "Auditoria Geral"
         ]);
         $this->enviaLocalizacao($localizacao->montar());
-    }
-
-    public function transformaJsonEmTabela($json)
-    {
-        $dataJson = json_decode($json);
-        $tabela = '<table class=\'tablelistagem auditoria-tab\' width=\'100%\' border=\'0\' cellpadding=\'4\' cellspacing=\'1\'>
-                        <tr>
-                            <td class=\'formdktd\' valign=\'top\' align=\'left\' style=\'font-weight:bold;\'>Campo</td>
-                            <td class=\'formdktd\' valign=\'top\' align=\'left\' style=\'font-weight:bold;\'>Valor</td>
-                        <tr>';
-        foreach ($dataJson as $key => $value) {
-            if (Portabilis_Date_Utils::isDateValid($value)) {
-                $value = date('d/m/Y', strtotime($value));
-            }
-            $tabela .= '<tr>';
-            $tabela .= "<td class='formlttd'>$key</td>";
-            $tabela .= "<td class='formlttd'>$value</td>";
-            $tabela .= '</tr>';
-        }
-        $tabela .= '</table>';
-        return $tabela;
     }
 
 }
