@@ -13,6 +13,7 @@ class clsModulesProfessorTurma
     public $tipo_vinculo;
     public $permite_lancar_faltas_componente;
     public $codUsuario;
+    public $pessoa_logada;
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
      *
@@ -79,6 +80,7 @@ class clsModulesProfessorTurma
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
 
         $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente';
 
@@ -179,7 +181,12 @@ class clsModulesProfessorTurma
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            return $db->InsertId("{$this->_tabela}_id_seq");
+            $id = $db->InsertId("{$this->_tabela}_id_seq");
+            $this->id = $id;
+            $auditoria = new clsModulesAuditoriaGeral('professor_turma', $this->pessoa_logada, $id);
+            $auditoria->inclusao($this->detalhe());
+
+            return $id;
         }
 
         return false;
@@ -239,7 +246,11 @@ class clsModulesProfessorTurma
             $gruda = ', ';
 
             if ($set) {
+                $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE id = '{$this->id}'");
+                $detalheAtual = $this->detalhe();
+                $auditoria = new clsModulesAuditoriaGeral('professor_turma', $this->pessoa_logada, $this->id);
+                $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
                 return true;
             }
@@ -418,14 +429,81 @@ class clsModulesProfessorTurma
     public function excluir()
     {
         if (is_numeric($this->id)) {
+            $detalhe = $this->detalhe();
             $sql = "DELETE FROM {$this->_tabela} pt WHERE id = '{$this->id}'";
             $db = new clsBanco();
             $db->Consulta($sql);
+            $auditoria = new clsModulesAuditoriaGeral('professor_turma', $this->pessoa_logada, $this->id);
+            $auditoria->exclusao($detalhe);
 
             return true;
         }
 
         return false;
+    }
+
+    public function gravaComponentes($professor_turma_id, $componentes)
+    {
+        $componentesAntigos = $this->retornaComponentesVinculados($professor_turma_id);
+        $this->excluiComponentes($professor_turma_id);
+        $db = new clsBanco();
+        foreach ($componentes as $componente) {
+            $db->Consulta("INSERT INTO modules.professor_turma_disciplina VALUES ({$professor_turma_id},{$componente})");
+        }
+        $componentesNovos = $this->retornaComponentesVinculados($professor_turma_id);
+        $this->auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos);
+    }
+
+    public function excluiComponentes($professor_turma_id)
+    {
+        $db = new clsBanco();
+        $db->Consulta("DELETE FROM modules.professor_turma_disciplina WHERE professor_turma_id = {$professor_turma_id}");
+    }
+
+    public function retornaComponentesVinculados($professor_turma_id)
+    {
+        $componentesVinculados = [];
+        $sql = "SELECT componente_curricular_id
+                  FROM modules.professor_turma_disciplina
+                 WHERE professor_turma_id = {$professor_turma_id}";
+        $db = new clsBanco();
+        $db->Consulta($sql);
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $componentesVinculados[] = $tupla['componente_curricular_id'];
+        }
+        return $componentesVinculados;
+    }
+
+    private function auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos)
+    {
+        $componentesExcluidos = array_diff($componentesAntigos, $componentesNovos);
+        $componentesAdicionados = array_diff($componentesNovos, $componentesAntigos);
+
+        $auditoria = new clsModulesAuditoriaGeral('professor_turma_disciplina', $this->pessoa_logada, $professor_turma_id);
+
+        foreach ($componentesExcluidos as $componente) {
+            $componente = [
+                'componente_curricular_id' => $componente,
+                'nome' => $this->retornaNomeDoComponente($componente)
+            ];
+            $auditoria->exclusao($componente);
+        }
+
+        foreach ($componentesAdicionados as $componente) {
+            $componente = [
+                'componente_curricular_id' => $componente,
+                'nome' => $this->retornaNomeDoComponente($componente)
+            ];
+            $auditoria->inclusao($componente);
+        }
+    }
+
+    public function retornaNomeDoComponente($idComponente)
+    {
+        $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper;
+        $componente = $mapperComponente->find(['id' => $idComponente]);
+        return $componente->nome;
     }
 
     /**
