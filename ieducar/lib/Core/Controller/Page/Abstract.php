@@ -33,6 +33,7 @@ require_once 'Core/Controller/Page/Interface.php';
 require_once 'Core/Controller/Page/Exception.php';
 require_once 'CoreExt/Configurable.php';
 require_once 'CoreExt/Exception/InvalidArgumentException.php';
+require_once 'include/Breadcrumb.php';
 
 /**
  * Core_Controller_Page_Abstract abstract class.
@@ -138,6 +139,11 @@ abstract class Core_Controller_Page_Abstract
    * @var integer
    */
   public $pessoa_logada = NULL;
+
+    /**
+   * @var string
+   */
+  public $locale = NULL;
 
   /**
    * Construtor.
@@ -473,5 +479,12 @@ abstract class Core_Controller_Page_Abstract
   {
     require_once 'Core/View.php';
     Core_View::generate($instance);
+  }
+
+  public function breadcrumb($currentPage, $breadcrumbs = [])
+  {
+    $breadcrumb = new Breadcrumb();
+    $breadcrumb = $breadcrumb->makeBreadcrumb($currentPage, $breadcrumbs);
+    $this->locale = $breadcrumb;
   }
 }

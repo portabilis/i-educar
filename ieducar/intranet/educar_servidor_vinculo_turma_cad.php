@@ -95,13 +95,8 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-            'educar_servidores_index.php' => 'Servidores',
-            '' => "{$nomeMenu} vínculo do servidor à turma"
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb('Vínculo do professor à turma',['educar_servidores_index.php' => 'Servidores']);
 
         return $retorno;
     }

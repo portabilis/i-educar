@@ -82,7 +82,6 @@ class clsListagem extends clsCampos
   var $funcAcao = '';
   var $funcAcaoNome = '';
   var $rotulo_anterior;
-  var $locale = null;
   var $appendInTop = false;
 
   var $array_botao;
