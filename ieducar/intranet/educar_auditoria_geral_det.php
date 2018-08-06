@@ -12,7 +12,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Auditoria geral');
         $this->processoAp = 9998851;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 class indice extends clsDetalhe
@@ -110,13 +109,7 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_auditoria_geral_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME']."/intranet" => "Início",
-            "educar_configuracoes_index.php" => "Configurações",
-            "" => "Auditoria Geral"
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Auditoria geral',['educar_configuracoes_index.php' => 'Configurações']);
     }
 
 }

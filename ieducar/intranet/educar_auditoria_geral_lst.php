@@ -13,7 +13,6 @@ class clsIndex extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} Auditoria geral");
         $this->processoAp = '9998851';
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -127,13 +126,7 @@ class indice extends clsListagem
 
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-            'educar_configuracoes_index.php' => 'Configurações',
-            '' => 'Auditoria geral'
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Auditoria geral',['educar_configuracoes_index.php' => 'Configurações']);
     }
 
     public function getNomeOperacao($operacap)
