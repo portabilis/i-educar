@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Servidores\Model\FuncaoExercida;
+use iEducar\Modules\Servidores\Model\TipoVinculo;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -122,15 +124,8 @@ class indice extends clsCadastro
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
 
-        $resources = [
-            null  => 'Selecione',
-            1 => 'Docente',
-            2 => 'Auxiliar/Assistente educacional',
-            3 => 'Profissional/Monitor de atividade complementar',
-            4 => 'Tradutor Intérprete de LIBRAS',
-            5 => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
-            6 => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD'
-        ];
+        $resources = FuncaoExercida::getDescriptiveValues();
+        $resources = array_replace([null => 'Selecione'], $resources);
 
         $options = [
             'label' => 'Função exercida',
@@ -139,13 +134,8 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('funcao_exercida', $options);
 
-        $resources = [
-            null => 'Nenhum',
-            1 => 'Concursado/efetivo/estável',
-            2 => 'Contrato temporário',
-            3 => 'Contrato terceirizado',
-            4 => 'Contrato CLT'
-        ];
+        $resources = TipoVinculo::getDescriptiveValues();
+        $resources = array_replace([null => 'Nenhum'], $resources);
 
         $options = [
             'label' => 'Tipo do vínculo',
