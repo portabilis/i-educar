@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\AuditoriaGeral\Model\Operacoes;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -54,11 +55,8 @@ class indice extends clsDetalhe
             $registro["codigo"]
         ]);
 
-        $operacoes = [
-            1 => 'Novo',
-            2 => 'Edição',
-            3 => 'Exclusão'
-        ];
+        $operacoes = Operacoes::getDescriptiveValues();
+        
         $this->addDetalhe([
             'Operação',
             $operacoes[$registro["operacao"]]

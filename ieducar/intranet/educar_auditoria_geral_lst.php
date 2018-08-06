@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\AuditoriaGeral\Model\Operacoes;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -69,14 +70,11 @@ class indice extends clsListagem
         ];
         $this->inputsHelper()->simpleSearchRotinasAuditoria(null, $options, $helperOptions);
 
-        $operacoes = [
-            null => 'Todas',
-            1 => 'Novo',
-            2 => 'Edição',
-            3 => 'Exclusão' 
-        ];
+        $operacoes = Operacoes::getDescriptiveValues();
+        $operacoes = array_replace([null => 'Todas'], $operacoes);
+
         $this->campoTexto('codigo', 'Código do registro', $this->codigo, 10, 50);
-        $this->campoLista('operacao', 'Operação', $operacoes, null, null, null, null, null, null, false);
+        $this->campoLista('operacao', 'Operação', $operacoes, $this->operacao, null, null, null, null, null, false);
         $this->inputsHelper()->dynamic(['dataInicial','dataFinal']);
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
@@ -108,7 +106,7 @@ class indice extends clsListagem
             $usuario = new clsFuncionario($a['usuario_id']);
             $usuario = $usuario->detalhe();
 
-            $operacao = $this->getNomeOperacao($a['operacao']);
+            $operacao = $operacoes[$a['operacao']];
 
             $dataAuditoria = Portabilis_Date_Utils::pgSQLToBr($a['data_hora']);
 
@@ -127,23 +125,6 @@ class indice extends clsListagem
         $this->largura = '100%';
 
         $this->breadcrumb('Auditoria geral',['educar_configuracoes_index.php' => 'Configurações']);
-    }
-
-    public function getNomeOperacao($operacap)
-    {
-        switch ($operacap) {
-            case 1:
-                $operacao = 'Novo';
-                break;
-            case 2:
-                $operacao = 'Edição';
-                break;
-            case 3:
-                $operacao = 'Exclusão';
-                break;
-        }
-
-        return $operacao;
     }
 
     public function retornaLinkDaAuditoria($idAuditoria, $campo)
