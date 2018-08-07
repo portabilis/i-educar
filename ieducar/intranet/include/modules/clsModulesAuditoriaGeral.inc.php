@@ -202,7 +202,8 @@ class clsModulesAuditoriaGeral
     $this->insereAuditoria(self::OPERACAO_EXCLUSAO, $dados, NULL);
   }
 
-  function lista($rotina, $usuario, $dataInicial, $dataFinal, $operacao, $codigo) {
+  function lista($rotina, $usuario, $dataInicial, $dataFinal, $horaInicial, $horaFinal, $operacao, $codigo)
+  {
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -242,6 +243,16 @@ class clsModulesAuditoriaGeral
 
     if(is_string($dataFinal)) {
       $filtros .= "{$whereAnd} data_hora::date <= '{$dataFinal}'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($horaInicial)) {
+      $filtros .= "{$whereAnd} data_hora::time >= '{$horaInicial}'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($horaFinal)) {
+      $filtros .= "{$whereAnd} data_hora::time <= '{$horaFinal}'";
       $whereAnd = " AND ";
     }
 

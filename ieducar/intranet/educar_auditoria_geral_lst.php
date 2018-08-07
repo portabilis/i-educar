@@ -76,6 +76,8 @@ class indice extends clsListagem
         $this->campoTexto('codigo', 'Código do registro', $this->codigo, 10, 50);
         $this->campoLista('operacao', 'Operação', $operacoes, $this->operacao, null, null, null, null, null, false);
         $this->inputsHelper()->dynamic(['dataInicial','dataFinal']);
+        $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, false);
+        $this->campoHora('hora_final', 'Hora Final', $this->hora_final, false);
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $detalhe = $obj_usuario->detalhe();
@@ -94,6 +96,8 @@ class indice extends clsListagem
             $this->usuario,
             Portabilis_Date_Utils::brToPgSQL($this->data_inicial),
             Portabilis_Date_Utils::brToPgSQL($this->data_final),
+            $this->hora_inicial,
+            $this->hora_final,
             $this->operacao,
             $this->codigo
         );
