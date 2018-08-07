@@ -532,7 +532,6 @@ class DiarioApiController extends ApiCoreController
             }
 
             $nota = new Avaliacao_Model_NotaComponente($array_nota);
-
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
@@ -1169,7 +1168,7 @@ class DiarioApiController extends ApiCoreController
         foreach ($_componentesCurriculares as $_componente) {
             $componente = array();
             $componenteId = $_componente->get('id');
-            $tipoNota = $this->getTipoNotaComponenteSerie($componenteId, $serieId);
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
 
             if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $componenteId)) {
                 continue;
@@ -1237,18 +1236,6 @@ class DiarioApiController extends ApiCoreController
             unset($componentesCurriculares[$i]['my_order']);
         }
         return $componentesCurriculares;
-    }
-
-    protected function getTipoNotaComponenteSerie($componenteId, $serieId)
-    {
-        $sql = "SELECT tipo_nota
-              FROM modules.componente_curricular_ano_escolar
-             WHERE ano_escolar_id = $1
-               AND componente_curricular_id = $2";
-
-        $tipoNota = $this->fetchPreparedQuery($sql, array($serieId, $componenteId));
-
-        return $tipoNota[0]['tipo_nota'];
     }
 
     protected function getAreaConhecimento($componenteCurricularId = null)

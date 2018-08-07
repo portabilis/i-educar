@@ -322,8 +322,9 @@ abstract class CoreExt_DataMapper
     $where = array();
 
      if (!is_array($pkey)){
+       $keys = array_keys($this->_primaryKey);
        $pkey = array(
-         array_shift(array_keys($this->_primaryKey)) => $pkey
+         array_shift($keys) => $pkey
        );
      }
 
@@ -622,7 +623,8 @@ abstract class CoreExt_DataMapper
       $tmpEntry = $this->find($pkSave);
       $newInfo = $tmpEntry->toDataArray();
 
-      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift(array_keys($this->_primaryKey))));
+      $keys = array_keys($this->_primaryKey);
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift($keys)));
       $auditoria->alteracao($oldInfo, $newInfo);
     }
 

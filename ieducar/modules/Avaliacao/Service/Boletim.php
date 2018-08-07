@@ -34,6 +34,7 @@ require_once 'App/Model/IedFinder.php';
 require_once 'App/Model/Matricula.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
+require_once  'ComponenteCurricular/Model/TipoNotaComponenteSerie.php';
 
 /**
  * Avaliacao_Service_Boletim class.
@@ -2307,7 +2308,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $nota = $this->_addValidators($nota);
     $nota = $this->_updateEtapa($nota);
-
     $nota->notaArredondada = $this->arredondaNota($nota);
     $this->_notas[$key]    = $nota;
 
@@ -2669,11 +2669,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function arredondaNota($nota)
   {
-    if ($nota instanceof Avaliacao_Model_NotaComponente) {
-      $nota = $nota->nota;
-    }elseif($nota instanceof Avaliacao_Model_NotaGeral){
-      $nota = $nota->nota;
-    }
+   $componenteId = $nota->get('componenteCurricular');
+
+   if (($nota instanceof Avaliacao_Model_NotaComponente) || ($nota instanceof Avaliacao_Model_NotaGeral)) {
+       $nota = $nota->nota;
+   }
 
     if (!is_numeric($nota)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
@@ -2682,7 +2682,37 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       ));
     }
 
+    if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+        return $this->getRegra()->tabelaArredondamentoConceitual->round($nota, 1);
+    }
+
     return $this->getRegra()->tabelaArredondamento->round($nota, 1);
+  }
+
+  public function regraUsaTipoNotaNumericaConceitual()
+  {
+      if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
+          return true;
+      }
+
+      return false;
+  }
+
+  public function componenteUsaNotaConceitual($componenteId)
+  {
+      $serieId = $this->_options['matriculaData'][ref_ref_cod_serie];
+      $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
+
+      if ($tipoNota == ComponenteSerie_Model_TipoNota::CONCEITUAL) {
+          return true;
+      }
+
+      return false;
+    }
+
+  public function usaTabelaArredondamentoConceitual ($componenteId)
+  {
+      return $this->regraUsaTipoNotaNumericaConceitual() && $this->componenteUsaNotaConceitual($componenteId);
   }
 
   /**
@@ -2693,6 +2723,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function arredondaMedia($media)
   {
+    $componenteId = $this->getCurrentComponenteCurricular();
+
     if ($media instanceof Avaliacao_Model_NotaComponenteMedia) {
       $media = $media->nota;
     }
@@ -2702,6 +2734,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       throw new CoreExt_Exception_InvalidArgumentException(sprintf(
         'O parâmetro $media ("%s") não é um valor numérico.', $media
       ));
+    }
+
+    if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+        return $this->getRegra()->tabelaArredondamentoConceitual->round($media, 2);
     }
 
     return $this->getRegra()->tabelaArredondamento->round($media, 2);
