@@ -126,7 +126,11 @@ class indice extends clsListagem
             $this->ref_ref_cod_escola = $this->ref_cod_escola;
         }
 
-        $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'anoLetivo'));
+        if (!isset($_GET['busca'])) {
+            $this->ano = date('Y');
+        }
+
+        $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'));
 
         $this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
         $this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel, null, null, null, null, null, false);
@@ -179,7 +183,7 @@ class indice extends clsListagem
             null,
             $this->ref_cod_curso,
             $this->ref_cod_instituicao,
-            null, null, null, null, null, $visivel, $this->turma_turno_id, null, $this->ano_letivo
+            null, null, null, null, null, $visivel, $this->turma_turno_id, null, $this->ano
         );
 
         $total = $obj_turma->_total;

@@ -362,7 +362,8 @@ class indice extends clsDetalhe
 
     try {
       $componentes = App_Model_IedFinder::getComponentesTurma(
-        $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->cod_turma
+        $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->cod_turma,
+        null, null, null, null, true, $registro['ano']
       );
     }
     catch (Exception $e) {
