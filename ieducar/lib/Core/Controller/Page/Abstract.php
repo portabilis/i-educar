@@ -481,6 +481,11 @@ abstract class Core_Controller_Page_Abstract
     Core_View::generate($instance);
   }
 
+  public function getQueryString($name, $default = null)
+  {
+    return $_GET[$name] ?? $default;
+  }
+
   public function breadcrumb($currentPage, $breadcrumbs = [])
   {
     $breadcrumb = new Breadcrumb();

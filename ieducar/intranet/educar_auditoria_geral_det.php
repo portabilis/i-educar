@@ -31,7 +31,7 @@ class indice extends clsDetalhe
             'Intranet'
         );
 
-        $this->id = $_GET['id'];
+        $this->id = $this->getQueryString('id');
 
         $objAuditoriaGeral = new clsModulesAuditoriaGeral();
         $objAuditoriaGeral->id = $this->id;

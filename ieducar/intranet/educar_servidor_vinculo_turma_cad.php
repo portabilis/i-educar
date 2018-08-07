@@ -42,9 +42,9 @@ class indice extends clsCadastro
     {
         $retorno = '';
 
-        $this->servidor_id    = $_GET['ref_cod_servidor'];
-        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-        $this->id = $_GET['id'];
+        $this->id = $this->getQueryString('id');
+        $this->servidor_id = $this->getQueryString('ref_cod_servidor');
+        $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
 
         // URL para redirecionamento
         $backUrl = sprintf(
