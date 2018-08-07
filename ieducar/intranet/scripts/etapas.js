@@ -18,7 +18,6 @@ $j(function () {
             this.setCurrentModule();
             this.setupModule();
             this.selectModule();
-            this.submit();
         },
         getSelector: function (key) {
             return this.selectors[this.env][key] || undefined;
@@ -219,6 +218,7 @@ $j(function () {
             addLink.removeAttr('onclick');
             sendBtn.removeAttr('onclick');
             sendBtn.unbind('click');
+            this.submit();
         },
         setupModule: function () {
             var $select = $j('#ref_cod_modulo'),
