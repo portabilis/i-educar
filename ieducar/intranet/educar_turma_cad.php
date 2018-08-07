@@ -110,7 +110,7 @@ class indice extends clsCadastro
   var $ref_cod_serie_mult;
 
   // Inclui módulo
-  var $turma_modulo;
+  var $turma_modulo = [];
   var $incluir_modulo;
   var $excluir_modulo;
 
@@ -501,32 +501,32 @@ class indice extends clsCadastro
           $qtd_registros++;
         }
       }
-
-      $this->campoQuebra2();
-
-      $this->campoRotulo('cabecalho', '<b style="font-size: 18px;">Etapas da turma</b>');
-
-      $this->campoLista(
-        'ref_cod_modulo',
-        'Módulo',
-        $opcoesCampoModulo,
-        $moduloSelecionado,
-        null,
-        null,
-        null,
-        null,
-        null,
-        true
-      );
-
-      $this->campoTabelaInicio("turma_modulo","Etapas",array("Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
-
-      $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
-      $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
-      $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
-
-      $this->campoTabelaFim();
     }
+
+    $this->campoQuebra2();
+
+    $this->campoRotulo('etapas_cabecalho', '<b style="font-size: 18px;">Etapas da turma</b>');
+
+    $this->campoLista(
+      'ref_cod_modulo',
+      'Módulo',
+      $opcoesCampoModulo,
+      $moduloSelecionado,
+      null,
+      null,
+      null,
+      null,
+      null,
+      true
+    );
+
+    $this->campoTabelaInicio("turma_modulo", "Etapas", array("Data inicial", "Data final", "Dias Letivos"), $this->turma_modulo);
+
+    $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
+    $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
+    $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+
+    $this->campoTabelaFim();
 
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
@@ -1445,16 +1445,16 @@ var evtOnLoad = function()
   setVisibility('tr_hora_inicio_intervalo', true);
   setVisibility('tr_hora_fim_intervalo', true);
   if (document.getElementById('padrao_ano_escolar').value == '') {
-    setVisibility('tr_turma_modulo', false);
+    setModuleAndPhasesVisibility(false);
   }else if (document.getElementById('padrao_ano_escolar').value == 0) {
-    setVisibility('tr_turma_modulo', true);
+    setModuleAndPhasesVisibility(true);
 
     var hr_tag = document.getElementsByTagName('hr');
     for (var ct = 0;ct < hr_tag.length; ct++) {
       setVisibility(hr_tag[ct].parentNode.parentNode, true);
     }
   }else {
-    setVisibility('tr_turma_modulo',false);
+    setModuleAndPhasesVisibility(false);
   }
 }
 
@@ -1664,7 +1664,7 @@ function PadraoAnoEscolar(xml)
     }
   }
 
-  setVisibility('tr_turma_modulo', false);
+  setModuleAndPhasesVisibility(false);
 
   setVisibility('tr_hora_inicial', true);
   setVisibility('tr_hora_final', true);
@@ -1678,8 +1678,15 @@ function PadraoAnoEscolar(xml)
   var campoCurso = document.getElementById('ref_cod_curso').value;
 
   if (document.getElementById('padrao_ano_escolar').value == 0) {
-    setVisibility('tr_turma_modulo', true);
+    setModuleAndPhasesVisibility(true);
   }
+}
+
+function setModuleAndPhasesVisibility(show)
+{
+  setVisibility('tr_etapas_cabecalho', show);
+  setVisibility('tr_ref_cod_modulo', show);
+  setVisibility('tr_turma_modulo', show);
 }
 
 function getHoraEscolaSerie()
