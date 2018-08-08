@@ -1,5 +1,7 @@
 <?php
 
+namespace iEducar\Modules\Navigation\Model;
+
 class Breadcrumb {
 
     public function makeBreadcrumb($currentPage, $breadcrumbs)
