@@ -203,6 +203,7 @@ class clsModulesProfessorTurma
           && is_numeric($this->servidor_id) && is_numeric($this->instituicao_id)) {
             $db  = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->ano)) {
                 $set .= "{$gruda}ano = '{$this->ano}'";
