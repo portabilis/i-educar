@@ -1,12 +1,13 @@
 <?php
 
 use iEducar\Modules\AuditoriaGeral\Model\Operacoes;
+use iEducar\Modules\AuditoriaGeral\Model\JsonToHtmlTable;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'Portabilis/Auditor/FromJsonToHtmlTable.php';
+require_once 'Portabilis/Date/Utils.php';
 
 class clsIndex extends clsBase
 {
@@ -19,7 +20,6 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
-    use JsonToHtmlTable;
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -104,8 +104,8 @@ class indice extends clsListagem
         $total = $auditoria->_total;
 
         foreach ($auditoriaLst as $a) {
-            $valorAntigo = $this->transformJsonToHtmlTable($a['valor_antigo']);
-            $valorNovo = $this->transformJsonToHtmlTable($a['valor_novo']);
+            $valorAntigo = JsonToHtmlTable::transformJsonToHtmlTable($a['valor_antigo']);
+            $valorNovo = JsonToHtmlTable::transformJsonToHtmlTable($a['valor_novo']);
 
             $usuario = new clsFuncionario($a['usuario_id']);
             $usuario = $usuario->detalhe();

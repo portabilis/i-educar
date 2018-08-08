@@ -1,11 +1,11 @@
 <?php
-
 use iEducar\Modules\AuditoriaGeral\Model\Operacoes;
+use iEducar\Modules\AuditoriaGeral\Model\JsonToHtmlTable;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Auditor/FromJsonToHtmlTable.php';
+require_once 'Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -17,7 +17,6 @@ class clsIndexBase extends clsBase
 }
 class indice extends clsDetalhe
 {
-    use JsonToHtmlTable;
     public $titulo;
 
     public $id;
@@ -71,15 +70,15 @@ class indice extends clsDetalhe
             'Data Hora',
             Portabilis_Date_Utils::pgSQLToBr($registro['data_hora'])
         ]);
-
+        
         $this->addDetalhe([
             'Valor Antigo',
-            $this->transformJsonToHtmlTable($registro['valor_antigo'])
+            JsonToHtmlTable::transformJsonToHtmlTable($registro['valor_antigo'])
         ]);
 
         $this->addDetalhe([
             'Valor Novo',
-            $this->transformJsonToHtmlTable($registro['valor_novo'])
+            JsonToHtmlTable::transformJsonToHtmlTable($registro['valor_novo'])
         ]);
 
         $this->addDetalhe([
