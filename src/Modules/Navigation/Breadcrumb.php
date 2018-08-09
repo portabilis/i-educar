@@ -1,8 +1,9 @@
 <?php
 
-namespace iEducar\Modules\Navigation\Model;
+namespace iEducar\Modules\Navigation;
 
-class Breadcrumb {
+class Breadcrumb
+{
 
     public function makeBreadcrumb($currentPage, $breadcrumbs)
     {
@@ -29,4 +30,3 @@ class Breadcrumb {
     }
     
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 
-use iEducar\Modules\Navigation\Model\Breadcrumb;
+use iEducar\Modules\Navigation\Breadcrumb;
 require_once 'CoreExt/Controller/Abstract.php';
 require_once 'Core/Controller/Page/Interface.php';
 require_once 'Core/Controller/Page/Exception.php';
