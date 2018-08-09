@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Servidores\Model\FuncaoExercida;
+use iEducar\Modules\Servidores\Model\TipoVinculo;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -40,13 +42,9 @@ class indice extends clsCadastro
     {
         $retorno = '';
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
-        $this->servidor_id    = $_GET['ref_cod_servidor'];
-        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-        $this->id = $_GET['id'];
+        $this->id = $this->getQueryString('id');
+        $this->servidor_id = $this->getQueryString('ref_cod_servidor');
+        $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
 
         // URL para redirecionamento
         $backUrl = sprintf(
@@ -99,13 +97,8 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-            'educar_servidores_index.php' => 'Servidores',
-            '' => "{$nomeMenu} vínculo do servidor à turma"
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb('Vínculo do professor à turma',['educar_servidores_index.php' => 'Servidores']);
 
         return $retorno;
     }
@@ -131,15 +124,8 @@ class indice extends clsCadastro
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
 
-        $resources = [
-            null  => 'Selecione',
-            1 => 'Docente',
-            2 => 'Auxiliar/Assistente educacional',
-            3 => 'Profissional/Monitor de atividade complementar',
-            4 => 'Tradutor Intérprete de LIBRAS',
-            5 => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
-            6 => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD'
-        ];
+        $resources = FuncaoExercida::getDescriptiveValues();
+        $resources = array_replace([null => 'Selecione'], $resources);
 
         $options = [
             'label' => 'Função exercida',
@@ -148,13 +134,8 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('funcao_exercida', $options);
 
-        $resources = [
-            null => 'Nenhum',
-            1 => 'Concursado/efetivo/estável',
-            2 => 'Contrato temporário',
-            3 => 'Contrato terceirizado',
-            4 => 'Contrato CLT'
-        ];
+        $resources = TipoVinculo::getDescriptiveValues();
+        $resources = array_replace([null => 'Nenhum'], $resources);
 
         $options = [
             'label' => 'Tipo do vínculo',
@@ -183,10 +164,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $backUrl = sprintf(
             'educar_servidor_vinculo_turma_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
             $this->servidor_id,
@@ -197,23 +174,21 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
         if ($this->ref_cod_turma) {
-            $obj = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
-            if ($obj->existe2()) {
+            $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
+            if ($professorTurma->existe2()) {
                 $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
 
                 return false;
             } else {
-                $professor_turma_id = $obj->cadastra();
-                $this->auditaCadastroDoVinculo($professor_turma_id);
-                $this->gravaComponentes($professor_turma_id);
+                $professorTurmaId = $professorTurma->cadastra();
+                $professorTurma->gravaComponentes($professorTurmaId, $this->componentecurricular);
             }
         } else {
-            $obj = new clsPmieducarTurma();
-            foreach ($obj->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->ano) as $reg) {
-                $obj = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
-                $professor_turma_id = $obj->cadastra();
-                $this->auditaCadastroDoVinculo($professor_turma_id);
-                $this->gravaComponentes($professor_turma_id);
+            $turmas = new clsPmieducarTurmas();
+            foreach ($turmas->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->ano) as $reg) {
+                $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
+                $professorTurmaId = $obj->cadastra();
+                $professorTurma->gravaComponentes($professorTurmaId);
             }
         }
 
@@ -224,10 +199,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $backUrl = sprintf(
             'educar_servidor_vinculo_turma_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
             $this->servidor_id,
@@ -237,7 +208,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
-        $obj = new clsModulesProfessorTurma(
+        $professorTurma = new clsModulesProfessorTurma(
             $this->id,
             $this->ano,
             $this->ref_cod_instituicao,
@@ -248,20 +219,16 @@ class indice extends clsCadastro
             $this->permite_lancar_faltas_componente
         );
 
-        if ($obj->existe2()) {
+        if ($professorTurma->existe2()) {
             $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
 
             return false;
         }
 
-        $detalheAntigo = $obj->detalhe();
-        $editou = $obj->edita();
+        $editou = $professorTurma->edita();
 
         if ($editou) {
-            $detalheAtual = $obj->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('professor_turma', $this->pessoa_logada, $this->id);
-            $auditoria->alteracao($detalheAntigo, $detalheAtual);
-            $this->gravaComponentes($this->id);
+            $professorTurma->gravaComponentes($this->id, $this->componentecurricular);
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             header('Location: ' . $backUrl);
             die();
@@ -273,10 +240,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $backUrl = sprintf(
             'educar_servidor_vinculo_turma_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
             $this->servidor_id,
@@ -286,90 +249,15 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, $backUrl);
 
-        $this->excluiComponentes($this->id);
-        $obj = new clsModulesProfessorTurma($this->id);
-        $objDetalhe = $obj->detalhe();
-
-        if ($obj->excluir()) {
-            $auditoria = new clsModulesAuditoriaGeral('professor_turma', $this->pessoa_logada, $this->id);
-            $auditoria->exclusao($objDetalhe);
-        }
+        $professorTurma = new clsModulesProfessorTurma($this->id);
+        $professorTurma->excluiComponentes($this->id);
+        $professorTurma->excluir();
 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
         header('Location:' . $backUrl);
         die();
     }
 
-    public function auditaCadastroDoVinculo($professor_turma_id)
-    {
-        if (!$professor_turma_id) {
-            return false;
-        }
-        $objProfessorTurma = new clsModulesProfessorTurma($professor_turma_id);
-        $vinculoProfessorTurma = $objProfessorTurma->detalhe();
-        $auditoria = new clsModulesAuditoriaGeral('professor_turma', $this->pessoa_logada, $professor_turma_id);
-        $auditoria->inclusao($vinculoProfessorTurma);
-        return true;
-    }
-
-    public function gravaComponentes($professor_turma_id)
-    {
-        $componentesAntigos = $this->retornaComponentesVinculados($professor_turma_id);
-        $this->excluiComponentes($professor_turma_id);
-        foreach ($this->getRequest()->componentecurricular as $componenteCurricularId) {
-            if (! empty($componenteCurricularId)) {
-                Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO modules.professor_turma_disciplina VALUES ($1,$2)', [ 'params' =>  [$professor_turma_id, $componenteCurricularId] ]);
-            }
-        }
-        $componentesNovos = $this->retornaComponentesVinculados($professor_turma_id);
-        $this->auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos);
-    }
-
-    public function excluiComponentes($professor_turma_id)
-    {
-        Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1', [ 'params' => [$professor_turma_id]]);
-    }
-
-    public function retornaComponentesVinculados($professor_turma_id)
-    {
-        $sql = 'SELECT componente_curricular_id
-                  FROM modules.professor_turma_disciplina
-                 WHERE professor_turma_id = $1';
-        $componentesVinculados = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$professor_turma_id]]);
-        $componentesVinculados = Portabilis_Array_Utils::setAsIdValue($componentesVinculados, 'componente_curricular_id', 'componente_curricular_id');
-        return $componentesVinculados;
-    }
-
-    public function auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos)
-    {
-        $componentesExcluidos = array_diff($componentesAntigos, $componentesNovos);
-        $componentesAdicionados = array_diff($componentesNovos, $componentesAntigos);
-
-        $auditoria = new clsModulesAuditoriaGeral('professor_turma_disciplina', $this->pessoa_logada, $professor_turma_id);
-
-        foreach ($componentesExcluidos as $componente) {
-            $componente = [
-                'componente_curricular_id' => $componente,
-                'nome' => $this->retornaNomeDoComponente($componente)
-            ];
-            $auditoria->exclusao($componente);
-        }
-
-        foreach ($componentesAdicionados as $componente) {
-            $componente = [
-                'componente_curricular_id' => $componente,
-                'nome' => $this->retornaNomeDoComponente($componente)
-            ];
-            $auditoria->inclusao($componente);
-        }
-    }
-
-    public function retornaNomeDoComponente($idComponente)
-    {
-        $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper;
-        $componente = $mapperComponente->find(['id' => $idComponente]);
-        return $componente->nome;
-    }
 }
 
 // Instancia objeto de página

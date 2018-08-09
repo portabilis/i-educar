@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\AuditoriaGeral\Model\Operacoes;
+use iEducar\Modules\AuditoriaGeral\Model\JsonToHtmlTable;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -13,7 +15,6 @@ class clsIndex extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} Auditoria geral");
         $this->processoAp = '9998851';
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -49,10 +50,6 @@ class indice extends clsListagem
 
     public function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Auditoria geral';
 
         foreach ($_GET as $var => $val) {
@@ -73,15 +70,14 @@ class indice extends clsListagem
         ];
         $this->inputsHelper()->simpleSearchRotinasAuditoria(null, $options, $helperOptions);
 
-        $operacoes = [
-            null => 'Todas',
-            1 => 'Novo',
-            2 => 'Edição',
-            3 => 'Exclusão' 
-        ];
+        $operacoes = Operacoes::getDescriptiveValues();
+        $operacoes = array_replace([null => 'Todas'], $operacoes);
+
         $this->campoTexto('codigo', 'Código do registro', $this->codigo, 10, 50);
-        $this->campoLista('operacao', 'Operação', $operacoes, null, null, null, null, null, null, false);
+        $this->campoLista('operacao', 'Operação', $operacoes, $this->operacao, null, null, null, null, null, false);
         $this->inputsHelper()->dynamic(['dataInicial','dataFinal']);
+        $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, false);
+        $this->campoHora('hora_final', 'Hora Final', $this->hora_final, false);
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $detalhe = $obj_usuario->detalhe();
@@ -100,19 +96,21 @@ class indice extends clsListagem
             $this->usuario,
             Portabilis_Date_Utils::brToPgSQL($this->data_inicial),
             Portabilis_Date_Utils::brToPgSQL($this->data_final),
+            $this->hora_inicial,
+            $this->hora_final,
             $this->operacao,
             $this->codigo
         );
         $total = $auditoria->_total;
 
         foreach ($auditoriaLst as $a) {
-            $valorAntigo = $this->transformaJsonEmTabela($a['valor_antigo']);
-            $valorNovo = $this->transformaJsonEmTabela($a['valor_novo']);
+            $valorAntigo = JsonToHtmlTable::transformJsonToHtmlTable($a['valor_antigo']);
+            $valorNovo = JsonToHtmlTable::transformJsonToHtmlTable($a['valor_novo']);
 
             $usuario = new clsFuncionario($a['usuario_id']);
             $usuario = $usuario->detalhe();
 
-            $operacao = $this->getNomeOperacao($a['operacao']);
+            $operacao = $operacoes[$a['operacao']];
 
             $dataAuditoria = Portabilis_Date_Utils::pgSQLToBr($a['data_hora']);
 
@@ -130,63 +128,7 @@ class indice extends clsListagem
 
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-            'educar_configuracoes_index.php' => 'Configurações',
-            '' => 'Auditoria geral'
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
-    }
-
-    public function transformaJsonEmTabela($json)
-    {
-        $dataJson = json_decode($json);
-        $tabela = '<table class=\'tablelistagem auditoria-tab\' width=\'100%\' border=\'0\' cellpadding=\'4\' cellspacing=\'1\'>
-                        <tr>
-                            <td class=\'formdktd\' valign=\'top\' align=\'left\' style=\'font-weight:bold;\'>Campo</td>
-                            <td class=\'formdktd\' valign=\'top\' align=\'left\' style=\'font-weight:bold;\'>Valor</td>
-                        <tr>';
-
-        foreach ($dataJson as $key => $value) {
-            if ($this->isDate($value)) {
-                $value = date('d/m/Y', strtotime($value));
-            }
-            $tabela .= '<tr>';
-            $tabela .= "<td class='formlttd'>$key</td>";
-            $tabela .= "<td class='formlttd'>$value</td>";
-            $tabela .= '</tr>';
-        }
-
-        $tabela .= '</table>';
-
-        return $tabela;
-    }
-
-    public function isDate($value)
-    {
-        if (preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function getNomeOperacao($operacap)
-    {
-        switch ($operacap) {
-            case 1:
-                $operacao = 'Novo';
-                break;
-            case 2:
-                $operacao = 'Edição';
-                break;
-            case 3:
-                $operacao = 'Exclusão';
-                break;
-        }
-
-        return $operacao;
+        $this->breadcrumb('Auditoria geral',['educar_configuracoes_index.php' => 'Configurações']);
     }
 
     public function retornaLinkDaAuditoria($idAuditoria, $campo)
