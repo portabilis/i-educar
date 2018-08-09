@@ -86,7 +86,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {page: 'index', label: 'Home'},
+    {page: 'index', label: 'Início'},
     {href: 'index.html#quemusa', label: 'Quem Usa?'},
     {blog: true, label: 'Blog'},
     {href : "https://forum.ieducar.org", label: 'Fórum' },
