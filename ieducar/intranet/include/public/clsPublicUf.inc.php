@@ -471,7 +471,7 @@ class clsPublicUf
         return "";
     }
 
-    function verificaDuplicidade($sigla_uf){
+    function verificaDuplicidade(){
     $db = new clsBanco();
     $sql = "SELECT sigla_uf
               FROM public.uf

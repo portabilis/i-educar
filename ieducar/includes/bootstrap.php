@@ -119,12 +119,14 @@ if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
 chdir($root . DS . 'intranet');
 unset($root, $paths);
 
-// função pra ajudar no debug
-function debug($var) {
-    $backtrace = debug_backtrace();
-    $template = '<div><strong>%s</strong> linha <strong>%d</strong></div>';
-    echo sprintf($template, $backtrace[0]['file'], $backtrace[0]['line']);
-    echo '<pre>';
-    print_r($var);
-    echo '</pre>';
+if (!function_exists('debug')) {
+
+    function debug($var) {
+        $backtrace = debug_backtrace();
+        $template = '<div><strong>%s</strong> linha <strong>%d</strong></div>';
+        echo sprintf($template, $backtrace[0]['file'], $backtrace[0]['line']);
+        echo '<pre>';
+        print_r($var);
+        echo '</pre>';
+    }
 }
