@@ -119,7 +119,7 @@ if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
 chdir($root . DS . 'intranet');
 unset($root, $paths);
 
-if (! function_exists('debug')) {
+if (!function_exists('debug')) {
 
     function debug($var) {
         $backtrace = debug_backtrace();

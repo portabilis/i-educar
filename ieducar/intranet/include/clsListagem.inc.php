@@ -572,7 +572,7 @@ class clsListagem extends clsCampos
 
           foreach ($linha as $i => $celula) {
             if (!empty( $this->colunas)) {
-              list($fmt) = current($this->colunas);
+              $fmt = current($this->colunas);
             }
             else {
               $fmt = alTopLeft;
