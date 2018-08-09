@@ -6,7 +6,7 @@ use Portabilis_Date_Utils;
 
 trait JsonToHtmlTable
 {
-    public function transformJsonToHtmlTable($json)
+    public static function transformJsonToHtmlTable($json)
     {
         $dataJson = json_decode($json);
         $htmlTable = '<table class=\'tablelistagem auditoria-tab\' width=\'100%\' border=\'0\' cellpadding=\'4\' cellspacing=\'1\'>

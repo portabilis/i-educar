@@ -8,7 +8,7 @@ class Operacoes
     const EDICAO = 2;
     const EXCLUSAO = 3;
 
-    public function getDescriptiveValues()
+    public static function getDescriptiveValues()
     {
         return [
             self::NOVO => 'Novo',
