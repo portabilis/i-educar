@@ -822,7 +822,7 @@ class clsDocumento
                 $this->certidao_casamento = $tupla["certidao_casamento"];
                 $this->passaporte = $tupla["passaporte"];
 
-                $tupla["idpes"] = $tupla["idpes"];
+                $tupla["idpes"] = $tupla["idpes"] ?? null;
                 $tupla["idorg_exp_rg"] = $tupla["idorg_exp_rg"];
                 $tupla["sigla_uf_cart_trabalho"] = $tupla["sigla_uf_cart_trabalho"];
                 $tupla["sigla_uf_cert_civil"] = $tupla["sigla_uf_cert_civil"];

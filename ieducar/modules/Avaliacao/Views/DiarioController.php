@@ -58,14 +58,14 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     $userId        = Portabilis_Utils_User::currentUserId();
     $componenteRequired = $isProfessor   = Portabilis_Business_Professor::isProfessor(false, $userId);
 
-    $this->inputsHelper()->input('ano');
+    $this->inputsHelper()->input('ano', 'ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
     $this->inputsHelper()->dynamic(array('componenteCurricularForDiario'), array('required' => $componenteRequired));
     $this->inputsHelper()->dynamic(array('matricula'), array('required' => FALSE ));
 
     $navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
                           '2' => 'Vertical',);
-                             
+
     $options      = array('label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
                           'resources' => $navegacaoTab,
                           'required'  => false,
@@ -90,10 +90,10 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => "Lan&ccedil;amento de notas"             
+         ""                                  => "Lan&ccedil;amento de notas"
     ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }  
+    $this->enviaLocalizacao($localizacao->montar(), true);
+  }
 }
 ?>
 

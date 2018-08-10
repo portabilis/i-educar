@@ -173,53 +173,72 @@ class DiarioController extends ApiCoreController
 
     protected function postNotas()
     {
-        if ($this->canPostNotas()) {
-            $etapa = $this->getRequest()->etapa;
-            $notas = $this->getRequest()->notas;
+        if (! $this->canPostNotas()) {
+            return false;
+        }
 
-            foreach ($notas as $turmaId => $notaTurma) {
-                foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+        $etapa = $this->getRequest()->etapa;
+        $notas = $this->getRequest()->notas;
 
-                    if (!empty($matriculaId)) {
-                        foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
-                                $valor = $notaTurmaAlunoDisciplina['nota'];
-                                $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-                                $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
-                                $valor = $this->truncate($valor, 4);
+        foreach ($notas as $turmaId => $notaTurma) {
+            foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
+                $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-                                $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
-
-                                $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
-
-                                $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
-
-                                $array_nota = [
-                                    'componenteCurricular' => $componenteCurricularId,
-                                    'nota' => $valorNota,
-                                    'etapa' => $etapa,
-                                    'notaOriginal' => $valor];
-
-                                if (!empty($nomeCampoRecuperacao)) {
-                                    $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
-                                }
-
-                                $nota = new Avaliacao_Model_NotaComponente($array_nota);
-
-                                if ($this->serviceBoletim($turmaId, $alunoId)) {
-                                    $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-                                    $this->trySaveServiceBoletim($turmaId, $alunoId);
-
-                                    $this->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
-                                }
-                            }
-                        }
-                    }
+                if (empty($matriculaId)) {
+                    continue;
                 }
 
-                $this->messenger->append('Notas postadas com sucesso!', 'success');
+                foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
+                    if (!$this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                        continue;
+                    }
+
+                    $valor = $notaTurmaAlunoDisciplina['nota'];
+                    $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
+                    $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
+                    $valor = $this->truncate($valor, 4);
+
+                    $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+
+                    $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
+
+                    $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
+
+                    $array_nota = [
+                        'componenteCurricular' => $componenteCurricularId,
+                        'nota' => $valorNota,
+                        'etapa' => $etapa,
+                        'notaOriginal' => $valor];
+
+                    if (!empty($nomeCampoRecuperacao)) {
+                        $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
+                    }
+
+                    $nota = new Avaliacao_Model_NotaComponente($array_nota);
+
+                    if (! $serviceBoletim = $this->serviceBoletim($turmaId, $alunoId)) {
+                        continue;
+                    }
+
+                    try {
+                        $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
+                            $etapa, $componenteCurricularId
+                        );
+                    } catch (Exception $e) {
+                        $this->messenger->append($e->getMessage(), 'error');
+
+                        return false;
+                    }
+
+                    $serviceBoletim->addNota($nota);
+
+                    $this->trySaveServiceBoletim($turmaId, $alunoId);
+
+                    $this->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
+                }
             }
+
+            $this->messenger->append('Notas postadas com sucesso!', 'success');
         }
     }
 
