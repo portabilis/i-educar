@@ -121,10 +121,10 @@ um pacote de mais de 40 relatórios funcionais.
 
 O i-Educar usa o [Composer](https://getcomposer.org/) para gerenciar suas
 dependências. O Composer já é executado automaticamente para quem utilizar
-docker-compose, basta dar o `docker-compose up`.
+docker-compose, basta executar o comando `docker-compose up`.
 
 Caso queira adicionar novas dependências ao projeto ou rodar algum outro
-compando do composer, execute da seguinte forma na raiz do projeto:
+comando do composer, execute da seguinte forma na raiz do projeto:
 
 ```bash
 docker run -it -v $(pwd):/app composer <seu_comando_aqui>
