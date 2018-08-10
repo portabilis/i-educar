@@ -125,7 +125,7 @@ class indice extends clsCadastro
     $registros = explode("\n", $arquivo);
 
     foreach ($registros as $registro) {
-      header_remove('Set-Cookie');
+      @header_remove('Set-Cookie');
       $dadosRegistro = explode("|", $registro);
       $numeroRegistro = $dadosRegistro[0];
 
@@ -165,7 +165,7 @@ class indice extends clsCadastro
       }
       //echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
     }
-    header_remove('Set-Cookie');
+    @header_remove('Set-Cookie');
     $this->mensagem = "Arquivo importado!";
     return true;
   }
@@ -186,7 +186,7 @@ class indice extends clsCadastro
     $cep = $dadosRegistro[12]; // ep.cep
     $logradouro = $dadosRegistro[13]; // l.idtlog l.nome
     $enderecoNumero = $dadosRegistro[14]; // ep.numero
-    $complemento = $dadosRegistro[15]; // ep.complemento
+    $complemento = utf8_encode($dadosRegistro[15]); // ep.complemento
     $nomeBairro = $dadosRegistro[16]; // b.nome
     $ufIbge = $dadosRegistro[17]; // uf.cod_ibge
     $municipioIbge = $dadosRegistro[18]; // m.cod_ibge
@@ -604,7 +604,7 @@ class indice extends clsCadastro
   }
 
   function vinculaDisciplinaSerie($codDisciplina, $codSerie){
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('componenteCurricular', 'anoEscolar');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('componenteCurricular', 'anoEscolar');
     $where = array('componente_curricular_id'=>$codDisciplina, 'ano_escolar_id' => $codSerie);
     $componenteAno = $dataMapper->findAll(array(), $where);
 
@@ -622,7 +622,7 @@ class indice extends clsCadastro
   }
 
   function getOrCreateComponenteCurricularTurma($codEscola, $codSerie, $codTurma, $codDisciplina){
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('componenteCurricular', 'turma');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('componenteCurricular', 'turma');
     $where = array('componente_curricular_id'=>$codDisciplina, 'turma_id' => $codTurma);
     $turmas = $dataMapper->findAll(array());
 
@@ -642,7 +642,7 @@ class indice extends clsCadastro
   }
 
   function getOrCreateAreaConhecimento(){
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('areaConhecimento', 'area');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('areaConhecimento', 'area');
     $areas = $dataMapper->findAll(array());
 
     $codArea = null;
@@ -662,7 +662,7 @@ class indice extends clsCadastro
 
     $codArea = $this->getOrCreateAreaConhecimento();
 
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('componenteCurricular', 'componente');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('componenteCurricular', 'componente');
     $where = array('codigo_educacenso' => $disciplinaEducacenso);
 
     $disciplinas = $dataMapper->findAll(array(), $where);
@@ -926,7 +926,7 @@ class indice extends clsCadastro
     $cep = $dadosRegistro[7-1];
     $endereco = $dadosRegistro[8-1];
     $numero = $dadosRegistro[9-1];
-    $complemento = $dadosRegistro[10-1];
+    $complemento = utf8_encode($dadosRegistro[10-1]);
     $bairro = $dadosRegistro[11-1];
     $ufIbge = $dadosRegistro[12-1];
     $municipioIbge = $dadosRegistro[13-1];
@@ -1190,7 +1190,7 @@ class indice extends clsCadastro
     $cep = $dadosRegistro[23-1];
     $endereco = $dadosRegistro[24-1];
     $numero = $dadosRegistro[25-1];
-    $complemento = $dadosRegistro[26-1];
+    $complemento = utf8_encode($dadosRegistro[26-1]);
     $bairro = $dadosRegistro[27-1];
     $ufIbge = $dadosRegistro[28-1];
     $municipioIbge = $dadosRegistro[29-1];
@@ -1330,7 +1330,7 @@ class indice extends clsCadastro
       'created_at'  => 'NOW()',
     );
 
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('transporte', 'aluno');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('transporte', 'aluno');
 
     try {
       $entity = $dataMapper->find($codAluno);
@@ -1805,7 +1805,7 @@ class indice extends clsCadastro
   }
 
   function createAlunoEducacenso($codAluno, $inep){
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('educacenso', 'aluno');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('educacenso', 'aluno');
 
     $data = array(
       'aluno'      => $codAluno,
@@ -1822,7 +1822,7 @@ class indice extends clsCadastro
   }
 
   function createEscolaEducacenso($codEscola, $inep){
-    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('educacenso', 'escola');
+    $dataMapper = (new Portabilis_DataMapper_Utils)->getDataMapperFor('educacenso', 'escola');
 
     $data = array(
       'escola'      => $codEscola,

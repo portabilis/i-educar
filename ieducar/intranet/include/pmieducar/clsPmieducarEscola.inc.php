@@ -1053,7 +1053,8 @@ class clsPmieducarEscola
   {
     if (is_numeric($this->cod_escola)) {
       $db = new clsBanco();
-      $set = "";
+      $set = '';
+      $gruda = '';
 
       if (is_numeric($this->ref_usuario_cad)) {
         $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
@@ -1420,7 +1421,7 @@ class clsPmieducarEscola
       }
 
       if (is_numeric($this->dependencia_alojamento_aluno)) {
-        $set .= "{$gruda}dependencia_alojamento_aluno = '{$this->dependencia_patio_coberto}'";
+        $set .= "{$gruda}dependencia_alojamento_aluno = '{$this->dependencia_alojamento_aluno}'";
         $gruda = ", ";
       }
 

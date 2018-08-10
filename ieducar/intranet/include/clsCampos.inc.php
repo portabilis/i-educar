@@ -958,8 +958,8 @@ class clsCampos extends Core_Controller_Page_Abstract
         $nome,
         $campo,
         $valor,
-        $tamanhovisivel,
-        $tamanhomaximo,
+        $tamanhovisivel = null,
+        $tamanhomaximo = null,
         $obrigatorio = false,
         $expressao = false,
         $duplo = false,
@@ -1397,7 +1397,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $md = $md ? false : true;
         $index = 0;
 
-        while (list($nome, $componente) = each($arr_campos)) {
+        foreach ($arr_campos as $nome => $componente) {
             $nome_add = $nome;
             $campo_tabela = false;
 
@@ -1758,7 +1758,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $name = '';
                         }
 
-                        $style = ($componente['tr_invisivel']) ?
+                        $style = isset($componente['tr_invisivel']) ?
                             'style=\'visibility:collapse\'' : '';
 
                         $explicacao = ($componente[6]) ?
@@ -2705,7 +2705,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
                 } // endswitch
 
-                if ($this->erros[$nome]) {
+                if (isset($this->erros[$nome])) {
                     $retorno .= '<br><font color=red>' . $this->erros[$nome] . '</font>';
                 }
 
