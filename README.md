@@ -96,11 +96,15 @@ o Docker Compose para criar os containers da aplicação:
 $ git clone https://github.com/portabilis/i-educar.git i-educar
 $ cd i-educar
 $ cp .env.example .env
+$ cp ieducar/configuration/ieducar.ini.sample ieducar/configuration/ieducar.ini
+$ cp phinx.php.sample phinx.php
 $ docker-compose up -d
 ```
 
-Depois disto faça uma cópia do arquivo `ieducar/configuration/ieducar.ini.sample`
-para `ieducar/configuration/ieducar.ini` realizando as alterações necessárias.
+Depois disto faça as alterações necessárias nos arquivos de configuração:
+- `.env`
+- `ieducar/configuration/ieducar.ini`
+- `phinx.php`
 
 ### Instalando relatórios
 
