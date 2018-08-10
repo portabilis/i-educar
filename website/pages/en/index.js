@@ -59,9 +59,7 @@ Button.defaultProps = {
 
 const SplashContainer = props => (
   <div className="homeContainer">
-    <div className="homeSplashFade">
-      <div className="wrapper homeWrapper">{props.children}</div>
-    </div>
+    {props.children}
   </div>
 );
 
@@ -93,7 +91,7 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         {/* <Logo img_src={imgUrl('i-educar-logo.png')} /> */}
         <div className="inner">
-
+          <img src={imgUrl('FB_cover_logo.png')} alt="Imagem mostrando a logo do i-Educar com uma tagline: O i-Educar é um software livre que descomplica e torna mais eficaz a gestão dos processos escolares, matrículas e dados de alunos."/>
         </div>
       </SplashContainer>
     );
