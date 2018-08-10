@@ -27,6 +27,8 @@ class AjustaModulosDeTurmas extends AbstractMigration
      */
     public function change()
     {
+        $this->execute("SELECT SETVAL('pmieducar.modulo_cod_modulo_seq', (SELECT MAX(cod_modulo) + 1 FROM pmieducar.modulo));");
+
         $generator = function () {
             $id = 0;
             $result = false;
