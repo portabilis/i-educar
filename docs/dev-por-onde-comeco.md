@@ -47,11 +47,14 @@ um pacote de mais de 40 relatórios funcionais.
 ## Instalando outras dependências
 
 O i-Educar usa o [Composer](https://getcomposer.org/) para gerenciar suas
-dependências. O Composer já vem pré-instalado na imagem via Docker então para
-instalar as dependências use os seguintes comandos:
+dependências. O Composer já é executado automaticamente para quem utilizar
+docker-compose, basta executar o comando `docker-compose up`.
 
-```terminal
-$ docker-compose exec ieducar_1604 composer install
+Caso queira adicionar novas dependências ao projeto ou rodar algum outro
+comando do composer, execute da seguinte forma na raiz do projeto:
+
+```bash
+docker run -it -v $(pwd):/app composer <seu_comando_aqui>
 ```
 
 ## Inicializando o banco de dados
@@ -105,7 +108,7 @@ O usuário padrão é: `admin` / A senha padrão é: `123456789`
 
 Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha padrão**.
 
-### Utilização do Xdebug
+## Utilização do Xdebug
 
 A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o 
 intuito de facilitar o processo de debug durante o desenvolvimento. Para 
