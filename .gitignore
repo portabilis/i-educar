@@ -18,6 +18,14 @@ ieducar/misc/database/migrations/portabilis
 .env
 .php_cs.cache
 
+# Docker
+docker/apache/logs/
+
+# IDE
+## Eclipse
+.buildpath
+.project
+.settings
 
 # Docusauros
 .DS_Store

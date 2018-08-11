@@ -85,13 +85,6 @@ DirectoryIndex index.php index.html index.htm
   php_flag  short_open_tag              on
 </IfModule>
 
-# Desabilita acesso para qualquer arquivo caso o
-<IfModule !mod_php7.c>
-  Order allow,deny
-  Deny from all
-</IfModule>
-
-
 # Configuração desabilitada (uma vez que o ambiente padrão já é production), permitindo definir o ambiente via virtual host.
 
 # Configura o ambiente de execu��o do i-Educar (production|development|testing).
