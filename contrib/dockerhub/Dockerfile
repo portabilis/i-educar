@@ -3,7 +3,6 @@ FROM php:7.0-apache
 LABEL maintainer="Caroline Salib <caroline@portabilis.com.br>, Everton Muniz <everton@portabilis.com.br>, Éber Dias <eber@portabilis.com.br>, Fábio Rodrigues Ribeiro<farribeiro@gmail.com>"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV XDEBUG="/etc/php/7.0/apache2/conf.d/20-xdebug.ini"
 
 RUN apt-get -y update \
 	&& apt-get install -y --no-install-recommends \
