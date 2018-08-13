@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\unit\Intranet;
 
 use clsCampos;
