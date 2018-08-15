@@ -74,4 +74,9 @@ class TestCase extends AbstractTestCase
         $this->getConnection()->getConnection()->exec(file_get_contents(__DIR__ . '/../unit/dumps/' . $file));
         $this->getConnection()->getConnection()->exec('SET session_replication_role = DEFAULT;');
     }
+
+    public function getHtmlCodeFromFile($fileName)
+    {
+        return  file_get_contents(__DIR__ . '/../unit/assets/' . $fileName);
+    }
 }
