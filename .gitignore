@@ -2,6 +2,11 @@
 /public/module
 /public/modules
 /vendor
+.env
+.php_cs.cache
+docker-compose.yml
+phinx.php
+phinx.yml
 
 *.idea
 *~
@@ -9,8 +14,6 @@
 /.gitkeep
 /.vagrant
 /deploy
-/phinx.php
-/phinx.yml
 Vagrantfile
 deploy/.ruby-version
 ieducar/configuration/ieducar.ini
@@ -19,8 +22,6 @@ ieducar/modules/Reports
 ieducar/intranet/filaunica
 ieducar/intranet/reservavaga
 ieducar/misc/database/migrations/portabilis
-.env
-.php_cs.cache
 
 
 # Docusauros
