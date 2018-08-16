@@ -8,7 +8,7 @@ services:
     links:
       - php
     ports:
-      - 8001:80
+      - 80:80
     working_dir: /application
     volumes:
       - ./:/application
@@ -25,7 +25,6 @@ services:
       XDEBUG_REMOTE_HOST: 127.0.0.1
       XDEBUG_REMOTE_PORT: 9000
       XDEBUG_REMOTE_ENABLE: 1
-
     working_dir: /application
     volumes:
       - ./:/application
