@@ -1,62 +1,10 @@
-; $Id$
-
-;
-; i-Educar - Sistema de gestão escolar
-;
-;  Copyright (C) 2006  Prefeitura Municipal de Itajaí
-;                      <ctima@itajai.sc.gov.br>
-;
-; Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
-; sob os termos da Licença Pública Geral GNU conforme publicada pela Free
-; Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
-; qualquer versão posterior.
-;
-; Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
-; NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
-; ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
-; do GNU para mais detalhes.
-;
-; Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
-; com este programa; se não, escreva para a Free Software Foundation, Inc., no
-; endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
-;
-
-
-;
-; Arquivo de configuração da aplicação.
-;
-; Este arquivo contém um conjunto de diretivas básicas para a configuração do
-; i-Educar. Este arquivo segue a sintaxe INI. Comentários de linha começam com
-; ponto-vírgula. Este arquivo em específico suporta:
-;
-; - Namespaces: é possível determinar namespaces, evitando colisão de diretivas
-; de configuração. O namespace app., por exemplo, é responsável pelas diretivas
-; da aplicação enquanto php. sobrescreve as diretivas do arquivo php.ini
-; original.
-;
-; - Herança: a herança simples é suportada, permitindo que o administrador
-; configure apenas um arquivo com configurações específicas para ambientes
-; diferentes como produção, desenvolvimento e testes (homologação). Para herdar
-; as configurações do ambiente 'production', extenda-a da seguinte forma:
-; [seu_ambiente : production].
-;
-; Recomenda-se deixar esse arquivo com permissão de leitura apenas para o dono
-; e ao usuário do Apache (ou do webserver de sua preferência).
-;
-; @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
-; @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
-; @package  CoreExt
-; @since    Arquivo disponível desde a versão 1.1.0
-; @version  $Id$
-;
-
 [production]
 ; Configurações de banco de dados
-app.database.dbname   = ieducar
-app.database.username = postgres
-app.database.hostname = postgres_95
-app.database.password = postgres
+app.database.hostname = postgres
 app.database.port     = 5432
+app.database.dbname   = ieducar
+app.database.username = ieducar
+app.database.password = ieducar
 app.name              = "i-Educar"
 
 ; Define mensagem de pendência administrativa
@@ -64,7 +12,7 @@ app.administrative_pending.exist = false
 app.administrative_pending.msg = "<p>Identificamos pend&ecirc;ncias administrativas da sua institui&ccedil;&atilde;o para utiliza&ccedil;&atilde;o do sistema. Sendo assim, pedimos que o respons&aacute;vel pelo sistema entre em contato com a Portabilis o mais breve.</p><br/><b>Telefone:</b> (48) 3055-3001 <br/> <b>E-mail:</b> contato@portabilis.com.br"
 
 ; Configurações do armazenamento de imagem amazon s3
-app.aws.bucketname   = apps-ieducar-images
+app.aws.bucketname   =
 app.aws.awsacesskey  =
 app.aws.awssecretkey =
 
@@ -98,7 +46,7 @@ app.locale.province = SP
 
 ; Timezone
 ; Defina o timezone desejado. Consulte a lista de timezones disponíveis em:
-; <http://en.wikipedia.org/wiki/List_of_tz_database_time_zones>.
+; <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>.
 app.locale.timezone = America/Sao_Paulo
 
 ; Configurações de administração
@@ -144,7 +92,7 @@ app.user_accounts.default_password_expiration_period = 180
 
 app.instituicao.data_base_deslocamento = 1
 
-app.novoeducacao.url = "http://172.17.0.1:3000"
+app.novoeducacao.url = "https://172.17.0.1:3000"
 app.novoeducacao.caminho_api = "/api/v1/"
 
 app.auditoria.notas = 1
@@ -176,7 +124,7 @@ app.mailer.debug           = false
 ;app.mailer.allowed_domains[] = cidade.sc.gov.br
 
 ; Configurações usadas pelo modulo de tratamento de erros ocorridos na aplicação.
-modules.error.link_to_support         = http://www.portabilis.com.br/fale_conosco#suporte
+modules.error.link_to_support         = https://www.portabilis.com.br/fale_conosco#suporte
 modules.error.send_notification_email = true
 ;modules.error.notification_email     = username@domain.com.br
 modules.error.show_details            = true
@@ -192,18 +140,18 @@ apis.access_key =
 apis.secret_key =
 
 ; Configuração do Administrative Tools Portabilis
-;app.administrative_tools_url = http://172.17.0.1:3000/api/v1
+;app.administrative_tools_url = https://172.17.0.1:3000/api/v1
 
 [development : production]
-; Herda configurações de banco de dados
 
 [testing : development]
-; Herda todas as configurações de desenvolvimento
+
+[localhost : development]
 
 ; Use seções especificas para adicionar configs que distinguem entre tenants,
-; ex para o host http://tenant.ieducar.com.br/, pode-se usar esta seção
+; ex para o host https://tenant.ieducar.com.br/, pode-se usar esta seção
 ; que herda as configurações de production
-;
+
 [tenant.ieducar.com.br : production]
 app.database.dbname     = tenant
 app.locale.province     = SC
