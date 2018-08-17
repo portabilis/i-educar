@@ -29,7 +29,7 @@ class LegacyLinkCommand extends Command
      */
     private function createSymbolLink($path)
     {
-        $legacy = '../ieducar/' . $path;
+        $legacy = '../' . config('legacy.path') . '/' . $path;
         $public = public_path($path);
 
         if (is_link($public)) {

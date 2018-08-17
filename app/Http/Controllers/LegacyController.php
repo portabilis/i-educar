@@ -14,7 +14,7 @@ class LegacyController extends Controller
      */
     private function getLegacyPath()
     {
-        return base_path('ieducar');
+        return base_path(config('legacy.path'));
     }
 
     /**
