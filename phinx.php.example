@@ -1,13 +1,15 @@
 <?php
 
+$app = require 'bootstrap/app.php';
+
 $environments = [
     "development" => [
-        "adapter" => "pgsql",
-        "host" => "postgres",
-        "port" => "5432",
-        "user" => "ieducar",
-        "pass" => "ieducar",
-        "name" => "ieducar",
+        "adapter" => env('DB_CONNECTION'),
+        "host" => env('DB_HOST'),
+        "port" => env('DB_PORT'),
+        "user" => env('DB_USERNAME'),
+        "pass" => env('DB_PASSWORD'),
+        "name" => env('DB_DATABASE'),
         "charset" => "utf8",
     ],
 ];
