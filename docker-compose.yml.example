@@ -29,14 +29,6 @@ services:
     volumes:
       - ./:/application
 
-  composer:
-    container_name: composer
-    image: composer
-    command: install
-    working_dir: /application
-    volumes:
-      - ./:/application
-
   postgres:
     container_name: postgres
     image: postgres:9.5
