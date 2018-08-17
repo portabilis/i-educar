@@ -1,8 +1,10 @@
+/legacy
 /public/intranet
 /public/module
 /public/modules
 /vendor
 .env
+.env.host
 .php_cs.cache
 docker-compose.yml
 phinx.php
