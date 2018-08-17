@@ -1,27 +1,27 @@
 <?php
 
-$environments = array(
-	"development" => array(
-		"adapter" => "pgsql",
-		"host" => "postgres_95",
-		"user" => "postgres",
-		"pass" => "postgres",
-		"port" => "5432",
-		"charset" => "utf8",
-		"name" => "ieducar",
-	),
-);
+$environments = [
+    "development" => [
+        "adapter" => "pgsql",
+        "host" => "postgres",
+        "port" => "5432",
+        "user" => "ieducar",
+        "pass" => "ieducar",
+        "name" => "ieducar",
+        "charset" => "utf8",
+    ],
+];
 
-$configuration = array(
-	"paths" => array(
-		"migrations" => array(
+$configuration = [
+    "paths" => [
+        "migrations" => [
             "ieducar/misc/database/migrations",
-        ),
-        "seeds" => array(
+        ],
+        "seeds" => [
             "ieducar/misc/database/seeds",
-        ),
-	),
-	"environments" => $environments,
-);
+        ],
+    ],
+    "environments" => $environments,
+];
 
 return $configuration;
