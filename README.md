@@ -126,9 +126,20 @@ Então, inicie os containers da aplicação:
 docker-compose up -d
 ```
 
+Faça instalação das dependências do projeto execute apenas um dos comandos
+abaixo:
+
+```
+# Caso você tenha o Composer instalado localmente
+composer install
+
+# Senão, execute
+docker run -it -v $(pwd):/app composer install
+```
+
 Acesse o container `php` para permitir a escrita nas pastas necessárias, criar 
-a chave da aplicação e finalizar a instalação do banco de dados e dos 
-relatórios:
+a chave da aplicação, links simbólicos e finalizar a instalação do banco de 
+dados e dos relatórios:
 
 ```
 docker-compose exec php bash
@@ -136,9 +147,10 @@ docker-compose exec php bash
 chmod -R 777 bootstrap/cache
 chmod -R 777 storage
 chmod -R 777 ieducar/modules/Reports/ReportSources/Portabilis
-chmod +x ieducar/vendor/portabilis/jasperphp/src/JasperStarter/bin/jasperstarter
+chmod +x vendor/portabilis/jasperphp/src/JasperStarter/bin/jasperstarter
 
 php artisan key:generate
+php artisan legacy:link
 
 vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
 vendor/bin/phinx migrate
