@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Stages\Exceptions\MissingStagesException;
+
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
@@ -106,6 +108,14 @@ class DiarioController extends ApiCoreController
         return $matriculaId;
     }
 
+    /**
+     * @param int $turmaId
+     * @param int $alunoId
+     *
+     * @return Avaliacao_Service_Boletim|bool
+     *
+     * @throws CoreExt_Exception
+     */
     protected function serviceBoletim($turmaId, $alunoId)
     {
         $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
@@ -224,6 +234,14 @@ class DiarioController extends ApiCoreController
                         $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
                             $etapa, $componenteCurricularId
                         );
+                    } catch (MissingStagesException $exception) {
+                        $this->appendResponse('error', [
+                            'code' => $exception->getCode(),
+                            'message' => $exception->getMessage(),
+                            'extra' => $exception->getExtraInfo(),
+                        ]);
+
+                        return false;
                     } catch (Exception $e) {
                         $this->messenger->append($e->getMessage(), 'error');
 
