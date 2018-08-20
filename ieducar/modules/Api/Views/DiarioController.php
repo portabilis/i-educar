@@ -15,6 +15,9 @@ require_once 'include/modules/clsModulesNotaExame.inc.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/String/Utils.php';
 
+//todo: Mover pra algum outro lugar
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
 class DiarioController extends ApiCoreController
 {
 
