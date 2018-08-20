@@ -11,8 +11,7 @@ class CriaTriggerParaImpedirDuplicacaoDePareceres extends AbstractMigration
                         RETURNS TRIGGER AS $$
                     BEGIN
                         PERFORM * FROM modules.parecer_aluno
-                                 WHERE parecer_aluno.matricula_id = NEW.matricula_id
-                                   AND parecer_aluno.parecer_descritivo = NEW.parecer_descritivo;
+                                 WHERE parecer_aluno.matricula_id = NEW.matricula_id;
                         IF FOUND THEN
                             RAISE EXCEPTION 'A matrícula % já existe na tabela parecer_aluno', NEW.matricula_id;
                         END IF;

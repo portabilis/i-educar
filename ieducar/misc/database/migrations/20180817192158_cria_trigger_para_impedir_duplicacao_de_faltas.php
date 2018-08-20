@@ -11,8 +11,7 @@ class CriaTriggerParaImpedirDuplicacaoDeFaltas extends AbstractMigration
                         RETURNS TRIGGER AS $$
                     BEGIN
                         PERFORM * FROM modules.falta_aluno
-                        WHERE falta_aluno.matricula_id = NEW.matricula_id
-                          AND falta_aluno.tipo_falta = NEW.tipo_falta;
+                        WHERE falta_aluno.matricula_id = NEW.matricula_id;
                         IF FOUND THEN
                             RAISE EXCEPTION 'A matrícula % já existe na tabela falta_aluno', NEW.matricula_id;
                         END IF;
