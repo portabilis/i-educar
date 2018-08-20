@@ -45,7 +45,7 @@ class clsPmieducarInstituicao
     var $obrigar_campos_censo;
     var $obrigar_documento_pessoa;
     var $orgao_regional;
-    var $considera_data_enturmacao;
+    var $exigir_lancamentos_anteriores;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -126,7 +126,7 @@ class clsPmieducarInstituicao
         $altera_atestado_para_declaracao = null,
         $obrigar_campos_censo = NULL,
         $obrigar_documento_pessoa = NULL,
-        $considera_data_enturmacao = NULL
+        $exigir_lancamentos_anteriores = NULL
     )
     {
         $db = new clsBanco();
@@ -178,7 +178,7 @@ class clsPmieducarInstituicao
                                                    obrigar_campos_censo,
                                                    obrigar_documento_pessoa,
                                                    orgao_regional,
-                                                   considera_data_enturmacao";
+                                                   exigir_lancamentos_anteriores";
 
         if (is_numeric($ref_usuario_cad)) {
             if (class_exists('clsPmieducarUsuario')) {
@@ -320,8 +320,8 @@ class clsPmieducarInstituicao
             $this->obrigar_documento_pessoa = $obrigar_documento_pessoa;
         }
 
-        if (is_bool($considera_data_enturmacao)) {
-            $this->considera_data_enturmacao = $considera_data_enturmacao;
+        if (is_bool($exigir_lancamentos_anteriores)) {
+            $this->exigir_lancamentos_anteriores = $exigir_lancamentos_anteriores;
         }
     }
 
@@ -668,12 +668,12 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             }
 
-            if (dbBool($this->considera_data_enturmacao)) {
-                $campos .= "{$gruda}considera_data_enturmacao";
+            if (dbBool($this->exigir_lancamentos_anteriores)) {
+                $campos .= "{$gruda}exigir_lancamentos_anteriores";
                 $valores .= "{$gruda} true ";
                 $gruda = ", ";
             } else {
-                $campos .= "{$gruda}considera_data_enturmacao";
+                $campos .= "{$gruda}exigir_lancamentos_anteriores";
                 $valores .= "{$gruda} false ";
                 $gruda = ", ";
             }
@@ -1003,11 +1003,11 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             }
 
-            if (dbBool($this->considera_data_enturmacao)) {
-                $set .= "{$gruda}considera_data_enturmacao = true ";
+            if (dbBool($this->exigir_lancamentos_anteriores)) {
+                $set .= "{$gruda}exigir_lancamentos_anteriores = true ";
                 $gruda = ", ";
             } else {
-                $set .= "{$gruda}considera_data_enturmacao = false ";
+                $set .= "{$gruda}exigir_lancamentos_anteriores = false ";
                 $gruda = ", ";
             }
 

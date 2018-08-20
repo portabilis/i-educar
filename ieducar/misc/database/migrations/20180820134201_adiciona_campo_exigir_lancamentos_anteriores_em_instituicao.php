@@ -2,14 +2,14 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class AdicionaCampoConsiderarDataEnturmacaoEmInstituicao extends AbstractMigration
+class AdicionaCampoExigirLancamentosAnterioresEmInstituicao extends AbstractMigration
 {
     public function up()
     {
         $this->execute(
             '
                 ALTER TABLE pmieducar.instituicao 
-                ADD COLUMN considera_data_enturmacao BOOLEAN DEFAULT false;
+                ADD COLUMN exigir_lancamentos_anteriores BOOLEAN DEFAULT false;
             '
         );
     }
@@ -19,7 +19,7 @@ class AdicionaCampoConsiderarDataEnturmacaoEmInstituicao extends AbstractMigrati
         $this->execute(
             '
                 ALTER TABLE pmieducar.instituicao 
-                DROP COLUMN considera_data_enturmacao;
+                DROP COLUMN exigir_lancamentos_anteriores;
             '
         );
     }

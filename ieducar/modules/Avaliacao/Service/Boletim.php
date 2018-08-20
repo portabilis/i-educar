@@ -3369,7 +3369,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             return $etapa['sequencial'];
         }, $etapasAntesDaEnturmacao);
 
-        $considerarDataEnturmacao = dbBool($instituicao['considera_data_enturmacao']);
+        $exigirLancamentosAnteriores = dbBool($instituicao['exigir_lancamentos_anteriores']);
 
         if ($etapaId == 'Rc') {
             $etapaId = $this->getOption('etapas');
@@ -3386,12 +3386,12 @@ public function alterarSituacao($novaSituacao, $matriculaId){
                 continue;
             }
 
-            // Se o aluno foi enturmado em uma data posterior ao fim de uma
-            // etapa, a nota não deve ser considerada como bloqueante caso o
-            // parâmetro da instituição "considerar_data_enturmacao_lancamento"
-            // esteja ativo.
+            // Se o o parâmetro da instituição "exigir_lancamentos_anteriores"
+            // não estiver ativo e o aluno foi enturmado em uma data posterior
+            // ao fim de uma etapa, o lançamento da nota da etapa anterior não
+            // será considerado bloqueante.
 
-            if (in_array($etapa, $etapasAntesDaEnturmacao) && $considerarDataEnturmacao) {
+            if (!$exigirLancamentosAnteriores && in_array($etapa, $etapasAntesDaEnturmacao)) {
                 continue;
             }
 
