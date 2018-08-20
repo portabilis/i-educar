@@ -7,6 +7,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
     protected $keys = [
         'instituicao',
         'ano',
+        'seleciona_curso',
         'curso',
         'data_inicial',
         'data_final'
@@ -14,7 +15,8 @@ class MovimentoGeralQueryFactory extends QueryFactory
 
     protected $defaults = [
         'instituicao' => 1,
-        'curso' => '\'0\''
+        'seleciona_curso' => 0,
+        'curso' => 0
     ];
 
     protected $query = '
@@ -29,7 +31,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo =1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and turma.turma_turno_id = 4
@@ -40,13 +42,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 0
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula, m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula, m.data_cadastro)) < :data_inicial::date
             ) as ed_inf_int,
             (
                 select count(distinct(m.cod_matricula))
@@ -57,7 +59,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and turma.turma_turno_id <> 4
@@ -68,13 +70,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 0
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ed_inf_parc,
             (
@@ -85,7 +87,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -95,13 +97,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 1
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_1,
             (
@@ -112,7 +114,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -122,13 +124,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 2
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_2,
             (
@@ -139,7 +141,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -149,13 +151,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 3
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_3,
             (
@@ -166,7 +168,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -176,13 +178,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 4
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_4,
             (
@@ -193,7 +195,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -203,13 +205,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 5
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_5,
             (
@@ -220,7 +222,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -230,13 +232,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 6
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_6,
             (
@@ -247,7 +249,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -257,13 +259,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 7
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_7,
             (
@@ -274,7 +276,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -284,13 +286,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 8
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_8,
             (
@@ -301,7 +303,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.aprovado not in (4, 6, 15)
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
@@ -311,13 +313,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         where true
                             and coluna = 9
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
-                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < {data_inicial}::date
+                    and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
                     and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
             ) as ano_9,
             (
@@ -326,7 +328,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 inner join pmieducar.matricula_turma mt on mt.ref_cod_matricula = m.cod_matricula
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.ativo = 1
                     and m.ref_ref_cod_serie in (
                         select ref_cod_serie
@@ -334,14 +336,14 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         inner join pmieducar.serie on serie.cod_serie = config_movimento_geral.ref_cod_serie
                         where true 
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
                     and mt.sequencial = 1
-                    and coalesce(mt.data_enturmacao, m.data_cadastro) between {data_inicial}::date and {data_final}::date
+                    and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
             ) as admitidos,
             (
                 select count(cod_matricula)
@@ -349,22 +351,22 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 inner join pmieducar.matricula_turma mt on mt.ref_cod_matricula = m.cod_matricula
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.ref_ref_cod_serie in (
                         select ref_cod_serie
                         from modules.config_movimento_geral
                         inner join pmieducar.serie on serie.cod_serie = config_movimento_geral.ref_cod_serie
                         where true
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
                     and m.aprovado = 4
                     and mt.transferido = \'t\'
-                    and coalesce(mt.data_exclusao, m.data_cancel) between {data_inicial}::date and {data_final}::date
+                    and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as transf,
             (
                 select count(cod_matricula)
@@ -372,22 +374,22 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 inner join pmieducar.matricula_turma mt on mt.ref_cod_matricula = m.cod_matricula
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.ref_ref_cod_serie in (
                         select ref_cod_serie
                         from modules.config_movimento_geral
                         inner join pmieducar.serie on serie.cod_serie = config_movimento_geral.ref_cod_serie
                         where true
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
                     and m.aprovado = 6
                     and mt.abandono = \'t\'
-                    and coalesce(mt.data_exclusao, m.data_cancel) between {data_inicial}::date and {data_final}::date
+                    and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as aband,
             (
                 select count(m.cod_matricula)
@@ -397,7 +399,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo = 1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
                         select ref_cod_serie
@@ -405,10 +407,10 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         inner join pmieducar.serie on serie.cod_serie = config_movimento_geral.ref_cod_serie
                         where true
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
                     and mt.ativo = 0
@@ -417,7 +419,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         from pmieducar.matricula_turma
                         where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
                     )
-                    and coalesce(mt.data_exclusao, m.data_cancel) between {data_inicial}::date and {data_final}::date
+                    and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as rem,
             (
                 select count(m.cod_matricula)
@@ -427,7 +429,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
                     and m.ativo =1
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.dependencia not in (true)
                     and m.ref_ref_cod_serie in (
                         select ref_cod_serie
@@ -435,14 +437,14 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         inner join pmieducar.serie on serie.cod_serie = config_movimento_geral.ref_cod_serie
                         where true
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                 )
                 and m.aprovado = 5
-                and coalesce(mt.data_exclusao, m.data_cancel) between {data_inicial}::date and {data_final}::date
+                and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as recla,
             (
                 select count(m.cod_matricula)
@@ -450,21 +452,21 @@ class MovimentoGeralQueryFactory extends QueryFactory
                 inner join pmieducar.matricula_turma mt on mt.ref_cod_matricula = m.cod_matricula
                 where true
                     and m.ref_ref_cod_escola = escola.cod_escola
-                    and m.ano = {ano}
+                    and m.ano = :ano
                     and m.ref_ref_cod_serie in (
                         select ref_cod_serie
                         from modules.config_movimento_geral
                         inner join pmieducar.serie on serie.cod_serie = config_movimento_geral.ref_cod_serie
                         where true
                             and (case
-                                when {curso} = \'0\' then
+                                when :seleciona_curso = 0 then
                                     true
                                 else
-                                    serie.ref_cod_curso in ({curso})
+                                    serie.ref_cod_curso in (:curso)
                             end)
                     )
                     and m.aprovado = 15
-                    and coalesce(mt.data_exclusao, m.data_cancel) between {data_inicial}::date and {data_final}::date
+                    and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as obito,
             (case
                 when coalesce(fundamental_ciclo,0) = 0 then
@@ -488,16 +490,16 @@ class MovimentoGeralQueryFactory extends QueryFactory
         inner join cadastro.juridica on juridica.idpes = escola.ref_idpes
         where true
             and escola.ativo = 1
-            and escola.ref_cod_instituicao = {instituicao}
+            and escola.ref_cod_instituicao = :instituicao
             and (case
-                when {curso} = \'0\' then
+                when :seleciona_curso = 0 then
                     true
                 else
                     exists(
                         select 1
                         from pmieducar.escola_curso
                         where true
-                            and escola_curso.ref_cod_curso in ({curso})
+                            and escola_curso.ref_cod_curso in (:curso)
                             and escola.cod_escola = escola_curso.ref_cod_escola
                     )
             end)

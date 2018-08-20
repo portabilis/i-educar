@@ -2,8 +2,12 @@
 
 namespace iEducar\Modules\Reports\QueryFactory;
 
+require_once 'include/clsBanco.inc.php';
+
 class QueryFactory
 {
+    protected $pdo;
+
     protected $keys = [];
 
     protected $defaults = [];
@@ -15,11 +19,18 @@ class QueryFactory
     public function __construct($params = [])
     {
         $this->params = $params;
+
+        $banco = new \clsBanco();
+
+        $banco->FraseConexao();
+
+        $this->pdo = new \PDO('pgsql:' . $banco->getFraseConexao());
     }
 
-    public function generate()
+    public function getData()
     {
         $query = $this->query;
+        $values = [];
 
         foreach ($this->keys as $key) {
             $value = $this->params[$key] ?? $this->defaults[$key] ?? null;
@@ -30,11 +41,26 @@ class QueryFactory
                 );
             }
 
-            $searchKey = '{' . $key . '}';
-            $query = str_replace($searchKey, $value, $query);
+            if (is_array($value)) {
+                $tmpValues = [];
+
+                foreach ($value as $k => $v) {
+                    $tmpValues[':' . $key . '_' . $k] = $v;
+                }
+
+                $query = str_replace(':' . $key, join(', ', array_keys($tmpValues)), $query);
+
+                $values += $tmpValues;
+            } else {
+                $values[':' . $key] = $value;
+            }
         }
 
-        return $query;
+        $statement = $this->pdo->prepare($query);
+
+        $statement->execute($values);
+
+        return $statement->fetchAll();
     }
 
     public function setParams($params)
