@@ -3340,6 +3340,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $matriculaId = $this->getOption('matricula');
         $serieId = $this->getOption('ref_cod_serie');
         $escolaId = $this->getOption('ref_cod_escola');
+        $instituicao = App_Model_IedFinder::getInstituicao($regra->instituicao);
 
         // Pelo que eu entendi, caso a opção `definirComponentePorEtapa` é
         // possível lançar notas para etapas futuras.
@@ -3368,8 +3369,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             return $etapa['sequencial'];
         }, $etapasAntesDaEnturmacao);
 
-        // TODO criar o parâmetro na instituição
-        $considerarDataEnturmacao = true;
+        $considerarDataEnturmacao = dbBool($instituicao['considera_data_enturmacao']);
 
         if ($etapaId == 'Rc') {
             $etapaId = $this->getOption('etapas');
