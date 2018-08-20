@@ -45,6 +45,7 @@ class clsPmieducarInstituicao
     var $obrigar_campos_censo;
     var $obrigar_documento_pessoa;
     var $orgao_regional;
+    var $considera_data_enturmacao;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -124,7 +125,8 @@ class clsPmieducarInstituicao
         $exigir_dados_socioeconomicos = null,
         $altera_atestado_para_declaracao = null,
         $obrigar_campos_censo = NULL,
-        $obrigar_documento_pessoa = NULL
+        $obrigar_documento_pessoa = NULL,
+        $considera_data_enturmacao = NULL
     )
     {
         $db = new clsBanco();
@@ -175,7 +177,8 @@ class clsPmieducarInstituicao
                                                    altera_atestado_para_declaracao,
                                                    obrigar_campos_censo,
                                                    obrigar_documento_pessoa,
-                                                   orgao_regional";
+                                                   orgao_regional,
+                                                   considera_data_enturmacao";
 
         if (is_numeric($ref_usuario_cad)) {
             if (class_exists('clsPmieducarUsuario')) {
@@ -315,6 +318,10 @@ class clsPmieducarInstituicao
 
         if (is_bool($obrigar_documento_pessoa)) {
             $this->obrigar_documento_pessoa = $obrigar_documento_pessoa;
+        }
+
+        if (is_bool($considera_data_enturmacao)) {
+            $this->considera_data_enturmacao = $considera_data_enturmacao;
         }
     }
 
@@ -661,6 +668,16 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             }
 
+            if (dbBool($this->considera_data_enturmacao)) {
+                $campos .= "{$gruda}considera_data_enturmacao";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}considera_data_enturmacao";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
+
             if (is_string($this->orgao_regional) AND !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -983,6 +1000,14 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             } else {
                 $set .= "{$gruda}obrigar_documento_pessoa = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->considera_data_enturmacao)) {
+                $set .= "{$gruda}considera_data_enturmacao = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}considera_data_enturmacao = false ";
                 $gruda = ", ";
             }
 

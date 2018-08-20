@@ -76,6 +76,7 @@ class indice extends clsCadastro
     var $obrigar_campos_censo;
     var $obrigar_documento_pessoa;
     var $orgao_regional;
+    var $considera_data_enturmacao;
 
     function Inicializar()
     {
@@ -135,6 +136,7 @@ class indice extends clsCadastro
         $this->altera_atestado_para_declaracao = dbBool($this->altera_atestado_para_declaracao);
         $this->obrigar_campos_censo = dbBool($this->obrigar_campos_censo);
         $this->obrigar_documento_pessoa = dbBool($this->obrigar_documento_pessoa);
+        $this->considera_data_enturmacao = dbBool($this->considera_data_enturmacao);
 
 
         return $retorno;
@@ -259,6 +261,17 @@ class indice extends clsCadastro
 
         $this->campoCheck("obrigar_campos_censo", "Obrigar o preenchimento dos campos exigidos pelo Censo escolar", $this->obrigar_campos_censo);
         $this->campoCheck("obrigar_documento_pessoa", "Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno", $this->obrigar_documento_pessoa);
+        $this->campoCheck(
+            'considera_data_enturmacao',
+            'Considera a data de enturmação no lançamento de notas',
+            $this->considera_data_enturmacao,
+            null,
+            false,
+            false,
+            false,
+            'Quando marcado, se o aluno foi enturmado após o final da etapa anterior, o sistema irá permitir o lançamento de notas na etapa atual (apenas para notas lançadas pelo o Diário de Notas)'
+        );
+
 
         $this->inputsHelper()->text(
             'data_base',
@@ -353,6 +366,7 @@ class indice extends clsCadastro
         $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
         $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
         $obj->orgao_regional = $this->orgao_regional;
+        $obj->considera_data_enturmacao = !is_null($this->considera_data_enturmacao);
         $cod_instituicao = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
@@ -407,6 +421,7 @@ class indice extends clsCadastro
         $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
         $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
         $obj->orgao_regional = $this->orgao_regional;
+        $obj->considera_data_enturmacao = !is_null($this->considera_data_enturmacao);
 
         $detalheAntigo = $obj->detalhe();
 
