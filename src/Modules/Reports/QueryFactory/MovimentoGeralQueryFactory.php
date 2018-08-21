@@ -21,6 +21,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
 
     protected $query = '
         select
+            escola.cod_escola,
             juridica.fantasia as escola,
             (
                 select count(distinct(m.cod_matricula))
@@ -469,13 +470,13 @@ class MovimentoGeralQueryFactory extends QueryFactory
                     and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as obito,
             (case
-                when coalesce(fundamental_ciclo,0) = 0 then
+                when coalesce(fundamental_ciclo, 0) = 0 then
                     \'\'
                 else
                     \'**\'
             end) as ciclo,
             (case
-                when coalesce(atendimento_aee,0) <= 0 then
+                when coalesce(atendimento_aee, 0) <= 0 then
                     \'\'
                 else
                     \'*\'
