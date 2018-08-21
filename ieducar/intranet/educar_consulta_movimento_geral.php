@@ -15,8 +15,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    public $pessoa_logada;
-
     public $ano;
 
     public $curso = [];
@@ -25,42 +23,27 @@ class indice extends clsCadastro
 
     public $data_final;
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->pessoa_logada = $this->getSession()->id_pessoa ?? null;
-    }
-
     public function Inicializar()
     {
-        $this->ano = $_GET['ano'] ?? null;
-        $this->curso = $_GET['curso'] ?? null;
-        $this->data_inicial = $_GET['data_inicial'] ?? null;
-        $this->data_final = $_GET['data_final'] ?? null;
+        $this->ano = $this->getQueryString('ano');
+        $this->curso = $this->getQueryString('curso');
+        $this->data_inicial = $this->getQueryString('data_inicial');
+        $this->data_final = $this->getQueryString('data_final');
 
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            561,
+            561, // TODO: mudar para o id real do menu
             $this->pessoa_logada,
             7,
-            'index.php'
+            'educar_index.php'
         );
 
         $this->nome_url_sucesso = 'Continuar';
-        $this->url_cancelar = 'index.php';
-
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            '' => 'Consulta de movimentação geral'
-        ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
-
+        $this->url_cancelar = 'educar_index.php';
         $this->nome_url_cancelar = 'Cancelar';
+
+        $this->breadcrumb('Consulta de movimentação geral', ['educar_index.php' => 'Escola']);
 
         return 'Novo';
     }
