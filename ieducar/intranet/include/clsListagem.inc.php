@@ -728,7 +728,7 @@ class clsListagem extends clsCampos
     if(isset($this->acao_imprimir)) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' id='imprimir' class='botaolistagem' onclick='javascript: $this->acao_imprimir' value='$this->valor_imprimir'>";
     }
-    if ($this->acao && $this->show_botao_novo) {
+    if (!empty($this->acao) && $this->show_botao_novo) {
       $retorno .=  "
             <tr>
               <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
