@@ -2,8 +2,6 @@
 
 namespace iEducar\Modules\Reports\QueryFactory;
 
-require_once 'include/clsBanco.inc.php';
-
 class QueryFactory
 {
     protected $pdo;
@@ -16,15 +14,10 @@ class QueryFactory
 
     protected $params = [];
 
-    public function __construct($params = [])
+    public function __construct(\PDO $connection, $params = [])
     {
         $this->params = $params;
-
-        $banco = new \clsBanco();
-
-        $banco->FraseConexao();
-
-        $this->pdo = new \PDO('pgsql:' . $banco->getFraseConexao());
+        $this->pdo = $connection;
     }
 
     public function getData()
