@@ -23,12 +23,8 @@ RUN apt-get -y update \
 	zip \
 	zlib1g-dev \
 	&& wget -qO- https://github.com/portabilis/i-educar/archive/master.tar.gz | tar zxv -C /var/www/html/i-educar \
-	&& mv /var/www/html/i-educar-master /var/www/html/i-educar \
-	&& rm -rf master.tar.gz \
 	&& mkdir -p /var/www/html/i-educar/ieducar/modules/Reports \
 	&& wget -qO- https://github.com/portabilis/i-educar-reports-package/archive/master.tar.gz | tar zxv -C /var/www/html/i-educar/ieducar/modules/Reports \
-	&& mv /var/www/html/i-educar-reports-package-master/* /var/www/html/i-educar/ieducar/modules/Reports \
-	&& rm -rf master.tar.gz i-educar-reports-package-master \
 	&& find /var/www/ -type f -exec chmod 644 {} \; \
 	&& find /var/www/ -type d -exec chmod 755 {} \; \
 	&& cp -a /var/www/html/i-educar/docker/ieducar_1604/ieducar.conf /etc/apache2/sites-available/000-default.conf \
