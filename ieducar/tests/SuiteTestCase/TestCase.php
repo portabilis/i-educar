@@ -77,6 +77,11 @@ class TestCase extends AbstractTestCase
 
     public function getHtmlCodeFromFile($fileName)
     {
-        return  file_get_contents(__DIR__ . '/../unit/assets/' . $fileName);
+        return file_get_contents(__DIR__ . '/../unit/assets/' . $fileName);
+    }
+
+    public function getPdoConection()
+    {
+        return $this->getConnection()->getConnection();
     }
 }
