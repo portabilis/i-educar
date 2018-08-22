@@ -3417,12 +3417,14 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             return true;
         }
 
-        $etapa = App_Model_IedFinder::getEtapa($etapaId);
+        $nomeDaEtapa = 'Etapa';
 
-        if (empty($etapa)) {
-            $nomeDaEtapa = 'Etapa';
-        } else {
-            $nomeDaEtapa = $etapa['nm_tipo'];
+        if (count($informacoesEtapas)) {
+            $etapa = App_Model_IedFinder::getEtapa($informacoesEtapas[0]['cod_modulo']);
+
+            if ($etapa) {
+                $nomeDaEtapa = $etapa['nm_tipo'];
+            }
         }
 
         if ($secretarioDeveLancarNota) {
