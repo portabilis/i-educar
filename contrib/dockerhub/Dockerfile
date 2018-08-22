@@ -22,6 +22,7 @@ RUN apt-get -y update \
 	wget \
 	zip \
 	zlib1g-dev \
+	&& mkdir -p /var/www/html/i-educar \
 	&& wget -qO- https://github.com/portabilis/i-educar/archive/master.tar.gz | tar zxv -C /var/www/html/i-educar \
 	&& mkdir -p /var/www/html/i-educar/ieducar/modules/Reports \
 	&& wget -qO- https://github.com/portabilis/i-educar-reports-package/archive/master.tar.gz | tar zxv -C /var/www/html/i-educar/ieducar/modules/Reports \
