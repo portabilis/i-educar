@@ -53,7 +53,7 @@ class QueryFactory
 
         $statement->execute($values);
 
-        return $statement->fetchAll();
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function setParams($params)

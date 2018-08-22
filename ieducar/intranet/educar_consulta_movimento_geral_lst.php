@@ -6,6 +6,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndex extends clsBase
 {
@@ -51,11 +52,9 @@ class indice extends clsListagem
         $data = (new MovimentoGeralQueryFactory(new \PDO($connectionString), $params))
             ->getData();
 
-        //debug($data); die();
-
         $this->addCabecalhos([
-            'Educação infantil integral',
-            'Educação infantil parcial',
+            'Ed. inf. integral',
+            'Ed. inf. parcial',
             '1° Ano',
             '2° Ano',
             '3° Ano',
@@ -74,32 +73,35 @@ class indice extends clsListagem
             'Localização'
         ]);
 
-        $linkTemplate = '<a href="#" data-escola="%d" data-tipo="%s">%d</a>';
+        $linkTemplate = '<a href="#" class="mostra-consulta" data-escola="%d" data-ano="%s" data-inicial="%s" data-final="%s" data-curso="%s" data-tipo="%s">%d</a>';
+        $dataCurso = empty($params['curso']) ? '' : join(',', $params['curso']);
 
         foreach ($data as $d) {
             $this->addLinhas($d['escola']);
 
             $this->addLinhas([
-                sprintf($linkTemplate, $d['cod_escola'], 'ed_inf_int', $d['ed_inf_int']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ed_inf_parc', $d['ed_inf_parc']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_1', $d['ano_1']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_2', $d['ano_2']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_3', $d['ano_3']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_4', $d['ano_4']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_5', $d['ano_5']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_6', $d['ano_6']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_7', $d['ano_7']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_8', $d['ano_8']),
-                sprintf($linkTemplate, $d['cod_escola'], 'ano_9', $d['ano_9']),
-                sprintf($linkTemplate, $d['cod_escola'], 'admitidos', $d['admitidos']),
-                sprintf($linkTemplate, $d['cod_escola'], 'aband', $d['aband']),
-                sprintf($linkTemplate, $d['cod_escola'], 'transf', $d['transf']),
-                sprintf($linkTemplate, $d['cod_escola'], 'rem', $d['rem']),
-                sprintf($linkTemplate, $d['cod_escola'], 'recla', $d['recla']),
-                sprintf($linkTemplate, $d['cod_escola'], 'obito', $d['obito']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ed_inf_int', $d['ed_inf_int']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ed_inf_parc', $d['ed_inf_parc']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_1', $d['ano_1']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_2', $d['ano_2']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_3', $d['ano_3']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_4', $d['ano_4']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_5', $d['ano_5']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_6', $d['ano_6']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_7', $d['ano_7']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_8', $d['ano_8']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_9', $d['ano_9']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'admitidos', $d['admitidos']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'aband', $d['aband']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'transf', $d['transf']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'rem', $d['rem']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'recla', $d['recla']),
+                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'obito', $d['obito']),
                 $d['localizacao']
             ]);
         }
+
+        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/consulta_movimentos.js']);
     }
 }
 
