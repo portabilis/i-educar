@@ -58,9 +58,9 @@ class MissingStagesException extends Exception
      */
     protected function getExceptionMessage($missingStages)
     {
-        $message = 'Nota somente pode ser lançada após lançar notas nas etapas: %s deste componente curricular.';
+        $message = 'Nota somente pode ser lançada após lançar notas nas etapas: %s %s.';
 
-        return sprintf($message, join(', ', $missingStages));
+        return sprintf($message, join($this->stageName . ', ', $missingStages), $this->stageName);
     }
 
     /**

@@ -9,9 +9,9 @@ class StagesNotInformedByCoordinatorException extends MissingStagesException
      */
     protected function getExceptionMessage($missingStages)
     {
-        $message = 'O secretário/coordenador deve lançar as notas das etapas: %s deste componente curricular.';
+        $message = 'O secretário/coordenador deve lançar as notas das etapas: %s %s.';
 
-        return sprintf($message, join(', ', $missingStages));
+        return sprintf($message, join($this->stageName . ', ', $missingStages), $this->stageName);
     }
 
     /**
