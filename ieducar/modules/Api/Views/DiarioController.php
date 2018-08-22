@@ -238,6 +238,7 @@ class DiarioController extends ApiCoreController
                             $etapa, $componenteCurricularId
                         );
                     } catch (MissingStagesException $exception) {
+                        $this->messenger->append($exception->getMessage(), 'error');
                         $this->appendResponse('error', [
                             'code' => $exception->getCode(),
                             'message' => $exception->getMessage(),
