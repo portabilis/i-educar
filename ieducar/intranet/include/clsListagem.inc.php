@@ -549,49 +549,49 @@ class clsListagem extends clsCampos
 
     // Lista
     if (empty($this->linhas)) {
-      $retorno .=  "
-            <tr>
-              <td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td>
-            </tr>";
+      $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td></tr>";
     }
     else {
       reset($this->linhas);
 
       foreach ($this->linhas as $i => $linha) {
         $classe = ($i % 2) ? 'formmdtd' : 'formlttd';
-        $retorno .=  "
-            <tr>";
+        $retornoTmp = '';
 
         if (is_array($linha)) {
-          reset($linha);
-
-          if (!empty($this->colunas)) {
-            reset( $this->colunas );
-          }
-
-          foreach ($linha as $i => $celula) {
-            if (!empty( $this->colunas)) {
-              $fmt = current($this->colunas);
-            }
-            else {
-              $fmt = alTopLeft;
+            if (
+                !empty($linha['tipo'])
+                && !empty($linha['conteudo'])
+                && $linha['tipo'] === 'html-puro'
+            ) {
+                $retorno .= $linha['conteudo'];
+                continue;
             }
 
-            if (strpos($celula, "<img src='imagens/noticia.jpg' border=0>" ) !== FALSE) {
-              $celula = str_replace("<img src='imagens/noticia.jpg' border=0>", "<img src='imagens/noticia.jpg' border=0 alt=''>", $celula);
+            reset($linha);
+
+            if (!empty($this->colunas)) {
+                reset($this->colunas);
             }
 
-            $retorno .=  "
-              <td class='$classe' $fmt>$celula</td>";
-          }
+            foreach ($linha as $i => $celula) {
+                if (!empty( $this->colunas)) {
+                    $fmt = current($this->colunas);
+                } else {
+                    $fmt = alTopLeft;
+                }
+
+                if (strpos($celula, "<img src='imagens/noticia.jpg' border=0>" ) !== FALSE) {
+                    $celula = str_replace("<img src='imagens/noticia.jpg' border=0>", "<img src='imagens/noticia.jpg' border=0 alt=''>", $celula);
+                }
+
+                $retornoTmp .=  "<td class='$classe' $fmt>$celula</td>";
+            }
+        }  else {
+            $retornoTmp .=  "<td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
         }
-        else {
-          $retorno .=  "
-              <td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
-        }
 
-        $retorno .=  "
-            </tr>";
+        $retorno .=  '<tr>' . $retornoTmp . '</tr>';
       }
     }
 

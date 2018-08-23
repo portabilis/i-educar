@@ -50,11 +50,11 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
 
   protected function inputOptions($options) {
     $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $escolaId      = $this->getEscolaId($options['escolaId']);
-    $serieId       = $this->getSerieId($options['serieId']);
-    $ano           = $this->viewInstance->ano;
-    $naoFiltrarAno    = $this->viewInstance->nao_filtrar_ano;
+    $instituicaoId = $this->getInstituicaoId($options['instituicaoId'] ?? null);
+    $escolaId      = $this->getEscolaId($options['escolaId'] ?? null);
+    $serieId       = $this->getSerieId($options['serieId'] ?? null);
+    $ano           = isset($this->viewInstance->ano) ? $this->viewInstance->ano : null;
+    $naoFiltrarAno = isset($this->viewInstance->nao_filtrar_ano) ? $this->viewInstance->nao_filtrar_ano : null;
 
     $userId        = $this->getCurrentUserId();
     $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);

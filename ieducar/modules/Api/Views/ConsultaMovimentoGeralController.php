@@ -10,13 +10,10 @@ use \iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosRemQueryFactory;
 use \iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosReclaQueryFactory;
 use \iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosObitoQueryFactory;
 
-require_once 'include/clsBanco.inc.php';
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
+require_once 'lib/Portabilis/Controller/ConsultaBaseController.php';
 
-class ConsultaMovimentoGeralController extends ApiCoreController
+class ConsultaMovimentoGeralController extends ConsultaBaseController
 {
-    protected $pdo;
-
     protected function canGetAlunos()
     {
         return (
@@ -28,24 +25,7 @@ class ConsultaMovimentoGeralController extends ApiCoreController
         );
     }
 
-    protected function getPDO()
-    {
-        if (is_null($this->pdo)) {
-            $base = new clsBanco();
-            $base->FraseConexao();
-            $connectionString = 'pgsql:' . $base->getFraseConexao();
-
-            $this->pdo = new \PDO($connectionString);
-        }
-
-        return $this->pdo;
-    }
-
-    protected function getAlunos() {
-        if (!$this->canGetAlunos()) {
-            return null;
-        }
-
+    protected function getData() {
         $type = $this->getRequest()->tipo;
         $params = [];
 
@@ -53,7 +33,7 @@ class ConsultaMovimentoGeralController extends ApiCoreController
         $params['data_inicial'] = $this->getRequest()->data_inicial;
         $params['data_final'] = $this->getRequest()->data_final;
         $params['ano'] = $this->getRequest()->ano;
-        $params['curso'] = !empty($this->getRequest()->curso) ? empty($this->getRequest()->curso) : 0;
+        $params['curso'] = !empty($this->getRequest()->curso) ? $this->getRequest()->curso : 0;
 
         if ($params['curso'] !== 0) {
             $params['curso'] = explode(',', $params['curso']);
@@ -65,16 +45,6 @@ class ConsultaMovimentoGeralController extends ApiCoreController
         $method = $this->getMethodName($type);
 
         return $this->{$method}($params);
-    }
-
-    protected function getMethodName($type)
-    {
-        $name = 'getData';
-        $type = str_replace('_', ' ', $type);
-        $type = ucwords($type);
-        $type = str_replace(' ', '', $type);
-
-        return $name . $type;
     }
 
     protected function getDataObito($params)
@@ -201,14 +171,5 @@ class ConsultaMovimentoGeralController extends ApiCoreController
         $params['ano_coluna'] = 9;
 
         return $this->getDataAnos($params);
-    }
-
-    public function Gerar()
-    {
-        if ($this->isRequestFor('get', 'alunos')) {
-            $this->appendResponse($this->getAlunos());
-        } else {
-            $this->notImplementedOperationError();
-        }
     }
 }

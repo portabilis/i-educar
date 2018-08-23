@@ -50,8 +50,8 @@ class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_D
 
   protected function inputOptions($options) {
     $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $escolaId      = $this->getEscolaId($options['escolaId']);
+    $instituicaoId = $this->getInstituicaoId($options['instituicaoId'] ?? null);
+    $escolaId      = $this->getEscolaId($options['escolaId'] ?? null);
     $userId        = $this->getCurrentUserId();
     $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 

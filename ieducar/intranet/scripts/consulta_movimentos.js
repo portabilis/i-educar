@@ -71,24 +71,20 @@ $j(function () {
         e.preventDefault();
 
         let $this = $j(this);
-        let params = {
-          oper: 'get',
-          resource: 'alunos',
-          escola: $this.data('escola'),
-          tipo: $this.data('tipo'),
-          data_inicial: $this.data('inicial'),
-          data_final: $this.data('final'),
-          curso: $this.data('curso'),
-          ano: $this.data('ano')
-        };
+        let api = $this.data('api');
+        let params = $this.data('params');
 
-        that.request(params);
+        params.tipo = $this.data('tipo');
+        params.resource = 'alunos';
+        params.oper = 'get';
+
+        that.request(api, params);
 
         return false;
       });
     },
-    request: function (params) {
-      let url  = '/module/Api/ConsultaMovimentoGeral';
+    request: function (api, params) {
+      let url  = '/module/Api/' + api;
       let that = this;
 
       if (!this.dialogContainer.dialog('isOpen')) {
