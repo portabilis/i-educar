@@ -115,9 +115,12 @@ class indice extends clsListagem
     $obj_servidor = new clsPmieducarServidor();
     $obj_servidor->setOrderby('nome ASC');
 
-    $lista_professor = $obj_servidor->lista_professor($this->ref_cod_instituicao, $this->ref_cod_escola, $this->nome_servidor);
+    $lista_professor = false;
 
-    $total = $obj_servidor->_total;
+    if ($this->ref_cod_instituicao && $this->ref_cod_escola) {
+        $lista_professor = $obj_servidor->lista_professor($this->ref_cod_instituicao, $this->ref_cod_escola, $this->nome_servidor);
+    }
+
     // pega detalhes de foreign_keys
     if (class_exists('clsPmieducarInstituicao')) {
       $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $lista_professor[0]["ref_cod_instituicao"] );

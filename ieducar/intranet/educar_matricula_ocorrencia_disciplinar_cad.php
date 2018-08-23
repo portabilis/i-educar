@@ -162,7 +162,7 @@ class indice extends clsCadastro
             $this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);
         }else{
             $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-            $this->inputsHelper()->simpleSearchMatricula();
+            $this->inputsHelper()->simpleSearchMatricula(null);
             $this->inputsHelper()->hidden('somente_andamento');
         }
 
