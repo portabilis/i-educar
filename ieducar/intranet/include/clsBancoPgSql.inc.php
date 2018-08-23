@@ -423,10 +423,10 @@ abstract class clsBancoSQL_
       }
     }
 
-    // Executa a Consulta
-    if ($this->executandoEcho) {
-      echo $this->strStringSQL."\n<br>";
-    }
+   if (env('APP_DEBUG')) {
+      \Debugbar::log($this->strStringSQL);
+      //echo $this->strStringSQL."\n<br>";
+   }
 
     $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
     $this->strErro = pg_result_error($this->bConsulta_ID);
