@@ -44,35 +44,32 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe de fotos";
-        
 
-        $id_foto = @$_GET['id_foto'];
+        $id_foto = $_GET['id_foto'] ?? null;
 
         $objPessoa = new clsPessoaFisica();
         $db = new clsBanco();
-        //$db->Consulta( "SELECT f.data_foto, f.titulo, f.descricao, p1.nm_pessoa, f.caminho, f.altura, f.largura, p2.nm_pessoa, f.ref_cod_foto_secao FROM foto_portal f, pessoa_fj p1, pessoa_fj p2 WHERE f.ref_ref_cod_pessoa_fj=p1.cod_pessoa_fj AND p2.cod_pessoa_fj=f.ref_cod_credito AND cod_foto_portal={$id_foto}" );
-        $db->Consulta( "SELECT f.ref_ref_cod_pessoa_fj, f.nm_credito, f.data_foto, f.titulo, f.descricao, f.caminho, f.altura, f.largura, f.ref_cod_foto_secao FROM foto_portal f WHERE cod_foto_portal={$id_foto}" );
-        if ($db->ProximoRegistro())
-        {
-            //list ($data, $titulo, $descricao, $nome, $foto, $altura, $largura, $credito, $secao ) = $db->Tupla();
+
+        if ($id_foto) {
+            $db->Consulta( "SELECT f.ref_ref_cod_pessoa_fj, f.nm_credito, f.data_foto, f.titulo, f.descricao, f.caminho, f.altura, f.largura, f.ref_cod_foto_secao FROM foto_portal f WHERE cod_foto_portal={$id_foto}" );
+        }
+
+        if ($id_foto && $db->ProximoRegistro()) {
             list ($cod_pessoa, $nm_credito, $data, $titulo, $descricao, $foto, $altura, $largura, $secao ) = $db->Tupla();
             list($nome) = $objPessoa->queryRapida($cod_pessoa, "nome");
             
-            $data = date('d/m/Y', strtotime(substr($data,0,19) ));
-            
-            
+            $data = date('d/m/Y', strtotime(substr($data, 0, 19)));
 
             $this->addDetalhe( array("Data", $data) );
             $this->addDetalhe( array("T&iacute;tulo", $titulo) );
             $this->addDetalhe( array("Criador", $nome) );
             $this->addDetalhe( array("Credito", $nm_credito) );
-            //echo $foto;
             $this->addDetalhe( array("Foto", "<a href='#' onclick='javascript:openfoto(\"$foto\", \"$altura\",  \"$largura\")'><img src='fotos/small/{$foto}' border='0'></a>") );
         }
+
         $this->url_novo = "fotos_cad.php";
         $this->url_editar = "fotos_cad.php?id_foto=$id_foto";
         $this->url_cancelar = "fotos_lst.php";
-
         $this->largura = "100%";
     }
 }

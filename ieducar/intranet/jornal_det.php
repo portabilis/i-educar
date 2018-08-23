@@ -48,14 +48,16 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Jornal do Munic&iacute;pio";
-        
 
-        $cod_jornal = @$_GET['cod_jornal'];
+        $cod_jornal = $_GET['cod_jornal'] ?? null;
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT jor_ano_edicao, jor_edicao, jor_dt_inicial, jor_dt_final FROM jor_edicao WHERE cod_jor_edicao={$cod_jornal}" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($cod_jornal) {
+            $db->Consulta( "SELECT jor_ano_edicao, jor_edicao, jor_dt_inicial, jor_dt_final FROM jor_edicao WHERE cod_jor_edicao={$cod_jornal}" );
+        }
+
+        if ($cod_jornal && $db->ProximoRegistro()) {
             list ($ano, $edicao, $data_inicial, $data_final) = $db->Tupla();
             $data_final= date('d/m/Y', strtotime(substr($data_final,0,19) ));
             $data_inicial= date('d/m/Y', strtotime(substr($data_inicial,0,19) ));

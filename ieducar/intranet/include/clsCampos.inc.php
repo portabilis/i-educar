@@ -628,7 +628,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $nome,
         $campo,
         $valor,
-        $default,
+        $default = null,
         $acao = '',
         $duplo = false,
         $descricao = '',

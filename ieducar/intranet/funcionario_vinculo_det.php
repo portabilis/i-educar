@@ -53,13 +53,15 @@ class indice extends clsDetalhe
         session_write_close();
         $this->titulo = "Detalhe do Vínculo";
         
+        $cod_func = $_GET['cod_func'] ?? null;
 
-        // Pega o codigo do chamado
-        $cod_func = @$_GET['cod_func'];
         $db = new clsBanco();
-        $db->Consulta( "SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo= '$cod_func' " );
-        if( $db->ProximoRegistro() )
-        {
+
+        if ($cod_func) {
+            $db->Consulta( "SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo= '$cod_func' " );
+        }
+
+        if ($cod_func && $db->ProximoRegistro()) {
             list($nm_vinculo) = $db->Tupla();
             $this->addDetalhe( array("Nome", $nm_vinculo ) );
         }   

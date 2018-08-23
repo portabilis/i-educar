@@ -44,16 +44,17 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe da licita&ccedil;&atilde;o";
-        
 
-        $id_licitacao = @$_GET['id_licitacao'];
+        $id_licitacao = $_GET['id_licitacao'] ?? null;
 
         $objPessoa = new clsPessoaFisica();
         $db = new clsBanco();
-        $db->Consulta( "SELECT l.ref_ref_cod_pessoa_fj, m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes={$id_licitacao}" );
-        if ($db->ProximoRegistro())
-        {
-            //list ($nm, $numero, $objeto, $data_c, $hora) = $db->Tupla();
+
+        if ($id_licitacao) {
+            $db->Consulta( "SELECT l.ref_ref_cod_pessoa_fj, m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes={$id_licitacao}" );
+        }
+
+        if ($id_licitacao && $db->ProximoRegistro()) {
             list ( $cod_pessoa, $nm, $numero, $objeto, $data_c, $hora ) = $db->Tupla();
             list ( $nome ) = $objPessoa->queryRapida($cod_pessoa, "nome");
             $hora = date('H:i', strtotime(substr($data_c,0,19)));
