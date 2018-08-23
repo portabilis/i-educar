@@ -216,8 +216,6 @@ class clsPmieducarModulo
         if (
             is_numeric($this->ref_usuario_cad)
             && is_string($this->nm_tipo)
-            && is_numeric($this->num_meses)
-            && is_numeric($this->num_semanas)
             && is_numeric($this->ref_cod_instituicao)
             && is_numeric($this->num_etapas)
         ) {
