@@ -46,17 +46,24 @@ class indice extends clsDetalhe
         $db = new clsBanco();
         $db2 = new clsBanco();
         $this->titulo = "Detalhe do Edital";
-        
 
-        $cod_edital = @$_GET['cod_edital'];
-        
-        $db->Consulta( "SELECT ref_cod_compras_licitacoes, versao, data_hora, ref_ref_cod_pessoa_fj, arquivo, motivo_alteracao, visivel FROM compras_editais_editais WHERE cod_compras_editais_editais = '{$cod_edital}'" );
-        $db->ProximoRegistro();
-        list( $cod_licitacao, $versao, $data_hora, $ref_pessoa, $arquivo, $motivo_alteracao, $visivel ) = $db->Tupla();
+        $cod_edital = $_GET['cod_edital'] ?? null;
+        $cod_licitacao = null;
+
+        if ($cod_edital) {
+            $db->Consulta( "SELECT ref_cod_compras_licitacoes, versao, data_hora, ref_ref_cod_pessoa_fj, arquivo, motivo_alteracao, visivel FROM compras_editais_editais WHERE cod_compras_editais_editais = '{$cod_edital}'" );
+            $db->ProximoRegistro();
+
+            list( $cod_licitacao, $versao, $data_hora, $ref_pessoa, $arquivo, $motivo_alteracao, $visivel ) = $db->Tupla();
+        }
 
         $strVersoes = "";
-        $db2->Consulta( "SELECT cod_compras_editais_editais, versao FROM compras_editais_editais WHERE ref_cod_compras_licitacoes = $cod_licitacao ORDER BY versao ASC" );
-        while ( $db2->ProximoRegistro() ) 
+
+        if ($cod_licitacao) {
+            $db2->Consulta( "SELECT cod_compras_editais_editais, versao FROM compras_editais_editais WHERE ref_cod_compras_licitacoes = $cod_licitacao ORDER BY versao ASC" );
+        }
+
+        while ( $db2->ProximoRegistro() )
         {
             list( $cod_sub_edital, $sub_versao ) = $db2->Tupla();
             if( $sub_versao != $versao )
@@ -104,10 +111,12 @@ class indice extends clsDetalhe
         }
         $this->addDetalhe( array("Tipo de Arquivo", "<img src=\"$imagem\"> $extensao" ) );
         $this->addDetalhe( array("Arquivo", "<a href=\"{$arquivo}\">{$arquivo}</a>" ) );
-        
-        $db->Consulta( "SELECT m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes='{$cod_licitacao}'" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($cod_licitacao) {
+            $db->Consulta( "SELECT m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes='{$cod_licitacao}'" );
+        }
+
+        if ($cod_licitacao && $db->ProximoRegistro()) {
             list ($nm_modalidade, $numero, $objeto, $data ) = $db->Tupla();
 
             $this->addDetalhe( array("Numero da Licitação",$numero) );

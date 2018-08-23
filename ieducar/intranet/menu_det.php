@@ -44,14 +44,16 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe de Menu";
-        
 
-        $id_item = @$_GET['id_item'];
+        $id_item = $_GET['id_item'] ?? null;
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT cat.nm_menu, sub.cod_menu_submenu, sub.cod_sistema, sub.nm_submenu, sub.arquivo, sub.title FROM menu_submenu AS sub, menu_menu AS cat WHERE cod_menu_submenu={$id_item} AND cod_menu_menu = ref_cod_menu_menu" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($id_item) {
+            $db->Consulta( "SELECT cat.nm_menu, sub.cod_menu_submenu, sub.cod_sistema, sub.nm_submenu, sub.arquivo, sub.title FROM menu_submenu AS sub, menu_menu AS cat WHERE cod_menu_submenu={$id_item} AND cod_menu_menu = ref_cod_menu_menu" );
+        }
+
+        if ($id_item && $db->ProximoRegistro()) {
             list ( $categoria, $id_item, $id_sistema, $nome, $arquivo, $alt) = $db->Tupla();
             $this->addDetalhe( array("Nome", $nome) );
             $this->addDetalhe( array("Categoria", $categoria) );

@@ -44,14 +44,16 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe de not&iacute;cias";
-        
 
-        $id_noticia = @$_GET['id_noticia'];
+        $id_noticia = $_GET['id_noticia'] ?? null;
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT n.titulo, n.data_noticia, n.descricao, n.ref_ref_cod_pessoa_fj FROM not_portal n WHERE cod_not_portal={$id_noticia}" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($id_noticia) {
+            $db->Consulta( "SELECT n.titulo, n.data_noticia, n.descricao, n.ref_ref_cod_pessoa_fj FROM not_portal n WHERE cod_not_portal={$id_noticia}" );
+        }
+
+        if ($id_noticia && $db->ProximoRegistro()) {
             list ($titulo, $data, $descricao, $cod_responsavel) = $db->Tupla();
             $objPessoa = new clsPessoaFj();
             list($responsavel) = $objPessoa->queryRapida($cod_responsavel,"nome");

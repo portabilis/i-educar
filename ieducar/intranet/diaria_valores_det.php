@@ -45,16 +45,17 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe do valor";
-        
 
-        $cod_diaria_valores = @$_GET['cod_diaria_valores'];
+        $cod_diaria_valores = $_GET['cod_diaria_valores'] ?? null;
         
         $db = new clsBanco();
         $db2 = new clsBanco();
-        
-        $db->Consulta( "SELECT cod_diaria_valores, ref_funcionario_cadastro, ref_cod_diaria_grupo, estadual, p100, p75, p50, p25, data_vigencia FROM pmidrh.diaria_valores WHERE cod_diaria_valores='{$cod_diaria_valores}'" );
-        if( $db->ProximoRegistro() )
-        {
+
+        if ($cod_diaria_valores) {
+            $db->Consulta( "SELECT cod_diaria_valores, ref_funcionario_cadastro, ref_cod_diaria_grupo, estadual, p100, p75, p50, p25, data_vigencia FROM pmidrh.diaria_valores WHERE cod_diaria_valores='{$cod_diaria_valores}'" );
+        }
+
+        if ($cod_diaria_valores && $db->ProximoRegistro()) {
             list( $cod_diaria_valores, $ref_funcionario_cadastro, $ref_cod_diaria_grupo, $estadual, $p100, $p75, $p50, $p25, $data_vigencia ) = $db->Tupla();
             
             $objPessoa = new clsPessoa_( $ref_funcionario_cadastro );
@@ -83,9 +84,7 @@ class indice extends clsDetalhe
             $this->addDetalhe( array( "Data de vig&ecirc;ncia", $data_vigencia ) );
             
             $this->url_editar = "diaria_valores_cad.php?cod_diaria_valores={$cod_diaria_valores}";
-        }
-        else 
-        {
+        } else {
             $this->addDetalhe( array( "Erro", "Codigo de diaria-valor invalido" ) );
         }
         
