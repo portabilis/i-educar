@@ -52,51 +52,66 @@ class indice extends clsListagem
         $data = (new MovimentoGeralQueryFactory(new \PDO($connectionString), $params))
             ->getData();
 
-        $this->addCabecalhos([
-            'Ed. inf. integral',
-            'Ed. inf. parcial',
-            '1° Ano',
-            '2° Ano',
-            '3° Ano',
-            '4° Ano',
-            '5° Ano',
-            '6° Ano',
-            '7° Ano',
-            '8° Ano',
-            '9° Ano',
-            'Admitidos',
-            'Abandonos',
-            'Transferidos',
-            'Rem',
-            'Recla',
-            'Óbito',
-            'Localização'
+        $this->addCabecalhos(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+
+        $this->addLinhas([
+            'tipo' => 'html-puro',
+            'conteudo' => '
+                <tr>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Ed. Inf. Integ.</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Ed. Inf. Parc..</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">1° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">2° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">3° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">4° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">5° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">6° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">7° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">8° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">9° Ano</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Eliminados</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Rem.</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Recla.</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Óbito</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Localização</td>
+                </tr>
+                
+                <tr>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;">AD</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;">AB</td>
+                    <td class="formdktd" style="font-weight: bold; text-align: center;">TR</td>
+                </tr>
+            '
         ]);
 
-        $linkTemplate = '<a href="#" class="mostra-consulta" data-escola="%d" data-ano="%s" data-inicial="%s" data-final="%s" data-curso="%s" data-tipo="%s">%d</a>';
-        $dataCurso = empty($params['curso']) ? '' : join(',', $params['curso']);
+        $params['curso'] = empty($params['curso']) ? '' : join(',', $params['curso']);
+        $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoGeral" data-params=\'%s\' data-tipo="%s">%d</a>';
 
         foreach ($data as $d) {
             $this->addLinhas($d['escola']);
 
+            $p = $params;
+            $p['escola'] = $d['cod_escola'];
+            $p = json_encode($p);
+
             $this->addLinhas([
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ed_inf_int', $d['ed_inf_int']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ed_inf_parc', $d['ed_inf_parc']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_1', $d['ano_1']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_2', $d['ano_2']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_3', $d['ano_3']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_4', $d['ano_4']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_5', $d['ano_5']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_6', $d['ano_6']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_7', $d['ano_7']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_8', $d['ano_8']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'ano_9', $d['ano_9']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'admitidos', $d['admitidos']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'aband', $d['aband']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'transf', $d['transf']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'rem', $d['rem']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'recla', $d['recla']),
-                sprintf($linkTemplate, $d['cod_escola'], $params['ano'], $params['data_inicial'], $params['data_final'], $dataCurso, 'obito', $d['obito']),
+                sprintf($linkTemplate, $p, 'ed_inf_int', $d['ed_inf_int']),
+                sprintf($linkTemplate, $p, 'ed_inf_parc', $d['ed_inf_parc']),
+                sprintf($linkTemplate, $p, 'ano_1', $d['ano_1']),
+                sprintf($linkTemplate, $p, 'ano_2', $d['ano_2']),
+                sprintf($linkTemplate, $p, 'ano_3', $d['ano_3']),
+                sprintf($linkTemplate, $p, 'ano_4', $d['ano_4']),
+                sprintf($linkTemplate, $p, 'ano_5', $d['ano_5']),
+                sprintf($linkTemplate, $p, 'ano_6', $d['ano_6']),
+                sprintf($linkTemplate, $p, 'ano_7', $d['ano_7']),
+                sprintf($linkTemplate, $p, 'ano_8', $d['ano_8']),
+                sprintf($linkTemplate, $p, 'ano_9', $d['ano_9']),
+                sprintf($linkTemplate, $p, 'admitidos', $d['admitidos']),
+                sprintf($linkTemplate, $p, 'aband', $d['aband']),
+                sprintf($linkTemplate, $p, 'transf', $d['transf']),
+                sprintf($linkTemplate, $p, 'rem', $d['rem']),
+                sprintf($linkTemplate, $p, 'recla', $d['recla']),
+                sprintf($linkTemplate, $p, 'obito', $d['obito']),
                 $d['localizacao']
             ]);
         }
