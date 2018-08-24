@@ -87,32 +87,32 @@ class indice extends clsListagem
         $params['curso'] = empty($params['curso']) ? '' : join(',', $params['curso']);
         $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoGeral" data-params=\'%s\' data-tipo="%s">%d</a>';
 
-        foreach ($data as $d) {
-            $this->addLinhas($d['escola']);
+        foreach ($data as $item) {
+            $this->addLinhas($item['escola']);
 
-            $p = $params;
-            $p['escola'] = $d['cod_escola'];
-            $p = json_encode($p);
+            $paramsCopy = $params;
+            $paramsCopy['escola'] = $item['cod_escola'];
+            $paramsCopy = json_encode($paramsCopy);
 
             $this->addLinhas([
-                sprintf($linkTemplate, $p, 'ed_inf_int', $d['ed_inf_int']),
-                sprintf($linkTemplate, $p, 'ed_inf_parc', $d['ed_inf_parc']),
-                sprintf($linkTemplate, $p, 'ano_1', $d['ano_1']),
-                sprintf($linkTemplate, $p, 'ano_2', $d['ano_2']),
-                sprintf($linkTemplate, $p, 'ano_3', $d['ano_3']),
-                sprintf($linkTemplate, $p, 'ano_4', $d['ano_4']),
-                sprintf($linkTemplate, $p, 'ano_5', $d['ano_5']),
-                sprintf($linkTemplate, $p, 'ano_6', $d['ano_6']),
-                sprintf($linkTemplate, $p, 'ano_7', $d['ano_7']),
-                sprintf($linkTemplate, $p, 'ano_8', $d['ano_8']),
-                sprintf($linkTemplate, $p, 'ano_9', $d['ano_9']),
-                sprintf($linkTemplate, $p, 'admitidos', $d['admitidos']),
-                sprintf($linkTemplate, $p, 'aband', $d['aband']),
-                sprintf($linkTemplate, $p, 'transf', $d['transf']),
-                sprintf($linkTemplate, $p, 'rem', $d['rem']),
-                sprintf($linkTemplate, $p, 'recla', $d['recla']),
-                sprintf($linkTemplate, $p, 'obito', $d['obito']),
-                $d['localizacao']
+                sprintf($linkTemplate, $paramsCopy, 'ed_inf_int', $item['ed_inf_int']),
+                sprintf($linkTemplate, $paramsCopy, 'ed_inf_parc', $item['ed_inf_parc']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_1', $item['ano_1']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_2', $item['ano_2']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_3', $item['ano_3']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_4', $item['ano_4']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_5', $item['ano_5']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_6', $item['ano_6']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_7', $item['ano_7']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_8', $item['ano_8']),
+                sprintf($linkTemplate, $paramsCopy, 'ano_9', $item['ano_9']),
+                sprintf($linkTemplate, $paramsCopy, 'admitidos', $item['admitidos']),
+                sprintf($linkTemplate, $paramsCopy, 'aband', $item['aband']),
+                sprintf($linkTemplate, $paramsCopy, 'transf', $item['transf']),
+                sprintf($linkTemplate, $paramsCopy, 'rem', $item['rem']),
+                sprintf($linkTemplate, $paramsCopy, 'recla', $item['recla']),
+                sprintf($linkTemplate, $paramsCopy, 'obito', $item['obito']),
+                $item['localizacao']
             ]);
         }
 

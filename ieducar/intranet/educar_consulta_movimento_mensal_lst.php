@@ -112,35 +112,36 @@ class indice extends clsListagem
 
         $template = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoMensal" data-params=\'%s\' data-tipo="%s">%d</a>';
 
-        foreach ($data as $d) {
-            $p = $params;
-            $p['serie'] = $d['cod_serie'];
-            $p['turma'] = $d['cod_turma'];
+        foreach ($data as $item) {
+            $paramsCopy = $params;
+            $paramsCopy['serie'] = $item['cod_serie'];
+            $paramsCopy['turma'] = $item['cod_turma'];
+            $paramsCopy = json_encode($paramsCopy);
 
             $this->addLinhas([
-                $d['nm_serie'],
-                $d['nm_turma'],
-                $d['turno'],
-                sprintf($template, json_encode($p), 'mat_ini_m', $d['mat_ini_m']),
-                sprintf($template, json_encode($p), 'mat_ini_f', $d['mat_ini_f']),
-                $d['mat_ini_t'],
-                sprintf($template, json_encode($p), 'mat_transf_m', $d['mat_transf_m']),
-                sprintf($template, json_encode($p), 'mat_transf_f', $d['mat_transf_f']),
-                sprintf($template, json_encode($p), 'mat_aband_m', $d['mat_aband_m']),
-                sprintf($template, json_encode($p), 'mat_aband_f', $d['mat_aband_f']),
-                sprintf($template, json_encode($p), 'mat_admit_m', $d['mat_admit_m']),
-                sprintf($template, json_encode($p), 'mat_admit_f', $d['mat_admit_f']),
-                sprintf($template, json_encode($p), 'mat_falecido_m', $d['mat_falecido_m']),
-                sprintf($template, json_encode($p), 'mat_falecido_f', $d['mat_falecido_f']),
-                sprintf($template, json_encode($p), 'mat_reclassificados_m', $d['mat_reclassificados_m']),
-                sprintf($template, json_encode($p), 'mat_reclassificados_f', $d['mat_reclassificados_f']),
-                sprintf($template, json_encode($p), 'mat_trocae_m', $d['mat_trocae_m']),
-                sprintf($template, json_encode($p), 'mat_trocae_f', $d['mat_trocae_f']),
-                sprintf($template, json_encode($p), 'mat_trocas_m', $d['mat_trocas_m']),
-                sprintf($template, json_encode($p), 'mat_trocas_f', $d['mat_trocas_f']),
-                $d['mat_final_m'],
-                $d['mat_final_f'],
-                $d['mat_final_t'],
+                $item['nm_serie'],
+                $item['nm_turma'],
+                $item['turno'],
+                sprintf($template, $paramsCopy, 'mat_ini_m', $item['mat_ini_m']),
+                sprintf($template, $paramsCopy, 'mat_ini_f', $item['mat_ini_f']),
+                $item['mat_ini_t'],
+                sprintf($template, $paramsCopy, 'mat_transf_m', $item['mat_transf_m']),
+                sprintf($template, $paramsCopy, 'mat_transf_f', $item['mat_transf_f']),
+                sprintf($template, $paramsCopy, 'mat_aband_m', $item['mat_aband_m']),
+                sprintf($template, $paramsCopy, 'mat_aband_f', $item['mat_aband_f']),
+                sprintf($template, $paramsCopy, 'mat_admit_m', $item['mat_admit_m']),
+                sprintf($template, $paramsCopy, 'mat_admit_f', $item['mat_admit_f']),
+                sprintf($template, $paramsCopy, 'mat_falecido_m', $item['mat_falecido_m']),
+                sprintf($template, $paramsCopy, 'mat_falecido_f', $item['mat_falecido_f']),
+                sprintf($template, $paramsCopy, 'mat_reclassificados_m', $item['mat_reclassificados_m']),
+                sprintf($template, $paramsCopy, 'mat_reclassificados_f', $item['mat_reclassificados_f']),
+                sprintf($template, $paramsCopy, 'mat_trocae_m', $item['mat_trocae_m']),
+                sprintf($template, $paramsCopy, 'mat_trocae_f', $item['mat_trocae_f']),
+                sprintf($template, $paramsCopy, 'mat_trocas_m', $item['mat_trocas_m']),
+                sprintf($template, $paramsCopy, 'mat_trocas_f', $item['mat_trocas_f']),
+                $item['mat_final_m'],
+                $item['mat_final_f'],
+                $item['mat_final_t'],
             ]);
 
             Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/consulta_movimentos.js']);
