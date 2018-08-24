@@ -2,22 +2,24 @@
 
 namespace Tests\Browser;
 
+use Tests\Browser\Pages\LoginPage;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ExampleTest extends DuskTestCase
+class LoginPageTest extends DuskTestCase
 {
     /**
-     * A basic browser test example.
+     * Test if login page is shown.
      *
      * @return void
+     *
+     * @throws \Throwable
      */
-    public function testBasicExample()
+    public function testSeeLoginPage()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                    ->assertSee('Laravel');
+                ->on(new LoginPage());
         });
     }
 }
