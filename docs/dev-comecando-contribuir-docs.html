@@ -19,6 +19,10 @@
                 var toggler = document.querySelector(togglerSelector);
                 var target = document.querySelector(targetSelector);
 
+                if (!toggler) {
+                  return;
+                }
+
                 toggler.onclick = function(event) {
                   event.preventDefault();
 
@@ -67,7 +71,7 @@
 </ul></li>
 <li>Insira o cabeçalho no arquivo para que seja processado pelo Docusaurus</li>
 </ul>
-<pre><code class="hljs css languages- bash">---
+<pre><code class="hljs css language-bash">---
 id: [PERFIL]-funcionalidade
 title: Título da página
 sidebar_label: Nome que será exibido no menu lateral esquerdo

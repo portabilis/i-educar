@@ -4,6 +4,7 @@
 <url> <loc>http://ieducar.org/help.html</loc> <changefreq>weekly</changefreq> <priority>0.5</priority> <xhtml:link rel="alternate" hreflang="en" href="http://ieducar.org/en/help.html" /> </url>
 <url> <loc>http://ieducar.org/index.html</loc> <changefreq>weekly</changefreq> <priority>0.5</priority> <xhtml:link rel="alternate" hreflang="en" href="http://ieducar.org/en/index.html" /> </url>
 <url> <loc>http://ieducar.org/users.html</loc> <changefreq>weekly</changefreq> <priority>0.5</priority> <xhtml:link rel="alternate" hreflang="en" href="http://ieducar.org/en/users.html" /> </url>
+<url> <loc>http://ieducar.org/blog/2018/07/18/7-coisas-que-voce-precisa-saber-sobre-o-i-educar-no-fisl18.html</loc> <changefreq>weekly</changefreq> <priority>0.3</priority> </url>
 <url> <loc>http://ieducar.org/blog/2018/01/31/i-educar-por-todo-o-brasil-portabilis-e-fundacao-lemann.html</loc> <changefreq>weekly</changefreq> <priority>0.3</priority> </url>
 <url> <loc>http://ieducar.org/blog/2017/12/28/em-2018-queremos-o-i-educar-por-todo-o-brasil.html</loc> <changefreq>weekly</changefreq> <priority>0.3</priority> </url>
 <url> <loc>http://ieducar.org/docs/admin-intro.html</loc> <changefreq>hourly</changefreq> <priority>1.0</priority> <xhtml:link rel="alternate" hreflang="en" href="http://ieducar.org/docs/admin-intro.html" /> </url>
