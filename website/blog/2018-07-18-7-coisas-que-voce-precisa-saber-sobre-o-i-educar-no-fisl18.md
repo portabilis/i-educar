@@ -27,8 +27,7 @@ i-Educar no FISL 18.
 
 ### #1 — Lançamento da nova e empolgante marca do i-Educar
 
-Na minha palestra (*slides disponíveis
-*[aqui](https://pt.slideshare.net/portabilis/fisl-18-lanamento-do-ieducar-20-e-nova-forma-de-trabalhar-em-comunidade))
+Na minha palestra (slides disponíveis [aqui](https://pt.slideshare.net/portabilis/fisl-18-lanamento-do-ieducar-20-e-nova-forma-de-trabalhar-em-comunidade))
 para falar sobre o novo momento da Comunidade, coordenado pela Portabilis e
 parceiros, anunciei a nova marca do i-Educar. **Vamos conhecer?**
 
@@ -89,7 +88,9 @@ sugerir novos recursos.
 ![](https://cdn-images-1.medium.com/max/800/0*N_bB0UvxqDhCn2ED)
 ###### **Novo fórum do i-Educar para facilitar a interação entre os participantes.**
 
-Tanto o site quanto o fórum fazem parte das decisões da Portabilis de facilitar e engajar a participação e colaboração, tendo em vista os gargalos de acessibilidade e usabilidade do atual Portal do [Software Público Brasileiro (https://softwarepublico.gov.br/).
+Tanto o site quanto o fórum fazem parte das decisões da Portabilis de facilitar e engajar a participação e colaboração,
+tendo em vista os gargalos de acessibilidade e usabilidade do atual Portal do [Software Público Brasileiro
+(https://softwarepublico.gov.br/).
 
 Que tal conhecer agora o nosso [site](http://ieducar.org/) e começar a interagir
 no [fórum](https://forum.ieducar.org/) com a Comunidade? Estamos te esperando!
@@ -147,9 +148,7 @@ Segundo o [texto
 publicado](http://fisl18.softwarelivre.org/index.php/2018/07/14/iniciativas-para-acelerar-transformacao-digital-no-setor-publico-sao-organizadas-no-fisl-18/)
 no site oficial do FISL 18:
 
-> “O i-Educar é exemplo de tecnologia livre com inúmeros cases de sucesso da
-> adoção de tecnologias livres que estão transformando o setor público, tornando-o
-mais eficiente e aumentando o impacto das políticas públicas.”
+*“O i-Educar é exemplo de tecnologia livre com inúmeros cases de sucesso da adoção de tecnologias livres que estão transformando o setor público, tornando-o mais eficiente e aumentando o impacto das políticas públicas.”*
 
 ![](https://cdn-images-1.medium.com/max/800/0*yDeC1uuYx0Kw_KIz)
 ###### Destaque do i-Educar no site oficial do FISL (Softwarelivre.org).
