@@ -78,7 +78,7 @@ class ReportController extends ApiCoreController
             } elseif ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
                 $boletimReport->addArg('SUBREPORT_DIR', '/sites_media_root/services-test/reports/jasper/');
             } else {
-                $boletimReport->addArg('SUBREPORT_DIR', 'modules/Reports/ReportSources/Portabilis/');
+                $boletimReport->addArg('SUBREPORT_DIR', __DIR__ . '/../../Reports/ReportSources/Portabilis/');
             }
 
             $encoding = 'base64';
@@ -122,7 +122,7 @@ class ReportController extends ApiCoreController
             } elseif ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
                 $boletimProfessorReport->addArg('SUBREPORT_DIR', '/sites_media_root/services-test/reports/jasper/');
             } else {
-                $boletimProfessorReport->addArg('SUBREPORT_DIR', 'modules/Reports/ReportSources/Portabilis/');
+                $boletimProfessorReport->addArg('SUBREPORT_DIR', __DIR__ . '/../../Reports/ReportSources/Portabilis/');
             }
 
             $encoding = 'base64';
