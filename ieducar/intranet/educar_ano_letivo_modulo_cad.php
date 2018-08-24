@@ -119,11 +119,10 @@ class indice extends clsCadastro
         $obj->setOrderBy('sequencial ASC');
         $registros = $obj->lista($this->ref_ano - 1, $this->ref_ref_cod_escola);
         $cont = 0;
-        $modulosAnoAnterior = '';
 
         if ($registros) {
             $tabela = '<table border=0 style=\'\' cellpadding=2 width=\'100%\'>';
-            $tabela .= "<tr bgcolor=$cor><td colspan='2'>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).')</td></tr><tr><td>';
+            $tabela .= "<tr bgcolor=$cor><td colspan='2'>Etapas do ano anterior (".($this->ref_ano - 1).')</td></tr><tr><td>';
             $tabela .= '<table cellpadding="2" cellspacing="2" border="0" align="left" width=\'300px\'>';
             $tabela .= '<tr bgcolor=\'#ccdce6\'><th width=\'100px\'>Etapa<a name=\'ano_letivo\'/></th><th width=\'200px\'>Período</th></tr>';
 
@@ -213,7 +212,7 @@ class indice extends clsCadastro
 
         $this->campoLista(
             'ref_cod_modulo',
-            'Módulo',
+            'Etapa',
             $opcoesCampoModulo,
             $this->ref_cod_modulo,
             null,
