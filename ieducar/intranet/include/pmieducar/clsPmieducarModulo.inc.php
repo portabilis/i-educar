@@ -248,6 +248,11 @@ class clsPmieducarModulo
                 $valores[] = "'{$this->num_semanas}'";
             }
 
+            if (is_numeric($this->num_etapas)) {
+                $campos[] = "num_etapas";
+                $valores[] = "'{$this->num_etapas}'";
+            }
+
             $campos[] = "data_cadastro";
             $valores[] = "NOW()";
 
