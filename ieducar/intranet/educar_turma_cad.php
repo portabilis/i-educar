@@ -505,7 +505,7 @@ class indice extends clsCadastro
 
     $this->campoQuebra2();
 
-    $this->campoRotulo('etapas_cabecalho', '<b style="font-size: 18px;">Etapas da turma</b>');
+    $this->campoRotulo('etapas_cabecalho', '<b>Etapas da turma</b>');
 
     $this->campoLista(
       'ref_cod_modulo',
