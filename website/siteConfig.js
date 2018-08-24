@@ -60,6 +60,7 @@ const users = [
   },
 ];
 
+
 const statistics = {
   numberOfCities: '+80',
   numberOfSchools: '+2050',
