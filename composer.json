@@ -9,7 +9,7 @@
   ],
   "homepage": "https://github.com/portabilis/i-educar",
   "require": {
-    "php": "~7.0",
+    "php": "7.0.*",
     "portabilis/jasperphp": "v1.2.0",
     "robmorgan/phinx": "v0.8.1",
     "gilbitron/php-simplecache": "^1.4",
