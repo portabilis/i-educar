@@ -244,7 +244,7 @@ Enquanto isso, nos acompanhe no [Fórum](https://forum.ieducar.org/),
 [Facebook](https://www.facebook.com/iEducar).
 
 **Eu sou Tiago Giusti, CEO da Portabilis e Coordenador da Comunidade i-Educar e,
-junto com o #TimePortabilis, acreditamos que podemos mudar o nosso país através
+junto com o #TimePortabilis e a Comunidade, acreditamos que podemos mudar o nosso país através
 da educação.**
 
 **Junte-se a nós no movimento do #iEducar #PorTodasAsEscolasDoBrasil.**
