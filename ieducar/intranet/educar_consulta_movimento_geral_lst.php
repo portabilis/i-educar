@@ -12,8 +12,8 @@ class clsIndex extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimentação geral');
-        $this->processoAp = 561; // TODO: mudar para o id real do menu
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento geral');
+        $this->processoAp = 9998900;
     }
 }
 
@@ -27,7 +27,7 @@ class indice extends clsListagem
         $params['data_inicial'] = $this->getQueryString('data_inicial');
         $params['data_final'] = $this->getQueryString('data_final');
 
-        $this->breadcrumb('Consulta de movimentação geral', ['educar_index.php' => 'Escola']);
+        $this->breadcrumb('Consulta de movimento geral', ['educar_index.php' => 'Escola']);
 
         $required = [
             'ano',

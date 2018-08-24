@@ -7,9 +7,9 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimentação mensal');
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento mensal');
         $this->addEstilo("localizacaoSistema");
-        $this->processoAp = 561; // TODO: mudar para o id real do menu
+        $this->processoAp = 9998910;
     }
 }
 
@@ -45,7 +45,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            561, // TODO: mudar para o id real do menu
+            9998910,
             $this->pessoa_logada,
             7,
             'educar_index.php'
@@ -55,7 +55,7 @@ class indice extends clsCadastro
         $this->url_cancelar = 'educar_index.php';
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Consulta de movimentação mensal', ['educar_index.php' => 'Escola']);
+        $this->breadcrumb('Consulta de movimento mensal', ['educar_index.php' => 'Escola']);
 
         return 'Novo';
     }
