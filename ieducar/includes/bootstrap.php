@@ -7,10 +7,13 @@ if (! version_compare('5.2.0', PHP_VERSION, '<=')) {
   die('O i-Educar requer o PHP na versão 5.2. A versão instalada de seu PHP (' . PHP_VERSION . ') não é suportada.');
 }
 
-/**
- * Alias para DIRECTORY_SEPARATOR
- */
-define('DS', DIRECTORY_SEPARATOR);
+if (! defined('DS')) {
+
+    /**
+     * Alias para DIRECTORY_SEPARATOR
+     */
+    define('DS', DIRECTORY_SEPARATOR);
+}
 
 /**
  * Diretório raiz do projeto.
