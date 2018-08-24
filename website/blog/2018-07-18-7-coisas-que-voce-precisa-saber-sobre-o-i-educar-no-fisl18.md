@@ -1,10 +1,12 @@
-# 7 coisas que você precisa saber sobre o i-Educar no FISL 18
+---
+author: Tiago de Faveri Giusti
+authorURL: https://www.linkedin.com/in/giustin
+title: 7 coisas que você precisa saber sobre o i-Educar no FISL 18
+---
 
 ![](https://cdn-images-1.medium.com/max/800/1*rYtSnJvnJP-Y3Nd8yBXHfg.jpeg)
-Da esquerda para a direita, Fernando Paiva, da Fundação Lemann; Marcejo
-Cajueiro, da Portabilis; Luis Felipe Costa, da UFRJ; Vinicius Celms, da Fundação
-Lemann; Evandro Falleiros, do IFMS e Tiago Giusti, da Portabilis no estande da
-Comunidade i-Educar no FISL 18.
+###### Da esquerda para a direita, Fernando Paiva, da Fundação Lemann; Marcelo Cajueiro, da Portabilis; Luis Felipe Costa, da UFRJ; Vinicius Celms, da Fundação Lemann; Evandro Falleiros, do IFMS e Tiago Giusti, da Portabilis no estande da Comunidade i-Educar no FISL 18. 
+
 
 O Fórum Internacional Software Livre é um evento que acontece em Porto Alegre/RS
 e discute e promove o uso de tecnologias livres para o desenvolvimento humano e
@@ -40,7 +42,7 @@ processos, orientar decisões através de dados e alcançar os objetivos
 pedagógicos necessários para garantia da aprendizagem dos alunos.
 
 ![](https://cdn-images-1.medium.com/max/800/0*KMButsVAdh86YwK_)
-**Nova e empolgante marca do i-Educar.**
+###### **Nova e empolgante marca do i-Educar.**
 Alguns conceitos que buscamos representar com a nova marca:
 
 * **Lápis** — um lápis, representando a essência da educação;
@@ -76,8 +78,7 @@ como canal principal de acesso ao projeto, código-fonte, documentação e
 materiais de marketing, destacando benefícios, casos de sucesso, dentre outros.
 
 ![](https://cdn-images-1.medium.com/max/800/0*GOA4Sll8GSWazLUp)
-**Novo site do i-Educar, com design pela Portabilis e desenvolvimento pelos
-alunos do IFMS.**
+###### **Novo site do i-Educar, com design pela Portabilis e desenvolvimento pelos alunos do IFMS.**
 
 Além do site, lançamos também um fórum de discussões
 ([https://forum.ieducar.org](https://forum.ieducar.org/) ) para facilitar a
@@ -86,11 +87,9 @@ excelente ferramenta para esclarecer dúvidas dos usuários, relatar problemas o
 sugerir novos recursos.
 
 ![](https://cdn-images-1.medium.com/max/800/0*N_bB0UvxqDhCn2ED)
-**Novo fórum do i-Educar para facilitar a interação entre os participantes.**
-Tanto o site quanto o fórum fazem parte das decisões da Portabilis de facilitar
-e engajar a participação e colaboração, tendo em vista os gargalos de
-acessibilidade e usabilidade do atual Portal do [Software Público
-Brasileiro](https://softwarepublico.gov.br/).
+###### **Novo fórum do i-Educar para facilitar a interação entre os participantes.**
+
+Tanto o site quanto o fórum fazem parte das decisões da Portabilis de facilitar e engajar a participação e colaboração, tendo em vista os gargalos de acessibilidade e usabilidade do atual Portal do [Software Público Brasileiro (https://softwarepublico.gov.br/).
 
 Que tal conhecer agora o nosso [site](http://ieducar.org/) e começar a interagir
 no [fórum](https://forum.ieducar.org/) com a Comunidade? Estamos te esperando!
@@ -108,9 +107,7 @@ os desafios de consolidar e tornar sustentável uma comunidade de software
 aberto.
 
 ![](https://cdn-images-1.medium.com/max/800/0*5g2JnuVZ4jKZFj9b)
-Da esquerda para a direita, Vinicius Celms, da Fundação Lemann; Diogo Dorgam, da
-Rocket Chat; Tiago Giusti, da Portabilis; Gabriel Engel, da Rocket Chat e
-Fernando Paiva, da Fundação Lemann.
+###### Da esquerda para a direita, Vinicius Celms, da Fundação Lemann; Diogo Dorgam, da Rocket Chat; Tiago Giusti, da Portabilis; Gabriel Engel, da Rocket Chat e Fernando Paiva, da Fundação Lemann.
 
 ### #4 — Troca de experiências com a equipe do Erúdio, de Itajaí
 
@@ -129,9 +126,7 @@ feitas recentemente no i-Educar, como a integração com o Censo Escolar, por
 exemplo.
 
 ![](https://cdn-images-1.medium.com/max/800/0*G5WRtpIEpO54Mkh6)
-Da esquerda para a direita, profissional da Sec. de Educação de Jaraguá do Sul;
-Vinicius Celms e Fernando Paiva, da Fundação Lemann; Murilo Sodré, da Prefeitura
-Mun. de Itajaí e Tiago Giusti, da Portabilis.
+###### Da esquerda para a direita, profissional da Sec. de Educação de Jaraguá do Sul; Vinicius Celms e Fernando Paiva, da Fundação Lemann; Murilo Sodré, da Prefeitura Mun. de Itajaí e Tiago Giusti, da Portabilis.
 
 ### #5 — i-Educar é abraçado pela ASL e vira destaque no FISL 18
 
@@ -157,7 +152,7 @@ no site oficial do FISL 18:
 mais eficiente e aumentando o impacto das políticas públicas.”
 
 ![](https://cdn-images-1.medium.com/max/800/0*yDeC1uuYx0Kw_KIz)
-Destaque do i-Educar no site oficial do FISL (Softwarelivre.org).
+###### Destaque do i-Educar no site oficial do FISL (Softwarelivre.org).
 
 O i-Educar também foi destaque nos grupos de discussões, sobretudo em pautas que
 trataram sobre a sustentabilidade de projetos abertos a partir de ecossistemas
@@ -194,7 +189,7 @@ o projeto, levava um bala em troca. O resultado foi o alcance de 110 estrelas
 para o projeto. Um excelente começo, não é mesmo?
 
 ![](https://cdn-images-1.medium.com/max/800/0*iGJ47oxv8gUVd-kA)
-Convite para deixar estrelas para projeto em troca de uma bala no FISL 18 :)
+###### Convite para deixar estrelas para projeto em troca de uma bala no FISL 18 :)
 
 Ah, o código que implementamos para o evento está [disponível
 aqui](https://github.com/giustin/i-educar-stars) e você pode usar como desejar.
@@ -215,7 +210,7 @@ alcancemos a **meta de 3.000 retweets**, a Portabilis fornecerá o i-Educar, sem
 custos, para até três redes de ensino que a Comunidade decidir.
 
 ![](https://cdn-images-1.medium.com/max/800/0*Livs-8tRly6n5ofL)
-Tweet com meta para levar o i-Educar para 3 redes públicas de ensino.
+###### Tweet com meta para levar o i-Educar para 3 redes públicas de ensino.
 
 O serviço entregue será uma instância do i-Educar com todos os serviços
 inclusos: implantação, configurações, treinamento, hospedagem gerenciada e
@@ -253,15 +248,3 @@ junto com o #TimePortabilis, acreditamos que podemos mudar o nosso país atravé
 da educação.**
 
 **Junte-se a nós no movimento do #iEducar #PorTodasAsEscolasDoBrasil.**
-
-
-### [Tiago De Faveri Giusti](https://medium.com/@giustin)
-
-CEO da Portabilis
-
-Não se pode falar de educação sem amor.
-
-
-
-
-
