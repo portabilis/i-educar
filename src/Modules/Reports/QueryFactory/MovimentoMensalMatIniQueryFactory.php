@@ -20,7 +20,7 @@ class MovimentoMensalMatIniQueryFactory extends QueryFactory
         'curso' => 0,
     ];
 
-    protected $query = '
+    protected $query = <<<'SQL'
         select
             m.cod_matricula,
             pessoa.nome,
@@ -78,5 +78,5 @@ class MovimentoMensalMatIniQueryFactory extends QueryFactory
             end)
         order by
             pessoa.nome asc
-    ';
+SQL;
 }

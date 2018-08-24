@@ -18,7 +18,7 @@ class MovimentoGeralAlunosAnosQueryFactory extends QueryFactory
         'curso' => 0
     ];
 
-    protected $query = '
+    protected $query = <<<'SQL'
         select
             m.cod_matricula,
             pessoa.nome,
@@ -60,5 +60,5 @@ class MovimentoGeralAlunosAnosQueryFactory extends QueryFactory
             and date(coalesce(mt.data_exclusao, m.data_cancel)) is null
         order by
             pessoa.nome asc
-    ';
+SQL;
 }

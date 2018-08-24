@@ -19,7 +19,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
         'curso' => 0
     ];
 
-    protected $query = '
+    protected $query = <<<'SQL'
         select
             escola.cod_escola,
             juridica.fantasia as escola,
@@ -366,7 +366,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                             end)
                     )
                     and m.aprovado = 4
-                    and mt.transferido = \'t\'
+                    and mt.transferido = 't'
                     and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as transf,
             (
@@ -389,7 +389,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                             end)
                     )
                     and m.aprovado = 6
-                    and mt.abandono = \'t\'
+                    and mt.abandono = 't'
                     and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             ) as aband,
             (
@@ -471,21 +471,21 @@ class MovimentoGeralQueryFactory extends QueryFactory
             ) as obito,
             (case
                 when coalesce(fundamental_ciclo, 0) = 0 then
-                    \'\'
+                    ''
                 else
-                    \'**\'
+                    '**'
             end) as ciclo,
             (case
                 when coalesce(atendimento_aee, 0) <= 0 then
-                    \'\'
+                    ''
                 else
-                    \'*\'
+                    '*'
             end) as aee,
             (case
                 when escola.zona_localizacao = 2 then
-                    \'Rural\'
+                    'Rural'
                 else
-                    \'Urbana\'
+                    'Urbana'
             end) as localizacao
         from pmieducar.escola
         inner join cadastro.juridica on juridica.idpes = escola.ref_idpes
@@ -504,6 +504,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                             and escola.cod_escola = escola_curso.ref_cod_escola
                     )
             end)
-        order by juridica.fantasia asc
-    ';
+        order by
+            juridica.fantasia asc
+SQL;
 }

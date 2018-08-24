@@ -17,7 +17,7 @@ class MovimentoGeralAlunosEdInfIntQueryFactory extends QueryFactory
         'curso' => 0
     ];
 
-    protected $query = '
+    protected $query = <<<'SQL'
         select
             m.cod_matricula,
             pessoa.nome,
@@ -59,5 +59,5 @@ class MovimentoGeralAlunosEdInfIntQueryFactory extends QueryFactory
             and date(coalesce(mt.data_enturmacao, m.data_matricula, m.data_cadastro)) < :data_inicial::date
         order by
             pessoa.nome asc
-    ';
+SQL;
 }

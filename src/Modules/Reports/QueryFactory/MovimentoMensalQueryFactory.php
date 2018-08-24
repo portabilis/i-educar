@@ -22,7 +22,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
         'serie' => 0,
     ];
 
-    protected $query = '
+    protected $query = <<<'SQL'
         select *
         from
             (
@@ -45,7 +45,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                         where true
                             and mt.ref_cod_turma = t.cod_turma
                             and m.ativo = 1
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and m.ano = t.ano
                             and m.dependencia not in (true)
                             and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
@@ -65,7 +65,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                         where true
                             and mt.ref_cod_turma = t.cod_turma
                             and m.ativo = 1
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and m.ano = t.ano
                             and m.dependencia not in (true)
                             and date(coalesce(mt.data_enturmacao, m.data_matricula, m.data_cadastro)) < :data_inicial::date
@@ -88,7 +88,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and m.ativo = 1
                             and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
                             and mt.sequencial > 1
@@ -105,7 +105,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and m.ativo = 1
                             and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
                             and mt.sequencial > 1
@@ -122,7 +122,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and m.ativo = 1
                             and mt.ativo = 0
                             and mt.sequencial < (
@@ -144,7 +144,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and m.ativo = 1
                             and mt.ativo = 0
                             and mt.sequencial < (
@@ -168,7 +168,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
                             and mt.sequencial = 1
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
                     ) as mat_admit_m,
                     (
@@ -185,7 +185,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
                             and mt.sequencial = 1
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
                     ) as mat_admit_f,
                     (
@@ -200,7 +200,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and m.aprovado = 5
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_reclassificados_m,
@@ -216,7 +216,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and m.aprovado = 5
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_reclassificados_f,
@@ -232,9 +232,9 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and m.aprovado = 4
-                            and mt.transferido = \'t\'
+                            and mt.transferido = 't'
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_transf_m,
                     (
@@ -249,9 +249,9 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and m.aprovado = 4
-                            and mt.transferido = \'t\'
+                            and mt.transferido = 't'
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_transf_f,
                     (
@@ -266,9 +266,9 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and m.aprovado = 6
-                            and mt.abandono = \'t\'
+                            and mt.abandono = 't'
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_aband_m,
                     (
@@ -283,9 +283,9 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and m.aprovado = 6
-                            and mt.abandono = \'t\'
+                            and mt.abandono = 't'
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_aband_f,
                     (
@@ -300,7 +300,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'M\'
+                            and f.sexo = 'M'
                             and m.aprovado = 15
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_falecido_m,
@@ -316,7 +316,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                             and m.ref_cod_curso = s.ref_cod_curso
                             and m.ref_ref_cod_serie = s.cod_serie
                             and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = \'F\'
+                            and f.sexo = 'F'
                             and m.aprovado = 15
                             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
                     ) as mat_falecido_f
@@ -358,7 +358,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
         order by
             nm_serie,
             nm_turma
-    ';
+SQL;
 
     public function getData(){
         $data = parent::getData();
