@@ -60,7 +60,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            561,
+            9998900,
             $this->pessoa_logada,
             7,
             'index.php'
