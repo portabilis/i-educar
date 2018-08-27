@@ -1,0 +1,389 @@
+{
+  "regras": [
+    {
+      "id": "2",
+      "regra_diferenciada_id": null,
+      "tabela_arredondamento_id": "2",
+      "tabela_arredondamento_id_conceitual": null,
+      "tipo_nota": "2",
+      "tipo_presenca": "2",
+      "parecer_descritivo": "0",
+      "tipo_recuperacao": "0",
+      "media_recuperacao_paralela": null,
+      "nota_maxima_geral": "10",
+      "nota_maxima_exame": "10",
+      "turmas": []
+    },
+    {
+      "id": "3",
+      "regra_diferenciada_id": null,
+      "tabela_arredondamento_id": "4",
+      "tabela_arredondamento_id_conceitual": null,
+      "tipo_nota": "1",
+      "tipo_presenca": "1",
+      "parecer_descritivo": "6",
+      "tipo_recuperacao": "0",
+      "media_recuperacao_paralela": null,
+      "nota_maxima_geral": "10",
+      "nota_maxima_exame": "10",
+      "turmas": []
+    },
+    {
+      "id": "4",
+      "regra_diferenciada_id": null,
+      "tabela_arredondamento_id": "6",
+      "tabela_arredondamento_id_conceitual": null,
+      "tipo_nota": "1",
+      "tipo_presenca": "1",
+      "parecer_descritivo": "3",
+      "tipo_recuperacao": "0",
+      "media_recuperacao_paralela": null,
+      "nota_maxima_geral": "10",
+      "nota_maxima_exame": "10",
+      "turmas": [
+        {
+          "turma_id": "701"
+        },
+        {
+          "turma_id": "702"
+        },
+        {
+          "turma_id": "703"
+        },
+        {
+          "turma_id": "720"
+        },
+        {
+          "turma_id": "721"
+        },
+        {
+          "turma_id": "723"
+        },
+        {
+          "turma_id": "724"
+        },
+        {
+          "turma_id": "725"
+        },
+        {
+          "turma_id": "733"
+        },
+        {
+          "turma_id": "769"
+        },
+        {
+          "turma_id": "771"
+        },
+        {
+          "turma_id": "772"
+        },
+        {
+          "turma_id": "775"
+        },
+        {
+          "turma_id": "776"
+        },
+        {
+          "turma_id": "779"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "regra_diferenciada_id": null,
+      "tabela_arredondamento_id": "3",
+      "tabela_arredondamento_id_conceitual": null,
+      "tipo_nota": "2",
+      "tipo_presenca": "1",
+      "parecer_descritivo": "3",
+      "tipo_recuperacao": "0",
+      "media_recuperacao_paralela": null,
+      "nota_maxima_geral": "10",
+      "nota_maxima_exame": "10",
+      "turmas": [
+        {
+          "turma_id": "689"
+        },
+        {
+          "turma_id": "690"
+        },
+        {
+          "turma_id": "691"
+        },
+        {
+          "turma_id": "693"
+        },
+        {
+          "turma_id": "694"
+        },
+        {
+          "turma_id": "695"
+        },
+        {
+          "turma_id": "696"
+        },
+        {
+          "turma_id": "697"
+        },
+        {
+          "turma_id": "699"
+        },
+        {
+          "turma_id": "705"
+        },
+        {
+          "turma_id": "706"
+        },
+        {
+          "turma_id": "707"
+        },
+        {
+          "turma_id": "708"
+        },
+        {
+          "turma_id": "710"
+        },
+        {
+          "turma_id": "711"
+        },
+        {
+          "turma_id": "712"
+        },
+        {
+          "turma_id": "713"
+        },
+        {
+          "turma_id": "714"
+        },
+        {
+          "turma_id": "715"
+        },
+        {
+          "turma_id": "738"
+        },
+        {
+          "turma_id": "739"
+        },
+        {
+          "turma_id": "740"
+        },
+        {
+          "turma_id": "741"
+        },
+        {
+          "turma_id": "742"
+        },
+        {
+          "turma_id": "743"
+        },
+        {
+          "turma_id": "744"
+        },
+        {
+          "turma_id": "745"
+        },
+        {
+          "turma_id": "746"
+        },
+        {
+          "turma_id": "747"
+        },
+        {
+          "turma_id": "748"
+        },
+        {
+          "turma_id": "750"
+        },
+        {
+          "turma_id": "751"
+        },
+        {
+          "turma_id": "752"
+        },
+        {
+          "turma_id": "753"
+        },
+        {
+          "turma_id": "755"
+        },
+        {
+          "turma_id": "756"
+        },
+        {
+          "turma_id": "757"
+        },
+        {
+          "turma_id": "758"
+        },
+        {
+          "turma_id": "759"
+        },
+        {
+          "turma_id": "760"
+        },
+        {
+          "turma_id": "761"
+        },
+        {
+          "turma_id": "762"
+        },
+        {
+          "turma_id": "763"
+        },
+        {
+          "turma_id": "764"
+        },
+        {
+          "turma_id": "787"
+        },
+        {
+          "turma_id": "788"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "regra_diferenciada_id": "1",
+      "tabela_arredondamento_id": "1",
+      "tabela_arredondamento_id_conceitual": "5",
+      "tipo_nota": "3",
+      "tipo_presenca": "1",
+      "parecer_descritivo": "0",
+      "tipo_recuperacao": "0",
+      "media_recuperacao_paralela": null,
+      "nota_maxima_geral": "10",
+      "nota_maxima_exame": "10",
+      "turmas": [
+        {
+          "turma_id": "700"
+        },
+        {
+          "turma_id": "704"
+        },
+        {
+          "turma_id": "729"
+        },
+        {
+          "turma_id": "730"
+        },
+        {
+          "turma_id": "731"
+        },
+        {
+          "turma_id": "732"
+        },
+        {
+          "turma_id": "781"
+        },
+        {
+          "turma_id": "782"
+        },
+        {
+          "turma_id": "783"
+        },
+        {
+          "turma_id": "784"
+        },
+        {
+          "turma_id": "789"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "regra_diferenciada_id": "1",
+      "tabela_arredondamento_id": "1",
+      "tabela_arredondamento_id_conceitual": null,
+      "tipo_nota": "1",
+      "tipo_presenca": "1",
+      "parecer_descritivo": "0",
+      "tipo_recuperacao": "0",
+      "media_recuperacao_paralela": null,
+      "nota_maxima_geral": "5",
+      "nota_maxima_exame": "5",
+      "turmas": []
+    },
+    {
+      "id": "1",
+      "regra_diferenciada_id": "5",
+      "tabela_arredondamento_id": "6",
+      "tabela_arredondamento_id_conceitual": null,
+      "tipo_nota": "1",
+      "tipo_presenca": "2",
+      "parecer_descritivo": "0",
+      "tipo_recuperacao": "0",
+      "media_recuperacao_paralela": null,
+      "nota_maxima_geral": "10",
+      "nota_maxima_exame": "10",
+      "turmas": [
+        {
+          "turma_id": "717"
+        },
+        {
+          "turma_id": "718"
+        },
+        {
+          "turma_id": "719"
+        },
+        {
+          "turma_id": "722"
+        },
+        {
+          "turma_id": "726"
+        },
+        {
+          "turma_id": "727"
+        },
+        {
+          "turma_id": "728"
+        },
+        {
+          "turma_id": "734"
+        },
+        {
+          "turma_id": "735"
+        },
+        {
+          "turma_id": "736"
+        },
+        {
+          "turma_id": "766"
+        },
+        {
+          "turma_id": "767"
+        },
+        {
+          "turma_id": "768"
+        },
+        {
+          "turma_id": "770"
+        },
+        {
+          "turma_id": "773"
+        },
+        {
+          "turma_id": "774"
+        },
+        {
+          "turma_id": "777"
+        },
+        {
+          "turma_id": "778"
+        },
+        {
+          "turma_id": "780"
+        },
+        {
+          "turma_id": "785"
+        },
+        {
+          "turma_id": "786"
+        }
+      ]
+    }
+  ],
+  "oper": "get",
+  "resource": "regras",
+  "msgs": [],
+  "any_error_msg": false
+}

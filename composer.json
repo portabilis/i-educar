@@ -19,8 +19,9 @@
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.12",
-    "phpunit/phpunit": "~6.5",
+    "guzzlehttp/guzzle": "^6.3",
     "phpunit/dbunit": "3.0.*",
+    "phpunit/phpunit": "~6.5",
     "phpunit/phpunit-selenium": "4.1.*"
   },
   "autoload": {

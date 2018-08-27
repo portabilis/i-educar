@@ -133,4 +133,9 @@ class Portabilis_Date_Utils
     return ($day == 29 && !checkdate($month, $day, $year));
   }
 
+  public static function isDateValid($date, $format = 'Y-m-d')
+  {
+    return (boolean) DateTime::createFromFormat($format, $date);
+  }
+
 }
