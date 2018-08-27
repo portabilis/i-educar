@@ -460,7 +460,7 @@ class indice extends clsCadastro
     if (is_array($lista) && count($lista)) {
       $this->modulos = $lista;
       foreach ($lista as $registro) {
-        $opcoesCampoModulo[$registro['cod_modulo']] = $registro['nm_tipo'];
+        $opcoesCampoModulo[$registro['cod_modulo']] = sprintf('%s - %d etapa(s)', $registro['nm_tipo'], $registro['num_etapas']);
       }
     }
 
