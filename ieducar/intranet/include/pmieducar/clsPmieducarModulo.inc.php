@@ -216,8 +216,6 @@ class clsPmieducarModulo
         if (
             is_numeric($this->ref_usuario_cad)
             && is_string($this->nm_tipo)
-            && is_numeric($this->num_meses)
-            && is_numeric($this->num_semanas)
             && is_numeric($this->ref_cod_instituicao)
             && is_numeric($this->num_etapas)
         ) {
@@ -248,6 +246,11 @@ class clsPmieducarModulo
             if (is_numeric($this->num_semanas)) {
                 $campos[] = "num_semanas";
                 $valores[] = "'{$this->num_semanas}'";
+            }
+
+            if (is_numeric($this->num_etapas)) {
+                $campos[] = "num_etapas";
+                $valores[] = "'{$this->num_etapas}'";
             }
 
             $campos[] = "data_cadastro";
@@ -301,10 +304,14 @@ class clsPmieducarModulo
 
             if (is_numeric($this->num_meses)) {
                 $set[] = "num_meses = '{$this->num_meses}'";
+            } else {
+                $set[] = "num_meses = NULL";
             }
 
             if (is_numeric($this->num_semanas)) {
                 $set[] = "num_semanas = '{$this->num_semanas}'";
+            } else {
+                $set[] = "num_semanas = NULL";
             }
 
             if (is_string($this->data_cadastro)) {
