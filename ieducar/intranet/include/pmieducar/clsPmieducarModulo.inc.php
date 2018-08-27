@@ -304,10 +304,14 @@ class clsPmieducarModulo
 
             if (is_numeric($this->num_meses)) {
                 $set[] = "num_meses = '{$this->num_meses}'";
+            } else {
+                $set[] = "num_meses = NULL";
             }
 
             if (is_numeric($this->num_semanas)) {
                 $set[] = "num_semanas = '{$this->num_semanas}'";
+            } else {
+                $set[] = "num_semanas = NULL";
             }
 
             if (is_string($this->data_cadastro)) {
