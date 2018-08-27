@@ -509,7 +509,7 @@ class indice extends clsCadastro
 
     $this->campoLista(
       'ref_cod_modulo',
-      'Módulo',
+      'Etapa',
       $opcoesCampoModulo,
       $moduloSelecionado,
       null,
