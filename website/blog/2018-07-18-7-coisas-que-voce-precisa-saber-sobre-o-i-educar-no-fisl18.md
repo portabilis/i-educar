@@ -4,19 +4,19 @@ authorURL: https://www.linkedin.com/in/giustin
 title: 7 coisas que você precisa saber sobre o i-Educar no FISL 18
 ---
 
-![](https://cdn-images-1.medium.com/max/800/1*rYtSnJvnJP-Y3Nd8yBXHfg.jpeg)
-###### Da esquerda para a direita, Fernando Paiva, da Fundação Lemann; Marcelo Cajueiro, da Portabilis; Luis Felipe Costa, da UFRJ; Vinicius Celms, da Fundação Lemann; Evandro Falleiros, do IFMS e Tiago Giusti, da Portabilis no estande da Comunidade i-Educar no FISL 18. 
-
-
 O Fórum Internacional Software Livre é um evento que acontece em Porto Alegre/RS
 e discute e promove o uso de tecnologias livres para o desenvolvimento humano e
-tecnológico. Neste ano, mais de 1.500 participantes estiveram presentes na 18º
+tecnológico.<!--truncate--> Neste ano, mais de 1.500 participantes estiveram presentes na 18º
 edição que contou com pelo menos 400 palestras distribuídas em 47 horas de
 atividade.
 
 Nós, da Comunidade i-Educar, marcamos presença com estande, espaço temático
 exclusivo do i-Educar, palestras com lançamentos, além de reuniões com novidades
 que irei abordar a seguir.
+
+![](https://cdn-images-1.medium.com/max/800/1*rYtSnJvnJP-Y3Nd8yBXHfg.jpeg)
+###### Da esquerda para a direita, Fernando Paiva, da Fundação Lemann; Marcelo Cajueiro, da Portabilis; Luis Felipe Costa, da UFRJ; Vinicius Celms, da Fundação Lemann; Evandro Falleiros, do IFMS e Tiago Giusti, da Portabilis no estande da Comunidade i-Educar no FISL 18. 
+
 
 A nossa participação foi financiada pela
 [Portabilis](https://portabilis.com.br/), mantenedora do projeto, e a [Fundação
