@@ -174,6 +174,8 @@ class clsListagem extends clsCampos
 
       $linkFixo = $strUrl . '?';
 
+      $add_iniciolimi = null;
+
       if (is_array($mixVariaveisMantidas)) {
         foreach ($mixVariaveisMantidas as $key => $value) {
           if ($key != $getVar) {
@@ -337,6 +339,8 @@ class clsListagem extends clsCampos
         }
       }
 
+      $janela = '';
+
       if ($this->busca_janela) {
         $janela .= "<form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}'>";
         $janela .= "<input name='busca' type='hidden' value='S'>";
@@ -453,7 +457,7 @@ class clsListagem extends clsCampos
         $retorno .=  "</script>";
 
         if ($this->exibirBotaoSubmit) {
-          if (isset($this->botao_submit)) {
+          if (isset($this->botao_submit) && $this->botao_submit) {
             $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='Buscar' id='botao_busca'>&nbsp;";
           }
           else {
@@ -722,10 +726,10 @@ class clsListagem extends clsCampos
 
     $botao = '';
 
-    if(isset($this->acao_voltar)) {
+    if(isset($this->acao_voltar) && $this->acao_voltar) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao_voltar' value=' Voltar '>";
     }
-    if(isset($this->acao_imprimir)) {
+    if(isset($this->acao_imprimir) && $this->acao_imprimir) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' id='imprimir' class='botaolistagem' onclick='javascript: $this->acao_imprimir' value='$this->valor_imprimir'>";
     }
     if ($this->acao && $this->show_botao_novo) {
