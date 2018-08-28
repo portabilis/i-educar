@@ -15,6 +15,8 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
+    const PROCESSO_AP = 9998910;
+
     public $ano;
 
     public $ref_cod_instituicao;
@@ -45,7 +47,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            9998910,
+            self::PROCESSO_AP,
             $this->pessoa_logada,
             7,
             'educar_index.php'
@@ -67,12 +69,12 @@ class indice extends clsCadastro
         $this->inputsHelper()->dynamic(array('dataInicial', 'dataFinal'));
     }
 
-    function Novo()
+    public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            9998910,
+            self::PROCESSO_AP,
             $this->pessoa_logada,
             7,
             'index.php'
@@ -98,8 +100,7 @@ class indice extends clsCadastro
         $queryString = http_build_query($queryString);
         $url = 'educar_consulta_movimento_mensal_lst.php?' . $queryString;
 
-        header('Location: ' . $url);
-        die();
+        $this->simpleRedirect($url);
     }
 }
 

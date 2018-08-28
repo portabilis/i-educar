@@ -15,6 +15,8 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
+    const PROCESSO_AP = 9998900;
+
     public $ano;
 
     public $curso = [];
@@ -33,7 +35,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            9998900,
+            self::PROCESSO_AP,
             $this->pessoa_logada,
             7,
             'educar_index.php'
@@ -55,29 +57,27 @@ class indice extends clsCadastro
         $this->inputsHelper()->dynamic(['dataInicial', 'dataFinal']);
     }
 
-    function Novo()
+    public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            9998900,
+            self::PROCESSO_AP,
             $this->pessoa_logada,
             7,
             'index.php'
         );
 
-        $campos = ['ano', 'curso', 'data_inicial', 'data_final'];
-        $queryString = [];
+        $queryString = http_build_query([
+            'ano' => $this->ano,
+            'curso' => $this->curso,
+            'data_inicial' => $this->data_inicial,
+            'data_final' => $this->data_final,
+        ]);
 
-        foreach ($campos as $campo) {
-            $queryString[$campo] = $this->{$campo};
-        }
+        $url = '/intranet/educar_consulta_movimento_geral_lst.php?' . $queryString;
 
-        $queryString = http_build_query($queryString);
-        $url = 'educar_consulta_movimento_geral_lst.php?' . $queryString;
-
-        header('Location: ' . $url);
-        die();
+        $this->redirect($url);
     }
 }
 

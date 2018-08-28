@@ -311,8 +311,8 @@ class clsCadastro extends clsCampos
     }
 
     $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
-    $tituloAplication = isset($this->titulo_aplication) ? $this->titulo_aplication : '';
-    $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$tituloAplication }</b>";
+    $applicationTitle = $this->titulo_aplication ?? '';
+    $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
     /**
      * Adiciona os botoes de help para a pagina atual

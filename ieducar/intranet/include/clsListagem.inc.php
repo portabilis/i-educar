@@ -559,36 +559,36 @@ class clsListagem extends clsCampos
         $retornoTmp = '';
 
         if (is_array($linha)) {
-            if (
-                !empty($linha['tipo'])
-                && !empty($linha['conteudo'])
-                && $linha['tipo'] === 'html-puro'
-            ) {
-                $retorno .= $linha['conteudo'];
-                continue;
+          if (
+            !empty($linha['tipo'])
+            && !empty($linha['conteudo'])
+            && $linha['tipo'] === 'html-puro'
+          ) {
+            $retorno .= $linha['conteudo'];
+            continue;
+          }
+
+          reset($linha);
+
+          if (!empty($this->colunas)) {
+            reset($this->colunas);
+          }
+
+          foreach ($linha as $i => $celula) {
+            if (!empty( $this->colunas)) {
+              $fmt = current($this->colunas);
+            } else {
+              $fmt = alTopLeft;
             }
 
-            reset($linha);
-
-            if (!empty($this->colunas)) {
-                reset($this->colunas);
+            if (strpos($celula, "<img src='imagens/noticia.jpg' border=0>" ) !== FALSE) {
+              $celula = str_replace("<img src='imagens/noticia.jpg' border=0>", "<img src='imagens/noticia.jpg' border=0 alt=''>", $celula);
             }
 
-            foreach ($linha as $i => $celula) {
-                if (!empty( $this->colunas)) {
-                    $fmt = current($this->colunas);
-                } else {
-                    $fmt = alTopLeft;
-                }
-
-                if (strpos($celula, "<img src='imagens/noticia.jpg' border=0>" ) !== FALSE) {
-                    $celula = str_replace("<img src='imagens/noticia.jpg' border=0>", "<img src='imagens/noticia.jpg' border=0 alt=''>", $celula);
-                }
-
-                $retornoTmp .=  "<td class='$classe' $fmt>$celula</td>";
-            }
-        }  else {
-            $retornoTmp .=  "<td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
+            $retornoTmp .=  "<td class='$classe' $fmt>$celula</td>";
+          }
+        } else {
+          $retornoTmp .=  "<td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
         }
 
         $retorno .=  '<tr>' . $retornoTmp . '</tr>';

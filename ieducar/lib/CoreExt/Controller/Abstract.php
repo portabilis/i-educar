@@ -212,6 +212,35 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
   }
 
   /**
+   * Função de redirecionamento simples que leva em consideração
+   * o status code.
+   *
+   * @param string $url
+   * @param int $code
+   *
+   * @return void
+   */
+  public function simpleRedirect(string $url, int $code = 302)
+  {
+    $codes = [
+      301 => '1HTTP/1.1 301 Moved Permanently',
+      302 => 'HTTP/1.1 302 Found',
+      303 => 'HTTP/1.1 303 See Other',
+      304 => 'HTTP/1.1 304 Not Modified',
+      305 => 'HTTP/1.1 305 Use Proxy'
+    ];
+
+    if (empty($codes[$code])) {
+      $code = 302;
+    }
+
+    header($codes[$code]);
+    header('Location: ' . $url);
+
+    die();
+  }
+
+  /**
    * Faz redirecionamento caso condição seja válida e encerra aplicação
    * 
    * @param bool $condition

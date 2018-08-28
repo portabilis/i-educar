@@ -1,6 +1,6 @@
 <?php
 
-use \iEducar\Modules\Reports\QueryFactory\MovimentoGeralQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralQueryFactory;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -37,8 +37,7 @@ class indice extends clsListagem
 
         foreach ($required as $req) {
             if (empty($params[$req])) {
-                $this->redirect('/intranet/educar_index.php');
-                die();
+                $this->simpleRedirect('/intranet/educar_index.php');
             }
         }
 
