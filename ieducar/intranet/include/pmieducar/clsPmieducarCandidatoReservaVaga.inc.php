@@ -695,4 +695,22 @@ class clsPmieducarCandidatoReservaVaga
     return FALSE;
   }
 
+    public function alteraSituacao($situacao)
+    {
+        if (!$this->cod_candidato_reserva_vaga) {
+            return false;
+        }
+
+        $situacao = $situacao ?: 'NULL';
+
+        $db = new clsBanco();
+        $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga 
+                                   SET situacao = {$situacao}, 
+                                       motivo = null,
+                                       data_situacao = NOW() 
+                                 WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+
+        return true;
+    }
+
 }
