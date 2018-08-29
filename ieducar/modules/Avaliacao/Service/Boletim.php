@@ -3363,4 +3363,161 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     return $this;
   }
 
+    /**
+     * Verifica se as notas das etapas anteriores foram lançadas para o
+     * componente curricular. Lança uma exceção caso contrário.
+     *
+     * @param int|string $etapaId
+     * @param int $componenteCurricularId
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function verificaNotasLancadasNasEtapasAnteriores($etapaId, $componenteCurricularId)
+    {
+        $temEtapasAnterioresLancadas = true;
+        $etapasSemNotas = [];
+        $regra = $this->getRegra();
+        $matriculaId = $this->getOption('matricula');
+        $serieId = $this->getOption('ref_cod_serie');
+        $escolaId = $this->getOption('ref_cod_escola');
+
+        // Pelo que eu entendi, caso a opção `definirComponentePorEtapa` é
+        // possível lançar notas para etapas futuras.
+
+        if ($regra->get('definirComponentePorEtapa') == "1") {
+            return true;
+        }
+
+        // Etapas com dispensa não teram notas, então não devem ser
+        // consideradas como bloqueantes.
+
+        $existeEtapaDispensada = (array) App_Model_IedFinder::validaDispensaPorMatricula(
+            $matriculaId, $serieId, $escolaId, $componenteCurricularId
+        );
+
+        if ($etapaId == 'Rc') {
+            $etapaId = $this->getOption('etapas');
+        }
+
+        for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
+
+            $nota = $this->getNotaAtual($etapa, $componenteCurricularId);
+
+            if (in_array($etapa, $existeEtapaDispensada)) {
+                continue;
+            }
+
+            $etapaDiferenteOuRecuperacao = $etapa != $etapaId || $etapaId == 'Rc';
+
+            if (
+                $etapaDiferenteOuRecuperacao
+                && empty($nota)
+                && !is_numeric($nota)
+            ) {
+                $temEtapasAnterioresLancadas = false;
+                $etapasSemNotas[] = $etapa;
+            }
+        }
+
+        if ($temEtapasAnterioresLancadas) {
+            return true;
+        }
+
+        throw new \Exception(
+            'Nota somente pode ser lançada após lançar notas nas etapas: ' .
+            join(', ', $etapasSemNotas) . ' deste componente curricular.'
+        );
+    }
+
+    /**
+     * Verifica se as faltas das etapas anteriores foram lançadas para o
+     * componente curricular. Lança uma exceção caso contrário.
+     *
+     * @param int|string $etapaId
+     * @param int $componenteCurricularId
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function verificaFaltasLancadasNasEtapasAnteriores($etapaId, $componenteCurricularId)
+    {
+        $temEtapasAnterioresLancadas = true;
+        $etapasSemFaltas = [];
+        $matriculaId = $this->getOption('matricula');
+        $serieId = $this->getOption('ref_cod_serie');
+        $escolaId = $this->getOption('ref_cod_escola');
+
+        $existeEtapaDispensada = (array) App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $componenteCurricularId);
+
+        for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
+
+            $faltas = $this->getFaltaAtual($etapa, $componenteCurricularId);
+
+            if (in_array($etapa, $existeEtapaDispensada)) {
+                continue;
+            }
+
+            if ($etapa != $etapaId && empty($faltas) && !is_numeric($faltas)) {
+                $temEtapasAnterioresLancadas = false;
+                $etapasSemFaltas[] = $etapa;
+            }
+        }
+
+        if ($temEtapasAnterioresLancadas) {
+            return true;
+        }
+
+        $mensagem = 'Falta somente pode ser lançada após lançar faltas nas '
+            . 'etapas anteriores: ' . join(', ', $etapasSemFaltas);
+
+        if ($this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $mensagem .= ' deste componente curricular.';
+        }
+
+        throw new Exception($mensagem);
+    }
+
+    /**
+     * Retorna a nota lançada na etapa para o componente curricular.
+     *
+     * @param int|string $etapa
+     * @param int $componenteCurricularId
+     *
+     * @return int|string
+     */
+    public function getNotaAtual($etapa, $componenteCurricularId)
+    {
+        // FIXME não entendi o motivo deste urldecode
+        $nota = urldecode($this->getNotaComponente($componenteCurricularId, $etapa)->nota);
+
+        return str_replace(',', '.', $nota);
+    }
+
+    /**
+     * Retorna o número de faltas lançadas na etapa para o componente
+     * curricular. Caso não exista, retorna null.
+     *
+     * @param int|string $etapa
+     * @param int $componenteCurricularId
+     *
+     * @return int|null
+     */
+    public function getFaltaAtual($etapa, $componenteCurricularId)
+    {
+        $faltas = null;
+        $tipoPresenca = $this->getRegra()->get('tipoPresenca');
+
+        if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade;
+        }
+
+        if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+            $faltas = $this->getFalta($etapa)->quantidade;
+        }
+
+        return $faltas;
+    }
 }

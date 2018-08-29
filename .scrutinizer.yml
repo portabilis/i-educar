@@ -1,7 +1,14 @@
 filter:
   excluded_paths:
-    - 'ieducar/tests/*'
-    - 'ieducar/misc/**/*'
+      - 'ieducar/tests/*'
+      - 'ieducar/misc/**/*'
+      - 'ieducar/intranet/scripts/jquery'
+      - 'ieducar/intranet/scripts/scriptaculous'
+      - 'ieducar/intranet/scripts/prototype'
+      - 'ieducar/intranet/scripts/select2'
+      - 'ieducar/intranet/scripts/graficos'
+      - 'ieducar/modules/Portabilis/Assets/Plugins/AjaxChosen/'
+      - 'ieducar/modules/Portabilis/Assets/Plugins/Chosen/'
 
 checks:
   php:
@@ -26,7 +33,7 @@ build:
   dependencies:
     after:
       - psql -c "CREATE DATABASE ieducar_test WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
-      - cp phinx.php.sample phinx.php
+      - cp phinx.php.scrutinizer phinx.php
       - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
       - ieducar/vendor/bin/phinx migrate
 

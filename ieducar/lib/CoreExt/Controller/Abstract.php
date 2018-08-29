@@ -210,4 +210,20 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
 
     header(sprintf('Location: %s', $url));
   }
+
+  /**
+   * Faz redirecionamento caso condição seja válida e encerra aplicação
+   * 
+   * @param bool $condition
+   * @param string $url
+   * 
+   * @return void
+   */
+  public function redirectIf($condition, $url)
+  {
+    if ($condition) {
+      header('Location: ' . $url);
+      die();
+    }
+  }
 }

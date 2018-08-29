@@ -94,7 +94,6 @@ class clsCadastro extends clsCampos
   var $nome_url_alt;
   var $url_alt;
   var $help_images = FALSE;
-  var $locale = null;
 
   var $array_botao;
   var $array_botao_url;

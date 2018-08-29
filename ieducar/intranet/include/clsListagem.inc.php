@@ -82,7 +82,6 @@ class clsListagem extends clsCampos
   var $funcAcao = '';
   var $funcAcaoNome = '';
   var $rotulo_anterior;
-  var $locale = null;
   var $appendInTop = false;
 
   var $array_botao;
@@ -174,6 +173,8 @@ class clsListagem extends clsCampos
       }
 
       $linkFixo = $strUrl . '?';
+
+      $add_iniciolimi = null;
 
       if (is_array($mixVariaveisMantidas)) {
         foreach ($mixVariaveisMantidas as $key => $value) {
@@ -338,6 +339,8 @@ class clsListagem extends clsCampos
         }
       }
 
+      $janela = '';
+
       if ($this->busca_janela) {
         $janela .= "<form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}'>";
         $janela .= "<input name='busca' type='hidden' value='S'>";
@@ -396,7 +399,7 @@ class clsListagem extends clsCampos
         if ($this->campos) {
           reset($this->campos);
 
-          while (list($nome, $componente) = each($this->campos)) {
+          foreach ($this->campos as $nome => $componente) {
             if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
               $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3])."'>";
             }
@@ -454,7 +457,7 @@ class clsListagem extends clsCampos
         $retorno .=  "</script>";
 
         if ($this->exibirBotaoSubmit) {
-          if ($this->botao_submit) {
+          if (isset($this->botao_submit) && $this->botao_submit) {
             $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='Buscar' id='botao_busca'>&nbsp;";
           }
           else {
@@ -515,12 +518,14 @@ class clsListagem extends clsCampos
         reset( $this->colunas );
       }
 
-      $retorno .= "<input type='hidden' id='ordenacao' name='ordenacao' value='{$_POST['ordenacao']}'>";
-      $retorno .= "<input type='hidden' id='fonte' name='fonte' value='{$_POST['fonte']}'>";
+      $ordenacao = $_POST['ordenacao'] ?? '';
+      $fonte = $_POST['fonte'] ?? '';
+      $retorno .= "<input type='hidden' id='ordenacao' name='ordenacao' value='{$ordenacao}'>";
+      $retorno .= "<input type='hidden' id='fonte' name='fonte' value='{$fonte}'>";
       $retorno .=  "
             <tr>";
 
-      while (list($i, $texto) = each($this->cabecalho)) {
+      foreach ($this->cabecalho as $i => $texto) {
         if (!empty( $this->colunas )) {
           list($i, $fmt) = each($this->colunas);
         }
@@ -556,7 +561,7 @@ class clsListagem extends clsCampos
     else {
       reset($this->linhas);
 
-      while (list($i, $linha) = each($this->linhas)) {
+      foreach ($this->linhas as $i => $linha) {
         $classe = ($i % 2) ? 'formmdtd' : 'formlttd';
         $retorno .=  "
             <tr>";
@@ -568,9 +573,9 @@ class clsListagem extends clsCampos
             reset( $this->colunas );
           }
 
-          while (list($i, $celula) = each($linha)) {
+          foreach ($linha as $i => $celula) {
             if (!empty( $this->colunas)) {
-              list($i, $fmt) = each($this->colunas);
+              $fmt = current($this->colunas);
             }
             else {
               $fmt = alTopLeft;
@@ -721,10 +726,10 @@ class clsListagem extends clsCampos
 
     $botao = '';
 
-    if($this->acao_voltar) {
+    if(isset($this->acao_voltar) && $this->acao_voltar) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao_voltar' value=' Voltar '>";
     }
-    if($this->acao_imprimir) {
+    if(isset($this->acao_imprimir) && $this->acao_imprimir) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' id='imprimir' class='botaolistagem' onclick='javascript: $this->acao_imprimir' value='$this->valor_imprimir'>";
     }
     if ($this->acao && $this->show_botao_novo) {
@@ -744,12 +749,12 @@ class clsListagem extends clsCampos
             <tr>
               <td colspan=\"$ncols\" align=\"center\">";
 
-    if (count($this->array_botao_script)) {
+    if (is_array($this->array_botao_script) && count($this->array_botao_script)) {
       for ($i = 0; $i < count($this->array_botao); $i++) {
         $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='". $this->array_botao_script[$i]."' value='".$this->array_botao[$i]."'>&nbsp;\n";
       }
     }
-    else {
+    elseif (is_array($this->array_botao)) {
       for ($i = 0; $i < count($this->array_botao); $i++) {
         $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
       }

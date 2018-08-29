@@ -108,7 +108,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
    */
   public function start()
   {
-    if (!$this->isStarted() && session_start()) {
+    if (!$this->isStarted() && @session_start()) {
       self::$_sessionStarted = TRUE;
       self::$_sessionId = session_id();
     }

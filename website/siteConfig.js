@@ -60,6 +60,7 @@ const users = [
   },
 ];
 
+
 const statistics = {
   numberOfCities: '+80',
   numberOfSchools: '+2050',
@@ -100,7 +101,7 @@ const siteConfig = {
   /* path to images for header/footer */
   headerIcon: 'img/logo_horizontal.svg',
   footerIcon: 'img/logo_ieducar_horizontal_footer.svg',
-  favicon: 'img/i-educar-logo.ico',
+  favicon: 'img/favicon/favicon.ico',
 
   /* colors for website */
   colors: {
@@ -156,6 +157,7 @@ const siteConfig = {
     'js/mailchimp.js',
     'js/map.js',
     'js/conversao.js',
+    'js/loadFonts.js'
   ],
   mapsApiKey: 'AIzaSyCIThOGkNPz5Kxk1CH5on42LzEMpVLGhho',
 
