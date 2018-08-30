@@ -7,6 +7,8 @@ require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
+require_once 'lib/CoreExt/Controller/Request.php';
 
 class MatriculaController extends ApiCoreController
 {
@@ -311,6 +313,7 @@ class MatriculaController extends ApiCoreController
     {
         if ($this->canDeleteAbandono()) {
             $matriculaId = $this->getRequest()->id;
+            $instituicaoId = $this->getRequest()->instituicao_id ?? 1;
             $tipoSemAbandono = null;
             $situacaoAndamento = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
@@ -340,6 +343,17 @@ class MatriculaController extends ApiCoreController
 
             $params = [$sequencial, $matriculaId];
             $this->fetchPreparedQuery($sql, $params);
+
+            $fakeRequest = new CoreExt_Controller_Request(['data' => [
+                'oper' => 'post',
+                'resource' => 'promocao',
+                'instituicao_id' => $instituicaoId,
+                'matricula_id' => $matriculaId
+            ]]);
+
+            $promocaoApi = new PromocaoApiController();
+            $promocaoApi->setRequest($fakeRequest);
+            $response = $promocaoApi->Gerar();
 
             $this->messenger->append('Abandono desfeito.', 'success');
         }
