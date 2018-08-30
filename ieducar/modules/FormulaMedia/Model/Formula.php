@@ -24,6 +24,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     protected $_tokens = [
         'Se', 'Et', 'Rc',
         'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10',
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10',
         'RSP1', 'RSP2', 'RSP3', 'RSP4', 'RSP5', 'RSP6', 'RSP7', 'RSP8', 'RSP9', 'RSP10',
         'RSPS1', 'RSPS2', 'RSPS3', 'RSPS4', 'RSPS5', 'RSPS6', 'RSPS7', 'RSPS8', 'RSPS9', 'RSPS10',
         'RSPM1', 'RSPM2', 'RSPM3', 'RSPM4', 'RSPM5', 'RSPM6', 'RSPM7', 'RSPM8', 'RSPM9', 'RSPM10',
@@ -41,6 +42,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     protected $_tokenNumerics = [
         'Se', 'Et', 'Rc',
         'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10',
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10',
         'RSP1', 'RSP2', 'RSP3', 'RSP4', 'RSP5', 'RSP6', 'RSP7', 'RSP8', 'RSP9', 'RSP10',
         'RSPS1', 'RSPS2', 'RSPS3', 'RSPS4', 'RSPS5', 'RSPS6', 'RSPS7', 'RSPS8', 'RSPS9', 'RSPS10',
         'RSPM1', 'RSPM2', 'RSPM3', 'RSPM4', 'RSPM5', 'RSPM6', 'RSPM7', 'RSPM8', 'RSPM9', 'RSPM10'

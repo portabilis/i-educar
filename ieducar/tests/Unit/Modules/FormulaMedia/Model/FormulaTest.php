@@ -31,7 +31,7 @@ class FormulaTest extends TestCase
      */
     public function testGetTokensMethod()
     {
-        $this->assertCount(53, $this->formula->getTokens());
+        $this->assertCount(63, $this->formula->getTokens());
     }
 
     /**
@@ -116,5 +116,33 @@ class FormulaTest extends TestCase
         // Este método tem muitas dependências e deverá ser refatorado.
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * Este teste está relacionado à dispensa de etapas dos alunos quando a
+     * média ponderada é utilizada para o cálculo da nota. Ou seja, cada etapa
+     * tem um peso diferente.
+     *
+     * Como a fórmula de cálculo da média ponderada é fixa, dependendo a etapa
+     * em que o aluno é dispensado, o cálculo da média fica incorreto, pois o
+     * aluno não possui nota devido ter a etapa dispensada.
+     *
+     * @return void
+     */
+    public function testConsideringDispensedStages()
+    {
+        $this->formula->formulaMedia = '((C1*E1*1) + (C2*E2*2) + (C3*E3*3) + (C4*E4*4)) / ((C1*1) + (C2*2) + (C3*3) + (C4*4))';
+        $average = $this->formula->execFormulaMedia([
+            'E1' => 9,
+            'E2' => 0,
+            'E3' => 9,
+            'E4' => 7,
+            'C1' => 1,
+            'C2' => 0,
+            'C3' => 1,
+            'C4' => 1,
+        ]);
+
+        $this->assertEquals(8, $average);
     }
 }
