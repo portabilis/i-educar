@@ -769,5 +769,24 @@ class clsPmieducarCandidatoFilaUnica
         }
         return FALSE;
     }
+
+    public function alteraSituacao($situacao, $motivo = null)
+    {
+        if (!$this->cod_candidato_fila_unica) {
+            return false;
+        }
+
+        $situacao = $situacao ?: 'NULL';
+        $motivo = $motivo ?: 'NULL';
+
+        $db = new clsBanco();
+        $db->Consulta("UPDATE pmieducar.candidato_fila_unica 
+                                   SET situacao = {$situacao}, 
+                                       motivo = {$motivo},
+                                       data_situacao = NOW() 
+                                 WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
+
+        return true;
+    }
 }
 ?>
