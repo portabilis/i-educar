@@ -330,6 +330,10 @@ class clsPmieducarModulo
                 $set[] = "ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
             }
 
+            if (is_string($this->num_etapas)) {
+                $set[] = "num_etapas = '{$this->num_etapas}'";
+            }
+
             if (!empty($set)) {
                 $set = join(', ', $set);
 
@@ -418,6 +422,10 @@ class clsPmieducarModulo
 
         if (is_numeric($int_ref_cod_instituicao)) {
             $filtros[] = "ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+        }
+
+        if (is_numeric($num_etapas)) {
+            $filtros[] = "$num_etapas = '{$num_etapas}'";
         }
 
         if (empty($filtros)) {
