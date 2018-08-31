@@ -223,7 +223,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
   public function simpleRedirect(string $url, int $code = 302)
   {
     $codes = [
-      301 => '1HTTP/1.1 301 Moved Permanently',
+      301 => 'HTTP/1.1 301 Moved Permanently',
       302 => 'HTTP/1.1 302 Found',
       303 => 'HTTP/1.1 303 See Other',
       304 => 'HTTP/1.1 304 Not Modified',

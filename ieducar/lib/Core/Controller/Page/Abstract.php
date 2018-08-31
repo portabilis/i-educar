@@ -439,7 +439,20 @@ abstract class Core_Controller_Page_Abstract
 
   public function getQueryString($name, $default = null)
   {
-    return !empty($_GET[$name]) ? $_GET[$name] : $default;
+    if (!isset($_GET[$name])) {
+      return $default;
+    }
+
+    switch ($_GET[$name]) {
+      case '':
+      case null:
+        $value = $default;
+        break;
+      default:
+        $value = $_GET[$name];
+    }
+
+    return $value;
   }
 
   public function breadcrumb($currentPage, $breadcrumbs = [])
