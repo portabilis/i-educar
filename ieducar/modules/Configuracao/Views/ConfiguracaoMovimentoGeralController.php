@@ -14,7 +14,7 @@ class clsIndexBase extends clsBase
     }
 }
 
-class indice extends clsCadastro
+class ConfiguracaoMovimentoGeralController extends clsCadastro
 {
     private $configDataMapper;
     protected $_formMap    = array(
@@ -79,6 +79,9 @@ class indice extends clsCadastro
         )
     );
 
+    public $_titulo = 'Configuração movimento geral';
+    public $_processoAp = 9998866;
+
     function Inicializar()
     {
         $obj_permissoes = new clsPermissoes();
@@ -90,6 +93,7 @@ class indice extends clsCadastro
             "educar_configuracoes_index.php"    => "Configurações",
             ""                                  => "Configuração movimento geral"
         ));
+
         $this->enviaLocalizacao($localizacao->montar());
         return 'Editar';
     }
@@ -142,17 +146,3 @@ class indice extends clsCadastro
     }
 
 }
-
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
-
-?>
