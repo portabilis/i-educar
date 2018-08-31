@@ -315,7 +315,6 @@ class MatriculaController extends ApiCoreController
     {
         if ($this->canDeleteAbandono()) {
             $matriculaId = $this->getRequest()->id;
-            $instituicaoId = $this->getRequest()->instituicao_id ?? 1;
             $tipoSemAbandono = null;
             $situacaoAndamento = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
@@ -346,6 +345,8 @@ class MatriculaController extends ApiCoreController
             $params = [$sequencial, $matriculaId];
             $this->fetchPreparedQuery($sql, $params);
 
+            $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao order by cod_instituicao asc limit 1;");
+
             $fakeRequest = new CoreExt_Controller_Request(['data' => [
                 'oper' => 'post',
                 'resource' => 'promocao',
@@ -360,6 +361,12 @@ class MatriculaController extends ApiCoreController
 
             $this->messenger->append('Abandono desfeito.', 'success');
         }
+    }
+
+    protected function getInstituicaoId()
+    {
+        $objBanco = new clsBanco();
+        $id = $objBanco->unicoCampo(" SELECT modules.frequencia_da_matricula({$cod_matricula}); ");
     }
 
     protected function deleteReclassificacao()

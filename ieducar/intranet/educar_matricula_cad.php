@@ -955,10 +955,12 @@ class indice extends clsCadastro
     $db = new clsBanco();
     $db->Consulta("SELECT modules.copia_notas_transf({$matriculaAntiga},{$matriculaNova});");
 
+    $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao order by cod_instituicao asc limit 1;");
+
     $fakeRequest = new CoreExt_Controller_Request(['data' => [
       'oper' => 'post',
       'resource' => 'promocao',
-      'instituicao_id' => 1, // TODO: conseguir flexbilizar este ID caso passemos a trabalhar com multiplas instituições
+      'instituicao_id' => $instituicaoId,
       'matricula_id' => $matriculaNova
     ]]);
 
