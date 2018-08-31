@@ -86,6 +86,18 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
      */
     public function __get($key)
     {
+        return $this->get($key);
+    }
+
+    /**
+     * Getter para as variáveis de requisição.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function get($key)
+    {
         switch (true) {
             case isset($this->_data[$key]):
                 return $this->_data[$key];
@@ -102,18 +114,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
         }
 
         return null;
-    }
-
-    /**
-     * Getter para as variáveis de requisição.
-     *
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function get($key)
-    {
-        return $this->__get($key);
     }
 
     /**
