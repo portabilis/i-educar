@@ -24,11 +24,16 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
+require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
+require_once 'lib/App/Model/MatriculaSituacao.php';
+require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
+require_once 'lib/CoreExt/Controller/Request.php';
 
 class clsIndexBase extends clsBase
 {
@@ -134,6 +139,17 @@ class indice extends clsCadastro
       $detEnturmacao = $detEnturmacao['data_enturmacao'];
       $enturmacao->data_enturmacao = $detEnturmacao;
       $enturmacao->edita();
+
+      $fakeRequest = new CoreExt_Controller_Request(['data' => [
+        'oper' => 'post',
+        'resource' => 'promocao',
+        'instituicao_id' => 1, // TODO: conseguir flexbilizar este ID caso passemos a trabalhar com multiplas instituições
+        'matricula_id' => $matriculaId
+      ]]);
+
+      $promocaoApi = new PromocaoApiController();
+      $promocaoApi->setRequest($fakeRequest);
+      $promocaoApi->Gerar();
     }
   }
 
@@ -297,10 +313,16 @@ class indice extends clsCadastro
             $det_matricula = $obj->detalhe();
             $obj->data_cancel = $this->data_cancel;
             $obj->edita();
+
+            $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
+                ->findAll(['id'], ['matricula_id' => $obj->cod_matricula])[0]->get('id');
+
+            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
             die();
-            return true;
         }
 //      }
 //      else

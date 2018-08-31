@@ -7,6 +7,8 @@ require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
+require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
 require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 require_once 'lib/CoreExt/Controller/Request.php';
 
@@ -352,8 +354,9 @@ class MatriculaController extends ApiCoreController
             ]]);
 
             $promocaoApi = new PromocaoApiController();
+
             $promocaoApi->setRequest($fakeRequest);
-            $response = $promocaoApi->Gerar();
+            $promocaoApi->Gerar();
 
             $this->messenger->append('Abandono desfeito.', 'success');
         }
@@ -506,6 +509,12 @@ class MatriculaController extends ApiCoreController
                         }
                     }
                 }
+
+                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
+                    ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0]->get('id');
+
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, $situacaoNova);
             } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
                 if ($enturmacoes) {
                     $params = [$matriculaId];

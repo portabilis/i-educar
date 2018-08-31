@@ -29,6 +29,9 @@ require_once "include/clsCadastro.inc.php";
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/geral.inc.php";
 require_once "lib/Portabilis/Date/Utils.php";
+require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
+require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
+require_once 'lib/App/Model/MatriculaSituacao.php';
 
 class clsIndexBase extends clsBase
 {
@@ -150,6 +153,13 @@ class indice extends clsCadastro
                     $enturmacao->marcaAlunoFalecido($this->data_cancel);
 
                 }
+
+                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
+                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0]->get('id');
+
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::FALECIDO);
+
                 $this->mensagem .= "Alteração realizado com sucesso.<br>";
                 header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
                 return true;

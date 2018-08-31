@@ -35,6 +35,8 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/CoreExt/Controller/Request.php';
+require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 
 /**
  * clsIndexBase class.
@@ -952,6 +954,17 @@ class indice extends clsCadastro
   function copiaNotasFaltas($matriculaAntiga, $matriculaNova) {
     $db = new clsBanco();
     $db->Consulta("SELECT modules.copia_notas_transf({$matriculaAntiga},{$matriculaNova});");
+
+    $fakeRequest = new CoreExt_Controller_Request(['data' => [
+      'oper' => 'post',
+      'resource' => 'promocao',
+      'instituicao_id' => 1, // TODO: conseguir flexbilizar este ID caso passemos a trabalhar com multiplas instituições
+      'matricula_id' => $matriculaNova
+    ]]);
+
+    $promocaoApi = new PromocaoApiController();
+    $promocaoApi->setRequest($fakeRequest);
+    $promocaoApi->Gerar();
   }
 
   function atendeSolicitacaoTransferencia($codTranferencia, $codMatriculaEntrada) {
