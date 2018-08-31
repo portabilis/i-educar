@@ -20,7 +20,8 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
         $defaultOptions = [
             'objectName' => 'componentecurricular',
             'apiController' => 'ComponenteCurricular',
-            'apiResource' => 'componentecurricular-search'
+            'apiResource' => 'componentecurricular-search',
+            'searchForArea' => false
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -34,10 +35,12 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
     protected function placeholderJs($options)
     {
         $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
+        $searchForArea = $options['searchForArea'] ? "true" : "false";
         $js = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                $optionsVarName.placeholder = safeUtf8Decode('Selecione os componentes');";
+        $js .= "var searchForArea = {$searchForArea}";
 
-        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
     }
 
     protected function loadAssets()
