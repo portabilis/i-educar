@@ -51,14 +51,16 @@ class clsModulesAuditoriaGeral
   var $_campos_lista;
   var $_tabela;
 
+  var $id;
   var $usuario_id;
   var $codigo;
   var $rotina;
 
   var $_campo_order_by;
 
-  function __construct($rotina, $usuario_id, $codigo = 'null'){
-    $this->_campos_lista = 'codigo,
+  function __construct($rotina, $usuario_id, $codigo = 'null', $id){
+    $this->_campos_lista = 'id,
+                            codigo,
                             usuario_id,
                             operacao,
                             rotina,
@@ -70,6 +72,7 @@ class clsModulesAuditoriaGeral
     $this->rotina = $rotina;
     $this->usuario_id = $usuario_id;
     $this->codigo = $codigo;
+    $this->id = $id;
 
     // Seta usuário admin quando não houver usuário pois pode ser API/Novo educação
     if (!$this->usuario_id) $this->usuario_id = 1;
@@ -199,13 +202,29 @@ class clsModulesAuditoriaGeral
     $this->insereAuditoria(self::OPERACAO_EXCLUSAO, $dados, NULL);
   }
 
-  function lista($rotina, $usuario, $dataInicial, $dataFinal) {
+  function lista($rotina, $usuario, $dataInicial, $dataFinal, $horaInicial, $horaFinal, $operacao, $codigo)
+  {
     $filtros = "";
 
     $whereAnd = " WHERE ";
 
+    if(is_numeric($this->id)) {
+      $filtros .= "{$whereAnd} id = {$this->id}";
+      $whereAnd = " AND ";
+    }
+
     if(is_string($rotina)) {
-      $filtros .= "{$whereAnd} rotina LIKE '%{$rotina}%'";
+      $filtros .= "{$whereAnd} rotina ILIKE '%{$rotina}%'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_numeric($operacao)) {
+      $filtros .= "{$whereAnd} operacao = {$operacao}";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($codigo)) {
+      $filtros .= "{$whereAnd} codigo = '{$codigo}'";
       $whereAnd = " AND ";
     }
 
@@ -224,6 +243,16 @@ class clsModulesAuditoriaGeral
 
     if(is_string($dataFinal)) {
       $filtros .= "{$whereAnd} data_hora::date <= '{$dataFinal}'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($horaInicial)) {
+      $filtros .= "{$whereAnd} data_hora::time >= '{$horaInicial}'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($horaFinal)) {
+      $filtros .= "{$whereAnd} data_hora::time <= '{$horaFinal}'";
       $whereAnd = " AND ";
     }
 

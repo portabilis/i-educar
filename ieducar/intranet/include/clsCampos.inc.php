@@ -1758,7 +1758,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $name = '';
                         }
 
-                        $style = isset($componente['tr_invisivel']) ?
+                        $style = (isset($componente['tr_invisivel']) && $componente['tr_invisivel']) ?
                             'style=\'visibility:collapse\'' : '';
 
                         $explicacao = ($componente[6]) ?
