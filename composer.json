@@ -17,7 +17,9 @@
         "laravel/tinker": "^1.0",
         "portabilis/jasperphp": "v1.2.0",
         "robmorgan/phinx": "^0.10.6",
-        "swiftmailer/swiftmailer": "^6.1"
+        "swiftmailer/swiftmailer": "^6.1",
+        "honeybadger-io/honeybadger-laravel": "1.2.*"
+
     },
     "require-dev": {
         "filp/whoops": "^2.0",

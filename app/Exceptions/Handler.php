@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Tracking\TrackerFactory;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -29,11 +30,17 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param  \Exception $exception
      * @return void
+     * @throws Exception
      */
     public function report(Exception $exception)
     {
+        if (config('errortracking.track_errors') && $this->shouldReport($exception)) {
+            $tracker = TrackerFactory::getTracker(config('errortracking.tracker_name'));
+            $tracker->notify($exception);
+        }
+
         parent::report($exception);
     }
 
