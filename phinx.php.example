@@ -1,29 +1,35 @@
 <?php
 
-$app = require 'bootstrap/app.php';
+require 'vendor/autoload.php';
+
+try {
+    (new \Dotenv\Dotenv(__DIR__))->load();
+} catch (Exception $e) {
+
+}
 
 $environments = [
-    "development" => [
-        "adapter" => env('DB_CONNECTION'),
-        "host" => env('DB_HOST'),
-        "port" => env('DB_PORT'),
-        "user" => env('DB_USERNAME'),
-        "pass" => env('DB_PASSWORD'),
-        "name" => env('DB_DATABASE'),
-        "charset" => "utf8",
+    'development' => [
+        'adapter' => env('DB_CONNECTION'),
+        'host' => env('DB_HOST'),
+        'port' => env('DB_PORT'),
+        'user' => env('DB_USERNAME'),
+        'pass' => env('DB_PASSWORD'),
+        'name' => env('DB_DATABASE'),
+        'charset' => 'utf8',
     ],
 ];
 
 $configuration = [
-    "paths" => [
-        "migrations" => [
-            "ieducar/misc/database/migrations",
+    'paths' => [
+        'migrations' => [
+            env('LEGACY_PATH') . '/misc/database/migrations',
         ],
-        "seeds" => [
-            "ieducar/misc/database/seeds",
+        'seeds' => [
+            env('LEGACY_PATH') . '/misc/database/seeds',
         ],
     ],
-    "environments" => $environments,
+    'environments' => $environments,
 ];
 
 return $configuration;
