@@ -29,6 +29,10 @@
  * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
  */
 
+use iEducar\Modules\ErrorTracking\TrackerFactory;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 // Inclui arquivo de bootstrapping
 require_once __DIR__ . '/../../includes/bootstrap.php';
 
@@ -870,6 +874,11 @@ class clsBase extends clsConfig
                 );
             }
         } catch (Exception $e) {
+
+            if ($GLOBALS['coreExt']['Config']->modules->error->track) {
+                $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+                $tracker->notify($e);
+            }
 
             if (getenv('APP_DEBUG')) {
                 throw new \Exception($e->getMessage(), 0, $e);
