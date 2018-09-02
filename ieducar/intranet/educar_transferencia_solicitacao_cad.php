@@ -140,7 +140,7 @@ class indice extends clsCadastro
       $enturmacao->data_enturmacao = $detEnturmacao;
       $enturmacao->edita();
 
-      $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao order by cod_instituicao asc limit 1;");
+      $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;");
 
       $fakeRequest = new CoreExt_Controller_Request(['data' => [
         'oper' => 'post',

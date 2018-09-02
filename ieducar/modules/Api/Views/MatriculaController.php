@@ -345,7 +345,7 @@ class MatriculaController extends ApiCoreController
             $params = [$sequencial, $matriculaId];
             $this->fetchPreparedQuery($sql, $params);
 
-            $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao order by cod_instituicao asc limit 1;");
+            $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;");
 
             $fakeRequest = new CoreExt_Controller_Request(['data' => [
                 'oper' => 'post',
@@ -361,12 +361,6 @@ class MatriculaController extends ApiCoreController
 
             $this->messenger->append('Abandono desfeito.', 'success');
         }
-    }
-
-    protected function getInstituicaoId()
-    {
-        $objBanco = new clsBanco();
-        $id = $objBanco->unicoCampo(" SELECT modules.frequencia_da_matricula({$cod_matricula}); ");
     }
 
     protected function deleteReclassificacao()
