@@ -8,7 +8,7 @@ $environments = array(
 		"pass" => "",
 		"port" => "5432",
 		"charset" => "utf8",
-		"name" => "ieducar_test",
+		"name" => "travis",
 	),
 );
 
