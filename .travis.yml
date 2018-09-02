@@ -32,6 +32,8 @@ matrix:
         - composer install
         - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
         - ieducar/vendor/bin/phinx migrate
+        - sed -i -e 's/API_URI" value="http:\/\/localhost/API_URI" value="http:\/\/localhost:8000/g' ieducar/phpunit.xml
+        - php -S localhost:8000 -t ieducar/ &
       script:
         - composer test
       after_success:
