@@ -38,4 +38,4 @@ matrix:
       script:
         - composer test
       after_success:
-        - ieducar/vendor/bin/coveralls --verbose
+        - ieducar/vendor/bin/php-coveralls --verbose
