@@ -20,7 +20,7 @@ matrix:
       php:
         - 7.0
       services:
-		- postgresql 
+		- postgresql
       before_script:
 		- psql -c 'create database travis;' -U postgres
 		- cp phinx.php.travis phinx.php
