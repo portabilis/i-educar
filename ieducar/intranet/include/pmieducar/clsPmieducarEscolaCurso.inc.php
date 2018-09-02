@@ -31,6 +31,7 @@
 */
 
 require_once( "include/pmieducar/geral.inc.php" );
+require_once( "lib/Portabilis/Utils/Database.php" );
 
 class clsPmieducarEscolaCurso
 {
@@ -42,6 +43,7 @@ class clsPmieducarEscolaCurso
     var $data_exclusao;
     var $ativo;
     var $autorizacao;
+    var $anos_letivos;
 
     // propriedades padrao
 
@@ -107,13 +109,13 @@ class clsPmieducarEscolaCurso
      *
      * @return object
      */
-    function __construct( $ref_cod_escola = null, $ref_cod_curso = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $autorizacao = null )
+    function __construct( $ref_cod_escola = null, $ref_cod_curso = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $autorizacao = null, $anos_letivos = [] )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}escola_curso";
 
-        $this->_campos_lista = $this->_todos_campos = "ec.ref_cod_escola, ec.ref_cod_curso, ec.ref_usuario_exc, ec.ref_usuario_cad, ec.data_cadastro, ec.data_exclusao, ec.ativo, ec.autorizacao";
+        $this->_campos_lista = $this->_todos_campos = "ec.ref_cod_escola, ec.ref_cod_curso, ec.ref_usuario_exc, ec.ref_usuario_cad, ec.data_cadastro, ec.data_exclusao, ec.ativo, ec.autorizacao, ARRAY_TO_JSON(ec.anos_letivos) AS anos_letivos ";
 
         if( is_numeric( $ref_usuario_exc ) )
         {
@@ -245,6 +247,10 @@ class clsPmieducarEscolaCurso
         {
             $this->autorizacao = $autorizacao;
         }
+        if( is_array( $anos_letivos ) )
+        {
+            $this->anos_letivos = $anos_letivos;
+        }
 
     }
 
@@ -285,6 +291,12 @@ class clsPmieducarEscolaCurso
             {
                 $campos.= "{$gruda}autorizacao";
                 $valores .= "{$gruda}'{$this->autorizacao}'";
+                $grupo = ", ";
+            }
+            if( is_array( $this->anos_letivos ) )
+            {
+                $campos.= "{$gruda}anos_letivos";
+                $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
                 $grupo = ", ";
             }
 
@@ -343,6 +355,11 @@ class clsPmieducarEscolaCurso
                 $gruda = ", ";
             }
 
+            if( is_array( $this->anos_letivos ) )
+            {
+                $set .= "{$gruda} anos_letivos = " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
+                $gruda = ", ";
+            }
 
             if( $set )
             {
@@ -427,7 +444,7 @@ class clsPmieducarEscolaCurso
                 $filtros .= "{$whereAnd} c.ativo = 1";
                 $whereAnd = " AND ";
             }
-            else 
+            else
             {
                 $filtros .= "{$whereAnd} c.ativo = 0";
                 $whereAnd = " AND ";

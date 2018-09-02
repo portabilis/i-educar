@@ -265,6 +265,11 @@ abstract class CoreExt_DataMapper
 
     if (0 < count($whereArg)) {
       foreach ($whereArg as $key => $value) {
+        // Caso $key seja um inteiro ela não representa uma coluna, e apenas nos importamos com o where
+        if (is_integer($key)) {
+            $where[] = sprintf('%s', $value);
+            continue;
+        }
         $whereName = $this->_getTableColumn($key);
 
         preg_match('/[<,=,>]/', $value, $matches);
