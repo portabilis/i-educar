@@ -20,6 +20,8 @@ matrix:
       php:
         - 7.0
       before_script:
+        - composer self-update
+        - composer install --dev
         - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
         - ieducar/vendor/bin/phinx migrate
       script:
