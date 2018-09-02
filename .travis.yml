@@ -19,14 +19,17 @@ matrix:
     - language: php
       php:
         - 7.0
-      services:
-        - postgresql
+      addons:
+        postgresql: 9.5
+        apt:
+          packages:
+          - postgresql-9.5
       cache:
         directories:
           - $HOME/.composer/cache
       before_script:
         - cp phinx.php.travis phinx.php
-        - composer install --dev
+        - composer install
         - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
         - ieducar/vendor/bin/phinx migrate
       script:
