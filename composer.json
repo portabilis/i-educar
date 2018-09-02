@@ -20,6 +20,7 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.12",
     "guzzlehttp/guzzle": "^6.3",
+    "php-coveralls/php-coveralls": "^2.1",
     "phpunit/dbunit": "3.0.*",
     "phpunit/phpunit": "~6.5",
     "phpunit/phpunit-selenium": "4.1.*"
@@ -35,9 +36,12 @@
     }
   },
   "scripts": {
-    "test": "phpunit",
+    "phpunit": "ieducar/vendor/bin/phpunit --colors=always --config=$(pwd)/ieducar/phpunit.xml --coverage-clover=$(pwd)/ieducar/tests/log/clover.xml",
     "check-style": "ieducar/vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
-    "fix-style": "ieducar/vendor/bin/php-cs-fixer fix"
+    "fix-style": "ieducar/vendor/bin/php-cs-fixer fix",
+    "test": [
+      "@phpunit"
+    ]
   },
   "extra": {
     "branch-alias": {

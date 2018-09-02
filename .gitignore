@@ -30,3 +30,6 @@ website/yarn.lock
 website/node_modules
 website/i18n/*
 !website/i18n/en.json
+
+# this is the code coverage generated when running phpunit.
+ieducar/tests/log

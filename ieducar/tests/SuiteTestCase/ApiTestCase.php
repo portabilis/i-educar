@@ -60,6 +60,6 @@ class ApiTestCase extends TestCase
 
     public function getJsonFile($fileName)
     {
-        return __DIR__ . '/../unit/assets/' . $fileName;
+        return __DIR__ . '/../Unit/assets/' . $fileName;
     }
 }

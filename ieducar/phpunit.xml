@@ -7,6 +7,20 @@
          convertWarningsToExceptions="false"
          processIsolation="false"
          stopOnFailure="false">
+  <logging>
+    <log type="coverage-html" target="./tests/log/report" charset="UTF-8"/>
+    <log type="coverage-clover" target="./tests/log/clover.xml"/>
+  </logging>
+  <filter>
+	<whitelist>
+	  <directory suffix=".php">.</directory>
+	  <directory suffix=".php">../src</directory>
+      <exclude>
+	  	<directory>vendor</directory>
+	  	<directory>tests</directory>
+      </exclude>
+	</whitelist>
+  </filter>
   <testsuites>
     <testsuite name="Functional">
       <directory suffix="Test.php">./tests/Functional</directory>
@@ -19,8 +33,8 @@
 
   <php>
     <env name="CORE_EXT_CONFIGURATION_ENV" value="testing"/>
-    <env name="API_URI" value="http://localhost:8001/module/Api/Regra"/>
-    <env name="API_ACCESS_KEY" value="kXol8EPSFgd1WsXSqlaUMMa2XYY23D"/>
-    <env name="API_SECRET_KEY" value="5y8cfq31oGvFdAlGMCLIeSKdfc8pUC"/>
+    <env name="API_URI" value="http://localhost/module/Api/Regra"/>
+    <env name="API_ACCESS_KEY" value=""/>
+    <env name="API_SECRET_KEY" value=""/>
   </php>
 </phpunit>

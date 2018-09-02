@@ -1,16 +1,28 @@
-language: node_js
-node_js:
-  - '8'
-if: branch = master
-branches:
-  only:
-    - master
-cache:
-  yarn: true
-script:
-  - if [[ $TRAVIS_BRANCH == "master" ]] && [[ $TRAVIS_PULL_REQUEST == "false" ]]; then
-      git config --global user.name "${GH_NAME}";
-      git config --global user.email "${GH_EMAIL}";
-      echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc;
-      cd website && yarn install && GIT_USER="${GH_NAME}" yarn run publish-gh-pages;
-    fi
+matrix:
+  include:
+    - language: node_js
+      node_js:
+        - '8'
+      if: branch = master
+      branches:
+        only:
+          - master
+      cache:
+        yarn: true
+      script:
+        - if [[ $TRAVIS_BRANCH == "master" ]] && [[ $TRAVIS_PULL_REQUEST == "false" ]]; then
+            git config --global user.name "${GH_NAME}";
+            git config --global user.email "${GH_EMAIL}";
+            echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc;
+            cd website && yarn install && GIT_USER="${GH_NAME}" yarn run publish-gh-pages;
+          fi
+    - language: php
+      php:
+        - 7.0
+      before_script:
+        - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
+        - ieducar/vendor/bin/phinx migrate
+      script:
+        - composer test
+      after_success:
+        - php vendor/bin/coveralls --verbose
