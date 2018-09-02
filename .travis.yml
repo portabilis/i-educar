@@ -32,6 +32,7 @@ matrix:
         - composer install
         - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
         - ieducar/vendor/bin/phinx migrate
+        - php -S localhost:80 -t ieducar/ &
       script:
         - composer test
       after_success:
