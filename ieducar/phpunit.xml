@@ -32,7 +32,7 @@
   </testsuites>
 
   <php>
-    <env name="CORE_EXT_CONFIGURATION_ENV" value="testing"/>
+    <env name="CORE_EXT_CONFIGURATION_ENV" value="testing" force="true"/>
     <env name="API_URI" value="http://localhost/module/Api/Regra"/>
     <env name="API_ACCESS_KEY" value=""/>
     <env name="API_SECRET_KEY" value=""/>

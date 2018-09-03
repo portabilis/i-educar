@@ -20,6 +20,7 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.12",
     "guzzlehttp/guzzle": "^6.3",
+    "mikey179/vfsStream": "^1.6",
     "php-coveralls/php-coveralls": "^2.1",
     "phpunit/dbunit": "3.0.*",
     "phpunit/phpunit": "~6.5",
