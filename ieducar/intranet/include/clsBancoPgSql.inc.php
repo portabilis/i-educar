@@ -28,6 +28,10 @@
  * @version   $Id$
  */
 
+use iEducar\Modules\ErrorTracking\TrackerFactory;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'Portabilis/Mailer.php';
@@ -811,6 +815,11 @@ abstract class clsBancoSQL_
     $_SESSION['last_php_error_line']    = $lastError['line'];
     $_SESSION['last_php_error_file']    = $lastError['file'];
     @session_write_close();
+
+    if ($GLOBALS['coreExt']['Config']->modules->error->track) {
+        $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+        $tracker->notify(new \Exception($lastError['message']));
+    }
 
     $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
     (new NotificationMailer)->unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
