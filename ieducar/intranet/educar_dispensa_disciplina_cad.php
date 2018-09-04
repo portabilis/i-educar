@@ -222,12 +222,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
-        $sql = 'SELECT MAX(cod_dispensa) + 1 FROM pmieducar.dispensa_disciplina';
         $db = new clsBanco();
-        $max_cod_dispensa = $db->CampoUnico($sql);
-
-        // Caso não exista nenhuma dispensa, atribui o código 1, tabela não utiliza sequences
-        $max_cod_dispensa = $max_cod_dispensa > 0 ? $max_cod_dispensa : 1;
 
         $obj = new clsPmieducarDispensaDisciplina(
             $this->ref_cod_matricula,
@@ -240,8 +235,7 @@ class indice extends clsCadastro
             null,
             null,
             1,
-            $this->observacao,
-            $max_cod_dispensa
+            $this->observacao
         );
 
         if ($obj->existe()) {
@@ -272,10 +266,10 @@ class indice extends clsCadastro
             return false;
         }
 
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $codDispensa = $obj->cadastra();
+        if ($codDispensa) {
             $detalhe = $obj->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $max_cod_dispensa);
+            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $codDispensa);
             $auditoria->inclusao($detalhe);
 
             foreach ($this->etapa as $etapa) {
@@ -334,7 +328,7 @@ class indice extends clsCadastro
             }
 
             foreach ($this->etapa as $e) {
-                $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($max_cod_dispensa, $e);
+                $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($codDispensa, $e);
                 $cadastra = $objDispensaEtapa->cadastra();
             }
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';

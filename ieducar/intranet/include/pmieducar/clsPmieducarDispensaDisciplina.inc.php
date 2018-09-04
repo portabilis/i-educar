@@ -184,8 +184,8 @@ class clsPmieducarDispensaDisciplina
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
             is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
-            is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_tipo_dispensa) &&
-            is_numeric($this->cod_dispensa)) {
+            is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_tipo_dispensa)
+        ) {
             $db = new clsBanco();
 
             $campos  = '';
@@ -242,16 +242,9 @@ class clsPmieducarDispensaDisciplina
                 $gruda    = ', ';
             }
 
-            if (is_numeric($this->cod_dispensa)) {
-                $campos  .= "{$gruda}cod_dispensa";
-                $valores .= "{$gruda}'{$this->cod_dispensa}'";
-                $gruda    = ', ';
-            }
-
             $sql = "INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)";
             $db->Consulta($sql);
-
-            return true;
+            return $db->InsertId("{$this->_tabela}_cod_dispensa_seq");
         }
 
         return false;
