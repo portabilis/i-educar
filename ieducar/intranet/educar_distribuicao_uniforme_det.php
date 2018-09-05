@@ -82,6 +82,7 @@ class indice extends clsDetalhe
             $this->addDetalhe([Portabilis_String_Utils::toLatin1('Quantidade de agasalhos (jaqueta e calça)'), $registro['agasalho_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de camisetas (manga curta)', $registro['camiseta_curta_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de camisetas (manga longa)', $registro['camiseta_longa_qtd'] ?: '0']);
+            $this->addDetalhe(['Quantidade de camisetas infantis (sem manga)', $registro['camiseta_infantil_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de meias', $registro['meias_qtd'] ?: '0']);
             $this->addDetalhe(['Bermudas tectels (masculino)', $registro['bermudas_tectels_qtd'] ?: '0']);
             $this->addDetalhe(['Bermudas coton (feminino)', $registro['bermudas_coton_qtd'] ?: '0']);
