@@ -168,7 +168,8 @@ class indice extends clsCadastro
             'value' => $this->agasalho_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline'  => true
+            'inline'  => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('agasalho_tm', [
@@ -186,7 +187,8 @@ class indice extends clsCadastro
             'value' => $this->camiseta_curta_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline' => true
+            'inline' => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('camiseta_curta_tm', [
@@ -203,7 +205,8 @@ class indice extends clsCadastro
             'value' => $this->camiseta_longa_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline' => true
+            'inline' => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('camiseta_longa_tm', [
@@ -220,7 +223,8 @@ class indice extends clsCadastro
             'value' => $this->camiseta_infantil_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline' => true
+            'inline' => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('camiseta_infantil_tm', [
@@ -237,7 +241,8 @@ class indice extends clsCadastro
             'value' => $this->meias_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline' => true
+            'inline' => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('meias_tm', [
@@ -254,7 +259,8 @@ class indice extends clsCadastro
             'value' => $this->bermudas_tectels_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline' => true
+            'inline' => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('bermudas_tectels_tm', [
@@ -271,7 +277,8 @@ class indice extends clsCadastro
             'value' => $this->bermudas_coton_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline' => true
+            'inline' => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('bermudas_coton_tm', [
@@ -288,7 +295,8 @@ class indice extends clsCadastro
             'value' => $this->tenis_qtd,
             'max_length' => 2,
             'size' => 2,
-            'inline' => true
+            'inline' => true,
+            'placeholder' => ''
         ]);
 
         $this->inputsHelper()->text('tenis_tm', [
