@@ -31,24 +31,14 @@ class AtualizaSituacaoNotaComponente extends AbstractMigration
             update
                 modules.nota_componente_curricular_media	
             set
-                situacao = (case
-                    when matricula_turma.transferido is true then 4
-                    when matricula_turma.abandono is true then 6
-                    when matricula_turma.falecido is true then 15
-                end)
+                situacao = matricula.aprovado
             from
                 modules.nota_aluno,
-                pmieducar.matricula,
-                pmieducar.matricula_turma
+                pmieducar.matricula
             where true
                 and nota_componente_curricular_media.nota_aluno_id = nota_aluno.id
                 and nota_aluno.matricula_id = matricula.cod_matricula
-                and matricula.cod_matricula = matricula_turma.ref_cod_matricula
-                and (
-                    matricula_turma.transferido is true
-                    or matricula_turma.abandono is true
-                    or matricula_turma.falecido is true
-                )
+                and matricula.aprovado in (4, 6, 15)
                 and nota_componente_curricular_media.situacao not in (4, 6, 15)
 SQL;
 
