@@ -103,14 +103,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$registro['ref_cod_aluno']}";
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php'                  => 'Escola',
-            ''                                  => 'Distribuições de uniforme escolar'
+        $this->breadcrumb('Distribuições de uniforme escolar', [
+            'educar_index.php' => 'Escola'
         ]);
-        
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
