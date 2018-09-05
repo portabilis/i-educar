@@ -415,7 +415,7 @@ class DiarioApiController extends ApiCoreController
         $tipoRecuperacaoParalela = $regra->get('tipoRecuperacaoParalela');
 
         $regraRecuperacao = $regra->getRegraRecuperacaoByEtapa($etapa);
-        $substituiMenorNota = dbBool($regraRecuperacao->get('substituiMenorNota')) ?? false;
+        $substituiMenorNota = dbBool($regraRecuperacao->get('substituiMenorNota'));
 
         if (
             $tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS
