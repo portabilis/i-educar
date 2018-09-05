@@ -610,8 +610,8 @@ class App_Model_IedFinder extends CoreExt_Entity
                    s.concluinte AS serie_concluinte,
                    rasa.regra_avaliacao_diferenciada_id as serie_regra_avaliacao_diferenciada_id,
                    rasa.regra_avaliacao_id as serie_regra_avaliacao_id,
-                   e.utiliza_regra_diferenciada as escola_utiliza_regra_diferenciada
-
+                   e.utiliza_regra_diferenciada as escola_utiliza_regra_diferenciada,
+                   mt.data_enturmacao
             FROM pmieducar.matricula m
             JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
             JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
@@ -1271,4 +1271,82 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     return false;
   }
+
+    /**
+     * Retorna as etapas da turma.
+     *
+     * @param int $turma
+     *
+     * @return array|mixed
+     *
+     * @throws Exception
+     */
+    public static function getEtapasDaTurma($turma)
+    {
+        $sql = "
+
+            select * from (
+            
+                select
+                    t.cod_turma,
+                    anm.sequencial,
+                    anm.ref_cod_modulo as cod_modulo,
+                    anm.data_inicio,
+                    anm.data_fim,
+                    anm.dias_letivos
+                from pmieducar.turma as t 
+                inner join pmieducar.curso as c 
+                on t.ref_cod_curso = c.cod_curso
+                inner join pmieducar.ano_letivo_modulo as anm
+                on anm.ref_ref_cod_escola = t.ref_ref_cod_escola
+                and anm.ref_ano = t.ano
+                where c.padrao_ano_escolar = 1
+                
+                union all
+                
+                select 
+                    t.cod_turma,
+                    tm.sequencial,
+                    tm.ref_cod_modulo as cod_modulo,
+                    tm.data_inicio,
+                    tm.data_fim,
+                    tm.dias_letivos
+                from pmieducar.turma as t 
+                inner join pmieducar.curso as c 
+                on t.ref_cod_curso = c.cod_curso
+                inner join pmieducar.turma_modulo as tm
+                on tm.ref_cod_turma = t.cod_turma
+                where c.padrao_ano_escolar = 0
+            ) as etapas
+            
+            where cod_turma = $1;
+
+        ";
+
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, [
+            'params' => [$turma]
+        ]);
+    }
+
+    /**
+     * @param int $etapaId
+     *
+     * @return array|null
+     *
+     * @throws Exception
+     */
+    public static function getEtapa($etapaId)
+    {
+        $sql = "select * from pmieducar.modulo where cod_modulo = $1;";
+
+        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, [
+            'params' => [$etapaId]
+        ]);
+
+        if ($query && count($query)) {
+            return array_shift($query);
+        }
+
+        return null;
+    }
 }
