@@ -65,6 +65,8 @@ class indice extends clsCadastro
 
     public $ref_cod_escola;
 
+    public $kit_completo;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -121,14 +123,13 @@ class indice extends clsCadastro
         // primary keys
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
         $this->campoOculto('cod_distribuicao_uniforme', $this->cod_distribuicao_uniforme);
-
         $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
         $this->inputsHelper()->date('data', [ 'label' => 'Data da distribuição', 'value' => $this->data, 'placeholder' => '']);
 
         $opcoes = ['' => 'Selecione'];
         $objTemp = new clsPmieducarEscola();
 
-        $lista = $objTemp->lista(null, null, null, $det_matricula['ref_cod_instituicao']);
+        $lista = $objTemp->lista();
 
         foreach ($lista as $escola) {
             $opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
@@ -227,8 +228,6 @@ class indice extends clsCadastro
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             header("Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             die();
-
-            return true;
         }
 
         $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -292,8 +291,6 @@ class indice extends clsCadastro
             $this->mensagem .= 'Ed&ccedil;&atilde;o efetuada com sucesso.<br>';
             header("Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             die();
-
-            return true;
         }
 
         $this->mensagem = 'Ed&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -319,8 +316,6 @@ class indice extends clsCadastro
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
             header("Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             die();
-
-            return true;
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
@@ -329,13 +324,8 @@ class indice extends clsCadastro
     }
 }
 
-// cria uma extensao da classe base
 $pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
+$pagina->addForm(new indice());
 $pagina->MakeAll();
 
 ?>
