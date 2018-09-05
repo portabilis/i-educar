@@ -327,7 +327,7 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
             $auditoria->inclusao($distribuicao);
 
-            $this->redirectIf(true, "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -385,7 +385,7 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
             $auditoria->alteracao($detalheAntigo, $obj->detalhe());
 
-            $this->redirectIf(true, "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -406,7 +406,7 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
             $auditoria->exclusao($detalhe);
 
-            $this->redirectIf(true, "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
