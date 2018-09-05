@@ -538,7 +538,8 @@ class clsPmieducarSerie
         $int_idade_final = null,
         $int_ref_cod_escola = null,
         $regra_avaliacao_id = null,
-        $int_idade_ideal = null
+        $int_idade_ideal = null,
+        $ano = null
     ) {
         $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao FROM {$this->_tabela} s, {$this->_schema}curso c";
 
@@ -619,15 +620,30 @@ class clsPmieducarSerie
         }
 
         if (is_numeric($int_ref_cod_escola)) {
-            $filtros[] = "EXISTS (SELECT
+            $condicao = " EXISTS (SELECT
                     1
                 FROM
                     pmieducar.escola_serie es
                 WHERE
                     s.cod_serie = es.ref_cod_serie
                     AND es.ativo = 1
-                    AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
+                    AND es.ref_cod_escola = '{$int_ref_cod_escola}' ";
+
+            if (is_numeric($ano)) {
+                $condicao .= " AND {$ano} = ANY(es.anos_letivos) ";
+            }
+            $condicao .= ' ) ';
+
+            $filtros[] = $condicao;
+
+        } elseif (is_numeric($ano)) {
+            $filtros[] = "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_serie es
+                                        WHERE s.cod_serie = es.ref_cod_serie
+                                          AND es.ativo = 1
+                                          AND {$ano} = ANY(es.anos_letivos) ";
         }
+
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
