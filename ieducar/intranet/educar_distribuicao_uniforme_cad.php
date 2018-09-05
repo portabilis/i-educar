@@ -142,7 +142,9 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->date('data', [
             'label' => 'Data da distribuição',
-            'value' => $this->data, 'placeholder' => ''
+            'value' => $this->data,
+            'placeholder' => '',
+            'size' => 10
         ]);
 
         $this->campoLista(
