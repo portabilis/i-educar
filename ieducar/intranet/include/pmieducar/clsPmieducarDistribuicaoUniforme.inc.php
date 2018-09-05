@@ -44,6 +44,10 @@ class clsPmieducarDistribuicaoUniforme
 
     public $ref_cod_escola;
 
+    public $camiseta_infantil_qtd;
+
+    public $camiseta_infantil_tm;
+
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
      *
@@ -125,13 +129,20 @@ class clsPmieducarDistribuicaoUniforme
         $bermudas_tectels_tm = null,
         $bermudas_coton_tm = null,
         $tenis_tm = null,
-        $ref_cod_escola = null
+        $ref_cod_escola = null,
+        $camiseta_infantil_qtd = null,
+        $camiseta_infantil_tm = null
     ) {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}distribuicao_uniforme";
 
-        $this->_campos_lista = $this->_todos_campos = ' cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo, agasalho_qtd, camiseta_curta_qtd, camiseta_longa_qtd, meias_qtd, bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data, agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola';
+        $this->_campos_lista = $this->_todos_campos = ' 
+            cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo, 
+            agasalho_qtd, camiseta_curta_qtd, camiseta_longa_qtd, meias_qtd,
+            bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data, 
+            agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, 
+            bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola
+        ';
 
         if (is_numeric($cod_distribuicao_uniforme)) {
             $this->cod_distribuicao_uniforme = $cod_distribuicao_uniforme;
@@ -177,6 +188,14 @@ class clsPmieducarDistribuicaoUniforme
 
         if (is_string($data)) {
             $this->data = $data;
+        }
+
+        if (is_numeric($camiseta_infantil_qtd)) {
+            $this->camiseta_infantil_qtd = $camiseta_infantil_qtd;
+        }
+
+        if (is_string($camiseta_infantil_tm)) {
+            $this->camiseta_infantil_tm = $camiseta_infantil_tm;
         }
 
         $this->agasalho_tm = $agasalho_tm;
@@ -316,6 +335,18 @@ class clsPmieducarDistribuicaoUniforme
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->camiseta_infantil_qtd)) {
+                $campos .= "{$gruda}camiseta_infantil_qtd";
+                $valores .= "{$gruda}{$this->camiseta_infantil_qtd}";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->camiseta_infantil_tm)) {
+                $campos .= "{$gruda}camiseta_infantil_tm";
+                $valores .= "{$gruda}'{$this->camiseta_infantil_tm}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $db->insertId("{$this->_tabela}_seq");
@@ -440,6 +471,18 @@ class clsPmieducarDistribuicaoUniforme
                 $set .= ',ref_cod_escola = NULL';
             }
 
+            if ($this->camiseta_infantil_qtd) {
+                $set .= ",camiseta_infantil_qtd = '{$this->camiseta_infantil_qtd}'";
+            } else {
+                $set .= ',camiseta_infantil_qtd = NULL';
+            }
+
+            if ($this->camiseta_infantil_tm) {
+                $set .= ",camiseta_infantil_tm = '{$this->camiseta_infantil_tm}'";
+            } else {
+                $set .= ',camiseta_infantil_tm = NULL';
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_distribuicao_uniforme = '{$this->cod_distribuicao_uniforme}'");
 
@@ -459,7 +502,6 @@ class clsPmieducarDistribuicaoUniforme
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = ' WHERE TRUE ';
-        // implementar
 
         if (is_numeric($ref_cod_aluno)) {
             $filtros .= " AND ref_cod_aluno = {$ref_cod_aluno} ";
@@ -491,6 +533,7 @@ class clsPmieducarDistribuicaoUniforme
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
+        
         if (count($resultado)) {
             return $resultado;
         }
@@ -605,7 +648,7 @@ class clsPmieducarDistribuicaoUniforme
     {
         if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            
+
             if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
