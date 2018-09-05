@@ -70,7 +70,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        
+
         $this->cod_distribuicao_uniforme=$_GET['cod_distribuicao_uniforme'];
         $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
 
@@ -117,7 +117,6 @@ class indice extends clsCadastro
             }
         }
 
-        // primary keys
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
         $this->campoOculto('cod_distribuicao_uniforme', $this->cod_distribuicao_uniforme);
         $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
@@ -133,42 +132,129 @@ class indice extends clsCadastro
         }
         $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola, '', false, '(Responsável pela distribuição do uniforme)', '', false, true);
 
-        $this->inputsHelper()->checkbox('kit_completo', [ 'label' => 'Kit completo', 'value' => $this->kit_completo]);
-        // $this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calça)", $this->agasalho_qtd, 2, 2, false );
-        $options = ['required' => false, 'label' => 'Quantidade de agasalhos (jaqueta e calça)', 'value' => $this->agasalho_qtd, 'max_length' => 2, 'size' => 2, 'inline'  => true];
-        $this->inputsHelper()->integer('agasalho_qtd', $options);
-        $options = ['required' => false, 'label' => ' Tamanho', 'value' => $this->agasalho_tm, 'max_length'  => 10, 'size' => 10];
-        $this->inputsHelper()->text('agasalho_tm', $options);
-        // $this->campoNumero( "camiseta_curta_qtd", "Quantidade de camisetas (manga curta)", $this->camiseta_curta_qtd, 2, 2, false);
-        $options = ['required' => false, 'label' => 'Quantidade de camisetas (manga curta)', 'value' => $this->camiseta_curta_qtd, 'max_length' => 2, 'size' => 2, 'inline'    => true];
-        $this->inputsHelper()->integer('camiseta_curta_qtd', $options);
-        $options = ['required' => false, 'label' => ' Tamanho', 'value' => $this->camiseta_curta_tm, 'max_length'  => 10, 'size' => 10];
-        $this->inputsHelper()->text('camiseta_curta_tm', $options);
-        // $this->campoNumero( "camiseta_longa_qtd", "Quantidade de camisetas (manga longa)", $this->camiseta_longa_qtd, 2, 2, false);
-        $options = ['required' => false, 'label' => 'Quantidade de camisetas (manga longa)', 'value' => $this->camiseta_longa_qtd, 'max_length' => 2, 'size' => 2, 'inline'    => true];
-        $this->inputsHelper()->integer('camiseta_longa_qtd', $options);
-        $options = ['required' => false, 'label' => ' Tamanho', 'value' => $this->camiseta_longa_tm, 'max_length'  => 10, 'size' => 10];
-        $this->inputsHelper()->text('camiseta_longa_tm', $options);
-        // $this->campoNumero( "meias_qtd", "Quantidade de meias", $this->meias_qtd, 2, 2, false);
-        $options = ['required' => false, 'label' => 'Quantidade de meias', 'value' => $this->meias_qtd, 'max_length' => 2, 'size' => 2, 'inline'   => true];
-        $this->inputsHelper()->integer('meias_qtd', $options);
-        $options = ['required' => false, 'label' => ' Tamanho', 'value' => $this->meias_tm, 'max_length'  => 10, 'size' => 10];
-        $this->inputsHelper()->text('meias_tm', $options);
-        // $this->campoNumero( "bermudas_tectels_qtd", "Bermudas tectels (masculino)", $this->bermudas_tectels_qtd, 2, 2, false);
-        $options = ['required' => false, 'label' => 'Bermudas tectels (masculino)', 'value' => $this->bermudas_tectels_qtd, 'max_length' => 2, 'size' => 2, 'inline'   => true];
-        $this->inputsHelper()->integer('bermudas_tectels_qtd', $options);
-        $options = ['required' => false, 'label' => ' Tamanho', 'value' => $this->bermudas_tectels_tm, 'max_length'  => 10, 'size' => 10];
-        $this->inputsHelper()->text('bermudas_tectels_tm', $options);
-        // $this->campoNumero( "bermudas_coton_qtd", "Bermudas coton (feminino)", $this->bermudas_coton_qtd, 2, 2, false);
-        $options = ['required' => false, 'label' => 'Bermudas coton (feminino)', 'value' => $this->bermudas_coton_qtd, 'max_length' => 2, 'size' => 2, 'inline' => true];
-        $this->inputsHelper()->integer('bermudas_coton_qtd', $options);
-        $options = ['required' => false, 'label' => ' Tamanho', 'value' => $this->bermudas_coton_tm, 'max_length' => 10, 'size' => 10];
-        $this->inputsHelper()->text('bermudas_coton_tm', $options);
-        // $this->campoNumero( "tamanho", "Tênis", $this->tenis_qtd, 2, 2, false);
-        $options = ['required' => false, 'label' => 'Tênis', 'value' => $this->tenis_qtd, 'max_length' => 2, 'size' => 2, 'inline' => true];
-        $this->inputsHelper()->integer('tenis_qtd', $options);
-        $options = ['required' => false, 'label' => ' Tamanho', 'value' => $this->tenis_tm, 'max_length'  => 10, 'size' => 10];
-        $this->inputsHelper()->text('tenis_tm', $options);
+        $this->inputsHelper()->checkbox('kit_completo', [
+            'label' => 'Kit completo', 'value' => $this->kit_completo
+        ]);
+
+        $this->inputsHelper()->integer('agasalho_qtd', [
+            'required' => false,
+            'label' => 'Quantidade de agasalhos (jaqueta e calça)',
+            'value' => $this->agasalho_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline'  => true
+        ]);
+
+        $this->inputsHelper()->text('agasalho_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->agasalho_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
+
+        $this->inputsHelper()->integer('camiseta_curta_qtd', [
+            'required' => false,
+            'label' => 'Quantidade de camisetas (manga curta)',
+            'value' => $this->camiseta_curta_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true
+        ]);
+
+        $this->inputsHelper()->text('camiseta_curta_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->camiseta_curta_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
+        $this->inputsHelper()->integer('camiseta_longa_qtd', [
+            'required' => false,
+            'label' => 'Quantidade de camisetas (manga longa)',
+            'value' => $this->camiseta_longa_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true
+        ]);
+
+        $this->inputsHelper()->text('camiseta_longa_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->camiseta_longa_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
+        $this->inputsHelper()->integer('meias_qtd', [
+            'required' => false,
+            'label' => 'Quantidade de meias',
+            'value' => $this->meias_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true
+        ]);
+
+        $this->inputsHelper()->text('meias_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->meias_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
+        $this->inputsHelper()->integer('bermudas_tectels_qtd', [
+            'required' => false,
+            'label' => 'Bermudas tectels (masculino)',
+            'value' => $this->bermudas_tectels_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true
+        ]);
+
+        $this->inputsHelper()->text('bermudas_tectels_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->bermudas_tectels_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
+        $this->inputsHelper()->integer('bermudas_coton_qtd', [
+            'required' => false,
+            'label' => 'Bermudas coton (feminino)',
+            'value' => $this->bermudas_coton_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true
+        ]);
+
+        $this->inputsHelper()->text('bermudas_coton_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->bermudas_coton_tm,
+            'max_length' => 10,
+            'size' => 10
+        ]);
+
+        $this->inputsHelper()->integer('tenis_qtd', [
+            'required' => false,
+            'label' => 'Tênis',
+            'value' => $this->tenis_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true
+        ]);
+
+        $this->inputsHelper()->text('tenis_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->tenis_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
     }
 
     public function Novo()
