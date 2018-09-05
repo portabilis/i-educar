@@ -336,7 +336,9 @@ class indice extends clsCadastro
             $this->bermudas_tectels_tm,
             $this->bermudas_coton_tm,
             $this->tenis_tm,
-            $this->ref_cod_escola
+            $this->ref_cod_escola,
+            $this->camiseta_infantil_qtd,
+            $this->camiseta_infantil_tm
         );
 
         $this->cod_distribuicao_uniforme = $cadastrou = $obj->cadastra();
@@ -396,7 +398,9 @@ class indice extends clsCadastro
             $this->bermudas_tectels_tm,
             $this->bermudas_coton_tm,
             $this->tenis_tm,
-            $this->ref_cod_escola
+            $this->ref_cod_escola,
+            $this->camiseta_infantil_qtd,
+            $this->camiseta_infantil_tm
         );
 
         $detalheAntigo = $obj->detalhe();

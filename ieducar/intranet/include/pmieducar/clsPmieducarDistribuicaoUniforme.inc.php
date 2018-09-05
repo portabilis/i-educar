@@ -141,7 +141,8 @@ class clsPmieducarDistribuicaoUniforme
             agasalho_qtd, camiseta_curta_qtd, camiseta_longa_qtd, meias_qtd,
             bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data, 
             agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, 
-            bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola
+            bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola,
+            camiseta_infantil_qtd, camiseta_infantil_tm
         ';
 
         if (is_numeric($cod_distribuicao_uniforme)) {
@@ -533,7 +534,7 @@ class clsPmieducarDistribuicaoUniforme
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        
+
         if (count($resultado)) {
             return $resultado;
         }
