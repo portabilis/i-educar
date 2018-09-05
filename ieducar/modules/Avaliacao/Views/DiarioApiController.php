@@ -413,10 +413,12 @@ class DiarioApiController extends ApiCoreController
         $tipoRecuperacaoParalela = $regra->get('tipoRecuperacaoParalela');
 
         $regraRecuperacao = $regra->getRegraRecuperacaoByEtapa($etapa);
+        $substituiMenorNota = dbBool($regraRecuperacao->get('substituiMenorNota')) ?? false;
 
-        if ($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS
-            && $regraRecuperacao && dbBool($regraRecuperacao->get('substituiMenorNota'))) {
-
+        if (
+            $tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS
+            && $regraRecuperacao
+        ) {
             $nota_recuperacao = $this->serviceBoletim()->getNotaComponente($componenteCurricularId, $regraRecuperacao->getLastEtapa())
                 ->notaRecuperacaoEspecifica;
 
@@ -448,8 +450,9 @@ class DiarioApiController extends ApiCoreController
                     }
                 }
 
-                // Se nota de recuperação for maior que menor nota então substitui
-                if ($nota_recuperacao > $menorNota->notaOriginal) {
+                // Se regra não substitui apenas a menor nota ou
+                // se nota de recuperação for maior que menor nota então substitui
+                if ($substituiMenorNota === false || $nota_recuperacao > $menorNota->notaOriginal) {
                     $nota = new Avaliacao_Model_NotaComponente(array(
                         'componenteCurricular' => $componenteCurricularId,
                         'nota' => $nota_recuperacao,
