@@ -70,10 +70,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
+        
         $this->cod_distribuicao_uniforme=$_GET['cod_distribuicao_uniforme'];
         $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
 
@@ -176,10 +173,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
         $obj_permissoes = new clsPermissoes();
@@ -237,10 +230,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
         $obj_permissoes = new clsPermissoes();
@@ -300,10 +289,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
