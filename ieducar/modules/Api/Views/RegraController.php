@@ -121,8 +121,11 @@ class RegraController extends ApiCoreController
                               nota_maxima_exame_final AS nota_maxima_exame,
                               COALESCE(regra_avaliacao.regra_diferenciada_id, 0) AS regra_diferenciada_id
               FROM modules.regra_avaliacao
-              LEFT JOIN pmieducar.serie serie ON serie.regra_avaliacao_id = regra_avaliacao.id
-              AND serie.ativo = 1
+              LEFT JOIN modules.regra_avaliacao_serie_ano rasa
+                ON rasa.regra_avaliacao_id = regra_avaliacao.id
+              LEFT JOIN pmieducar.serie serie
+                ON rasa.serie_id = serie.cod_serie
+                AND serie.ativo = 1
               LEFT JOIN pmieducar.turma turma ON turma.ref_ref_cod_serie = serie.cod_serie
               AND turma.ativo = 1
               AND regra_avaliacao.instituicao_id = $1
@@ -133,7 +136,8 @@ class RegraController extends ApiCoreController
 
             $_regras = $this->fetchPreparedQuery($sql, [
                 $instituicaoId, $ano
-            ]);
+                ]
+            );
 
             $attrs = [
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',

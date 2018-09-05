@@ -31,6 +31,7 @@
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/App/Model/IedFinder.php';
 
 /**
  * Portabilis_View_Helper_DynamicInput_AnoLetivo class.
@@ -64,8 +65,12 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
   protected function inputOptions($options) {
     $resources = $options['resources'];
     $escolaId  = $this->getEscolaId($options['escolaId']);
+    $serieId  = $this->getSerieId($options['serieId']);
 
-    if ($escolaId && empty($resources)) {
+    if ($serieId && $escolaId && empty($resources)) {
+        $resources = App_Model_IedFinder::getAnosLetivosEscolaSerie($escolaId, $serieId);
+        //asort($resources);
+    } else if ($escolaId && empty($resources)) {
       $sql       = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
                     and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 

@@ -32,6 +32,9 @@
  * @version     $Id$
  */
 
+use iEducar\Modules\ErrorTracking\TrackerFactory;
+
+require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/View/Helper/Inputs.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
@@ -140,6 +143,11 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
       echo $result;
     }
     catch (Exception $e) {
+
+      if ($GLOBALS['coreExt']['Config']->modules->error->track) {
+          $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+          $tracker->notify($e);
+      }
 
       $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
 

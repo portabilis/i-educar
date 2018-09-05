@@ -180,6 +180,9 @@ modules.error.link_to_support         = http://www.portabilis.com.br/fale_conosc
 modules.error.send_notification_email = true
 ;modules.error.notification_email     = username@domain.com.br
 modules.error.show_details            = true
+modules.error.track = false
+modules.error.tracker_name =
+modules.error.honeybadger_key =
 
 ; Configurações google.com/recaptcha (confirmação humana, para evitar robos)
 app.recaptcha.public_key     =
