@@ -38,8 +38,8 @@ class AtualizaSituacaoNotaComponente extends AbstractMigration
             where true
                 and nota_componente_curricular_media.nota_aluno_id = nota_aluno.id
                 and nota_aluno.matricula_id = matricula.cod_matricula
-                and matricula.aprovado in (4, 6, 15)
-                and nota_componente_curricular_media.situacao not in (4, 6, 15)
+                and matricula.aprovado in (4, 5, 6, 15)
+                and nota_componente_curricular_media.situacao not in (4, 5, 6, 15)
 SQL;
 
         $this->execute($query);
@@ -48,24 +48,13 @@ SQL;
             update
                 nota_componente_curricular_media
             set
-                situacao = (case
-                    when view_situacao.texto_situacao = 'Aprovado' then 1
-                    when view_situacao.texto_situacao = 'Reprovado' then 2
-                    when view_situacao.texto_situacao = 'Cursando' then 3
-                    when view_situacao.texto_situacao = 'Transferido' then 4
-                    when view_situacao.texto_situacao = 'Reclassificado' then 5
-                    when view_situacao.texto_situacao = 'Abandono' then 6
-                    when view_situacao.texto_situacao = 'Ap. Depen.' then 12
-                    when view_situacao.texto_situacao = 'Ap. Cons.' then 13
-                    when view_situacao.texto_situacao = 'Rp. Faltas' then 14
-                    when view_situacao.texto_situacao = 'Falecido' then 15
-                end)
+                situacao = matricula.aprovado
             from
                 modules.nota_aluno,
-                relatorio.view_situacao
+                pmieducar.matricula
             where true
                 and nota_aluno.id = nota_componente_curricular_media.nota_aluno_id
-                and nota_aluno.matricula_id = view_situacao.cod_matricula
+                and nota_aluno.matricula_id = matricula.cod_matricula
                 and nota_componente_curricular_media.situacao is null;
 SQL;
 
