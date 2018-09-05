@@ -67,6 +67,10 @@ class indice extends clsCadastro
 
     public $kit_completo;
 
+    public $camiseta_infantil_qtd;
+
+    public $camiseta_infantil_tm;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -206,6 +210,23 @@ class indice extends clsCadastro
             'required' => false,
             'label' => ' Tamanho',
             'value' => $this->camiseta_longa_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
+        $this->inputsHelper()->integer('camiseta_infantil_qtd', [
+            'required' => false,
+            'label' => 'Quantidade de camisetas infantis (sem manga)',
+            'value' => $this->camiseta_infantil_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true
+        ]);
+
+        $this->inputsHelper()->text('camiseta_infantil_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->camiseta_infantil_tm,
             'max_length'  => 10,
             'size' => 10
         ]);
@@ -426,6 +447,7 @@ $pagina->MakeAll();
         $j('#agasalho_qtd').val('').attr('disabled', 'disabled');
         $j('#camiseta_curta_qtd').val('').attr('disabled', 'disabled');
         $j('#camiseta_longa_qtd').val('').attr('disabled', 'disabled');
+        $j('#camiseta_infantil_qtd').val('').attr('disabled', 'disabled');
         $j('#meias_qtd').val('').attr('disabled', 'disabled');
         $j('#bermudas_tectels_qtd').val('').attr('disabled', 'disabled');
         $j('#bermudas_coton_qtd').val('').attr('disabled', 'disabled');
@@ -437,6 +459,7 @@ $pagina->MakeAll();
         $j('#agasalho_qtd').removeAttr('disabled');
         $j('#camiseta_curta_qtd').removeAttr('disabled');
         $j('#camiseta_longa_qtd').removeAttr('disabled');
+        $j('#camiseta_infantil_qtd').removeAttr('disabled');
         $j('#meias_qtd').removeAttr('disabled');
         $j('#bermudas_tectels_qtd').removeAttr('disabled');
         $j('#bermudas_coton_qtd').removeAttr('disabled');
