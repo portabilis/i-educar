@@ -301,15 +301,14 @@ class indice extends clsCadastro
         if ($cadastrou) {
             $distribuicao = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
             $distribuicao = $distribuicao->detalhe();
+            
             $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
             $auditoria->inclusao($distribuicao);
 
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header("Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-            die();
+            $this->redirectIf(true, "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -359,16 +358,15 @@ class indice extends clsCadastro
 
         $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
+
         if ($editou) {
             $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
             $auditoria->alteracao($detalheAntigo, $obj->detalhe());
 
-            $this->mensagem .= 'Ed&ccedil;&atilde;o efetuada com sucesso.<br>';
-            header("Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-            die();
+            $this->redirectIf(true, "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
-        $this->mensagem = 'Ed&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -381,15 +379,15 @@ class indice extends clsCadastro
         $obj = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
         $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
+
         if ($excluiu) {
             $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
             $auditoria->exclusao($detalhe);
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-            header("Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-            die();
+
+            $this->redirectIf(true, "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
