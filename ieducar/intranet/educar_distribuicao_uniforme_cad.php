@@ -84,7 +84,7 @@ class indice extends clsCadastro
             $registro  = $obj->detalhe();
 
             if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
                 }
 
@@ -99,7 +99,11 @@ class indice extends clsCadastro
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro['ref_cod_aluno']}&cod_distribuicao_uniforme={$registro['cod_distribuicao_uniforme']}" : "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
+
+        $this->url_cancelar = $retorno == 'Editar'
+            ? "educar_distribuicao_uniforme_det.php?ref_cod_aluno={$registro['ref_cod_aluno']}&cod_distribuicao_uniforme={$registro['cod_distribuicao_uniforme']}"
+            : "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
+
         $this->nome_url_cancelar = 'Cancelar';
 
         $this->breadcrumb('Distribuições de uniforme escolar', [
@@ -113,24 +117,42 @@ class indice extends clsCadastro
     {
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
-                $this->$campo = (!$this->$campo) ?  $val : $this->$campo ;
+                $this->$campo = !$this->$campo ?  $val : $this->$campo;
             }
         }
 
-        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
-        $this->campoOculto('cod_distribuicao_uniforme', $this->cod_distribuicao_uniforme);
-        $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
-        $this->inputsHelper()->date('data', [ 'label' => 'Data da distribuição', 'value' => $this->data, 'placeholder' => '']);
+        $objEscola = new clsPmieducarEscola();
+        $lista = $objEscola->lista();
 
-        $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsPmieducarEscola();
-
-        $lista = $objTemp->lista();
+        $escolaOpcoes = ['' => 'Selecione'];
 
         foreach ($lista as $escola) {
-            $opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
+            $escolaOpcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
         }
-        $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola, '', false, '(Responsável pela distribuição do uniforme)', '', false, true);
+
+        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+
+        $this->campoOculto('cod_distribuicao_uniforme', $this->cod_distribuicao_uniforme);
+
+        $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
+
+        $this->inputsHelper()->date('data', [
+            'label' => 'Data da distribuição',
+            'value' => $this->data, 'placeholder' => ''
+        ]);
+
+        $this->campoLista(
+            'ref_cod_escola',
+            'Escola',
+            $escolaOpcoes,
+            $this->ref_cod_escola,
+            '',
+            false,
+            '(Responsável pela distribuição do uniforme)',
+            '',
+            false,
+            true
+        );
 
         $this->inputsHelper()->checkbox('kit_completo', [
             'label' => 'Kit completo', 'value' => $this->kit_completo
@@ -301,7 +323,7 @@ class indice extends clsCadastro
         if ($cadastrou) {
             $distribuicao = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
             $distribuicao = $distribuicao->detalhe();
-            
+
             $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
             $auditoria->inclusao($distribuicao);
 
