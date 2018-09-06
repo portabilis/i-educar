@@ -5,6 +5,10 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/IedFinder.php';
+require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
+require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
+require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
+require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -243,65 +247,8 @@ class indice extends clsCadastro
 
         $codigoDispensa = $objetoDispensa->cadastra();
         if ($codigoDispensa) {
-            foreach ($this->etapa as $etapa) {
-                $get_notas_lancadas = App_Model_IedFinder::getNotasLancadasAluno($this->ref_cod_matricula, $this->ref_cod_disciplina, $etapa);
-
-                if ($get_notas_lancadas[0]['matricula_id'] == '') {
-                    break;
-                } else {
-                    $cod_matricula = $get_notas_lancadas[0]['matricula_id'];
-                    $disciplina = $get_notas_lancadas[0]['componente_curricular_id'];
-                    $nota = $get_notas_lancadas[0]['nota'];
-                    $etapa_nota = $get_notas_lancadas[0]['etapa'];
-                    if (empty($get_notas_lancadas[0]['nota_recuperacao'])) {
-                        $nota_recuperacao = 'NULL';
-                    }
-                    if (empty($get_notas_lancadas[0]['nota_recuperacao_especifica'])) {
-                        $nota_recuperacao_especifica = 'NULL';
-                    }
-
-                    $db->Consulta("INSERT INTO pmieducar.auditoria_nota_dispensa (ref_cod_matricula, ref_cod_componente_curricular, nota, etapa, nota_recuperacao, nota_recuperacao_especifica, data_cadastro)
-                         VALUES($cod_matricula, $disciplina, $nota, $etapa_nota, $nota_recuperacao, $nota_recuperacao_especifica, NOW())");
-
-                    $db->Consulta("DELETE
-                           FROM modules.nota_componente_curricular AS ncc USING modules.nota_aluno AS na
-                          WHERE na.id = ncc.nota_aluno_id
-                            AND na.matricula_id = $this->ref_cod_matricula
-                            AND ncc.componente_curricular_id = $this->ref_cod_disciplina
-                            AND ncc.etapa = $etapa::CHARACTER VARYING ");
-                }
-            }
-
-            $tipo_falta = $db->CampoUnico("SELECT tipo_falta FROM modules.falta_aluno WHERE matricula_id = $this->ref_cod_matricula");
-            if ($tipo_falta == 2) {
-                foreach ($this->etapa as $etapa) {
-                    $get_faltas_lancadas = App_Model_IedFinder::getFaltasLancadasAluno($this->ref_cod_matricula, $this->ref_cod_disciplina, $etapa);
-
-                    if ($get_faltas_lancadas[0]['matricula_id'] == '') {
-                        break;
-                    } else {
-                        $cod_matricula = $get_faltas_lancadas[0]['matricula_id'];
-                        $disciplina = $get_faltas_lancadas[0]['componente_curricular_id'];
-                        $quantidade = $get_faltas_lancadas[0]['quantidade'];
-                        $etapa_falta = $get_faltas_lancadas[0]['etapa'];
-
-                        $db->Consulta("INSERT INTO pmieducar.auditoria_falta_componente_dispensa (ref_cod_matricula, ref_cod_componente_curricular, quantidade, etapa, data_cadastro)
-              VALUES ($cod_matricula, $disciplina, $quantidade, $etapa_falta, NOW())");
-
-                        $db->Consulta("DELETE
-                             FROM modules.falta_componente_curricular AS fcc USING modules.falta_aluno AS fa
-                            WHERE fa.id = fcc.falta_aluno_id
-                              AND fa.matricula_id = $this->ref_cod_matricula
-                              AND fcc.componente_curricular_id = $this->ref_cod_disciplina
-                              AND fcc.etapa = $etapa::CHARACTER VARYING ");
-                    }
-                }
-            }
-
-            foreach ($this->etapa as $e) {
-                $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($codigoDispensa, $e);
-                $cadastra = $objDispensaEtapa->cadastra();
-            }
+            $dadosDaDispensa['cod_dispensa'] = $codigoDispensa;
+            $this->cadastraEtapasDaDispensa($dadosDaDispensa);
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
             header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
             die();
@@ -321,13 +268,10 @@ class indice extends clsCadastro
         $dadosDaDispensa = $this->obtemDadosDaDispensa();
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-        $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
-        $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
+        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
+        $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($dadosDaDispensa['cod_dispensa']);
 
-        foreach ($this->etapa as $e) {
-            $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($this->cod_dispensa, $e);
-            $cadastra = $objDispensaEtapa->cadastra();
-        }
+        $this->cadastraEtapasDaDispensa($dadosDaDispensa);
 
         $editou = $objetoDispensa->edita();
         if ($editou) {
@@ -430,6 +374,7 @@ class indice extends clsCadastro
     public function obtemDadosDaDispensa()
     {
         $dadosDaDispensa = [
+            'cod_dispensa' => $this->cod_dispensa,
             'ref_cod_matricula' => $this->ref_cod_matricula,
             'ref_cod_serie' => $this->ref_cod_serie,
             'ref_cod_escola' => $this->ref_cod_escola,
@@ -461,6 +406,68 @@ class indice extends clsCadastro
         );
 
         return $objetoDispensa;
+    }
+
+    public function cadastraEtapasDaDispensa($dadosDaDispensa)
+    {
+        foreach ($dadosDaDispensa['etapas'] as $etapa) {
+            $this->removeNotasDaDisciplinaNaEtapa(
+                $dadosDaDispensa['ref_cod_matricula'],
+                $dadosDaDispensa['ref_cod_disciplina'],
+                $etapa
+            );
+            $this->removeFaltasDaDisciplinaNaEtapa(
+                $dadosDaDispensa['ref_cod_matricula'],
+                $dadosDaDispensa['ref_cod_disciplina'],
+                $etapa
+            );
+            $objetoEtapaDaDispensa = new clsPmieducarDispensaDisciplinaEtapa($dadosDaDispensa['cod_dispensa'], $etapa);
+            $cadastra = $objetoEtapaDaDispensa->cadastra();
+        }
+    }
+
+    public function removeNotasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
+    {
+        $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
+        $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
+        $notaAluno = $notaAluno[0]->id;
+        if(empty($notaAluno)) {
+            return false;
+        }
+        $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper();
+        $notaComponenteCurricular = $notaComponenteCurricularMapper->findAll([], [
+            'nota_aluno_id' => $notaAluno,
+            'componente_curricular_id' => $disciplinaId,
+            'etapa' => $etapa
+        ]);
+        if(empty($notaComponenteCurricular)) {
+            return false;
+        }
+        $notaComponenteCurricularMapper->delete($notaComponenteCurricular[0]);
+
+        return true;
+    }
+
+    public function removeFaltasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
+    {
+        $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper();
+        $faltaAluno = $faltaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
+        $faltaAluno = $faltaAluno[0]->id;
+        if(empty($faltaAluno)) {
+            return false;
+        }
+        $faltaComponenteCurricularMapper = new Avaliacao_Model_FaltaComponenteDataMapper();
+        $faltaComponenteCurricular = $faltaComponenteCurricularMapper->findAll([], [
+            'falta_aluno_id' => $faltaAluno,
+            'componente_curricular_id' => $disciplinaId,
+            'etapa' => $etapa
+        ]);
+        if(empty($faltaComponenteCurricular)) {
+            return false;
+        }
+        $faltaComponenteCurricularMapper->delete($faltaComponenteCurricular[0]);
+
+        return true;
     }
 }
 
