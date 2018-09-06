@@ -166,7 +166,8 @@ class clsPessoaFj
         'SELECT idpes FROM cadastro.fisica WHERE cpf LIKE \'%%%s%%\'', $id_federal
       );
 
-      $db2->Consulta();
+      // FIXME
+      // $db2->Consulta();
 
       $array_idpes = NULL;
 
