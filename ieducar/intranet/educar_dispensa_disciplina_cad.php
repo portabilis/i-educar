@@ -9,6 +9,7 @@ require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
 require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
+require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -37,6 +38,7 @@ class indice extends clsCadastro
     public $ref_sequencial;
     public $ref_cod_instituicao;
     public $ref_cod_escola;
+    public $modoEdicao;
 
     public function Inicializar()
     {
@@ -101,7 +103,7 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $this->breadcrumb('Dispensa de componentes curriculares',['educar_index.php' => 'Escola']);
-
+        $this->modoEdicao = $retorno == 'Editar';
         return $retorno;
     }
 
@@ -112,6 +114,7 @@ class indice extends clsCadastro
          */
         $obj_ref_cod_matricula = new clsPmieducarMatricula();
         $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $this->ano = $detalhe_aluno['ano'];
 
         $obj_aluno = new clsPmieducarAluno();
         $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1));
@@ -144,6 +147,10 @@ class indice extends clsCadastro
         $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         $this->campoOculto('cod_dispensa', $this->cod_dispensa);
 
+        $this->campoOculto('ano', $this->ano);
+        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+        $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
+
         $opcoes = ['' => 'Selecione'];
 
         // Seleciona os componentes curriculares da turma
@@ -163,16 +170,11 @@ class indice extends clsCadastro
             $opcoes[$componente->id] = $componente->nome;
         }
 
-        if ($this->ref_cod_disciplina) {
+        if ($this->modoEdicao) {
             $this->campoRotulo('nm_disciplina', 'Disciplina', $opcoes[$this->ref_cod_disciplina]);
             $this->campoOculto('ref_cod_disciplina', $this->ref_cod_disciplina);
         } else {
-            $this->campoLista(
-                'ref_cod_disciplina',
-                'Disciplina',
-                $opcoes,
-                $this->ref_cod_disciplina
-            );
+            $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true]);
         }
 
         $opcoes = ['' => 'Selecione'];
@@ -224,40 +226,47 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+        $disciplinasNaoExistentesNaSerieDaEscola = [];
 
-        $db = new clsBanco();
+        foreach ($this->componentecurricular as $disciplinaId) {
+            $this->ref_cod_disciplina = $disciplinaId;
+            $dadosDaDispensa = $this->obtemDadosDaDispensa();
+            $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-        $dadosDaDispensa = $this->obtemDadosDaDispensa();
-        $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
+            if (!$this->existeComponenteSerie()) {
+                $disciplinasNaoExistentesNaSerieDaEscola[] = $this->nomeDisciplina($disciplinaId);
+                continue;
+            }
 
-        if ($objetoDispensa->existe()) {
-            $this->cod_dispensa = $objetoDispensa->detalhe()['cod_dispensa'];
-            $this->Editar();
-            header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
+            if ($objetoDispensa->existe()) {
+                $dadosDaDispensa['cod_dispensa'] = $objetoDispensa->detalhe()['cod_dispensa'];
+                $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
+                $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($dadosDaDispensa['cod_dispensa']);
+                $objetoDispensa->edita();
+                $this->cadastraEtapasDaDispensa($dadosDaDispensa);
+                continue;
+            }
+
+            $codigoDispensa = $objetoDispensa->cadastra();
+            if (!$codigoDispensa) {
+                $this->mensagem = 'Cadastro não realizado.<br />';
+                echo "<!--\nErro ao cadastrar clsPmieducarDispensaDisciplina\nvalores obrigatorios\n is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_dispensa )\n-->";
+
+                return false;
+            }
+            $dadosDaDispensa['cod_dispensa'] = $codigoDispensa;
+            $this->cadastraEtapasDaDispensa($dadosDaDispensa);
         }
 
-        if (!$this->existeComponenteSerie()) {
-            $this->mensagem = 'O componente não está habilitado na série da escola.';
-            $this->url_cancelar = 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
-            $this->nome_url_cancelar = 'Cancelar';
-
+        if (count($disciplinasNaoExistentesNaSerieDaEscola) > 0) {
+            $disciplinas = implode(", ", $disciplinasNaoExistentesNaSerieDaEscola);
+            $this->mensagem = "O(s) componente(s):<b>{$disciplinas}</b>. não está(ão) habilitado(s) na série da escola.";
             return false;
         }
 
-        $codigoDispensa = $objetoDispensa->cadastra();
-        if ($codigoDispensa) {
-            $dadosDaDispensa['cod_dispensa'] = $codigoDispensa;
-            $this->cadastraEtapasDaDispensa($dadosDaDispensa);
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-            header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
-        }
-
-        $this->mensagem = 'Cadastro não realizado.<br />';
-        echo "<!--\nErro ao cadastrar clsPmieducarDispensaDisciplina\nvalores obrigatorios\n is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_dispensa )\n-->";
-
-        return false;
+        $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+        header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+        die();
     }
 
     public function Editar()
@@ -431,7 +440,7 @@ class indice extends clsCadastro
         $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
         $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
         $notaAluno = $notaAluno[0]->id;
-        if(empty($notaAluno)) {
+        if (empty($notaAluno)) {
             return false;
         }
         $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper();
@@ -440,7 +449,7 @@ class indice extends clsCadastro
             'componente_curricular_id' => $disciplinaId,
             'etapa' => $etapa
         ]);
-        if(empty($notaComponenteCurricular)) {
+        if (empty($notaComponenteCurricular)) {
             return false;
         }
         $notaComponenteCurricularMapper->delete($notaComponenteCurricular[0]);
@@ -453,7 +462,7 @@ class indice extends clsCadastro
         $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper();
         $faltaAluno = $faltaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
         $faltaAluno = $faltaAluno[0]->id;
-        if(empty($faltaAluno)) {
+        if (empty($faltaAluno)) {
             return false;
         }
         $faltaComponenteCurricularMapper = new Avaliacao_Model_FaltaComponenteDataMapper();
@@ -462,12 +471,19 @@ class indice extends clsCadastro
             'componente_curricular_id' => $disciplinaId,
             'etapa' => $etapa
         ]);
-        if(empty($faltaComponenteCurricular)) {
+        if (empty($faltaComponenteCurricular)) {
             return false;
         }
         $faltaComponenteCurricularMapper->delete($faltaComponenteCurricular[0]);
 
         return true;
+    }
+
+    private function nomeDisciplina($disciplinaId){
+        $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+        $componenteCurricular = $mapper->find($disciplinaId)->nome;
+
+        return $componenteCurricular;
     }
 }
 
