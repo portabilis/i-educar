@@ -1068,7 +1068,9 @@ class clsPmieducarServidor
         {$servidorDisciplinas})";
       $whereAnd = " AND ";
     }
+
     if (is_string($str_horario) && $str_horario == "S") {
+        $whereAno = is_numeric($ano_alocacao) ? 'AND quadro_horario.ano = ' . $ano_alocacao : null;
       $filtros .= "
     {$whereAnd} (s.cod_servidor NOT IN
       (SELECT DISTINCT qhh.ref_servidor
@@ -1084,7 +1086,8 @@ class clsPmieducarServidor
               OR ('{$array_horario[2]}' > qhh.hora_inicial AND '{$array_horario[2]}' < qhh.hora_final))
             OR ('{$array_horario[1]}' = qhh.hora_inicial AND '{$array_horario[2]}' = qhh.hora_final)
             OR ('{$array_horario[1]}' <= qhh.hora_inicial AND '{$array_horario[2]}' >= qhh.hora_final))
-        AND qhh.ativo = '1' ";
+        AND qhh.ativo = '1' 
+        {$whereAno}";
       if (is_string($lst_matriculas)) {
         $filtros .= "AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
       }
