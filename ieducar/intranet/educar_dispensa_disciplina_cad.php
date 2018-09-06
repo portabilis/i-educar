@@ -224,36 +224,11 @@ class indice extends clsCadastro
 
         $db = new clsBanco();
 
-        $obj = new clsPmieducarDispensaDisciplina(
-            $this->ref_cod_matricula,
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->ref_cod_disciplina,
-            null,
-            $this->pessoa_logada,
-            $this->ref_cod_tipo_dispensa,
-            null,
-            null,
-            1,
-            $this->observacao
-        );
+        $dadosDaDispensa = $this->obtemDadosDaDispensa();
+        $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-        if ($obj->existe()) {
-            $obj = new clsPmieducarDispensaDisciplina(
-                $this->ref_cod_matricula,
-                $this->ref_cod_serie,
-                $this->ref_cod_escola,
-                $this->ref_cod_disciplina,
-                $this->pessoa_logada,
-                null,
-                $this->ref_cod_tipo_dispensa,
-                null,
-                null,
-                1,
-                $this->observacao
-            );
-
-            $obj->edita();
+        if ($objetoDispensa->existe()) {
+            $objetoDispensa->edita();
             header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
             die();
         }
@@ -266,10 +241,10 @@ class indice extends clsCadastro
             return false;
         }
 
-        $codDispensa = $obj->cadastra();
-        if ($codDispensa) {
-            $detalhe = $obj->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $codDispensa);
+        $codigoDispensa = $objetoDispensa->cadastra();
+        if ($codigoDispensa) {
+            $detalhe = $objetoDispensa->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $codigoDispensa);
             $auditoria->inclusao($detalhe);
 
             foreach ($this->etapa as $etapa) {
@@ -328,7 +303,7 @@ class indice extends clsCadastro
             }
 
             foreach ($this->etapa as $e) {
-                $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($codDispensa, $e);
+                $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($codigoDispensa, $e);
                 $cadastra = $objDispensaEtapa->cadastra();
             }
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
@@ -344,26 +319,11 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-
-        $obj = new clsPmieducarDispensaDisciplina(
-            $this->ref_cod_matricula,
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->ref_cod_disciplina,
-            $this->pessoa_logada,
-            null,
-            $this->ref_cod_tipo_dispensa,
-            null,
-            null,
-            1,
-            $this->observacao
-        );
+        
+        $dadosDaDispensa = $this->obtemDadosDaDispensa();
+        $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
         $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
         $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
@@ -373,11 +333,11 @@ class indice extends clsCadastro
             $cadastra = $objDispensaEtapa->cadastra();
         }
 
-        $detalheAntigo = $obj->detalhe();
-        $editou = $obj->edita();
+        $detalheAntigo = $objetoDispensa->detalhe();
+        $editou = $objetoDispensa->edita();
         if ($editou) {
             $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->cod_dispensa);
-            $auditoria->alteracao($detalheAntigo, $obj->detalhe());
+            $auditoria->alteracao($detalheAntigo, $objetoDispensa->detalhe());
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
             die();
@@ -391,33 +351,17 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula
-    );
+        $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
-        $obj = new clsPmieducarDispensaDisciplina(
-            $this->ref_cod_matricula,
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->ref_cod_disciplina,
-            $this->pessoa_logada,
-            null,
-            $this->ref_cod_tipo_dispensa,
-            null,
-            null,
-            0,
-            $this->observacao
-        );
+        $dadosDaDispensa = $this->obtemDadosDaDispensa();
+        $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
         $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
         $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
 
-        $detalhe = $obj->detalhe();
-        $excluiu = $obj->excluir();
+        $detalhe = $objetoDispensa->detalhe();
+        $excluiu = $objetoDispensa->excluir();
 
         if ($excluiu) {
             $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->cod_dispensa);
@@ -492,6 +436,42 @@ class indice extends clsCadastro
             'Etapas',
             "<div id='etapas'>$etapas</div>"
         );
+    }
+
+    public function obtemDadosDaDispensa()
+    {
+        $dadosDaDispensa = [
+            'ref_cod_matricula' => $this->ref_cod_matricula,
+            'ref_cod_serie' => $this->ref_cod_serie,
+            'ref_cod_escola' => $this->ref_cod_escola,
+            'ref_cod_disciplina' => $this->ref_cod_disciplina,
+            'ref_usuario_exc' => $this->pessoa_logada,
+            'ref_usuario_cad' => $this->pessoa_logada,
+            'ref_cod_tipo_dispensa' => $this->ref_cod_tipo_dispensa,
+            'observacao' => $this->observacao,
+            'etapas' => $this->etapa
+        ];
+
+        return $dadosDaDispensa;
+    }
+
+    public function montaObjetoDispensa($dadosDaDispensa = [])
+    {
+        $objetoDispensa = new clsPmieducarDispensaDisciplina(
+            $dadosDaDispensa['ref_cod_matricula'],
+            $dadosDaDispensa['ref_cod_serie'],
+            $dadosDaDispensa['ref_cod_escola'],
+            $dadosDaDispensa['ref_cod_disciplina'],
+            $dadosDaDispensa['ref_usuario_exc'],
+            $dadosDaDispensa['ref_usuario_cad'],
+            $dadosDaDispensa['ref_cod_tipo_dispensa'],
+            null,
+            null,
+            1,
+            $dadosDaDispensa['observacao']
+        );
+
+        return $objetoDispensa;
     }
 }
 
