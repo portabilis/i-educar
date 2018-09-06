@@ -32,9 +32,11 @@ class indice extends clsDetalhe
 
         $this->id = $this->getQueryString('id');
 
-        $objAuditoriaGeral = new clsModulesAuditoriaGeral();
+        // FIXME #parameters
+        $objAuditoriaGeral = new clsModulesAuditoriaGeral(null, null);
         $objAuditoriaGeral->id = $this->id;
-        $registro = array_shift($objAuditoriaGeral->lista());
+        // FIXME #parameters
+        $registro = array_shift($objAuditoriaGeral->lista(null, null, null, null, null, null, null, null));
         $this->redirectIf(!$registro, 'educar_auditoria_geral_lst.php');
 
         $usuario = new clsFuncionario($registro['usuario_id']);

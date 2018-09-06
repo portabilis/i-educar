@@ -811,7 +811,8 @@ class DiarioApiController extends ApiCoreController
                 if ($tpParecer == $cnsParecer::ANUAL_COMPONENTE || $tpParecer == $cnsParecer::ETAPA_COMPONENTE) {
                     $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
                 } else {
-                    $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa);
+                    // FIXME #parameters
+                    $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, null);
                 }
 
                 $this->trySaveServiceBoletim();
