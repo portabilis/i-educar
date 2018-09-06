@@ -244,7 +244,12 @@ class clsPmieducarDispensaDisciplina
 
             $sql = "INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)";
             $db->Consulta($sql);
-            return $db->InsertId("{$this->_tabela}_cod_dispensa_seq");
+            $id = $db->InsertId("{$this->_tabela}_cod_dispensa_seq");
+            $this->id = $id;
+            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $id);
+            $auditoria->inclusao($this->detalhe());
+
+            return $id;
         }
 
         return false;
@@ -297,7 +302,11 @@ class clsPmieducarDispensaDisciplina
             }
 
             if ($set) {
+                $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_serie = '{$this->ref_cod_serie}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
+                $detalheAtual = $this->detalhe();
+                $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->id);
+                $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
                 return true;
             }
@@ -545,8 +554,11 @@ class clsPmieducarDispensaDisciplina
             is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_usuario_exc)
         ) {
+            $detalhe = $this->detalhe();
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
+            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->id);
+            $auditoria->exclusao($detalhe);
 
             return $this->edita();
         }

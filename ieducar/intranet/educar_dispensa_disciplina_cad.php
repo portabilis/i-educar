@@ -5,7 +5,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/IedFinder.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -244,10 +243,6 @@ class indice extends clsCadastro
 
         $codigoDispensa = $objetoDispensa->cadastra();
         if ($codigoDispensa) {
-            $detalhe = $objetoDispensa->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $codigoDispensa);
-            $auditoria->inclusao($detalhe);
-
             foreach ($this->etapa as $etapa) {
                 $get_notas_lancadas = App_Model_IedFinder::getNotasLancadasAluno($this->ref_cod_matricula, $this->ref_cod_disciplina, $etapa);
 
@@ -334,11 +329,8 @@ class indice extends clsCadastro
             $cadastra = $objDispensaEtapa->cadastra();
         }
 
-        $detalheAntigo = $objetoDispensa->detalhe();
         $editou = $objetoDispensa->edita();
         if ($editou) {
-            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->cod_dispensa);
-            $auditoria->alteracao($detalheAntigo, $objetoDispensa->detalhe());
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
             die();
@@ -360,13 +352,9 @@ class indice extends clsCadastro
 
         $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
         $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
-
-        $detalhe = $objetoDispensa->detalhe();
         $excluiu = $objetoDispensa->excluir();
 
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->cod_dispensa);
-            $auditoria->exclusao($detalhe);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
             die();
