@@ -2,7 +2,7 @@
 
 require_once 'lib/Portabilis/Array/Utils.php';
 
-class Portabilis_Report_ReportCore
+abstract class Portabilis_Report_ReportCore
 {
     /**
      * @var array
@@ -137,23 +137,13 @@ class Portabilis_Report_ReportCore
      * template para a renderização.
      *
      * @return string
-     *
-     * @throws Exception
      */
-    public function templateName()
-    {
-        throw new Exception('The method \'templateName\' must be overridden!');
-    }
+    abstract public function templateName();
 
     /**
      * Adiciona os parâmetros obrigatórios a serem passados ao renderizador.
      *
      * @return void
-     *
-     * @throws Exception
      */
-    public function requiredArgs()
-    {
-        throw new Exception('The method \'requiredArgs\' must be overridden!');
-    }
+    abstract public function requiredArgs();
 }

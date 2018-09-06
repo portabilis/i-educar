@@ -12,8 +12,6 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
      * @param object $config
      *
      * @return void
-     *
-     * @throws Exception
      */
     public function setSettings($config)
     {

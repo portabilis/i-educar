@@ -11,8 +11,6 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
      * @param object $config
      *
      * @return void
-     *
-     * @throws Exception
      */
     public function setSettings($config)
     {

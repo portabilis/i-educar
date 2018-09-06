@@ -13,8 +13,6 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      * @param object $config
      *
      * @return void
-     *
-     * @throws Exception
      */
     public function setSettings($config)
     {
@@ -66,7 +64,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      * @param array $options
      *
      * @return void
-     *
+     * 
      * @throws Exception
      */
     public function dumps($report, $options = [])
