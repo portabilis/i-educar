@@ -11,15 +11,29 @@ require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_EditController
 {
-
-    // setado qualquer dataMapper pois é obrigatório.
+    /**
+     * Setado qualquer Data Mapper pois é obrigatório.
+     *
+     * @var string
+     */
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
 
-    # 624 código permissão página index, por padrão todos usuários tem permissão.
+    /**
+     * Código de permissão da página index, por padrão todos usuários tem
+     * permissão.
+     *
+     * @var int
+     */
     protected $_processoAp = 624;
 
-    protected $_titulo = 'Relat&oacute;rio';
+    /**
+     * @var string
+     */
+    protected $_titulo = 'Relatório';
 
+    /**
+     * Portabilis_Controller_ReportCoreController constructor.
+     */
     public function __construct()
     {
         $this->validatesIfUserIsLoggedIn();
@@ -35,6 +49,15 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         parent::__construct();
     }
 
+    /**
+     * Método padrão da clsCadastro.
+     *
+     * @see clsCadastro::Gerar()
+     *
+     * @return bool|void
+     *
+     * @throws Exception
+     */
     public function Gerar()
     {
         if (count($_POST) < 1 && !isset($_GET['print_report_with_get'])) {
@@ -67,6 +90,13 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         }
     }
 
+    /**
+     * Altera os headers que irão na resposta da requisição.
+     *
+     * @param string $result
+     *
+     * @return void
+     */
     public function headers($result)
     {
         header('Pragma: public');
@@ -79,12 +109,26 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         header('Content-Length: ' . strlen($result));
     }
 
+    /**
+     * Renderiza o formulário de filtragem.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function renderForm()
     {
         $this->form();
         $this->nome_url_sucesso = 'Exibir';
     }
 
+    /**
+     * Renderiza o relatório.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function renderReport()
     {
         try {
@@ -116,39 +160,84 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         }
     }
 
-    // methods that must be overridden
-
+    /**
+     * Monta o formulário de filtragem.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function form()
     {
         throw new Exception('The method \'form\' must be overridden!');
     }
 
-    // metodo executado após validação com sucesso (antes de imprimir) , como os argumentos ex: $this->addArg('id', 1); $this->addArg('id_2', 2);
+    /**
+     * Método executado após validar com sucesso (antes de imprimir), os
+     * argumentos.
+     *
+     *  <code>
+     *      $this->addArg('id', 1);
+     *      $this->addArg('id_2', 2);
+     *  </code>
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function beforeValidation()
     {
         throw new Exception('The method \'beforeValidation\' must be overridden!');
     }
 
-    // methods that can be overridden
-
+    /**
+     * Colocar aqui as validacoes serverside, exemplo se histórico possui todos
+     * os campos. Retornar mensagens, se não existe nenhuma mensagem, então
+     * está validado.
+     *
+     *  <code>
+     *      $this->addValidationError('O cadastro x esta em y status');
+     *  </code>
+     *
+     * @return void
+     */
     public function afterValidation()
     {
-        //colocar aqui as validacoes serverside, exemplo se histórico possui todos os campos...
-        //retornar dict msgs, se nenhuma msg entao esta validado ex: $this->addValidationError('O cadastro x esta em y status');
     }
 
+    /**
+     * Valida se o usuário está logado, caso contrário redireciona para a
+     * página de logoff.
+     *
+     * @return void
+     */
     protected function validatesIfUserIsLoggedIn()
     {
         if (!$this->getSession()->id_pessoa) {
             header('Location: logof.php');
+            die();
         }
     }
 
+    /**
+     * Adiciona uma mensagem de erro de validação.
+     *
+     * @param string $message
+     *
+     * @return void
+     */
     public function addValidationError($message)
     {
-        $this->validationErrors[] = ['message' => utf8_encode($message)];
+        $this->validationErrors[] = [
+            'message' => utf8_encode($message)
+        ];
     }
 
+    /**
+     * Valida se todos os parâmetros obrigatórios foram informados.
+     *
+     * @return void
+     */
     public function validatesPresenseOfRequiredArgsInReport()
     {
         foreach ($this->report->requiredArgs as $requiredArg) {
@@ -158,6 +247,11 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         }
     }
 
+    /**
+     * Exibe mensagem em caso de erro.
+     *
+     * @return void
+     */
     public function onValidationError()
     {
         $msg = Portabilis_String_Utils::toLatin1('O relatório não pode ser emitido, dica(s):') . '\n\n';
@@ -173,6 +267,13 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         echo "<script type='text/javascript'>alert('$msg'); close();</script> ";
     }
 
+    /**
+     * Renderiza uma mensagem de erro.
+     *
+     * @param string $details
+     *
+     * @return void
+     */
     public function renderError($details = '')
     {
         $details = Portabilis_String_Utils::escape($details);
@@ -184,6 +285,13 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         echo $msg;
     }
 
+    /**
+     * Carrega assets utilizados.
+     *
+     * @param object $dispatcher
+     *
+     * @return void
+     */
     protected function loadResourceAssets($dispatcher)
     {
         $rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -202,6 +310,11 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         }
     }
 
+    /**
+     * Adiciona JavaScript a página.
+     *
+     * @return void
+     */
     public function appendFixups()
     {
         $js = <<<EOT
