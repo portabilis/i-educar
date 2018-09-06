@@ -1,11 +1,19 @@
 <?php
 
 require_once 'XML/RPC2/Client.php';
-
 require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFactory
 {
+    /**
+     * Define as configurações dos relatórios.
+     *
+     * @param object $config
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function setSettings($config)
     {
         $this->settings['url'] = $config->report->remote_factory->url;
@@ -15,20 +23,28 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
         $this->settings['logo_name'] = $config->report->remote_factory->logo_name;
     }
 
+    /**
+     * Renderiza o relatório.
+     *
+     * @param Portabilis_Report_ReportCore $report
+     * @param array $options
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     */
     public function dumps($report, $options = [])
     {
-        $defaultOptions = ['add_logo_name_arg' => true, 'encoding' => 'uncoded'];
-        $options = self::mergeOptions($options, $defaultOptions);
-
-        // logo helper
+        $options = self::mergeOptions($options, [
+            'add_logo_name_arg' => true,
+            'encoding' => 'uncoded'
+        ]);
 
         if ($options['add_logo_name_arg'] and !$this->settings['logo_name']) {
             throw new Exception('The option \'add_logo_name_arg\' is true, but no logo_name defined in configurations!');
         } elseif ($options['add_logo_name_arg']) {
             $report->addArg('logo_name', $this->settings['logo_name']);
         }
-
-        // api call
 
         $client = XML_RPC2_Client::create($this->settings['url']);
 
@@ -40,9 +56,8 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
             $args = $report->args
         );
 
-        // report encoding
+        // Esta fábrica retorna o relatório encodado em base64.
 
-        // the remote report factory returns report encoded to base64.
         if ($options['encoding'] == 'base64') {
             $report = $result['report'];
         } elseif ($options['encoding'] == 'uncoded') {

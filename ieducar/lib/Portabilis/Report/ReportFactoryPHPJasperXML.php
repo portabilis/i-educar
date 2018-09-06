@@ -6,12 +6,30 @@ require_once 'relatorios/phpjasperxml/class/PHPJasperXML.inc';
 
 class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_ReportFactory
 {
+    /**
+     * Define as configurações dos relatórios.
+     *
+     * @param object $config
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function setSettings($config)
     {
         $this->settings['db'] = $config->app->database;
         $this->settings['logo_file_name'] = $config->report->logo_file_name;
     }
 
+    /**
+     * Carrega o arquivo .jrxml do template.
+     *
+     * @param string $templateName
+     *
+     * @return SimpleXMLElement
+     *
+     * @throws CoreExt_Exception
+     */
     public function loadReportSource($templateName)
     {
         $rootPath = dirname(dirname(dirname(dirname(__FILE__))));
@@ -25,6 +43,14 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
         return simplexml_load_file($filePath);
     }
 
+    /**
+     * Retorna o arquivo da logo utilizada nos relatórios.
+     *
+     * @return string
+     *
+     * @throws CoreExt_Exception
+     * @throws Exception
+     */
     public function logoPath()
     {
         if (!$this->settings['logo_file_name']) {
@@ -41,10 +67,21 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
         return $filePath;
     }
 
+    /**
+     * Renderiza o relatório.
+     *
+     * @param Portabilis_Report_ReportCore $report
+     * @param array $options
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function dumps($report, $options = [])
     {
-        $defaultOptions = ['add_logo_arg' => true];
-        $options = self::mergeOptions($options, $defaultOptions);
+        $options = self::mergeOptions($options, [
+            'add_logo_arg' => true
+        ]);
 
         if ($options['add_logo_arg']) {
             $report->addArg('logo', $this->logoPath());
@@ -53,6 +90,7 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
         $xml = $this->loadReportSource($report->templateName());
 
         $builder = new PHPJasperXML();
+
         $builder->debugsql = false;
         $builder->arrayParameter = $report->args;
 
@@ -66,7 +104,9 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
             $this->settings['db']->port
         );
 
-        // I: standard output, D: Download file, F: file
+        // I: standard output
+        // D: Download file
+        // F: file
         $builder->outpage('I');
     }
 }

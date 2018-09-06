@@ -7,12 +7,26 @@ use JasperPHP\JasperPHP;
 
 class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportFactory
 {
+    /**
+     * Define as configurações dos relatórios.
+     *
+     * @param object $config
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function setSettings($config)
     {
         $this->settings['db'] = $config->app->database;
         $this->settings['logo_file_name'] = $config->report->logo_file_name;
     }
 
+    /**
+     * Retorna o diretório dos relatórios.
+     *
+     * @return string
+     */
     public function getReportsPath()
     {
         $rootPath = dirname(dirname(dirname(dirname(__FILE__))));
@@ -21,6 +35,14 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         return $reportsPath;
     }
 
+    /**
+     * Retorna o arquivo da logo utilizada nos relatórios.
+     *
+     * @return string
+     *
+     * @throws CoreExt_Exception
+     * @throws Exception
+     */
     public function logoPath()
     {
         if (!$this->settings['logo_file_name']) {
@@ -37,19 +59,28 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         return $filePath;
     }
 
+    /**
+     * Renderiza o relatório.
+     *
+     * @param Portabilis_Report_ReportCore $report
+     * @param array $options
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
     public function dumps($report, $options = [])
     {
-        $defaultOptions = ['add_logo_arg' => true];
-        $options = self::mergeOptions($options, $defaultOptions);
+        $options = self::mergeOptions($options, [
+            'add_logo_arg' => true
+        ]);
 
         if ($options['add_logo_arg']) {
             $report->addArg('logo', $this->logoPath());
         }
 
-        // Generate a random file name
         $outputFile = $this->getReportsPath() . time() . '-' . mt_rand();;
 
-        // Corrige parametros boleanos
         foreach ($report->args as $key => $value) {
             if (is_bool($value)) {
                 $report->args[$key] = ($value ? 'true' : 'false');
@@ -57,7 +88,8 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         }
 
         $builder = new JasperPHP();
-        $return = $builder->process(
+
+        $builder->process(
             $this->getReportsPath() . $report->templateName() . '.jasper',
             $outputFile,
             ['pdf'],
@@ -79,6 +111,13 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         $this->destroyPDF($outputFile);
     }
 
+    /**
+     * Lê o PDF gerado para a saída de conteúdo.
+     *
+     * @param string $file
+     *
+     * @return void
+     */
     public function showPDF($file)
     {
         header('Pragma: public');
@@ -96,6 +135,13 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         readfile($file);
     }
 
+    /**
+     * Deleta o PDF gerado.
+     *
+     * @param string $file
+     *
+     * @return void
+     */
     public function destroyPDF($file)
     {
         unlink($file);
