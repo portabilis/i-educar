@@ -176,7 +176,6 @@ class SerieController extends ApiCoreController
             $seriePorCurso[$serie['cod_curso']]['nome'] = $serie['nm_curso'];
             $seriePorCurso[$serie['cod_curso']]['series'][$serie['id']] = $serie['nome'];
         }
-
         return ['options' => $seriePorCurso ];
     }
 
