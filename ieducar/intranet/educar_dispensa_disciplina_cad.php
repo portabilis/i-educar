@@ -228,7 +228,8 @@ class indice extends clsCadastro
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
         if ($objetoDispensa->existe()) {
-            $objetoDispensa->edita();
+            $this->cod_dispensa = $objetoDispensa->detalhe()['cod_dispensa'];
+            $this->Editar();
             header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
             die();
         }
