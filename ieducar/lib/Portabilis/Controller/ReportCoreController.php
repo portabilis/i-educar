@@ -32,6 +32,11 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     protected $_titulo = 'Relatório';
 
     /**
+     * @var Portabilis_Report_ReportCore
+     */
+    protected $report;
+
+    /**
      * Portabilis_Controller_ReportCoreController constructor.
      */
     public function __construct()
@@ -78,7 +83,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
             $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? (is_null($GLOBALS['coreExt']['Config']->report->database_teste) ? '' : $GLOBALS['coreExt']['Config']->report->database_teste) : $GLOBALS['coreExt']['Config']->app->database->dbname));
 
-            $this->report->addArg('data_emissao', (int)$GLOBALS['coreExt']['Config']->report->header->show_data_emissao);
+            $this->report->addArg('data_emissao', (int) $GLOBALS['coreExt']['Config']->report->header->show_data_emissao);
             $this->validatesPresenseOfRequiredArgsInReport();
             $this->aftervalidation();
 
@@ -150,7 +155,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
             $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
 
-            if ((bool)$GLOBALS['coreExt']['Config']->report->show_error_details === true || (int)$nivelUsuario === 1) {
+            if ((bool) $GLOBALS['coreExt']['Config']->report->show_error_details === true || (int) $nivelUsuario === 1) {
                 $details = 'Detalhes: ' . $e->getMessage();
             } else {
                 $details = 'Visualização dos detalhes sobre o erro desativada.';
