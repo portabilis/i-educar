@@ -161,7 +161,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
     $this->_value = $value;
     $value = $this->_sanitize($value);
 
-    if (TRUE == $this->getOption('trim') && is_string($value)) {
+    if (TRUE == $this->getOption('trim')) {
       $value = trim($value);
     }
 

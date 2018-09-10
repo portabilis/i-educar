@@ -320,8 +320,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
       $valid = true;
 
       foreach($requiredParamNames as $param) {
-        $value = $this->getRequest()->$param;
-        if (! $this->validator->validatesPresenceOf($value, $param) and $valid) {
+        if (! $this->validator->validatesPresenceOf($this->getRequest()->$param, $param) and $valid) {
           $valid = false;
         }
       }
