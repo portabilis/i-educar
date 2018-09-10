@@ -252,7 +252,6 @@ class indice extends clsCadastro
             $codigoDispensa = $objetoDispensa->cadastra();
             if (!$codigoDispensa) {
                 $this->mensagem = 'Cadastro não realizado.<br />';
-                echo "<!--\nErro ao cadastrar clsPmieducarDispensaDisciplina\nvalores obrigatorios\n is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_dispensa )\n-->";
 
                 return false;
             }
@@ -292,7 +291,6 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Edição não realizada.<br />';
-        echo "<!--\nErro ao editar clsPmieducarDispensaDisciplina\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
         return false;
     }
@@ -316,7 +314,6 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Exclusão não realizada.<br />';
-        echo "<!--\nErro ao excluir clsPmieducarDispensaDisciplina\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
         return false;
     }
