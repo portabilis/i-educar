@@ -77,7 +77,9 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
             $report->addArg('logo', $this->logoPath());
         }
 
-        $outputFile = $this->getReportsPath() . time() . '-' . mt_rand();;
+        $dataFile = $this->getReportsPath() . time() . '-' . mt_rand();
+        $outputFile = $this->getReportsPath() . time() . '-' . mt_rand();
+        $jasperFile = $this->getReportsPath() . $report->templateName() . '.jasper';
 
         foreach ($report->args as $key => $value) {
             if (is_bool($value)) {
@@ -87,21 +89,43 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
         $builder = new JasperPHP();
 
-        $builder->process(
-            $this->getReportsPath() . $report->templateName() . '.jasper',
-            $outputFile,
-            ['pdf'],
-            $report->args,
-            [
-                'driver' => 'postgres',
-                'username' => $this->settings['db']->username,
-                'host' => $this->settings['db']->hostname,
-                'database' => $this->settings['db']->dbname,
-                'port' => $this->settings['db']->port,
-                'password' => $this->settings['db']->password,
-            ],
-            false
-        )->execute();
+        if ($report->useJson()) {
+
+            file_put_contents($dataFile, json_encode($report->getJsonData()));
+
+            $report->addArg('source', $dataFile);
+
+            $builder->process(
+                $jasperFile,
+                $outputFile,
+                ['pdf'],
+                $report->args,
+                [
+                    'driver'=>'json',
+                    'json_query' => $report->getJsonQuery(),
+                    'data_file' =>  $dataFile
+                ]
+            )->execute();
+
+            unlink($dataFile);
+
+        } else {
+            $builder->process(
+                $jasperFile,
+                $outputFile,
+                ['pdf'],
+                $report->args,
+                [
+                    'driver' => 'postgres',
+                    'username' => $this->settings['db']->username,
+                    'host' => $this->settings['db']->hostname,
+                    'database' => $this->settings['db']->dbname,
+                    'port' => $this->settings['db']->port,
+                    'password' => $this->settings['db']->password,
+                ],
+                false
+            )->execute();
+        }
 
         $outputFile .= '.pdf';
 
