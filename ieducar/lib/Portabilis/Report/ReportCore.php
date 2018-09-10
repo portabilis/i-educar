@@ -146,4 +146,36 @@ abstract class Portabilis_Report_ReportCore
      * @return void
      */
     abstract public function requiredArgs();
+
+    /**
+     * Indica se JSON será utilizado como fonte de dados para o relatório.
+     *
+     * @return bool
+     */
+    public function useJson()
+    {
+        return false;
+    }
+
+    /**
+     * Retorna a query onde será encontrado os dados para o relatório
+     * principal.
+     *
+     * @return string
+     */
+    public function getJsonQuery()
+    {
+        return '';
+    }
+
+    /**
+     * Array com os dados que serão convertidos em JSON e enviados ao relatório
+     * como fonte de dados.
+     *
+     * @return array
+     */
+    public function getJsonData()
+    {
+        return [];
+    }
 }
