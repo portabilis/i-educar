@@ -40,17 +40,8 @@ error_reporting(E_ALL ^ E_STRICT);
 // saída de buffer.
 ini_set('session.use_cookies', 0);
 
-// set_include_path(
-//     get_include_path() . PATH_SEPARATOR .
-//     realpath(__DIR__.'/../') . PATH_SEPARATOR .
-//     realpath(__DIR__.'/../intranet/') . PATH_SEPARATOR .
-//     __DIR__
-// );
-
-$curdir = getcwd();
 chdir(__DIR__.'/../intranet/');
 require_once 'include/clsBanco.inc.php';
 require_once 'CustomPdo.php';
 require_once 'UnitBaseTest.class.php';
 require_once 'IntegrationBaseTest.php';
-// chdir($curdir);
