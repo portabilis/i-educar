@@ -107,6 +107,7 @@ class clsEstadoCivil
     function lista( $int_ideciv=false, $str_descricao=false, $str_ordenacao="descricao", $int_limite_ini=0, $int_limite_qtd=20 )
     {
         // verificacoes de filtros a serem usados
+        $where = '';
         $whereAnd = "WHERE ";
         if(is_numeric($int_ideciv))
         {

@@ -53,7 +53,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $bannerClose = FALSE;
   var $largura;
   var $detalhe = array();
-  var $locale = null;
 
   var $url_novo;
   var $caption_novo = "Novo";

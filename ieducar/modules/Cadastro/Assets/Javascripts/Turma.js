@@ -39,13 +39,6 @@ let verificaEtapaEducacenso = ()=>{
   }
 }
 
-let verificaTurmaUnificada = () => {
-  $j('#turma_unificada').makeUnrequired();
-  if (obrigarCamposCenso && $j('#etapa_educacenso').val() == '3') {
-    $j('#turma_unificada').makeRequired();
-  }
-}
-
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   mostraAtividadesAee();
@@ -55,8 +48,7 @@ $j('#tipo_atendimento').change(function() {
 verificaEtapaEducacenso();
 
 $j('#etapa_educacenso').change(function() {
-  mostraCursoTecnico();
-  verificaTurmaUnificada();
+  mostraCursoTecnico();;
 });
 
 function mostraAtividadesComplementares(){
@@ -161,7 +153,7 @@ function habilitaTurmaMaisEducacao() {
                                                    $j('#dependencia_administrativa').val() == 3;
   var atendimentoClasseHospitalarAee = $j('#tipo_atendimento').val() == 1 ||
                                        $j('#tipo_atendimento').val() == 5;
-  var atividadeComplementar = $j('#tipo_atendimento').val() == 4; 
+  var atividadeComplementar = $j('#tipo_atendimento').val() == 4;
   var modalidadeEja = $j('#modalidade_curso').val() == 3;
   var etapaEducacenso = ($j('#etapa_educacenso').val() >= 4 &&
                          $j('#etapa_educacenso').val() <= 38) ||
@@ -304,7 +296,6 @@ $j(document).ready(function() {
       mostraAtividadesComplementares();
       mostraAtividadesAee();
       mostraCursoTecnico();
-      mostraTurmaUnificada();
       habilitaEtapaEducacenso();
     });
 
@@ -314,20 +305,6 @@ $j(document).ready(function() {
       $j('#'+row.id).find('input:checked').val('on');
     }
   });
-
-  $j("#etapa_educacenso").change(function() {
-    mostraTurmaUnificada();
-  });
-
-  function mostraTurmaUnificada() {
-    var etapaUnificada = $j("#etapa_educacenso").val() == 3;
-
-    $j("#tr_turma_unificada").hide();
-
-    if (etapaUnificada) {
-      $j("#tr_turma_unificada").show();
-    }
-  }
 
   var submitForm = function(){
     let canSubmit = validationUtils.validatesFields(true);
@@ -340,4 +317,71 @@ $j(document).ready(function() {
   $submitButton.removeAttr('onclick');
   $j(document.formcadastro).removeAttr('onsubmit');
   $submitButton.click(submitForm);
+
+  $j('#ref_cod_serie, #ano_letivo').on('change', function(){
+    let escola_id = $j('#ref_cod_escola').val();
+    let serie_id = $j('#ref_cod_serie').val();
+    let ano = $j('#ano_letivo').val();
+    if (escola_id && serie_id && ano) {
+      let parametros = {
+        escola_id: escola_id,
+        serie_id: serie_id,
+        ano: ano
+      };
+      let url = getResourceUrlBuilder.buildUrl(
+        '/module/Api/ComponenteCurricular',
+        'componentes-curriculares-escola-serie-ano',
+        parametros
+      );
+      let options = {
+        dataType: 'json',
+        url: url,
+        success: preencheComponentesCurriculares
+      };
+      getResource(options);
+    } else {
+      $j('#disciplinas').html('');
+    }
+  });
+
+  var getLinhaComponente = function(componente) {
+    return  `
+    <div style="margin-bottom: 10px; float: left" class="linha-disciplina">
+      <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</label>
+      <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria[${componente.id}]" value="" size="5" maxlength="7"></label>
+      <label style="display: block; float: left;width: 200px;"><input type="checkbox" name="usar_componente[${componente.id}]" value="1">(${componente.carga_horaria} h)</label>
+      <label style="display: block; float: left;"><input type="checkbox" name="docente_vinculado[${componente.id}]" value="1"></label>
+    </div>
+    <br style="clear: left" />`;
+  }
+
+  var preencheComponentesCurriculares = function(data) {
+    let componentesCurriculares = data.componentes_curriculares;
+    var conteudo = '';
+
+    if (componentesCurriculares.length) {
+      conteudo += `<div style="margin-bottom: 10px; float: left">
+                     <span style="display: block; float: left; width: 250px;">Nome</span>
+                     <span style="display: block; float: left; width: 250px;">Abreviatura</span>
+                     <label> <span style="display: block; float: left; width: 100px">Carga hor&aacute;ria </span></label>
+                     <label> <span style="display: block; float: left; width: 200px">Usar padr&atilde;o do componente?</span></label>
+                     <label> <span style="display: block; float: left">Possui docente vinculado?</span></label>
+                   </div>
+                   <br style="clear: left" />`;
+
+      componentesCurriculares.forEach((componente) => {
+        conteudo += getLinhaComponente(componente);
+      });
+    } else {
+      $j('#disciplinas').html('A série/ano escolar não possui componentes curriculares cadastrados.');
+    }
+
+    if (conteudo) {
+      $j('#disciplinas').html(
+        `<table cellspacing="0" cellpadding="0" border="0">
+            <tr align="left"><td>${conteudo}</td></tr>
+        </table>`
+      );
+    }
+  }
 });

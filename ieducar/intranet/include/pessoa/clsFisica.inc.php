@@ -530,6 +530,7 @@ class clsFisica
         // verifica campos obrigatorios para edicao
         if( is_numeric($this->idpes) && $this->idpes_rev )
         {
+            $set = '';
             $gruda = "";
             if($this->data_nasc)
             {

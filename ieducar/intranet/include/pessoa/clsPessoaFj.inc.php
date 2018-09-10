@@ -163,19 +163,6 @@ class clsPessoaFj
       $db2 = new clsBanco();
 
       $sql = sprintf(
-        'SELECT idpes FROM cadastro.fisica WHERE cpf LIKE \'%%%s%%\'', $id_federal
-      );
-
-      $db2->Consulta();
-
-      $array_idpes = NULL;
-
-      while ($db2->ProximoRegistro()) {
-        list($id_pes)  = $db2->Tupla();
-        $array_idpes[] = $id_pes;
-      }
-
-      $sql = sprintf(
         'SELECT idpes FROM cadastro.juridica WHERE cnpj LIKE \'%%%s%%\'', $id_federal
       );
 
@@ -281,7 +268,7 @@ class clsPessoaFj
         $this->logradouro       = $detalheEndereco['logradouro'];
         $this->sigla_uf         = $detalheEndereco['sigla_uf'];
         $this->cidade           = $detalheEndereco['cidade'];
-        $this->reside_desde     = $detalheEndereco['reside_desde'];
+        $this->reside_desde     = $detalheEndereco['reside_desde'] ?? null;
         $this->idtlog           = $detalheEndereco['idtlog'];
         $this->complemento      = $detalheEndereco['complemento'];
         $this->numero           = $detalheEndereco['numero'];

@@ -3,7 +3,8 @@
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
-use iEducar\Modules\Educacenso\Deficiencia\ValidaDeficienciaMultipla;
+use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
+use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/clsBanco.inc.php';
@@ -14,6 +15,7 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
+require_once 'lib/App/Model/Educacenso.php';
 require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 
 /**
@@ -756,17 +758,23 @@ class EducacensoExportController extends ApiCoreController
                 $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = null;
             }
 
-            if (!in_array($dependencia_administrativa, array(2, 3))) {
-                $r20s19 = null;
-            }
+            /**
+             * @var integer $dependencia_administrativa
+             * @var integer $r20s18 Tipo de atendimento
+             * @var integer $r20s37 Modalidade
+             * @var integer $r20s38 Etapa de ensino
+             * @var integer $r20s19 Turma mais educacao
+             * @var integer $r20s6 Tipo mediação
+             */
+            $turmaMaisEducacao = new ValueTurmaMaisEducacao();
+            $turmaMaisEducacao->setDependenciaAdministrativa($dependencia_administrativa);
+            $turmaMaisEducacao->setTipoAtendimento($r20s18);
+            $turmaMaisEducacao->setModalidade($r20s37);
+            $turmaMaisEducacao->setEtapaEnsino($r20s38);
+            $turmaMaisEducacao->setTurmaMaisEducacao($r20s19);
+            $turmaMaisEducacao->setTipoMediacao($r20s6);
 
-            if (in_array($r20s18, array(1, 5))) {
-                $r20s19 = null;
-            }
-
-            if (($r20s37 == 3) || !(($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41)) {
-                $r20s19 = null;
-            }
+            $r20s19 = $turmaMaisEducacao->getValue();
 
             $coddigoEducacensoToSeq =
                 array(
@@ -988,8 +996,9 @@ class EducacensoExportController extends ApiCoreController
                 $arrayDeficienciasProfessor[] = $deficienciaToSeq[$deficiencia_educacenso];
             }
 
-            $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new DeficienciaMultiplaProfessor());
-            $r30s26 = (int)$validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasProfessor);
+
+            $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor(), $arrayDeficienciasProfessor);
+            $r30s26 = $validaDeficienciaMultipla->getValue();
 
             if ($r30s18 == 0) {
                 $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = null;
@@ -1611,9 +1620,7 @@ SQL;
             $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
             $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = null;
 
-            // Caso não exista nenhum curso seta seq 40 como 1
-            $r60s39 = (int)is_null($r60s30) && is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
-                && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
+            $r60s39 = null;
 
             // Define 'tipodeficiencia' => 'seqleiaute'
             $deficienciaToSeq = MapeamentoDeficienciasAluno::getArrayMapeamentoDeficiencias();
@@ -1660,8 +1667,9 @@ SQL;
                 $r60s39 = 1;
             }
 
-            $validaDeficienciaMultipla = new ValidaDeficienciaMultipla(new DeficienciaMultiplaAluno());
-            $r60s24 = (int)$validaDeficienciaMultipla->possuiDeficienciaMultipla($arrayDeficienciasAluno);
+            $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaAluno(), $arrayDeficienciasAluno);
+            $r60s24 = $validaDeficienciaMultipla->getValue();
+
 
             //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
             for ($i = 30; $i <= 38; $i++) {
@@ -1720,7 +1728,7 @@ SQL;
         \'70\' AS r70s1,
         ece.cod_escola_inep AS r70s2,
         eca.cod_aluno_inep AS r70s3,
-        fd.rg AS r70s5,
+        REGEXP_REPLACE(fd.rg,\'[^a-zA-Z0-9ª°-]\',\'\',\'g\') AS r70s5,
         oer.codigo_educacenso AS r70s6,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) AS r70s7,
         fd.data_exp_rg AS r70s8,
@@ -1866,7 +1874,7 @@ SQL;
         eca.cod_aluno_inep AS r80s3,
         a.cod_aluno AS r80s4,
         t.cod_turma AS r80s6,
-        t.turma_unificada AS r80s8,
+        mt.turma_unificada AS r80s8,
         mt.etapa_educacenso AS r80s9,
         a.recebe_escolarizacao_em_outro_espaco AS r80s10,
         ta.responsavel AS transporte_escolar,
@@ -2008,7 +2016,6 @@ SQL;
         $numeroRegistros = 24;
         $atividadeComplementar = 4;
         $atendimentoEducEspecializado = 5;
-        $educacaoInfantilUnificada = 3;
 
         foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql,
             array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
@@ -2018,7 +2025,7 @@ SQL;
                 $r80s10 = '';
             }
 
-            if ($etapa_educacenso != $educacaoInfantilUnificada) {
+            if (!in_array($etapa_educacenso, App_Model_Educacenso::etapasEnsinoUnificadas())) {
                 $r80s8 = '';
             }
 
@@ -2062,6 +2069,13 @@ SQL;
             if ($this->turma_presencial_ou_semi == 1 || $this->turma_presencial_ou_semi == 2) {
                 if (is_null($r80s11)) {
                     $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido para aluno {$alunoId}.<br/>";
+                    $this->error = true;
+                }
+            }
+
+            if (in_array($etapa_educacenso, App_Model_Educacenso::etapasEnsinoUnificadas())) {
+                if (empty($r80s8)) {
+                    $this->msg .= "Dados para formular o registro 80 campo 8 da escola {$escolaId} com problemas. Verifique se o campo etapa da turma unificada foi preenchido para aluno {$alunoId}.<br/>";
                     $this->error = true;
                 }
             }

@@ -675,7 +675,7 @@ class EditController extends Core_Controller_Page_EditController
         );
 
         $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
-        $regras[0] = 'Não utiliza';
+        $regras = array_replace([0 => 'Não utiliza'], $regras);
 
         $this->campoLista(
             'regraDiferenciada',

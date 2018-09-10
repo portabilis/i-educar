@@ -100,7 +100,7 @@ class clsPmieducarBloqueioAnoLetivo
     /**
      * Constructor
      */
-    function __construct( $ref_cod_instituicao = null, $ref_ano = null, $data_inicio = null, $data_fim)
+    function __construct( $ref_cod_instituicao = null, $ref_ano = null, $data_inicio = null, $data_fim = null)
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

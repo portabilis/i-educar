@@ -7,6 +7,11 @@ class App_Model_Educacenso
         return array(12,13,22,23,24,72,56,64);
     }
 
+    public static function etapasEnsinoUnificadas()
+    {
+        return array(3);
+    }
+
     public static function etapasDaTurma($etapaEnsino)
     {
         $etapas = array();

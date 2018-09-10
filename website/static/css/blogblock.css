@@ -1,0 +1,126 @@
+.blogBlockHeader h2 p{
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #4e5666;
+
+}
+.blogBlockHeader p{
+  font-family: $descriptionFont;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.blogContainerHeader {
+  background: #ffffff;
+}
+
+.blogContainerHeader.paddingBottom {
+  padding-bottom: 19px;
+}
+
+.blogBlock {
+  margin-right: 30px;
+}
+
+.blogContainerLast {
+  background: #ffffff;
+}
+
+.blogContainerLast.paddingBottom {
+  padding-bottom: 144px;
+}
+
+.blogContainerLast.paddingTop {
+  padding-top: 0px;
+}
+
+.blogBlock h2 p{
+  font-family: $titleFont;
+  font-size: 24px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #2696ff;
+}
+
+.blogBlock p{
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+  text-align: justify;
+}
+
+.blogBlock p.blogdate {
+  font-size: 14px;
+  font-family: $descriptionFont;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #4e5666;
+  opacity: 0.7;
+}
+
+.postHeaderTitle  {
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+.post-content p {
+  font-family: $descriptionFont;
+  font-size: 21px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+
+.read-more .button {
+  height: 48px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  border: solid 1px #2696ff;
+  text-align: center;
+  color: #2696ff;
+  padding-top: 14px;
+  padding-bottom: 10px;
+}
+
+.read-more .button a {
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+
+@media only screen and (max-width: 1023px) {
+  
+}

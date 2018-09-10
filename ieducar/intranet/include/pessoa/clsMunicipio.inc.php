@@ -390,7 +390,7 @@ class clsMunicipio
 
                 $tupla["sigla_uf"] = new clsUf( $tupla["sigla_uf"] );
                 $tupla["idasmun"] = new clsUf( $tupla["idasmun"] );
-                $tupla["idmun_pai"] = new clsUf( $tupla["idamun_pai"] );
+                $tupla["idmun_pai"] = new clsUf( $tupla["idamun_pai"] ?? null );
 
                 return $tupla;
             }

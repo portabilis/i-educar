@@ -19,5 +19,8 @@
 
   <php>
     <env name="CORE_EXT_CONFIGURATION_ENV" value="testing"/>
+    <env name="API_URI" value="http://localhost:8001/module/Api/Regra"/>
+    <env name="API_ACCESS_KEY" value="kXol8EPSFgd1WsXSqlaUMMa2XYY23D"/>
+    <env name="API_SECRET_KEY" value="5y8cfq31oGvFdAlGMCLIeSKdfc8pUC"/>
   </php>
 </phpunit>

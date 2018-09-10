@@ -1,33 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -228,17 +200,17 @@ class indice extends clsDetalhe
             $registro['ddd_fone_2'] = $det_pessoa_fj['ddd_2'];
             $registro['fone_2'] = $det_pessoa_fj['fone_2'];
 
-            $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'];
-            $registro['fone_fax'] = $det_pessoa_fj['fone_fax'];
+            $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'] ?? null;
+            $registro['fone_fax'] = $det_pessoa_fj['fone_fax'] ?? null;
 
-            $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'];
-            $registro['fone_mov'] = $det_pessoa_fj['fone_mov'];
+            $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
+            $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
 
             $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
 
             $obj_beneficios = new clsPmieducarAlunoBeneficio();
-            $obj_beneficios_lista = $obj_beneficios->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->cod_aluno);
+            $obj_beneficios_lista = $obj_beneficios->lista(null, null, null, null, null, null, null, null, null, null, $this->cod_aluno);
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = array();
@@ -285,10 +257,10 @@ class indice extends clsDetalhe
             }
 
             $registro['sigla_uf_cart_trabalho'] = $detalheDocumento['sigla_uf_cart_trabalho'];
-            $registro['num_tit_eleitor'] = $detalheDocumento['num_titulo_eleitor'];
-            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_titulo_eleitor'];
-            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'];
-            $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'];
+            $registro['num_tit_eleitor'] = $detalheDocumento['num_titulo_eleitor'] ?? null;
+            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_titulo_eleitor'] ?? null;
+            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'] ?? null;
+            $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'] ?? null;
 
             $obj_endereco = new clsPessoaEndereco($this->ref_idpes);
 
@@ -302,7 +274,7 @@ class indice extends clsDetalhe
                 $registro['andar'] = $obj_endereco_det['andar'];
                 $registro['apartamento'] = $obj_endereco_det['apartamento'];
                 $registro['bloco'] = $obj_endereco_det['bloco'];
-                $registro['nm_logradouro'] = $obj_endereco_det['logradouro'];
+                $registro['nm_logradouro'] = $obj_endereco_det['logradouro'] ?? null;
                 $registro['cep_'] = int2CEP($registro['id_cep']);
 
                 $obj_bairro = new clsBairro($registro['id_bairro']);
@@ -352,7 +324,7 @@ class indice extends clsDetalhe
                     $registro['idtlog'] = $registro['idtlog']['descricao'];
 
                     $det_uf = $obj_endereco_det['sigla_uf']->detalhe();
-                    $registro['ref_sigla_uf'] = $det_uf['nome'];
+                    $registro['ref_sigla_uf'] = $det_uf['nome'] ?? null;
 
                     $registro['cep_'] = int2CEP($registro['id_cep']);
                 }
@@ -365,7 +337,7 @@ class indice extends clsDetalhe
 
         // código inep
         $alunoMapper = new Educacenso_Model_AlunoDataMapper();
-        $alunoInep = NULL;
+        $alunoInep = null;
 
         try {
             $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
@@ -394,7 +366,10 @@ class indice extends clsDetalhe
 
         if ($registro['nome_aluno']) {
             if ($caminhoFoto != null and $caminhoFoto != '') {
-                $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno'] . '<p><img height="117" src="' . $caminhoFoto . '"/></p>'));
+                $this->addDetalhe(array(
+                    'Nome Aluno',
+                    $registro['nome_aluno'] . '<p><img height="117" src="' . $caminhoFoto . '"/></p>'
+                ));
             } else {
                 $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno']));
             }
@@ -425,8 +400,8 @@ class indice extends clsDetalhe
             $this->addDetalhe(array('CEP', $registro['cep_']));
         }
 
-        if ($registro['ref_sigla_uf']) {
-            $this->addDetalhe(array('UF', $registro['ref_sigla_uf']));
+        if (isset($registro['ref_sigla_uf']) && !empty($registro['ref_sigla_uf'])) {
+            $this->addDetalhe(array('UF', $registro['ref_sigla_uf'] ?? null));
         }
 
         if ($registro['cidade']) {
@@ -627,11 +602,11 @@ class indice extends clsDetalhe
 
             $cor = '#D1DADF';
 
-            $urlLaudoMedico = explode(",", $registro['url_laudo_medico']);
-            for ($i = 0; $i < count($urlLaudoMedico); $i++) {
+            $arrayLaudoMedico = json_decode($registro['url_laudo_medico']);
+            foreach ($arrayLaudoMedico as $key => $laudoMedico) {
                 $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
-                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlLaudoMedico[$i]}' target='_blank' > Visualizar laudo " . (count($urlLaudoMedico) > 1 ? ($i + 1) : "") . " </a></td></tr>";
+                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedico->url}' target='_blank' > Visualizar laudo " . (count($arrayLaudoMedico) > 1 ? ($key + 1) : "") . " </a></td></tr>";
             }
 
             $tabela .= '</table>';
@@ -660,27 +635,29 @@ class indice extends clsDetalhe
         if (!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']) {
             $this->addDetalhe(array('Tipo Certidão Civil', 'Nascimento (novo formato)'));
             $this->addDetalhe(array('Número Certidão Civil', $registro['certidao_nascimento']));
-        } else if (!$registro['tipo_cert_civil'] && $registro['certidao_casamento']) {
-            $this->addDetalhe(array('Tipo Certidão Civil', 'Casamento (novo formato)'));
-            $this->addDetalhe(array('Número Certidão Civil', $registro['certidao_casamento']));
         } else {
-            $lista_tipo_cert_civil = array();
-            $lista_tipo_cert_civil["0"] = 'Selecione';
-            $lista_tipo_cert_civil[91] = 'Nascimento (antigo formato)';
-            $lista_tipo_cert_civil[92] = 'Casamento (antigo formato)';
+            if (!$registro['tipo_cert_civil'] && $registro['certidao_casamento']) {
+                $this->addDetalhe(array('Tipo Certidão Civil', 'Casamento (novo formato)'));
+                $this->addDetalhe(array('Número Certidão Civil', $registro['certidao_casamento']));
+            } else {
+                $lista_tipo_cert_civil = array();
+                $lista_tipo_cert_civil["0"] = 'Selecione';
+                $lista_tipo_cert_civil[91] = 'Nascimento (antigo formato)';
+                $lista_tipo_cert_civil[92] = 'Casamento (antigo formato)';
 
-            $this->addDetalhe(array('Tipo Certidão Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
+                $this->addDetalhe(array('Tipo Certidão Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
 
-            if ($registro['num_termo']) {
-                $this->addDetalhe(array('Termo', $registro['num_termo']));
-            }
+                if ($registro['num_termo']) {
+                    $this->addDetalhe(array('Termo', $registro['num_termo']));
+                }
 
-            if ($registro['num_livro']) {
-                $this->addDetalhe(array('Livro', $registro['num_livro']));
-            }
+                if ($registro['num_livro']) {
+                    $this->addDetalhe(array('Livro', $registro['num_livro']));
+                }
 
-            if ($registro['num_folha']) {
-                $this->addDetalhe(array('Folha', $registro['num_folha']));
+                if ($registro['num_folha']) {
+                    $this->addDetalhe(array('Folha', $registro['num_folha']));
+                }
             }
         }
 
@@ -710,13 +687,16 @@ class indice extends clsDetalhe
 
         // Transporte escolar.
         $transporteMapper = new Transporte_Model_AlunoDataMapper();
-        $transporteAluno = NULL;
+        $transporteAluno = null;
         try {
             $transporteAluno = $transporteMapper->find(array('aluno' => $this->cod_aluno));
         } catch (Exception $e) {
         }
 
-        $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) && $transporteAluno->responsavel != 'Não utiliza' ? 'Sim' : 'Não utiliza'));
+        $this->addDetalhe(array(
+            'Transporte escolar',
+            isset($transporteAluno) && $transporteAluno->responsavel != 'Não utiliza' ? 'Sim' : 'Não utiliza'
+        ));
         if ($transporteAluno && $transporteAluno->responsavel != 'Não utiliza') {
             $this->addDetalhe(array('Responsável transporte', $transporteAluno->responsavel));
         }
@@ -758,19 +738,28 @@ class indice extends clsDetalhe
                 $this->addDetalhe(array('Número do cartão do SUS', $this->sus));
             }
 
-            $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim' : 'Não')));
+            $this->addDetalhe(array(
+                'Possui alergia a algum medicamento',
+                ($reg['alergia_medicamento'] == 'S' ? 'Sim' : 'Não')
+            ));
 
             if (trim($reg['desc_alergia_medicamento']) != '') {
                 $this->addDetalhe(array('Quais', $reg['desc_alergia_medicamento']));
             }
 
-            $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim' : 'Não')));
+            $this->addDetalhe(array(
+                'Possui alergia a algum alimento',
+                ($reg['alergia_alimento'] == 'S' ? 'Sim' : 'Não')
+            ));
 
             if (trim($reg['desc_alergia_alimento']) != '') {
                 $this->addDetalhe(array('Quais', $reg['desc_alergia_alimento']));
             }
 
-            $this->addDetalhe(array('Possui alguma doenca congênita', ($reg['doenca_congenita'] == 'S' ? 'Sim' : 'Não')));
+            $this->addDetalhe(array(
+                'Possui alguma doenca congênita',
+                ($reg['doenca_congenita'] == 'S' ? 'Sim' : 'Não')
+            ));
 
             if (trim($reg['desc_doenca_congenita']) != '') {
                 $this->addDetalhe(array('Quais', $reg['desc_doenca_congenita']));
@@ -801,19 +790,28 @@ class indice extends clsDetalhe
                 $this->addDetalhe(array('Qual', $reg['desc_tratamento_medico']));
             }
 
-            $this->addDetalhe(array('Ingere medicação específica', ($reg['medicacao_especifica'] == 'S' ? 'Sim' : 'Não')));
+            $this->addDetalhe(array(
+                'Ingere medicação específica',
+                ($reg['medicacao_especifica'] == 'S' ? 'Sim' : 'Não')
+            ));
 
             if (trim($reg['desc_medicacao_especifica']) != '') {
                 $this->addDetalhe(array('Qual', $reg['desc_medicacao_especifica']));
             }
 
-            $this->addDetalhe(array('Acompanhamento médico ou psicológico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim' : 'Não')));
+            $this->addDetalhe(array(
+                'Acompanhamento médico ou psicológico',
+                ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim' : 'Não')
+            ));
 
             if (trim($reg['desc_acomp_medico_psicologico']) != '') {
                 $this->addDetalhe(array('Motivo', $reg['desc_acomp_medico_psicologico']));
             }
 
-            $this->addDetalhe(array('Restrição para atividades físicas', ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim' : 'Não')));
+            $this->addDetalhe(array(
+                'Restrição para atividades físicas',
+                ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim' : 'Não')
+            ));
 
             if (trim($reg['desc_restricao_atividade_fisica']) != '') {
                 $this->addDetalhe(array('Qual', $reg['desc_restricao_atividade_fisica']));
@@ -848,17 +846,32 @@ class indice extends clsDetalhe
         if ($reg) {
             if (dbBool($reg["kit_completo"])) {
                 $this->addDetalhe(array("<span id='funiforme'></span>Recebeu kit completo", "Sim"));
-                $this->addDetalhe(array("<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1('Data da distribuição'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])));
+                $this->addDetalhe(array(
+                    "<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1('Data da distribuição'),
+                    Portabilis_Date_Utils::pgSQLToBr($reg['data'])
+                ));
             } else {
-                $this->addDetalhe(array("<span id='funiforme'></span>Recebeu kit completo", Portabilis_String_Utils::toLatin1("Não")));
-                $this->addDetalhe(array(Portabilis_String_Utils::toLatin1('Data da distribuição'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])));
-                $this->addDetalhe(array(Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calça)"), $reg['agasalho_qtd'] ?: '0'));
+                $this->addDetalhe(array(
+                    "<span id='funiforme'></span>Recebeu kit completo",
+                    Portabilis_String_Utils::toLatin1("Não")
+                ));
+                $this->addDetalhe(array(
+                    Portabilis_String_Utils::toLatin1('Data da distribuição'),
+                    Portabilis_Date_Utils::pgSQLToBr($reg['data'])
+                ));
+                $this->addDetalhe(array(
+                    Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calça)"),
+                    $reg['agasalho_qtd'] ?: '0'
+                ));
                 $this->addDetalhe(array("Quantidade de camisetas (manga curta)", $reg['camiseta_curta_qtd'] ?: '0'));
                 $this->addDetalhe(array("Quantidade de camisetas (manga longa)", $reg['camiseta_longa_qtd'] ?: '0'));
                 $this->addDetalhe(array("Quantidade de meias", $reg['meias_qtd'] ?: '0'));
                 $this->addDetalhe(array("Bermudas tectels (masculino)", $reg['bermudas_tectels_qtd'] ?: '0'));
                 $this->addDetalhe(array("Bermudas coton (feminino)", $reg['bermudas_coton_qtd'] ?: '0'));
-                $this->addDetalhe(array("<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1("Quantidade de tênis"), $reg['tenis_qtd'] ?: '0'));
+                $this->addDetalhe(array(
+                    "<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1("Quantidade de tênis"),
+                    $reg['tenis_qtd'] ?: '0'
+                ));
             }
         }
 

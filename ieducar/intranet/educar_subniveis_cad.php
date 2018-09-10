@@ -179,7 +179,8 @@ class indice extends clsCadastro
 
         $obj = new clsPmieducarSubnivel(null,$this->pessoa_logada,$this->pessoa_logada,null,$this->ref_cod_nivel);
 
-        $obj->desativaTodos();
+        // FIXME #parameters
+        $obj->desativaTodos(null);
 
         if($this->nm_nivel)
         {

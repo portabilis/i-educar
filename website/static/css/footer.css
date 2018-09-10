@@ -1,0 +1,132 @@
+.nav-footer {
+  height: auto;
+  display: block;
+  justify-content: center;
+  padding-top: 0px;
+  padding: 0px;
+  background-color: #2c3a55;
+}
+
+.subfooteritens{
+  display:flex;
+  max-width: 1440px;
+  width: 100%;
+  padding: 0 32px;
+  padding-top: 14px;
+}
+
+.subfooter {
+    display: flex;
+    justify-content: center;
+    background-color: #253147;
+}
+
+li + li {
+  margin-top: 0px;
+}
+
+.footerVersion {
+  display: flex;
+  flex: 1;
+  justify-content:flex-end;
+}
+
+
+.nav-footer .sitemap {
+  max-width: 1440px;
+  width: 1440px;
+  padding: 0 32px;
+  padding-top: 40px;
+  margin: 0px;
+}
+
+.nav-footer .sitemap .nav-home {
+  width: auto;
+  padding: 0px;
+  padding-right: 10px;
+  margin: 0px 20px 0 0;
+}
+
+.footerNav nav ul {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 5px;
+  list-style: none;
+}
+
+.sitemap .footerNav nav{
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+}
+.footerDescription em {
+  color:blue;
+}
+
+.sitemap .footerNav{
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.footerNav nav ul li{
+  padding-left: 5px;
+  margin-left: 16px;
+  list-style: none;
+}
+
+.footerNav nav ul li a{
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  margin-left: 36px;
+}
+
+.subfooter p {
+  font-family: $descriptionFont;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #506899;
+}
+
+@media only screen and (min-width: 1024px) {
+
+  .nav-footer .sitemap {
+    width: 100%;
+    padding: 0 32px;
+    padding-top: 40px;
+    margin: 0px;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .nav-footer .sitemap {
+    width: 100%;
+    padding: 0 32px;
+    padding-top: 40px;
+    margin: 0px;
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+
+  .nav-footer .sitemap {
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-device-width: 735px) {
+  .nav-footer .sitemap {
+    flex-direction: row;
+  }
+}
+
+@media only screen and (max-device-width: 682px) {
+  .footerNav nav ul {
+    display: inline;
+  }
+}
