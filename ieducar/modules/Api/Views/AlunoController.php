@@ -1034,7 +1034,7 @@ class AlunoController extends ApiCoreController
             $aluno['projetos'] = $this->loadProjetos($id);
             $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
             
-            $objFoto = new clsCadastroFisicaFoto($this->ref_idpes);
+            $objFoto = new clsCadastroFisicaFoto($aluno['pessoa_id']);
             $detalheFoto = $objFoto->detalhe();
 
             if ($detalheFoto) {
