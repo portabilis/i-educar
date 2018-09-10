@@ -95,13 +95,13 @@ o tenha instalado.
 Depois de ter o Docker e git instalados faça o clone deste repositório e execute
 o Docker Compose para criar os containers da aplicação:
 
-```bash
-git clone https://github.com/portabilis/i-educar.git i-educar
-cd i-educar
-cp .env.example .env
-cp ieducar/configuration/ieducar.ini.sample ieducar/configuration/ieducar.ini
-cp phinx.php.sample phinx.php
-docker-compose up -d
+```terminal
+$ git clone https://github.com/portabilis/i-educar.git i-educar
+$ cd i-educar
+$ cp .env.example .env
+$ cp ieducar/configuration/ieducar.ini.sample ieducar/configuration/ieducar.ini
+$ cp phinx.php.sample phinx.php
+$ docker-compose up -d
 ```
 
 Depois disto faça as alterações necessárias nos arquivos de configuração:
