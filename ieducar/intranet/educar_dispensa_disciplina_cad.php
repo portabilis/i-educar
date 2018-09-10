@@ -2,7 +2,6 @@
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
@@ -203,17 +202,20 @@ class indice extends clsCadastro
         $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 10, false);
     }
 
-    public function existeComponenteSerie()
+    public function existeComponenteSerie($serieId, $escolaId, $disciplinaId)
     {
-        $db = new clsBanco();
-        $sql = "SELECT EXISTS (SELECT 1
-                               FROM pmieducar.escola_serie_disciplina
-                              WHERE ref_ref_cod_serie = {$this->ref_cod_serie}
-                                AND ref_ref_cod_escola = {$this->ref_cod_escola}
-                                AND ref_cod_disciplina = {$this->ref_cod_disciplina}
-                                AND escola_serie_disciplina.ativo = 1)";
+        try {
+            App_Model_IedFinder::getEscolaSerieDisciplina(
+                $serieId,
+                $escolaId,
+                null,
+                $disciplinaId
+            );
+        } catch (Exception $e) {
+            return false;
+        }
 
-        return dbBool($db->campoUnico($sql));
+        return true;
     }
 
     public function Novo()
@@ -233,7 +235,7 @@ class indice extends clsCadastro
             $dadosDaDispensa = $this->obtemDadosDaDispensa();
             $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
-            if (!$this->existeComponenteSerie()) {
+            if (!$this->existeComponenteSerie($dadosDaDispensa['ref_cod_serie'], $dadosDaDispensa['ref_cod_escola'], $disciplinaId)) {
                 $disciplinasNaoExistentesNaSerieDaEscola[] = $this->nomeDisciplina($disciplinaId);
                 continue;
             }
