@@ -1033,7 +1033,7 @@ class AlunoController extends ApiCoreController
             $aluno['beneficios'] = $this->loadBeneficios($id);
             $aluno['projetos'] = $this->loadProjetos($id);
             $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
-            
+
             $objFoto = new clsCadastroFisicaFoto($aluno['pessoa_id']);
             $detalheFoto = $objFoto->detalhe();
 
@@ -1053,7 +1053,7 @@ class AlunoController extends ApiCoreController
                 p.nome as nome_aluno,
                 f.data_nasc as data_nascimento,
                 ff.caminho as foto_aluno,
-                COALESCE((SELECT NOT cadastro.deficiencia.desconsidera_regra_diferenciada
+                COALESCE((SELECT NOT d.desconsidera_regra_diferenciada
                             FROM cadastro.fisica_deficiencia fd
                             JOIN cadastro.deficiencia d ON (d.cod_deficiencia = fd.ref_cod_deficiencia)
                             WHERE fd.ref_idpes = p.idpes AND
