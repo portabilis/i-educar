@@ -50,7 +50,6 @@ require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
 
-require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
@@ -894,7 +893,6 @@ class clsBase extends clsConfig
             @session_write_close();
 
             error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
-            (new NotificationMailer)->unexpectedError($e->getMessage());
 
             die("<script>document.location.href = '/module/Error/unexpected';</script>");
         }
