@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -52,11 +55,11 @@ class indice extends clsCadastro
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->ref_cod_turma_copiar_enturmacoes = $_GET['ref_cod_turma_copiar_enturmacoes'];
-        $this->cod_matricula = $_GET['cod_matricula'];
-        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
-        $this->ref_cod_candidato_reserva_vaga = $_GET['ref_cod_candidato_reserva_vaga'];
-        $this->ref_cod_candidato_fila_unica = $_GET['cod_candidato_fila_unica'];
+        $this->ref_cod_turma_copiar_enturmacoes = $this->getQueryString('ref_cod_turma_copiar_enturmacoes');
+        $this->cod_matricula = $this->getQueryString('cod_matricula');
+        $this->ref_cod_aluno = $this->getQueryString('ref_cod_aluno');
+        $this->ref_cod_candidato_reserva_vaga = $this->getQueryString('ref_cod_candidato_reserva_vaga');
+        $this->ref_cod_candidato_fila_unica = $this->getQueryString('cod_candidato_fila_unica');
 
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
         $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
@@ -845,6 +848,15 @@ class indice extends clsCadastro
 
             $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
 
+            $bestDate = $this->getRegistrationDate($this->ref_cod_aluno, $this->ref_cod_turma);
+            $dataMatriculaObj = new \DateTime($this->data_matricula);
+
+            if ($dataMatriculaObj < $bestDate) {
+                $this->mensagem .= 'A data de matrícula precisa ser igual ou maior que ' . $date->format('d/m/Y');
+
+                return false;
+            }
+
             $obj = new clsPmieducarMatricula(
                 null,
                 $this->ref_cod_reserva_vaga,
@@ -1466,6 +1478,71 @@ class indice extends clsCadastro
         );
 
         return count($lst_mt);
+    }
+
+    protected function getRegistrationDate($student, $class)
+    {
+        $query = "
+            select
+                ano_letivo_modulo.data_inicio as ano_data_inicio,
+                turma_modulo.data_inicio as turma_data_inicio,
+                (matricula.data_exclusao + interval '1 day')::date  as matricula_data_exclusao
+            from
+                pmieducar.turma
+            inner join
+                pmieducar.ano_letivo_modulo on true
+                    and ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
+                    and ano_letivo_modulo.ref_ano = turma.ano
+                    and ano_letivo_modulo.sequencial = 1
+            left join
+                pmieducar.turma_modulo on true
+                    and turma_modulo.ref_cod_turma = turma.cod_turma
+                    and turma_modulo.sequencial = 1
+            left join
+                (
+                    select
+                        matricula_turma.data_exclusao,
+                        matricula_turma.ativo,
+                        matricula.ano
+                    from
+                        pmieducar.matricula_turma
+                    inner join
+                        pmieducar.matricula on matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                    where true
+                        and matricula.ref_cod_aluno = {$student}
+                    order by
+                        ref_cod_matricula desc
+                    limit 1
+                ) as matricula on true
+                    and matricula.ano = turma.ano
+                    and matricula.data_exclusao is not null
+                    and matricula.ativo = 0
+            where true
+                and turma.cod_turma = {$class};
+        ";
+
+        $db = new clsBanco();
+
+        $db->setFetchMode(clsBanco::FETCH_ASSOC);
+        $db->Consulta($query);
+        $db->ProximoRegistro();
+
+        $results = $db->Tupla();
+        $date = null;
+
+        foreach ($results as $k => $v) {
+            if (is_null($v)) {
+                continue;
+            }
+
+            $newDate = \DateTime::createFromFormat('Y-m-d', $v);
+
+            if (is_null($date) || $newDate > $date) {
+                $date = $newDate;
+            }
+        }
+
+        return $date;
     }
 }
 
