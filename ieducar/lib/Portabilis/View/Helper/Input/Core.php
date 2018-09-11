@@ -38,7 +38,7 @@ class Portabilis_View_Helper_Input_Core
 
     protected function inputValue($value = null)
     {
-        if (! $value && $this->viewInstance->{$this->inputName()}) {
+        if (!$value && isset($this->viewInstance->{$this->inputName()})) {
             $value = $this->viewInstance->{$this->inputName()};
         }
 
