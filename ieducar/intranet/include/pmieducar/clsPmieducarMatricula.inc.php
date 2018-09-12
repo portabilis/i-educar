@@ -1875,4 +1875,69 @@ class clsPmieducarMatricula
 
         return false;
     }
+
+    public function pegaMelhorDataMatricula($cod_aluno, $cod_turma)
+    {
+        $query = "
+            select
+                ano_letivo_modulo.data_inicio as ano_data_inicio,
+                turma_modulo.data_inicio as turma_data_inicio,
+                (matricula.data_exclusao + interval '1 day')::date  as matricula_data_exclusao
+            from
+                pmieducar.turma
+            inner join
+                pmieducar.ano_letivo_modulo on true
+                    and ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
+                    and ano_letivo_modulo.ref_ano = turma.ano
+                    and ano_letivo_modulo.sequencial = 1
+            left join
+                pmieducar.turma_modulo on true
+                    and turma_modulo.ref_cod_turma = turma.cod_turma
+                    and turma_modulo.sequencial = 1
+            left join
+                (
+                    select
+                        matricula_turma.data_exclusao,
+                        matricula_turma.ativo,
+                        matricula.ano
+                    from
+                        pmieducar.matricula_turma
+                    inner join
+                        pmieducar.matricula on matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                    where true
+                        and matricula.ref_cod_aluno = {$cod_aluno}
+                    order by
+                        ref_cod_matricula desc
+                    limit 1
+                ) as matricula on true
+                    and matricula.ano = turma.ano
+                    and matricula.data_exclusao is not null
+                    and matricula.ativo = 0
+            where true
+                and turma.cod_turma = {$cod_turma};
+        ";
+
+        $db = new clsBanco();
+
+        $db->setFetchMode(clsBanco::FETCH_ASSOC);
+        $db->Consulta($query);
+        $db->ProximoRegistro();
+
+        $results = $db->Tupla();
+        $date = null;
+
+        foreach ($results as $k => $v) {
+            if (is_null($v)) {
+                continue;
+            }
+
+            $newDate = new \DateTime($v);
+
+            if (is_null($date) || $newDate > $date) {
+                $date = $newDate;
+            }
+        }
+
+        return $date;
+    }
 }
