@@ -1,8 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -852,7 +849,7 @@ class indice extends clsCadastro
             $dataMatriculaObj = new \DateTime($this->data_matricula);
 
             if ($dataMatriculaObj < $bestDate) {
-                $this->mensagem .= 'A data de matrícula precisa ser igual ou maior que ' . $date->format('d/m/Y');
+                $this->mensagem .= 'A data de matrícula precisa ser igual ou maior que ' . $bestDate->format('d/m/Y');
 
                 return false;
             }
@@ -1535,7 +1532,7 @@ class indice extends clsCadastro
                 continue;
             }
 
-            $newDate = \DateTime::createFromFormat('Y-m-d', $v);
+            $newDate = new \DateTime($v);
 
             if (is_null($date) || $newDate > $date) {
                 $date = $newDate;
