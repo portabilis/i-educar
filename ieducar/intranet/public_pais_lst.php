@@ -99,7 +99,7 @@ class indice extends clsListagem
 
         // Paginador
         $this->__limite = 20;
-        $this->__offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
+        $this->__offset = isset($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->__limite-$this->__limite : 0;
 
         $obj_pais = new clsPublicPais();
         $obj_pais->setOrderby( "nome ASC" );

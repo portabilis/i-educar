@@ -1,6 +1,7 @@
 <?php
 
 use Cocur\Slugify\Slugify;
+use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
@@ -28,14 +29,8 @@ class DiarioApiController extends ApiCoreController
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
     protected $_processoAp = 642;
 
-    // validations
-
-    // post nota validations
-
     protected function validatesValueOfAttValueIsInOpcoesNotas()
     {
-        //$expectedValues = array_keys($this->getOpcoesNotas());
-        //return $this->validator->validatesValueInSetOf($this->getRequest()->att_value, $expectedValues, 'att_value');
         return true;
     }
 
@@ -111,87 +106,43 @@ class DiarioApiController extends ApiCoreController
 
     protected function validatesPreviousNotasHasBeenSet()
     {
-        $hasPreviousNotas = true;
-        $etapasWithoutNotas = array();
-        $regra = $this->serviceBoletim()->getRegra();
-        $matriculaId = $this->serviceBoletim()->getOption('matricula');
-        $serieId = $this->serviceBoletim()->getOption('ref_cod_serie');
-        $escolaId = $this->serviceBoletim()->getOption('ref_cod_escola');
-        $disciplinaId = $this->getRequest()->componente_curricular_id;
+        $etapaId = $this->getRequest()->etapa;
+        $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+        $serviceBoletim = $this->serviceBoletim();
 
-        $existeEtapaDispensadaDisciplina = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $disciplinaId);
-
-        if ($this->getRequest()->etapa == 'Rc') {
-            $etapaRequest = $this->serviceBoletim()->getOption('etapas');
-        } else {
-            $etapaRequest = $this->getRequest()->etapa;
+        try {
+            return $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
+                $etapaId, $componenteCurricularId
+            );
+        } catch (MissingStagesException $exception) {
+            $this->messenger->append($exception->getMessage());
+            $this->appendResponse('error', [
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+                'extra' => $exception->getExtraInfo(),
+            ]);
+        } catch (Exception $e) {
+            $this->messenger->append($e->getMessage());
         }
 
-        for ($etapa = 1; $etapa <= $etapaRequest; $etapa++) {
-
-            $nota = $this->getNotaAtual($etapa);
-
-            if (is_array($existeEtapaDispensadaDisciplina) && in_array($etapa, $existeEtapaDispensadaDisciplina)) {
-                continue;
-            }
-
-            if (($etapa != $this->getRequest()->etapa || $this->getRequest()->etapa == 'Rc') &&
-                empty($nota) && !is_numeric($nota)) {
-                $hasPreviousNotas = false;
-                $etapasWithoutNotas[] = $etapa;
-            }
-        }
-
-        if ($regra->get('definirComponentePorEtapa') == "1") {
-            return true;
-        }
-
-        if (!$hasPreviousNotas) {
-            $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " .
-                join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
-            return false;
-        }
-
-        return true;
+        return false;
     }
-
-    // post falta validations
 
     protected function validatesPreviousFaltasHasBeenSet()
     {
-        $hasPreviousFaltas = true;
-        $etapasWithoutFaltas = array();
-        $matriculaId = $this->serviceBoletim()->getOption('matricula');
-        $serieId = $this->serviceBoletim()->getOption('ref_cod_serie');
-        $escolaId = $this->serviceBoletim()->getOption('ref_cod_escola');
-        $disciplinaId = $this->getRequest()->componente_curricular_id;
+        $etapaId = $this->getRequest()->etapa;
+        $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+        $serviceBoletim = $this->serviceBoletim();
 
-        $existeEtapaDispensadaDisciplina = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $disciplinaId);
-
-        for ($etapa = 1; $etapa <= $this->getRequest()->etapa; $etapa++) {
-            $falta = $this->getFaltaAtual($etapa);
-
-            if (is_array($existeEtapaDispensadaDisciplina) && in_array($etapa, $existeEtapaDispensadaDisciplina)) {
-                continue;
-            }
-
-            if ($etapa != $this->getRequest()->etapa && empty($falta) && !is_numeric($falta)) {
-                $hasPreviousFaltas = false;
-                $etapasWithoutFaltas[] = $etapa;
-            }
+        try {
+            return $serviceBoletim->verificaFaltasLancadasNasEtapasAnteriores(
+                $etapaId, $componenteCurricularId
+            );
+        } catch (Exception $e) {
+            $this->messenger->append($e->getMessage());
         }
 
-        if (!$hasPreviousFaltas) {
-            if ($this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-                $this->messenger->append("Falta somente pode ser lançada após lançar faltas nas etapas anteriores: " .
-                    join(', ', $etapasWithoutFaltas) . ' deste componente curricular.');
-            } else {
-                $this->messenger->append("Falta somente pode ser lançada após lançar faltas nas etapas anteriores: " .
-                    join(', ', $etapasWithoutFaltas) . '.');
-            }
-        }
-
-        return $hasPreviousFaltas;
+        return false;
     }
 
     // post/ delete parecer validations
@@ -532,7 +483,6 @@ class DiarioApiController extends ApiCoreController
             }
 
             $nota = new Avaliacao_Model_NotaComponente($array_nota);
-
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
@@ -861,7 +811,8 @@ class DiarioApiController extends ApiCoreController
                 if ($tpParecer == $cnsParecer::ANUAL_COMPONENTE || $tpParecer == $cnsParecer::ETAPA_COMPONENTE) {
                     $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
                 } else {
-                    $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa);
+                    // FIXME #parameters
+                    $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, null);
                 }
 
                 $this->trySaveServiceBoletim();
@@ -1015,6 +966,13 @@ class DiarioApiController extends ApiCoreController
         return $matriculaId;
     }
 
+    /**
+     * @param bool $reload
+     *
+     * @return Avaliacao_Service_Boletim
+     *
+     * @throws CoreExt_Exception
+     */
     protected function serviceBoletim($reload = false)
     {
         $matriculaId = $this->getCurrentMatriculaId();
@@ -1169,7 +1127,7 @@ class DiarioApiController extends ApiCoreController
         foreach ($_componentesCurriculares as $_componente) {
             $componente = array();
             $componenteId = $_componente->get('id');
-            $tipoNota = $this->getTipoNotaComponenteSerie($componenteId, $serieId);
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
 
             if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $componenteId)) {
                 continue;
@@ -1239,18 +1197,6 @@ class DiarioApiController extends ApiCoreController
         return $componentesCurriculares;
     }
 
-    protected function getTipoNotaComponenteSerie($componenteId, $serieId)
-    {
-        $sql = "SELECT tipo_nota
-              FROM modules.componente_curricular_ano_escolar
-             WHERE ano_escolar_id = $1
-               AND componente_curricular_id = $2";
-
-        $tipoNota = $this->fetchPreparedQuery($sql, array($serieId, $componenteId));
-
-        return $tipoNota[0]['tipo_nota'];
-    }
-
     protected function getAreaConhecimento($componenteCurricularId = null)
     {
         if (is_null($componenteCurricularId)) {
@@ -1291,6 +1237,11 @@ class DiarioApiController extends ApiCoreController
         return ($obj->excluir());
     }
 
+    /**
+     * @deprecated
+     *
+     * @see Avaliacao_Service_Boletim::getNotaAtual()
+     */
     protected function getNotaAtual($etapa = null, $componenteCurricularId = null)
     {
         // defaults
@@ -1514,6 +1465,11 @@ class DiarioApiController extends ApiCoreController
         return str_replace(',', '.', $nota);
     }
 
+    /**
+     * @deprecated
+     *
+     * @see Avaliacao_Service_Boletim::getFaltaAtual()
+     */
     protected function getFaltaAtual($etapa = null, $componenteCurricularId = null)
     {
         // defaults

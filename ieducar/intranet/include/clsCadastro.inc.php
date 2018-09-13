@@ -94,7 +94,6 @@ class clsCadastro extends clsCampos
   var $nome_url_alt;
   var $url_alt;
   var $help_images = FALSE;
-  var $locale = null;
 
   var $array_botao;
   var $array_botao_url;
@@ -796,6 +795,13 @@ class clsCadastro extends clsCampos
         $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
         $instituicao = empty($this->ref_cod_instituicao) ? $obj->primeiraAtiva() : $obj->detalhe();
         return dbBool($instituicao['obrigar_campos_censo']);
+    }
+
+    protected function sugestaoAnosLetivos()
+    {
+        $anoAtual = date('Y');
+        $anos = range($anoAtual-10, $anoAtual+1);
+        return array_combine($anos, $anos);
     }
 
   protected function inputsHelper() {

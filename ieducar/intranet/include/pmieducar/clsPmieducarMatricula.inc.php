@@ -291,9 +291,6 @@ class clsPmieducarMatricula
     if (is_string($data_cancel)) {
       $this->data_cancel = $data_cancel;
     }
-    if (is_bool($dependencia)) {
-      $this->dependencia = $dependencia;
-    }
     if (is_numeric($turno_id)) {
       $this->turno_id = $turno_id;
     }

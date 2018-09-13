@@ -383,7 +383,7 @@ class clsControlador
   protected function checkForMultipleAccess($user) {
     // considera como acesso multiplo, acesso em diferentes IPs em menos de $tempoMultiploAcesso minutos
     $tempoMultiploAcesso = 10;
-    $tempoEmEspera       = abs(time() - strftime("now") - strtotime($user['data_login'])) / 60;
+    $tempoEmEspera       = abs(time() - strtotime($user['data_login'])) / 60;
 
     $multiploAcesso = $tempoEmEspera <= $tempoMultiploAcesso &&
                       $user['ip_ultimo_acesso'] != $this->getClientIP();

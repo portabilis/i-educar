@@ -10,7 +10,8 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "docusaurus": "^1.1.3",
-    "jsdom": "^11.11.0"
+    "docusaurus": "^1.3.3",
+    "jsdom": "^11.11.0",
+    "react-helmet": "^5.2.0"
   }
 }

@@ -1,0 +1,210 @@
+<script>
+  function tabela(name, counter)
+  {
+    // Seta variavel para não reordenar id dos campos
+    this.setReordena = function(reordenar)
+    {
+      this.reordenar = reordenar;
+    }
+
+    // Construtor
+    this.constructor = function() {
+
+      // Contém uma referência ao objeto
+      var This = this;
+
+      this.id = counter;
+
+      this.afterAddRow    = function(){};
+      this.afterRemoveRow = function(){};
+
+      this.isIE      = (navigator.appName.indexOf('Microsoft') != -1) ? 1 : 0;
+      this.nome      = name;
+      this.campos    = new Array();
+      this.reordenar = true;
+
+      this.getId = function() { return this.id; }
+
+      var numColumns = document.getElementById(This.nome).rows[1].childNodes.length;
+
+      var row = document.getElementById(This.nome).insertRow(document.getElementById(This.nome).rows.length-1);
+
+      for (var ct = 0; ct < numColumns - 1; ct++) {
+        var campo = document.getElementById(This.nome).rows[2].childNodes[ct].cloneNode(true);
+
+        if (This.isIE) {
+          if(campo.childNodes[0].type == 'text')
+            campo.childNodes[0].value  = '';
+          else if(campo.childNodes[0].type == 'select-one')
+            campo.childNodes[0].value  = '';
+          else if(campo.childNodes[0].type == 'checkbox')
+            campo.childNodes[0].checked = false;
+        }
+        else {
+          if (campo.childNodes[1].type == 'text')
+            campo.childNodes[1].value  = '';
+          else if(campo.childNodes[1].type == 'select-one')
+            campo.childNodes[1].value  = '';
+          else if(campo.childNodes[1].type == 'checkbox')
+            campo.childNodes[1].checked = false;
+        }
+
+        This.campos.push(campo);
+      }
+
+      var campo         = document.getElementById(This.nome).rows[2].childNodes[ct].cloneNode(true);
+      var campos_oculto = campo.getElementsByTagName('INPUT');
+
+      for (var co = 0; co < campos_oculto.length; co++) {
+        campos_oculto[co].id = /[a-zA-Z_-]*/.exec(campos_oculto[co].id) + '[' + This.id +']';
+        campos_oculto[co].value = '';
+      }
+
+      This.campos.push(campo);
+    }
+
+    // Call the constructor
+    this.constructor();
+
+    this.classe = (this.id % 2 == 0 )? 'formlttd' : 'formmdtd';
+    this.addRow = function()
+    {
+      var This = this;
+
+      This.classe    = (This.id % 2 == 0 )? 'formmdtd tr_' + This.nome : 'formlttd tr_' + This.nome;
+      var numColumns = This.campos.length
+
+      var row = document.getElementById(This.nome).insertRow(document.getElementById(This.nome).rows.length-2);
+
+      row.setAttribute("id", "tr_"+This.nome+"["+This.id+"]");
+      row.setAttribute("name", "tr_"+This.nome+"[]");
+
+      row.className = This.classe;
+
+      for (var ct = 0; ct < numColumns - 1; ct++) {
+          var campo       = This.campos[ct].cloneNode(true);
+          campo.className = This.classe;
+          campo.setAttribute("id", /[a-zA-Z_-]*/.exec(campo.id)+"["+This.id+"]");
+
+          if (This.isIE) {
+            campo.childNodes[0].id = /[a-zA-Z_-]*/.exec(campo.childNodes[0].id) + '[' + This.id +']';
+            campo.childNodes[0].name = /[a-zA-Z_-]*/.exec(campo.childNodes[0].name) + '[' + This.id +']';
+
+            if (campo.childNodes[0].type == 'select-one')
+              campo.childNodes[0].selectedIndex = '';
+          }
+          else {
+            campo.childNodes[1].id = /[a-zA-Z_-]*/.exec(campo.childNodes[1].id) + '[' + This.id +']';
+            campo.childNodes[1].name = /[a-zA-Z_-]*/.exec(campo.childNodes[1].name) + '[' + This.id +']';
+
+            if (campo.childNodes[1].type == 'select-one')
+              campo.childNodes[1].selectedIndex = '';
+          }
+
+        row.appendChild(campo);
+      }
+
+      This.classe = (This.classe == 'formmdtd') ? 'formlttd' : 'formmdtd';
+
+      var campo = this.campos[This.campos.length-1].cloneNode(true);
+
+      row.appendChild(campo);
+
+      var campos_oculto = campo.getElementsByTagName('INPUT');
+
+      for (var co = 0; co < campos_oculto.length; co++) {
+        campos_oculto[co].id = /[a-zA-Z_-]*/.exec(campos_oculto[co].id) + '[' + This.id +']';
+        campos_oculto[co].name = /[a-zA-Z_-]*/.exec(campos_oculto[co].name) + '[' + This.id +']';
+      }
+
+      var link_deletar = campo.getElementsByTagName('A');
+
+      link_deletar[0].id = /[a-zA-Z_-]*/.exec(link_deletar[0].id) + '[' + This.id +']';
+
+      This.id++;
+      this.afterAddRow();
+    }
+
+    this.removeRow = function(row)
+    {
+      var This = this;
+
+      var tab = row;
+      var tr;
+      while (tab.nodeName != 'TABLE') {
+        if(tab.nodeName == 'TR')
+          tr = tab;
+
+        tab = tab.parentNode;
+      }
+
+      var trs = tab.getElementsByTagName('TR');
+
+      var linha = 0;
+
+      for (var ct = 2; ct < trs.length - 1; ct++) {
+        if (trs[ct] == tr) {
+          tab.deleteRow(ct);
+        }
+      }
+
+      trs = document.getElementsByName('tr_'+This.nome + '[]');
+      var classe = 'formmdtd tr_' + This.nome;
+
+      for (var ct = 0; ct < trs.length; ct++) {
+        if (trs[ct] && trs[ct].id != 'adicionar_linha') {
+          trs[ct].className = classe;
+
+          for (var c = 0; c < trs[ct].cells.length; c++)
+            trs[ct].cells[c].className = classe;
+
+          classe = (classe == 'formmdtd')? 'formlttd tr_' + This.nome : 'formmdtd tr_' + This.nome;
+        }
+      }
+
+      if (This.reordenar) {
+        This.setId(tab);
+        This.id--;
+      }
+
+      // if (This.id == 0)
+      //   This.addRow();   // Foi comentado para permitir excluir todas as alocações do servidor publico.
+
+      this.afterRemoveRow();
+    }
+
+    this.setId = function setId(tab)
+    {
+      var trs = tab.getElementsByTagName('TR');
+      var cod_ini = 0;
+
+      for (var ct = 2; ct < trs.length; ct++) {
+        var nome_tr = /[a-zA-Z-_]*/.exec(trs[ct].id);
+
+        if (!nome_tr)
+           continue;
+
+         trs[ct].setAttribute( "id",nome_tr + '[' + cod_ini + ']');
+
+        for (var c = 0; c < trs[ct].cells.length; c++) {
+          var nome_td = /[a-zA-Z-_]*/.exec(trs[ct].cells[c].id);
+          trs[ct].cells[c].setAttribute( "id",nome_td + '[' + cod_ini + ']');
+
+          var campos = trs[ct].cells[c].childNodes;
+
+          for (var inp = 0 ; inp < campos.length; inp++) {
+            if (!campos[inp].id)
+              continue;
+
+            var nome_inp = /[a-zA-Z-_]*/.exec(campos[inp].id);
+
+            campos[inp].setAttribute("id",nome_inp + '[' + cod_ini + ']');
+            campos[inp].setAttribute("name",nome_inp + '[' + cod_ini + ']');
+          }
+        }
+
+        cod_ini++;
+      }
+    }
+  }
+  </script>

@@ -429,7 +429,9 @@ td.fundoLocalizacao {
     margin-top: 15px;
 }
 
-#localizacao a{
+#localizacao a,
+#localizacao span{
+  font-weight: bold !important;
   color: #47728f;
   font-size: 14px !important;
 }

@@ -8,7 +8,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
     protected $_titulo = 'Processamento histórico';
     protected $_processoAp = 999613;
-    protected $_formMap = array();
+    protected $_formMap = [];
 
     protected function _preRender()
     {
@@ -26,11 +26,11 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         $localizacao = new LocalizacaoSistema();
 
         $localizacao->entradaCaminhos(
-            array(
-                $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-                "educar_index.php"                                    => "Escola",
-                ""                                                                    => "Processamento de hist&oacute;rico escolar"
-                )
+            [
+                $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
+                'educar_index.php' => 'Escola',
+                '' => 'Processamento de hist&oacute;rico escolar'
+            ]
         );
         $this->enviaLocalizacao($localizacao->montar(), true);
     }
@@ -40,48 +40,51 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     public function Gerar()
     {
-        Portabilis_View_Helper_Application::loadStylesheet($this, array('/modules/HistoricoEscolar/Static/styles/processamento.css','/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'));
+        Portabilis_View_Helper_Application::loadStylesheet($this, [
+            '/modules/HistoricoEscolar/Static/styles/processamento.css',
+            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'
+        ]);
 
-        $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
+        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
 
         $this->inputsHelper()->dynamic(
             'curso',
-            array(
+            [
                 'required' => false,
                 'label_hint' => _cl('historico.cadastro.curso_detalhe')
-            )
+            ]
         );
 
         $this->inputsHelper()->dynamic(
             'serie',
-            array(
+            [
                 'required' => false,
                 'label' => _cl('historico.cadastro.serie')
-            )
+            ]
         );
 
-        $this->inputsHelper()->dynamic(array('turma', 'matricula'), array('required' => false));
+        $this->inputsHelper()->dynamic(['turma', 'matricula'], ['required' => false]);
 
         $this->campoCheck(
-            "alunos_dependencia",
-            "Processar somente hist&oacute;ricos de depend&ecirc;ncias",
+            'alunos_dependencia',
+            'Processar somente hist&oacute;ricos de depend&ecirc;ncias',
             null,
             null,
             false,
             false,
             false,
-            "Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia."
+            'Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia.'
         );
 
         $campoPosicao = '';
 
         if ($this->validaControlePosicaoHistorico()) {
-            $campoPosicao = "
-            <tr class='tr_posicao'>
-                <td><label for='posicao'>".Portabilis_String_Utils::toLatin1('Posição') ." *</label><br>
-                <sub style='vertical-align:top;'>".Portabilis_String_Utils::toLatin1("Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2")."</sub></td>
-                <td colspan='2'><input type='text' id='posicao' name='posicao' class='obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric'></input></td>
-            </tr>";
+            $campoPosicao = '
+            <tr class=\'tr_posicao\'>
+                <td><label for=\'posicao\'>' . Portabilis_String_Utils::toLatin1('Posição') . ' *</label><br>
+                <sub style=\'vertical-align:top;\'>' . Portabilis_String_Utils::toLatin1('Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2') . '</sub></td>
+                <td colspan=\'2\'><input type=\'text\' id=\'posicao\' name=\'posicao\' class=\'obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric\'></input></td>
+            </tr>';
         }
 
         $resourceOptionsTable = "<table id='resource-options' style='padding: 20px 0;' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
@@ -191,70 +194,70 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 </td>
             </tr>
 
-            " . $campoPosicao . "
+            " . $campoPosicao . '
 
             <tr>
-                <td><label for='registro'>Registro (arquivo)</label></td>
-                <td colspan='2'><input type='text' id='registro' name='registro'></input></td>
+                <td><label for=\'registro\'>Registro (arquivo)</label></td>
+                <td colspan=\'2\'><input type=\'text\' id=\'registro\' name=\'registro\'></input></td>
             </tr>
 
             <tr>
-                <td><label for='livro'>Livro</label></td>
-                <td colspan='2'><input type='text' id='livro' name='livro'></input></td>
+                <td><label for=\'livro\'>Livro</label></td>
+                <td colspan=\'2\'><input type=\'text\' id=\'livro\' name=\'livro\'></input></td>
             </tr>
 
             <tr>
-                <td><label for='dias-letivos'>Folha</label></td>
-                <td colspan='2'><input type='text' id='folha' name='folha'></input></td>
+                <td><label for=\'dias-letivos\'>Folha</label></td>
+                <td colspan=\'2\'><input type=\'text\' id=\'folha\' name=\'folha\'></input></td>
             </tr>
 
             <tr>
-                <td><label for='observacao'>Observa&ccedil;&atilde;o</label></td>
-                <td colspan='2'><textarea id='observacao' name='observacao' cols='60' rows='5'></textarea></td>
+                <td><label for=\'observacao\'>Observa&ccedil;&atilde;o</label></td>
+                <td colspan=\'2\'><textarea id=\'observacao\' name=\'observacao\' cols=\'60\' rows=\'5\'></textarea></td>
             </tr>
 
             <tr>
-                <td><label for='extra-curricular'>Extra curricular</label></td>
-                <td colspan='2'><input type='checkbox' id='extra-curricular' name='extra-curricular'></input></td>
+                <td><label for=\'extra-curricular\'>Extra curricular</label></td>
+                <td colspan=\'2\'><input type=\'checkbox\' id=\'extra-curricular\' name=\'extra-curricular\'></input></td>
             </tr>
 
             <tr>
                                 <td>
-                                        <label for='media-area-conhecimento'>Fechar m&eacute;dia por &aacute;rea de conhecimento</label><br>
-                                        <sub style='vertical-align:top;'>Caso esse campo seja selecionado, será gerado o histórico das áreas de conhecimento e não dos componentes curriculares</sub>
+                                        <label for=\'media-area-conhecimento\'>Fechar m&eacute;dia por &aacute;rea de conhecimento</label><br>
+                                        <sub style=\'vertical-align:top;\'>Caso esse campo seja selecionado, será gerado o histórico das áreas de conhecimento e não dos componentes curriculares</sub>
                                 </td>
-                <td colspan='2'><input type='checkbox' id='media-area-conhecimento' name='media-area-conhecimento'></input></td>
+                <td colspan=\'2\'><input type=\'checkbox\' id=\'media-area-conhecimento\' name=\'media-area-conhecimento\'></input></td>
             </tr>
 
             <tr>
-                <td><label for='processar-media-geral'>Processar m&eacute;dia geral dos alunos</label><br></td>
-                <td colspan='2'><input type='checkbox' id='processar-media-geral' name='processar-media-geral'></input></td>
+                <td><label for=\'processar-media-geral\'>Processar m&eacute;dia geral dos alunos</label><br></td>
+                <td colspan=\'2\'><input type=\'checkbox\' id=\'processar-media-geral\' name=\'processar-media-geral\'></input></td>
             </tr>
 
-        </table>";
+        </table>';
 
         $this->appendOutput($resourceOptionsTable);
 
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
-            array(
+            [
                 '/modules/Portabilis/Assets/Javascripts/Utils.js',
                 '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
                 '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
                 '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
                 '/modules/HistoricoEscolar/Static/scripts/processamento.js'
-            )
+            ]
         );
     }
 
-    function getSelectGradeCurso()
+    public function getSelectGradeCurso()
     {
         $db = new clsBanco();
-        $sql = "select * from pmieducar.historico_grade_curso where ativo = 1";
+        $sql = 'select * from pmieducar.historico_grade_curso where ativo = 1';
         $db->Consulta($sql);
 
-        $select = "<select id='grade-curso' class='obrigatorio disable-on-search clear-on-change-curso'>";
-        $select .= "<option value=''>Selecione</option>";
+        $select = '<select id=\'grade-curso\' class=\'obrigatorio disable-on-search clear-on-change-curso\'>';
+        $select .= '<option value=\'\'>Selecione</option>';
 
         while ($db->ProximoRegistro()) {
             $record = $db->Tupla();
@@ -262,16 +265,16 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         }
 
         $select .= '</select>';
+
         return $select;
     }
 
-    function validaControlePosicaoHistorico()
+    public function validaControlePosicaoHistorico()
     {
         $obj = new clsPmieducarInstituicao;
-        //Busca instituicao ativa
+
         $lst = $obj->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
 
         return dbBool($lst[0]['controlar_posicao_historicos']);
     }
 }
-?>

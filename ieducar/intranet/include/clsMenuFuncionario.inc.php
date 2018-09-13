@@ -44,7 +44,7 @@ class clsMenuFuncionario
 {
   var $ref_ref_cod_pessoa_fj = FALSE;
   var $cadastra              = FALSE;
-  var $exclui                = FALSE;
+  var $exclui                = FALSE;
   var $ref_cod_menu_submenu  = FALSE;
 
   /**

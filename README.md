@@ -1,3 +1,5 @@
+[![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/coverage.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
+
 # i-Educar
 
 _“Lançando o maior software livre educacional do Brasil!”._
@@ -8,7 +10,7 @@ país por meio da educação. Junte-se a nós!**
 ## Conteúdo
 
 1. [Sobre o i-Educar](#sobre-o-i-educar)
-2. [Comunicação](#comunicacao)
+2. [Comunicação](#comunicação)
 3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
 4. [Como contribuir](#como-contribuir)
 5. [Instalação](#instalação)
@@ -96,11 +98,15 @@ o Docker Compose para criar os containers da aplicação:
 $ git clone https://github.com/portabilis/i-educar.git i-educar
 $ cd i-educar
 $ cp .env.example .env
+$ cp ieducar/configuration/ieducar.ini.sample ieducar/configuration/ieducar.ini
+$ cp phinx.php.sample phinx.php
 $ docker-compose up -d
 ```
 
-Depois disto faça uma cópia do arquivo `ieducar/configuration/ieducar.ini.sample`
-para `ieducar/configuration/ieducar.ini` realizando as alterações necessárias.
+Depois disto faça as alterações necessárias nos arquivos de configuração:
+- `.env`
+- `ieducar/configuration/ieducar.ini`
+- `phinx.php`
 
 ### Instalando relatórios
 
@@ -120,11 +126,14 @@ um pacote de mais de 40 relatórios funcionais.
 ### Instalando outras dependências
 
 O i-Educar usa o [Composer](https://getcomposer.org/) para gerenciar suas
-dependências. O Composer já vem pré-instalado na imagem via Docker então para
-instalar as dependências use os seguintes comandos:
+dependências. O Composer já é executado automaticamente para quem utilizar
+docker-compose, basta executar o comando `docker-compose up`.
 
-```terminal
-$ docker-compose exec ieducar_1604 composer install
+Caso queira adicionar novas dependências ao projeto ou rodar algum outro
+comando do composer, execute da seguinte forma na raiz do projeto:
+
+```bash
+docker run -it -v $(pwd):/app composer <seu_comando_aqui>
 ```
 
 ### Inicializando o banco de dados

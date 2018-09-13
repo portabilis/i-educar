@@ -265,6 +265,11 @@ abstract class CoreExt_DataMapper
 
     if (0 < count($whereArg)) {
       foreach ($whereArg as $key => $value) {
+        // Caso $key seja um inteiro ela não representa uma coluna, e apenas nos importamos com o where
+        if (is_integer($key)) {
+            $where[] = sprintf('%s', $value);
+            continue;
+        }
         $whereName = $this->_getTableColumn($key);
 
         preg_match('/[<,=,>]/', $value, $matches);
@@ -317,8 +322,9 @@ abstract class CoreExt_DataMapper
     $where = array();
 
      if (!is_array($pkey)){
+       $keys = array_keys($this->_primaryKey);
        $pkey = array(
-         array_shift(array_keys($this->_primaryKey)) => $pkey
+         array_shift($keys) => $pkey
        );
      }
 
@@ -617,7 +623,8 @@ abstract class CoreExt_DataMapper
       $tmpEntry = $this->find($pkSave);
       $newInfo = $tmpEntry->toDataArray();
 
-      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift(array_keys($this->_primaryKey))));
+      $keys = array_keys($this->_primaryKey);
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift($keys)));
       $auditoria->alteracao($oldInfo, $newInfo);
     }
 

@@ -1,0 +1,90 @@
+.mailContainer {
+  height: auto;
+  background-image: linear-gradient(67deg, #2696ff, #8100f7);
+  padding-bottom: 160px;
+}
+
+.mailContainer .homeWrapper {
+  padding-top: 161px;
+}
+
+#conversion {
+  display: flex;
+  width: 100%;
+  padding-top: 79px;
+  justify-content: center;
+  align-items:flex-end;
+  flex-wrap: wrap;
+}
+
+#conversion div {
+  flex-grow: 2;
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+#conversion button {
+  height: 54px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  width: 100px;
+  font-family: $titleFont;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 1px;
+  color: #2696ff;
+  margin-bottom: 10px;
+}
+
+#conversion input {
+  display: block;
+  height: 54px;
+  opacity: 0.9;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 0;
+  font-family: $descriptionFont;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #ffffff;
+  width: 100%;
+  padding: 16px;
+}
+
+#conversion label {
+  font-family: $titleFont;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+#conversionSuccess p{
+  font-family: $titleFont;
+  font-size: 18px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #ffffff;
+}

@@ -1,0 +1,208 @@
+
+
+#mapBlock .wrapper{
+  height: 704px;
+  padding: 0;
+  display: flex;
+}
+
+#mapBlock.paddingTop {
+  padding-top: 0;
+}
+
+#map {
+  height: auto;
+  flex-grow: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
+}
+
+.numbers {
+  flex-grow: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
+  padding-right: 25px;
+  padding-left: 20px;
+}
+
+.numbersBoxStudents {
+  height: 140px;
+  background-color: #2c91f7;
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.numbersBoxCities h2,
+.numbersBoxSchools h2,
+.numbersBoxStudents h2 {
+  font-size: 50px;
+  opacity: 0.7;
+  font-family: $titleFont;
+  line-height: 1.5;
+  margin: 0;
+}
+.numbersBoxCities p,
+.numbersBoxSchools p,
+.numbersBoxStudents p {
+  font-size: 18px;
+  font-family: $descriptionFont;
+  line-height: 1.5;
+  font-weight: 500;
+  margin: 0;
+}
+
+
+.mapsBlockHeader h2 p{
+  font-family: $titleFont;
+  font-size: 32px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #4e5666;
+
+}
+.mapsBlockHeader p{
+  font-family: $descriptionFont;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #4e5666;
+}
+.mapsBlockHeader h2{
+  margin: 0;
+}
+
+@media only screen and (min-width: 797px) {
+  .numbersBoxCities {
+    height: 140px;
+    background-color: #f8fbff;
+    margin-bottom: 22px;
+    margin-top: 67px;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+
+  .numbersBoxSchools {
+    height: 140px;
+    background-color: #3ee4cf;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+}
+
+@media only screen and (max-width: 796px) {
+  .numbersBoxCities {
+    height: 140px;
+    background-color: #f8fbff;
+    margin-bottom: 10px;
+    margin-top: 67px;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+
+  .numbersBoxSchools {
+    height: 140px;
+    background-color: #3ee4cf;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+}
+
+
+@media only screen and (min-width: 1046px) {
+  .numbersBoxCities {
+    height: 140px;
+    background-color: #f8fbff;
+    margin-bottom: 35px;
+    margin-top: 67px;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+
+  .numbersBoxSchools {
+    height: 140px;
+    background-color: #3ee4cf;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 35px;
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 764px) {
+  #mapBlock .wrapper{
+    flex-flow: column;
+  }
+
+  .numbersBoxStudents {
+    height: 140px;
+    background-color: #2c91f7;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .numbers {
+    padding-right: 20px;
+  }
+
+  #map {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  #mapBlock .wrapper {
+    height: 1250px;
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 517px) {
+  #mapBlock .wrapper {
+    height: 1280px;
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 394px) {
+  #mapBlock .wrapper {
+    height: 1350px;
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 377px) {
+  #mapBlock .wrapper {
+    height: 1420px;
+  }
+}

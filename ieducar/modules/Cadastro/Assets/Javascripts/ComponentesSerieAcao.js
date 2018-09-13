@@ -3,21 +3,22 @@ var serieId      =  $j('#serie_id').val();
 submitButton.removeAttr('onclick');
 
 submitButton.click(function(){
-    var componentesInput = $j('[name*=carga_horaria]');
-    var arrayComponentes = [];
-    componentesInput.each(function(i) {
-        nome      = this.name;
-        key       = nome.split('componentes[').pop().split('][').shift();
-        check     = $j('[name="componentes['+key+'][id]"]').is(':checked');
-        id        = $j('[name="componentes['+key+'][id]"]').val();
-        carga     = $j('[name="componentes['+key+'][carga_horaria]"]').val();
-        tipo_nota = $j('[name="componentes['+key+'][tipo_nota]"]').val();
+  var componentesInput = $j('[name*=carga_horaria]');
+  var arrayComponentes = [];
+  componentesInput.each(function(i) {
+    let nome      = this.name;
+    let key       = nome.split('componentes[').pop().split('][').shift();
+    let check     = $j('[name="componentes['+key+'][id]"]').is(':checked');
+    let id        = $j('[name="componentes['+key+'][id]"]').val();
+    let carga     = $j('[name="componentes['+key+'][carga_horaria]"]').val();
+    let tipo_nota = $j('[name="componentes['+key+'][tipo_nota]"]').val();
+    let anos_letivos = $j('[name="componentes['+key+'][anos_letivos]"]').val() || [];
 
-        if(check){
-            arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota});
-        }
-    });
-    atualizaComponentesSerie(arrayComponentes);
+    if(check){
+      arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota, anos_letivos: anos_letivos});
+    }
+  });
+  atualizaComponentesSerie(arrayComponentes);
 });
 
 function atualizaComponentesSerie(componentes){
@@ -40,14 +41,14 @@ function atualizaComponentesSerie(componentes){
 }
 
 function handleAtualizaComponentesSerie(response) {
-    
+
         if (response.msgErro) {
             messageUtils.error(response.msgErro);
         }else{
             var nmSerie = $j('#ref_cod_serie option:selected').map(function() {
                 return this.text;
             }).get();
-    
+
             if(response.insert){
                 if (confirm('Você adicionou ' + response.insert.length + ' novo(s) componente(s) na série ' + nmSerie + '. Deseja aplicar para todas as escolas?')) {
                     adicionaComponentesNasEscolas(response.insert);
@@ -58,9 +59,9 @@ function handleAtualizaComponentesSerie(response) {
             messageUtils.success('Componentes da série alterados com sucesso!');
         }
     }
-    
+
 function handleCompleteAtualizaComponentesSerie(){
-    
+
 }
 
 function handleErroAtualizaComponentesSerie(response){
