@@ -186,9 +186,16 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
 
-
         $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null,null,null,null,null,null,null, 0 );
         $modulo = $obj->detalhe();
+
+        if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma())
+        {
+            $this->mensagem = "Exclusão não realizada.<br>";
+            $this->url_cancelar = "educar_modulo_det.php?cod_modulo={$modulo["cod_modulo"]}";
+            return false;
+        }
+
         $excluiu = $obj->excluir();
         if ($excluiu)
         {
