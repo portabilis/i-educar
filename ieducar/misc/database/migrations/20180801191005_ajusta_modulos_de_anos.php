@@ -106,7 +106,7 @@ class AjustaModulosDeAnos extends AbstractMigration
 
         $data = [
             'ref_usuario_cad' => "'1'",
-            'nm_tipo' => "'$map[$steps]'" ?? sprintf("'Módulo %d etapas'", $steps),
+            'nm_tipo' => !empty($map[$steps]) ? "'$map[$steps]'" : sprintf("'Módulo %d etapas'", $steps),
             'num_meses' => "'1'",
             'num_semanas' => "'1'",
             'data_cadastro' => 'NOW()',
