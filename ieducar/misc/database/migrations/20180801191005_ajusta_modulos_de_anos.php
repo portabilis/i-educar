@@ -27,6 +27,8 @@ class AjustaModulosDeAnos extends AbstractMigration
      */
     public function change()
     {
+        $this->execute("SELECT SETVAL('pmieducar.modulo_cod_modulo_seq', (SELECT MAX(cod_modulo) + 1 FROM pmieducar.modulo));");
+
         $query = "
             select
                 ref_ano,
@@ -70,13 +72,18 @@ class AjustaModulosDeAnos extends AbstractMigration
 
                 if ((int)$m['num_etapas'] === (int)$record['etapas']) {
                     $module = (int)$mod;
+                    break;
                 }
             }
 
             if ($module === 0) {
-                $m = $this->fetchRow(sprintf('select * from pmieducar.modulo where num_etapas = %d', $record['etapas']));
+                $m = $this->fetchRow(sprintf('select * from pmieducar.modulo where num_etapas = %d limit 1', $record['etapas']));
 
                 if ($m) {
+                    if ((bool)$m['ativo'] === false) {
+                        $this->execute(sprintf('update pmieducar.modulo set ativo = 1 where cod_modulo = %d;', (int)$m['cod_modulo']));
+                    }
+
                     $module = (int)$m['cod_modulo'];
                 }
             }

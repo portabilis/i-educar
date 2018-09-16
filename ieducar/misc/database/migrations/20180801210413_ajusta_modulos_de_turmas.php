@@ -31,7 +31,6 @@ class AjustaModulosDeTurmas extends AbstractMigration
 
         $generator = function () {
             $id = 0;
-            $result = false;
 
             do {
                 $query = sprintf(
@@ -85,13 +84,18 @@ class AjustaModulosDeTurmas extends AbstractMigration
 
                 if ((int)$m['num_etapas'] === (int)$record['etapas']) {
                     $module = (int)$mod;
+                    break;
                 }
             }
 
             if ($module === 0) {
-                $m = $this->fetchRow(sprintf('select * from pmieducar.modulo where num_etapas = %d', $record['etapas']));
+                $m = $this->fetchRow(sprintf('select * from pmieducar.modulo where num_etapas = %d limit 1', $record['etapas']));
 
                 if ($m) {
+                    if ((bool)$m['ativo'] === false) {
+                        $this->execute();
+                    }
+
                     $module = (int)$m['cod_modulo'];
                 }
             }
@@ -120,7 +124,7 @@ class AjustaModulosDeTurmas extends AbstractMigration
 
         $data = [
             'ref_usuario_cad' => "'1'",
-            'nm_tipo' => "'$map[$steps]'" ?? sprintf("'Módulo %d etapas'", $steps),
+            'nm_tipo' => !empty($map[$steps]) ? "'$map[$steps]'" : sprintf("'Módulo %d etapas'", $steps),
             'num_meses' => "'1'",
             'num_semanas' => "'1'",
             'data_cadastro' => 'NOW()',
