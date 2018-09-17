@@ -120,4 +120,9 @@ class Portabilis_Utils_Database {
     $paramsOrOptions['return_only'] = 'first-row';
     return self::fetchPreparedQuery($sql, $paramsOrOptions);
   }
+
+  public static function arrayToPgArray(array $value):string
+  {
+    return "'{" . implode(',', $value) . "}'";
+  }
 }

@@ -148,13 +148,13 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        if(isset($_GET["ref_cod_aluno"]) && isset($_GET["sequencial"])){
+        if (isset($_GET["ref_cod_aluno"], $_GET["sequencial"])) {
             $objCodNomeEscola = new clsPmieducarHistoricoEscolar($_GET["ref_cod_aluno"], $_GET["sequencial"]);
-            $registro = $objCodNomeEscola->getCodNomeEscola();
-            if($registro){
-                $arrRegistro = explode("-", $registro);
-                $nomeEscola = $arrRegistro[0];
-                $codigoEscola = $arrRegistro[1];
+            $registro = $objCodNomeEscola->detalhe();
+
+            if ($registro) {
+                $nomeEscola = $registro['escola'];
+                $codigoEscola = $registro['ref_cod_escola'];
             }
         }
 
@@ -225,9 +225,11 @@ class indice extends clsCadastro
         $this->campoLista("ref_cod_escola", "Escola", $opcoes, null, '', false, '', '', false, true);
 
     $escola_options = array(
-      'required'    => false,
-      'label'       => 'Nome da escola',
-      'value'       => $this->escola
+      'required' => false,
+      'label' => 'Nome da escola',
+      'value' => $this->escola,
+      'max_length' => 255,
+      'size' => 80,
     );
     $this->inputsHelper()->text('escola', $escola_options);
 

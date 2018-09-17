@@ -20,6 +20,7 @@ class ComponentesSerieController extends ApiCoreController
             $arrayComponentes[$key]['id'] = $componente->id;
             $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
             $arrayComponentes[$key]['tipo_nota'] = $componente->tipo_nota;
+            $arrayComponentes[$key]['anos_letivos'] = $componente->anos_letivos;
         }
 
         $obj = new clsModulesComponenteCurricularAnoEscolar(null, $serieId, null, null, $arrayComponentes);
