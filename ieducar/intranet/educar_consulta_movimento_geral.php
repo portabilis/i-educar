@@ -77,7 +77,7 @@ class indice extends clsCadastro
 
         $url = '/intranet/educar_consulta_movimento_geral_lst.php?' . $queryString;
 
-        $this->redirect($url);
+        $this->simpleRedirect($url);
     }
 }
 
