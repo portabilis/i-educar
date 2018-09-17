@@ -79,7 +79,9 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
         $dataFile = $this->getReportsPath() . time() . '-' . mt_rand();
         $outputFile = $this->getReportsPath() . time() . '-' . mt_rand();
-        $jasperFile = $this->getReportsPath() . $report->templateName() . '.jasper';
+        $filename = $this->getReportsPath() . $report->templateName();
+        $jasperFile = $filename . '.jasper';
+        $jrxmlFile = $filename . '.jrxml';
 
         foreach ($report->args as $key => $value) {
             if (is_bool($value)) {
@@ -89,9 +91,22 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
         $builder = new JasperPHP();
 
+        // Compila o arquivo .jrxml caso o arquivo .jasper não exista.
+
+        if (file_exists($jasperFile) === false) {
+            $builder->compile($jrxmlFile, $filename, false, false)->execute();
+        }
+
+        // Com o intuito de manter a compatibilidade até finalizar a migração
+        // de todos os relatórios será utilizado o método useJson() para
+        // informar qual tipo de data source será utilizado.
+
         if ($report->useJson()) {
 
-            file_put_contents($dataFile, json_encode($report->getJsonData()));
+            $data = $report->getJsonData();
+            $json = json_encode($data);
+
+            file_put_contents($dataFile, $json);
 
             $report->addArg('source', $dataFile);
 
@@ -104,7 +119,8 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
                     'driver'=>'json',
                     'json_query' => $report->getJsonQuery(),
                     'data_file' =>  $dataFile
-                ]
+                ],
+                false // Não executar em background garante que o erro será retornado
             )->execute();
 
             unlink($dataFile);
@@ -123,7 +139,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
                     'port' => $this->settings['db']->port,
                     'password' => $this->settings['db']->password,
                 ],
-                false
+                false // Não executar em background garante que o erro será retornado
             )->execute();
         }
 
