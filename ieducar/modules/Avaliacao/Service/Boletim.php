@@ -1,32 +1,8 @@
 <?php
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuído na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     Avaliacao
- * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
- * @version     $Id$
- */
+
+use iEducar\Modules\Stages\Exceptions\MissingStagesException;
+use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
+use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
 
 require_once 'CoreExt/Configurable.php';
 require_once 'CoreExt/Entity.php';
@@ -36,25 +12,6 @@ require_once 'App/Model/MatriculaSituacao.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once  'ComponenteCurricular/Model/TipoNotaComponenteSerie.php';
 
-/**
- * Avaliacao_Service_Boletim class.
- *
- * Implementa uma API orientada a serviços (Service Layer Pattern
- * {@link http://martinfowler.com/eaaCatalog/serviceLayer.html}).
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     Avaliacao
- * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
- * @todo        Substituir todos os usos literais de 'Rc' e 'An' por constantes
- *              ou por um novo CoreExt_Enum
- * @todo        Criar método que retorna o conjunto de faltas de acordo com o
- *              tipo de presença da regra, refatorando a série de condicionais
- *              existentes em métodos como getSituacaoFaltas()
- * @version     @@package_version@@
- */
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
   /**
@@ -3372,6 +3329,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
      *
      * @return bool
      *
+     * @throws MissingStagesException
      * @throws Exception
      */
     public function verificaNotasLancadasNasEtapasAnteriores($etapaId, $componenteCurricularId)
@@ -3382,6 +3340,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $matriculaId = $this->getOption('matricula');
         $serieId = $this->getOption('ref_cod_serie');
         $escolaId = $this->getOption('ref_cod_escola');
+        $instituicao = App_Model_IedFinder::getInstituicao($regra->instituicao);
 
         // Pelo que eu entendi, caso a opção `definirComponentePorEtapa` é
         // possível lançar notas para etapas futuras.
@@ -3390,24 +3349,57 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             return true;
         }
 
-        // Etapas com dispensa não teram notas, então não devem ser
-        // consideradas como bloqueantes.
-
-        $existeEtapaDispensada = (array) App_Model_IedFinder::validaDispensaPorMatricula(
+        $etapasDispensadas = (array) App_Model_IedFinder::validaDispensaPorMatricula(
             $matriculaId, $serieId, $escolaId, $componenteCurricularId
         );
+
+        $informacoesMatricula = (array) App_Model_IedFinder::getMatricula(
+            $matriculaId
+        );
+
+        $informacoesEtapas = (array) App_Model_IedFinder::getEtapasDaTurma(
+            $informacoesMatricula['ref_cod_turma']
+        );
+
+        $etapasAntesDaEnturmacao = array_filter($informacoesEtapas, function ($etapa) use ($informacoesMatricula) {
+            return $informacoesMatricula['data_enturmacao'] > $etapa['data_fim'];
+        });
+
+        $etapasAntesDaEnturmacao = array_map(function ($etapa) {
+            return $etapa['sequencial'];
+        }, $etapasAntesDaEnturmacao);
+
+        $exigirLancamentosAnteriores = dbBool($instituicao['exigir_lancamentos_anteriores']);
 
         if ($etapaId == 'Rc') {
             $etapaId = $this->getOption('etapas');
         }
 
+        $secretarioDeveLancarNota = false;
+
         for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
 
-            $nota = $this->getNotaAtual($etapa, $componenteCurricularId);
+            // Etapas com dispensa não terão notas, então não devem ser
+            // consideradas como bloqueantes.
 
-            if (in_array($etapa, $existeEtapaDispensada)) {
+            if (in_array($etapa, $etapasDispensadas)) {
                 continue;
             }
+
+            // Se o o parâmetro da instituição "exigir_lancamentos_anteriores"
+            // não estiver ativo e o aluno foi enturmado em uma data posterior
+            // ao fim de uma etapa, o lançamento da nota da etapa anterior não
+            // será considerado bloqueante.
+
+            if (!$exigirLancamentosAnteriores && in_array($etapa, $etapasAntesDaEnturmacao)) {
+                continue;
+            }
+
+            if (in_array($etapa, $etapasAntesDaEnturmacao)) {
+                $secretarioDeveLancarNota = true;
+            }
+
+            $nota = $this->getNotaAtual($etapa, $componenteCurricularId);
 
             $etapaDiferenteOuRecuperacao = $etapa != $etapaId || $etapaId == 'Rc';
 
@@ -3425,10 +3417,21 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             return true;
         }
 
-        throw new \Exception(
-            'Nota somente pode ser lançada após lançar notas nas etapas: ' .
-            join(', ', $etapasSemNotas) . ' deste componente curricular.'
-        );
+        $nomeDaEtapa = 'Etapa';
+
+        if (count($informacoesEtapas)) {
+            $etapa = App_Model_IedFinder::getEtapa($informacoesEtapas[0]['cod_modulo']);
+
+            if ($etapa) {
+                $nomeDaEtapa = $etapa['nm_tipo'];
+            }
+        }
+
+        if ($secretarioDeveLancarNota) {
+            throw new StagesNotInformedByCoordinatorException($etapasSemNotas, $nomeDaEtapa);
+        }
+
+        throw new StagesNotInformedByTeacherException($etapasSemNotas, $nomeDaEtapa);
     }
 
     /**

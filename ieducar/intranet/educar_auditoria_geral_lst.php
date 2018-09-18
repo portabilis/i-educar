@@ -88,7 +88,8 @@ class indice extends clsListagem
 
         $this->addCabecalhos([ 'Matrícula', 'Rotina', 'Operação', 'Valor antigo', 'Valor novo', 'Data']);
 
-        $auditoria = new clsModulesAuditoriaGeral();
+        // FIXME #parameters
+        $auditoria = new clsModulesAuditoriaGeral(null, null);
         $auditoria->setOrderby('data_hora DESC');
         $auditoria->setLimite($this->limite, $this->offset);
         $auditoriaLst = $auditoria->lista(

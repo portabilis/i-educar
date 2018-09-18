@@ -45,9 +45,10 @@ class clsPmieducarEscolaSerie
     var $ativo;
     var $hora_inicio_intervalo;
     var $hora_fim_intervalo;
-  var $bloquear_enturmacao_sem_vagas;
-  var $bloquear_cadastro_turma_para_serie_com_vagas;
+    var $bloquear_enturmacao_sem_vagas;
+    var $bloquear_cadastro_turma_para_serie_com_vagas;
     var $codUsuario;
+    var $anos_letivos;
 
     // propriedades padrao
 
@@ -113,13 +114,13 @@ class clsPmieducarEscolaSerie
      *
      * @return object
      */
-    function __construct( $ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null )
+    function __construct( $ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null, $anos_letivos = [] )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}escola_serie";
 
-        $this->_campos_lista = $this->_todos_campos = "es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas";
+        $this->_campos_lista = $this->_todos_campos = "es.ref_cod_escola, es.ref_cod_serie, es.ref_usuario_exc, es.ref_usuario_cad, es.hora_inicial, es.hora_final, es.data_cadastro, es.data_exclusao, es.ativo, es.hora_inicio_intervalo, es.hora_fim_intervalo, es.bloquear_enturmacao_sem_vagas, es.bloquear_cadastro_turma_para_serie_com_vagas, ARRAY_TO_JSON(es.anos_letivos) AS anos_letivos ";
 
         if( is_numeric( $ref_usuario_cad ) )
         {
@@ -263,6 +264,10 @@ class clsPmieducarEscolaSerie
         {
             $this->hora_fim_intervalo = $hora_fim_intervalo;
         }
+        if( is_array( $anos_letivos ) )
+        {
+            $this->anos_letivos = $anos_letivos;
+        }
 
     $this->bloquear_enturmacao_sem_vagas = $bloquear_enturmacao_sem_vagas;
     $this->bloquear_cadastro_turma_para_serie_com_vagas = $bloquear_cadastro_turma_para_serie_com_vagas;
@@ -344,6 +349,14 @@ class clsPmieducarEscolaSerie
                 $gruda = ", ";
             }
 
+
+            if( is_array( $this->anos_letivos ) )
+            {
+                $campos.= "{$gruda}anos_letivos";
+                $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
+                $grupo = ", ";
+            }
+
             $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return true;
         }
@@ -413,6 +426,11 @@ class clsPmieducarEscolaSerie
 
             if(is_numeric( $this->bloquear_cadastro_turma_para_serie_com_vagas)) {
                 $set .= "{$gruda}bloquear_cadastro_turma_para_serie_com_vagas = '{$this->bloquear_cadastro_turma_para_serie_com_vagas}'";
+                $gruda = ", ";
+            }
+            if( is_array( $this->anos_letivos ) )
+            {
+                $set .= "{$gruda} anos_letivos = " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
                 $gruda = ", ";
             }
 

@@ -234,7 +234,8 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
 
         foreach ($values as $value) {
             $value = $formula->execFormulaMedia($value);
-            $rounded = $this->round($value);
+            // FIXME #parameters
+            $rounded = $this->round($value, null);
 
             if (is_null($best)) {
                 $best = $rounded;
