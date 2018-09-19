@@ -44,7 +44,7 @@ class EmailTracker implements Tracker
 
     protected function getHost()
     {
-        return $_SERVER['HTTP_HOST'] ?: null;
+        return $_SERVER['HTTP_HOST'] ?? null;
     }
 
     private function getRecipient()
