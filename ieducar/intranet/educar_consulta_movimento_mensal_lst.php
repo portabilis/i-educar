@@ -57,91 +57,201 @@ class indice extends clsListagem
         $data = (new MovimentoMensalQueryFactory(new \PDO($connectionString), $params))
             ->getData();
 
-        $this->addCabecalhos(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+        $this->titulo = 'Parâmetros';
+        $this->acao = 'go("/intranet/educar_consulta_movimento_mensal.php")';
+        $this->nome_acao = "Nova consulta";
 
-        $this->addLinhas([
-            'tipo' => 'html-puro',
-            'conteudo' => '
-                <tr>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Série</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Turma</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Turno</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Matrícula inicial</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="14">Alunos</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Matrícula final</td>
-                </tr>
-                
-                <tr>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">T</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Transf.</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Aband.</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Admitido</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Óbito</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Reclassif.</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Troca (entrou)</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Troca (saiu)</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">T</td>
-                </tr>
-                
-                <tr>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">F</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">M</td>
-                    <td class="formdktd" style="font-weight: bold; text-align: center;">F</td>
-                </tr>
-            '
+        $escola = 'Todas';
+        $curso = 'Todos';
+        $serie = 'Todas';
+        $turma = 'Todas';
+
+        if (!empty($params['escola'])) {
+            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery("
+                select
+                    juridica.fantasia
+                from
+                    pmieducar.escola
+                inner join
+                    cadastro.juridica on juridica.idpes = escola.ref_idpes
+                where true
+                    and escola.cod_escola = {$params['escola']}
+                limit 1;
+            ");
+
+            $escola = $dados[0]['fantasia'];
+        }
+
+        if (!empty($params['curso'])) {
+            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery(
+                "select nm_curso from pmieducar.curso where cod_curso = {$params['curso']};"
+            );
+
+            $curso = $dados[0]['nm_curso'];
+        }
+
+        if (!empty($params['serie'])) {
+            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery(
+                "select nm_serie from pmieducar.serie where cod_serie = {$params['serie']};"
+            );
+
+            $serie = $dados[0]['nm_serie'];
+        }
+
+        if (!empty($params['turma'])) {
+            $dados = (array)Portabilis_Utils_Database::fetchPreparedQuery(
+                "select nm_turma from pmieducar.turma where cod_turma = {$params['turma']};"
+            );
+
+            $turma = $dados[0]['nm_turma'];
+        }
+
+        $this->addCabecalhos([
+            'Ano',
+            'Escola',
+            'Curso',
+            'Série',
+            'Turma',
+            'Data inicial',
+            'Data final'
         ]);
 
-        $template = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoMensal" data-params=\'%s\' data-tipo="%s">%d</a>';
+        $this->addLinhas([
+            filter_var($params['ano'], FILTER_SANITIZE_STRING),
+            $escola,
+            $curso,
+            $serie,
+            $turma,
+            filter_var($this->getQueryString('data_inicial'), FILTER_SANITIZE_STRING),
+            filter_var($this->getQueryString('data_final'), FILTER_SANITIZE_STRING)
+        ]);
 
-        foreach ($data as $item) {
-            $paramsCopy = $params;
-            $paramsCopy['serie'] = $item['cod_serie'];
-            $paramsCopy['turma'] = $item['cod_turma'];
-            $paramsCopy = json_encode($paramsCopy);
+        $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoMensal" data-params=\'%s\' data-tipo="%s">%d</a>';
 
-            $this->addLinhas([
-                $item['nm_serie'],
-                $item['nm_turma'],
-                $item['turno'],
-                sprintf($template, $paramsCopy, 'mat_ini_m', $item['mat_ini_m']),
-                sprintf($template, $paramsCopy, 'mat_ini_f', $item['mat_ini_f']),
-                $item['mat_ini_t'],
-                sprintf($template, $paramsCopy, 'mat_transf_m', $item['mat_transf_m']),
-                sprintf($template, $paramsCopy, 'mat_transf_f', $item['mat_transf_f']),
-                sprintf($template, $paramsCopy, 'mat_aband_m', $item['mat_aband_m']),
-                sprintf($template, $paramsCopy, 'mat_aband_f', $item['mat_aband_f']),
-                sprintf($template, $paramsCopy, 'mat_admit_m', $item['mat_admit_m']),
-                sprintf($template, $paramsCopy, 'mat_admit_f', $item['mat_admit_f']),
-                sprintf($template, $paramsCopy, 'mat_falecido_m', $item['mat_falecido_m']),
-                sprintf($template, $paramsCopy, 'mat_falecido_f', $item['mat_falecido_f']),
-                sprintf($template, $paramsCopy, 'mat_reclassificados_m', $item['mat_reclassificados_m']),
-                sprintf($template, $paramsCopy, 'mat_reclassificados_f', $item['mat_reclassificados_f']),
-                sprintf($template, $paramsCopy, 'mat_trocae_m', $item['mat_trocae_m']),
-                sprintf($template, $paramsCopy, 'mat_trocae_f', $item['mat_trocae_f']),
-                sprintf($template, $paramsCopy, 'mat_trocas_m', $item['mat_trocas_m']),
-                sprintf($template, $paramsCopy, 'mat_trocas_f', $item['mat_trocas_f']),
-                $item['mat_final_m'],
-                $item['mat_final_f'],
-                $item['mat_final_t'],
-            ]);
-
-            Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/consulta_movimentos.js']);
+        foreach ($data as $key => $value) {
+            foreach ($value as $k => $v) {
+                switch ($k) {
+                    case 'cod_serie':
+                    case 'nm_serie':
+                    case 'nm_turma':
+                    case 'turno':
+                    case 'mat_ini_t':
+                    case 'mat_final_m':
+                    case 'mat_final_f':
+                    case 'mat_final_t':
+                        continue;
+                        break;
+                    default:
+                        $paramsCopy = $params;
+                        $paramsCopy['serie'] = $value['cod_serie'];
+                        $paramsCopy['turma'] = $value['cod_turma'];
+                        $paramsCopy = json_encode($paramsCopy);
+                        $data[$key][$k] = sprintf($linkTemplate, $paramsCopy, $k, $v);
+                }
+            }
         }
+
+        $data = json_encode($data);
+
+        $tableScript = <<<JS
+(function () {
+  let paramsTable = document.querySelectorAll('#form_resultado .tablelistagem')[0];
+  paramsTable.setAttribute('style', 'width: 100%;');
+  
+  let data = {$data};
+  let table = [];
+  
+  table.push('<table class="tablelistagem" style="width: 100%; margin-bottom: 100px;" cellspacing="1" cellpadding="4" border="0">');
+    table.push('<tr>');
+      table.push('<td class="titulo-tabela-listagem" colspan="23">Resultados</td>');
+    table.push('</tr>');
+
+    table.push('<tr>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Série</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Turma</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Turno</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Matrícula inicial</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="14">Alunos</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Matrícula final</td>');
+    table.push('</tr>');
+    
+    table.push('<tr>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">T</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Transf.</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Aband.</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Admitido</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Óbito</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Reclassif.</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Troca (entrou)</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Troca (saiu)</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">T</td>');
+    table.push('</tr>');
+    
+    table.push('<tr>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
+    table.push('</tr>');
+
+  for (let i = 0; i < data.length; i++) {
+    let item = data[i];
+    let cellClass = ((i % 2) === 0) ? 'formlttd' : 'formmdtd';
+
+    table.push('<tr>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.nm_serie + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.nm_turma + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.turno + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_ini_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_ini_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_ini_t + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_transf_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_transf_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_aband_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_aband_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_admit_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_admit_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_falecido_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_falecido_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificados_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificados_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocas_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocas_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_t + '</td>');
+    table.push('</tr>');
+  }
+
+  table.push('</table>');
+  
+  let base = document.querySelectorAll('#corpo')[0];
+  let wrapper= document.createElement('div');
+  wrapper.innerHTML = table.join('');
+  let tableObj = wrapper.firstChild;
+  
+  base.appendChild(tableObj);
+})();
+JS;
+
+        Portabilis_View_Helper_Application::embedJavascript($this, $tableScript, false);
+        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/consulta_movimentos.js']);
     }
 }
 
