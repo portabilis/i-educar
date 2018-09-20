@@ -254,7 +254,8 @@ class indice extends clsCadastro
 
       $codEscolaRedeEnsino = $this->getOrCreateRedeDeEnsino();
 
-      $codEscola = $this->createEscola($localizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor);
+      // FIXME #parameters
+      $codEscola = $this->createEscola($localizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor, null);
 
       $this->createEscolaAnoLetivo($codEscola, $dataInicioAnoLetivo, $dataFimAnoLetivo);
 

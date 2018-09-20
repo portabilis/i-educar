@@ -188,7 +188,8 @@ class indice extends clsCadastro
             foreach ($turmas->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->ano) as $reg) {
                 $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
                 $professorTurmaId = $obj->cadastra();
-                $professorTurma->gravaComponentes($professorTurmaId);
+                // FIXME #parameters
+                $professorTurma->gravaComponentes($professorTurmaId, null);
             }
         }
 

@@ -139,8 +139,11 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
   // helpers
 
   protected function validator() {
-    if (! isset($this->_validator))
-      $this->_validator = new Portabilis_Validator();
+    if (! isset($this->_validator)) {
+        // FIXME #parameters
+        $messenger = null;
+        $this->_validator = new Portabilis_Validator($messenger);
+    }
 
     return $this->_validator;
   }
