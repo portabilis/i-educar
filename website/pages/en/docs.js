@@ -93,24 +93,24 @@ class Docs extends React.Component {
         <Block layout='threeColumn' className='docsContainer' classNameGrid='docsGrid'>
         {[
           {
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt sed lectus non auctor. Duis eu vulputate neque, eu eleifend justo. Curabitur eleifend nisi eu porta laoreet.',
+            content: 'É professor ou secretário de escola? Consulte o manual do i-Educar e saiba, passo a passo, como utilizar todas suas funções, aproveitando-o ao máximo.',
             image: imgUrl('funcionalidades/book.svg'),
             imageAlign: 'top',
-            title: 'Professores',
+            title: 'Usuário',
             link: docUrl("user-intro"),
           },
           {
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt sed lectus non auctor. Duis eu vulputate neque, eu eleifend justo. Curabitur eleifend nisi eu porta laoreet.',
+            content: 'Um guia para tornar a gestão do i-Educar mais fácil e intuitiva.',
             image: imgUrl('funcionalidades/book.svg'),
             imageAlign: 'top',
-            title: 'Administradores',
+            title: 'Administradores [Em Breve]',
             link: docUrl("admin-intro"),
           },
           {
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt sed lectus non auctor. Duis eu vulputate neque, eu eleifend justo. Curabitur eleifend nisi eu porta laoreet.',
+            content: ' Faça parte da comunidade do maior software aberto de gestão escolar do Brasil e ajude na democratização da tecnologia para a educação pública. Saiba como adotar, customizar e contribuir com o desenvolvimento do i-Educar.',
             image: imgUrl('funcionalidades/book.svg'),
             imageAlign: 'top',
-            title: 'Desenvolvedores',
+            title: 'Desenvolvedores [Em Breve]',
             link: docUrl("dev-intro"),
           }
         ]}

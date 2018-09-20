@@ -798,6 +798,13 @@ class clsCadastro extends clsCampos
         return dbBool($instituicao['obrigar_campos_censo']);
     }
 
+    protected function sugestaoAnosLetivos()
+    {
+        $anoAtual = date('Y');
+        $anos = range($anoAtual-10, $anoAtual+1);
+        return array_combine($anos, $anos);
+    }
+
   protected function inputsHelper() {
     if (! isset($this->_inputsHelper))
       $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);

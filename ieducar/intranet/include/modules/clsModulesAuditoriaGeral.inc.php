@@ -58,7 +58,7 @@ class clsModulesAuditoriaGeral
 
   var $_campo_order_by;
 
-  function __construct($rotina, $usuario_id, $codigo = 'null', $id){
+  function __construct($rotina, $usuario_id, $codigo = 'null', $id = null){
     $this->_campos_lista = 'id,
                             codigo,
                             usuario_id,
@@ -145,17 +145,6 @@ class clsModulesAuditoriaGeral
   }
 
   function insereAuditoria($operacao, $valorAntigo, $valorNovo) {
-    if ($operacao == self::OPERACAO_ALTERACAO) {
-      $keysEmComum = array_intersect_key($valorAntigo, $valorNovo);
-
-      $valorAntigo = $this->removeKeysDiferentes($valorAntigo, $keysEmComum);
-      $valorNovo = $this->removeKeysDiferentes($valorNovo, $keysEmComum);
-
-      $keysMesmoValor = $this->keysComValuesIguais($valorAntigo, $valorNovo);
-
-      $valorAntigo = $this->removeKeysIguais($valorAntigo, $keysMesmoValor);
-      $valorNovo = $this->removeKeysIguais($valorNovo, $keysMesmoValor);
-    }
 
     if (!$valorAntigo && !$valorNovo) return;
 

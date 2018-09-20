@@ -166,9 +166,10 @@ font-family: $titleFont;
     .docsGridHeader {
       margin-bottom: 71px;
     }
+
     .docsGrid {
       top: -349px;
-      height: 297px;
+      height: 338px;
     }
 
     .docsText {

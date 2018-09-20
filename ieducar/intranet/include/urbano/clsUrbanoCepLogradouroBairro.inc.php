@@ -394,7 +394,6 @@ class clsUrbanoCepLogradouroBairro
         if( is_numeric( $this->idbai ) && is_numeric( $this->idlog ) && is_numeric( $this->cep ) )
         {
             $this->cep == '' ? 0 : $this->cep;
-            var_dump($this->cep);die;
             $db = new clsBanco();
             $set = "";
             if( is_numeric( $this->idpes_rev ) )

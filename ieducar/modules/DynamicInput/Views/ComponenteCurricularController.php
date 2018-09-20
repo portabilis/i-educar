@@ -125,6 +125,7 @@ class ComponenteCurricularController extends ApiCoreController
                          t.ativo = 1 and
                          esd.ativo = 1 and
                          al.ativo = 1 and
+                         $2 = ANY(esd.anos_letivos) and
                          (t.ref_cod_disciplina_dispensada <> cc.id OR t.ref_cod_disciplina_dispensada is null) and
                          (case when esd.etapas_especificas = 1 then $3 = ANY (string_to_array(esd.etapas_utilizadas,',')::int[]) else true end)
                    order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
@@ -193,6 +194,7 @@ class ComponenteCurricularController extends ApiCoreController
                          esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and
                          esd.ativo = 1 and
                          al.ativo = 1 and
+                         $2 = ANY(esd.anos_letivos) AND
                          cc.area_conhecimento_id = ac.id
                   order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
 

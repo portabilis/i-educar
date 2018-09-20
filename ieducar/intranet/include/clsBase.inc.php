@@ -29,6 +29,10 @@
  * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
  */
 
+use iEducar\Modules\ErrorTracking\TrackerFactory;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 // Inclui arquivo de bootstrapping
 require_once __DIR__ . '/../../includes/bootstrap.php';
 
@@ -46,7 +50,6 @@ require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
 
-require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
@@ -871,6 +874,11 @@ class clsBase extends clsConfig
             }
         } catch (Exception $e) {
 
+            if ($GLOBALS['coreExt']['Config']->modules->error->track) {
+                $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+                $tracker->notify($e);
+            }
+
             if (getenv('APP_DEBUG')) {
                 throw new \Exception($e->getMessage(), 0, $e);
             }
@@ -885,7 +893,6 @@ class clsBase extends clsConfig
             @session_write_close();
 
             error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
-            (new NotificationMailer)->unexpectedError($e->getMessage());
 
             die("<script>document.location.href = '/module/Error/unexpected';</script>");
         }

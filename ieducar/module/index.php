@@ -31,6 +31,10 @@
  * @version   $Id$
  */
 
+use iEducar\Modules\ErrorTracking\TrackerFactory;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
 require_once '../includes/bootstrap.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'App/Model/IedFinder.php';
@@ -38,8 +42,6 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
 require_once 'CoreExt/Controller/Request.php';
 require_once 'CoreExt/Controller/Front.php';
 require_once 'CoreExt/DataMapper.php';
-
-require_once 'modules/Error/Mailers/NotificationMailer.php';
 
 try
 {
@@ -86,8 +88,12 @@ catch (Exception $e) {
   $_SESSION['last_php_error_file']    = $lastError['file'];
   @session_write_close();
 
+  if ($GLOBALS['coreExt']['Config']->modules->error->track) {
+      $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+      $tracker->notify($e);
+  }
+
   error_log("Erro inesperado (pego em /module/index.php): " . $e->getMessage());
-  (new NotificationMailer)->unexpectedError($e->getMessage());
 
   die("<script>document.location.href = '/module/Error/unexpected';</script>");
 }
