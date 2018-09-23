@@ -27,10 +27,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      */
     public function getReportsPath()
     {
-        $rootPath = dirname(dirname(dirname(dirname(__FILE__))));
-        $reportsPath = $rootPath . '/modules/Reports/ReportSources/Portabilis/';
-
-        return $reportsPath;
+        return $GLOBALS['coreExt']['Config']->report->source_path;
     }
 
     /**
