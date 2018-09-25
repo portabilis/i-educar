@@ -93,7 +93,7 @@ class AjustaModulosDeTurmas extends AbstractMigration
 
                 if ($m) {
                     if ((bool)$m['ativo'] === false) {
-                        $this->execute();
+                        $this->execute(sprintf('update pmieducar.modulo set ativo = 1 where cod_modulo = %d;', (int)$m['cod_modulo']));
                     }
 
                     $module = (int)$m['cod_modulo'];
