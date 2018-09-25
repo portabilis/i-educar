@@ -38,16 +38,20 @@ class Portabilis_View_Helper_Input_Core
 
     protected function inputValue($value = null)
     {
-        if (!$value && isset($this->viewInstance->{$this->inputName()})) {
-            $value = $this->viewInstance->{$this->inputName()};
+        if (!is_null($value)) {
+            return $value;
         }
 
-        return $value;
+        if (isset($this->viewInstance->{$this->inputName()})) {
+            return $this->viewInstance->{$this->inputName()};
+        }
+
+        return null;
     }
 
     protected function inputPlaceholder($inputOptions)
     {
-        return isset($inputOptions['placeholder']) ? $inputOptions['placeholder'] : $inputOptions['label'];
+        return $inputOptions['placeholder'] ?? $inputOptions['label'] ?? null;
     }
 
     protected function fixupPlaceholder($inputOptions)
@@ -57,8 +61,9 @@ class Portabilis_View_Helper_Input_Core
 
         $script = '
             var $input = $j(\'#' . $id . '\');
-            if ($input.is(\':enabled\'))
+            if ($input.is(\':enabled\')) {
                 $input.attr(\'placeholder\', \'' . $placeholder . '\');
+            }
         ';
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $script, $afterReady = true);
@@ -70,6 +75,7 @@ class Portabilis_View_Helper_Input_Core
         // adicionarem mensagens
 
         $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+
         Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
 
         $dependencies = [
@@ -83,7 +89,7 @@ class Portabilis_View_Helper_Input_Core
 
     protected function loadAssets()
     {
-        $rootPath = $_SERVER['DOCUMENT_ROOT'];
+        $rootPath = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
         $style = "/modules/DynamicInput/Assets/Stylesheets/{$this->helperName()}.css";
         $script = "/modules/DynamicInput/Assets/Javascripts/{$this->helperName()}.js";
 
@@ -132,7 +138,7 @@ class Portabilis_View_Helper_Input_Core
 
     protected function getInstituicaoId($instituicaoId = null)
     {
-        if (!is_null($instituicaoId)) {
+        if (!is_null($instituicaoId) && is_numeric($instituicaoId)) {
             return $instituicaoId;
         }
 
@@ -157,11 +163,11 @@ class Portabilis_View_Helper_Input_Core
 
     protected function getEscolaId($escolaId = null)
     {
-        if (!is_null($escolaId)) {
+        if (!is_null($escolaId) && is_numeric($escolaId)) {
             return $escolaId;
         }
 
-        if (isset($this->viewInstance->ref_cod_escola)) {
+        if (isset($this->viewInstance->ref_cod_escola) && is_numeric($this->viewInstance->ref_cod_escola)) {
             return $this->viewInstance->ref_cod_escola;
         }
 
@@ -176,11 +182,11 @@ class Portabilis_View_Helper_Input_Core
 
     protected function getBibliotecaId($bibliotecaId = null)
     {
-        if (!is_null($bibliotecaId)) {
+        if (!is_null($bibliotecaId) && is_numeric($bibliotecaId)) {
             return $bibliotecaId;
         }
 
-        if (isset($this->viewInstance->ref_cod_biblioteca)) {
+        if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             return $this->viewInstance->ref_cod_biblioteca;
         }
 
@@ -195,11 +201,11 @@ class Portabilis_View_Helper_Input_Core
 
     protected function getCursoId($cursoId = null)
     {
-        if (!is_null($cursoId)) {
+        if (!is_null($cursoId) && is_numeric($cursoId)) {
             return $cursoId;
         }
 
-        if (isset($this->viewInstance->ref_cod_curso)) {
+        if (isset($this->viewInstance->ref_cod_curso) && is_numeric($this->viewInstance->ref_cod_curso)) {
             return $this->viewInstance->ref_cod_curso;
         }
 
@@ -208,11 +214,11 @@ class Portabilis_View_Helper_Input_Core
 
     protected function getSerieId($serieId = null)
     {
-        if (!is_null($serieId)) {
+        if (!is_null($serieId) && is_numeric($serieId)) {
             return $serieId;
         }
 
-        if (isset($this->viewInstance->ref_cod_serie)) {
+        if (isset($this->viewInstance->ref_cod_serie) && is_numeric($this->viewInstance->ref_cod_serie)) {
             return $this->viewInstance->ref_cod_serie;
         }
 

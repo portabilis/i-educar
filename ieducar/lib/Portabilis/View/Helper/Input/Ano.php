@@ -6,11 +6,11 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
 {
     protected function inputValue($value = null)
     {
-        if (!is_null($value)) {
+        if (!is_null($value) && is_numeric($value)) {
             return $value;
         }
 
-        if (!empty($this->viewInstance->ano)) {
+        if (isset($this->viewInstance->ano) && is_numeric($this->viewInstance->ano)) {
             return $this->viewInstance->ano;
         }
 

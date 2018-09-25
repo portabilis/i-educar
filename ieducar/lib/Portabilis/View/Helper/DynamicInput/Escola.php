@@ -22,7 +22,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
         $instituicaoId = $this->getInstituicaoId($options['instituicaoId'] ?? null);
         $userId = $this->getCurrentUserId();
 
-        if ($instituicaoId and empty($resources)) {
+        if ($instituicaoId && empty($resources)) {
             $permissao = new clsPermissoes();
             $nivel = $permissao->nivel_acesso($userId);
 

@@ -7,6 +7,8 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/CoreExt/Controller/Request.php';
+require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 
 class clsIndexBase extends clsBase
 {
@@ -1058,46 +1060,7 @@ class indice extends clsCadastro
         $obj_transferencia->edita();
     }
 
-    public function desativaEnturmacoesMatricula($matriculaId)
-    {
-        $result = true;
-        $enturmacoes = new clsPmieducarMatriculaTurma();
 
-        $enturmacoes = $enturmacoes->lista(
-            $matriculaId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
-        );
-
-        if ($enturmacoes) {
-            foreach ($enturmacoes as $enturmacao) {
-                $enturmacao = new clsPmieducarMatriculaTurma(
-                    $matriculaId,
-                    $enturmacao['ref_cod_turma'],
-                    $this->pessoa_logada,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    $enturmacao['sequencial']
-                );
-
-                $enturmacao->removerSequencial = true;
-                $detEnturmacao = $enturmacao->detalhe();
-                $detEnturmacao = $detEnturmacao['data_enturmacao'];
-                $enturmacao->data_enturmacao = $detEnturmacao;
-
-                if ($result && !$enturmacao->edita()) {
-                    $result = false;
-                }
-            }
         }
 
         if (!$result) {
