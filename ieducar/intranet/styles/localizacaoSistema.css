@@ -49,7 +49,8 @@
 
 #localizacao .pagina_atual {
   color: #000;
-  cursor: text;    
+  cursor: text;
+  margin-left: 5px;
 }
 #localizacao .pagina_atual:hover{
   color: #000;
