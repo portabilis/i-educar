@@ -1,0 +1,50 @@
+FROM php:7.0-apache
+
+LABEL maintainer="Caroline Salib <caroline@portabilis.com.br>, Everton Muniz <everton@portabilis.com.br>, Éber Dias <eber@portabilis.com.br>, Fábio Rodrigues Ribeiro<farribeiro@gmail.com>"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -y update \
+	&& apt-get install -y --no-install-recommends \
+	curl \
+	gcc \
+	git \
+	libcurl4-gnutls-dev \
+	libedit-dev \
+	libpq-dev \
+	libreadline-dev \
+	libxml2-dev \
+	openjdk-8-jre \
+	make \
+	rpl \
+	software-properties-common \
+	unzip \
+	wget \
+	zip \
+	zlib1g-dev \
+	&& mkdir -p /var/www/html/i-educar \
+	&& wget -qO- https://github.com/portabilis/i-educar/archive/master.tar.gz | tar zxv -C /var/www/html/i-educar \
+	&& mkdir -p /var/www/html/i-educar/ieducar/modules/Reports \
+	&& wget -qO- https://github.com/portabilis/i-educar-reports-package/archive/master.tar.gz | tar zxv -C /var/www/html/i-educar/ieducar/modules/Reports \
+	&& find /var/www/ -type f -exec chmod 644 {} \; \
+	&& find /var/www/ -type d -exec chmod 755 {} \; \
+	&& cp -a /var/www/html/i-educar/docker/ieducar_1604/ieducar.conf /etc/apache2/sites-available/000-default.conf \
+	&& a2enmod rewrite \
+	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
+	&& chown -R www-data:www-data /var/www \
+	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+	&& php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+	&& php composer-setup.php \
+	&& php -r "unlink('composer-setup.php');" \
+	&& mv composer.phar /usr/local/bin/composer \
+	&& cd /var/www/html/i-educar \
+	&& composer install \
+	&& docker-php-ext-install zip \
+	&& docker-php-ext-install pgsql \
+	&& docker-php-ext-install mbstring \
+	&& docker-php-ext-install curl \
+	&& docker-php-ext-install xmlrpc \
+	&& docker-php-ext-install readline \
+	&& apt-get clean \
+	&& apt-get purge --auto-remove -y \
+	&& rm -rf /var/lib/apt/lists/*
