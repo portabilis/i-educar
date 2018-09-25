@@ -19,7 +19,7 @@ país por meio da educação. Junte-se a nós!**
 ## Sobre i-Educar
 
 O i-Educar é um software livre de gestão escolar totalmente on-line que permite
-secretários escolares, professores, coordenadores e gestores da área possam
+que secretários escolares, professores, coordenadores e gestores da área possam
 utilizar uma ferramenta que produz informações e estatísticas em tempo real,
 com um banco de dados centralizado e de fácil acesso, diminuindo a necessidade
 de uso de papel, a duplicidade de documentos, o tempo de atendimento ao cidadão
@@ -49,13 +49,13 @@ colaboradores do projeto.
 | [Telegram](https://t.me/ieducar ) | - Comunicar novidades sobre o projeto<br> - Movimentar a comunidade<br>  - Falar tópicos que **não** demandem discussões profundas |
 
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
-comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
+comunidade i-Educar e não terá suporte da Portabilis - mantenedora oficial do projeto.
 
 ## Roadmap de tecnologia
 
-O i-Educar por ser um sistema antigo e por não ter seguido um padrão específico,
-precisa passar por um processo de melhoria para diminuir a quantidade de bugs,
-melhorar a manutenibilidade e enfim permitir a evolução através de features.
+O i-Educar, por ser um sistema antigo e não ter seguido um padrão específico,
+precisa passar por um processo de melhorias para diminuir a quantidade de bugs,
+melhorar a manutenibilidade e permitir sua evolução através de features.
 
 ### Passos iniciais
 
@@ -80,7 +80,7 @@ ajudar a alcançar nossos objetivos.
 
 ## Instalação
 
-> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e desenvolvimento. Não é recomendado para ambientes de produção!
+> ATENÇÃO: Essa forma de instalação tem o objetivo de facilitar demonstrações e desenvolvimento. Não é recomendado para ambientes de produção!
 
 Antes de começar você vai precisar instalar o Docker e o Docker Compose em sua
 máquina. Para mais informações veja estes links:
@@ -91,7 +91,7 @@ máquina. Para mais informações veja estes links:
 Você também vai precisar do [Git](https://git-scm.com/downloads) caso ainda não
 o tenha instalado.
 
-Depois de ter o Docker e git instalados faça o clone deste repositório e execute
+Depois de ter o Docker e git instalados, faça o clone deste repositório e execute
 o Docker Compose para criar os containers da aplicação:
 
 ```terminal
@@ -103,15 +103,15 @@ $ cp phinx.php.sample phinx.php
 $ docker-compose up -d
 ```
 
-Depois disto faça as alterações necessárias nos arquivos de configuração:
+Depois disso, faça as alterações necessárias nos arquivos de configuração:
 - `.env`
 - `ieducar/configuration/ieducar.ini`
 - `phinx.php`
 
 ### Instalando relatórios
 
-Os relatórios respondem por uma parte muito importante no i-Educar mas o
-desenvolvimento destes relatórios ocorre de forma paralela em outro repositório.
+Os relatórios respondem a uma parte muito importante no i-Educar, mas o
+desenvolvimento desses relatórios ocorre de forma paralela em outro repositório.
 Por isso, antes de prosseguir, é necessário "instalar" os relatórios em conjunto
 com o i-Educar. Execute o seguinte comando a partir da pasta onde o i-Educar foi
 clonado em sua máquina:
@@ -145,9 +145,9 @@ passo anterior, mas é necessário configurá-lo antes de executar qualquer
 comando.
 
 Na raiz do projeto você encontra um arquivo chamado `phinx.php.sample`. Copie
-este arquivo e altere seu nome para `phinx.php`. Verifique seu conteúdo e,
+esse arquivo e altere seu nome para `phinx.php`. Verifique seu conteúdo e,
 caso tenha feito alguma mudança na configuração do Docker, modifique as
-credenciais do banco de acordo com suas alterações. Caso contrário o arquivo
+credenciais do banco de acordo com suas alterações. Caso contrário, o arquivo
 estará pronto para ser utilizado.
 
 **Atenção:**
@@ -162,7 +162,7 @@ $ docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx seed:run -s Starting
 $ docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
 ```
 
-Este comando irá executar a criação de tabelas e inserção de dados iniciais
+Esse comando executará a criação de tabelas e inserção de dados iniciais
 para utilização do i-Educar.
 
 ### Configurando permissões
@@ -178,7 +178,7 @@ $ docker-compose exec ieducar_1604 chmod 777 -R ieducar/modules/Reports/ReportSo
 
 ### Primeiro acesso
 
-Após realizar a instalação de acordo com as instruções acima você está pronta a
+Após realizar a instalação de acordo com as instruções acima, você está pronto para
 realizar seu primeiro acesso ao i-Educar. Basta acessar o seguinte endereço:
 
 [http://localhost:8001](http://localhost:8001)
