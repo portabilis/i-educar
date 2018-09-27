@@ -101,6 +101,13 @@ class clsPmieducarMatricula
     public $_campo_order_by;
 
     /**
+     * Instância do objeto de clsBanco.
+     *
+     * @var clsBanco
+     */
+    protected $db;
+
+    /**
      * Construtor.
      */
     public function __construct(
@@ -130,6 +137,7 @@ class clsPmieducarMatricula
         $turno_id = null
     ) {
         $db = new clsBanco();
+        $this->db = $db;
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'matricula';
 
@@ -1876,68 +1884,104 @@ class clsPmieducarMatricula
         return false;
     }
 
-    public function pegaMelhorDataMatricula($cod_aluno, $cod_turma)
+    public function pegaDataDeTransferencia($cod_aluno, $ano)
     {
         $query = "
             select
-                ano_letivo_modulo.data_inicio as ano_data_inicio,
-                turma_modulo.data_inicio as turma_data_inicio,
-                (matricula.data_exclusao + interval '1 day')::date  as matricula_data_exclusao
+                matricula.data_cancel
+            from
+                pmieducar.matricula
+            inner join pmieducar.transferencia_solicitacao
+                on transferencia_solicitacao.ref_cod_matricula_saida = matricula.cod_matricula
+            where true
+                and transferencia_solicitacao.ativo = 1
+                and matricula.ref_cod_aluno = {$cod_aluno}
+                and matricula.ano = {$ano}
+                and matricula.aprovado = 4
+            order by
+                transferencia_solicitacao.cod_transferencia_solicitacao desc
+            limit 1;
+        ";
+
+        $data = $this->db->UnicoCampo($query);
+
+        if (!$data) {
+            return false;
+        }
+
+        return new \DateTime($data);
+    }
+
+    public function pegaDataAnoLetivoInicio($cod_turma)
+    {
+        $query = "
+            select
+                coalesce(turma_modulo.data_inicio, ano_letivo_modulo.data_inicio) as data
             from
                 pmieducar.turma
-            inner join
-                pmieducar.ano_letivo_modulo on true
-                    and ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
-                    and ano_letivo_modulo.ref_ano = turma.ano
-                    and ano_letivo_modulo.sequencial = 1
-            left join
-                pmieducar.turma_modulo on true
-                    and turma_modulo.ref_cod_turma = turma.cod_turma
-                    and turma_modulo.sequencial = 1
-            left join
-                (
-                    select
-                        matricula_turma.data_exclusao,
-                        matricula_turma.ativo,
-                        matricula.ano
-                    from
-                        pmieducar.matricula_turma
-                    inner join
-                        pmieducar.matricula on matricula.cod_matricula = matricula_turma.ref_cod_matricula
-                    where true
-                        and matricula.ref_cod_aluno = {$cod_aluno}
-                    order by
-                        ref_cod_matricula desc
-                    limit 1
-                ) as matricula on true
-                    and matricula.ano = turma.ano
-                    and matricula.data_exclusao is not null
-                    and matricula.ativo = 0
+            inner join pmieducar.ano_letivo_modulo
+                on ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
+                and ano_letivo_modulo.ref_ano = turma.ano
+            left join pmieducar.turma_modulo
+                on turma_modulo.ref_cod_turma = turma.cod_turma
+            where true
+                and turma_modulo.sequencial = 1
+                and ano_letivo_modulo.sequencial = 1
+                and turma.cod_turma = {$cod_turma};
+        ";
+
+        $data = $this->db->UnicoCampo($query);
+
+        if (!$data) {
+            return false;
+        }
+
+        return new \DateTime($data);
+    }
+
+    public function pegaDataAnoLetivoFim($cod_turma)
+    {
+        $query = "
+            select
+                coalesce(turma_modulo.data_fim, ano_letivo_modulo.data_fim) as data
+            from
+                pmieducar.turma
+            inner join (
+                select
+                    ano_letivo_modulo.data_fim,
+                    ano_letivo_modulo.ref_ref_cod_escola,
+                    ano_letivo_modulo.ref_ano
+                from
+                    pmieducar.ano_letivo_modulo
+                inner join pmieducar.modulo
+                    on modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
+                where true
+                    and ano_letivo_modulo.sequencial = modulo.num_etapas
+            ) as ano_letivo_modulo
+                on ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
+                and ano_letivo_modulo.ref_ano = turma.ano
+            left join (
+                select
+                    turma_modulo.data_fim,
+                    turma_modulo.ref_cod_turma
+                from
+                    pmieducar.turma_modulo
+                inner join pmieducar.modulo
+                    on modulo.cod_modulo = turma_modulo.ref_cod_modulo
+                where true
+                    and turma_modulo.sequencial = modulo.num_etapas
+            ) as turma_modulo
+                on turma_modulo.ref_cod_turma = turma.cod_turma
             where true
                 and turma.cod_turma = {$cod_turma};
         ";
 
-        $db = new clsBanco();
+        $data = $this->db->UnicoCampo($query);
 
-        $db->setFetchMode(clsBanco::FETCH_ASSOC);
-        $db->Consulta($query);
-        $db->ProximoRegistro();
-
-        $results = $db->Tupla();
-        $date = null;
-
-        foreach ($results as $k => $v) {
-            if (is_null($v)) {
-                continue;
-            }
-
-            $newDate = new \DateTime($v);
-
-            if (is_null($date) || $newDate > $date) {
-                $date = $newDate;
-            }
+        if (!$data) {
+            return false;
         }
 
-        return $date;
+        return new \DateTime($data);
     }
 }

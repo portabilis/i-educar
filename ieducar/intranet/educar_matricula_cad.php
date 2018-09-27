@@ -197,9 +197,9 @@ class indice extends clsCadastro
     private function getEnturmacoesNaTurma($turma)
     {
         return (array) Portabilis_Utils_Database::fetchPreparedQuery("
-            select * 
+            select *
             from pmieducar.matricula_turma
-            where ref_cod_turma = {$turma} 
+            where ref_cod_turma = {$turma}
             and ativo = 1
         ");
     }
@@ -207,8 +207,8 @@ class indice extends clsCadastro
     private function getMaximoAlunosNaTurma($turma)
     {
         return (int) (new clsBanco())->CampoUnico("
-            select max_aluno 
-            from pmieducar.turma 
+            select max_aluno
+            from pmieducar.turma
             where cod_turma = $turma
         ");
     }
@@ -216,9 +216,9 @@ class indice extends clsCadastro
     private function getMatricula($matricula)
     {
         $matriculas = Portabilis_Utils_Database::fetchPreparedQuery("
-            select * 
-            from pmieducar.matricula 
-            where cod_matricula = {$matricula} 
+            select *
+            from pmieducar.matricula
+            where cod_matricula = {$matricula}
             limit 1
         ");
 
@@ -871,11 +871,32 @@ class indice extends clsCadastro
                 $this->data_matricula
             );
 
-            $melhorData = $obj->pegaMelhorDataMatricula($this->ref_cod_aluno, $this->ref_cod_turma);
             $dataMatriculaObj = new \DateTime($this->data_matricula);
+            $dataTransferencia = $obj->pegaDataDeTransferencia($this->ref_cod_aluno, $this->ano);
+            $dataAnoLetivoInicio = $obj->pegaDataAnoLetivoInicio($this->ref_cod_turma);
+            $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim($this->ref_cod_turma);
 
-            if ($dataMatriculaObj < $melhorData) {
-                $this->mensagem .= 'A data de matrícula precisa ser igual ou maior que ' . $melhorData->format('d/m/Y');
+            if ($dataTransferencia && $dataMatriculaObj <= $dataTransferencia) {
+                $this->mensagem .= sprintf(
+                    'Não é possível matricular o aluno. O mesmo possui enturmação com data de saída anterior à data informada. Favor alterar a data de matrícula para ser superior a %s.',
+                    $dataTransferencia->format('d/m/Y')
+                );
+
+                return false;
+            } elseif ($dataMatriculaObj < $dataAnoLetivoInicio) {
+                $this->mensagem .= sprintf(
+                    'A data de matrícula precisa ser igual ou maior que a data de início do ano letivo da escola ou turma (%s).',
+                    $dataAnoLetivoInicio->format('d/m/Y')
+                );
+
+                return false;
+            }
+
+            if ($dataMatriculaObj > $dataAnoLetivoTermino) {
+                $this->mensagem .= sprintf(
+                    'A data de matrícula precisa ser igual ou menor que a data fim do ano letivo da escola ou turma (%s).',
+                    $dataAnoLetivoTermino->format('d/m/Y')
+                );
 
                 return false;
             }
@@ -1061,6 +1082,47 @@ class indice extends clsCadastro
     }
 
 
+    public function desativaEnturmacoesMatricula($matriculaId)
+    {
+        $result = true;
+
+        $enturmacoes = new clsPmieducarMatriculaTurma();
+        $enturmacoes = $enturmacoes->lista(
+            $matriculaId,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1
+        );
+
+        if ($enturmacoes) {
+            foreach ($enturmacoes as $enturmacao) {
+                $enturmacao = new clsPmieducarMatriculaTurma(
+                    $matriculaId,
+                    $enturmacao['ref_cod_turma'],
+                    $this->pessoa_logada,
+                    null,
+                    null,
+                    null,
+                    0,
+                    null,
+                    $enturmacao['sequencial']
+                );
+
+                $enturmacao->removerSequencial = true;
+                $detEnturmacao = $enturmacao->detalhe();
+                $detEnturmacao = $detEnturmacao['data_enturmacao'];
+                $enturmacao->data_enturmacao = $detEnturmacao;
+
+                if ($result && ! $enturmacao->edita()){
+                    $result = false;
+                }
+
+            }
         }
 
         if (!$result) {
