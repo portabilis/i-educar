@@ -62,7 +62,6 @@ class ComponentesSerieController extends ApiCoreController
     public function replicaComponentesAdicionadosNasEscolas($serieId, $componentes)
     {
         $escolas = $this->getEscolasDaSerie($serieId);
-        $turmas = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
 
         if ($escolas && $componentes) {
             foreach ($escolas as $escola) {
