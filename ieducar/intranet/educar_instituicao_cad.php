@@ -16,21 +16,13 @@ class clsIndexBase extends clsBase
 {
     function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Institui&ccedil;&atilde;o");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Instituição");
         $this->processoAp = "559";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 
 class indice extends clsCadastro
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    var $pessoa_logada;
-
     var $cod_instituicao;
     var $ref_usuario_exc;
     var $ref_usuario_cad;
@@ -81,15 +73,12 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(559, $this->pessoa_logada, 3, "educar_instituicao_lst.php");
 
-        $this->cod_instituicao = $_GET["cod_instituicao"];
+        $this->cod_instituicao = $this->getQueryString('cod_instituicao');
 
         if (is_numeric($this->cod_instituicao)) {
 
@@ -109,16 +98,7 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_instituicao_det.php?cod_instituicao={$registro["cod_instituicao"]}" : "educar_instituicao_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(
-            array(
-                $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-                "educar_index.php" => "Escola",
-                "" => "{$nomeMenu} institui&ccedil;&atilde;o"
-            )
-        );
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Instituição', ['educar_index.php' => 'Escola']);
 
         $this->gerar_historico_transferencia = dbBool($this->gerar_historico_transferencia);
         $this->controlar_posicao_historicos = dbBool($this->controlar_posicao_historicos);
@@ -329,9 +309,6 @@ class indice extends clsCadastro
     {
         header("Location: educar_instituicao_lst.php");
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
         $obj = new clsPmieducarInstituicao(null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace("-", "", $this->cep), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, str_replace("'", "''", $this->nm_instituicao), null, null, $this->quantidade_alunos_metro_quadrado);
         $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
         $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -377,17 +354,13 @@ class indice extends clsCadastro
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = "Cadastro não realizado.<br>";
         echo "<!--\nErro ao cadastrar clsPmieducarInstituicao\nvalores obrigatorios\nis_numeric( $ref_usuario_cad ) && is_string( $ref_idtlog ) && is_string( $ref_sigla_uf ) && is_numeric( $cep ) && is_string( $cidade ) && is_string( $bairro ) && is_string( $logradouro ) && is_string( $nm_responsavel ) && is_string( $data_cadastro ) && is_numeric( $ativo )\n-->";
         return false;
     }
 
     function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj = new clsPmieducarInstituicao($this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace("-", "", $this->cep), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, str_replace("'", "''", $this->nm_instituicao), null, null, $this->quantidade_alunos_metro_quadrado);
         $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
         $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -427,13 +400,13 @@ class indice extends clsCadastro
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $obj_altera = new alteraAtestadoParaDeclaracao(is_null($this->altera_atestado_para_declaracao) ? false : true);
             $obj_altera->editaMenus();
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+            $this->mensagem .= "Edição efetuada com sucesso.<br>";
             header("Location: educar_instituicao_lst.php");
             die();
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = "Edição não realizada.<br>";
         echo "<!--\nErro ao editar clsPmieducarInstituicao\nvalores obrigatorios\nif( is_numeric( $this->cod_instituicao ) )\n-->";
         return false;
     }
@@ -442,14 +415,10 @@ class indice extends clsCadastro
     {
         header("Location: educar_instituicao_lst.php");
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $verificaEscolasVinculadas = new clsPmieducarEscola();
         $listaEscolasVinculadas = $verificaEscolasVinculadas->lista(null, null, null, $this->cod_instituicao);
         if (is_array($listaEscolasVinculadas)) {
-            $this->mensagem = "Exclus&atilde;o n&atilde;o realizada. Esta instituic&atilde;o possui escolas vinculadas.<br>";
+            $this->mensagem = "Exclusão não realizada. Esta instituicão possui escolas vinculadas.<br>";
             return false;
         } else {
             $obj = new clsPmieducarInstituicao($this->cod_instituicao, $this->pessoa_logada, $this->ref_usuario_cad, $this->ref_idtlog, $this->ref_sigla_uf, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, $this->ativo);
@@ -459,13 +428,13 @@ class indice extends clsCadastro
                 $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $this->cod_instituicao);
                 $auditoria->exclusao($instituicao);
 
-                $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+                $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
                 header("Location: educar_instituicao_lst.php");
                 die();
                 return true;
             }
 
-            $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+            $this->mensagem = "Exclusão não realizada.<br>";
             echo "<!--\nErro ao excluir clsPmieducarInstituicao\nvalores obrigatorios\nif( is_numeric( $this->cod_instituicao ) )\n-->";
             return false;
         }
