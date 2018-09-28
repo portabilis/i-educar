@@ -11,10 +11,10 @@
   "require": {
     "php": "7.0.*",
     "cocur/slugify": "^3.1",
+    "cossou/jasperphp": "^2.7",
     "gilbitron/php-simplecache": "^1.4",
     "google/recaptcha": "~1.1",
     "honeybadger-io/honeybadger-php": "^0.4.1",
-    "portabilis/jasperphp": "v1.2.0",
     "robmorgan/phinx": "v0.8.1",
     "swiftmailer/swiftmailer": "^6.0"
   },
