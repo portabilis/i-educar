@@ -1924,8 +1924,8 @@ class clsPmieducarMatricula
                 and ano_letivo_modulo.ref_ano = turma.ano
             left join pmieducar.turma_modulo
                 on turma_modulo.ref_cod_turma = turma.cod_turma
-            where true
                 and turma_modulo.sequencial = 1
+            where true
                 and ano_letivo_modulo.sequencial = 1
                 and turma.cod_turma = {$cod_turma};
         ";
