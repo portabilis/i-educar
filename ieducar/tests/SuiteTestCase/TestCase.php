@@ -79,4 +79,9 @@ class TestCase extends AbstractTestCase
     {
         return  file_get_contents(__DIR__ . '/../Unit/assets/' . $fileName);
     }
+
+    public function getPdoConection()
+    {
+        return $this->getConnection()->getConnection();
+    }
 }
