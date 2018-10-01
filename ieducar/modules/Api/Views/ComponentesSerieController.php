@@ -61,7 +61,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function replicaComponentesAdicionadosNasEscolas($serieId, $componentes)
     {
-        $escolas = $this->getEscolasDaSerie($serieId);
+        $escolas = $this->getEscolasSerie($serieId);
 
         if ($escolas && $componentes) {
             foreach ($escolas as $escola) {
@@ -84,7 +84,7 @@ class ComponentesSerieController extends ApiCoreController
         return $ultimoAnoLetivoAberto;
     }
 
-    public function getEscolasDaSerie($serieId)
+    public function getEscolasSerie($serieId)
     {
         $objEscolaSerie = new clsPmieducarEscolaSerie();
         $escolasDaSerie = $objEscolaSerie->lista(null, $serieId);
@@ -134,7 +134,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function atualizaExclusoesDeComponentes($serieId, $componentes)
     {
-        $escolas = $this->getEscolasDaSerie($serieId);
+        $escolas = $this->getEscolasSerie($serieId);
         $turmas = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
 
         if ($escolas && $componentes) {
@@ -167,7 +167,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function excluiTodasDisciplinasEscolaSerie($serieId)
     {
-        $escolas = $this->getEscolasDaSerie($serieId);
+        $escolas = $this->getEscolasSerie($serieId);
 
         if ($escolas) {
             foreach ($escolas as $escola) {
@@ -218,6 +218,22 @@ class ComponentesSerieController extends ApiCoreController
         return ['existe_dispensa' => $obj->existeDispensa($disciplinas)];
     }
 
+    private function getEscolasBySerie($serieId)
+    {
+        $sql = <<<'SQL'
+                  SELECT escola.cod_escola, relatorio.get_nome_escola(cod_escola) AS nome_escola
+                    FROM pmieducar.escola
+                             JOIN pmieducar.escola_serie ON escola_serie.ref_cod_escola = escola.cod_escola
+                    WHERE escola_serie.ref_cod_serie = $1
+                      AND escola.ativo = 1
+                      AND escola_serie.ativo = 1
+                    ORDER BY nome_escola
+SQL;
+        $escolas = $this->fetchPreparedQuery($sql, [$serieId]);
+
+        return ['escolas' => $escolas];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('post', 'atualiza-componentes-serie')) {
@@ -230,6 +246,8 @@ class ComponentesSerieController extends ApiCoreController
             $this->appendResponse($this->existeDispensa());
         } elseif ($this->isRequestFor('get', 'existe-dependencia')) {
             $this->appendResponse($this->existeDependencia());
+        } elseif ($this->isRequestFor('get', 'get-escolas-by-serie')) {
+            $this->appendResponse($this->getEscolasBySerie($this->getRequest()->serie));
         } else {
             $this->notImplementedOperationError();
         }
