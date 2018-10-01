@@ -186,72 +186,6 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options, $helperOptions);
 
-        $this->campoCheck('exigir_vinculo_turma_professor', 'Exigir vínculo com turma para lançamento de notas do professor?', $this->exigir_vinculo_turma_professor);
-
-        $this->campoCheck('gerar_historico_transferencia', 'Gerar histórico de transferência ao transferir matrícula?', $this->gerar_historico_transferencia);
-
-        $this->campoCheck('controlar_posicao_historicos', 'Permitir controlar posicionamento dos históricos em seu respectivo documento', $this->controlar_posicao_historicos);
-
-        $this->campoCheck('matricula_apenas_bairro_escola', 'Permitir matrícula de alunos apenas do bairro da escola?', $this->matricula_apenas_bairro_escola);
-
-        $this->campoCheck('restringir_historico_escolar', 'Restringir modificações de históricos escolares?', $this->restringir_historico_escolar, null, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.');
-
-        $this->campoCheck('controlar_espaco_utilizacao_aluno', 'Controlar espaço utilizado pelo aluno?', $this->controlar_espaco_utilizacao_aluno);
-        $this->campoMonetario(
-            'percentagem_maxima_ocupacao_salas',
-            'Percentagem máxima de ocupação da sala',
-            Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
-            6,
-            6,
-            false
-        );
-        $this->campoNumero('quantidade_alunos_metro_quadrado', 'Quantidade máxima de alunos permitidos por metro quadrado', $this->quantidade_alunos_metro_quadrado, 6, 6);
-
-        $this->campoCheck('restringir_multiplas_enturmacoes', 'Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano', $this->restringir_multiplas_enturmacoes);
-        $this->campoCheck('permissao_filtro_abandono_transferencia', 'Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência', $this->permissao_filtro_abandono_transferencia);
-
-        $this->multiplas_reserva_vaga = isset($this->cod_instituicao) ? dbBool($this->multiplas_reserva_vaga) : true;
-        $this->campoCheck('multiplas_reserva_vaga', 'Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes', $this->multiplas_reserva_vaga);
-
-        $this->permitir_carga_horaria = isset($this->cod_instituicao) ? dbBool($this->permitir_carga_horaria) : true;
-        $this->campoCheck('permitir_carga_horaria', 'Não permitir definir C.H. por componente no histórico escolar', $this->permitir_carga_horaria, null, false, false, false, 'Caso a opção estiver habilitda, não será possivel adicionar carga horária na tabela de disciplinas do histórico do aluno.');
-        $this->campoCheck('reserva_integral_somente_com_renda', 'Permitir reserva de vaga para o turno integral somente quando a renda for informada', $this->reserva_integral_somente_com_renda);
-        $this->campoCheck('exigir_dados_socioeconomicos', 'Exigir dados socioeconômico na reserva de vaga para turno integral', $this->exigir_dados_socioeconomicos);
-
-        $this->campoCheck(
-            'componente_curricular_turma',
-            'Permitir definir componentes curriculares diferenciados nas turmas',
-            $this->componente_curricular_turma
-        );
-
-        $this->campoCheck(
-            'reprova_dependencia_ano_concluinte',
-            'Não permitir dependência em séries/anos concluintes',
-            $this->reprova_dependencia_ano_concluinte,
-            null,
-            false,
-            false,
-            false,
-            'Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.'
-        );
-
-        $this->campoCheck('bloqueia_matricula_serie_nao_seguinte', 'Não permitir matrículas que não respeitem a sequência de enturmação', $this->bloqueia_matricula_serie_nao_seguinte);
-        $this->campoCheck('altera_atestado_para_declaracao', 'Alterar nome do título do menu e relatórios de Atestado para Declaração', $this->altera_atestado_para_declaracao);
-
-        $this->campoCheck('obrigar_campos_censo', 'Obrigar o preenchimento dos campos exigidos pelo Censo escolar', $this->obrigar_campos_censo);
-        $this->campoCheck('obrigar_documento_pessoa', 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', $this->obrigar_documento_pessoa);
-
-        $this->campoCheck(
-            'exigir_lancamentos_anteriores',
-            'Exigir o lançamento de notas em etapas que o aluno não estava enturmado',
-            $this->exigir_lancamentos_anteriores
-        );
-        $this->campoCheck(
-            'exibir_apenas_professores_alocados',
-            'Exibir apenas professores alocados nos filtros de emissão do Diário de classe',
-            $this->exibir_apenas_professores_alocados
-        );
-
         $this->inputsHelper()->text(
             'data_base',
             [
@@ -307,6 +241,81 @@ class indice extends clsCadastro
 
         $options = ['label' => 'Código do órgão regional de ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('orgao_regional', $options);
+
+        $this->campoRotulo('gerais','<b id="gerais">Gerais</b>');
+        $this->campoCheck('obrigar_documento_pessoa', 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', $this->obrigar_documento_pessoa);
+        
+        $this->campoRotulo('historicos','<b>Históricos</b>');
+        $this->campoCheck('gerar_historico_transferencia', 'Gerar histórico de transferência ao transferir matrícula?', $this->gerar_historico_transferencia);
+        $this->campoCheck('controlar_posicao_historicos', 'Permitir controlar posicionamento dos históricos em seu respectivo documento', $this->controlar_posicao_historicos);
+        $this->campoCheck('restringir_historico_escolar', 'Restringir modificações de históricos escolares?', $this->restringir_historico_escolar, null, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.');
+        $this->campoCheck('permitir_carga_horaria', 'Não permitir definir C.H. por componente no histórico escolar', $this->permitir_carga_horaria, null, false, false, false, 'Caso a opção estiver habilitda, não será possivel adicionar carga horária na tabela de disciplinas do histórico do aluno.');
+
+        $this->campoRotulo('reserva_vaga','<b>Reserva de vaga</b>');
+        $this->multiplas_reserva_vaga = isset($this->cod_instituicao) ? dbBool($this->multiplas_reserva_vaga) : true;
+        $this->campoCheck('multiplas_reserva_vaga', 'Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes', $this->multiplas_reserva_vaga);
+        $this->campoCheck('reserva_integral_somente_com_renda', 'Permitir reserva de vaga para o turno integral somente quando a renda for informada', $this->reserva_integral_somente_com_renda);
+        $this->campoCheck('exigir_dados_socioeconomicos', 'Exigir dados socioeconômico na reserva de vaga para turno integral', $this->exigir_dados_socioeconomicos);
+
+        $this->campoRotulo('relatorios','<b>Relatórios</b>');
+        $this->campoCheck('permissao_filtro_abandono_transferencia', 'Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência', $this->permissao_filtro_abandono_transferencia);
+        $this->campoCheck('altera_atestado_para_declaracao', 'Alterar nome do título do menu e relatórios de Atestado para Declaração', $this->altera_atestado_para_declaracao);
+        $this->campoCheck('exibir_apenas_professores_alocados', 'Exibir apenas professores alocados nos filtros de emissão do Diário de classe', $this->exibir_apenas_professores_alocados);
+
+        $this->campoRotulo('processos_escolares','<b>Processos escolares</b>');
+        $this->campoCheck('exigir_vinculo_turma_professor', 'Exigir vínculo com turma para lançamento de notas do professor?', $this->exigir_vinculo_turma_professor);
+
+
+        $this->campoCheck('matricula_apenas_bairro_escola', 'Permitir matrícula de alunos apenas do bairro da escola?', $this->matricula_apenas_bairro_escola);
+
+        
+
+        $this->campoCheck('controlar_espaco_utilizacao_aluno', 'Controlar espaço utilizado pelo aluno?', $this->controlar_espaco_utilizacao_aluno);
+        $this->campoMonetario(
+            'percentagem_maxima_ocupacao_salas',
+            'Percentagem máxima de ocupação da sala',
+            Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
+            6,
+            6,
+            false
+        );
+        $this->campoNumero('quantidade_alunos_metro_quadrado', 'Quantidade máxima de alunos permitidos por metro quadrado', $this->quantidade_alunos_metro_quadrado, 6, 6);
+
+        $this->campoCheck('restringir_multiplas_enturmacoes', 'Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano', $this->restringir_multiplas_enturmacoes);
+
+        $this->permitir_carga_horaria = isset($this->cod_instituicao) ? dbBool($this->permitir_carga_horaria) : true;
+
+        $this->campoCheck(
+            'componente_curricular_turma',
+            'Permitir definir componentes curriculares diferenciados nas turmas',
+            $this->componente_curricular_turma
+        );
+
+        $this->campoCheck(
+            'reprova_dependencia_ano_concluinte',
+            'Não permitir dependência em séries/anos concluintes',
+            $this->reprova_dependencia_ano_concluinte,
+            null,
+            false,
+            false,
+            false,
+            'Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.'
+        );
+
+        $this->campoCheck('bloqueia_matricula_serie_nao_seguinte', 'Não permitir matrículas que não respeitem a sequência de enturmação', $this->bloqueia_matricula_serie_nao_seguinte);
+
+        $this->campoCheck('obrigar_campos_censo', 'Obrigar o preenchimento dos campos exigidos pelo Censo escolar', $this->obrigar_campos_censo);
+
+        $this->campoCheck(
+            'exigir_lancamentos_anteriores',
+            'Exigir o lançamento de notas em etapas que o aluno não estava enturmado',
+            $this->exigir_lancamentos_anteriores
+        );
+
+        $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        $styles = array ('/modules/Cadastro/Assets/Stylesheets/Instituicao.css');
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
     public function Novo()
@@ -464,25 +473,6 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
-
-    $j('#controlar_espaco_utilizacao_aluno').click(onControlarEspacoUtilizadoClick);
-
-    if (!$j('#controlar_espaco_utilizacao_aluno').prop('checked')) {
-        $j('#percentagem_maxima_ocupacao_salas').closest('tr').hide();
-        $j('#quantidade_alunos_metro_quadrado').closest('tr').hide();
-    }
-
-    function onControlarEspacoUtilizadoClick() {
-        if (!$j('#controlar_espaco_utilizacao_aluno').prop('checked')) {
-            $j('#percentagem_maxima_ocupacao_salas').val('');
-            $j('#quantidade_alunos_metro_quadrado').val('');
-            $j('#percentagem_maxima_ocupacao_salas').closest('tr').hide();
-            $j('#quantidade_alunos_metro_quadrado').closest('tr').hide();
-        } else {
-            $j('#percentagem_maxima_ocupacao_salas').closest('tr').show();
-            $j('#quantidade_alunos_metro_quadrado').closest('tr').show();
-        }
-    }
 
     let populaOrgaoRegional = data => {
         $j('#orgao_regional').append(
