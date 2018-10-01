@@ -69,6 +69,7 @@ class indice extends clsCadastro
     public $obrigar_documento_pessoa;
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
+    public $exibir_apenas_professores_alocados;
 
     public function Inicializar()
     {
@@ -116,6 +117,7 @@ class indice extends clsCadastro
         $this->obrigar_campos_censo = dbBool($this->obrigar_campos_censo);
         $this->obrigar_documento_pessoa = dbBool($this->obrigar_documento_pessoa);
         $this->exigir_lancamentos_anteriores = dbBool($this->exigir_lancamentos_anteriores);
+        $this->exibir_apenas_professores_alocados = dbBool($this->exibir_apenas_professores_alocados);
 
         return $retorno;
     }
@@ -244,6 +246,11 @@ class indice extends clsCadastro
             'Exigir o lançamento de notas em etapas que o aluno não estava enturmado',
             $this->exigir_lancamentos_anteriores
         );
+        $this->campoCheck(
+            'exibir_apenas_professores_alocados',
+            'Exibir apenas professores alocados nos filtros de emissão do Diário de classe',
+            $this->exibir_apenas_professores_alocados
+        );
 
         $this->inputsHelper()->text(
             'data_base',
@@ -336,6 +343,7 @@ class indice extends clsCadastro
         $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
         $obj->orgao_regional = $this->orgao_regional;
         $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
+        $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
         $cod_instituicao = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
@@ -389,6 +397,7 @@ class indice extends clsCadastro
         $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
         $obj->orgao_regional = $this->orgao_regional;
         $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
+        $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
 
         $detalheAntigo = $obj->detalhe();
 

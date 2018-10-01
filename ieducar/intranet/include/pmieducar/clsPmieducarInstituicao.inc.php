@@ -46,6 +46,7 @@ class clsPmieducarInstituicao
     public $obrigar_documento_pessoa;
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
+    public $exibir_apenas_professores_alocados;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -134,7 +135,8 @@ class clsPmieducarInstituicao
         $altera_atestado_para_declaracao = null,
         $obrigar_campos_censo = null,
         $obrigar_documento_pessoa = null,
-        $exigir_lancamentos_anteriores = null
+        $exigir_lancamentos_anteriores = null,
+        $exibir_apenas_professores_alocados = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -186,7 +188,8 @@ class clsPmieducarInstituicao
             obrigar_campos_censo,
             obrigar_documento_pessoa,
             orgao_regional,
-            exigir_lancamentos_anteriores 
+            exigir_lancamentos_anteriores,
+            exibir_apenas_professores_alocados 
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -331,6 +334,10 @@ class clsPmieducarInstituicao
 
         if (is_bool($exigir_lancamentos_anteriores)) {
             $this->exigir_lancamentos_anteriores = $exigir_lancamentos_anteriores;
+        }
+
+        if (is_bool($exibir_apenas_professores_alocados)) {
+            $this->exibir_apenas_professores_alocados = $exibir_apenas_professores_alocados;
         }
     }
 
@@ -688,6 +695,16 @@ class clsPmieducarInstituicao
                 $gruda = ', ';
             }
 
+            if (dbBool($this->exibir_apenas_professores_alocados)) {
+                $campos .= "{$gruda}exibir_apenas_professores_alocados";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}exibir_apenas_professores_alocados";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1020,6 +1037,14 @@ class clsPmieducarInstituicao
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}exigir_lancamentos_anteriores = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->exibir_apenas_professores_alocados)) {
+                $set .= "{$gruda}exibir_apenas_professores_alocados = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}exibir_apenas_professores_alocados = false ";
                 $gruda = ', ';
             }
 
