@@ -97,8 +97,8 @@ class LegacyController extends Controller
         foreach (headers_list() as $header) {
             $header = explode(':', $header);
 
-            $name = trim($header[0]);
-            $value = trim($header[1]);
+            $name = ltrim($header[0], ' ');
+            $value = ltrim($header[1], ' ');
 
             $headers[$name] = $value;
         }
@@ -126,11 +126,12 @@ class LegacyController extends Controller
      */
     private function requireFileFromLegacy($filename)
     {
-        ob_start();
-
         $this->startLegacySession();
         $this->configureErrorsAndExceptions();
         $this->loadLegacyBootstrapFile();
+
+        ob_start();
+
         $this->loadLegacyFile($filename);
 
         $content = ob_get_contents();
