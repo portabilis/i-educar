@@ -52,8 +52,6 @@ function handleAtualizaComponentesSerie(response) {
             if(response.insert){
                 serieId = $j('#serie_id').val();
                 ModalSelectEscolas.init(serieId, nmSerie, response.insert);
-
-                //adicionaComponentesNasEscolas(response.insert);
             }else{
                 redirecionaListagem()
             }
@@ -61,16 +59,12 @@ function handleAtualizaComponentesSerie(response) {
         }
     }
 
-function handleCompleteAtualizaComponentesSerie(){
-
-}
-
 function handleErroAtualizaComponentesSerie(response){
     handleMessages([{type : 'error', msg : 'Erro ao alterar componentes da série: ' + response.statusText}], '');
     safeLog(response);
 }
 
-function adicionaComponentesNasEscolas(componentes){
+function adicionaComponentesTodasEscolas(componentes){
     var url = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'replica-componentes-adicionados-escolas', {});
 
     var options = {
@@ -79,7 +73,7 @@ function adicionaComponentesNasEscolas(componentes){
       dataType : 'json',
       data     : {
         serie_id    : serieId,
-        componentes : JSON.stringify(componentes)
+        componentes : $j('#json-componentes').val()
       },
       success  : handleReplicaComponentesEscola,
       error    : handleErroReplicaComponentesEscola
@@ -153,7 +147,7 @@ function redirecionaListagem(){
 }
 
 
-var ModalSelectEscolas = {
+ModalSelectEscolas = {
     links: $j('.mostra-consulta'),
     dialogContainer: $j('#dialog-container'),
     dialog: undefined,
@@ -211,12 +205,12 @@ var ModalSelectEscolas = {
         tableContainer.hide();
         msgContainer.html(msg).show();
     },
-    request: function (serieId) {
+    request: function () {
         let that = this;
         let url = '/module/Api/ComponentesSerie';
         let params = {
             'oper': 'get',
-            'serie': serieId,
+            'serie': this.serieId,
             'resource': 'get-escolas-by-serie'
         };
 
@@ -230,7 +224,7 @@ var ModalSelectEscolas = {
             that.makeHtml(response.escolas);
         });
     },
-    getActionButtons () {
+    getActionButtons() {
         let buttonsTable = $j('<table>').attr({
             'class': 'tablecadastro',
             'width': '100%',
@@ -248,7 +242,7 @@ var ModalSelectEscolas = {
             'align': 'center'
         });
 
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesNasEscolas(this.componentes)">');
+        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesTodasEscolas()">');
         buttonsTd.append('<input type="button" class="botaolistagem" value="Não aplicar em nenhuma" onclick="redirecionaListagem()">');
         buttonsTd.append('<input type="button" class="botao" value="Selecionar escolas para aplicar" onclick="expandEscolas()">');
 
@@ -258,7 +252,7 @@ var ModalSelectEscolas = {
 
         return buttonsTable;
     },
-    getEscolasTable: function(data){
+    getEscolasTable: function (data) {
         let div = $j('<div>').attr({
             'style': 'display:none',
             'id': 'div-escolas'
@@ -281,8 +275,9 @@ var ModalSelectEscolas = {
         );
 
         trTitle.append($j('<td>').attr({
-            class: 'formdktd',
-        }));
+                class: 'formdktd',
+            }).append('Escolas')
+        );
 
         table.append(trTitle);
 
@@ -296,9 +291,9 @@ var ModalSelectEscolas = {
                 }).append(
                     $j('<input>').attr({
                         type: 'checkbox',
-                        id: 'escola-' + escola.id,
+                        id: 'escola-' + escola.cod_escola,
                         name: 'escola[]',
-                        'value': escola.id
+                        'value': escola.cod_escola
                     })
                 )
             );
@@ -306,14 +301,14 @@ var ModalSelectEscolas = {
             tr.append($j('<td>').attr({
                 class: 'formmdtd'
             }).append(
-                '<label for="escola-' + escola.id + '">' + escola.nome_escola + '</label>'
+                '<label for="escola-' + escola.cod_escola + '">' + escola.nome_escola + '</label>'
             ));
 
             table.append(tr);
         });
 
         div.append(table);
-        div.append('<input type="button" class="botao" value="Aplicar nas escolas selecionadas">');
+        div.append('<input type="button" class="botao" value="Aplicar nas escolas selecionadas" onclick="atualizaComponentesEscolas(' + this.serieId + ')">');
 
         return div;
     },
@@ -321,15 +316,49 @@ var ModalSelectEscolas = {
         this.createDialog();
         this.serieNome = serieNome;
         this.componentes = componentes;
-        this.request(serieId);
+        this.serieId = serieId;
+
+        $j('#json-componentes').val(JSON.stringify(componentes));
+
+        this.request();
     }
 };
 
-function expandEscolas(){
+function expandEscolas() {
     $j('#div-escolas').toggle('fast');
 }
 
 function checkAllEscolas(element) {
-    var isChecked = $j(element).prop("checked");
+    let isChecked = $j(element).prop("checked");
     $j('input[name=escola\\[\\]]').prop('checked', isChecked);
+}
+
+$j('body').append($j('<input>').attr({
+    type: 'hidden',
+    id: 'json-componentes'
+}));
+
+function atualizaComponentesEscolas (serieId) {
+    let componentes = $j('#json-componentes').val();
+    let escolasInput = $j('input[name=escola\\[\\]]');
+    let arrayEscolas = [];
+    escolasInput.each(function(key, input) {
+        if ($j(input).prop('checked') === true) {
+            let id = $j(input).val();
+            arrayEscolas.push({id : id});
+        }
+    });
+
+    let url = '/module/Api/ComponentesSerie';
+    let params = {
+        'oper': 'post',
+        'resource': 'atualiza-componentes-escolas',
+        'serie': serieId,
+        'componentes': componentes,
+        'escolas': JSON.stringify(arrayEscolas)
+    };
+
+    $j.post(url, params, function (response) {
+        redirecionaListagem();
+    });
 }

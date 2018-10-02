@@ -49,28 +49,47 @@ class ComponentesSerieController extends ApiCoreController
     {
         $serieId = $this->getRequest()->serie_id;
         $componentes = json_decode($this->getRequest()->componentes);
-        $arrayComponentes = [];
+        $arrayComponentes = $this->handleComponentesArray($componentes);
+        $escolas = $this->getEscolasSerieBySerie($serieId);
 
-        foreach ($componentes as $key => $componente) {
-            $arrayComponentes[$key]['id'] = $componente->id;
-            $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
-        }
+        $escolas = array_map(function ($item){
+            return $item['ref_cod_escola'];
+        }, $escolas);
 
-        $this->replicaComponentesAdicionadosNasEscolas($serieId, $arrayComponentes);
+        $this->replicaComponentesAdicionadosNasEscolas($serieId, $arrayComponentes, $escolas);
     }
 
-    public function replicaComponentesAdicionadosNasEscolas($serieId, $componentes)
+    public function atualizaComponentesEscolas()
     {
-        $escolas = $this->getEscolasSerie($serieId);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
 
-        if ($escolas && $componentes) {
-            foreach ($escolas as $escola) {
-                foreach ($componentes as $componente) {
-                    $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola['ref_cod_escola'], $componente['id']);
+        $serieId = $this->getRequest()->serie;
+        $escolas = json_decode($this->getRequest()->escolas, false);
+        $componentes = json_decode($this->getRequest()->componentes, false);
+        $arrayComponentes = $this->handleComponentesArray($componentes);
 
-                    if (!$objEscolaSerieDisciplina->cadastra()) {
-                        return false;
-                    }
+        $escolas = array_map(function ($item){
+            return $item->id;
+        }, $escolas);
+
+        $this->replicaComponentesAdicionadosNasEscolas($serieId, $arrayComponentes, $escolas);
+    }
+
+    public function replicaComponentesAdicionadosNasEscolas($serieId, $componentes, $escolas)
+    {
+        if (!$escolas || !$componentes) {
+            return [];
+        }
+
+        foreach ($escolas as $escola) {
+            foreach ($componentes as $componente) {
+                $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola,
+                    $componente['id'], null, null, null, null, $componente['anos_letivos']);
+
+                if (!$objEscolaSerieDisciplina->cadastra()) {
+                    return false;
                 }
             }
         }
@@ -84,7 +103,7 @@ class ComponentesSerieController extends ApiCoreController
         return $ultimoAnoLetivoAberto;
     }
 
-    public function getEscolasSerie($serieId)
+    public function getEscolasSerieBySerie($serieId)
     {
         $objEscolaSerie = new clsPmieducarEscolaSerie();
         $escolasDaSerie = $objEscolaSerie->lista(null, $serieId);
@@ -134,7 +153,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function atualizaExclusoesDeComponentes($serieId, $componentes)
     {
-        $escolas = $this->getEscolasSerie($serieId);
+        $escolas = $this->getEscolasSerieBySerie($serieId);
         $turmas = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
 
         if ($escolas && $componentes) {
@@ -167,7 +186,7 @@ class ComponentesSerieController extends ApiCoreController
 
     public function excluiTodasDisciplinasEscolaSerie($serieId)
     {
-        $escolas = $this->getEscolasSerie($serieId);
+        $escolas = $this->getEscolasSerieBySerie($serieId);
 
         if ($escolas) {
             foreach ($escolas as $escola) {
@@ -248,8 +267,23 @@ SQL;
             $this->appendResponse($this->existeDependencia());
         } elseif ($this->isRequestFor('get', 'get-escolas-by-serie')) {
             $this->appendResponse($this->getEscolasBySerie($this->getRequest()->serie));
+        } elseif ($this->isRequestFor('post', 'atualiza-componentes-escolas')) {
+            $this->appendResponse($this->atualizaComponentesEscolas());
         } else {
             $this->notImplementedOperationError();
         }
+    }
+
+    private function handleComponentesArray($componentes)
+    {
+        $arrayComponentes = [];
+
+        foreach ($componentes as $key => $componente) {
+            $arrayComponentes[$key]['id'] = $componente->id;
+            $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
+            $arrayComponentes[$key]['anos_letivos'] = $componente->anos_letivos;
+        }
+
+        return $arrayComponentes;
     }
 }
