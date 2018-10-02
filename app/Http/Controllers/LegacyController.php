@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -84,19 +85,61 @@ class LegacyController extends Controller
     }
 
     /**
+     * Return all HTTP headers created during this request that will returned
+     * in response.
+     *
+     * @return array
+     */
+    private function getHttpHeaders()
+    {
+        $headers = [];
+
+        foreach (headers_list() as $header) {
+            $header = explode(':', $header);
+
+            $name = trim($header[0]);
+            $value = trim($header[1]);
+
+            $headers[$name] = $value;
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Return the current HTTP status code.
+     *
+     * @return int
+     */
+    private function getHttpStatusCode()
+    {
+        return http_response_code();
+    }
+
+    /**
      * Start session, configure errors and exceptions and load necessary files
      * to run legacy code.
      *
      * @param string $filename
      *
-     * @return void
+     * @return Response
      */
     private function requireFileFromLegacy($filename)
     {
+        ob_start();
+
         $this->startLegacySession();
         $this->configureErrorsAndExceptions();
         $this->loadLegacyBootstrapFile();
         $this->loadLegacyFile($filename);
+
+        $content = ob_get_contents();
+
+        ob_end_clean();
+
+        return new Response(
+            $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
+        );
     }
 
     /**
@@ -110,36 +153,36 @@ class LegacyController extends Controller
     }
 
     /**
-     * Load intranet route file.
+     * Load intranet route file and generate a response.
      *
      * @param string $uri
      *
-     * @return void
+     * @return Response
      */
     public function intranet($uri)
     {
-        $this->requireFileFromLegacy('intranet/' . $uri);
+        return $this->requireFileFromLegacy('intranet/' . $uri);
     }
 
     /**
-     * Load module route file.
+     * Load module route file and generate a response.
      *
-     * @return void
+     * @return Response
      */
     public function module()
     {
-        $this->requireFileFromLegacy('module/index.php');
+        return $this->requireFileFromLegacy('module/index.php');
     }
 
     /**
-     * Load modules route file.
+     * Load modules route file and generate a response.
      *
      * @param string $uri
      *
-     * @return void
+     * @return Response
      */
     public function modules($uri)
     {
-        $this->requireFileFromLegacy('modules/' . $uri);
+        return $this->requireFileFromLegacy('modules/' . $uri);
     }
 }
