@@ -188,7 +188,7 @@ ModalSelectEscolas = {
 
         msgContainer.html(
             '<p>Você adicionou <b>' + this.componentes.length + '</b> componente(s) na série <b>' + this.serieNome + '</b><br>' +
-            'Você pode aplicar para todas as escolas, não aplicar em nenhuma escola ou escolher para quais escolas deseja aplicar</p>'
+            'Você pode aplicar as mesmas alterações dessa série para todas as escolas, não aplicar em nenhuma escola ou escolher para quais escolas deseja aplicar</p>'
         );
 
         msgContainer.append(this.getActionButtons());
@@ -293,7 +293,8 @@ ModalSelectEscolas = {
                         type: 'checkbox',
                         id: 'escola-' + escola.cod_escola,
                         name: 'escola[]',
-                        'value': escola.cod_escola
+                        'value': escola.cod_escola,
+                        checked: true
                     })
                 )
             );
