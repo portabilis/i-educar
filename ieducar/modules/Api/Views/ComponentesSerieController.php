@@ -61,10 +61,6 @@ class ComponentesSerieController extends ApiCoreController
 
     public function atualizaComponentesEscolas()
     {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
         $serieId = $this->getRequest()->serie;
         $escolas = json_decode($this->getRequest()->escolas, false);
         $componentes = json_decode($this->getRequest()->componentes, false);
