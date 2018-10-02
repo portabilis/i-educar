@@ -1,8 +1,6 @@
 <?php
 
-
 namespace iEducar\Modules\Educacenso\Deficiencia;
-
 
 class DeficienciaMultiplaProfessor implements CombinacaoDeficienciaMultipla
 {

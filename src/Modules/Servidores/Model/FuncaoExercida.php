@@ -22,5 +22,4 @@ class FuncaoExercida
             self::DOCENTE_TUTOR_EAD => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD'
         ];
     }
-
 }

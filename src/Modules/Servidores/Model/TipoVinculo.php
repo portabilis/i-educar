@@ -18,5 +18,4 @@ class TipoVinculo
             self::CLT => 'Contrato CLT',
         ];
     }
-
 }

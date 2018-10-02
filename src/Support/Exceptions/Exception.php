@@ -7,5 +7,4 @@ use Throwable;
 
 class Exception extends BaseException implements Throwable
 {
-
 }

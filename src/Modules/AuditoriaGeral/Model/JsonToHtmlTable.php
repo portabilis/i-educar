@@ -1,6 +1,7 @@
 <?php
 
 namespace iEducar\Modules\AuditoriaGeral\Model;
+
 require_once 'Portabilis/Date/Utils.php';
 use Portabilis_Date_Utils;
 

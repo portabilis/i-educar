@@ -16,7 +16,6 @@ class ValueDeficienciaMultipla implements ValueInterface
      */
     private $deficiencias;
 
-
     public function __construct(CombinacaoDeficienciaMultipla $combinacao, $deficiencias)
     {
         $this->combinacaoDeficiencias = $combinacao->getCombinacoes();

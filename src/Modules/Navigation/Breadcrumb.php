@@ -4,7 +4,6 @@ namespace iEducar\Modules\Navigation;
 
 class Breadcrumb
 {
-
     public function makeBreadcrumb($currentPage, $breadcrumbs)
     {
         return $this->htmlBreadcrumb($currentPage, $breadcrumbs);
@@ -28,5 +27,4 @@ class Breadcrumb
 
         return implode("\n", $html);
     }
-    
 }
