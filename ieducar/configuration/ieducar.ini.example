@@ -76,8 +76,10 @@ report.logo_file_name = brasil.png
 report.show_error_details = true
 
 ; Define a fabrica de relatórios padrão
-;report.default_factory = Portabilis_Report_ReportFactoryPHPJasperXML
 report.default_factory = Portabilis_Report_ReportFactoryPHPJasper
+
+; Define o diretório dos arquivos fontes dos relatórios
+report.source_path = /home/portabilis/ieducar/ieducar/modules/Reports/ReportSources
 
 ; Configurações da entidade (instituicao)
 ; define o nome da entidade a ser exibido no topo
@@ -128,6 +130,9 @@ modules.error.link_to_support         = https://www.portabilis.com.br/fale_conos
 modules.error.send_notification_email = true
 ;modules.error.notification_email     = username@domain.com.br
 modules.error.show_details            = true
+modules.error.track = false
+modules.error.tracker_name =
+modules.error.honeybadger_key =
 
 ; Configurações google.com/recaptcha (confirmação humana, para evitar robos)
 app.recaptcha.public_key     =

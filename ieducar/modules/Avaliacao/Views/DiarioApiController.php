@@ -1,6 +1,7 @@
 <?php
 
 use Cocur\Slugify\Slugify;
+use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
@@ -28,14 +29,8 @@ class DiarioApiController extends ApiCoreController
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
     protected $_processoAp = 642;
 
-    // validations
-
-    // post nota validations
-
     protected function validatesValueOfAttValueIsInOpcoesNotas()
     {
-        //$expectedValues = array_keys($this->getOpcoesNotas());
-        //return $this->validator->validatesValueInSetOf($this->getRequest()->att_value, $expectedValues, 'att_value');
         return true;
     }
 
@@ -119,6 +114,13 @@ class DiarioApiController extends ApiCoreController
             return $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
                 $etapaId, $componenteCurricularId
             );
+        } catch (MissingStagesException $exception) {
+            $this->messenger->append($exception->getMessage());
+            $this->appendResponse('error', [
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+                'extra' => $exception->getExtraInfo(),
+            ]);
         } catch (Exception $e) {
             $this->messenger->append($e->getMessage());
         }
@@ -809,7 +811,8 @@ class DiarioApiController extends ApiCoreController
                 if ($tpParecer == $cnsParecer::ANUAL_COMPONENTE || $tpParecer == $cnsParecer::ETAPA_COMPONENTE) {
                     $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
                 } else {
-                    $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa);
+                    // FIXME #parameters
+                    $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, null);
                 }
 
                 $this->trySaveServiceBoletim();
@@ -963,6 +966,13 @@ class DiarioApiController extends ApiCoreController
         return $matriculaId;
     }
 
+    /**
+     * @param bool $reload
+     *
+     * @return Avaliacao_Service_Boletim
+     *
+     * @throws CoreExt_Exception
+     */
     protected function serviceBoletim($reload = false)
     {
         $matriculaId = $this->getCurrentMatriculaId();

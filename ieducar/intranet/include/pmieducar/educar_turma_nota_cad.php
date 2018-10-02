@@ -1359,7 +1359,8 @@ class indice extends clsCadastro
                         }
                     }
                     $obj_turma_modulo = new clsPmieducarTurmaModulo();
-                    $fimAnoLetivo = $obj_turma_modulo->fimAno( $this->ref_cod_turma, $this->qtd_modulos );
+                    // FIXME #parameters
+                    $fimAnoLetivo = $obj_turma_modulo->fimAno( $this->ref_cod_turma, $this->qtd_modulos, null, null);
 //                  $total_notas = $obj_nota_aluno->retornaTotalNotas( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_turma, $this->ref_cod_turma );
 
 //                  if ( $total_notas == ( $this->qtd_modulos * $this->qtd_disciplinas ) )

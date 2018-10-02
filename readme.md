@@ -1,4 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/coverage.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
+[![Coverage Status](https://coveralls.io/repos/github/portabilis/i-educar/badge.svg?branch=master)](https://coveralls.io/github/portabilis/i-educar?branch=master)
 
 # i-Educar
 
@@ -188,6 +189,30 @@ A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o
 intuito de facilitar o processo de debug durante o desenvolvimento. Para 
 configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo 
 `docker-compose.yml` conforme orientações da sua IDE de desenvolvimento.
+
+### Executando testes unitários
+
+Para ambiente de desenvolvimento edite o arquivo ieducar/phpunit.xml e removaou
+comente a linha que segue:
+```xml
+    <log type="coverage-clover" target="./tests/log/clover.xml"/>
+```
+
+Esta linha acima é apenas para gerar o xml de coverage para a badge do
+repositório.
+
+Mantenha o coverage-html para visualizar local como está o status de coverage do
+projeto.
+
+Para rodar os testes, execute o comando que segue:
+
+```bash
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phpunit -c /home/portabilis/ieducar/ieducar/phpunit.xml 
+```
+
+#### Visualizar report de coverage
+
+Acesse em seu navegador o arquivo index.html que consta na pasta `ieducar/tests/log/report/index.html`
 
 ## Perguntas frequentes (FAQ)
 
