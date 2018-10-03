@@ -84,9 +84,15 @@ class ComponentesSerieController extends ApiCoreController
                 $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola,
                     $componente['id'], null, null, null, null, $componente['anos_letivos']);
 
-                if (!$objEscolaSerieDisciplina->cadastra()) {
-                    return false;
+                $escolaSerieDisciplina = $objEscolaSerieDisciplina->detalhe();
+
+                if ($escolaSerieDisciplina === false){
+                    $objEscolaSerieDisciplina->cadastra();
+                    continue;
                 }
+
+                $objEscolaSerieDisciplina->anos_letivos = array_merge($componente['anos_letivos'], json_decode($escolaSerieDisciplina['anos_letivos'], true));
+                $objEscolaSerieDisciplina->edita();
             }
         }
     }

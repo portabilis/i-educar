@@ -45,16 +45,33 @@ function handleAtualizaComponentesSerie(response) {
         if (response.msgErro) {
             messageUtils.error(response.msgErro);
         }else{
-            var nmSerie = $j('#ref_cod_serie option:selected').map(function() {
+            let nmSerie = $j('#ref_cod_serie option:selected').map(function() {
                 return this.text;
             }).get();
 
-            if(response.insert){
-                serieId = $j('#serie_id').val();
-                ModalSelectEscolas.init(serieId, nmSerie, response.insert);
-            }else{
-                redirecionaListagem()
+            serieId = $j('#serie_id').val();
+
+            let arrayComponentes = [];
+            let actions = [];
+            if(response.insert && response.insert.length > 0){
+                arrayComponentes = arrayComponentes.concat(response.insert);
+                actions.push('novos-componentes');
             }
+
+            if (response.update && response.update.length > 0) {
+                $j.each(response.update, function (key, componente) {
+                    if (componente.anos_letivos_inseridos && componente.anos_letivos_inseridos.length > 0) {
+                        componente.anos_letivos = componente.anos_letivos_inseridos;
+                        arrayComponentes = arrayComponentes.concat(componente);
+                        actions.push('novos-anos');
+                    }
+                });
+            }
+
+            if (arrayComponentes.length > 0) {
+                ModalSelectEscolas.init(serieId, nmSerie, arrayComponentes, 'novos-componentes', actions);
+            }
+
             messageUtils.success('Componentes da série alterados com sucesso!');
         }
     }
@@ -64,7 +81,7 @@ function handleErroAtualizaComponentesSerie(response){
     safeLog(response);
 }
 
-function adicionaComponentesTodasEscolas(componentes){
+function adicionaComponentesTodasEscolas(dialogId){
     var url = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'replica-componentes-adicionados-escolas', {});
 
     var options = {
@@ -75,19 +92,18 @@ function adicionaComponentesTodasEscolas(componentes){
         serie_id    : serieId,
         componentes : $j('#json-componentes').val()
       },
-      success  : handleReplicaComponentesEscola,
+      success  : function(response) {
+          if(response.any_error_msg){
+              messageUtils.error('Erro ao aplicar alterações para todas as escolas.');
+          }
+          messageUtils.success('Alterações aplicadas para todas as escolas.');
+          closeDialog(dialogId)
+      },
+          //handleReplicaComponentesEscola(idContainer),
       error    : handleErroReplicaComponentesEscola
     };
 
     postResource(options);
-}
-
-function handleReplicaComponentesEscola(response){
-    if(response.any_error_msg){
-        messageUtils.error('Erro ao aplicar alterações para todas as escolas.');
-    }
-    messageUtils.success('Alterações aplicadas para todas as escolas.');
-    redirecionaListagem();
 }
 
 function handleErroReplicaComponentesEscola(response){
@@ -149,20 +165,23 @@ function redirecionaListagem(){
 
 ModalSelectEscolas = {
     links: $j('.mostra-consulta'),
-    dialogContainer: $j('#dialog-container'),
+    dialogContainer: undefined,
     dialog: undefined,
     serieNome: null,
     componentes: [],
+    idContainer: null,
     createDialog: function () {
+        this.dialogContainer = $j('#dialog-container-' + this.idContainer);
+
         if (this.dialogContainer.length < 1) {
             $j('body').append(
-                '<div id="dialog-container" style="max-height: 80vh; width: 820px; overflow: auto;">' +
+                '<div id="dialog-container-' + this.idContainer + '" style="max-height: 80vh; width: 820px; overflow: auto;">' +
                 '<div class="msg"></div>' +
                 '<div class="table"></div>' +
                 '</div>'
             );
 
-            this.dialogContainer = $j('#dialog-container');
+            this.dialogContainer = $j('#dialog-container-' + this.idContainer);
         }
 
         this.dialog = this.dialogContainer.dialog({
@@ -174,8 +193,6 @@ ModalSelectEscolas = {
             resizable: true,
             title: 'Seleção de escolas'
         });
-
-
     },
     makeHtml: function (data) {
         let dialog = this.dialogContainer;
@@ -187,8 +204,7 @@ ModalSelectEscolas = {
             .hide();
 
         msgContainer.html(
-            '<p>Você adicionou <b>' + this.componentes.length + '</b> componente(s) na série <b>' + this.serieNome + '</b><br>' +
-            'Você pode aplicar as mesmas alterações dessa série para todas as escolas, não aplicar em nenhuma escola ou escolher para quais escolas deseja aplicar</p>'
+            this.getContainerMessage()
         );
 
         msgContainer.append(this.getActionButtons());
@@ -196,6 +212,22 @@ ModalSelectEscolas = {
         msgContainer.append(this.getEscolasTable(data));
 
         this.dialog.dialog('option', 'position', {my: 'center', at: 'center', of: window});
+    },
+    getContainerMessage: function () {
+        let msg = 'Foram feitas as seguintes alterações:<br>';
+        msg += '<ul>';
+        if (this.actions.includes('novos-componentes')) {
+            msg += '<li>Foram adicionados <b>' + this.componentes.length + '</b> componente(s) na série <b>' + this.serieNome + '</b></li>';
+        }
+
+        if (this.actions.includes('novos-anos')) {
+            msg += '<li>Foram adicionados novos anos letivos para <b>' + this.componentes.length + '</b> componente(s) na série <b>' + this.serieNome + '</b></li>';
+        }
+
+        msg += '</ul>';
+
+        return msg + 'Você pode aplicar as mesmas alterações dessa série para todas as escolas, não aplicar em nenhuma escola ou escolher para quais escolas deseja aplicar</p>';
+
     },
     showMsg: function (msg) {
         let dialog = this.dialogContainer;
@@ -242,8 +274,8 @@ ModalSelectEscolas = {
             'align': 'center'
         });
 
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesTodasEscolas()">');
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Não aplicar em nenhuma" onclick="redirecionaListagem()">');
+        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesTodasEscolas(\''+this.idContainer+'\')">');
+        buttonsTd.append('<input type="button" class="botaolistagem" value="Não aplicar em nenhuma" onclick="closeDialog(\''+this.idContainer+'\')">');
         buttonsTd.append('<input type="button" class="botao" value="Selecionar escolas para aplicar" onclick="expandEscolas()">');
 
         buttonsTr.append(buttonsTd);
@@ -309,18 +341,19 @@ ModalSelectEscolas = {
         });
 
         div.append(table);
-        div.append('<input type="button" class="botao" value="Aplicar nas escolas selecionadas" onclick="atualizaComponentesEscolas(' + this.serieId + ')">');
+        div.append('<input type="button" class="botao" value="Aplicar nas escolas selecionadas" onclick="atualizaComponentesEscolas(' + this.serieId + ', \''+this.idContainer+'\')">');
 
         return div;
     },
-    init: function (serieId, serieNome, componentes) {
-        this.createDialog();
+    init: function (serieId, serieNome, componentes, idContainer, actions) {
         this.serieNome = serieNome;
         this.componentes = componentes;
         this.serieId = serieId;
-
+        this.idContainer = idContainer;
+        this.actions = actions;
         $j('#json-componentes').val(JSON.stringify(componentes));
 
+        this.createDialog();
         this.request();
     }
 };
@@ -339,7 +372,7 @@ $j('body').append($j('<input>').attr({
     id: 'json-componentes'
 }));
 
-function atualizaComponentesEscolas (serieId) {
+function atualizaComponentesEscolas (serieId, dialogId) {
     let componentes = $j('#json-componentes').val();
     let escolasInput = $j('input[name=escola\\[\\]]');
     let arrayEscolas = [];
@@ -360,6 +393,11 @@ function atualizaComponentesEscolas (serieId) {
     };
 
     $j.post(url, params, function (response) {
-        redirecionaListagem();
+        messageUtils.success('Alterações aplicadas para todas as escolas selecionadas');
+        closeDialog(dialogId)
     });
+}
+
+function closeDialog(dialogId) {
+    $j('#dialog-container-' + dialogId).dialog('close');
 }
