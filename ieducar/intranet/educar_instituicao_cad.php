@@ -173,10 +173,6 @@ class indice extends clsCadastro
         $this->campoNumero('ddd_telefone', 'DDD Telefone', $this->ddd_telefone, 2, 2);
         $this->campoNumero('telefone', 'Telefone', $this->telefone, 11, 11);
 
-        $this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
-
-        $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
-
         ///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
         //$helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
         $options = ['label' => 'Coordenador(a) de transporte',
@@ -185,42 +181,6 @@ class indice extends clsCadastro
             'required' => false];
 
         $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options, $helperOptions);
-
-        $this->inputsHelper()->text(
-            'data_base',
-            [
-                'label' => 'Data base para matrícula (dia/mês)',
-                'size' => 5,
-                'max_length' => 5,
-                'placeholder' => 'dd/mm',
-                'required' => false,
-                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)
-            ]
-        );
-
-        $this->campoData('data_expiracao_reserva_vaga', 'Data para indeferimento automático da reserva de vaga', Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga), null, null, false);
-
-        $this->inputsHelper()->text(
-            'data_fechamento',
-            [
-                'label' => 'Data de fechamento das turmas para matrícula',
-                'size' => 5,
-                'max_length' => 5,
-                'placeholder' => 'dd/mm',
-                'required' => false,
-                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento)
-            ]
-        );
-
-        $this->inputsHelper()->date(
-            'data_educacenso',
-            [
-                'label' => 'Data de referência do Educacenso',
-                'required' => false,
-                'placeholder' => 'dd/mm/yyyy',
-                'value' => $this->data_educacenso
-            ]
-        );
 
         $opcoes = [];
         if (!empty($this->ref_sigla_uf)) {
@@ -242,9 +202,45 @@ class indice extends clsCadastro
         $options = ['label' => 'Código do órgão regional de ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('orgao_regional', $options);
 
-        $this->campoRotulo('gerais','<b id="gerais">Gerais</b>');
+        $this->campoRotulo('gerais','<b>Gerais</b>');
         $this->campoCheck('obrigar_documento_pessoa', 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', $this->obrigar_documento_pessoa);
         
+        $this->campoRotulo('datas','<b>Datas</b>');
+        $this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+        $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+        $this->inputsHelper()->text(
+            'data_base',
+            [
+                'label' => 'Data base para matrícula (dia/mês)',
+                'size' => 5,
+                'max_length' => 5,
+                'placeholder' => 'dd/mm',
+                'required' => false,
+                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)
+            ]
+        );
+        $this->campoData('data_expiracao_reserva_vaga', 'Data para indeferimento automático da reserva de vaga', Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga), null, null, false);
+        $this->inputsHelper()->text(
+            'data_fechamento',
+            [
+                'label' => 'Data de fechamento das turmas para matrícula',
+                'size' => 5,
+                'max_length' => 5,
+                'placeholder' => 'dd/mm',
+                'required' => false,
+                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento)
+            ]
+        );
+        $this->inputsHelper()->date(
+            'data_educacenso',
+            [
+                'label' => 'Data de referência do Educacenso',
+                'required' => false,
+                'placeholder' => 'dd/mm/yyyy',
+                'value' => $this->data_educacenso
+            ]
+        );
+
         $this->campoRotulo('historicos','<b>Históricos</b>');
         $this->campoCheck('gerar_historico_transferencia', 'Gerar histórico de transferência ao transferir matrícula?', $this->gerar_historico_transferencia);
         $this->campoCheck('controlar_posicao_historicos', 'Permitir controlar posicionamento dos históricos em seu respectivo documento', $this->controlar_posicao_historicos);
