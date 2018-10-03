@@ -148,7 +148,7 @@ docker-compose exec php bash
 chmod -R 777 bootstrap/cache
 chmod -R 777 storage
 chmod -R 777 ieducar/modules/Reports/ReportSources/Portabilis
-chmod +x vendor/portabilis/jasperphp/src/JasperStarter/bin/jasperstarter
+chmod +x vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter
 
 php artisan key:generate
 php artisan legacy:link
