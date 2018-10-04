@@ -618,12 +618,9 @@ class indice extends clsCadastro
     $this->inputsHelper()->booleanSelect('turma_mais_educacao', $options);
 
     $scripts = array(
-      '/modules/Cadastro/Assets/Javascripts/Turma.js'
+      '/modules/Cadastro/Assets/Javascripts/Turma.js',
+      '/intranet/scripts/etapas.js'
     );
-
-    if ($this->padrao_ano_escolar != 1) {
-      $scripts[] = '/intranet/scripts/etapas.js';
-    }
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
