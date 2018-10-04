@@ -263,7 +263,7 @@ class clsPmieducarEscolaSerieDisciplina
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->ref_cod_disciplina)) {
             $db = new clsBanco();
-            $set = "";
+            $set = [];
 
             if (is_numeric($this->ativo)) {
                 $set[] = "ativo = '{$this->ativo}'";
