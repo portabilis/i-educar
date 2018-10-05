@@ -643,9 +643,14 @@ class indice extends clsCadastro
       $disciplinas = '';
       $conteudo    = '';
 
-      $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
-        $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, true, $this->ano
-      );
+      try {
+        $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
+            $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, true, $this->ano
+        );
+      } catch (Exception $e) {
+          $this->mensagem = 'A série desta turma está sem componente curricular habilitado. ';
+          return false;
+      }
 
       // Instancia o mapper de turma
       $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
