@@ -647,9 +647,9 @@ class indice extends clsCadastro
         $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
             $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, true, $this->ano
         );
-      } catch (Exception $e) {
-          $this->mensagem = 'A série desta turma está sem componente curricular habilitado. ';
-          return false;
+      }  catch (App_Model_Exception $e) {
+          $this->mensagem = $e->getMessage();
+          return;
       }
 
       // Instancia o mapper de turma
