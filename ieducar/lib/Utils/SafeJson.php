@@ -1,7 +1,7 @@
 <?php
 
-class SafeJson {
-
+class SafeJson
+{
     public static function encode($value, $options = 0, $depth = 512)
     {
         return self::handle(json_encode($value, $options, $depth));
