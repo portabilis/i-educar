@@ -34,7 +34,7 @@ matrix:
         - ieducar/vendor/bin/phinx migrate
         - sed -i -e '/<log type="coverage-html.*UTF-8"\/>/g' ieducar/phpunit.xml
         - sed -i -e 's/API_URI" value="http:\/\/localhost/API_URI" value="http:\/\/localhost:8000/g' ieducar/phpunit.xml
-        - sed -i -e 's/hostname = postgres_95/hostname = localhost/g' ieducar/configuration/testing.ini
+        - sed -i -e 's/hostname = postgres_95/hostname = travis/g' ieducar/configuration/testing.ini
         - CORE_EXT_CONFIGURATION_ENV=testing php -S localhost:8000 -t ieducar/ &
       script:
         - composer test
