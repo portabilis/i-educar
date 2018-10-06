@@ -1,5 +1,15 @@
+# IDE Files
 *.idea
 *~
+
+## Visual Studio
+*.vscode
+
+## Eclipse
+.buildpath
+.project
+.settings
+
 # Vagrant
 /.gitkeep
 /.vagrant
@@ -9,7 +19,6 @@
 Vagrantfile
 deploy/.ruby-version
 ieducar/configuration/ieducar.ini
-*.vscode
 ieducar/modules/Reports
 ieducar/vendor
 ieducar/intranet/filaunica
