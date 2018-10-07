@@ -43,31 +43,33 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @since     Classe disponível desde a versão ?
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchProjeto extends Portabilis_View_Helper_Input_SimpleSearch {
-
-
-  public function simpleSearchProjeto($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'projeto',
+class Portabilis_View_Helper_Input_Resource_SimpleSearchProjeto extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    public function simpleSearchProjeto($attrName, $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'projeto',
                             'apiController' => 'Projeto',
                             'apiResource'   => 'projeto-search',
                             'showIdOnValue' => false);
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
-
-  protected function resourceValue($id) {
-    if ($id) {
-      $sql       = "select nome from pmieducar.projeto where cod_projeto = $1";
-      $options   = array('params' => $id, 'return_only' => 'first-field');
-      $nome = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-
-      return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+        parent::simpleSearch($options['objectName'], $attrName, $options);
     }
-  }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o nome do projeto';
-  }
+    protected function resourceValue($id)
+    {
+        if ($id) {
+            $sql       = "select nome from pmieducar.projeto where cod_projeto = $1";
+            $options   = array('params' => $id, 'return_only' => 'first-field');
+            $nome = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+
+            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+        }
+    }
+
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Informe o nome do projeto';
+    }
 }

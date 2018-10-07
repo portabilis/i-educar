@@ -1,7 +1,5 @@
 <?php
-
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+namespace Ieducar\Portabilis\Utils;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -25,7 +23,7 @@
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
@@ -38,27 +36,31 @@ require_once 'lib/Portabilis/Utils/User.php';
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_Utils_DeprecatedXmlApi {
+class Portabilis_Utils_DeprecatedXmlApi
+{
+    public static function returnEmptyQueryUnlessUserIsLoggedIn($xmlns = 'sugestoes', $rootNodeName = 'query')
+    {
+        if (Portabilis_Utils_User::loggedIn() != true) {
+            Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Login required');
+        }
+    }
 
-  public static function returnEmptyQueryUnlessUserIsLoggedIn($xmlns = 'sugestoes', $rootNodeName = 'query') {
-    if (Portabilis_Utils_User::loggedIn() != true)
-      Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Login required');
-  }
+    public static function returnEmptyQueryForDisabledApi($xmlns = 'sugestoes', $rootNodeName = 'query')
+    {
+        Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Disabled API');
+    }
 
-  public static function returnEmptyQueryForDisabledApi($xmlns = 'sugestoes', $rootNodeName = 'query'){
-    Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Disabled API');
-  }
-
-  public static function returnEmptyQuery($xmlns = 'sugestoes', $rootNodeName = 'query', $comment = ''){
-    $emptyQuery = "<?xml version='1.0' encoding='5'?>" .
+    public static function returnEmptyQuery($xmlns = 'sugestoes', $rootNodeName = 'query', $comment = '')
+    {
+        $emptyQuery = "<?xml version='1.0' encoding='5'?>" .
                   "<!-- $comment -->" .
                   "<$rootNodeName xmlns='$xmlns'></$rootNodeName>";
 
-    die($emptyQuery);
-  }
+        die($emptyQuery);
+    }
 }

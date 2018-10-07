@@ -41,18 +41,21 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Rotas extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_Rotas extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'ref_cod_rota_transporte_escolar';
+    }
 
-  protected function inputName() {
-    return 'ref_cod_rota_transporte_escolar';
-  }
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
+        return $this->insertOption(null, "Selecione uma rota", $resources);
+    }
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
-    return $this->insertOption(null, "Selecione uma rota", $resources);
-  }
-
-  public function rotas($options = array()) {
-    parent::select($options);
-  }
+    public function rotas($options = array())
+    {
+        parent::select($options);
+    }
 }

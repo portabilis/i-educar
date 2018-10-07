@@ -1,4 +1,5 @@
 <?php
+namespace Ieducar\Portabilis\Utils;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -22,7 +23,7 @@
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
@@ -35,43 +36,59 @@ require_once 'lib/Portabilis/Array/Utils.php';
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_Utils_Float {
+class Portabilis_Utils_Float
+{
 
-  // wrapper for Portabilis_Array_Utils::merge
-  protected static function mergeOptions($options, $defaultOptions) {
-    return Portabilis_Array_Utils::merge($options, $defaultOptions);
-  }
+    /**
+     * Wrapper for Portabilis_Array_Utils::merge
+     * @param  array $options
+     * @param  array $defaultOptions
+     * @return array
+     */
+    protected static function mergeOptions($options, $defaultOptions)
+    {
+        return Portabilis_Array_Utils::merge($options, $defaultOptions);
+    }
 
 
-  /* Limita as casas decimais de um numero float, SEM arredonda-lo,
-     ex: para 4.96, usando limit = 1, retornará 4.9 e não 5. */
-  public static function limitDecimal($value, $options = array()) {
-    if (! is_numeric($value))
-      throw new Exception("Value must be numeric!");
-    elseif(is_integer($value))
-      return (float)$value;
+    /**
+     * Limita as casas decimais de um numero float, SEM arredonda-lo
+     *
+     * ex: para 4.96, usando limit = 1, retornará 4.9 e não 5
+     *
+     * @param  float $value
+     * @param  array  $options
+     * @return float
+     */
+    public static function limitDecimal($value, $options = array())
+    {
+        if (! is_numeric($value)) {
+            throw new Exception("Value must be numeric!");
+        } elseif (is_integer($value)) {
+            return (float)$value;
+        }
 
-    $locale         = localeconv();
+        $locale         = localeconv();
 
-    $defaultOptions = array('limit'         => 2,
+        $defaultOptions = array('limit'         => 2,
                             'decimal_point' => $locale['decimal_point'],
                             'thousands_sep' => $locale['thousands_sep']);
 
-    $options        = self::mergeOptions($options, $defaultOptions);
+        $options        = self::mergeOptions($options, $defaultOptions);
 
 
-    // split the values after and before the decimal point.
-    $digits    = explode($options['decimal_point'], (string)$value);
+        // split the values after and before the decimal point.
+        $digits    = explode($options['decimal_point'], (string)$value);
 
-    // limit the decimal using the limit option (defaults to 2), eg: .96789 will be limited to .96
-    $digits[1] = substr($digits[1], 0, $options['limit']);
+        // limit the decimal using the limit option (defaults to 2), eg: .96789 will be limited to .96
+        $digits[1] = substr($digits[1], 0, $options['limit']);
 
-    // join the the digits and convert it to float, eg: '4' and '96', will be '4.96'
-    return (float)($digits[0] . '.' . $digits[1]);
-  }
+        // join the the digits and convert it to float, eg: '4' and '96', will be '4.96'
+        return (float)($digits[0] . '.' . $digits[1]);
+    }
 }

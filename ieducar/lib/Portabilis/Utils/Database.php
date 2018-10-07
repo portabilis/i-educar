@@ -1,7 +1,5 @@
 <?php
-
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+namespace Ieducar\Portabilis\Utils;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -25,7 +23,7 @@
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
@@ -36,93 +34,123 @@ require_once 'lib/Portabilis/Array/Utils.php';
 /**
  * Portabilis_Utils_Database class.
  *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @author Lucas D'Avila <lucas@lucasdavi.la>
+ * @author Ricardo Bortotto <ricardo@portabilis.com.br
+ * @author Lucas Schmoeller da Silva <lucasschmoellerdasilva@gmail.com
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_Utils_Database {
+class Portabilis_Utils_Database
+{
+    public static $_db;
 
-  static $_db;
+    /**
+     * Wrapper for Portabilis_Array_Utils::merge
+     * @param  array $options
+     * @param  array $defaultOptions
+     * @return array
+     */
+    protected static function mergeOptions($options, $defaultOptions)
+    {
+        return Portabilis_Array_Utils::merge($options, $defaultOptions);
+    }
 
-  // wrapper for Portabilis_Array_Utils::merge
-  protected static function mergeOptions($options, $defaultOptions) {
-    return Portabilis_Array_Utils::merge($options, $defaultOptions);
-  }
+    public static function db()
+    {
+        if (! isset(self::$_db)) {
+            self::$_db = new clsBanco();
+        }
 
-  public static function db() {
-    if (! isset(self::$_db))
-      self::$_db = new clsBanco();
+        return self::$_db;
+    }
 
-    return self::$_db;
-  }
+    public static function fetchPreparedQuery($sql, $options = array())
+    {
+        $result         = array();
 
-  public static function fetchPreparedQuery($sql, $options = array()) {
-    $result         = array();
-
-    $defaultOptions = array('params'      => array(),
+        $defaultOptions = array('params'      => array(),
                             'show_errors' => true,
                             'return_only' => '',
                             'messenger'   => null);
 
-    $options        = self::mergeOptions($options, $defaultOptions);
+        $options        = self::mergeOptions($options, $defaultOptions);
 
-    // options validations
-    //if ($options['show_errors'] and is_null($options['messenger']))
-    //  throw new Exception("When 'show_errors' is true you must pass the option messenger too.");
+        // options validations
+        //if ($options['show_errors'] and is_null($options['messenger']))
+        //  throw new Exception("When 'show_errors' is true you must pass the option messenger too.");
 
 
-    try {
-      if (self::db()->execPreparedQuery($sql, $options['params']) != false) {
-        while (self::db()->ProximoRegistro())
-          $result[] = self::db()->Tupla();
+        try {
+            if (self::db()->execPreparedQuery($sql, $options['params']) != false) {
+                while (self::db()->ProximoRegistro()) {
+                    $result[] = self::db()->Tupla();
+                }
 
-        if (in_array($options['return_only'], array('first-line', 'first-row', 'first-record')) and count($result) > 0)
-          $result = $result[0];
-        elseif ($options['return_only'] == 'first-field' and count($result) > 0 and count($result[0]) > 0)
-          $result = $result[0][0];
-      }
+                if (in_array($options['return_only'], array('first-line', 'first-row', 'first-record')) and count($result) > 0) {
+                    $result = $result[0];
+                } elseif ($options['return_only'] == 'first-field' and count($result) > 0 and count($result[0]) > 0) {
+                    $result = $result[0][0];
+                }
+            }
+        } catch (Exception $e) {
+            if ($options['show_errors'] and ! is_null($options['messenger'])) {
+                $options['messenger']->append($e->getMessage(), 'error');
+            } else {
+                throw $e;
+            }
+        }
+
+        return $result;
     }
-    catch(Exception $e) {
-      if ($options['show_errors'] and ! is_null($options['messenger']))
-        $options['messenger']->append($e->getMessage(), 'error');
-      else
-        throw $e;
+
+    /**
+     * Helper para consultas que buscam apenas o primeiro campo
+     *
+     * considera o segundo argumento o array de options esperado por fetchPreparedQuery
+     * a menos que este não possua um chave params ou não seja um array,
+     * neste caso o considera como params
+     *
+     * @param  string $sql
+     * @param  array  $paramsOrOptions [description]
+     * @return array
+     */
+    public static function selectField($sql, $paramsOrOptions = array())
+    {
+        if (! is_array($paramsOrOptions) || ! isset($paramsOrOptions['params'])) {
+            $paramsOrOptions = array('params' => $paramsOrOptions);
+        }
+
+        $paramsOrOptions['return_only'] = 'first-field';
+        return self::fetchPreparedQuery($sql, $paramsOrOptions);
     }
 
-    return $result;
-  }
 
-  // helper para consultas que buscam apenas o primeiro campo,
-  // considera o segundo argumento o array de options esperado por fetchPreparedQuery
-  // a menos que este não possua um chave params ou não seja um array,
-  // neste caso o considera como params
-  public static function selectField($sql, $paramsOrOptions = array()) {
+    /**
+     * Helper para consultas que buscam apenas a primeira linha
+     *
+     * considera o segundo argumento o array de options esperado por fetchPreparedQuery
+     * a menos que este não possua um chave params ou não seja um array,
+     * neste caso o considera como params
+     *
+     * @param  string $sql
+     * @param  array  $paramsOrOptions
+     * @return array
+     */
+    public static function selectRow($sql, $paramsOrOptions = array())
+    {
+        if (! is_array($paramsOrOptions) || ! isset($paramsOrOptions['params'])) {
+            $paramsOrOptions = array('params' => $paramsOrOptions);
+        }
 
-    if (! is_array($paramsOrOptions) || ! isset($paramsOrOptions['params']))
-      $paramsOrOptions = array('params' => $paramsOrOptions);
+        $paramsOrOptions['return_only'] = 'first-row';
+        return self::fetchPreparedQuery($sql, $paramsOrOptions);
+    }
 
-    $paramsOrOptions['return_only'] = 'first-field';
-    return self::fetchPreparedQuery($sql, $paramsOrOptions);
-  }
-
-  // helper para consultas que buscam apenas a primeira linha
-  // considera o segundo argumento o array de options esperado por fetchPreparedQuery
-  // a menos que este não possua um chave params ou não seja um array,
-  // neste caso o considera como params
-  public static function selectRow($sql, $paramsOrOptions = array()) {
-
-    if (! is_array($paramsOrOptions) || ! isset($paramsOrOptions['params']))
-      $paramsOrOptions = array('params' => $paramsOrOptions);
-
-    $paramsOrOptions['return_only'] = 'first-row';
-    return self::fetchPreparedQuery($sql, $paramsOrOptions);
-  }
-
-  public static function arrayToPgArray(array $value):string
-  {
-    return "'{" . implode(',', $value) . "}'";
-  }
+    public static function arrayToPgArray(array $value)
+    {
+        return "'{" . implode(',', $value) . "}'";
+    }
 }

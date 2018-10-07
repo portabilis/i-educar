@@ -41,73 +41,80 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Helper_DynamicInput_CoreSelect {
-
-  protected function inputValue($value = null) {
-    return $this->getBibliotecaId($value);
-  }
-
-
-  protected function inputName() {
-    return 'ref_cod_biblioteca';
-  }
-
-
-  protected function inputOptions($options) {
-    $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId();
-    $escolaId      = $this->getEscolaId();
-
-    if ($instituicaoId and $escolaId and empty($resources)) {
-      // se possui id escola então filtra bibliotecas pelo id desta escola
-      $resources = App_Model_IedFinder::getBibliotecas($instituicaoId, $escolaId);
+class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputValue($value = null)
+    {
+        return $this->getBibliotecaId($value);
     }
 
-    return $this->insertOption(null, "Selecione uma biblioteca", $resources);
-  }
+
+    protected function inputName()
+    {
+        return 'ref_cod_biblioteca';
+    }
 
 
-  public function selectInput($options = array()) {
-    parent::select($options);
-  }
+    protected function inputOptions($options)
+    {
+        $resources     = $options['resources'];
+        $instituicaoId = $this->getInstituicaoId();
+        $escolaId      = $this->getEscolaId();
+
+        if ($instituicaoId and $escolaId and empty($resources)) {
+            // se possui id escola então filtra bibliotecas pelo id desta escola
+            $resources = App_Model_IedFinder::getBibliotecas($instituicaoId, $escolaId);
+        }
+
+        return $this->insertOption(null, "Selecione uma biblioteca", $resources);
+    }
 
 
-  public function stringInput($options = array()) {
-    $defaultOptions       = array('options' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
+    public function selectInput($options = array())
+    {
+        parent::select($options);
+    }
 
-    // subescreve $options['options']['value'] com nome escola
-    if (isset($options['options']['value']) && $options['options']['value'])
-      $bibliotecaId =  $options['options']['value'];
-    else
-      $bibliotecaId = $this->getBibliotecaId($options['id']);
 
-    $biblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
-    $options['options']['value'] = $biblioteca['nm_biblioteca'];
+    public function stringInput($options = array())
+    {
+        $defaultOptions       = array('options' => array());
+        $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'        => 'ref_cod_biblioteca',
+        // subescreve $options['options']['value'] com nome escola
+        if (isset($options['options']['value']) && $options['options']['value']) {
+            $bibliotecaId =  $options['options']['value'];
+        } else {
+            $bibliotecaId = $this->getBibliotecaId($options['id']);
+        }
+
+        $biblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
+        $options['options']['value'] = $biblioteca['nm_biblioteca'];
+
+        $defaultInputOptions = array('id'        => 'ref_cod_biblioteca',
                                  'label'     => 'Biblioteca',
                                  'value'     => '',
                                  'inline'    => false,
                                  'descricao' => '',
                                  'separador' => ':');
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $this->viewInstance->campoOculto($inputOptions['id'], $bibliotecaId);
+        $this->viewInstance->campoOculto($inputOptions['id'], $bibliotecaId);
 
-    $inputOptions['id'] = 'biblioteca_nome';
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
-  }
+        $inputOptions['id'] = 'biblioteca_nome';
+        call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
+    }
 
 
-  public function biblioteca($options = array()) {
-    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL'))
-      $this->selectInput($options);
+    public function biblioteca($options = array())
+    {
+        if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL')) {
+            $this->selectInput($options);
+        } elseif ($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA')) {
+            $this->stringInput($options);
+        }
 
-    elseif($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA'))
-      $this->stringInput($options);
-
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Biblioteca.js');
-  }
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Biblioteca.js');
+    }
 }

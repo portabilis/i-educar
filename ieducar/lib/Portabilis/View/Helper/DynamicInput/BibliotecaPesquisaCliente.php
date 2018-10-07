@@ -42,25 +42,27 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Portabilis_View_Helper_DynamicInput_Core {
+class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Portabilis_View_Helper_DynamicInput_Core
+{
+    protected function getResourceId($id = null)
+    {
+        if (! $id && $this->viewInstance->ref_cod_cliente) {
+            $id = $this->viewInstance->ref_cod_cliente;
+        }
+
+        return $id;
+    }
 
 
-  protected function getResourceId($id = null) {
-    if (! $id && $this->viewInstance->ref_cod_cliente)
-      $id = $this->viewInstance->ref_cod_cliente;
+    public function bibliotecaPesquisaCliente($options = array())
+    {
+        $defaultOptions       = array('id' => null, 'options' => array(), 'hiddenInputOptions' => array());
+        $options              = $this->mergeOptions($options, $defaultOptions);
 
-    return $id;
-  }
+        $inputHint = "<img border='0' onclick='pesquisaCliente();' id='lupa_pesquisa_cliente' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
 
-
-  public function bibliotecaPesquisaCliente($options = array()) {
-    $defaultOptions       = array('id' => null, 'options' => array(), 'hiddenInputOptions' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $inputHint = "<img border='0' onclick='pesquisaCliente();' id='lupa_pesquisa_cliente' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
-
-    // input
-    $defaultInputOptions = array('id'    => 'nome_cliente',
+        // input
+        $defaultInputOptions = array('id'    => 'nome_cliente',
                             'label'      => 'Cliente',
                             'value'      => '',
                             'size'       => '30',
@@ -74,18 +76,18 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
                             'event'      => 'onKeyUp',
                             'disabled'   => true);
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
 
-    // hidden input
-    $defaultHiddenInputOptions = array('id'    => 'ref_cod_cliente',
+        // hidden input
+        $defaultHiddenInputOptions = array('id'    => 'ref_cod_cliente',
                                        'value' => $this->getResourceId($options['id']));
 
-    $hiddenInputOptions = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoOculto'), $hiddenInputOptions);
+        $hiddenInputOptions = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
+        call_user_func_array(array($this->viewInstance, 'campoOculto'), $hiddenInputOptions);
 
-    // js
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
+        // js
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetCliente = function(){
         $("#ref_cod_cliente").val("");
         $("#nome_cliente").val("");
@@ -93,7 +95,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
 
       $("#ref_cod_biblioteca").change(resetCliente);', true);
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, "
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, "
       function pesquisaCliente() {
         var additionalFields = getElementFor('biblioteca');
         var exceptFields     = getElementFor('nome_cliente');
@@ -106,5 +108,5 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
         }
       }
     ");
-  }
+    }
 }

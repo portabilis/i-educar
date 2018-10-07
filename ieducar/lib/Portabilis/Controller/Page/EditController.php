@@ -1,7 +1,5 @@
 <?php
-
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+namespace Ieducar\Portabilis\Controller\Page;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -23,9 +21,11 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @author Lucas D'Avila <lucassdvl@gmail.com>
+ * @author Lucas Schmoeller da Silva <llucas_gs@hotmail.com>
+ * @author Eder Soares <edersoares@me.com>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @subpackage  lib
  * @since   Arquivo disponível desde a versão ?
@@ -45,165 +45,179 @@ require_once 'lib/Portabilis/View/Helper/Application.php';
 // Resource controller
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
+    protected $_dataMapper = null;
 
-  protected $_dataMapper = null;
-
-  # vars that must be overwritten in subclasses
+    # vars that must be overwritten in subclasses
     # protected $_processoAp        = 0;
     # protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
 
-  # vars that can be overwritten
+    # vars that can be overwritten
     # protected $_dataMapper   = 'Avaliacao_Model_NotaComponenteDataMapper';
     # protected $_saveOption   = FALSE;
     # protected $_deleteOption = FALSE;
     # protected $_titulo       = 'Cadastro de aluno';
 
-  protected $_nivelAcessoInsuficiente = "/module/Error/unauthorized";
+    protected $_nivelAcessoInsuficiente = "/module/Error/unauthorized";
 
 
-  protected $_titulo               = '';
-  protected $backwardCompatibility = false;
+    protected $_titulo               = '';
+    protected $backwardCompatibility = false;
 
-  public function __construct(){
-    parent::__construct();
-    $this->loadAssets();
-  }
-
-  // methods that can be overwritten
-
-  protected function canSave()
-  {
-    return true;
-  }
-
-
-  // methods that must be overwritten
-
-  function Gerar()
-  {
-    throw new Exception("The method 'Gerar' must be overwritten!");
-  }
-
-
-  protected function save()
-  {
-    throw new Exception("The method 'save' must be overwritten!");
-  }
-
-
-  // methods that cannot be overwritten
-
-  protected function _save()
-  {
-    $result = false;
-
-    // try set or load entity before validation or save
-    if (! $this->_initNovo())
-      $this->_initEditar();
-
-    if (! $this->messenger()->hasMsgWithType('error') && $this->canSave()) {
-      try {
-        $result = $this->save();
-
-        if (is_null($result))
-          $result = ! $this->messenger()->hasMsgWithType('error');
-        elseif(! is_bool($result))
-          throw new Exception("Invalid value returned from '_save' method: '$result', please return null, true or false!");
-      }
-      catch (Exception $e) {
-        $this->messenger()->append('Erro ao gravar altera&ccedil;&otilde;es, por favor, tente novamente.', 'error');
-        error_log("Erro ao gravar alteracoes: " .  $e->getMessage());
-
-        $result = false;
-      }
-
-      $result = $result && ! $this->messenger()->hasMsgWithType('error');
-
-      if ($result)
-        $this->messenger()->append('Altera&ccedil;&otilde;es gravadas com sucesso.', 'success', false, 'success');
-     }
-
-    return $result;
-  }
-
-
-  protected function flashMessage()
-  {
-    if (! $this->hasErrors())
-      return $this->messenger()->toHtml();
-
-    return '';
-  }
-
-
-  // helpers
-
-  protected function validator() {
-    if (! isset($this->_validator)) {
-        // FIXME #parameters
-        $messenger = null;
-        $this->_validator = new Portabilis_Validator($messenger);
+    public function __construct()
+    {
+        parent::__construct();
+        $this->loadAssets();
     }
 
-    return $this->_validator;
-  }
+    // methods that can be overwritten
+
+    protected function canSave()
+    {
+        return true;
+    }
 
 
-  protected function messenger() {
-    if (! isset($this->_messenger))
-      $this->_messenger = new Portabilis_Messenger();
+    // methods that must be overwritten
 
-    return $this->_messenger;
-  }
+    public function Gerar()
+    {
+        throw new Exception("The method 'Gerar' must be overwritten!");
+    }
 
-  protected function loadResourceAssets($dispatcher){
-    $rootPath       = $_SERVER['DOCUMENT_ROOT'];
-    $controllerName = ucwords($dispatcher->getControllerName());
-    $actionName     = ucwords($dispatcher->getActionName());
 
-    $style          = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
-    $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+    protected function save()
+    {
+        throw new Exception("The method 'save' must be overwritten!");
+    }
 
-    if (file_exists($rootPath . $style))
-      Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
-    if (file_exists($rootPath . $script))
-      Portabilis_View_Helper_Application::loadJavascript($this, $script);
-  }
+    // methods that cannot be overwritten
 
-  protected function loadAssets(){
-    Portabilis_View_Helper_Application::loadJQueryFormLib($this);
+    protected function _save()
+    {
+        $result = false;
 
-    $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',
+        // try set or load entity before validation or save
+        if (! $this->_initNovo()) {
+            $this->_initEditar();
+        }
+
+        if (! $this->messenger()->hasMsgWithType('error') && $this->canSave()) {
+            try {
+                $result = $this->save();
+
+                if (is_null($result)) {
+                    $result = ! $this->messenger()->hasMsgWithType('error');
+                } elseif (! is_bool($result)) {
+                    throw new Exception("Invalid value returned from '_save' method: '$result', please return null, true or false!");
+                }
+            } catch (Exception $e) {
+                $this->messenger()->append('Erro ao gravar altera&ccedil;&otilde;es, por favor, tente novamente.', 'error');
+                error_log("Erro ao gravar alteracoes: " .  $e->getMessage());
+
+                $result = false;
+            }
+
+            $result = $result && ! $this->messenger()->hasMsgWithType('error');
+
+            if ($result) {
+                $this->messenger()->append('Altera&ccedil;&otilde;es gravadas com sucesso.', 'success', false, 'success');
+            }
+        }
+
+        return $result;
+    }
+
+
+    protected function flashMessage()
+    {
+        if (! $this->hasErrors()) {
+            return $this->messenger()->toHtml();
+        }
+
+        return '';
+    }
+
+
+    // helpers
+
+    protected function validator()
+    {
+        if (! isset($this->_validator)) {
+            // FIXME #parameters
+            $messenger = null;
+            $this->_validator = new Portabilis_Validator($messenger);
+        }
+
+        return $this->_validator;
+    }
+
+
+    protected function messenger()
+    {
+        if (! isset($this->_messenger)) {
+            $this->_messenger = new Portabilis_Messenger();
+        }
+
+        return $this->_messenger;
+    }
+
+    protected function loadResourceAssets($dispatcher)
+    {
+        $rootPath       = $_SERVER['DOCUMENT_ROOT'];
+        $controllerName = ucwords($dispatcher->getControllerName());
+        $actionName     = ucwords($dispatcher->getActionName());
+
+        $style          = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
+        $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+
+        if (file_exists($rootPath . $style)) {
+            Portabilis_View_Helper_Application::loadStylesheet($this, $style);
+        }
+
+        if (file_exists($rootPath . $script)) {
+            Portabilis_View_Helper_Application::loadJavascript($this, $script);
+        }
+    }
+
+    protected function loadAssets()
+    {
+        Portabilis_View_Helper_Application::loadJQueryFormLib($this);
+
+        $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',
                     '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
                     'styles/localizacaoSistema.css');
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
 
-    $scripts = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+        $scripts = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                      '/modules/Portabilis/Assets/Javascripts/Validator.js',
                      '/modules/Portabilis/Assets/Javascripts/Utils.js');
 
-    if (! $this->backwardCompatibility)
-      $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js';
+        if (! $this->backwardCompatibility) {
+            $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js';
+        }
 
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-  }
-
-
-  // wrappers for Portabilis_*Utils*
-
-  protected static function mergeOptions($options, $defaultOptions) {
-    return Portabilis_Array_Utils::merge($options, $defaultOptions);
-  }
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
 
 
-  protected function fetchPreparedQuery($sql, $options = array()) {
-    return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-  }
+    // wrappers for Portabilis_*Utils*
+
+    protected static function mergeOptions($options, $defaultOptions)
+    {
+        return Portabilis_Array_Utils::merge($options, $defaultOptions);
+    }
 
 
-  protected function getDataMapperFor($packageName, $modelName){
-    return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
-  }
+    protected function fetchPreparedQuery($sql, $options = array())
+    {
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+    }
+
+
+    protected function getDataMapperFor($packageName, $modelName)
+    {
+        return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
+    }
 }

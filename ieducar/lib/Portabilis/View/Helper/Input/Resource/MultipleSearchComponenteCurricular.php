@@ -43,44 +43,47 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @since     ?
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular extends Portabilis_View_Helper_Input_MultipleSearch {
+class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular extends Portabilis_View_Helper_Input_MultipleSearch
+{
+    protected function getOptions($resources)
+    {
+        if (empty($resources)) {
+            $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id, nome FROM modules.componente_curricular');
+            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
+        }
 
-  protected function getOptions($resources) {
-
-    if (empty($resources)) {
-      $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id, nome FROM modules.componente_curricular');
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
+        return $this->insertOption(null, '', $resources);
     }
 
-    return $this->insertOption(null, '', $resources);
-  }
-
-  public function multipleSearchComponenteCurricular($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'componentecurricular',
+    public function multipleSearchComponenteCurricular($attrName, $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'componentecurricular',
                             'apiController' => 'ComponenteCurricular',
                             'apiResource'   => 'componentecurricular-search');
 
-    $options                         = $this->mergeOptions($options, $defaultOptions);
-    $options['options']['resources'] = $this->getOptions($options['options']['resources']);
+        $options                         = $this->mergeOptions($options, $defaultOptions);
+        $options['options']['resources'] = $this->getOptions($options['options']['resources']);
 
-    $this->placeholderJs($options);
+        $this->placeholderJs($options);
 
-    parent::multipleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::multipleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function placeholderJs($options) {
-    $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
-    $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
+    protected function placeholderJs($options)
+    {
+        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione os componentes');";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+    }
 
-   protected function loadAssets() {
-    Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchComponenteCurricular.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-  }
+    protected function loadAssets()
+    {
+        Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchComponenteCurricular.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    }
 }

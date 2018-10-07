@@ -1,4 +1,5 @@
 <?php
+namespace Ieducar\Portabilis\Currency;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -22,7 +23,7 @@
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     ?
  * @version   $Id$
@@ -34,21 +35,35 @@
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     ?
  * @version   @@package_version@@
  */
-class Portabilis_Currency_Utils {
-  
-  //converte um valor numérico de moeda brasileira (ex: 2,32) para estrangeira (2.32)
-  public static function moedaBrToUs($valor) {
-    return str_replace(',', '.', (str_replace('.', '', $valor)));
-  }
+class Portabilis_Currency_Utils
+{
 
-  //converte um valor numérico de moeda estrangeira (ex: 2.32) para brasileira (2,32)
-  public static function moedaUsToBr($valor){
-    return str_replace('.', ',', $valor);
-  }
+    /**
+     * Converte um valor numérico de moeda brasileira
+     *
+     * ex: (2,32) para estrangeira (2.32)
+     *
+     * @param  string $valor
+     * @return string
+     */
+    public static function moedaBrToUs($valor)
+    {
+        return str_replace(',', '.', (str_replace('.', '', $valor)));
+    }
 
+    /**
+     * Converte um valor numérico de moeda estrangeira
+     *
+     * @param  string $valor [description]
+     * @return string        [description]
+     */
+    public static function moedaUsToBr($valor)
+    {
+        return str_replace('.', ',', $valor);
+    }
 }

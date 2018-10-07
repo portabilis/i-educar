@@ -1,4 +1,5 @@
 <?php
+namespace Ieducar\Portabilis\Controller;
 
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
@@ -23,9 +24,9 @@ ini_set("display_errors", 1);
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @author    Lucas D'Avila <lucas@lucasdavi.la>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @subpackage  lib
  * @since   Arquivo disponível desde a versão ?
@@ -38,52 +39,63 @@ require_once 'lib/Portabilis/View/Helper/Application.php';
 
 class Portabilis_Controller_ErrorCoreController extends Core_Controller_Page_ViewController
 {
-  protected $_titulo = 'Error';
+    protected $_titulo = 'Error';
 
-  public function __construct() {
-    parent::__construct();
-    $this->loadAssets();
-  }
-
-  /* overwrite Core/Controller/Page/Abstract.php para renderizar html
-     sem necessidade de usuário estar logado */
-  public function generate(CoreExt_Controller_Page_Interface $instance)
-  {
-    $this->setHeader();
-
-    $viewBase         = new Core_View($instance);
-    $viewBase->titulo = $this->_titulo;
-    $viewBase->addForm($instance);
-
-    $html = $viewBase->MakeHeadHtml();
-
-    foreach ($viewBase->clsForm as $form) {
-      $html .= $form->Gerar();
+    public function __construct()
+    {
+        parent::__construct();
+        $this->loadAssets();
     }
 
-    $html .= $form->getAppendedOutput();
-    $html .= $viewBase->MakeFootHtml();
+    /**
+     * Renderizar html
+     *
+     * overwrite Core/Controller/Page/Abstract.php para renderizar html
+     * sem necessidade de usuário estar logado
+     *
+     * @param  CoreExt_Controller_Page_Interface $instance
+     * @return string echo html
+     */
+    public function generate(CoreExt_Controller_Page_Interface $instance)
+    {
+        $this->setHeader();
 
-    echo $html;
-  }
+        $viewBase         = new Core_View($instance);
+        $viewBase->titulo = $this->_titulo;
+        $viewBase->addForm($instance);
 
-  protected function loadAssets() {
-    $styles = array(
+        $html = $viewBase->MakeHeadHtml();
+
+        foreach ($viewBase->clsForm as $form) {
+            $html .= $form->Gerar();
+        }
+
+        $html .= $form->getAppendedOutput();
+        $html .= $viewBase->MakeFootHtml();
+
+        echo $html;
+    }
+
+    protected function loadAssets()
+    {
+        $styles = array(
       'styles/reset.css',
       'styles/portabilis.css',
       'styles/min-portabilis.css',
       '/modules/Error/Assets/Stylesheets/Error.css'
     );
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-  }
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+    }
 
 
-  protected function setHeader() {
-    die('setHeader must be overwritten!');
-  }
+    protected function setHeader()
+    {
+        die('setHeader must be overwritten!');
+    }
 
-  public function Gerar() {
-    die('Gerar must be overwritten!');
-  }
+    public function Gerar()
+    {
+        die('Gerar must be overwritten!');
+    }
 }

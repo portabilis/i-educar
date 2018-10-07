@@ -41,18 +41,19 @@ require_once 'Portabilis/Date/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Core
+{
+    public function date($attrName, $options = array())
+    {
+        $defaultOptions = array('options' => array(), 'objectName' => '');
 
-  public function date($attrName, $options = array()) {
-    $defaultOptions = array('options' => array(), 'objectName' => '');
+        $options             = $this->mergeOptions($options, $defaultOptions);
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
 
-    $options             = $this->mergeOptions($options, $defaultOptions);
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+        $label = ! empty($attrName) ? $attrName : $options['objectName'];
+        $label = str_replace('_id', '', $label);
 
-    $label = ! empty($attrName) ? $attrName : $options['objectName'];
-    $label = str_replace('_id', '', $label);
-
-    $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
+        $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
                                  'label'          => ucwords($label),
                                  'value'          => null,
                                  'required'       => true,
@@ -64,27 +65,29 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
                                  'hint'       => 'dd/mm/aaaa',
                              );
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $isDbFormated = strrpos($inputOptions['value'], '-') > -1;
+        $isDbFormated = strrpos($inputOptions['value'], '-') > -1;
 
-    if ($isDbFormated)
-      $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
+        if ($isDbFormated) {
+            $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
+        }
 
-    call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
-    $this->fixupPlaceholder($inputOptions);
+        call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
+        $this->fixupPlaceholder($inputOptions);
 
-    // implementado fixup via js, pois algumas opções não estão sendo verificadas pelo helper ieducar.
-    $this->fixupOptions($inputOptions);
-  }
+        // implementado fixup via js, pois algumas opções não estão sendo verificadas pelo helper ieducar.
+        $this->fixupOptions($inputOptions);
+    }
 
-  protected function fixupOptions($inputOptions) {
-    $id           = $inputOptions['id'];
+    protected function fixupOptions($inputOptions)
+    {
+        $id           = $inputOptions['id'];
 
-    $sizeFixup    = "\$input.attr('size', " . $inputOptions['size'] . ");";
-    $disableFixup = $inputOptions['disabled'] ? "\$input.attr('disabled', 'disabled');" : '';
+        $sizeFixup    = "\$input.attr('size', " . $inputOptions['size'] . ");";
+        $disableFixup = $inputOptions['disabled'] ? "\$input.attr('disabled', 'disabled');" : '';
 
-    $script = "
+        $script = "
       var \$input = \$j('#" . $id . "');
       $sizeFixup
       $disableFixup
@@ -102,6 +105,6 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
       });
     ";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $script, $afterReady = true);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $script, $afterReady = true);
+    }
 }

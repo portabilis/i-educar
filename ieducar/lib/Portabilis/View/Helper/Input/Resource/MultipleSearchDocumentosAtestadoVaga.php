@@ -42,12 +42,12 @@ require_once 'lib/Portabilis/View/Helper/Input/MultipleSearch.php';
  * @since     ?
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga extends Portabilis_View_Helper_Input_MultipleSearch {
-
-  protected function getOptions($resources) {
-
-    if (empty($resources)) {
-      $resources = array('certidao_nasci'         => 'Certid&atilde;o de nascimento e/ou carteira de identidade',
+class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga extends Portabilis_View_Helper_Input_MultipleSearch
+{
+    protected function getOptions($resources)
+    {
+        if (empty($resources)) {
+            $resources = array('certidao_nasci'         => 'Certid&atilde;o de nascimento e/ou carteira de identidade',
                          'comprovante_resi'       => 'Comprovante de resid&ecirc;ncia',
                          'foto_3_4'               => 'Foto 3/4',
                          'historico_escola'       => 'Hist&oacute;rico escolar original',
@@ -61,29 +61,31 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
                          'tit_eleitor'            => 'T&iacute;tulo de eleitor do respons&aacute;vel',
                          'doc_nis'                => 'N&uacute;mero de Identifica&ccedil;&atilde;o Social - NIS'
                          );
-    }
+        }
 
-    return $this->insertOption(null, '', $resources);
-  }
-  public function multipleSearchDocumentosAtestadoVaga($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'documentos',
+        return $this->insertOption(null, '', $resources);
+    }
+    public function multipleSearchDocumentosAtestadoVaga($attrName, $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'documentos',
                             'apiController' => '',
                             'apiResource'   => '');
 
-    $options                         = $this->mergeOptions($options, $defaultOptions);
+        $options                         = $this->mergeOptions($options, $defaultOptions);
 
-    $options['options']['resources'] = $this->getOptions($options['options']['resources']);
+        $options['options']['resources'] = $this->getOptions($options['options']['resources']);
 
-    $this->placeholderJs($options);
+        $this->placeholderJs($options);
 
-    parent::multipleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::multipleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function placeholderJs($options) {
-    $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
-    $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
+    protected function placeholderJs($options)
+    {
+        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione os componentes');";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+    }
 }

@@ -42,10 +42,10 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/ComponenteCurricular.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_ComponenteCurricularForDiario extends Portabilis_View_Helper_DynamicInput_ComponenteCurricular {
-
-  public function componenteCurricularForDiario($options = array()){
-    return parent::componenteCurricular($options);
-  }
-
+class Portabilis_View_Helper_DynamicInput_ComponenteCurricularForDiario extends Portabilis_View_Helper_DynamicInput_ComponenteCurricular
+{
+    public function componenteCurricularForDiario($options = array())
+    {
+        return parent::componenteCurricular($options);
+    }
 }

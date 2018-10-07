@@ -42,11 +42,12 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_Core {
-
-  protected function fixupValidation($inputOptions) {
-    // fixup para remover caracteres não numericos
-    $js = " \$j('#" . $inputOptions['id'] . "').keyup(function(){
+class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_Core
+{
+    protected function fixupValidation($inputOptions)
+    {
+        // fixup para remover caracteres não numericos
+        $js = " \$j('#" . $inputOptions['id'] . "').keyup(function(){
       var oldValue = this.value;
       this.value = this.value.replace(/[^0-9\.-]/g, '');
 
@@ -63,19 +64,20 @@ class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_
     });
     ";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
+    }
 
-  public function numeric($attrName, $options = array()) {
-    $defaultOptions = array('options' => array(), 'objectName' => '');
+    public function numeric($attrName, $options = array())
+    {
+        $defaultOptions = array('options' => array(), 'objectName' => '');
 
-    $options             = $this->mergeOptions($options, $defaultOptions);
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+        $options             = $this->mergeOptions($options, $defaultOptions);
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
 
-    $label = ! empty($attrName) ? $attrName : $options['objectName'];
-    $label = str_replace('_id', '', $label);
+        $label = ! empty($attrName) ? $attrName : $options['objectName'];
+        $label = str_replace('_id', '', $label);
 
-    $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
+        $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
                                  'label'      => ucwords($label),
                                  'value'      => null,
                                  'size'       => 15,
@@ -88,12 +90,12 @@ class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_
                                  'inline'     => false,
                                  'disabled'   => false);
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
 
-    call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
+        call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
 
-    $this->fixupPlaceholder($inputOptions);
-    $this->fixupValidation($inputOptions);
-  }
+        $this->fixupPlaceholder($inputOptions);
+        $this->fixupValidation($inputOptions);
+    }
 }

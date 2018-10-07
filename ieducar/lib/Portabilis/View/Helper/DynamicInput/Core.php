@@ -41,12 +41,13 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_Core extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_DynamicInput_Core extends Portabilis_View_Helper_Input_Core
+{
+    protected function loadCoreAssets()
+    {
+        parent::loadCoreAssets();
 
-  protected function loadCoreAssets() {
-    parent::loadCoreAssets();
-
-    $dependencies = array('/modules/DynamicInput/Assets/Javascripts/DynamicInput.js');
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
-  }
+        $dependencies = array('/modules/DynamicInput/Assets/Javascripts/DynamicInput.js');
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
+    }
 }

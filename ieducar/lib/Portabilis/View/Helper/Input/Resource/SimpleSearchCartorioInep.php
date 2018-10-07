@@ -4,8 +4,8 @@ require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
-class Portabilis_View_Helper_Input_Resource_SimpleSearchCartorioInep extends Portabilis_View_Helper_Input_SimpleSearch {
-
+class Portabilis_View_Helper_Input_Resource_SimpleSearchCartorioInep extends Portabilis_View_Helper_Input_SimpleSearch
+{
     protected function resourceValue($id)
     {
         if ($id) {
@@ -40,8 +40,9 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCartorioInep extends Por
         return 'Informe o código ou nome do cartório';
     }
 
-    protected function loadAssets() {
+    protected function loadAssets()
+    {
         $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchCartorioInep.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-      }
+    }
 }

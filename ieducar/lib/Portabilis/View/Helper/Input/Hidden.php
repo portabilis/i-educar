@@ -42,18 +42,19 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_Core
+{
+    public function hidden($attrName, $options = array())
+    {
+        $defaultOptions      = array('options' => array(), 'objectName' => '');
+        $options             = $this->mergeOptions($options, $defaultOptions);
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
 
-  public function hidden($attrName, $options = array()) {
-    $defaultOptions      = array('options' => array(), 'objectName' => '');
-    $options             = $this->mergeOptions($options, $defaultOptions);
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
-
-    $defaultInputOptions = array('id'    => $options['objectName'] . $spacer . $attrName,
+        $defaultInputOptions = array('id'    => $options['objectName'] . $spacer . $attrName,
                                  'value' => '');
 
-    $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions        = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
-  }
+        call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
+    }
 }

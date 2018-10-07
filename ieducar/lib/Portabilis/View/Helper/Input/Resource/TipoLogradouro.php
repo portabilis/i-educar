@@ -43,22 +43,24 @@ require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
  * @version   @@package_version@@
  */
 
-class Portabilis_View_Helper_Input_Resource_TipoLogradouro extends Portabilis_View_Helper_Input_CoreSelect {
+class Portabilis_View_Helper_Input_Resource_TipoLogradouro extends Portabilis_View_Helper_Input_CoreSelect
+{
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
+        if (empty($options['resources'])) {
+            $resources = new clsTipoLogradouro();
+            $resources = $resources->lista();
+            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'idtlog', 'descricao');
+        }
 
-    if (empty($options['resources'])) {
-      $resources = new clsTipoLogradouro();
-      $resources = $resources->lista();
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'idtlog', 'descricao');
+        return $this->insertOption(null, "Tipo logradouro", $resources);
     }
 
-    return $this->insertOption(null, "Tipo logradouro", $resources);
-  }
 
-
-  public function tipoLogradouro($options = array()) {
-    parent::select($options);
-  }
+    public function tipoLogradouro($options = array())
+    {
+        parent::select($options);
+    }
 }

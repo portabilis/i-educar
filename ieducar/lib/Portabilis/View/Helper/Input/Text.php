@@ -42,18 +42,19 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Core
+{
+    public function text($attrName, $options = array())
+    {
+        $defaultOptions = array('options' => array(), 'objectName' => '');
 
-  public function text($attrName, $options = array()) {
-    $defaultOptions = array('options' => array(), 'objectName' => '');
+        $options             = $this->mergeOptions($options, $defaultOptions);
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
 
-    $options             = $this->mergeOptions($options, $defaultOptions);
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+        $label = ! empty($attrName) ? $attrName : $options['objectName'];
+        $label = str_replace('_id', '', $label);
 
-    $label = ! empty($attrName) ? $attrName : $options['objectName'];
-    $label = str_replace('_id', '', $label);
-
-    $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
+        $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
                                  'label'          => ucwords($label),
                                  'value'          => null,
                                  'size'           => 50,
@@ -67,10 +68,10 @@ class Portabilis_View_Helper_Input_Text extends Portabilis_View_Helper_Input_Cor
                                  'event'          => 'onKeyUp',
                                  'disabled'       => false);
 
-    $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
+        $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
 
-    call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
-    $this->fixupPlaceholder($inputOptions);
-  }
+        call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
+        $this->fixupPlaceholder($inputOptions);
+    }
 }

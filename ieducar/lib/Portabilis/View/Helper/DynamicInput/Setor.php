@@ -43,22 +43,26 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
  * @version   @@package_version@@
  */
 
-class Portabilis_View_Helper_DynamicInput_Setor extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_Setor extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'id_setor';
+    }
 
-   protected function inputName() {
-    return 'id_setor';
-  }
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
+        return $this->insertOption(null, "Selecione um setor", $resources);
+    }
 
-  protected function inputOptions($options) {
-    $resources = $options['resources'];
-    return $this->insertOption(null, "Selecione um setor", $resources);
-  }
+    protected function defaultOptions()
+    {
+        return array('options' => array('label' => 'Setor'));
+    }
 
-  protected function defaultOptions(){
-    return array('options' => array('label' => 'Setor'));
-  }
-
-  public function setor($options = array()) {
-    parent::select($options);
-  }
+    public function setor($options = array())
+    {
+        parent::select($options);
+    }
 }

@@ -42,21 +42,25 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Helper_DynamicInput_Core {
-  protected function inputValue($value = null) {
-    if (! $value && $this->viewInstance->data_final)
-      $value = $this->viewInstance->data_final;
-    else
-      $value = date('t/m/Y');
+class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Helper_DynamicInput_Core
+{
+    protected function inputValue($value = null)
+    {
+        if (! $value && $this->viewInstance->data_final) {
+            $value = $this->viewInstance->data_final;
+        } else {
+            $value = date('t/m/Y');
+        }
 
-    return $value;
-  }
+        return $value;
+    }
 
-  public function dataFinal($options = array()) {
-    $defaultOptions       = array('options' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
+    public function dataFinal($options = array())
+    {
+        $defaultOptions       = array('options' => array());
+        $options              = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'data_final',
+        $defaultInputOptions = array('id'         => 'data_final',
                                  'label'      => 'Data final',
                                  'value'      => $this->inputValue($options['options']['value']),
                                  'required'   => true,
@@ -65,7 +69,7 @@ class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Help
                                  'callback'   => false,
                                  'disabled'   => false);
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
-  }
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
+    }
 }

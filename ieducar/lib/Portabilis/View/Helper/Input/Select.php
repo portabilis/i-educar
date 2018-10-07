@@ -42,14 +42,15 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core {
+class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core
+{
+    public function select($attrName, $options = array())
+    {
+        $defaultOptions       = array('options' => array(), 'objectName' => '', 'resources' => array());
+        $options              = $this->mergeOptions($options, $defaultOptions);
 
-  public function select($attrName, $options = array()) {
-    $defaultOptions       = array('options' => array(), 'objectName' => '', 'resources' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
-    $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
+        $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
+        $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
                                  'label'      => ucwords($attrName),
                                  'resources'  => $options['resources'],
                                  'value'      => '',
@@ -61,9 +62,9 @@ class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_C
                                  'required'   => true,
                                  'multiple'   => false);
 
-    $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
+        $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
 
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
-  }
+        call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
+    }
 }

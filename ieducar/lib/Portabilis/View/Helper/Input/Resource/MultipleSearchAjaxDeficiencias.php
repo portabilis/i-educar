@@ -63,15 +63,16 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 */
 
-class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends Portabilis_View_Helper_Input_MultipleSearchAjax {
-
-  public function multipleSearchDeficiencias($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'deficiencias',
+class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends Portabilis_View_Helper_Input_MultipleSearchAjax
+{
+    public function multipleSearchDeficiencias($attrName, $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'deficiencias',
                             'apiController' => 'Deficiencia',
                             'apiResource'   => 'deficiencia-search');
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::multipleSearchAjax($options['objectName'], $attrName, $options);
-  }
+        parent::multipleSearchAjax($options['objectName'], $attrName, $options);
+    }
 }

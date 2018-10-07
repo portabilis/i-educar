@@ -12,5 +12,6 @@ require_once 'lib/Portabilis/View/Helper/Input/Ano.php';
 
 */
 
-class Portabilis_View_Helper_DynamicInput_Ano extends Portabilis_View_Helper_Input_Ano {
+class Portabilis_View_Helper_DynamicInput_Ano extends Portabilis_View_Helper_Input_Ano
+{
 }

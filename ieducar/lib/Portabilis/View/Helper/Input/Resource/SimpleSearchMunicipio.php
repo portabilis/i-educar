@@ -43,31 +43,34 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portabilis_View_Helper_Input_SimpleSearch {
+class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    protected function resourceValue($id)
+    {
+        if ($id) {
+            $sql       = "select nome, sigla_uf from public.municipio where idmun = $1";
+            $options   = array('params' => $id, 'return_only' => 'first-row');
+            $municipio = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+            $nome      = $municipio['nome'];
+            $siglaUf   = $municipio['sigla_uf'];
 
-  protected function resourceValue($id) {
-    if ($id) {
-      $sql       = "select nome, sigla_uf from public.municipio where idmun = $1";
-      $options   = array('params' => $id, 'return_only' => 'first-row');
-      $municipio = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-      $nome      = $municipio['nome'];
-      $siglaUf   = $municipio['sigla_uf'];
-
-      return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false)) . " ($siglaUf)";
+            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false)) . " ($siglaUf)";
+        }
     }
-  }
 
-  public function simpleSearchMunicipio($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'municipio',
+    public function simpleSearchMunicipio($attrName, $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'municipio',
                             'apiController' => 'Municipio',
                             'apiResource'   => 'municipio-search');
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::simpleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o código ou nome da cidade';
-  }
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Informe o código ou nome da cidade';
+    }
 }

@@ -42,23 +42,27 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_View_Helper_DynamicInput_CoreSelect {
+class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'ref_cod_fonte';
+    }
 
-  protected function inputName() {
-    return 'ref_cod_fonte';
-  }
+    protected function inputOptions($options)
+    {
+        $resources    = $options['resources'];
+        $bibliotecaId = $this->getBibliotecaId();
 
-  protected function inputOptions($options) {
-    $resources    = $options['resources'];
-    $bibliotecaId = $this->getBibliotecaId();
+        if ($bibliotecaId and empty($resources)) {
+            $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
+        }
 
-    if ($bibliotecaId and empty($resources))
-      $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
+        return $this->insertOption(null, "Selecione uma fonte", $resources);
+    }
 
-    return $this->insertOption(null, "Selecione uma fonte", $resources);
-  }
-
-  public function bibliotecaFonte($options = array()) {
-    parent::select($options);
-  }
+    public function bibliotecaFonte($options = array())
+    {
+        parent::select($options);
+    }
 }

@@ -43,29 +43,32 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchPais extends Portabilis_View_Helper_Input_SimpleSearch {
+class Portabilis_View_Helper_Input_Resource_SimpleSearchPais extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    protected function resourceValue($id)
+    {
+        if ($id) {
+            $sql     = "select nome from public.pais where idpais = $1";
+            $options = array('params' => $id, 'return_only' => 'first-field');
+            $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-  protected function resourceValue($id) {
-    if ($id) {
-      $sql     = "select nome from public.pais where idpais = $1";
-      $options = array('params' => $id, 'return_only' => 'first-field');
-      $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-
-      return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+        }
     }
-  }
 
-  public function simpleSearchPais($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'pais',
+    public function simpleSearchPais($attrName, $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'pais',
                             'apiController' => 'Pais',
                             'apiResource'   => 'pais-search');
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::simpleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o código ou nome do pais de origem';
-  }
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Informe o código ou nome do pais de origem';
+    }
 }

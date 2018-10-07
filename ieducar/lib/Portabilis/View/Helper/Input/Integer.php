@@ -41,12 +41,13 @@ require_once 'lib/Portabilis/View/Helper/Input/Numeric.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_Numeric {
-
-  protected function fixupValidation($inputOptions) {
-    // fixup para remover caracteres não numericos
-    // inclusive pontos '.', não removidos pela super classe
-    $js = " \$j('#" . $inputOptions['id'] . "').keyup(function(){
+class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_Numeric
+{
+    protected function fixupValidation($inputOptions)
+    {
+        // fixup para remover caracteres não numericos
+        // inclusive pontos '.', não removidos pela super classe
+        $js = " \$j('#" . $inputOptions['id'] . "').keyup(function(){
       var oldValue = this.value;
 
       this.value = this.value.replace(/[^0-9\.]/g, '');
@@ -57,10 +58,11 @@ class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_
 
     });";
 
-    Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
-  }
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
+    }
 
-  public function integer($attrName, $options = array()) {
-    parent::numeric($attrName, $options);
-  }
+    public function integer($attrName, $options = array())
+    {
+        parent::numeric($attrName, $options);
+    }
 }

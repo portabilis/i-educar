@@ -1,7 +1,5 @@
 <?php
-
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
+namespace Ieducar\Portabilis\Utils;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -25,7 +23,7 @@
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
@@ -37,62 +35,73 @@ require_once 'lib/Portabilis/Utils/User.php';
  * Portabilis_Utils_Validation class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ * @author Bonot <bonot@portabilis.com.br>
+ * @author Alan Felipe Farias <alan_felipe_farias@hotmail.com>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Portabilis
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_Utils_Validation {
+class Portabilis_Utils_Validation
+{
+    /**
+     * validate a CPF string
+     * @param  string $cpf
+     * @return boolean
+     */
+    public static function validatesCpf($cpf)
+    {
+        $cpf = preg_replace('/[^0-9]/', '', (string)$cpf);
 
-  public static function validatesCpf($cpf) {
-    $cpf = preg_replace('/[^0-9]/', '', (string)$cpf);
+        if (strlen($cpf) != 11) {
+            return false;
+        }
 
-    if (strlen($cpf) != 11)
-      return false;
+        $cpfsInvalidos = array(
+            '00000000000',
+            '11111111111',
+            '22222222222',
+            '33333333333',
+            '44444444444',
+            '55555555555',
+            '66666666666',
+            '77777777777',
+            '88888888888',
+            '99999999999'
+            );
 
-    $cpfsInvalidos = array(
-      '00000000000',
-      '11111111111',
-      '22222222222',
-      '33333333333',
-      '44444444444',
-      '55555555555',
-      '66666666666',
-      '77777777777',
-      '88888888888',
-      '99999999999'
-    );
+        if (in_array($cpf, $cpfsInvalidos)) {
+            return false;
+        }
 
-    if (in_array($cpf, $cpfsInvalidos)) {
-      return false;
+        // calcula primeiro dígito verificador
+        $soma = 0;
+
+        for ($i = 0; $i < 9; $i++) {
+            $soma += ((10 - $i) * $cpf[$i]);
+        }
+
+        $primeiroDigito = 11 - ($soma % 11);
+
+        if ($primeiroDigito >= 10) {
+            $primeiroDigito = 0;
+        }
+
+
+        // calcula segundo dígito verificador
+        $soma = 0;
+
+        for ($i = 0; $i < 10; $i++) {
+            $soma += ((11 - $i) * $cpf[$i]);
+        }
+
+        $segundoDigito = 11 - ($soma % 11);
+
+        if ($segundoDigito >= 10) {
+            $segundoDigito = 0;
+        }
+
+        return ($primeiroDigito == $cpf[9] && $segundoDigito == $cpf[10]);
     }
-
-    // calcula primeiro dígito verificador
-    $soma = 0;
-
-    for ($i = 0; $i < 9; $i++)
-      $soma += ((10 - $i) * $cpf[$i]);
-
-    $primeiroDigito = 11 - ($soma % 11);
-
-    if ($primeiroDigito >= 10)
-      $primeiroDigito = 0;
-
-
-    // calcula segundo dígito verificador
-    $soma = 0;
-
-    for ($i = 0; $i < 10; $i++)
-      $soma += ((11 - $i) * $cpf[$i]);
-
-    $segundoDigito = 11 - ($soma % 11);
-
-    if ($segundoDigito >= 10)
-      $segundoDigito = 0;
-
-
-
-    return ($primeiroDigito == $cpf[9] && $segundoDigito == $cpf[10]);
-  }
 }

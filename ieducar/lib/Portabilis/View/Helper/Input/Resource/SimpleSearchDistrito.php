@@ -43,36 +43,39 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @since     Classe disponível desde a versão ?
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabilis_View_Helper_Input_SimpleSearch {
-
-
-  public function simpleSearchDistrito($attrName, $options = array()) {
-    $defaultOptions = array('objectName'    => 'distrito',
+class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    public function simpleSearchDistrito($attrName, $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'distrito',
                             'apiController' => 'Distrito',
                             'apiResource'   => 'distrito-search',
                             'showIdOnValue' => false);
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
-
-  protected function resourceValue($id) {
-    if ($id) {
-      $sql       = "select nome from public.distrito where iddis = $1";
-      $options   = array('params' => $id, 'return_only' => 'first-field');
-      $distrito = $id. ' - '. Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-
-      return Portabilis_String_Utils::toLatin1($distrito, array('transform' => true, 'escape' => false));
+        parent::simpleSearch($options['objectName'], $attrName, $options);
     }
-  }  
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o nome do distrito';
-  }
+    protected function resourceValue($id)
+    {
+        if ($id) {
+            $sql       = "select nome from public.distrito where iddis = $1";
+            $options   = array('params' => $id, 'return_only' => 'first-field');
+            $distrito = $id. ' - '. Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+
+            return Portabilis_String_Utils::toLatin1($distrito, array('transform' => true, 'escape' => false));
+        }
+    }
+
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Informe o nome do distrito';
+    }
   
-  protected function loadAssets() {
-    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchDistrito.js';
-    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-  }
+    protected function loadAssets()
+    {
+        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchDistrito.js';
+        Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    }
 }

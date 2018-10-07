@@ -41,30 +41,32 @@ require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
  * @since     07/2013
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Resource_SimpleSearchMotorista extends Portabilis_View_Helper_Input_SimpleSearch {
+class Portabilis_View_Helper_Input_Resource_SimpleSearchMotorista extends Portabilis_View_Helper_Input_SimpleSearch
+{
+    protected function resourceValue($id)
+    {
+        if ($id) {
+            $sql       = "select nome from modules.motorista, cadastro.pessoa where ref_idpes = idpes and cod_motorista = $1";
+            $options = array('params' => $id, 'return_only' => 'first-field');
+            $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-  protected function resourceValue($id) {
-    if ($id) {
-      $sql       = "select nome from modules.motorista, cadastro.pessoa where ref_idpes = idpes and cod_motorista = $1";
-      $options = array('params' => $id, 'return_only' => 'first-field');
-      $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-
-      return Portabilis_String_Utils::toUtf8($nome, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toUtf8($nome, array('transform' => true, 'escape' => false));
+        }
     }
-  }
 
-  public function simpleSearchMotorista($attrName = '', $options = array()) {
-    $defaultOptions = array('objectName'    => 'motorista',
+    public function simpleSearchMotorista($attrName = '', $options = array())
+    {
+        $defaultOptions = array('objectName'    => 'motorista',
                             'apiController' => 'Motorista',
                             'apiResource'   => 'motorista-search');
 
-    $options        = $this->mergeOptions($options, $defaultOptions);
+        $options        = $this->mergeOptions($options, $defaultOptions);
 
-    parent::simpleSearch($options['objectName'], $attrName, $options);
-  }
+        parent::simpleSearch($options['objectName'], $attrName, $options);
+    }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o código ou nome do motorista';
-  }
-
+    protected function inputPlaceholder($inputOptions)
+    {
+        return 'Informe o código ou nome do motorista';
+    }
 }

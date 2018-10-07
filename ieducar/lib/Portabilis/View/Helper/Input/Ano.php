@@ -42,21 +42,25 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core {
-  protected function inputValue($value = null) {
-    if (! $value && $this->viewInstance->ano)
-      $value = $this->viewInstance->ano;
-    else
-      $value = date('Y');
+class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
+{
+    protected function inputValue($value = null)
+    {
+        if (! $value && $this->viewInstance->ano) {
+            $value = $this->viewInstance->ano;
+        } else {
+            $value = date('Y');
+        }
 
-    return $value;
-  }
+        return $value;
+    }
 
-  public function ano($options = array()) {
-    $defaultOptions      = array('options' => array());
-    $options             = $this->mergeOptions($options, $defaultOptions);
+    public function ano($options = array())
+    {
+        $defaultOptions      = array('options' => array());
+        $options             = $this->mergeOptions($options, $defaultOptions);
 
-    $defaultInputOptions = array('id'         => 'ano',
+        $defaultInputOptions = array('id'         => 'ano',
                                  'label'      => 'Ano',
                                  'value'      => $this->inputValue($options['options']['value']),
                                  'size'       => 4,
@@ -69,7 +73,7 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
                                  'inline'     => false,
                                  'disabled'   => false);
 
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
-  }
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
+    }
 }
