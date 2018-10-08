@@ -1,6 +1,4 @@
 <?php
-namespace Ieducar\Portabilis\object;
-
 /**
  * i-Educar - Sistema de gestão escolar
  *

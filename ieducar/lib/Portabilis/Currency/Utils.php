@@ -1,6 +1,4 @@
 <?php
-namespace Ieducar\Portabilis\Currency;
-
 /**
  * i-Educar - Sistema de gestão escolar
  *

@@ -1,6 +1,4 @@
 <?php
-namespace Ieducar\Portabilis\Controller;
-
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
 /**
