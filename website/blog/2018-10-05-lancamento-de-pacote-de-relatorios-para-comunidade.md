@@ -11,7 +11,7 @@ title: Lançamento de pacote de relatórios na Comunidade i-Educar
 
 Vamos ajudar a educação a decolar com os melhores relatórios para a Comunidade?
 
-A [Portabilis](http://portabilis.com.br) fez o lançamento oficial de um pacote com seus melhores relatórios para a Comunidade i-Educar, para garantir o compromisso que temos com a Comunidade e, principalmente, com a educação do nosso País.
+A [Portabilis](http://portabilis.com.br) fez o lançamento oficial de um pacote com seus melhores relatórios para a Comunidade i-Educar<!--truncate-->, para garantir o compromisso que temos com a Comunidade e, principalmente, com a educação do nosso País.
 
 [Este lançamento](https://www.youtube.com/watch?v=6-Uzv5hLsLE&amp;t=352s) de evoluções se trata de um **pacote com dezenas de relatórios e documentos** , os melhores que desenvolvemos junto aos nossos clientes, que facilitarão o uso dos dados gerados pelo software, apoiando as escolas de todo o Brasil a superarem a falta de informação e tecnologia necessários para tomadas mais inteligentes de decisão na gestão da educação.
 
