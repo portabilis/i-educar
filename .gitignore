@@ -1,6 +1,6 @@
 # IDE Files
+## PHPStorm InteliJ
 *.idea
-*~
 
 ## Visual Studio
 *.vscode
@@ -9,6 +9,10 @@
 .buildpath
 .project
 .settings
+
+## Vi
+*~
+*.swp
 
 # Vagrant
 /.gitkeep
