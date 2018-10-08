@@ -303,7 +303,7 @@ ModalSelectEscolas = {
         trTitle.append($j('<td>').attr({
                 class: 'formdktd',
                 align: 'center'
-            }).append('<input type="checkbox" onclick="checkAllEscolas(this)">')
+            }).append('<input type="checkbox" onclick="checkAllEscolas(this)" checked>')
         );
 
         trTitle.append($j('<td>').attr({
