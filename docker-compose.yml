@@ -17,7 +17,7 @@ services:
     image: "composer"
     volumes:
       - ./:/app
-    command: install
+    command: install --ignore-platform-reqs
   postgres_95:
     volumes:
       - /var/lib/postgresql/data

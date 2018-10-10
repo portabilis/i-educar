@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <table name="parent">
+    <column>id</column>
+    <column>filho_id</column>
+    <column>nome</column>
+    <row>
+      <value>1</value>
+      <value>1</value>
+      <value>Arnaldo Antunes</value>
+    </row>
+    <row>
+      <value>2</value>
+      <value>2</value>
+      <value>Marvin Gaye</value>
+    </row>
+  </table>
+  <table name="child">
+    <column>id</column>
+    <column>nome</column>
+    <column>sexo</column>
+    <column>tipo_sanguineo</column>
+    <column>peso</column>
+    <row>
+      <value>1</value>
+      <value>Antunes Jr.</value>
+      <value>1</value>
+      <value>4</value>
+      <value>12.300</value>
+    </row>
+    <row>
+      <value>2</value>
+      <value>Gaye Jr.</value>
+      <value>1</value>
+      <value>3</value>
+      <value>22.850</value>
+    </row>
+  </table>
+</dataset>
