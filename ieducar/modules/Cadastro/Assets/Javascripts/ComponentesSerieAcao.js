@@ -97,9 +97,8 @@ function adicionaComponentesTodasEscolas(dialogId){
               messageUtils.error('Erro ao aplicar alterações para todas as escolas.');
           }
           messageUtils.success('Alterações aplicadas para todas as escolas.');
-          closeDialog(dialogId)
+          redirecionaListagem();
       },
-          //handleReplicaComponentesEscola(idContainer),
       error    : handleErroReplicaComponentesEscola
     };
 
@@ -186,12 +185,15 @@ ModalSelectEscolas = {
 
         this.dialog = this.dialogContainer.dialog({
             autoOpen: false,
-            closeOnEscape: true,
+            closeOnEscape: false,
             draggable: false,
             width: 820,
             modal: true,
             resizable: true,
-            title: 'Seleção de escolas'
+            title: 'Seleção de escolas',
+            open: function(event, ui) {
+                $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+            }
         });
     },
     makeHtml: function (data) {
@@ -275,7 +277,7 @@ ModalSelectEscolas = {
         });
 
         buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesTodasEscolas(\''+this.idContainer+'\')">');
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Não aplicar em nenhuma" onclick="closeDialog(\''+this.idContainer+'\')">');
+        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar somente na série" onclick="redirecionaListagem();">');
         buttonsTd.append('<input type="button" class="botao" value="Selecionar escolas para aplicar" onclick="expandEscolas()">');
 
         buttonsTr.append(buttonsTd);
@@ -394,7 +396,7 @@ function atualizaComponentesEscolas (serieId, dialogId) {
 
     $j.post(url, params, function (response) {
         messageUtils.success('Alterações aplicadas para todas as escolas selecionadas');
-        closeDialog(dialogId)
+        redirecionaListagem();
     });
 }
 
