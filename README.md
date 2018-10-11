@@ -207,6 +207,14 @@ docker-compose exec ieducar_1604 chmod +x ieducar/vendor/cossou/jasperphp/src/Ja
 docker-compose exec ieducar_1604 chmod 777 -R ieducar/modules/Reports/ReportSources/
 ```
 
+### Compilando arquivos do JasperReports
+
+```terminal
+docker-compose exec ieducar_1604 bash
+cd ieducar/modules/Reports/ReportSources
+for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(../../../vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter cp $line.jrxml -o $line); done
+```
+
 ### Primeiro acesso
 
 Após realizar a instalação de acordo com as instruções acima você está pronta a
