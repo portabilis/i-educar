@@ -121,8 +121,27 @@ clonado em sua máquina:
 git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
 ```
 
-P.S.: Esses relatórios são legados e podem não funcionar. Em breve vamos lançar
-um pacote de mais de 40 relatórios funcionais.
+Altere também o arquivo `phinx.php`, para adicionar as migrations dos relatórios:
+
+```php
+...
+
+$configuration = array(
+    "paths" => array(
+        "migrations" => array(
+            "ieducar/misc/database/migrations",
+            "ieducar/modules/Reports/database/migrations",   // <<<<< ADICIONAR ESTA LINHA
+        ),
+        "seeds" => array(
+            "ieducar/misc/database/seeds",
+            "ieducar/modules/Reports/database/seeds",        // <<<<< ADICIONAR ESTA LINHA
+        ),
+    ),
+    "environments" => $environments,
+);
+
+...
+```
 
 ### Instalando outras dependências
 
@@ -165,6 +184,17 @@ docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
 
 Este comando irá executar a criação de tabelas e inserção de dados iniciais
 para utilização do i-Educar.
+
+#### Inicializando o banco de dados dos relatórios
+
+Os relatórios também possuem sua seed inicial para o banco de dados e as migrations que são individuais por cada relatório.
+
+Execute os seguintes comandos:
+
+```terminal
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx seed:run -s StartingReportsSeed
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
+```
 
 ### Configurando permissões
 
