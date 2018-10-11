@@ -173,8 +173,8 @@ necessário definir algumas permissões especiais em pastas e arquivos. Use os
 comandos abaixo:
 
 ```terminal
-docker-compose exec ieducar_1604 chmod +x ieducar/vendor/portabilis/jasperphp/src/JasperStarter/bin/jasperstarter
-docker-compose exec ieducar_1604 chmod 777 -R ieducar/modules/Reports/ReportSources/Portabilis
+docker-compose exec ieducar_1604 chmod +x ieducar/vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter
+docker-compose exec ieducar_1604 chmod 777 -R ieducar/modules/Reports/ReportSources/
 ```
 
 ### Primeiro acesso
