@@ -230,7 +230,7 @@ class indice extends clsListagem
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificados_m + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificados_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_m + '</td>');
-      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocas_m + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocas_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_m + '</td>');

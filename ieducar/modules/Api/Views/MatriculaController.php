@@ -266,22 +266,31 @@ class MatriculaController extends ApiCoreController
                               WHEN matricula.aprovado = 3
                                    AND matricula_turma.remanejado = TRUE THEN TRUE
                               ELSE FALSE
-                          END) AS apresentar_fora_da_data
+                          END) AS apresentar_fora_da_data,
+                          (CASE
+                              WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, FALSE) = FALSE
+                              ELSE TRUE
+                          END) AS mostrar_enturmacao
                   FROM matricula
                   INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
                   INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE cod_matricula = $1
-                  AND CASE
-                  WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, false) = false
-                  ELSE true
-                  END';
+                  WHERE cod_matricula = $1';
 
                     $params = [$matriculas[$key]['matricula_id']];
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
                     if (is_array($enturmacoes) && count($enturmacoes) > 0) {
-                        $attrs = ['turma_id', 'sequencial', 'sequencial_fechamento', 'data_entrada', 'data_saida', 'data_atualizacao', 'apresentar_fora_da_data'];
+                        $attrs = [
+                            'turma_id',
+                            'sequencial',
+                            'sequencial_fechamento',
+                            'data_entrada',
+                            'data_saida',
+                            'data_atualizacao',
+                            'apresentar_fora_da_data',
+                            'mostrar_enturmacao'
+                        ];
                         $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
                         $matriculas[$key]['enturmacoes'] = $enturmacoes;
                     }
