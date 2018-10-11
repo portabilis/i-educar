@@ -127,8 +127,11 @@ um pacote de mais de 40 relatórios funcionais.
 ### Instalando outras dependências
 
 O i-Educar usa o [Composer](https://getcomposer.org/) para gerenciar suas
-dependências. O Composer já é executado automaticamente para quem utilizar
-docker-compose, basta executar o comando `docker-compose up`.
+dependências. Para instalar, execute o comando:
+
+```bash
+docker run -it -v $(pwd):/app composer install --ignore-platform-reqs
+```
 
 Caso queira adicionar novas dependências ao projeto ou rodar algum outro
 comando do composer, execute da seguinte forma na raiz do projeto:
