@@ -29,11 +29,12 @@ class indice extends clsDetalhe
         // Pega o codigo do chamado
         $cod_func = @$_GET['cod_func'];
         $db = new clsBanco();
-        $db->Consulta("SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo= '$cod_func' ");
+        $db->Consulta("SELECT nm_vinculo, abreviatura FROM funcionario_vinculo WHERE cod_funcionario_vinculo = '$cod_func'");
 
         if ($db->ProximoRegistro()) {
-            list($nm_vinculo) = $db->Tupla();
-            $this->addDetalhe(['Nome', $nm_vinculo ]);
+            list($nm_vinculo, $abreviatura) = $db->Tupla();
+            $this->addDetalhe(['Nome', $nm_vinculo]);
+            $this->addDetalhe(['Abreviatura', $abreviatura]);
         }
 
         $this->url_novo = 'funcionario_vinculo_cad.php';
