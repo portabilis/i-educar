@@ -345,22 +345,6 @@ class indice extends clsCadastro
 
         return $total;
     }
-
-    public function pegaVinculosFuncionarios()
-    {
-        $retorno = [];
-        $db = new clsBanco;
-
-        $db->Consulta('SELECT cod_funcionario_vinculo, nm_vinculo FROM portal.funcionario_vinculo ORDER BY cod_funcionario_vinculo ASC;');
-
-        while ($db->ProximoRegistro()) {
-            $item = $db->Tupla();
-
-            $retorno[$item['cod_funcionario_vinculo']] = $item['nm_vinculo'];
-        }
-
-        return $retorno;
-    }
 }
 
 $pagina = new clsIndexBase();
