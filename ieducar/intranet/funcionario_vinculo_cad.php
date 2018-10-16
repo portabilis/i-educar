@@ -18,6 +18,7 @@ class indice extends clsCadastro
 {
     public $nm_vinculo;
     public $cod_vinculo;
+    public $abreviatura;
 
     public function Inicializar()
     {
@@ -26,11 +27,12 @@ class indice extends clsCadastro
         if ($_GET['cod_funcionario_vinculo']) {
             $this->cod_vinculo = $_GET['cod_funcionario_vinculo'];
             $db =new clsBanco();
-            $db->Consulta("SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo = $this->cod_vinculo");
+            $db->Consulta("SELECT nm_vinculo, abreviatura FROM funcionario_vinculo WHERE cod_funcionario_vinculo = $this->cod_vinculo");
 
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $this->nm_vinculo = $tupla[0];
+                $this->abreviatura = $tupla[1];
                 $retorno = 'Editar';
                 $this->fexcluir = true;
             }
@@ -55,12 +57,13 @@ class indice extends clsCadastro
     {
         $this->campoOculto('cod_vinculo', $this->cod_vinculo);
         $this->campoTexto('nm_vinculo', 'Nome', $this->nm_vinculo, 30, 250, true);
+        $this->campoTexto('abreviatura', 'Abreviatura', $this->abreviatura, 5, 4, true);
     }
 
     public function Novo()
     {
         $db = new clsBanco();
-        $db->Consulta("INSERT INTO funcionario_vinculo ( nm_vinculo ) VALUES ( '$this->nm_vinculo' )");
+        $db->Consulta("INSERT INTO funcionario_vinculo ( nm_vinculo, abreviatura ) VALUES ( '$this->nm_vinculo', '$this->abreviatura' )");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
         return true;
@@ -69,7 +72,7 @@ class indice extends clsCadastro
     public function Editar()
     {
         $db = new clsBanco();
-        $db->Consulta("UPDATE funcionario_vinculo SET nm_vinculo = '$this->nm_vinculo' WHERE cod_funcionario_vinculo=$this->cod_vinculo");
+        $db->Consulta("UPDATE funcionario_vinculo SET nm_vinculo = '$this->nm_vinculo', abreviatura = '$this->abreviatura' WHERE cod_funcionario_vinculo=$this->cod_vinculo");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
         return true;
@@ -78,6 +81,16 @@ class indice extends clsCadastro
     public function Excluir()
     {
         $db = new clsBanco();
+
+        $count = (int)$db->CampoUnico("SELECT COUNT(*) FROM pmieducar.servidor_alocacao WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
+        $count += (int)$db->CampoUnico("SELECT COUNT(*) FROM portal.funcionario WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
+
+        if ($count > 0) {
+            $this->mensagem = 'Não é possível remover. Já existem funcionários cadastrados e alocados com este vínculo.';
+
+            return false;
+        }
+
         $db->Consulta("DELETE FROM funcionario_vinculo WHERE cod_funcionario_vinculo=$this->cod_vinculo");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
