@@ -559,6 +559,8 @@ class indice extends clsCadastro
             }
 
             $turmaDestino->ano = $anoDestino;
+            $turmaDestino->ref_usuario_cad = $this->pessoa_logada;
+            $turmaDestino->ref_usuario_exc = $this->pessoa_logada;
             $turmaDestinoId = $turmaDestino->cadastra();
 
             $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
