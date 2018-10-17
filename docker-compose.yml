@@ -1,7 +1,5 @@
 version: '3'
-
 services:
-
   ieducar_1604:
     build: ./docker/ieducar_1604
     env_file:
@@ -14,10 +12,10 @@ services:
       - postgres_95
     container_name: ieducar_1604
   composer:
-    image: "composer"
+    image: composer
     volumes:
       - ./:/app
-    command: install
+    command: install --ignore-platform-reqs
   postgres_95:
     volumes:
       - /var/lib/postgresql/data

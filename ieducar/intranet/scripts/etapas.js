@@ -42,6 +42,12 @@ $j(function () {
             var that = this;
 
             $j('#btn_enviar').click(function (e) {
+                if (parseInt($j('#padrao_ano_escolar').val(), 10) === 1) {
+                    window.acao();
+
+                    return;
+                }
+
                 e.preventDefault();
 
                 that.resetErrors();

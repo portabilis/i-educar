@@ -72,14 +72,7 @@ class ReportController extends ApiCoreController
             $boletimReport->addArg('serie', (int)$dadosMatricula['serie_id']);
             $boletimReport->addArg('turma', (int)$dadosMatricula['turma_id']);
             $boletimReport->addArg('situacao_matricula', 10);
-
-            if (CORE_EXT_CONFIGURATION_ENV == 'production') {
-                $boletimReport->addArg('SUBREPORT_DIR', '/sites_media_root/services/reports/jasper/');
-            } elseif ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
-                $boletimReport->addArg('SUBREPORT_DIR', '/sites_media_root/services-test/reports/jasper/');
-            } else {
-                $boletimReport->addArg('SUBREPORT_DIR', __DIR__ . '/../../Reports/ReportSources/Portabilis/');
-            }
+            $boletimReport->addArg('SUBREPORT_DIR', $GLOBALS['coreExt']['Config']->report->source_path);
 
             $encoding = 'base64';
             $dumpsOptions = ['options' => ['encoding' => $encoding]];
@@ -116,14 +109,7 @@ class ReportController extends ApiCoreController
 
             $boletimProfessorReport->addArg('modelo', $modelo);
             $boletimProfessorReport->addArg('linha', 0);
-
-            if (CORE_EXT_CONFIGURATION_ENV == 'production') {
-                $boletimProfessorReport->addArg('SUBREPORT_DIR', '/sites_media_root/services/reports/jasper/');
-            } elseif ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
-                $boletimProfessorReport->addArg('SUBREPORT_DIR', '/sites_media_root/services-test/reports/jasper/');
-            } else {
-                $boletimProfessorReport->addArg('SUBREPORT_DIR', __DIR__ . '/../../Reports/ReportSources/Portabilis/');
-            }
+            $boletimProfessorReport->addArg('SUBREPORT_DIR', $GLOBALS['coreExt']['Config']->report->source_path);
 
             $encoding = 'base64';
 

@@ -1,0 +1,4 @@
+# for php-coveralls
+service_name: travis-ci
+coverage_clover: ieducar/tests/log/clover.xml
+json_path: ieducar/tests/log/coveralls-upload.json
