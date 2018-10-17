@@ -133,6 +133,7 @@ class clsModulesComponenteCurricularAnoEscolar
                 $this->updateInfo['update'][$u]['carga_horaria'] = $componente['carga_horaria'];
                 $this->updateInfo['update'][$u]['tipo_nota'] = $componente['tipo_nota'];
                 $this->updateInfo['update'][$u]['anos_letivos'] = $componente['anos_letivos'];
+                $this->updateInfo['update'][$u]['anos_letivos_inseridos'] = $this->getAnosLetivosInseridos($componente['id'], $componente['anos_letivos']);
                 $u++;
             }else{
                 $this->updateInfo['insert'][$i]['id'] = $componente['id'];
@@ -173,6 +174,35 @@ class clsModulesComponenteCurricularAnoEscolar
         }
 
         return false;
+    }
+
+    private function getAnosLetivosInseridos($componenteCurricularId, $arrayAnosLetivos)
+    {
+        $sql = <<<SQL
+                SELECT array_to_json(anos_letivos) as anos_letivos
+                  FROM {$this->_tabela}
+                 WHERE ano_escolar_id = {$this->ano_escolar_id}
+                   AND componente_curricular_id = {$componenteCurricularId} 
+SQL;
+        $db = new clsBanco();
+        $db->Consulta($sql);
+        $db->ProximoRegistro();
+
+        $resultado = $db->Tupla();
+
+        if (empty($resultado) || !isset($resultado['anos_letivos'])) {
+            return [];
+        }
+
+        $anosLetivosExistentes = json_decode($resultado['anos_letivos'], true);
+
+        foreach (array_diff($arrayAnosLetivos, $anosLetivosExistentes) as $ano) {
+            $retorno[] = $ano;
+        }
+
+        return $retorno;
+
+        return array_diff($arrayAnosLetivos, $anosLetivosExistentes);
     }
 
     private function cadastraComponente($componente_curricular_id = NULL,
