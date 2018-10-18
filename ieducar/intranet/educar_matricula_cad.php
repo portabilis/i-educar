@@ -1050,8 +1050,13 @@ class indice extends clsCadastro
         $serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
         $aprovado = [1, 12, 13];
         $reprovado = [2, 14];
+        $transferido = 4;
 
         if (!$dadosUltimaMatricula) {
+            return true;
+        }
+
+        if ($situacaoUltimaMatricula == $transferido) {
             return true;
         }
 
