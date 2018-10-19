@@ -96,12 +96,12 @@ Depois de ter o Docker e git instalados faça o clone deste repositório e execu
 o Docker Compose para criar os containers da aplicação:
 
 ```terminal
-$ git clone https://github.com/portabilis/i-educar.git i-educar
-$ cd i-educar
-$ cp .env.example .env
-$ cp ieducar/configuration/ieducar.ini.sample ieducar/configuration/ieducar.ini
-$ cp phinx.php.sample phinx.php
-$ docker-compose up -d
+git clone https://github.com/portabilis/i-educar.git i-educar
+cd i-educar
+cp .env.example .env
+cp ieducar/configuration/ieducar.ini.sample ieducar/configuration/ieducar.ini
+cp phinx.php.sample phinx.php
+docker-compose up -d
 ```
 
 Depois disto faça as alterações necessárias nos arquivos de configuração:
@@ -118,22 +118,44 @@ com o i-Educar. Execute o seguinte comando a partir da pasta onde o i-Educar foi
 clonado em sua máquina:
 
 ```terminal
-$ git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
+git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
 ```
 
-P.S.: Esses relatórios são legados e podem não funcionar. Em breve vamos lançar
-um pacote de mais de 40 relatórios funcionais.
+Altere também o arquivo `phinx.php`, para adicionar as migrations dos relatórios:
+
+```php
+...
+
+$configuration = array(
+    "paths" => array(
+        "migrations" => array(
+            "ieducar/misc/database/migrations",
+            "ieducar/modules/Reports/database/migrations",   // <<<<< ADICIONAR ESTA LINHA
+        ),
+        "seeds" => array(
+            "ieducar/misc/database/seeds",
+            "ieducar/modules/Reports/database/seeds",        // <<<<< ADICIONAR ESTA LINHA
+        ),
+    ),
+    "environments" => $environments,
+);
+
+...
+```
 
 ### Instalando outras dependências
 
 O i-Educar usa o [Composer](https://getcomposer.org/) para gerenciar suas
-dependências. O Composer já é executado automaticamente para quem utilizar
-docker-compose, basta executar o comando `docker-compose up`.
+dependências. Para instalar, execute o comando:
+
+```bash
+docker run -it -v $(pwd):/app composer install --ignore-platform-reqs
+```
 
 Caso queira adicionar novas dependências ao projeto ou rodar algum outro
 comando do composer, execute da seguinte forma na raiz do projeto:
 
-```bash
+```terminal
 docker run -it -v $(pwd):/app composer <seu_comando_aqui>
 ```
 
@@ -159,12 +181,23 @@ modifique a chave `host` para `localhost` e `port` para `5434`.
 Depois de ter feito a configuração do Phinx, basta rodar os seguintes comandos:
 
 ```terminal
-$ docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
-$ docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
 ```
 
 Este comando irá executar a criação de tabelas e inserção de dados iniciais
 para utilização do i-Educar.
+
+#### Inicializando o banco de dados dos relatórios
+
+Os relatórios também possuem sua seed inicial para o banco de dados e as migrations que são individuais por cada relatório.
+
+Execute os seguintes comandos:
+
+```terminal
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx seed:run -s StartingReportsSeed
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
+```
 
 ### Configurando permissões
 
@@ -173,8 +206,16 @@ necessário definir algumas permissões especiais em pastas e arquivos. Use os
 comandos abaixo:
 
 ```terminal
-$ docker-compose exec ieducar_1604 chmod +x ieducar/vendor/portabilis/jasperphp/src/JasperStarter/bin/jasperstarter
-$ docker-compose exec ieducar_1604 chmod 777 -R ieducar/modules/Reports/ReportSources/Portabilis
+docker-compose exec ieducar_1604 chmod +x ieducar/vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter
+docker-compose exec ieducar_1604 chmod 777 -R ieducar/modules/Reports/ReportSources/
+```
+
+### Compilando arquivos do JasperReports
+
+```terminal
+docker-compose exec ieducar_1604 bash
+cd ieducar/modules/Reports/ReportSources
+for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(../../../vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter cp $line.jrxml -o $line); done
 ```
 
 ### Primeiro acesso
@@ -200,7 +241,7 @@ conforme orientações da sua IDE de desenvolvimento.
 Para ambiente de desenvolvimento edite o arquivo ieducar/phpunit.xml e removaou
 comente a linha que segue:
 ```xml
-    <log type="coverage-clover" target="./tests/log/clover.xml"/>
+<log type="coverage-clover" target="./tests/log/clover.xml"/>
 ```
 
 Esta linha acima é apenas para gerar o xml de coverage para a badge do
@@ -211,7 +252,7 @@ projeto.
 
 Para rodar os testes, execute o comando que segue:
 
-```bash
+```terminal
 docker-compose exec ieducar_1604 ieducar/vendor/bin/phpunit -c /home/portabilis/ieducar/ieducar/phpunit.xml 
 ```
 

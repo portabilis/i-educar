@@ -101,7 +101,7 @@ report.show_error_details = true
 report.default_factory = Portabilis_Report_ReportFactoryPHPJasper
 
 ; Define o diretório dos arquivos fontes dos relatórios
-report.source_path = /home/portabilis/ieducar/ieducar/modules/Reports/ReportSources
+report.source_path = /home/portabilis/ieducar/ieducar/modules/Reports/ReportSources/
 
 ; Configurações da entidade (instituicao)
 ; define o nome da entidade a ser exibido no topo
