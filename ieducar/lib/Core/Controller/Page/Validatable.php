@@ -22,7 +22,7 @@
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Core_Controller
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
@@ -32,17 +32,18 @@
  * Core_Controller_Page_Validatable interface.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Caroline Salib <carolinesalibc@gmail.com>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Core_Controller
  * @since     Interface disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
 interface Core_Controller_Page_Validatable
 {
-  /**
-   * Retorna um array com objetos CoreExt_Validate.
-   * @return array
-   */
-  public function getValidators();
+    /**
+     * Retorna um array com objetos CoreExt_Validate.
+     * @return array
+     */
+    public function getValidators();
 }

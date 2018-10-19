@@ -22,7 +22,7 @@
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Core_View
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
@@ -34,17 +34,18 @@
  * Provê uma API para criar listagem de itens tabulados.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Caroline Salib <carolinesalibc@gmail.com>
  * @category  i-Educar
- * @license   @@license@@
+ * @license   GPL-2.0+
  * @package   Core_View
  * @since     Interface disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
 interface Core_View_Tabulable
 {
-  /**
-   * Retorna um array associativo no formato nome do campo => label.
-   * @return array
-   */
-  public function getTableMap();
+    /**
+     * Retorna um array associativo no formato nome do campo => label.
+     * @return array
+     */
+    public function getTableMap();
 }
