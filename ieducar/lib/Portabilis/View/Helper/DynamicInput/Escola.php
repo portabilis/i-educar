@@ -58,7 +58,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     protected function inputOptions($options)
     {
         $resources            = $options['resources'];
-        $instituicaoId        = $this->getInstituicaoId($options['instituicaoId']);
+        $instituicaoId        = $this->getInstituicaoId($options['instituicaoId'] ?? null);
         $userId               = $this->getCurrentUserId();
 
         if ($instituicaoId and empty($resources)) {

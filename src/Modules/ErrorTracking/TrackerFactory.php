@@ -12,6 +12,10 @@ class TrackerFactory
             return new HoneyBadgerTracker();
         }
 
+        if ($trackerName == 'EMAIL') {
+            return new EmailTracker();
+        }
+
         throw new Exception('Invalid error tracker');
     }
 }
