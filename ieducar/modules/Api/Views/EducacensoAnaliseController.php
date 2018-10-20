@@ -935,8 +935,9 @@ class EducacensoAnaliseController extends ApiCoreController
                             "fail" => true);
       }
       if ($servidor["codigo_escolaridade"] && !$servidor["escolaridade"]) {
-        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se o campo escolaridade educacenso foi informado para a escolaridade {$servidor['descricao_escolaridade']}.",
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se o campo escolaridade educacenso do(a) servidor(a) {$nomeServidor}, foi informado para a escolaridade {$servidor['descricao_escolaridade']}.",
                             "path" => "(Servidores > Escolaridade > Editar > Campo: Escolaridade Educacenso)",
+                            "linkPath" => "/intranet/educar_escolaridade_cad.php?idesco={$servidor["codigo_escolaridade"]}",
                             "fail" => true);
       }
       if ($servidor["escolaridade"] == $superiorCompleto && !$servidor["situacao_curso_superior_1"]) {

@@ -618,12 +618,9 @@ class indice extends clsCadastro
     $this->inputsHelper()->booleanSelect('turma_mais_educacao', $options);
 
     $scripts = array(
-      '/modules/Cadastro/Assets/Javascripts/Turma.js'
+      '/modules/Cadastro/Assets/Javascripts/Turma.js',
+      '/intranet/scripts/etapas.js'
     );
-
-    if ($this->padrao_ano_escolar != 1) {
-      $scripts[] = '/intranet/scripts/etapas.js';
-    }
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
@@ -646,9 +643,14 @@ class indice extends clsCadastro
       $disciplinas = '';
       $conteudo    = '';
 
-      $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
-        $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, true, $this->ano
-      );
+      try {
+        $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
+            $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, true, $this->ano
+        );
+      }  catch (App_Model_Exception $e) {
+          $this->mensagem = $e->getMessage();
+          return;
+      }
 
       // Instancia o mapper de turma
       $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();

@@ -31,6 +31,8 @@
   background-color: white;
   text-align: center;
   cursor: pointer;
+  background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%,rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
+  box-shadow: inset -1px 0 0 0 #ffffff;
 }
 
 .instituicaoTab-active{
@@ -59,4 +61,32 @@
 .tabText{
   position: relative;
   top: 6px;  
+}
+
+
+#tabControl {
+  margin: -12px -8px !important;
+  background: #FFF;
+  min-height: 50px;
+}
+#tabControl ul li{
+  padding: 0 !important;
+}
+
+.instituicaoTab,
+.instituicaoTab-active,
+#tab1, #tab2 {
+  width: auto !important;
+  font-size: 14px;
+  font-weight: normal;
+  padding: 6px 20px 12px 20px;
+  border-radius: 0px !important;
+  border: 0 !important;
+  color: #47728f;
+}
+
+.instituicaoTab-active {
+  width: auto !important;
+  background: #FFF !important;
+  box-shadow: inset 1px 1px 0 0 #cddce6, inset -1px 0 0 0 #cddce6;
 }

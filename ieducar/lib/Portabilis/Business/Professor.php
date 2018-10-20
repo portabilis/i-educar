@@ -117,6 +117,10 @@ class Portabilis_Business_Professor {
   }
 
   public static function seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId) {
+      $instituicaoId = $instituicaoId ?: 0;
+      $escolaId  = $escolaId ?: 0;
+      $cursoId = $cursoId ?: 0;
+
     if (self::canLoadSeriesAlocado($instituicaoId)){
       $sql = "SELECT s.cod_serie as id, s.nm_serie as nome                
               FROM pmieducar.quadro_horario qh

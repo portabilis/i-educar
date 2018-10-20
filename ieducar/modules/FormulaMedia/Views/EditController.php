@@ -67,6 +67,7 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => 'A fórmula de cálculo.<br />
                    Variáveis disponíveis:<br />
                    &middot; En - Etapa n (de 1 a 10)<br />
+                   &middot; Cn - Considera etapa n (de 1 a 10): 1 - Sim, 0 - Não<br />
                    &middot; Et - Total de etapas<br />
                    &middot; Se - Soma das notas das etapas<br />
                    &middot; Rc - Nota da recuperação<br />

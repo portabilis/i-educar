@@ -1,115 +1,181 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Portabilis
- * @since     Arquivo disponível desde a versão 1.1.0
- * @version   $Id$
- */
-
 require_once 'lib/Portabilis/Array/Utils.php';
 
-/**
- * Portabilis_Report_ReportCore class.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Portabilis
- * @since     Classe disponível desde a versão 1.1.0
- * @version   @@package_version@@
- */
-
-class Portabilis_Report_ReportCore
+abstract class Portabilis_Report_ReportCore
 {
+    /**
+     * @var array
+     */
+    public $requiredArgs;
 
- function __construct() {
-    $this->requiredArgs = array();
-    $this->args         = array();
+    /**
+     * @var array
+     */
+    public $args;
 
-    // set required args on construct, because ReportCoreController access it args before call dumps
-    $this->requiredArgs();
-  }
+    /**
+     * Portabilis_Report_ReportCore constructor.
+     *
+     * @throws Exception
+     */
+    public function __construct()
+    {
+        $this->requiredArgs = [];
+        $this->args = [];
 
-  // wrapper for Portabilis_Array_Utils::merge
-  protected static function mergeOptions($options, $defaultOptions) {
-    return Portabilis_Array_Utils::merge($options, $defaultOptions);
-  }
-
-  function addArg($name, $value) {
-    if (is_string($value))
-      $value = $value;
-
-    $this->args[$name] = $value;
-  }
-
-  function addRequiredArg($name) {
-    $this->requiredArgs[] = $name;
-  }
-
-  function validatesPresenseOfRequiredArgs() {
-    foreach($this->requiredArgs as $requiredArg) {
-
-      if (! isset($this->args[$requiredArg]) || empty($this->args[$requiredArg]))
-        throw new Exception("The required arg '{$requiredArg}' wasn't set or is empty!");
+        $this->requiredArgs();
     }
-  }
 
-  function dumps($options = array()) {
-    $defaultOptions = array('report_factory' => null, 'options' => array());
-    $options        = self::mergeOptions($options, $defaultOptions);
+    /**
+     * Wrapper para Portabilis_Array_Utils::merge.
+     *
+     * @see Portabilis_Array_Utils::merge()
+     *
+     * @param array $options
+     * @param array $defaultOptions
+     *
+     * @return array
+     */
+    protected static function mergeOptions($options, $defaultOptions)
+    {
+        return Portabilis_Array_Utils::merge($options, $defaultOptions);
+    }
 
-    $this->validatesPresenseOfRequiredArgs();
+    /**
+     * Adiciona um parâmetro para ser passado ao renderizador.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return void
+     */
+    public function addArg($name, $value)
+    {
+        $this->args[$name] = $value;
+    }
 
-    $reportFactory = ! is_null($options['report_factory']) ? $options['report_factory'] : $this->reportFactory();
+    /**
+     * Adiciona o nome de um parâmetro obrigatório.
+     *
+     * @param string $name
+     *
+     * @return void
+     */
+    public function addRequiredArg($name)
+    {
+        $this->requiredArgs[] = $name;
+    }
 
-    return $reportFactory->dumps($this, $options['options']);
-  }
+    /**
+     * Valida a existência de todos os parâmetros obrigatórios.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function validatesPresenseOfRequiredArgs()
+    {
+        foreach ($this->requiredArgs as $requiredArg) {
+            if (!isset($this->args[$requiredArg]) || empty($this->args[$requiredArg])) {
+                throw new Exception("The required arg '{$requiredArg}' wasn't set or is empty!");
+            }
+        }
+    }
 
-  function reportFactory() {
-    $factoryClassName = $GLOBALS['coreExt']['Config']->report->default_factory;
-    $factoryClassPath = str_replace('_', '/', $factoryClassName) . '.php';
+    /**
+     * Renderiza o relatório.
+     *
+     * @param array $options
+     *
+     * @return mixed
+     *
+     * @throws CoreExt_Exception
+     * @throws Exception
+     */
+    public function dumps($options = [])
+    {
+        $options = self::mergeOptions($options, [
+            'report_factory' => null,
+            'options' => []
+        ]);
 
-    if (! $factoryClassName)
-      throw new CoreExt_Exception("No report.default_factory defined in configurations!");
+        $this->validatesPresenseOfRequiredArgs();
 
-    // don't fail if path not exists.
-    include_once $factoryClassPath;
+        $reportFactory = is_null($options['report_factory']) ? $this->reportFactory() : $options['report_factory'];
 
-    if (! class_exists($factoryClassName))
-      throw new CoreExt_Exception("Class '$factoryClassName' not found in path '$factoryClassPath'");
+        return $reportFactory->dumps($this, $options['options']);
+    }
 
-    return new $factoryClassName();
-  }
+    /**
+     * Retorna uma fábrica de relatórios.
+     *
+     * @return Portabilis_Report_ReportFactory
+     *
+     * @throws CoreExt_Exception
+     */
+    public function reportFactory()
+    {
+        $factoryClassName = $GLOBALS['coreExt']['Config']->report->default_factory;
+        $factoryClassPath = str_replace('_', '/', $factoryClassName) . '.php';
 
-  // methods that must be overridden
+        if (!$factoryClassName) {
+            throw new CoreExt_Exception('No report.default_factory defined in configurations!');
+        }
 
-  function templateName() {
-    throw new Exception("The method 'templateName' must be overridden!");
-  }
+        include_once $factoryClassPath;
 
-  function requiredArgs() {
-    throw new Exception("The method 'requiredArgs' must be overridden!");
-  }
+        if (!class_exists($factoryClassName)) {
+            throw new CoreExt_Exception("Class '$factoryClassName' not found in path '$factoryClassPath'");
+        }
+
+        return new $factoryClassName();
+    }
+
+    /**
+     * Retorna o nome do template (arquivo .jrxml) que será utilizado como
+     * template para a renderização.
+     *
+     * @return string
+     */
+    abstract public function templateName();
+
+    /**
+     * Adiciona os parâmetros obrigatórios a serem passados ao renderizador.
+     *
+     * @return void
+     */
+    abstract public function requiredArgs();
+
+    /**
+     * Indica se JSON será utilizado como fonte de dados para o relatório.
+     *
+     * @return bool
+     */
+    public function useJson()
+    {
+        return false;
+    }
+
+    /**
+     * Retorna a query onde será encontrado os dados para o relatório
+     * principal.
+     *
+     * @return string
+     */
+    public function getJsonQuery()
+    {
+        return '';
+    }
+
+    /**
+     * Array com os dados que serão convertidos em JSON e enviados ao relatório
+     * como fonte de dados.
+     *
+     * @return array
+     */
+    public function getJsonData()
+    {
+        return [];
+    }
 }
