@@ -1,4 +1,31 @@
 <?php
+/**
+ * i-Educar - Sistema de gestão escolar
+ *
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
+ *
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * do GNU para mais detalhes.
+ *
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * @author Rodrigo Rodrigues <rodrigogbgod@gmail.com>
+ * @category  i-Educar
+ * @license   GPL-2.0+
+ * @package   Core_Controller
+ * @since     Arquivo disponível desde a versão 1.1.0
+ * @version   $Id$
+ */
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -6,8 +33,8 @@ require_once 'Configuracao/Model/ConfiguracaoMovimentoGeralDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
-
-    function Formular() {
+    public function Formular()
+    {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Configuração movimento geral');
         $this->processoAp = 9998866;
         $this->addEstilo('localizacaoSistema');
@@ -79,13 +106,17 @@ class indice extends clsCadastro
         )
     );
 
-    function Inicializar()
+    public function Inicializar()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(9998866, $_SESSION['id_pessoa'], 1,
-            'educar_index.php');
+        $obj_permissoes->permissao_cadastra(
+            9998866,
+            $_SESSION['id_pessoa'],
+            1,
+            'educar_index.php'
+        );
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
+        $localizacao->entradaCaminhos(array(
             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
             "educar_configuracoes_index.php"    => "Configurações",
             ""                                  => "Configuração movimento geral"
@@ -94,16 +125,18 @@ class indice extends clsCadastro
         return 'Editar';
     }
 
-    public function Gerar() {
+    public function Gerar()
+    {
         $this->loadConfig();
-        foreach ($this->_formMap as $key => $value){
-            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false, 'values' => $value['value'], 'coluna' => $value['coluna']),'');
+        foreach ($this->_formMap as $key => $value) {
+            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false, 'values' => $value['value'], 'coluna' => $value['coluna']), '');
         }
     }
 
-    function loadConfig() {
+    public function loadConfig()
+    {
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
-        foreach ($this->configDataMapper->findAll() as $config){
+        foreach ($this->configDataMapper->findAll() as $config) {
             $config;
             $series = $this->_formMap['serie-'.$config->get('coluna')]['value'];
 
@@ -113,18 +146,17 @@ class indice extends clsCadastro
         }
     }
 
-    function Editar()
+    public function Editar()
     {
-
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
         $salvou = true;
         $this->deleteAllConfigs();
-        foreach ($_POST as $key => $value){
-            if (strpos($key,'multiple_search_serie_serie-') === 0) {
+        foreach ($_POST as $key => $value) {
+            if (strpos($key, 'multiple_search_serie_serie-') === 0) {
                 $series = $value;
                 $coluna = str_replace('multiple_search_serie_serie-', '', $key);
                 foreach ($series as $serie) {
-                    if (!empty($serie)){
+                    if (!empty($serie)) {
                         $this->configDataMapper->save($this->configDataMapper->createNewEntityInstance(array('coluna' => $coluna, 'serie' => $serie)));
                     }
                 }
@@ -134,13 +166,13 @@ class indice extends clsCadastro
         return $salvou;
     }
 
-    function deleteAllConfigs() {
+    public function deleteAllConfigs()
+    {
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
-        foreach ($this->configDataMapper->findAll() as $config){
+        foreach ($this->configDataMapper->findAll() as $config) {
             $this->configDataMapper->delete($config);
         }
     }
-
 }
 
 // Instancia objeto de página
@@ -154,5 +186,3 @@ $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
-
-?>
