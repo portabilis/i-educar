@@ -43,11 +43,10 @@ require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class App_Model_MatriculaTest extends PHPUnit\Framework\TestCase
+class App_Model_MatriculaTest extends UnitBaseTest
 {
   public function testAtualizaMatricula()
   {
-      $this->markTestSkipped('must be revisited.');
     $matricula = $this->getCleanMock('clsPmieducarMatricula');
     $matricula->expects($this->once())
               ->method('edita')
