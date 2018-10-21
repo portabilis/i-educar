@@ -1,0 +1,23 @@
+[production]
+app.database.dbname   = ieducar_test
+app.database.username = runner
+app.database.hostname = localhost
+app.database.password = semaphoredb
+app.database.port     = 5432
+app.name              = "i-Educar"
+
+app.admin.reports.sql_tempo    = 3
+app.admin.reports.pagina_tempo = 5
+app.admin.reports.emails[]     =
+
+[development : production]
+
+[testing : development]
+
+app.locale.country  = 45
+app.locale.province = SP
+app.locale.timezone = America/Sao_Paulo
+apis.access_key = ""
+apis.secret_key = ""
+
+app.template.vars.instituicao = i-Educar

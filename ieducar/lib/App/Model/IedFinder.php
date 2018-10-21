@@ -625,6 +625,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             AND rasa.serie_id = s.cod_serie
             WHERE m.cod_matricula = $1
               AND a.ativo = 1
+              AND t.ativo = 1
               AND (mt.ativo = 1
                    OR (mt.transferido
                        OR mt.remanejado
@@ -1286,7 +1287,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $sql = "
 
             select * from (
-            
+
                 select
                     t.cod_turma,
                     anm.sequencial,
@@ -1294,31 +1295,31 @@ class App_Model_IedFinder extends CoreExt_Entity
                     anm.data_inicio,
                     anm.data_fim,
                     anm.dias_letivos
-                from pmieducar.turma as t 
-                inner join pmieducar.curso as c 
+                from pmieducar.turma as t
+                inner join pmieducar.curso as c
                 on t.ref_cod_curso = c.cod_curso
                 inner join pmieducar.ano_letivo_modulo as anm
                 on anm.ref_ref_cod_escola = t.ref_ref_cod_escola
                 and anm.ref_ano = t.ano
                 where c.padrao_ano_escolar = 1
-                
+
                 union all
-                
-                select 
+
+                select
                     t.cod_turma,
                     tm.sequencial,
                     tm.ref_cod_modulo as cod_modulo,
                     tm.data_inicio,
                     tm.data_fim,
                     tm.dias_letivos
-                from pmieducar.turma as t 
-                inner join pmieducar.curso as c 
+                from pmieducar.turma as t
+                inner join pmieducar.curso as c
                 on t.ref_cod_curso = c.cod_curso
                 inner join pmieducar.turma_modulo as tm
                 on tm.ref_cod_turma = t.cod_turma
                 where c.padrao_ano_escolar = 0
             ) as etapas
-            
+
             where cod_turma = $1;
 
         ";

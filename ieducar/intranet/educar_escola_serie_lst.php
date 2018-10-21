@@ -92,7 +92,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Escola S&eacute;rie - Listagem';
+    $this->titulo = 'Escola Série - Listagem';
 
     foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
       $this->$var = ( $val === '' ) ? null: $val;
@@ -107,7 +107,7 @@ class indice extends clsListagem
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
     $lista_busca[] = 'Escola';
-    $lista_busca[] = 'Institui&ccedil;&atilde;o';
+    $lista_busca[] = 'Instituição';
     $lista_busca[] = 'Escola';
     $this->addCabecalhos($lista_busca);
 
@@ -129,7 +129,7 @@ class indice extends clsListagem
 
     $lista = $obj_escola_serie->lista(
       $this->ref_cod_escola,
-      $this->ref_ref_cod_serie,
+      $this->ref_cod_serie,
       NULL,
       NULL,
       NULL,

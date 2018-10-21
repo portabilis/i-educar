@@ -1,196 +1,151 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaí                               *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-*   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-*   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-*   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-*                                                                        *
-*   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-*   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-*   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-*   junto  com  este  programa. Se não, escreva para a Free Software     *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 31/07/2006 16:40 pelo gerador automatico de classes
-*/
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAnoLetivoModulo
 {
-    var $ref_ano;
-    var $ref_ref_cod_escola;
-    var $sequencial;
-    var $ref_cod_modulo;
-    var $data_inicio;
-    var $data_fim;
-    var $dias_letivos;
-    // propriedades padrao
+
+    public $ref_ano;
+    public $ref_ref_cod_escola;
+    public $sequencial;
+    public $ref_cod_modulo;
+    public $data_inicio;
+    public $data_fim;
+    public $dias_letivos;
 
     /**
      * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
-     * Construtor (PHP 4)
+     * Construtor
      *
      * @return object
      */
-    function __construct( $ref_ano = null, $ref_ref_cod_escola = null, $sequencial = null, $ref_cod_modulo = null, $data_inicio = null, $data_fim = null, $dias_letivos = null )
-    {
+    public function __construct(
+        $ref_ano = null,
+        $ref_ref_cod_escola = null,
+        $sequencial = null,
+        $ref_cod_modulo = null,
+        $data_inicio = null,
+        $data_fim = null,
+        $dias_letivos = null
+    ) {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}ano_letivo_modulo";
 
-        $this->_campos_lista = $this->_todos_campos = "ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo, data_inicio, data_fim, dias_letivos";
+        $this->_campos_lista = $this->_todos_campos = 'ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo, data_inicio, data_fim, dias_letivos';
 
-        if( is_numeric( $ref_cod_modulo ) )
-        {
-            if( class_exists( "clsPmieducarModulo" ) )
-            {
-                $tmp_obj = new clsPmieducarModulo( $ref_cod_modulo );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_modulo)) {
+            if (class_exists('clsPmieducarModulo')) {
+                $tmp_obj = new clsPmieducarModulo($ref_cod_modulo);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_modulo = $ref_cod_modulo;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_modulo = $ref_cod_modulo;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_modulo = $ref_cod_modulo;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.modulo WHERE cod_modulo = '{$ref_cod_modulo}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.modulo WHERE cod_modulo = '{$ref_cod_modulo}'")) {
                     $this->ref_cod_modulo = $ref_cod_modulo;
                 }
             }
         }
-        if( is_numeric( $ref_ref_cod_escola ) && is_numeric( $ref_ano ) )
-        {
-            if( class_exists( "clsPmieducarEscolaAnoLetivo" ) )
-            {
-                $tmp_obj = new clsPmieducarEscolaAnoLetivo( $ref_ref_cod_escola, $ref_ano );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+
+        if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ano)) {
+            if (class_exists('clsPmieducarEscolaAnoLetivo')) {
+                $tmp_obj = new clsPmieducarEscolaAnoLetivo($ref_ref_cod_escola, $ref_ano);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+                        $this->ref_ano = $ref_ano;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_ref_cod_escola = $ref_ref_cod_escola;
                         $this->ref_ano = $ref_ano;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                        $this->ref_ano = $ref_ano;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.escola_ano_letivo WHERE ref_cod_escola = '{$ref_ref_cod_escola}' AND ano = '{$ref_ano}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_ano_letivo WHERE ref_cod_escola = '{$ref_ref_cod_escola}' AND ano = '{$ref_ano}'")) {
                     $this->ref_ref_cod_escola = $ref_ref_cod_escola;
                     $this->ref_ano = $ref_ano;
                 }
             }
         }
 
-
-        if( is_numeric( $sequencial ) )
-        {
+        if (is_numeric($sequencial)) {
             $this->sequencial = $sequencial;
         }
-        if( is_string( $data_inicio ) )
-        {
+
+        if (is_string($data_inicio)) {
             $this->data_inicio = $data_inicio;
         }
-        if( is_string( $data_fim ) )
-        {
+
+        if (is_string($data_fim)) {
             $this->data_fim = $data_fim;
         }
-        if( is_numeric( $dias_letivos ) )
-        {
+
+        if (is_numeric($dias_letivos)) {
             $this->dias_letivos = $dias_letivos;
         }
-
     }
 
     /**
@@ -198,77 +153,84 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_modulo ) && is_string( $this->data_inicio ) && is_string( $this->data_fim) && is_numeric($this->dias_letivos) )
-        {
+        if (
+            is_numeric($this->ref_ano)
+            && is_numeric($this->ref_ref_cod_escola)
+            && is_numeric($this->sequencial)
+            && is_numeric($this->ref_cod_modulo)
+            && is_string($this->data_inicio)
+            && is_string($this->data_fim)
+            && is_numeric($this->dias_letivos)
+        ) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = [];
+            $valores = [];
 
-            if( is_numeric( $this->ref_ano ) )
-            {
-                $campos .= "{$gruda}ref_ano";
-                $valores .= "{$gruda}'{$this->ref_ano}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->ref_ref_cod_escola ) )
-            {
-                $campos .= "{$gruda}ref_ref_cod_escola";
-                $valores .= "{$gruda}'{$this->ref_ref_cod_escola}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->sequencial ) )
-            {
-                $campos .= "{$gruda}sequencial";
-                $valores .= "{$gruda}'{$this->sequencial}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->ref_cod_modulo ) )
-            {
-                $campos .= "{$gruda}ref_cod_modulo";
-                $valores .= "{$gruda}'{$this->ref_cod_modulo}'";
-                $gruda = ", ";
-            }
-            if( is_string( $this->data_inicio ) )
-            {
-                $campos .= "{$gruda}data_inicio";
-                $valores .= "{$gruda}'{$this->data_inicio}'";
-                $gruda = ", ";
-            }
-            if( is_string( $this->data_fim ) )
-            {
-                $campos .= "{$gruda}data_fim";
-                $valores .= "{$gruda}'{$this->data_fim}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->dias_letivos ) )
-            {
-                $campos .= "{$gruda}dias_letivos";
-                $valores .= "{$gruda}'{$this->dias_letivos}'";
-                $gruda = ", ";
+            if (is_numeric($this->ref_ano)) {
+                $campos[] = "ref_ano";
+                $valores[] = "'{$this->ref_ano}'";
             }
 
-      // ativa escolaAnoLetivo se estiver desativado
-      // (quando o escolaAnoLetivo é 'excluido' o registro não é removido)
-      $escolaAnoLetivo = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola,
-                                                         $this->ref_ano,
-                                                         null,
-                                                         $_SESSION['id_pessoa'],
-                                                         null,
-                                                         null,
-                                                         null,
-                                                         1);
-      $escolaAnoLetivoDetalhe = $escolaAnoLetivo->detalhe();
+            if (is_numeric($this->ref_ref_cod_escola)) {
+                $campos[] = "ref_ref_cod_escola";
+                $valores[] = "'{$this->ref_ref_cod_escola}'";
+            }
 
-      if (isset($escolaAnoLetivoDetalhe['ativo']) and $escolaAnoLetivoDetalhe['ativo'] != '1')
-        $escolaAnoLetivo->edita();
+            if (is_numeric($this->sequencial)) {
+                $campos[] = "sequencial";
+                $valores[] = "'{$this->sequencial}'";
+            }
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+            if (is_numeric($this->ref_cod_modulo)) {
+                $campos[] = "ref_cod_modulo";
+                $valores[] = "'{$this->ref_cod_modulo}'";
+            }
+
+            if (is_string($this->data_inicio)) {
+                $campos[] = "data_inicio";
+                $valores[] = "'{$this->data_inicio}'";
+            }
+
+            if (is_string($this->data_fim)) {
+                $campos[] = "data_fim";
+                $valores[] = "'{$this->data_fim}'";
+            }
+
+            if (is_numeric($this->dias_letivos)) {
+                $campos[] = "dias_letivos";
+                $valores[] = "'{$this->dias_letivos}'";
+            }
+
+            // ativa escolaAnoLetivo se estiver desativado
+            // (quando o escolaAnoLetivo é 'excluido' o registro não é removido)
+            $escolaAnoLetivo = new clsPmieducarEscolaAnoLetivo(
+                $this->ref_ref_cod_escola,
+                $this->ref_ano,
+                null,
+                $_SESSION['id_pessoa'],
+                null,
+                null,
+                null,
+                1
+            );
+
+            $escolaAnoLetivoDetalhe = $escolaAnoLetivo->detalhe();
+
+            if (isset($escolaAnoLetivoDetalhe['ativo']) and $escolaAnoLetivoDetalhe['ativo'] != '1') {
+                $escolaAnoLetivo->edita();
+            }
+
+            $campos = join(', ', $campos);
+            $valores = join(', ', $valores);
+
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
             return true;
         }
+
         return false;
     }
 
@@ -277,36 +239,38 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_modulo ) )
-        {
-
+        if (
+            is_numeric($this->ref_ano)
+            && is_numeric($this->ref_ref_cod_escola)
+            && is_numeric($this->sequencial)
+            && is_numeric($this->ref_cod_modulo)
+        ) {
             $db = new clsBanco();
-            $set = "";
+            $set = [];
 
-            if( is_string( $this->data_inicio ) )
-            {
-                $set .= "{$gruda}data_inicio = '{$this->data_inicio}'";
-                $gruda = ", ";
-            }
-            if( is_string( $this->data_fim ) )
-            {
-                $set .= "{$gruda}data_fim = '{$this->data_fim}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->dias_letivos ) )
-            {
-                $set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
-                $gruda = ", ";
+            if (is_string($this->data_inicio)) {
+                $set[] = "data_inicio = '{$this->data_inicio}'";
             }
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND sequencial = '{$this->sequencial}' AND ref_cod_modulo = '{$this->ref_cod_modulo}'" );
+            if (is_string($this->data_fim)) {
+                $set[] = "data_fim = '{$this->data_fim}'";
+            }
+
+            if (is_numeric($this->dias_letivos)) {
+                $set[] = "dias_letivos = '{$this->dias_letivos}'";
+            }
+
+            if ($set) {
+                $set = join(', ', $set);
+
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND sequencial = '{$this->sequencial}' AND ref_cod_modulo = '{$this->ref_cod_modulo}'");
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -315,87 +279,83 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return array
      */
-    function lista( $int_ref_ano = null, $int_ref_ref_cod_escola = null, $int_sequencial = null, $int_ref_cod_modulo = null, $date_data_inicio_ini = null, $date_data_inicio_fim = null, $date_data_fim_ini = null, $date_data_fim_fim = null )
-    {
-        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        $filtros = "";
+    public function lista(
+        $int_ref_ano = null,
+        $int_ref_ref_cod_escola = null,
+        $int_sequencial = null,
+        $int_ref_cod_modulo = null,
+        $date_data_inicio_ini = null,
+        $date_data_inicio_fim = null,
+        $date_data_fim_ini = null,
+        $date_data_fim_fim = null
+    ) {
+        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} WHERE ";
+        $filtros = [];
 
-        $whereAnd = " WHERE ";
-
-        if( is_numeric( $int_ref_ano ) )
-        {
-            $filtros .= "{$whereAnd} ref_ano = '{$int_ref_ano}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_ref_ref_cod_escola ) )
-        {
-            $filtros .= "{$whereAnd} ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_sequencial ) )
-        {
-            $filtros .= "{$whereAnd} sequencial = '{$int_sequencial}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_ref_cod_modulo ) )
-        {
-            $filtros .= "{$whereAnd} ref_cod_modulo = '{$int_ref_cod_modulo}'";
-            $whereAnd = " AND ";
-        }
-        if( is_string( $date_data_inicio_ini ) )
-        {
-            $filtros .= "{$whereAnd} data_inicio >= '{$date_data_inicio_ini}'";
-            $whereAnd = " AND ";
-        }
-        if( is_string( $date_data_inicio_fim ) )
-        {
-            $filtros .= "{$whereAnd} data_inicio <= '{$date_data_inicio_fim}'";
-            $whereAnd = " AND ";
-        }
-        if( is_string( $date_data_fim_ini ) )
-        {
-            $filtros .= "{$whereAnd} data_fim >= '{$date_data_fim_ini}'";
-            $whereAnd = " AND ";
-        }
-        if( is_string( $date_data_fim_fim ) )
-        {
-            $filtros .= "{$whereAnd} data_fim <= '{$date_data_fim_fim}'";
-            $whereAnd = " AND ";
+        if (is_numeric($int_ref_ano)) {
+            $filtros[] = "ref_ano = '{$int_ref_ano}'";
         }
 
+        if (is_numeric($int_ref_ref_cod_escola)) {
+            $filtros[] = "ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
+        }
+
+        if (is_numeric($int_sequencial)) {
+            $filtros[] = "sequencial = '{$int_sequencial}'";
+        }
+
+        if (is_numeric($int_ref_cod_modulo)) {
+            $filtros[] = "ref_cod_modulo = '{$int_ref_cod_modulo}'";
+        }
+
+        if (is_string($date_data_inicio_ini)) {
+            $filtros[] = "data_inicio >= '{$date_data_inicio_ini}'";
+        }
+
+        if (is_string($date_data_inicio_fim)) {
+            $filtros[] = "data_inicio <= '{$date_data_inicio_fim}'";
+        }
+
+        if (is_string($date_data_fim_ini)) {
+            $filtros[] = "data_fim >= '{$date_data_fim_ini}'";
+        }
+
+        if (is_string($date_data_fim_fim)) {
+            $filtros[] = "data_fim <= '{$date_data_fim_fim}'";
+        }
+
+        if (empty($filtros)) {
+            return false;
+        }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+        $filtros = join(' AND ', $filtros);
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} WHERE {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -404,16 +364,16 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_modulo ) )
-        {
+        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->sequencial) && is_numeric($this->ref_cod_modulo)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND sequencial = '{$this->sequencial}' AND ref_cod_modulo = '{$this->ref_cod_modulo}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND sequencial = '{$this->sequencial}' AND ref_cod_modulo = '{$this->ref_cod_modulo}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -422,51 +382,41 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_modulo ) )
-        {
+        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->sequencial) && is_numeric($this->ref_cod_modulo)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND sequencial = '{$this->sequencial}' AND ref_cod_modulo = '{$this->ref_cod_modulo}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND sequencial = '{$this->sequencial}' AND ref_cod_modulo = '{$this->ref_cod_modulo}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
     /**
-     * Exclui um registro
+     * Exclui um registro (mantido apenas por questão de BC)
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_modulo ) )
-        {
-
-        /*
-            delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND sequencial = '{$this->sequencial}' AND ref_cod_modulo = '{$this->ref_cod_modulo}'" );
-        return true;
-        */
-
-
-        }
         return false;
     }
 
     /**
      * Exclui todos os registros referentes a uma escola e a um ano
      */
-    function  excluirTodos()
+    public function excluirTodos()
     {
-        if ( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) ) {
+        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'" );
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ano = '{$this->ref_ano}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'");
+
             return true;
         }
+
         return false;
     }
 
@@ -475,7 +425,7 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -485,7 +435,7 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -495,7 +445,7 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -506,18 +456,18 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -525,13 +475,9 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
-        // limpa a string de possiveis erros (delete, insert, etc)
-        //$strNomeCampo = eregi_replace();
-
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -541,13 +487,13 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -555,20 +501,21 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return array
      */
-    function menorData( $ref_ano, $ref_ref_cod_escola )
+    public function menorData($ref_ano, $ref_ref_cod_escola)
     {
-        if( is_numeric( $ref_ano ) && is_numeric( $ref_ref_cod_escola ) )
-        {
+        if (is_numeric($ref_ano) && is_numeric($ref_ref_cod_escola)) {
             $db = new clsBanco();
-            $resultado = $db->CampoUnico( "SELECT
-                                MIN( data_inicio )
-                            FROM
-                                pmieducar.ano_letivo_modulo
-                            WHERE
-                                ref_ano = '{$ref_ano}'
-                                AND ref_ref_cod_escola = '{$ref_ref_cod_escola}'" );
+            $resultado = $db->CampoUnico("SELECT
+                    MIN( data_inicio )
+                FROM
+                    pmieducar.ano_letivo_modulo
+                WHERE
+                    ref_ano = '{$ref_ano}'
+                    AND ref_ref_cod_escola = '{$ref_ref_cod_escola}'");
+
             return $resultado;
         }
+
         return false;
     }
 
@@ -577,20 +524,21 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return array
      */
-    function maiorData( $ref_ano, $ref_ref_cod_escola )
+    public function maiorData($ref_ano, $ref_ref_cod_escola)
     {
-        if( is_numeric( $ref_ano ) && is_numeric( $ref_ref_cod_escola ) )
-        {
+        if (is_numeric($ref_ano) && is_numeric($ref_ref_cod_escola)) {
             $db = new clsBanco();
-            $resultado = $db->CampoUnico( "SELECT
-                                MAX( data_fim )
-                            FROM
-                                pmieducar.ano_letivo_modulo
-                            WHERE
-                                ref_ano = '{$ref_ano}'
-                                AND ref_ref_cod_escola = '{$ref_ref_cod_escola}'" );
+            $resultado = $db->CampoUnico("SELECT
+                    MAX( data_fim )
+                FROM
+                    pmieducar.ano_letivo_modulo
+                WHERE
+                    ref_ano = '{$ref_ano}'
+                    AND ref_ref_cod_escola = '{$ref_ref_cod_escola}'");
+
             return $resultado;
         }
+
         return false;
     }
 
@@ -599,7 +547,8 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return string
      */
-    function getNomeModulo() {
+    public function getNomeModulo()
+    {
         if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
             $resultado = $db->CampoUnico("SELECT sequencial || 'º ' || nm_tipo AS nome_modulo
@@ -608,8 +557,10 @@ class clsPmieducarAnoLetivoModulo
                                            WHERE ref_ano = {$this->ref_ano}
                                              AND ref_ref_cod_escola = {$this->ref_ref_cod_escola}
                                              AND sequencial = {$this->sequencial}");
+
             return $resultado;
         }
+
         return false;
     }
 
@@ -618,7 +569,8 @@ class clsPmieducarAnoLetivoModulo
      *
      * @return array
      */
-    function getEtapas() {
+    public function getEtapas()
+    {
         if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
             $db = new clsBanco();
             $sql = "SELECT sequencial AS id, sequencial || 'º ' || nm_tipo AS nome
@@ -629,13 +581,13 @@ class clsPmieducarAnoLetivoModulo
 
             $db->Consulta($sql);
 
-            while ( $db->ProximoRegistro() )
-            {
+            while ($db->ProximoRegistro()) {
                 $resultado[] = $db->Tupla();
             }
+
             return $resultado;
         }
+
         return false;
     }
 }
-?>

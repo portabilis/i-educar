@@ -6,7 +6,7 @@
          convertNoticesToExceptions="false"
          convertWarningsToExceptions="false"
          processIsolation="false"
-         stopOnFailure="false">
+         stopOnFailure="true">
   <logging>
     <log type="coverage-html" target="./tests/log/report" charset="UTF-8"/>
     <log type="coverage-clover" target="./tests/log/clover.xml"/>

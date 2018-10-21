@@ -553,31 +553,35 @@ class clsListagem extends clsCampos
 
     // Lista
     if (empty($this->linhas)) {
-      $retorno .=  "
-            <tr>
-              <td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td>
-            </tr>";
+      $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td></tr>";
     }
     else {
       reset($this->linhas);
 
       foreach ($this->linhas as $i => $linha) {
         $classe = ($i % 2) ? 'formmdtd' : 'formlttd';
-        $retorno .=  "
-            <tr>";
+        $retornoTmp = '';
 
         if (is_array($linha)) {
+          if (
+            !empty($linha['tipo'])
+            && !empty($linha['conteudo'])
+            && $linha['tipo'] === 'html-puro'
+          ) {
+            $retorno .= $linha['conteudo'];
+            continue;
+          }
+
           reset($linha);
 
           if (!empty($this->colunas)) {
-            reset( $this->colunas );
+            reset($this->colunas);
           }
 
           foreach ($linha as $i => $celula) {
             if (!empty( $this->colunas)) {
               $fmt = current($this->colunas);
-            }
-            else {
+            } else {
               $fmt = alTopLeft;
             }
 
@@ -585,17 +589,13 @@ class clsListagem extends clsCampos
               $celula = str_replace("<img src='imagens/noticia.jpg' border=0>", "<img src='imagens/noticia.jpg' border=0 alt=''>", $celula);
             }
 
-            $retorno .=  "
-              <td class='$classe' $fmt>$celula</td>";
+            $retornoTmp .=  "<td class='$classe' $fmt>$celula</td>";
           }
-        }
-        else {
-          $retorno .=  "
-              <td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
+        } else {
+          $retornoTmp .=  "<td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
         }
 
-        $retorno .=  "
-            </tr>";
+        $retorno .=  '<tr>' . $retornoTmp . '</tr>';
       }
     }
 
@@ -732,7 +732,7 @@ class clsListagem extends clsCampos
     if(isset($this->acao_imprimir) && $this->acao_imprimir) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' id='imprimir' class='botaolistagem' onclick='javascript: $this->acao_imprimir' value='$this->valor_imprimir'>";
     }
-    if ($this->acao && $this->show_botao_novo) {
+    if (!empty($this->acao) && $this->show_botao_novo) {
       $retorno .=  "
             <tr>
               <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
