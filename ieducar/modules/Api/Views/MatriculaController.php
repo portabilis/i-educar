@@ -7,6 +7,10 @@ require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
+require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
+require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
+require_once 'lib/CoreExt/Controller/Request.php';
 
 class MatriculaController extends ApiCoreController
 {
@@ -262,22 +266,31 @@ class MatriculaController extends ApiCoreController
                               WHEN matricula.aprovado = 3
                                    AND matricula_turma.remanejado = TRUE THEN TRUE
                               ELSE FALSE
-                          END) AS apresentar_fora_da_data
+                          END) AS apresentar_fora_da_data,
+                          (CASE
+                              WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, FALSE) = FALSE
+                              ELSE TRUE
+                          END) AS mostrar_enturmacao
                   FROM matricula
                   INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
                   INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE cod_matricula = $1
-                  AND CASE
-                  WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, false) = false
-                  ELSE true
-                  END';
+                  WHERE cod_matricula = $1';
 
                     $params = [$matriculas[$key]['matricula_id']];
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
                     if (is_array($enturmacoes) && count($enturmacoes) > 0) {
-                        $attrs = ['turma_id', 'sequencial', 'sequencial_fechamento', 'data_entrada', 'data_saida', 'data_atualizacao', 'apresentar_fora_da_data'];
+                        $attrs = [
+                            'turma_id',
+                            'sequencial',
+                            'sequencial_fechamento',
+                            'data_entrada',
+                            'data_saida',
+                            'data_atualizacao',
+                            'apresentar_fora_da_data',
+                            'mostrar_enturmacao'
+                        ];
                         $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
                         $matriculas[$key]['enturmacoes'] = $enturmacoes;
                     }
@@ -344,6 +357,20 @@ class MatriculaController extends ApiCoreController
 
             $params = [$sequencial, $matriculaId];
             $this->fetchPreparedQuery($sql, $params);
+
+            $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;");
+
+            $fakeRequest = new CoreExt_Controller_Request(['data' => [
+                'oper' => 'post',
+                'resource' => 'promocao',
+                'instituicao_id' => $instituicaoId,
+                'matricula_id' => $matriculaId
+            ]]);
+
+            $promocaoApi = new PromocaoApiController();
+
+            $promocaoApi->setRequest($fakeRequest);
+            $promocaoApi->Gerar();
 
             $this->messenger->append('Abandono desfeito.', 'success');
         }
@@ -496,6 +523,12 @@ class MatriculaController extends ApiCoreController
                         }
                     }
                 }
+
+                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
+                    ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0]->get('id');
+
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, $situacaoNova);
             } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
                 if ($enturmacoes) {
                     $params = [$matriculaId];

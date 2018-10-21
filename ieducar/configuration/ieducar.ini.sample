@@ -101,7 +101,7 @@ report.show_error_details = true
 report.default_factory = Portabilis_Report_ReportFactoryPHPJasper
 
 ; Define o diretório dos arquivos fontes dos relatórios
-report.source_path = /home/portabilis/ieducar/ieducar/modules/Reports/ReportSources
+report.source_path = /home/portabilis/ieducar/ieducar/modules/Reports/ReportSources/
 
 ; Configurações da entidade (instituicao)
 ; define o nome da entidade a ser exibido no topo
@@ -149,12 +149,11 @@ app.mailer.debug           = false
 
 ; Configurações usadas pelo modulo de tratamento de erros ocorridos na aplicação.
 modules.error.link_to_support         = http://www.portabilis.com.br/fale_conosco#suporte
-modules.error.send_notification_email = true
-;modules.error.notification_email     = username@domain.com.br
 modules.error.show_details            = true
 modules.error.track = false
-modules.error.tracker_name =
+modules.error.tracker_name = EMAIL
 modules.error.honeybadger_key =
+modules.error.email_recipient =
 
 ; Configurações google.com/recaptcha (confirmação humana, para evitar robos)
 app.recaptcha.public_key     =

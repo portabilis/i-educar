@@ -237,15 +237,16 @@ class indice extends clsCadastro
     {
         $db = new clsBanco();
         $db->consulta("SELECT (CASE
-                              WHEN escola.utiliza_regra_diferenciada THEN regra_avaliacao_diferenciada.qtd_disciplinas_dependencia
-                              ELSE regra_avaliacao.qtd_disciplinas_dependencia
-                          END) AS qtd_disciplinas_dependencia
-                  FROM pmieducar.escola,
-                       pmieducar.serie
-                  LEFT JOIN modules.regra_avaliacao ON (serie.regra_avaliacao_id = regra_avaliacao.id)
-                  LEFT JOIN modules.regra_avaliacao AS regra_avaliacao_diferenciada ON (serie.regra_avaliacao_diferenciada_id = regra_avaliacao_diferenciada.id)
-                  WHERE serie.cod_serie = {$this->ref_cod_serie}
-                    AND escola.cod_escola = {$this->ref_cod_escola}");
+                               WHEN escola.utiliza_regra_diferenciada AND serie.regra_avaliacao_diferenciada_id IS NOT NULL
+                               THEN regra_avaliacao_diferenciada.qtd_disciplinas_dependencia
+                               ELSE regra_avaliacao.qtd_disciplinas_dependencia
+                                END) AS qtd_disciplinas_dependencia
+                         FROM pmieducar.escola,
+                              pmieducar.serie
+                    LEFT JOIN modules.regra_avaliacao ON (serie.regra_avaliacao_id = regra_avaliacao.id)
+                    LEFT JOIN modules.regra_avaliacao AS regra_avaliacao_diferenciada ON (serie.regra_avaliacao_diferenciada_id = regra_avaliacao_diferenciada.id)
+                        WHERE serie.cod_serie = {$this->ref_cod_serie}
+                          AND escola.cod_escola = {$this->ref_cod_escola}");
 
         $db->ProximoRegistro();
         $m = $db->Tupla();

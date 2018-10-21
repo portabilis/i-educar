@@ -38,7 +38,7 @@
     }
   },
   "scripts": {
-    "phpunit": "ieducar/vendor/bin/phpunit --colors=always --config=$(pwd)/ieducar/phpunit.xml --coverage-clover=$(pwd)/ieducar/tests/log/clover.xml",
+    "phpunit": "ieducar/vendor/bin/phpunit --colors=always --config=$(pwd)/ieducar/phpunit.xml",
     "check-style": "ieducar/vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
     "fix-style": "ieducar/vendor/bin/php-cs-fixer fix",
     "test": [

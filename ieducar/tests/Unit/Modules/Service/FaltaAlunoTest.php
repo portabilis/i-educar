@@ -46,7 +46,6 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 {
   public function testCriaNovaInstanciaDeFaltaAluno()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltaSave  = clone $faltaAluno;
