@@ -21,6 +21,7 @@ class RegraTest extends ApiTestCase
     public function testRegression()
     {
         $responseBody = $this->doAuthenticatedRequest('regras', ['instituicao_id' => 1, 'ano' => '2018']);
+        print_r($responseBody);
 
         $this->assertJsonStringEqualsJsonFile($this->getJsonFile('regra_json_valid.json'), $responseBody);
     }
