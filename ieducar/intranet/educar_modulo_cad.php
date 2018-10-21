@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -34,7 +10,7 @@ class clsIndexBase extends clsBase
 {
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Etapa" );
         $this->processoAp = "584";
         $this->addEstilo("localizacaoSistema");
     }
@@ -54,6 +30,7 @@ class indice extends clsCadastro
     var $ref_usuario_cad;
     var $nm_tipo;
     var $descricao;
+    var $num_etapas;
     var $num_meses;
     var $num_semanas;
     var $data_cadastro;
@@ -71,19 +48,26 @@ class indice extends clsCadastro
         $this->cod_modulo=$_GET["cod_modulo"];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
+        $obj_permissoes->permissao_cadastra(
+            584,
+            $this->pessoa_logada,
+            3,
+            "educar_modulo_lst.php"
+        );
 
-        if( is_numeric( $this->cod_modulo ) )
+        if (is_numeric($this->cod_modulo))
         {
-            $obj = new clsPmieducarModulo( $this->cod_modulo );
+            $obj = new clsPmieducarModulo($this->cod_modulo);
             $registro  = $obj->detalhe();
-            if( $registro )
+            if ($registro)
             {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+                // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro AS $campo => $val) {
                     $this->$campo = $val;
+                }
 
                 $obj_permissoes = new clsPermissoes();
-                if( $obj_permissoes->permissao_excluir( 584, $this->pessoa_logada, 3 ) )
+                if ($obj_permissoes->permissao_excluir( 584, $this->pessoa_logada, 3))
                 {
                     $this->fexcluir = true;
                 }
@@ -91,14 +75,16 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_modulo_det.php?cod_modulo={$registro["cod_modulo"]}" : "educar_modulo_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} m&oacute;dulo"             
-        ));
+        $localizacao->entradaCaminhos(
+            array(
+                $_SERVER['SERVER_NAME']."/intranet" => "Início",
+                "educar_index.php"                  => "Escola",
+                ""        => "{$nomeMenu} etapa"
+            )
+        );
         $this->enviaLocalizacao($localizacao->montar());
 
         $this->nome_url_cancelar = "Cancelar";
@@ -117,42 +103,17 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-        // foreign keys
-//      if ($nivel_usuario == 1)
-//      {
-//          $opcoes = array( "" => "Selecione" );
-//          if( class_exists( "clsPmieducarInstituicao" ) )
-//          {
-//              $obj_instituicao = new clsPmieducarInstituicao();
-//              $lista = $obj_instituicao->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,1);
-//              if ( is_array( $lista ) && count( $lista ) )
-//              {
-//                  foreach ( $lista as $registro )
-//                  {
-//                      $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
-//                  }
-//              }
-//          }
-//          else
-//          {
-//              echo "<!--\nErro\nClasse clsPmieducarInstituicao n&atilde;o encontrada\n-->";
-//              $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-//          }
-//          $this->campoLista( "ref_cod_instituicao", "Instituic&atilde;o", $opcoes, $this->ref_cod_instituicao);
-//      }
-//      else if ($nivel_usuario == 2)
-//      {
-//          $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-//          $obj_usuario_det = $obj_usuario->detalhe();
-//          $this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];
-//          $this->campoOculto( "ref_cod_instituicao", $this->ref_cod_instituicao );
-//      }
+        $option = false;
+        if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma())
+        {
+            $option = true;
+        }
 
-        // text
-        $this->campoTexto( "nm_tipo", "M&oacute;dulo", $this->nm_tipo, 30, 255, true );
-        $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
-        $this->campoNumero( "num_meses", "N&uacute;mero Meses", $this->num_meses, 2, 2, true );
-        $this->campoNumero( "num_semanas", "N&uacute;mero Semanas", $this->num_semanas, 2, 2, true );
+        $this->campoTexto( "nm_tipo", "Etapa", $this->nm_tipo, 30, 255, true );
+        $this->campoMemo( "descricao", "Descrição", $this->descricao, 60, 5, false );
+        $this->campoNumero( "num_etapas", "Número de etapas", $this->num_etapas, 2, 2, true, null, null, null, null, null, $option);
+        $this->campoNumero( "num_meses", "Número de meses", $this->num_meses, 2, 2, false );
+        $this->campoNumero( "num_semanas", "Número de semanas", $this->num_semanas, 2, 2, false );
     }
 
     function Novo()
@@ -162,12 +123,11 @@ class indice extends clsCadastro
         @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
+        $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3,  "educar_modulo_lst.php");
 
-
-        $obj = new clsPmieducarModulo( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao );
+        $obj = new clsPmieducarModulo( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao, $this->num_etapas);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
+        if ($cadastrou)
         {
             $modulo = new clsPmieducarModulo($cadastrou);
             $modulo = $modulo->detalhe();
@@ -181,7 +141,7 @@ class indice extends clsCadastro
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = "Cadastro não realizado.<br>";
         echo "<!--\nErro ao cadastrar clsPmieducarModulo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo ) && is_numeric( $this->num_meses ) && is_numeric( $this->num_semanas ) && is_numeric( $this->ref_cod_instituicao )\n-->";
         return false;
     }
@@ -196,25 +156,24 @@ class indice extends clsCadastro
         $moduloDetalheAntes = $moduloDetalhe->detalhe();
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
+        $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3,  "educar_modulo_lst.php");
 
-
-        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao );
+        $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao, $this->num_etapas );
         $editou = $obj->edita();
-        if( $editou )
+        if ($editou)
         {
             $moduloDetalheDepois = $moduloDetalhe->detalhe();
             $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $this->cod_modulo);
             $auditoria->alteracao($moduloDetalheAntes, $moduloDetalheDepois);
 
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+            $this->mensagem .= "Edição efetuada com sucesso.<br>";
             header( "Location: educar_modulo_lst.php" );
             die();
             return true;
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarModulo\nvalores obrigatorios\nif( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = "Edição não realizada.<br>";
+        echo "<!--\nErro ao editar clsPmieducarModulo\nvalores obrigatorios\nif ( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
         return false;
     }
 
@@ -227,24 +186,60 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
 
-
         $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null,null,null,null,null,null,null, 0 );
         $modulo = $obj->detalhe();
+
+        if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma())
+        {
+            $this->mensagem = "Exclusão não realizada.<br>";
+            $this->url_cancelar = "educar_modulo_det.php?cod_modulo={$modulo["cod_modulo"]}";
+            return false;
+        }
+
         $excluiu = $obj->excluir();
-        if( $excluiu )
+        if ($excluiu)
         {
             $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $this->cod_modulo);
             $auditoria->exclusao($modulo);
 
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+            $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
             header( "Location: educar_modulo_lst.php" );
             die();
             return true;
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarModulo\nvalores obrigatorios\nif( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = "Exclusão não realizada.<br>";
+        echo "<!--\nErro ao excluir clsPmieducarModulo\nvalores obrigatorios\nif ( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
         return false;
+    }
+
+    function existeEtapaNaEscola()
+    {
+        if (! $this->cod_modulo)
+        {
+            return false;
+        }
+
+        $obj = new clsPmieducarAnoLetivoModulo($this->cod_modulo);
+        $result = $obj->lista(null, null, null, $this->cod_modulo);
+
+        return !empty($result);
+    }
+
+    function existeEtapaNaTurma()
+    {
+        if (! $this->cod_modulo) {
+            return false;
+        }
+
+        $obj = new clsPmieducarTurmaModulo($this->cod_modulo);
+        $result = $obj->lista(null, $this->cod_modulo);
+
+        if (! $result > 0) {
+            return false;
+        }
+
+        return true;
     }
 }
 

@@ -3132,7 +3132,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     $this->_loadNotas(FALSE);
     $regra = $this->getRegra();
 
-    if(is_null($etapa)) {$etapa = 1;}
+    $etapa = 1;
 
     if($regra->get('notaGeralPorEtapa') == "1"){
       $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
@@ -3199,12 +3199,17 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           }
 
           $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
+          $consideraEtapas = [];
+
+          for ($i = 1; $i <= $qtdeEtapas; $i++) {
+              $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
+          }
 
           if ($verificaDispensa) {
             $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
           }
 
-          $notas = array('Se' => 0, 'Et' => $qtdeEtapas);
+          $notas = array_merge(['Se' => 0, 'Et' => $qtdeEtapas], $consideraEtapas);
 
           // Cria o array formatado para o cálculo da fórmula da média
           foreach ($etapasNotas as $etapa => $nota) {
