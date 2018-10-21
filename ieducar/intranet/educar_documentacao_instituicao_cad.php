@@ -72,8 +72,7 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        Portabilis_View_Helper_Application::loadJavascript($this, array('/modules/Cadastro/Assets/Javascripts/Instituicao.js'));
-        Portabilis_View_Helper_Application::loadStylesheet($this, array('/modules/Cadastro/Assets/Stylesheets/Instituicao.css'));
+        Portabilis_View_Helper_Application::loadJavascript($this, array('/modules/Cadastro/Assets/Javascripts/DocumentacaoPadrao.js'));
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $obj_usuario_det = $obj_usuario->detalhe();

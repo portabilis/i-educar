@@ -51,8 +51,8 @@ class Portabilis_View_Helper_DynamicInput_EtapaEscola extends Portabilis_View_He
 
   protected function inputOptions($options) {
     $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $escolaId      = $this->getEscolaId($options['escolaId']);
+    $instituicaoId = $this->getInstituicaoId($options['instituicaoId'] ?? null);
+    $escolaId      = $this->getEscolaId($options['escolaId'] ?? null);
     $ano           = $this->viewInstance->ano;
     $userId        = $this->getCurrentUserId();
 

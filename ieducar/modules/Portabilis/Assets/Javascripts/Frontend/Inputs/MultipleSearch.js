@@ -4,7 +4,8 @@ var defaultChosenOptions = {
   no_results_text: "Sem resultados para ",
   width: '231px',
   placeholder_text_multiple: "Selecione as opções",
-  placeholder_text_single: "Selecione uma opção"
+  placeholder_text_single: "Selecione uma opção",
+  search_contains: true
 };
 
 var defaultMultipleSearchOptions = {
@@ -32,7 +33,7 @@ var multipleSearch = {
   setup : function(options) {
     options = defaultMultipleSearchOptions.mergeWith(options);
     options.chosenOptions.url = options.get('searchPath');
-
+console.log(options);
     var typeSearch = options.get('typeSearch');
     var attrName = options.get('attrName');
     if (attrName) { attrName = '_' + attrName; }
