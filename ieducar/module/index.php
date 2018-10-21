@@ -43,8 +43,6 @@ require_once 'CoreExt/Controller/Request.php';
 require_once 'CoreExt/Controller/Front.php';
 require_once 'CoreExt/DataMapper.php';
 
-require_once 'modules/Error/Mailers/NotificationMailer.php';
-
 try
 {
   // Objeto de requisição
@@ -96,7 +94,6 @@ catch (Exception $e) {
   }
 
   error_log("Erro inesperado (pego em /module/index.php): " . $e->getMessage());
-  (new NotificationMailer)->unexpectedError($e->getMessage());
 
   die("<script>document.location.href = '/module/Error/unexpected';</script>");
 }

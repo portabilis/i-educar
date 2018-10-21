@@ -788,5 +788,37 @@ class clsPmieducarCandidatoFilaUnica
 
         return true;
     }
+
+    /**
+     * Retorna um array com os códigos das escolas em que o aluno está
+     * aguardando na fila.
+     *
+     * @param int $cod_candidato_fila_unica
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function getOpcoesDeEscolas($cod_candidato_fila_unica)
+    {
+        $db = new clsBanco();
+
+        $db->Consulta(
+            "
+                SELECT ref_cod_escola
+                FROM pmieducar.escola_candidato_fila_unica
+                WHERE ref_cod_candidato_fila_unica = {$cod_candidato_fila_unica}
+                ORDER BY sequencial;
+            "
+        );
+
+        $escolas = [];
+
+        while ($db->ProximoRegistro()) {
+            $escolas[] = $db->Tupla()['ref_cod_escola'];
+        }
+
+        return $escolas;
+    }
 }
 ?>

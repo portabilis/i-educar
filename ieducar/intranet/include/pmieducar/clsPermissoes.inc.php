@@ -260,10 +260,10 @@ class clsPermissoes
     $detalhe_usuario = $obj_usuario->detalhe();
 
     if ($detalhe_usuario) {
-      return $detalhe_usuario['ref_cod_escola'];
+      return $detalhe_usuario['ref_cod_escola'] ?? false;
     }
 
-    return FALSE;
+    return false;
   }
 
     /**
