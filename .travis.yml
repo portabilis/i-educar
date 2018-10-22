@@ -8,7 +8,7 @@ matrix:
         postgresql: 9.5
         apt:
           packages:
-          - postgresql-9.5
+            - postgresql-9.5
       cache:
         directories:
           - $HOME/.composer/cache
@@ -18,5 +18,11 @@ matrix:
         - composer install
         - vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
         - vendor/bin/phinx migrate
+        - sed -i -e '/<log type="coverage-html.*UTF-8"\/>/g' ieducar/phpunit.xml
+        - sed -i -e 's/CORE_EXT_CONFIGURATION_ENV" value="testing/CORE_EXT_CONFIGURATION_ENV" value="travis/g' ieducar/phpunit.xml
+        - sed -i -e 's/API_URI" value="http:\/\/localhost/API_URI" value="http:\/\/localhost:8000/g' ieducar/phpunit.xml
+        - CORE_EXT_CONFIGURATION_ENV=travis php -S localhost:8000 -t ieducar/ &
+      script:
+        - composer test
       after_success:
         - vendor/bin/php-coveralls --verbose

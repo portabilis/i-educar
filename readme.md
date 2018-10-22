@@ -1,4 +1,7 @@
-[![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/coverage.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master) ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
+[![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases) 
+![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master) 
+![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master) 
+![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
 [![Coverage Status](https://coveralls.io/repos/github/portabilis/i-educar/badge.svg?branch=master)](https://coveralls.io/github/portabilis/i-educar?branch=master)
 
 # i-Educar
@@ -96,45 +99,71 @@ Para executar o projeto é necessário a utilização de alguns softwares para f
 
 Para instalar o projeto clone o repositório:
 
-```
+```bash
 git clone https://github.com/portabilis/i-educar.git && cd i-educar
 ```
 
 Em seguida, clone o repositório de relatórios:
 
-```
+```bash
 git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
 ```
 
 Será necessário criar os arquivos de configuração do seu ambiente, modifique-os se necessário:
 
-```
+```bash
 cp docker-compose.yml.example docker-compose.yml
 cp .env.example .env
 cp ieducar/configuration/ieducar.ini.example ieducar/configuration/ieducar.ini
 cp phinx.php.example phinx.php
 ```
 
+Altere também o arquivo `phinx.php`, para adicionar as migrations dos relatórios:
+
+```php
+...
+
+$configuration = array(
+    "paths" => array(
+        "migrations" => array(
+            "ieducar/misc/database/migrations",
+            "ieducar/modules/Reports/database/migrations",   // <<<<< ADICIONAR ESTA LINHA
+        ),
+        "seeds" => array(
+            "ieducar/misc/database/seeds",
+            "ieducar/modules/Reports/database/seeds",        // <<<<< ADICIONAR ESTA LINHA
+        ),
+    ),
+    "environments" => $environments,
+);
+
+...
+```
+
 Faça o build das imagens Docker utilizadas no projeto (pode levar alguns minutos):
 
-```
+```bash
 docker-compose build
 ```
 
 Então, inicie os containers da aplicação:
 
-```
+```bash
 docker-compose up -d
 ```
 
 Faça instalação das dependências do projeto execute apenas um dos comandos
 abaixo:
 
-```
 # Caso você tenha o Composer instalado localmente
+
+```bash
 composer install
+```
 
 # Senão, execute
+
+```bash
 docker run -it -v $(pwd):/app composer install
 ```
 
@@ -153,23 +182,18 @@ chmod +x vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter
 php artisan key:generate
 php artisan legacy:link
 
-vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
+vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed -s StartingReportsSeed
 vendor/bin/phinx migrate
 
 exit
 ```
 
-### Instalando outras dependências
-
-O i-Educar usa o [Composer](https://getcomposer.org/) para gerenciar suas
-dependências. O Composer já é executado automaticamente para quem utilizar
-docker-compose, basta executar o comando `docker-compose up`.
-
-Caso queira adicionar novas dependências ao projeto ou executar algum outro
-comando do composer, execute na raiz do projeto:
+### Compilando arquivos do JasperReports
 
 ```bash
-docker run -it -v $(pwd):/app composer <seu_comando>
+docker-compose exec php bash
+cd ieducar/modules/Reports/ReportSources
+for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(../../../vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter cp $line.jrxml -o $line); done
 ```
 
 ### Primeiro acesso
@@ -195,7 +219,7 @@ configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
 Para ambiente de desenvolvimento edite o arquivo ieducar/phpunit.xml e removaou
 comente a linha que segue:
 ```xml
-    <log type="coverage-clover" target="./tests/log/clover.xml"/>
+<log type="coverage-clover" target="./tests/log/clover.xml"/>
 ```
 
 Esta linha acima é apenas para gerar o xml de coverage para a badge do
@@ -207,7 +231,7 @@ projeto.
 Para rodar os testes, execute o comando que segue:
 
 ```bash
-docker-compose exec ieducar_1604 ieducar/vendor/bin/phpunit -c /home/portabilis/ieducar/ieducar/phpunit.xml 
+docker-compose exec php vendor/bin/phpunit -c /application/ieducar/phpunit.xml 
 ```
 
 #### Visualizar report de coverage
