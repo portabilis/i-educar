@@ -9,10 +9,10 @@ class ViewController extends Core_Controller_Page_ViewController
     protected $_titulo     = 'Detalhes da licenciatura';
     protected $_processoAp = 635;
     protected $_tableMap   = [
-        'Licenciatura'     => 'licenciatura',
-        'Curso'            => 'curso',
+        'Licenciatura' => 'licenciatura',
+        'Curso' => 'curso',
         'Ano de conclusão' => 'anoConclusao',
-        'IES'              => 'ies'
+        'IES' => 'ies'
     ];
 
     public function setUrlEditar(CoreExt_Entity $entry)
@@ -21,8 +21,8 @@ class ViewController extends Core_Controller_Page_ViewController
             'edit',
             [
                 'query' => [
-                    'id'          => $entry->id,
-                    'servidor'    => $entry->servidor,
+                    'id' => $entry->id,
+                    'servidor' => $entry->servidor,
                     'instituicao' => $this->getRequest()->instituicao
                 ]
             ]
@@ -35,8 +35,8 @@ class ViewController extends Core_Controller_Page_ViewController
             'index',
             [
                 'query' => [
-                    'id'          => $entry->id,
-                    'servidor'    => $entry->servidor,
+                    'id' => $entry->id,
+                    'servidor' => $entry->servidor,
                     'instituicao' => $this->getRequest()->instituicao
                 ]
             ]

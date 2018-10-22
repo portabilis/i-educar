@@ -8,12 +8,13 @@ require_once 'include/public/clsPublicUf.inc.php';
 
 class EditController extends Core_Controller_Page_EditController
 {
-    protected $_dataMapper        = 'Docente_Model_LicenciaturaDataMapper';
-    protected $_titulo            = 'Cadastro de Curso Superior/Licenciatura';
-    protected $_processoAp        = 635;
+    protected $_dataMapper = 'Docente_Model_LicenciaturaDataMapper';
+    protected $_titulo = 'Cadastro de Curso Superior/Licenciatura';
+    protected $_processoAp = 635;
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
-    protected $_saveOption        = true;
-    protected $_deleteOption      = true;
+    protected $_saveOption = true;
+    protected $_deleteOption = true;
+
     protected $_formMap = [
         'servidor' => [
             'label'  => '',
@@ -51,19 +52,18 @@ class EditController extends Core_Controller_Page_EditController
             'entity' => 'created_at'
         ]
     ];
+
     protected function _preConstruct()
     {
         $params = [
-            'id'          => $this->getRequest()->id,
-            'servidor'    => $this->getRequest()->servidor,
+            'id' => $this->getRequest()->id,
+            'servidor' => $this->getRequest()->servidor,
             'instituicao' => $this->getRequest()->instituicao
         ];
-
-        $this->setOptions(['new_success_params'  => $params]);
+        $this->setOptions(['new_success_params' => $params]);
         $this->setOptions(['edit_success_params' => $params]);
 
         unset($params['id']);
-
         $this->setOptions(['delete_success_params' => $params]);
     }
 
@@ -78,12 +78,16 @@ class EditController extends Core_Controller_Page_EditController
         $this->campoOculto('servidor', $this->getRequest()->servidor);
 
         $cursoSuperiorMapper = new Educacenso_Model_CursoSuperiorDataMapper();
-        $cursos = $cursoSuperiorMapper->findAll([], [], ['id' => 'ASC', 'nome' => 'ASC']);
+        $cursos = $cursoSuperiorMapper->findAll(
+            [],
+            [],
+            ['id' => 'ASC', 'nome' => 'ASC']
+        );
 
         // Licenciatura
-        $licenciatura = $this->getEntity()->get('licenciatura')
-            ? $this->getEntity()->get('licenciatura')
-            : 0;
+        $licenciatura = $this->getEntity()->get('licenciatura') ?
+            $this->getEntity()->get('licenciatura') :
+            0;
 
         $this->campoRadio(
             'licenciatura',
@@ -94,7 +98,6 @@ class EditController extends Core_Controller_Page_EditController
 
         // Curso
         $opcoes = [];
-
         foreach ($cursos as $curso) {
             $opcoes[$curso->id] = $curso->nome;
         }
@@ -108,13 +111,10 @@ class EditController extends Core_Controller_Page_EditController
 
         // Ano conclusão
         $opcoes = range(1960, date('Y'));
-
         rsort($opcoes);
-
         $opcoes = array_combine($opcoes, $opcoes);
-
         $this->campoLista(
-      'anoConclusao',
+            'anoConclusao',
             $this->_getLabel('anoConclusao'),
             $opcoes,
             $this->getEntity()->anoConclusao
@@ -125,17 +125,15 @@ class EditController extends Core_Controller_Page_EditController
         $ufs = $ufs->lista();
 
         $opcoes = [];
-
         foreach ($ufs as $uf) {
             $opcoes[$uf['sigla_uf']] = $uf['sigla_uf'];
         }
-
         ksort($opcoes);
 
         // Caso não seja uma instância persistida, usa a UF do locale.
-        $uf = $this->getEntity()->ies->uf
-            ? $this->getEntity()->ies->uf
-            : $coreExt['Config']->app->locale->province;
+        $uf = $this->getEntity()->ies->uf ?
+            $this->getEntity()->ies->uf :
+            $coreExt['Config']->app->locale->province;
 
         $this->campoLista('uf', 'UF', $opcoes, $uf, 'getIes()');
 
@@ -153,7 +151,7 @@ class EditController extends Core_Controller_Page_EditController
         $opcoes[$ies->id] = $ies->nome;
 
         $this->campoLista(
-      'ies',
+            'ies',
             $this->_getLabel('ies'),
             $opcoes,
             $this->getEntity()->ies->id
@@ -208,9 +206,8 @@ EOT;
 
     public function Novo()
     {
-        $_POST['user']       = $this->getOption('id_usuario');
+        $_POST['user'] = $this->getOption('id_usuario');
         $_POST['created_at'] = 'NOW()';
-
         parent::Novo();
     }
 }
