@@ -21,7 +21,6 @@
  *
  * @author Rodrigo Rodrigues <rodrigogbgod@gmail.com>
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Core_Controller
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
