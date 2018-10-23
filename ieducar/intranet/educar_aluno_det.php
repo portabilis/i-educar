@@ -124,7 +124,16 @@ class indice extends clsDetalhe
             $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
             $registro['cpf'] = int2IdFederal($det_fisica['cpf']);
             $registro['data_nasc'] = Portabilis_Date_Utils::pgSQLToBr($det_fisica['data_nasc']);
-            $registro['sexo'] = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';
+
+            $registro['sexo'] = '';
+
+            if ($det_fisica['sexo'] == 'F') {
+                $registro['sexo'] = 'Feminino';
+            }
+
+            if ($det_fisica['sexo'] == 'M') {
+                $registro['sexo'] = 'Masculino';
+            }
 
             $obj_estado_civil = new clsEstadoCivil();
             $obj_estado_civil_lista = $obj_estado_civil->lista();
