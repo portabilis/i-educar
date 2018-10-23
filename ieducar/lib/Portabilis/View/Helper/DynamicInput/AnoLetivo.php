@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/App/Model/IedFinder.php';
  * Portabilis_View_Helper_DynamicInput_AnoLetivo class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -54,8 +58,8 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
 
     protected function filtroSituacao()
     {
-        $tiposSituacao  = array('nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2);
-        $situacaoIn     = array();
+        $tiposSituacao  = ['nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2];
+        $situacaoIn     = [];
 
         foreach ($tiposSituacao as $nome => $flag) {
             if (in_array("$nome", $this->options['situacoes'])) {
@@ -79,19 +83,19 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
             $sql       = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
                     and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 
-            $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => $escolaId));
+            $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => $escolaId]);
             $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ano', 'ano');
         }
 
-        return $this->insertOption(null, "Selecione um ano letivo", $resources);
+        return $this->insertOption(null, 'Selecione um ano letivo', $resources);
     }
 
     protected function defaultOptions()
     {
-        return array('escolaId' => null, 'situacoes' => array('em_andamento', 'nao_iniciado', 'finalizado'));
+        return ['escolaId' => null, 'situacoes' => ['em_andamento', 'nao_iniciado', 'finalizado']];
     }
 
-    public function anoLetivo($options = array())
+    public function anoLetivo($options = [])
     {
         parent::select($options);
 

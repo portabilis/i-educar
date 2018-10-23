@@ -21,10 +21,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -36,10 +38,12 @@ require_once 'lib/Portabilis/Utils/Database.php';
  * Portabilis_Validator class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Validator
@@ -48,7 +52,6 @@ class Portabilis_Validator
     {
         $this->messenger = $messenger;
     }
-
 
     // TODO refatorar todos metodos, para não receber mais argumento $raiseException*
 
@@ -69,9 +72,9 @@ class Portabilis_Validator
 
             return false;
         }
+
         return true;
     }
-
 
     public function validatesValueIsNumeric(&$value, $name, $raiseExceptionOnFail = false, $msg = '', $addMsgOnError = true)
     {
@@ -87,9 +90,9 @@ class Portabilis_Validator
 
             return false;
         }
+
         return true;
     }
-
 
     public function validatesValueIsArray(&$value, $name, $raiseExceptionOnFail = false, $msg = '', $addMsgOnError = true)
     {
@@ -105,9 +108,9 @@ class Portabilis_Validator
 
             return false;
         }
+
         return true;
     }
-
 
     public function validatesValueInSetOf(&$value, $setExpectedValues, $name, $raiseExceptionOnFail = false, $msg = '')
     {

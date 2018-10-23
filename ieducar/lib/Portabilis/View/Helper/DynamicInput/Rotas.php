@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,10 +37,12 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
  * Portabilis_View_Helper_DynamicInput_Rotas class.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_Rotas extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -51,10 +55,11 @@ class Portabilis_View_Helper_DynamicInput_Rotas extends Portabilis_View_Helper_D
     protected function inputOptions($options)
     {
         $resources = $options['resources'];
-        return $this->insertOption(null, "Selecione uma rota", $resources);
+
+        return $this->insertOption(null, 'Selecione uma rota', $resources);
     }
 
-    public function rotas($options = array())
+    public function rotas($options = [])
     {
         parent::select($options);
     }

@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -58,15 +61,15 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaTipoCliente extends Portabil
             $resources = App_Model_IedFinder::getBibliotecaTiposCliente($bibliotecaId);
         }
 
-        return $this->insertOption(null, "Selecione um tipo de cliente", $resources);
+        return $this->insertOption(null, 'Selecione um tipo de cliente', $resources);
     }
 
     protected function defaultOptions()
     {
-        return array('options' => array('label' => 'Tipo cliente'));
+        return ['options' => ['label' => 'Tipo cliente']];
     }
 
-    public function bibliotecaTipoCliente($options = array())
+    public function bibliotecaTipoCliente($options = [])
     {
         parent::select($options);
     }

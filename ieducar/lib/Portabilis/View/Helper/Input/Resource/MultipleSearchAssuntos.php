@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchAssuntos class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_MultipleSearchAssuntos extends Portabilis_View_Helper_Input_MultipleSearch
@@ -56,11 +60,11 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAssuntos extends Porta
         return $this->insertOption(null, '', $resources);
     }
 
-    public function multipleSearchAssuntos($attrName, $options = array())
+    public function multipleSearchAssuntos($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'assuntos',
+        $defaultOptions = ['objectName'    => 'assuntos',
                             'apiController' => 'Assunto',
-                            'apiResource'   => 'assunto-search');
+                            'apiResource'   => 'assunto-search'];
 
         $options                         = $this->mergeOptions($options, $defaultOptions);
         $options['options']['resources'] = $this->getOptions($options['options']['resources']);
@@ -74,7 +78,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAssuntos extends Porta
 
     protected function placeholderJs($options)
     {
-        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione os assuntos');";
 

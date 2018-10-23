@@ -20,10 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -31,10 +33,12 @@
  * Portabilis_DataMapper_Utils class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_DataMapper_Utils
@@ -53,7 +57,7 @@ class Portabilis_DataMapper_Utils
   */
     public function getDataMapperFor($packageName, $modelName)
     {
-        $dataMapperClassName = ucfirst($packageName) . "_Model_" . ucfirst($modelName) . "DataMapper";
+        $dataMapperClassName = ucfirst($packageName) . '_Model_' . ucfirst($modelName) . 'DataMapper';
         $classPath           = str_replace('_', '/', $dataMapperClassName) . '.php';
 
         // don't raise any error if the file to be included not exists or it already included.

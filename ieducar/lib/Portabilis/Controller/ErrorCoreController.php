@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1);
+ini_set('display_errors', 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -22,13 +22,15 @@ ini_set("display_errors", 1);
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Lucas D'Avila <lucas@lucasdavi.la>
- * @category  i-Educar
- * @license   GPL-2.0+
- * @package   Portabilis
+ * @author      Lucas D'Avila <lucas@lucasdavi.la>
+ *
+ * @category    i-Educar
+ * @package     Portabilis
  * @subpackage  lib
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
+ *
+ * @since       Arquivo disponível desde a versão ?
+ *
+ * @version     $Id$
  */
 
 require_once 'Core/View.php';
@@ -51,7 +53,8 @@ class Portabilis_Controller_ErrorCoreController extends Core_Controller_Page_Vie
      * overwrite Core/Controller/Page/Abstract.php para renderizar html
      * sem necessidade de usuário estar logado
      *
-     * @param  CoreExt_Controller_Page_Interface $instance
+     * @param CoreExt_Controller_Page_Interface $instance
+     *
      * @return string echo html
      */
     public function generate(CoreExt_Controller_Page_Interface $instance)
@@ -76,16 +79,15 @@ class Portabilis_Controller_ErrorCoreController extends Core_Controller_Page_Vie
 
     protected function loadAssets()
     {
-        $styles = array(
+        $styles = [
       'styles/reset.css',
       'styles/portabilis.css',
       'styles/min-portabilis.css',
       '/modules/Error/Assets/Stylesheets/Error.css'
-    );
+    ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
-
 
     protected function setHeader()
     {

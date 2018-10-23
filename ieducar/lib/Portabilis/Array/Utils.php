@@ -20,22 +20,26 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 /**
  * Portabilis_Array_Utils class.
  *
- * @author Lucas D'Avila <lucas@lucasdavi.la>
- * @author Rodrigo Rodrigues <rodrigogbgod@gmail.com>
+ * @author    Lucas D'Avila <lucas@lucasdavi.la>
+ * @author    Rodrigo Rodrigues <rodrigogbgod@gmail.com>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Array_Utils
@@ -45,8 +49,9 @@ class Portabilis_Array_Utils
      * Mescla $defaultArray com $array,
      * preservando os valores de $array nos casos em que ambos tem a mesma chave.
      *
-     * @param  array $array
-     * @param  array $defaultArray
+     * @param array $array
+     * @param array $defaultArray
+     *
      * @return array
      */
     public static function merge($array, $defaultArray)
@@ -58,23 +63,23 @@ class Portabilis_Array_Utils
         return $defaultArray;
     }
 
-
     /**
      * Mescla os valores de diferentes arrays, onde no array mesclado, cada valor (unico),
      * passa a ser a chave do array.
      *
      * ex: mergeValues(array(array(1,2), array(2,3,4)) resulta em array(1=>1, 2=>2, 3=>3, 4=>4)
      *
-     * @param  array $arrays
+     * @param array $arrays
+     *
      * @return array
      */
     public function mergeValues($arrays)
     {
         if (! is_array($arrays)) {
-            $arrays = array($arrays);
+            $arrays = [$arrays];
         }
 
-        $merge = array();
+        $merge = [];
 
         foreach ($arrays as $array) {
             foreach ($array as $value) {
@@ -87,19 +92,19 @@ class Portabilis_Array_Utils
         return $merge;
     }
 
-
     /**
      * Insere uma chave => valor no inicio do $array,
      * preservando os indices inteiros dos arrays (sem reiniciar)
      *
-     * @param  string $key
-     * @param  mixed $value
-     * @param  array $array
+     * @param string $key
+     * @param mixed  $value
+     * @param array  $array
+     *
      * @return array
      */
     public static function insertIn($key, $value, $array)
     {
-        $newArray = array($key => $value);
+        $newArray = [$key => $value];
 
         foreach ($array as $key => $value) {
             $newArray[$key] = $value;
@@ -108,23 +113,23 @@ class Portabilis_Array_Utils
         return $newArray;
     }
 
-
     /**
-     * @param  array $arrays
-     * @param  array  $attrs
+     * @param array $arrays
+     * @param array $attrs
+     *
      * @return array
      */
-    public static function filterSet($arrays, $attrs = array())
+    public static function filterSet($arrays, $attrs = [])
     {
         if (empty($arrays)) {
-            return array();
+            return [];
         }
 
         if (! is_array($arrays)) {
-            $arrays = array($arrays);
+            $arrays = [$arrays];
         }
 
-        $arraysFiltered = array();
+        $arraysFiltered = [];
 
         foreach ($arrays as $array) {
             $arraysFiltered[] = self::filter($array, $attrs);
@@ -133,7 +138,6 @@ class Portabilis_Array_Utils
         return $arraysFiltered;
     }
 
-
     /**
      * Retorna um array {key => value, key => value}
      * de atributos filtrados de um outro array, podendo renomear nome dos attrs,
@@ -141,17 +145,18 @@ class Portabilis_Array_Utils
      *
      * ex: $attrs = array('cod_escola' => 'id', 'nome')
      *
-     * @param  array $array array a ser(em) filtrado(s)
-     * @param  array  $attrs atributo ou array de atributos para filtrar objeto,
+     * @param array $array array a ser(em) filtrado(s)
+     * @param array $attrs atributo ou array de atributos para filtrar objeto,
+     *
      * @return array
      */
-    public static function filter($array, $attrs = array())
+    public static function filter($array, $attrs = [])
     {
         if (! is_array($attrs)) {
-            $attrs = array($attrs);
+            $attrs = [$attrs];
         }
 
-        $arrayFiltered = array();
+        $arrayFiltered = [];
 
         // apply filter
         foreach ($attrs as $attrName => $attrValueName) {
@@ -165,7 +170,6 @@ class Portabilis_Array_Utils
         return $arrayFiltered;
     }
 
-
     /**
      * Transforma um conjunto de arrays "chave => valor, chave => valor" em um array "id => value"
      *
@@ -176,21 +180,22 @@ class Portabilis_Array_Utils
      * ex: (('id' => 1, 'nome' => 'lucas'), ('id' => 2, 'nome' => 'davila'))
      * é transformado em (1 => 'lucas', 2 => davila)
 
-     * @param array $arrays
+     *
+     * @param array  $arrays
      * @param string $keyAttr
-     * @param array $valueAtt
+     * @param array  $valueAtt
      */
     public static function setAsIdValue($arrays, $keyAttr, $valueAtt)
     {
         if (empty($arrays)) {
-            return array();
+            return [];
         }
 
         if (! is_array($arrays)) {
-            $arrays = array($arrays);
+            $arrays = [$arrays];
         }
 
-        $idValueArray = array();
+        $idValueArray = [];
 
         foreach ($arrays as $array) {
             $idValueArray = self::merge($idValueArray, self::asIdValue($array, $keyAttr, $valueAtt));
@@ -199,30 +204,30 @@ class Portabilis_Array_Utils
         return Portabilis_Array_Utils::sortByValue($idValueArray);
     }
 
-
     /**
      * Transforma um array "chave => valor, chave => valor" em um array "id => value"
      *
      * ex: ('id' => 1, 'nome' => 'lucas') é transformado em (1 => 'lucas')
      *
-     * @param  array $array
-     * @param  string $keyAttr
-     * @param  mixed $valueAtt
+     * @param array  $array
+     * @param string $keyAttr
+     * @param mixed  $valueAtt
+     *
      * @return array
      */
     public static function asIdValue($array, $keyAttr, $valueAtt)
     {
-        return array($array[$keyAttr] => $array[$valueAtt]);
+        return [$array[$keyAttr] => $array[$valueAtt]];
     }
-
 
     /**
      * Ordena array por uma chave usando função php usort
      *
      * ex: $ordenedResources = Portabilis_Array_Utils::sortByKey($resources, 'resource_att_name');
      *
-     * @param  mixed $key
-     * @param  array $array
+     * @param mixed $key
+     * @param array $array
+     *
      * @return array
      */
     public static function sortByKey($key, $array)
@@ -237,7 +242,8 @@ class Portabilis_Array_Utils
     /**
      * Ordena array por valor mantendo as chaves associativas, usando função php uasort
      *
-     * @param  array $array
+     * @param array $array
+     *
      * @return array
      */
     public static function sortByValue($array)
@@ -251,9 +257,10 @@ class Portabilis_Array_Utils
 
     /**
      *
-     * @param  string $key
-     * @param  array $array
-     * @param  array $otherArray
+     * @param string $key
+     * @param array  $array
+     * @param array  $otherArray
+     *
      * @return integer
      */
     public static function _keySorter($key, $array, $otherArray)
@@ -270,8 +277,9 @@ class Portabilis_Array_Utils
 
     /**
      *
-     * @param  string $a
-     * @param  string $b
+     * @param string $a
+     * @param string $b
+     *
      * @return integer
      */
     public static function _valueSorter($a, $b)
@@ -294,7 +302,8 @@ class Portabilis_Array_Utils
     /**
      * Trim each values for a given array
      *
-     * @param  array $array
+     * @param array $array
+     *
      * @return array
      */
     public static function trim($array)
@@ -308,8 +317,9 @@ class Portabilis_Array_Utils
 
     /**
      *
-     * @param  array $array
-     * @param  string $column
+     * @param array  $array
+     * @param string $column
+     *
      * @return array
      */
     public static function arrayColumn($array, $column)

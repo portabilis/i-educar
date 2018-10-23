@@ -9,27 +9,27 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCartorioInep extends Por
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql = "SELECT id_cartorio || ' - ' || descricao AS nome
+            $sql = 'SELECT id_cartorio || \' - \' || descricao AS nome
                     FROM cadastro.codigo_cartorio_inep
-                    WHERE id = $1";
+                    WHERE id = $1';
 
-            $options = array('params' => $id, 'return_only' => 'first-row');
+            $options = ['params' => $id, 'return_only' => 'first-row'];
             $curso_superior = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
             $nome = $curso_superior['nome'];
 
-            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]);
         }
     }
 
-    public function simpleSearchCartorioInep($attrName, $options = array())
+    public function simpleSearchCartorioInep($attrName, $options = [])
     {
-        $defaultOptions = array(
+        $defaultOptions = [
             'objectName' => 'cartorioinep',
             'apiController' => 'CartorioInep',
             'apiResource'   => 'cartorioinep-search',
             'showIdOnValue' => false
-        );
-            
+        ];
+
         $options = $this->mergeOptions($options, $defaultOptions);
 
         parent::simpleSearch($options['objectName'], $attrName, $options);

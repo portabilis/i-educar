@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Portabilis_View_Helper_DynamicInput_Core
@@ -53,16 +56,15 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
         return $id;
     }
 
-
-    public function bibliotecaPesquisaCliente($options = array())
+    public function bibliotecaPesquisaCliente($options = [])
     {
-        $defaultOptions       = array('id' => null, 'options' => array(), 'hiddenInputOptions' => array());
+        $defaultOptions       = ['id' => null, 'options' => [], 'hiddenInputOptions' => []];
         $options              = $this->mergeOptions($options, $defaultOptions);
 
-        $inputHint = "<img border='0' onclick='pesquisaCliente();' id='lupa_pesquisa_cliente' name='lupa_pesquisa_cliente' src='imagens/lupa.png' />";
+        $inputHint = '<img border=\'0\' onclick=\'pesquisaCliente();\' id=\'lupa_pesquisa_cliente\' name=\'lupa_pesquisa_cliente\' src=\'imagens/lupa.png\' />';
 
         // input
-        $defaultInputOptions = array('id'    => 'nome_cliente',
+        $defaultInputOptions = ['id'    => 'nome_cliente',
                             'label'      => 'Cliente',
                             'value'      => '',
                             'size'       => '30',
@@ -74,17 +76,17 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
                             'input_hint' => $inputHint,
                             'callback'   => '',
                             'event'      => 'onKeyUp',
-                            'disabled'   => true);
+                            'disabled'   => true];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-        call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
+        call_user_func_array([$this->viewInstance, 'campoTexto'], $inputOptions);
 
         // hidden input
-        $defaultHiddenInputOptions = array('id'    => 'ref_cod_cliente',
-                                       'value' => $this->getResourceId($options['id']));
+        $defaultHiddenInputOptions = ['id'    => 'ref_cod_cliente',
+                                       'value' => $this->getResourceId($options['id'])];
 
         $hiddenInputOptions = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
-        call_user_func_array(array($this->viewInstance, 'campoOculto'), $hiddenInputOptions);
+        call_user_func_array([$this->viewInstance, 'campoOculto'], $hiddenInputOptions);
 
         // js
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
@@ -95,18 +97,18 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
 
       $("#ref_cod_biblioteca").change(resetCliente);', true);
 
-        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, "
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       function pesquisaCliente() {
-        var additionalFields = getElementFor('biblioteca');
-        var exceptFields     = getElementFor('nome_cliente');
+        var additionalFields = getElementFor(\'biblioteca\');
+        var exceptFields     = getElementFor(\'nome_cliente\');
 
         if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
-          var bibliotecaId   = getElementFor('biblioteca').val();
-          var attrIdName     = getElementFor('cliente').attr('id');
+          var bibliotecaId   = getElementFor(\'biblioteca\').val();
+          var attrIdName     = getElementFor(\'cliente\').attr(\'id\');
 
-            pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1='+attrIdName+'&campo2=nome_cliente&ref_cod_biblioteca='+bibliotecaId);
+            pesquisa_valores_popless(\'educar_pesquisa_cliente_lst.php?campo1=\'+attrIdName+\'&campo2=nome_cliente&ref_cod_biblioteca=\'+bibliotecaId);
         }
       }
-    ");
+    ');
     }
 }

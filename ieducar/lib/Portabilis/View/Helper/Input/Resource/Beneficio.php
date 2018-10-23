@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_Input_Resource_Beneficio class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_Helper_Input_CoreSelect
@@ -54,10 +57,10 @@ class Portabilis_View_Helper_Input_Resource_Beneficio extends Portabilis_View_He
             $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_aluno_beneficio', 'nm_beneficio');
         }
 
-        return $this->insertOption(null, Portabilis_String_Utils::toLatin1("Benefício"), $resources);
+        return $this->insertOption(null, Portabilis_String_Utils::toLatin1('Benefício'), $resources);
     }
 
-    public function beneficio($options = array())
+    public function beneficio($options = [])
     {
         parent::select($options);
     }

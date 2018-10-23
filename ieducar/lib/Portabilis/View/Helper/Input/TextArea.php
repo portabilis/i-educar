@@ -22,31 +22,34 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
-
 /**
  * Portabilis_View_Helper_Input_TextArea class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input_Core
 {
-    public function textArea($attrName, $options = array())
+    public function textArea($attrName, $options = [])
     {
-        $defaultOptions = array('options' => array(), 'objectName' => '');
+        $defaultOptions = ['options' => [], 'objectName' => ''];
 
         $options             = $this->mergeOptions($options, $defaultOptions);
         $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
@@ -54,7 +57,7 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
         $label = ! empty($attrName) ? $attrName : $options['objectName'];
         $label = str_replace('_id', '', $label);
 
-        $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
+        $defaultInputOptions = ['id'             => $options['objectName'] . $spacer . $attrName,
                                  'label'          => ucwords($label),
                                  'value'          => null,
                                  'cols'           => 49,
@@ -65,11 +68,11 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
                                  'inline'         => false,
                                  'script'         => false,
                                  'event'          => 'onClick',
-                                 'disabled'       => false);
+                                 'disabled'       => false];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array(array($this->viewInstance, 'campoMemo'), $inputOptions);
+        call_user_func_array([$this->viewInstance, 'campoMemo'], $inputOptions);
         $this->fixupPlaceholder($inputOptions);
     }
 }

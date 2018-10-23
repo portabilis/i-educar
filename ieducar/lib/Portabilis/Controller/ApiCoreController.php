@@ -19,19 +19,21 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author Lucas D'Avila <lucas@lucasdavi.la>
- * @author Éber Freitas Dias <eber.freitas@gmail.com>
- * @author Rodrigo Rodrigues <rodrigogbgod@gmail.com>
- * @author Ricardo Bortotto <ricardo@portabilis.com.br>
- * @author Mauricio Citadini Bilessimo <pariulon@hotmail.com>
- * @author Lucas Schmoeller da Silva <lucasschmoellerdasilva@gmail.com>
- * @author Caroline Salib <carolinesalibc@gmail.com>
- * @category  i-Educar
- * @license   GPL-2.0+
- * @package   Portabilis
+ * @author      Lucas D'Avila <lucas@lucasdavi.la>
+ * @author      Éber Freitas Dias <eber.freitas@gmail.com>
+ * @author      Rodrigo Rodrigues <rodrigogbgod@gmail.com>
+ * @author      Ricardo Bortotto <ricardo@portabilis.com.br>
+ * @author      Mauricio Citadini Bilessimo <pariulon@hotmail.com>
+ * @author      Lucas Schmoeller da Silva <lucasschmoellerdasilva@gmail.com>
+ * @author      Caroline Salib <carolinesalibc@gmail.com>
+ *
+ * @category    i-Educar
+ * @package     Portabilis
  * @subpackage  lib
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
+ *
+ * @since       Arquivo disponível desde a versão ?
+ *
+ * @version     $Id$
  */
 
 require_once 'include/clsBanco.inc.php';
@@ -57,10 +59,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
     protected $_deleteOption      = false;
     protected $_titulo            = '';
 
-
     // adicionar classe do data mapper que se deseja usar, em tais casos.
     protected $_dataMapper        = null;
-
 
     /* Variaveis utilizadas pelos validadores validatesAuthorizationToDestroy e validatesAuthorizationToChange.
        Notar que todos usuários tem autorização para o processo 0,
@@ -69,12 +69,11 @@ class ApiCoreController extends Core_Controller_Page_EditController
     protected $_processoAp        = 0;
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
 
-
     public function __construct()
     {
         $this->messenger = new Portabilis_Messenger();
         $this->validator = new Portabilis_Validator($this->messenger);
-        $this->response  = array();
+        $this->response  = [];
     }
 
     /**
@@ -91,7 +90,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         return Portabilis_Utils_User::getNivelAcesso();
     }
-
 
     // validators
 
@@ -158,7 +156,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $user = $this->currentUser();
 
         if (! $user['super']) {
-            $this->messenger->append("O usuário logado deve ser o admin");
+            $this->messenger->append('O usuário logado deve ser o admin');
+
             return false;
         }
 
@@ -166,11 +165,12 @@ class ApiCoreController extends Core_Controller_Page_EditController
     }
 
     /**
-     * @param  string $resourceName
-     * @param  array  $options
+     * @param string $resourceName
+     * @param array  $options
+     *
      * @return boolean
      */
-    protected function validatesId($resourceName, $options = array())
+    protected function validatesId($resourceName, $options = [])
     {
         $attrName = $resourceName . ($resourceName ? '_id' : 'id');
 
@@ -215,34 +215,29 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return $can;
     }
 
-
     // validation
 
     protected function canAcceptRequest()
     {
         return $this->validatesUserIsLoggedIn() &&
-           $this->validatesPresenceOf(array('oper', 'resource'));
+           $this->validatesPresenceOf(['oper', 'resource']);
     }
-
 
     protected function canGet()
     {
         return $this->validatesResourceId();
     }
 
-
     protected function canChange()
     {
         throw new Exception('canChange must be overwritten!');
     }
-
 
     protected function canPost()
     {
         return $this->canChange() &&
            $this->validatesAuthorizationToChange();
     }
-
 
     protected function canPut()
     {
@@ -251,12 +246,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
            $this->validatesAuthorizationToChange();
     }
 
-
     protected function canSearch()
     {
         return $this->validatesPresenceOf('query');
     }
-
 
     protected function canDelete()
     {
@@ -264,13 +257,11 @@ class ApiCoreController extends Core_Controller_Page_EditController
            $this->validatesAuthorizationToDestroy();
     }
 
-
     protected function canEnable()
     {
         return $this->validatesResourceId() &&
            $this->validatesAuthorizationToChange();
     }
-
 
     // api
 
@@ -278,7 +269,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $this->messenger->append("Operação '{$this->getRequest()->oper}' não implementada para o recurso '{$this->getRequest()->resource}'");
     }
-
 
     protected function appendResponse($name, $value = '')
     {
@@ -291,7 +281,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         }
     }
 
-
     // subscrever nas classes filhas sentando os recursos disponibilizados e operacoes permitidas, ex:
     // return array('resources1' => array('get'), 'resouce2'    => array('post', 'delete'));
     protected function getAvailableOperationsForResources()
@@ -299,13 +288,11 @@ class ApiCoreController extends Core_Controller_Page_EditController
         throw new CoreExt_Exception('É necessário sobrescrever o método "getExpectedOperationsForResources()" de ApiCoreController.');
     }
 
-
     protected function isRequestFor($oper, $resource)
     {
         return $this->getRequest()->resource == $resource &&
            $this->getRequest()->oper == $oper;
     }
-
 
     protected function prepareResponse()
     {
@@ -324,15 +311,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $response = SafeJson::encode($this->response);
         } catch (Exception $e) {
             error_log("Erro inesperado no metodo prepareResponse da classe ApiCoreController: {$e->getMessage()}");
-            $response = array('msgs' => array('msg' => 'Erro inesperado no servidor. Por favor, tente novamente.',
-                        'type' => 'error'));
+            $response = ['msgs' => ['msg' => 'Erro inesperado no servidor. Por favor, tente novamente.',
+                        'type' => 'error']];
 
             $response = SafeJson::encode($response);
         }
 
         echo $response;
     }
-
 
     public function generate(CoreExt_Controller_Page_Interface $instance)
     {
@@ -348,7 +334,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
         echo $this->prepareResponse();
     }
-
 
     /*  subescrever nas classes filhas setando as verificações desejadas e retornando a resposta,
         conforme recurso e operação recebida ex: get, post ou delete, ex:
@@ -373,16 +358,15 @@ class ApiCoreController extends Core_Controller_Page_EditController
     */
     public function Gerar()
     {
-        throw new CoreExt_Exception("The method 'Gerar' must be overwritten!");
+        throw new CoreExt_Exception('The method \'Gerar\' must be overwritten!');
     }
-
 
     // #TODO mover validadores para classe lib/Portabilis/Validator.php / adicionar wrapper para tais
 
     protected function validatesPresenceOf($requiredParamNames)
     {
         if (! is_array($requiredParamNames)) {
-            $requiredParamNames = array($requiredParamNames);
+            $requiredParamNames = [$requiredParamNames];
         }
 
         $valid = true;
@@ -396,12 +380,11 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return $valid;
     }
 
-
-    protected function validatesExistenceOf($resourceName, $value, $options = array())
+    protected function validatesExistenceOf($resourceName, $value, $options = [])
     {
-        $defaultOptions = array('schema_name'      => 'pmieducar',
+        $defaultOptions = ['schema_name'      => 'pmieducar',
                             'field_name'       => "cod_{$resourceName}",
-                            'add_msg_on_error' => true);
+                            'add_msg_on_error' => true];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 
@@ -417,6 +400,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
                                                     $addMsgOnError        = $options['add_msg_on_error']
         );
             }
+
             return $valid;
         } else {
             return $this->validator->validatesValueIsInBd(
@@ -430,11 +414,11 @@ class ApiCoreController extends Core_Controller_Page_EditController
         }
     }
 
-    protected function validatesUniquenessOf($resourceName, $value, $options = array())
+    protected function validatesUniquenessOf($resourceName, $value, $options = [])
     {
-        $defaultOptions = array('schema_name'      => 'pmieducar',
+        $defaultOptions = ['schema_name'      => 'pmieducar',
                             'field_name'       => "cod_{$resourceName}",
-                            'add_msg_on_error' => true);
+                            'add_msg_on_error' => true];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 
@@ -448,11 +432,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
     );
     }
 
-
     protected function validatesIsNumeric($expectedNumericParamNames)
     {
         if (! is_array($expectedNumericParamNames)) {
-            $expectedNumericParamNames = array($expectedNumericParamNames);
+            $expectedNumericParamNames = [$expectedNumericParamNames];
         }
 
         $valid = true;
@@ -466,18 +449,16 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return $valid;
     }
 
-
     // wrappers for Portabilis_*Utils*
-
 
     // DEPRECADO
     // #TODO nas classes filhas, migrar chamadas de fetchPreparedQuery para usar novo padrao com array de options
-    protected function fetchPreparedQuery($sql, $params = array(), $hideExceptions = true, $returnOnly = '')
+    protected function fetchPreparedQuery($sql, $params = [], $hideExceptions = true, $returnOnly = '')
     {
-        $options = array('params'      => $params,
+        $options = ['params'      => $params,
                      'show_errors' => ! $hideExceptions,
                      'return_only' => $returnOnly,
-                     'messenger'   => $this->messenger);
+                     'messenger'   => $this->messenger];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
     }
@@ -503,7 +484,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return $entity;
     }
 
-    protected function createEntityOf($dataMapper, $data = array())
+    protected function createEntityOf($dataMapper, $data = [])
     {
         return $dataMapper->createNewEntityInstance($data);
     }
@@ -511,12 +492,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
     protected function getOrCreateEntityOf($dataMapper, $id)
     {
         $entity = $this->tryGetEntityOf($dataMapper, $id);
+
         return (is_null($entity) ? $this->createEntityOf($dataMapper) : $entity);
     }
 
     protected function deleteEntityOf($dataMapper, $id)
     {
         $entity = $this->tryGetEntityOf($dataMapper, $id);
+
         return (is_null($entity) ? true : $dataMapper->delete($entity));
     }
 
@@ -526,7 +509,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $dataMapper->save($entity);
         } else {
             $errors = $entity->getErrors();
-            $msgs   = array();
+            $msgs   = [];
 
             foreach ($errors as $attr => $msg) {
                 if (! is_null($msg)) {
@@ -545,12 +528,12 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return Portabilis_Array_Utils::merge($options, $defaultOptions);
     }
 
-    protected function toUtf8($str, $options = array())
+    protected function toUtf8($str, $options = [])
     {
         return Portabilis_String_Utils::toUtf8($str, $options);
     }
 
-    protected function toLatin1($str, $options = array())
+    protected function toLatin1($str, $options = [])
     {
         return Portabilis_String_Utils::toLatin1($str, $options);
     }
@@ -558,7 +541,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     // DEPRECADO #TODO nas classe filhas migrar de safeString => toUtf8
     protected function safeString($str, $transform = true)
     {
-        return $this->toUtf8($str, array('transform' => $transform));
+        return $this->toUtf8($str, ['transform' => $transform]);
     }
 
     // DEPRECADO #TODO nas classe filhas migrar de safeStringForDb => toLatin1
@@ -567,25 +550,24 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return $this->toLatin1($str);
     }
 
-
     // search
 
     protected function defaultSearchOptions()
     {
         $resourceName = Portabilis_String_Utils::underscore($this->getDispatcher()->getActionName());
 
-        return array('namespace'    => 'pmieducar',
+        return ['namespace'    => 'pmieducar',
                  'table'        => $resourceName,
                  'idAttr'       => "cod_$resourceName",
                  'labelAttr'    => 'nome',
-                 'selectFields' => array(),
-                 'sqlParams'    => array());
+                 'selectFields' => [],
+                 'sqlParams'    => []];
     }
 
     // overwrite in subclass to chande search options
     protected function searchOptions()
     {
-        return array();
+        return [];
     }
 
     protected function sqlsForNumericSearch()
@@ -603,7 +585,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return "select distinct $selectFields from $namespace.$table
             where $idAttr::varchar like $1||'%' order by $idAttr limit 15";
     }
-
 
     protected function sqlsForStringSearch()
     {
@@ -624,7 +605,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     protected function sqlParams($query)
     {
         $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
-        $params        = array($query);
+        $params        = [$query];
 
         foreach ($searchOptions['sqlParams'] as $param) {
             $params[] = $param;
@@ -635,8 +616,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function loadResourcesBySearchQuery($query)
     {
-        $results      = array();
-        $numericQuery = preg_replace("/[^0-9]/", "", $query);
+        $results      = [];
+        $numericQuery = preg_replace('/[^0-9]/', '', $query);
 
         if (! empty($numericQuery)) {
             $sqls   = $this->sqlsForNumericSearch();
@@ -644,14 +625,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
         } else {
 
       // convertido query para latin1, para que pesquisas com acentuação funcionem.
-            $query     = Portabilis_String_Utils::toLatin1($query, array('escape' => false));
+            $query     = Portabilis_String_Utils::toLatin1($query, ['escape' => false]);
 
             $sqls   = $this->sqlsForStringSearch();
             $params = $this->sqlParams($query);
         }
 
         if (! is_array($sqls)) {
-            $sqls = array($sqls);
+            $sqls = [$sqls];
         }
 
         foreach ($sqls as $sql) {
@@ -671,9 +652,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function formatResourceValue($resource)
     {
-        return $resource['id'] . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
+        return $resource['id'] . ' - ' . $this->toUtf8($resource['name'], ['transform' => true]);
     }
-
 
     // default api responders
 
@@ -684,9 +664,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
         }
 
         if (empty($resources)) {
-            $resources = array('' => 'Sem resultados.');
+            $resources = ['' => 'Sem resultados.'];
         }
 
-        return array('result' => $resources);
+        return ['result' => $resources];
     }
 }

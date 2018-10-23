@@ -20,10 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -33,10 +35,12 @@ require_once 'lib/Portabilis/Utils/User.php';
  * Portabilis_Utils_DeprecatedXmlApi class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Utils_DeprecatedXmlApi
@@ -55,7 +59,7 @@ class Portabilis_Utils_DeprecatedXmlApi
 
     public static function returnEmptyQuery($xmlns = 'sugestoes', $rootNodeName = 'query', $comment = '')
     {
-        $emptyQuery = "<?xml version='1.0' encoding='5'?>" .
+        $emptyQuery = '<?xml version=\'1.0\' encoding=\'5\'?>' .
                   "<!-- $comment -->" .
                   "<$rootNodeName xmlns='$xmlns'></$rootNodeName>";
 

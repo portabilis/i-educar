@@ -12,11 +12,11 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchSerie extends Portabil
         return $this->insertOption(null, '', $resources);
     }
 
-    public function multipleSearchSerie($attrName, $options = array())
+    public function multipleSearchSerie($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'multiple_search_serie',
+        $defaultOptions = ['objectName'    => 'multiple_search_serie',
             'apiController' => 'Serie',
-            'apiResource'   => 'series-curso-grouped');
+            'apiResource'   => 'series-curso-grouped'];
 
         $options                         = $this->mergeOptions($options, $defaultOptions);
         $options['options']['resources'] = $this->getOptions($options['options']['resources']);
@@ -28,13 +28,13 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchSerie extends Portabil
 
     protected function placeholderJs($options)
     {
-        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione');";
 
         $json = SafeJson::encode($options['options']['values']);
 
-        $js .= 'arrayOptions.push({element : $j("#'. $options['objectName'] . "_serie-". $options['options']['coluna'] .'"),values : '. $json .'})';
+        $js .= 'arrayOptions.push({element : $j("#'. $options['objectName'] . '_serie-'. $options['options']['coluna'] .'"),values : '. $json .'})';
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
     }

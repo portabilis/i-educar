@@ -19,15 +19,17 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author Lucas D'Avila <lucassdvl@gmail.com>
- * @author Lucas Schmoeller da Silva <llucas_gs@hotmail.com>
- * @author Eder Soares <edersoares@me.com>
- * @category  i-Educar
- * @license   GPL-2.0+
- * @package   Portabilis
+ * @author      Lucas D'Avila <lucassdvl@gmail.com>
+ * @author      Lucas Schmoeller da Silva <llucas_gs@hotmail.com>
+ * @author      Eder Soares <edersoares@me.com>
+ *
+ * @category    i-Educar
+ * @package     Portabilis
  * @subpackage  lib
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
+ *
+ * @since       Arquivo disponível desde a versão ?
+ *
+ * @version     $Id$
  */
 
 require_once 'Core/Controller/Page/EditController.php';
@@ -55,8 +57,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     # protected $_deleteOption = FALSE;
     # protected $_titulo       = 'Cadastro de aluno';
 
-    protected $_nivelAcessoInsuficiente = "/module/Error/unauthorized";
-
+    protected $_nivelAcessoInsuficiente = '/module/Error/unauthorized';
 
     protected $_titulo               = '';
     protected $backwardCompatibility = false;
@@ -74,20 +75,17 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         return true;
     }
 
-
     // methods that must be overwritten
 
     public function Gerar()
     {
-        throw new Exception("The method 'Gerar' must be overwritten!");
+        throw new Exception('The method \'Gerar\' must be overwritten!');
     }
-
 
     protected function save()
     {
-        throw new Exception("The method 'save' must be overwritten!");
+        throw new Exception('The method \'save\' must be overwritten!');
     }
-
 
     // methods that cannot be overwritten
 
@@ -111,7 +109,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
                 }
             } catch (Exception $e) {
                 $this->messenger()->append('Erro ao gravar altera&ccedil;&otilde;es, por favor, tente novamente.', 'error');
-                error_log("Erro ao gravar alteracoes: " .  $e->getMessage());
+                error_log('Erro ao gravar alteracoes: ' .  $e->getMessage());
 
                 $result = false;
             }
@@ -126,7 +124,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         return $result;
     }
 
-
     protected function flashMessage()
     {
         if (! $this->hasErrors()) {
@@ -135,7 +132,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
         return '';
     }
-
 
     // helpers
 
@@ -149,7 +145,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
         return $this->_validator;
     }
-
 
     protected function messenger()
     {
@@ -182,15 +177,14 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     {
         Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
-        $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',
+        $styles = ['/modules/Portabilis/Assets/Stylesheets/Frontend.css',
                     '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-                    'styles/localizacaoSistema.css');
+                    'styles/localizacaoSistema.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-
-        $scripts = array('/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js',
                      '/modules/Portabilis/Assets/Javascripts/Validator.js',
-                     '/modules/Portabilis/Assets/Javascripts/Utils.js');
+                     '/modules/Portabilis/Assets/Javascripts/Utils.js'];
 
         if (! $this->backwardCompatibility) {
             $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js';
@@ -199,7 +193,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-
     // wrappers for Portabilis_*Utils*
 
     protected static function mergeOptions($options, $defaultOptions)
@@ -207,12 +200,10 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         return Portabilis_Array_Utils::merge($options, $defaultOptions);
     }
 
-
-    protected function fetchPreparedQuery($sql, $options = array())
+    protected function fetchPreparedQuery($sql, $options = [])
     {
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
     }
-
 
     protected function getDataMapperFor($packageName, $modelName)
     {

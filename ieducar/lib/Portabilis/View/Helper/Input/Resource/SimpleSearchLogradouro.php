@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -37,38 +39,40 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_SimpleSearchLogradouro class.
  *
  * @author    Lucas Schmoeller da Silva <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão ?
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Portabilis_View_Helper_Input_SimpleSearch
 {
-    public function simpleSearchLogradouro($attrName, $options = array())
+    public function simpleSearchLogradouro($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'logradouro',
+        $defaultOptions = ['objectName'    => 'logradouro',
                             'apiController' => 'Logradouro',
                             'apiResource'   => 'logradouro-search',
-                            'showIdOnValue' => false);
+                            'showIdOnValue' => false];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 
         parent::simpleSearch($options['objectName'], $attrName, $options);
     }
-  
+
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql       = "select nome, descricao as tipo_logradouro from
-                    public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
-                    where idlog = $1";
-            $options   = array('params' => $id, 'return_only' => 'first-row');
+            $sql       = 'select nome, descricao as tipo_logradouro from
+                    public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog)
+                    where idlog = $1';
+            $options   = ['params' => $id, 'return_only' => 'first-row'];
             $resource = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
             $tipo      = Portabilis_String_Utils::toUtf8($resource['tipo_logradouro']);
             $nome      = Portabilis_String_Utils::toUtf8($resource['nome']);
-    
-            return Portabilis_String_Utils::toLatin1($tipo.' '.$nome, array('transform' => true, 'escape' => false));
+
+            return Portabilis_String_Utils::toLatin1($tipo.' '.$nome, ['transform' => true, 'escape' => false]);
         }
     }
 

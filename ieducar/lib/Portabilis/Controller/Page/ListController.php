@@ -19,18 +19,20 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Lucas D'Avila <lucas@lucasdavi.la>
- * @category  i-Educar
- * @license   GPL-2.0+
- * @package   Avaliacao
+ * @author      Lucas D'Avila <lucas@lucasdavi.la>
+ *
+ * @category    i-Educar
+ * @package     Avaliacao
  * @subpackage  Modules
- * @since     Arquivo disponível desde a versão ?
- * @version   $Id$
+ *
+ * @since       Arquivo disponível desde a versão ?
+ *
+ * @version     $Id$
  */
 
 require_once 'Core/Controller/Page/ListController.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once "lib/Portabilis/View/Helper/Inputs.php";
+require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
 // Process controller
 class Portabilis_Controller_Page_ListController extends Core_Controller_Page_ListController
@@ -39,7 +41,7 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
 
     public function __construct()
     {
-        $this->rodape  = "";
+        $this->rodape  = '';
         $this->largura = '100%';
 
         $this->loadAssets();
@@ -47,7 +49,7 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
     }
 
     /**
-     * @param  object $dispatcher
+     * @param object $dispatcher
      */
     protected function loadResourceAssets($dispatcher)
     {
@@ -71,15 +73,15 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
     {
         Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
-        $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-                    '/modules/Portabilis/Assets/Stylesheets/Frontend/Process.css');
+        $styles = ['/modules/Portabilis/Assets/Stylesheets/Frontend.css',
+                    '/modules/Portabilis/Assets/Stylesheets/Frontend/Process.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-        $scripts = array(
+        $scripts = [
       '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
       '/modules/Portabilis/Assets/Javascripts/Validator.js',
       '/modules/Portabilis/Assets/Javascripts/Utils.js'
-    );
+    ];
 
         if (! $this->backwardCompatibility) {
             $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js';

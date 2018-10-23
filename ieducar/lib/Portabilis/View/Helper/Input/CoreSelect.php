@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,10 +37,12 @@ require_once 'lib/Portabilis/View/Helper/Input/Core.php';
  * Portabilis_View_Helper_DynamicInput_CoreSelect class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Input_Core
@@ -48,14 +52,14 @@ class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Inp
         return parent::inputName() . '_id';
     }
 
-    public function select($options = array())
+    public function select($options = [])
     {
         // this helper options
-        $defaultOptions = array('id'         => null,
+        $defaultOptions = ['id'         => null,
                             'objectName' => '',
                             'attrName'   => $this->inputName(),
-                            'resources'  => array(),
-                            'options'    => array());
+                            'resources'  => [],
+                            'options'    => []];
 
         $defaultOptions            = $this->mergeOptions($this->defaultOptions(), $defaultOptions);
         $this->options             = $this->mergeOptions($options, $defaultOptions);
@@ -63,12 +67,12 @@ class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Inp
 
         // select options
 
-        $defaultInputOptions = array('label'     => Portabilis_String_Utils::humanize($this->inputName()),
+        $defaultInputOptions = ['label'     => Portabilis_String_Utils::humanize($this->inputName()),
                                  'value'     => $this->inputValue($this->options['id']),
-                                 'resources' => $this->inputOptions($this->options));
+                                 'resources' => $this->inputOptions($this->options)];
 
         $inputOptions  = $this->mergeOptions($this->options['options'], $defaultInputOptions);
-        $helperOptions = array('objectName' => $this->options['objectName']);
+        $helperOptions = ['objectName' => $this->options['objectName']];
 
         // input
         $this->inputsHelper()->select($this->options['attrName'], $inputOptions, $helperOptions);
@@ -80,7 +84,7 @@ class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Inp
     {
         return $this->insertOption(
         null,
-                               "Selecione um(a) " . Portabilis_String_Utils::humanize($this->inputName()),
+                               'Selecione um(a) ' . Portabilis_String_Utils::humanize($this->inputName()),
                                $resources
     );
     }
@@ -89,6 +93,6 @@ class Portabilis_View_Helper_Input_CoreSelect extends Portabilis_View_Helper_Inp
     // and pass to select helper
     protected function defaultOptions()
     {
-        return array();
+        return [];
     }
 }

@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_Input_Resource_Religiao class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 
@@ -55,11 +58,10 @@ class Portabilis_View_Helper_Input_Resource_Religiao extends Portabilis_View_Hel
             $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_religiao', 'nm_religiao');
         }
 
-        return $this->insertOption(null, Portabilis_String_Utils::toLatin1("Religião"), $resources);
+        return $this->insertOption(null, Portabilis_String_Utils::toLatin1('Religião'), $resources);
     }
 
-
-    public function religiao($options = array())
+    public function religiao($options = [])
     {
         parent::select($options);
     }

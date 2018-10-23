@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_SimpleSearchPessoa class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabilis_View_Helper_Input_SimpleSearch
@@ -48,19 +52,19 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql     = "select nome from cadastro.pessoa where idpes = $1";
-            $options = array('params' => $id, 'return_only' => 'first-field');
+            $sql     = 'select nome from cadastro.pessoa where idpes = $1';
+            $options = ['params' => $id, 'return_only' => 'first-field'];
             $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]);
         }
     }
 
-    public function simpleSearchPessoa($attrName, $options = array())
+    public function simpleSearchPessoa($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'pessoa',
+        $defaultOptions = ['objectName'    => 'pessoa',
                             'apiController' => 'Pessoa',
-                            'apiResource'   => 'pessoa-search');
+                            'apiResource'   => 'pessoa-search'];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 

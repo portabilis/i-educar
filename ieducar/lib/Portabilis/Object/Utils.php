@@ -20,10 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -31,21 +33,23 @@
  * Portabilis_Object_Utils class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Object_Utils
 {
-    public static function filterSet($objects, $attrs = array())
+    public static function filterSet($objects, $attrs = [])
     {
         if (! is_array($objects)) {
-            $objects = array($objects);
+            $objects = [$objects];
         }
 
-        $objectsFiltered = array();
+        $objectsFiltered = [];
 
         foreach ($objects as $object) {
             $objectsFiltered[] = self::filter($object, $attrs);
@@ -54,23 +58,23 @@ class Portabilis_Object_Utils
         return $objectsFiltered;
     }
 
-
     /**
      * Retorna um array {key => value, key => value}
      * de atributos filtrados de um objeto, podendo renomear nome dos attrs,
      * util para filtrar um objetos a ser retornado por uma api
      *
-     * @param  object|array $object Objeto ou array de objetos a ser(em) filtrado(s)
-     * @param  array  $attrs  Atributo ou array de atributos para filtrar objeto,
+     * @param object|array $object Objeto ou array de objetos a ser(em) filtrado(s)
+     * @param array        $attrs  Atributo ou array de atributos para filtrar objeto,
+     *
      * @return array
      */
-    public static function filter($object, $attrs = array())
+    public static function filter($object, $attrs = [])
     {
         if (! is_array($attrs)) {
-            $attrs = array($attrs);
+            $attrs = [$attrs];
         }
 
-        $objectFiltered = array();
+        $objectFiltered = [];
 
         // apply filter
         foreach ($attrs as $keyAttr => $valueAtt) {
@@ -84,22 +88,22 @@ class Portabilis_Object_Utils
         return $objectFiltered;
     }
 
-
     /**
      * Retorna um array { key => value, key2 => value2 }, filtrados de um array (lista) de objetos,
      * util para filtar uma lista de objetos a ser usado para criar um input select.
      *
-     * @param  object|array $objects  Objeto ou array de objetos a ser(em) filtrado(s)
-     * @param  string $keyAttr  Nome do atributo respectivo a chave, a filtrar no objeto
-     * @param  mixed $valueAtt Nome do atributo respectivo ao valor a filtrar no objeto
+     * @param object|array $objects  Objeto ou array de objetos a ser(em) filtrado(s)
+     * @param string       $keyAttr  Nome do atributo respectivo a chave, a filtrar no objeto
+     * @param mixed        $valueAtt Nome do atributo respectivo ao valor a filtrar no objeto
+     *
      * @return array
      */
     public static function asIdValue($objects, $keyAttr, $valueAtt)
     {
-        $objectsFiltered = array();
+        $objectsFiltered = [];
 
         if (! is_array($objects)) {
-            $objects = array($objects);
+            $objects = [$objects];
         }
 
         // apply filter

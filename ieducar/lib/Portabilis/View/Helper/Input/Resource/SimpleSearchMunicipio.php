@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_SimpleSearchMunicipio class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portabilis_View_Helper_Input_SimpleSearch
@@ -48,21 +52,21 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portab
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql       = "select nome, sigla_uf from public.municipio where idmun = $1";
-            $options   = array('params' => $id, 'return_only' => 'first-row');
+            $sql       = 'select nome, sigla_uf from public.municipio where idmun = $1';
+            $options   = ['params' => $id, 'return_only' => 'first-row'];
             $municipio = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
             $nome      = $municipio['nome'];
             $siglaUf   = $municipio['sigla_uf'];
 
-            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false)) . " ($siglaUf)";
+            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]) . " ($siglaUf)";
         }
     }
 
-    public function simpleSearchMunicipio($attrName, $options = array())
+    public function simpleSearchMunicipio($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'municipio',
+        $defaultOptions = ['objectName'    => 'municipio',
                             'apiController' => 'Municipio',
-                            'apiResource'   => 'municipio-search');
+                            'apiResource'   => 'municipio-search'];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 

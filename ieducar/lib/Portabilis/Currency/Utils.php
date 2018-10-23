@@ -20,22 +20,25 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
-
 
 /**
  * Portabilis_Currency_Utils class.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Currency_Utils
@@ -46,7 +49,8 @@ class Portabilis_Currency_Utils
      *
      * ex: (2,32) para estrangeira (2.32)
      *
-     * @param  string $valor
+     * @param string $valor
+     *
      * @return string
      */
     public static function moedaBrToUs($valor)
@@ -57,8 +61,9 @@ class Portabilis_Currency_Utils
     /**
      * Converte um valor numérico de moeda estrangeira
      *
-     * @param  string $valor [description]
-     * @return string        [description]
+     * @param string $valor [description]
+     *
+     * @return string [description]
      */
     public static function moedaUsToBr($valor)
     {

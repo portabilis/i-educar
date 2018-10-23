@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   $Id$
  */
 
@@ -38,20 +40,22 @@ require_once 'lib/Utils/SafeJson.php';
  * Portabilis_View_Helper_Input_MultipleSearchCustom class.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabilis_View_Helper_Input_MultipleSearch
 {
-    public function MultipleSearchCustom($attrName, $options = array())
+    public function MultipleSearchCustom($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'custom',
+        $defaultOptions = ['objectName'    => 'custom',
                             'apiController' => 'custom',
                             'apiResource'   => 'custom-search',
-                            'type'          => 'multiple');
+                            'type'          => 'multiple'];
 
         $options                         = $this->mergeOptions($options, $defaultOptions);
         $options['options']['resources'] = $this->insertOption(null, '', $options['options']['options']['all_values']);
@@ -63,7 +67,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabi
 
     protected function placeholderJs($options)
     {
-        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione');";
 

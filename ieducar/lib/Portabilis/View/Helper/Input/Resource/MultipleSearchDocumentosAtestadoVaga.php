@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/MultipleSearch.php';
 
-
 /**
  * Portabilis_View_Helper_Input_MultipleSearchComponenteCurricular class.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga extends Portabilis_View_Helper_Input_MultipleSearch
@@ -47,7 +50,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
     protected function getOptions($resources)
     {
         if (empty($resources)) {
-            $resources = array('certidao_nasci'         => 'Certid&atilde;o de nascimento e/ou carteira de identidade',
+            $resources = ['certidao_nasci'         => 'Certid&atilde;o de nascimento e/ou carteira de identidade',
                          'comprovante_resi'       => 'Comprovante de resid&ecirc;ncia',
                          'foto_3_4'               => 'Foto 3/4',
                          'historico_escola'       => 'Hist&oacute;rico escolar original',
@@ -60,16 +63,16 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
                          'cpf_aluno_pai'          => 'C&oacute;pia do CPF (aluno e pai)',
                          'tit_eleitor'            => 'T&iacute;tulo de eleitor do respons&aacute;vel',
                          'doc_nis'                => 'N&uacute;mero de Identifica&ccedil;&atilde;o Social - NIS'
-                         );
+                         ];
         }
 
         return $this->insertOption(null, '', $resources);
     }
-    public function multipleSearchDocumentosAtestadoVaga($attrName, $options = array())
+    public function multipleSearchDocumentosAtestadoVaga($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'documentos',
+        $defaultOptions = ['objectName'    => 'documentos',
                             'apiController' => '',
-                            'apiResource'   => '');
+                            'apiResource'   => ''];
 
         $options                         = $this->mergeOptions($options, $defaultOptions);
 
@@ -82,7 +85,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
 
     protected function placeholderJs($options)
     {
-        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione os componentes');";
 

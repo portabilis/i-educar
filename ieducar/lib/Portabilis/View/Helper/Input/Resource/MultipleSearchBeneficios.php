@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchBeneficios class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     11/2013
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Portabilis_View_Helper_Input_MultipleSearch
@@ -56,11 +60,11 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Por
         return $this->insertOption(null, '', $resources);
     }
 
-    public function multipleSearchBeneficios($attrName, $options = array())
+    public function multipleSearchBeneficios($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'beneficios',
+        $defaultOptions = ['objectName'    => 'beneficios',
                             'apiController' => 'Beneficio',
-                            'apiResource'   => 'beneficio-search');
+                            'apiResource'   => 'beneficio-search'];
 
         $options                         = $this->mergeOptions($options, $defaultOptions);
         $options['options']['resources'] = $this->getOptions($options['options']['resources']);
@@ -74,7 +78,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Por
 
     protected function placeholderJs($options)
     {
-        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = 'Selecione os benefícios';";
 

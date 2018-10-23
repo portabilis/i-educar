@@ -10,6 +10,7 @@ class Portabilis_View_Helper_DynamicInput_DataInicial extends Portabilis_View_He
         if (!empty($this->viewInstance->data_inicial)) {
             return $this->viewInstance->data_inicial;
         }
+
         return date('01/m/Y');
     }
     public function dataInicial($options = [])

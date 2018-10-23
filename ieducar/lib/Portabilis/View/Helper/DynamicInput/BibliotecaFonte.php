@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_BibliotecaFonte class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -58,10 +61,10 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaFonte extends Portabilis_Vie
             $resources = App_Model_IedFinder::getBibliotecaFontes($bibliotecaId);
         }
 
-        return $this->insertOption(null, "Selecione uma fonte", $resources);
+        return $this->insertOption(null, 'Selecione uma fonte', $resources);
     }
 
-    public function bibliotecaFonte($options = array())
+    public function bibliotecaFonte($options = [])
     {
         parent::select($options);
     }

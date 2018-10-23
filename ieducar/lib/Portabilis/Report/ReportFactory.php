@@ -19,14 +19,16 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author Lucas D'Avila <lucassdvl@gmail.com>
- * @author Marcelo Cajueiro <marcelocajueiro@gmail.com>
- * @author Lucas Schmoeller da Silva <lucasschmoellerdasilva@gmail.com>
- * @author Eder Soares <edersoares@me.com>
+ * @author    Lucas D'Avila <lucassdvl@gmail.com>
+ * @author    Marcelo Cajueiro <marcelocajueiro@gmail.com>
+ * @author    Lucas Schmoeller da Silva <lucasschmoellerdasilva@gmail.com>
+ * @author    Eder Soares <edersoares@me.com>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -85,7 +87,7 @@ abstract class Portabilis_Report_ReportFactory
      * Renderiza o relatório.
      *
      * @param Portabilis_Report_ReportCore $report
-     * @param array $options
+     * @param array                        $options
      *
      * @return mixed
      */

@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_SimpleSearchCursoSuperior class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão ?
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_SimpleSearchCursoSuperior extends Portabilis_View_Helper_Input_SimpleSearch
@@ -48,26 +52,26 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCursoSuperior extends Po
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql       = "select curso_id || ' - ' || nome || ' / ' || coalesce((case grau_academico
-                                               when 1 then 'Tecnológico'
-                                               when 2 then 'Licenciatura'
-                                               when 3 then 'Bacharelado' end), '') as nome
-                      from modules.educacenso_curso_superior where id = $1";
+            $sql       = 'select curso_id || \' - \' || nome || \' / \' || coalesce((case grau_academico
+                                               when 1 then \'Tecnológico\'
+                                               when 2 then \'Licenciatura\'
+                                               when 3 then \'Bacharelado\' end), \'\') as nome
+                      from modules.educacenso_curso_superior where id = $1';
 
-            $options   = array('params' => $id, 'return_only' => 'first-row');
+            $options   = ['params' => $id, 'return_only' => 'first-row'];
             $curso_superior = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
             $nome      = $curso_superior['nome'];
 
-            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]);
         }
     }
 
-    public function simpleSearchCursoSuperior($attrName, $options = array())
+    public function simpleSearchCursoSuperior($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'cursosuperior',
+        $defaultOptions = ['objectName'    => 'cursosuperior',
                             'apiController' => 'CursoSuperior',
                             'apiResource'   => 'cursosuperior-search',
-                            'showIdOnValue' => false);
+                            'showIdOnValue' => false];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 

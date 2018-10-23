@@ -22,6 +22,7 @@ class Portabilis_View_Helper_Input_Core
     protected function helperName()
     {
         $arrayClassName = explode('_', get_class($this));
+
         return end($arrayClassName);
     }
     protected function inputName()
@@ -36,6 +37,7 @@ class Portabilis_View_Helper_Input_Core
         if (isset($this->viewInstance->{$this->inputName()})) {
             return $this->viewInstance->{$this->inputName()};
         }
+
         return null;
     }
     protected function inputPlaceholder($inputOptions)
@@ -118,8 +120,10 @@ class Portabilis_View_Helper_Input_Core
         }
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
+
             return $biblioteca['ref_cod_instituicao'];
         }
+
         return $this->getPermissoes()->getInstituicao($this->getCurrentUserId());
     }
     protected function getEscolaId($escolaId = null)
@@ -132,8 +136,10 @@ class Portabilis_View_Helper_Input_Core
         }
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
+
             return $biblioteca['ref_cod_escola'];
         }
+
         return $this->getPermissoes()->getEscola($this->getCurrentUserId());
     }
     protected function getBibliotecaId($bibliotecaId = null)
@@ -148,6 +154,7 @@ class Portabilis_View_Helper_Input_Core
         if (is_array($biblioteca) && count($biblioteca) > 0) {
             return $biblioteca[0]['ref_cod_biblioteca'];
         }
+
         return null;
     }
     protected function getCursoId($cursoId = null)
@@ -158,6 +165,7 @@ class Portabilis_View_Helper_Input_Core
         if (isset($this->viewInstance->ref_cod_curso) && is_numeric($this->viewInstance->ref_cod_curso)) {
             return $this->viewInstance->ref_cod_curso;
         }
+
         return null;
     }
     protected function getSerieId($serieId = null)
@@ -168,6 +176,7 @@ class Portabilis_View_Helper_Input_Core
         if (isset($this->viewInstance->ref_cod_serie) && is_numeric($this->viewInstance->ref_cod_serie)) {
             return $this->viewInstance->ref_cod_serie;
         }
+
         return null;
     }
 }

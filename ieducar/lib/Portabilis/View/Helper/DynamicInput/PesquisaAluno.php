@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_PesquisaAluno class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_Helper_DynamicInput_Core
@@ -53,7 +56,6 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
         return $id;
     }
 
-
     protected function getResource($id)
     {
         if (! $id) {
@@ -66,19 +68,18 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
         return $resource;
     }
 
-
-    public function pesquisaAluno($options = array())
+    public function pesquisaAluno($options = [])
     {
-        $defaultOptions = array('id' => null, 'options' => array(), 'filterByEscola' => false);
+        $defaultOptions = ['id' => null, 'options' => [], 'filterByEscola' => false];
         $options        = $this->mergeOptions($options, $defaultOptions);
 
-        $inputHint  = "<img border='0' onclick='pesquisaAluno();' id='lupa_pesquisa_aluno' name='lupa_pesquisa_aluno' src='imagens/lupa.png' />";
+        $inputHint  = '<img border=\'0\' onclick=\'pesquisaAluno();\' id=\'lupa_pesquisa_aluno\' name=\'lupa_pesquisa_aluno\' src=\'imagens/lupa.png\' />';
 
         // se não recuperar recurso, deixa resourceLabel em branco
         $resource      = $this->getResource($options['id']);
         $resourceLabel = $resource ? $resource['nome_aluno'] : '';
 
-        $defaultInputOptions = array('id'         => 'nm_aluno',
+        $defaultInputOptions = ['id'         => 'nm_aluno',
                                  'label'      => 'Aluno',
                                  'value'      => $resourceLabel,
                                  'size'       => '30',
@@ -90,12 +91,12 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
                                  'input_hint' => $inputHint,
                                  'callback'   => '',
                                  'event'      => 'onKeyUp',
-                                 'disabled'   => true);
+                                 'disabled'   => true];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-        call_user_func_array(array($this->viewInstance, 'campoTexto'), $inputOptions);
+        call_user_func_array([$this->viewInstance, 'campoTexto'], $inputOptions);
 
-        $this->viewInstance->campoOculto("ref_cod_aluno", $this->inputValue($options['id']));
+        $this->viewInstance->campoOculto('ref_cod_aluno', $this->inputValue($options['id']));
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
       var resetAluno = function(){

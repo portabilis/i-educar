@@ -20,10 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -33,19 +35,23 @@ require_once 'lib/Portabilis/Utils/User.php';
  * Portabilis_Utils_Validation class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @author Bonot <bonot@portabilis.com.br>
- * @author Alan Felipe Farias <alan_felipe_farias@hotmail.com>
+ * @author    Bonot <bonot@portabilis.com.br>
+ * @author    Alan Felipe Farias <alan_felipe_farias@hotmail.com>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Utils_Validation
 {
     /**
      * validate a CPF string
-     * @param  string $cpf
+     *
+     * @param string $cpf
+     *
      * @return boolean
      */
     public static function validatesCpf($cpf)
@@ -56,7 +62,7 @@ class Portabilis_Utils_Validation
             return false;
         }
 
-        $cpfsInvalidos = array(
+        $cpfsInvalidos = [
             '00000000000',
             '11111111111',
             '22222222222',
@@ -67,7 +73,7 @@ class Portabilis_Utils_Validation
             '77777777777',
             '88888888888',
             '99999999999'
-            );
+            ];
 
         if (in_array($cpf, $cpfsInvalidos)) {
             return false;
@@ -85,7 +91,6 @@ class Portabilis_Utils_Validation
         if ($primeiroDigito >= 10) {
             $primeiroDigito = 0;
         }
-
 
         // calcula segundo dígito verificador
         $soma = 0;

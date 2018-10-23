@@ -10,11 +10,12 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
         if (isset($this->viewInstance->ano) && is_numeric($this->viewInstance->ano)) {
             return $this->viewInstance->ano;
         }
+
         return date('Y');
     }
-    public function ano($options = array())
+    public function ano($options = [])
     {
-        $defaultOptions = array('options' => array());
+        $defaultOptions = ['options' => []];
         $options = $this->mergeOptions($options, $defaultOptions);
         $value = $options['options']['value'] ?? null;
         $defaultInputOptions = [
@@ -32,6 +33,6 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
             'disabled' => false
         ];
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-        call_user_func_array(array($this->viewInstance, 'campoNumero'), $inputOptions);
-  }
+        call_user_func_array([$this->viewInstance, 'campoNumero'], $inputOptions);
+    }
 }

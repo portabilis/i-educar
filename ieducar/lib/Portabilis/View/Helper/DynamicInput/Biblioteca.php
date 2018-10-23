@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,10 +37,12 @@ require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
  * Portabilis_View_Helper_DynamicInput_Biblioteca class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -48,12 +52,10 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
         return $this->getBibliotecaId($value);
     }
 
-
     protected function inputName()
     {
         return 'ref_cod_biblioteca';
     }
-
 
     protected function inputOptions($options)
     {
@@ -66,19 +68,17 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
             $resources = App_Model_IedFinder::getBibliotecas($instituicaoId, $escolaId);
         }
 
-        return $this->insertOption(null, "Selecione uma biblioteca", $resources);
+        return $this->insertOption(null, 'Selecione uma biblioteca', $resources);
     }
 
-
-    public function selectInput($options = array())
+    public function selectInput($options = [])
     {
         parent::select($options);
     }
 
-
-    public function stringInput($options = array())
+    public function stringInput($options = [])
     {
-        $defaultOptions       = array('options' => array());
+        $defaultOptions       = ['options' => []];
         $options              = $this->mergeOptions($options, $defaultOptions);
 
         // subescreve $options['options']['value'] com nome escola
@@ -91,23 +91,22 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
         $biblioteca = App_Model_IedFinder::getBiblioteca($bibliotecaId);
         $options['options']['value'] = $biblioteca['nm_biblioteca'];
 
-        $defaultInputOptions = array('id'        => 'ref_cod_biblioteca',
+        $defaultInputOptions = ['id'        => 'ref_cod_biblioteca',
                                  'label'     => 'Biblioteca',
                                  'value'     => '',
                                  'inline'    => false,
                                  'descricao' => '',
-                                 'separador' => ':');
+                                 'separador' => ':'];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
         $this->viewInstance->campoOculto($inputOptions['id'], $bibliotecaId);
 
         $inputOptions['id'] = 'biblioteca_nome';
-        call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
+        call_user_func_array([$this->viewInstance, 'campoRotulo'], $inputOptions);
     }
 
-
-    public function biblioteca($options = array())
+    public function biblioteca($options = [])
     {
         if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL')) {
             $this->selectInput($options);

@@ -20,10 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -33,10 +35,12 @@ require_once 'lib/Portabilis/Array/Utils.php';
  * Portabilis_String_Utils class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_String_Utils
@@ -44,8 +48,10 @@ class Portabilis_String_Utils
 
     /**
      * wrapper for Portabilis_Array_Utils::merge
-     * @param  array $options
-     * @param  array $defaultOptions
+     *
+     * @param array $options
+     * @param array $defaultOptions
+     *
      * @return array
      */
     protected static function mergeOptions($options, $defaultOptions)
@@ -53,27 +59,27 @@ class Portabilis_String_Utils
         return Portabilis_Array_Utils::merge($options, $defaultOptions);
     }
 
-
     /**
      * Splits a string in a array
      *
      * $divisors = array('-', ' '); // or $divisors = '-';
      * $options = array('limit' => 2, 'trim' => true);
      *
-     * @param  string|array $divisors
-     * @param  string $string
-     * @param  array  $options
+     * @param string|array $divisors
+     * @param string       $string
+     * @param array        $options
+     *
      * @return array
      */
-    public static function split($divisors, $string, $options = array())
+    public static function split($divisors, $string, $options = [])
     {
-        $result         = array($string);
+        $result         = [$string];
 
-        $defaultOptions = array('limit' => -1, 'trim' => true);
+        $defaultOptions = ['limit' => -1, 'trim' => true];
         $options        = self::mergeOptions($options, $defaultOptions);
 
         if (! is_array($divisors)) {
-            $divisors = array($divisors);
+            $divisors = [$divisors];
         }
 
         foreach ($divisors as $divisor) {
@@ -91,12 +97,12 @@ class Portabilis_String_Utils
         return $result;
     }
 
-
     /**
      * Scapes a string, adding backslashes before characters that need to be quoted,
      * this method is useful to scape values to be inserted via database queries
      *
-     * @param  string $str
+     * @param string $str
+     *
      * @return string
      */
     public static function escape($str)
@@ -104,17 +110,17 @@ class Portabilis_String_Utils
         return addslashes($str);
     }
 
-
     /**
      * Encodes latin1 strings to utf-8
      *
      * This method is useful to return latin1 strings (with accents) stored in db, in json api's
      *
-     * @param  string $str
-     * @param  array  $options
+     * @param string $str
+     * @param array  $options
+     *
      * @return string
      */
-    public static function toUtf8($str, $options = array())
+    public static function toUtf8($str, $options = [])
     {
         // $defaultOptions = array('transform' => false, 'escape' => false, 'convert_html_special_chars' => false);
         // $options        = self::mergeOptions($options, $defaultOptions);
@@ -134,17 +140,17 @@ class Portabilis_String_Utils
         return $str;
     }
 
-
     /**
      * Encodes utf-8 strings to latin1
      *
      * this method is useful to store utf-8 string (with accents) get from json api's, in latin1 db's
      *
-     * @param  string $str
-     * @param  array  $options
+     * @param string $str
+     * @param array  $options
+     *
      * @return string
      */
-    public static function toLatin1($str, $options = array())
+    public static function toLatin1($str, $options = [])
     {
         // $defaultOptions = array('transform' => false, 'escape' => true, 'convert_html_special_chars' => false);
         // $options        = self::mergeOptions($options, $defaultOptions);
@@ -171,9 +177,9 @@ class Portabilis_String_Utils
     public static function unaccent($str)
     {
         $fromEncoding = Portabilis_String_Utils::encoding($str);
+
         return iconv($fromEncoding, 'US-ASCII//TRANSLIT', $str);
     }
-
 
     public static function encoding($str)
     {
@@ -185,17 +191,16 @@ class Portabilis_String_Utils
         return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
     }
 
-
     public static function underscore($str)
     {
         $words = preg_split('/(?=[A-Z])/', $str, -1, PREG_SPLIT_NO_EMPTY);
+
         return strtolower(implode('_', $words));
     }
 
-
     public static function humanize($str)
     {
-        $robotWords = array('_id', 'ref_cod_', 'ref_ref_cod_');
+        $robotWords = ['_id', 'ref_cod_', 'ref_ref_cod_'];
 
         foreach ($robotWords as $word) {
             $str = str_replace($word, '', $str);

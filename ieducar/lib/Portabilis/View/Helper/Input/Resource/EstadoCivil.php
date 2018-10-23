@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_Input_Resource_EstadoCivil class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_Helper_Input_CoreSelect
@@ -54,10 +57,10 @@ class Portabilis_View_Helper_Input_Resource_EstadoCivil extends Portabilis_View_
             $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ideciv', 'descricao');
         }
 
-        return $this->insertOption(null, "Estado civil", $resources);
+        return $this->insertOption(null, 'Estado civil', $resources);
     }
 
-    public function estadoCivil($options = array())
+    public function estadoCivil($options = [])
     {
         parent::select($options);
     }

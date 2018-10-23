@@ -10,6 +10,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
             $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id, nome FROM modules.componente_curricular');
             $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
         }
+
         return $this->insertOption(null, '', $resources);
     }
     public function multipleSearchComponenteCurricular($attrName, $options = [])
@@ -28,7 +29,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
     protected function placeholderJs($options)
     {
         $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
-        $searchForArea = $options['searchForArea'] ? "true" : "false";
+        $searchForArea = $options['searchForArea'] ? 'true' : 'false';
         $js = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                $optionsVarName.placeholder = safeUtf8Decode('Selecione os componentes');";
         $js .= "var searchForArea = {$searchForArea}";

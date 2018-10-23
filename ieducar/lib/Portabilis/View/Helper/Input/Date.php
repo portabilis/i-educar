@@ -21,10 +21,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,17 +37,19 @@ require_once 'Portabilis/Date/Utils.php';
  * Portabilis_View_Helper_Input_Date class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Core
 {
-    public function date($attrName, $options = array())
+    public function date($attrName, $options = [])
     {
-        $defaultOptions = array('options' => array(), 'objectName' => '');
+        $defaultOptions = ['options' => [], 'objectName' => ''];
 
         $options             = $this->mergeOptions($options, $defaultOptions);
         $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
@@ -53,7 +57,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
         $label = ! empty($attrName) ? $attrName : $options['objectName'];
         $label = str_replace('_id', '', $label);
 
-        $defaultInputOptions = array('id'             => $options['objectName'] . $spacer . $attrName,
+        $defaultInputOptions = ['id'             => $options['objectName'] . $spacer . $attrName,
                                  'label'          => ucwords($label),
                                  'value'          => null,
                                  'required'       => true,
@@ -63,7 +67,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
                                  'disabled'       => false,
                                  'size'           => 9, // opção suportada pelo elemento, mas não pelo helper ieducar
                                  'hint'       => 'dd/mm/aaaa',
-                             );
+                             ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
@@ -73,7 +77,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
         }
 
-        call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
+        call_user_func_array([$this->viewInstance, 'campoData'], $inputOptions);
         $this->fixupPlaceholder($inputOptions);
 
         // implementado fixup via js, pois algumas opções não estão sendo verificadas pelo helper ieducar.
@@ -84,11 +88,11 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
     {
         $id           = $inputOptions['id'];
 
-        $sizeFixup    = "\$input.attr('size', " . $inputOptions['size'] . ");";
-        $disableFixup = $inputOptions['disabled'] ? "\$input.attr('disabled', 'disabled');" : '';
+        $sizeFixup    = '$input.attr(\'size\', ' . $inputOptions['size'] . ');';
+        $disableFixup = $inputOptions['disabled'] ? '$input.attr(\'disabled\', \'disabled\');' : '';
 
-        $script = "
-      var \$input = \$j('#" . $id . "');
+        $script = '
+      var $input = $j(\'#' . $id . "');
       $sizeFixup
       $disableFixup
       \$input.change(function(){

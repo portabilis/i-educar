@@ -10,6 +10,7 @@ class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Help
         if (!empty($this->viewInstance->data_final)) {
             return $this->viewInstance->data_final;
         }
+
         return date('t/m/Y');
     }
     public function dataFinal($options = [])

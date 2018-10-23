@@ -20,10 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -32,10 +34,12 @@
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Utils_User
@@ -46,6 +50,7 @@ class Portabilis_Utils_User
 
     /**
      * Return current User Id
+     *
      * @return integer
      */
     public static function currentUserId()
@@ -61,13 +66,13 @@ class Portabilis_Utils_User
 
     /**
      * Redirecto to //intranet/logof.php
+     *
      * @return void
      */
     public static function redirectToLogoff()
     {
         header('Location: /intranet/logof.php');
     }
-
 
     public static function loggedIn()
     {
@@ -78,8 +83,8 @@ class Portabilis_Utils_User
 
     public static function loadUsingCredentials($username, $password)
     {
-        $sql     = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2";
-        $options = array('params' => array($username, $password), 'show_errors' => false, 'return_only' => 'first-field');
+        $sql     = 'SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = $1 and senha = $2';
+        $options = ['params' => [$username, $password], 'show_errors' => false, 'return_only' => 'first-field'];
         $userId  = self::fetchPreparedQuery($sql, $options);
 
         if (is_numeric($userId)) {
@@ -98,21 +103,19 @@ class Portabilis_Utils_User
             throw new Exception("'$id' is not a valid id, please send a numeric value or a string 'current_user'");
         }
 
-        $sql     = "SELECT ref_cod_pessoa_fj as id, opcao_menu, ref_cod_setor_new, tipo_menu, matricula, email, status_token,
+        $sql     = 'SELECT ref_cod_pessoa_fj as id, opcao_menu, ref_cod_setor_new, tipo_menu, matricula, email, status_token,
                 ativo, proibido, tempo_expira_conta, data_reativa_conta, tempo_expira_senha, data_troca_senha,
-                ip_logado as ip_ultimo_acesso, data_login FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1";
+                ip_logado as ip_ultimo_acesso, data_login FROM portal.funcionario WHERE ref_cod_pessoa_fj = $1';
 
-        $options       = array('params' => array($id), 'show_errors' => false, 'return_only' => 'first-line');
+        $options       = ['params' => [$id], 'show_errors' => false, 'return_only' => 'first-line'];
         $user          = self::fetchPreparedQuery($sql, $options);
         $user['super'] = $GLOBALS['coreExt']['Config']->app->superuser == $user['matricula'];
-
 
         /* considera como expirado caso usuario não admin e data_reativa_conta + tempo_expira_conta <= now
            obs: ao salvar drh > cadastro funcionario, seta data_reativa_conta = now */
         $user['expired_account'] = ! $user['super'] && ! empty($user['tempo_expira_conta']) &&
                                ! empty($user['data_reativa_conta']) &&
                                time() - strtotime($user['data_reativa_conta']) > $user['tempo_expira_conta'] * 60 * 60 * 24;
-
 
         // considera o periodo para expiração de senha definido nas configs, caso o tenha sido feito.
         $tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
@@ -128,15 +131,13 @@ class Portabilis_Utils_User
         return $user;
     }
 
-
     public static function disableAccount($userId)
     {
-        $sql     = "UPDATE portal.funcionario SET ativo = 0 WHERE ref_cod_pessoa_fj = $1";
-        $options = array('params' => array($userId), 'show_errors' => false);
+        $sql     = 'UPDATE portal.funcionario SET ativo = 0 WHERE ref_cod_pessoa_fj = $1';
+        $options = ['params' => [$userId], 'show_errors' => false];
 
         self::fetchPreparedQuery($sql, $options);
     }
-
 
     /*
       Destroi determinado tipo de status_token de um usuário, como ocorre por exemplo após fazer login,
@@ -144,22 +145,19 @@ class Portabilis_Utils_User
     */
     public static function destroyStatusTokenFor($userId, $withType)
     {
-        $sql     = "UPDATE portal.funcionario set status_token = '' WHERE ref_cod_pessoa_fj = $1 and status_token like $2";
-        $options = array('params' => array($userId, "$withType-%"), 'show_errors' => false);
+        $sql     = 'UPDATE portal.funcionario set status_token = \'\' WHERE ref_cod_pessoa_fj = $1 and status_token like $2';
+        $options = ['params' => [$userId, "$withType-%"], 'show_errors' => false];
 
         self::fetchPreparedQuery($sql, $options);
     }
-
 
     public static function logAccessFor($userId, $clientIP)
     {
         $sql     = "UPDATE portal.funcionario SET ip_logado = '$clientIP', data_login = NOW() WHERE ref_cod_pessoa_fj = $1";
-        $options = array('params' => array($userId), 'show_errors' => false);
+        $options = ['params' => [$userId], 'show_errors' => false];
 
         self::fetchPreparedQuery($sql, $options);
     }
-
-
 
     // permissões
 
@@ -172,7 +170,6 @@ class Portabilis_Utils_User
         return self::$_permissoes;
     }
 
-
     public static function getNivelAcesso()
     {
         if (! isset(self::$_nivelAcesso)) {
@@ -182,14 +179,13 @@ class Portabilis_Utils_User
         return self::$_nivelAcesso;
     }
 
-
     # TODO verificar se é possivel usar a logica de App_Model_NivelAcesso
     public static function hasNivelAcesso($nivelAcessoType)
     {
-        $niveisAcesso = array('POLI_INSTITUCIONAL' => 1,
+        $niveisAcesso = ['POLI_INSTITUCIONAL' => 1,
                           'INSTITUCIONAL'      => 2,
                           'SOMENTE_ESCOLA'     => 4,
-                          'SOMENTE_BIBLIOTECA' => 8);
+                          'SOMENTE_BIBLIOTECA' => 8];
 
         if (! isset($niveisAcesso[$nivelAcessoType])) {
             throw new CoreExt_Exception("Nivel acesso '$nivelAcessoType' não definido.");
@@ -197,7 +193,6 @@ class Portabilis_Utils_User
 
         return self::getNivelAcesso() == $niveisAcesso[$nivelAcessoType];
     }
-
 
     public static function canAccessEscola($id)
     {
@@ -217,10 +212,9 @@ class Portabilis_Utils_User
         return false;
     }
 
-
     // wrappers for Portabilis*Utils*
 
-    protected static function fetchPreparedQuery($sql, $options = array())
+    protected static function fetchPreparedQuery($sql, $options = [])
     {
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
     }

@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_Etapa class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_EtapaEscola extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -63,11 +66,10 @@ class Portabilis_View_Helper_DynamicInput_EtapaEscola extends Portabilis_View_He
             $resources = App_Model_IedFinder::getEtapasEscola($ano, $escolaId);
         }
 
-
-        return $this->insertOption(null, "Selecione uma etapa", $resources);
+        return $this->insertOption(null, 'Selecione uma etapa', $resources);
     }
 
-    public function etapaEscola($options = array())
+    public function etapaEscola($options = [])
     {
         parent::select($options);
     }

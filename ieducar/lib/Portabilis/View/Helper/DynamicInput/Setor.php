@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Matheus Nicoski <matheus@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_Setor class.
  *
  * @author    Matheus Nicoski <matheus@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 
@@ -53,15 +56,16 @@ class Portabilis_View_Helper_DynamicInput_Setor extends Portabilis_View_Helper_D
     protected function inputOptions($options)
     {
         $resources = $options['resources'];
-        return $this->insertOption(null, "Selecione um setor", $resources);
+
+        return $this->insertOption(null, 'Selecione um setor', $resources);
     }
 
     protected function defaultOptions()
     {
-        return array('options' => array('label' => 'Setor'));
+        return ['options' => ['label' => 'Setor']];
     }
 
-    public function setor($options = array())
+    public function setor($options = [])
     {
         parent::select($options);
     }

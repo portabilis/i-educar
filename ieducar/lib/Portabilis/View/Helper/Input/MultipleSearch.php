@@ -22,42 +22,45 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
-
 /**
  * Portabilis_View_Helper_Input_MultipleSearch class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper_Input_Core
 {
-    public function multipleSearch($objectName, $attrName, $options = array())
+    public function multipleSearch($objectName, $attrName, $options = [])
     {
-        $defaultOptions = array('options'            => array(),
+        $defaultOptions = ['options'            => [],
                             'apiModule'         => 'Api',
                             'apiController'     => ucwords($objectName),
                             'apiResource'       => $objectName . '-search',
                             'searchPath'         => '',
-                            'type' => 'multiple');
+                            'type' => 'multiple'];
 
         $options = $this->mergeOptions($options, $defaultOptions);
 
         if (empty($options['searchPath'])) {
-            $options['searchPath'] = "/module/" . $options['apiModule'] . "/" . $options['apiController'] .
-                               "?oper=get&resource=" . $options['apiResource'];
+            $options['searchPath'] = '/module/' . $options['apiModule'] . '/' . $options['apiController'] .
+                               '?oper=get&resource=' . $options['apiResource'];
         }
 
         // #TODO load resources value?
@@ -78,11 +81,10 @@ class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper
 
     protected function selectInput($objectName, $attrName, $options)
     {
-        $textHelperOptions = array('objectName' => $objectName);
+        $textHelperOptions = ['objectName' => $objectName];
 
         $this->inputsHelper()->select($attrName, $options['options'], $textHelperOptions);
     }
-
 
     protected function loadAssets()
     {
@@ -91,7 +93,6 @@ class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper
         $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
     }
-
 
     protected function js($objectName, $attrName, $options)
     {
@@ -103,10 +104,10 @@ class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper
           in the script file for the resource controller.
         */
 
-        $resourceOptions = "multipleSearch" . Portabilis_String_Utils::camelize($objectName) . "Options";
+        $resourceOptions = 'multipleSearch' . Portabilis_String_Utils::camelize($objectName) . 'Options';
 
         $js = "$resourceOptions = typeof $resourceOptions == 'undefined' ? {} : $resourceOptions;
-           multipleSearchHelper.setup('$objectName', '$attrName', '" . $options['type'] . "','" . $options['type'] . "', $resourceOptions);";
+           multipleSearchHelper.setup('$objectName', '$attrName', '" . $options['type'] . '\',\'' . $options['type'] . "', $resourceOptions);";
 
         // this script will be executed after the script for the current controller (if it was loaded in the view);
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);

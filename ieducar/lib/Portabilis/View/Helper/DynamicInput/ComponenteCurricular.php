@@ -22,24 +22,27 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
-
 /**
  * Portabilis_View_Helper_DynamicInput_ComponenteCurricular class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabilis_View_Helper_DynamicInput_Core
@@ -55,20 +58,20 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
 
     protected function getOptions($turmaId, $resources)
     {
-        return $this->insertOption(null, "Selecione um componente curricular", array());
+        return $this->insertOption(null, 'Selecione um componente curricular', []);
     }
 
-    public function componenteCurricular($options = array())
+    public function componenteCurricular($options = [])
     {
-        $defaultOptions       = array('id'        => null,
+        $defaultOptions       = ['id'        => null,
                                   'turmaId'   => null,
-                                  'options'   => array(),
-                                  'resources' => array());
+                                  'options'   => [],
+                                  'resources' => []];
 
         $options              = $this->mergeOptions($options, $defaultOptions);
         $resources            = $this->getOptions($options['turmaId'], $options['resources']);
 
-        $defaultSelectOptions = array('id'                       => 'ref_cod_componente_curricular',
+        $defaultSelectOptions = ['id'                       => 'ref_cod_componente_curricular',
                                   'label'                    => 'Componente Curricular',
                                   'componentes_curriculares' => $resources,
                                   'value'                    => $this->getResourceId($options['id']),
@@ -78,9 +81,9 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
                                   'input_hint'               => '',
                                   'disabled'                 => false,
                                   'required'                 => true,
-                                  'multiple'                 => false);
+                                  'multiple'                 => false];
 
         $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-        call_user_func_array(array($this->viewInstance, 'campoLista'), $selectOptions);
+        call_user_func_array([$this->viewInstance, 'campoLista'], $selectOptions);
     }
 }

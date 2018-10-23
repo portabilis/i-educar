@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     07/2013
+ *
  * @version   @@package_version@@
  */
 
@@ -35,10 +37,12 @@ require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
  * Portabilis_View_Helper_Input_SimpleSearchEmpresa class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     07/2013
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoaj extends Portabilis_View_Helper_Input_SimpleSearch
@@ -46,19 +50,19 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoaj extends Portabil
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql       = "select nome from cadastro.pessoa where idpes = $1 and tipo='J'";
-            $options = array('params' => $id, 'return_only' => 'first-field');
+            $sql       = 'select nome from cadastro.pessoa where idpes = $1 and tipo=\'J\'';
+            $options = ['params' => $id, 'return_only' => 'first-field'];
             $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-            return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]);
         }
     }
 
-    public function simpleSearchPessoaj($attrName = '', $options = array())
+    public function simpleSearchPessoaj($attrName = '', $options = [])
     {
-        $defaultOptions = array('objectName'    => 'pessoaj',
+        $defaultOptions = ['objectName'    => 'pessoaj',
                             'apiController' => 'Pessoaj',
-                            'apiResource'   => 'pessoaj-search');
+                            'apiResource'   => 'pessoaj-search'];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 

@@ -20,10 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -33,10 +35,12 @@ require_once 'lib/Portabilis/Array/Utils.php';
  * Portabilis_Utils_Float class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Portabilis_Utils_Float
@@ -44,8 +48,10 @@ class Portabilis_Utils_Float
 
     /**
      * Wrapper for Portabilis_Array_Utils::merge
-     * @param  array $options
-     * @param  array $defaultOptions
+     *
+     * @param array $options
+     * @param array $defaultOptions
+     *
      * @return array
      */
     protected static function mergeOptions($options, $defaultOptions)
@@ -53,32 +59,31 @@ class Portabilis_Utils_Float
         return Portabilis_Array_Utils::merge($options, $defaultOptions);
     }
 
-
     /**
      * Limita as casas decimais de um numero float, SEM arredonda-lo
      *
      * ex: para 4.96, usando limit = 1, retornará 4.9 e não 5
      *
-     * @param  float $value
-     * @param  array  $options
+     * @param float $value
+     * @param array $options
+     *
      * @return float
      */
-    public static function limitDecimal($value, $options = array())
+    public static function limitDecimal($value, $options = [])
     {
         if (! is_numeric($value)) {
-            throw new Exception("Value must be numeric!");
+            throw new Exception('Value must be numeric!');
         } elseif (is_integer($value)) {
             return (float)$value;
         }
 
         $locale         = localeconv();
 
-        $defaultOptions = array('limit'         => 2,
+        $defaultOptions = ['limit'         => 2,
                             'decimal_point' => $locale['decimal_point'],
-                            'thousands_sep' => $locale['thousands_sep']);
+                            'thousands_sep' => $locale['thousands_sep']];
 
         $options        = self::mergeOptions($options, $defaultOptions);
-
 
         // split the values after and before the decimal point.
         $digits    = explode($options['decimal_point'], (string)$value);

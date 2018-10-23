@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchEscola class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_MultipleSearchEscola extends Portabilis_View_Helper_Input_MultipleSearch
@@ -56,9 +60,9 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchEscola extends Portabi
         return $this->insertOption(null, '', $resources);
     }
 
-    public function multipleSearchEscola($attrName, $options = array())
+    public function multipleSearchEscola($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'escola', 'max_selected_options' => 3);
+        $defaultOptions = ['objectName'    => 'escola', 'max_selected_options' => 3];
 
         $options                         = $this->mergeOptions($options, $defaultOptions);
         $options['options']['resources'] = $this->getOptions($options['options']['resources']);
@@ -70,7 +74,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchEscola extends Portabi
 
     protected function placeholderJs($options)
     {
-        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione as escolas');";
 

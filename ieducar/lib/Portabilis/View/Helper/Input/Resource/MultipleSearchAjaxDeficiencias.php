@@ -24,10 +24,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -39,13 +41,14 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchDeficiencias class.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
-
 
 /*
 
@@ -65,11 +68,11 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends Portabilis_View_Helper_Input_MultipleSearchAjax
 {
-    public function multipleSearchDeficiencias($attrName, $options = array())
+    public function multipleSearchDeficiencias($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'deficiencias',
+        $defaultOptions = ['objectName'    => 'deficiencias',
                             'apiController' => 'Deficiencia',
-                            'apiResource'   => 'deficiencia-search');
+                            'apiResource'   => 'deficiencia-search'];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 

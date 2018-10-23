@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -37,20 +39,22 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_SimpleSearchDistrito class.
  *
  * @author    Lucas Schmoeller da Silva <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     Classe disponível desde a versão ?
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabilis_View_Helper_Input_SimpleSearch
 {
-    public function simpleSearchDistrito($attrName, $options = array())
+    public function simpleSearchDistrito($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'distrito',
+        $defaultOptions = ['objectName'    => 'distrito',
                             'apiController' => 'Distrito',
                             'apiResource'   => 'distrito-search',
-                            'showIdOnValue' => false);
+                            'showIdOnValue' => false];
 
         $options        = $this->mergeOptions($options, $defaultOptions);
 
@@ -60,11 +64,11 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabi
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql       = "select nome from public.distrito where iddis = $1";
-            $options   = array('params' => $id, 'return_only' => 'first-field');
+            $sql       = 'select nome from public.distrito where iddis = $1';
+            $options   = ['params' => $id, 'return_only' => 'first-field'];
             $distrito = $id. ' - '. Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-            return Portabilis_String_Utils::toLatin1($distrito, array('transform' => true, 'escape' => false));
+            return Portabilis_String_Utils::toLatin1($distrito, ['transform' => true, 'escape' => false]);
         }
     }
 
@@ -72,7 +76,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabi
     {
         return 'Informe o nome do distrito';
     }
-  
+
     protected function loadAssets()
     {
         $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchDistrito.js';

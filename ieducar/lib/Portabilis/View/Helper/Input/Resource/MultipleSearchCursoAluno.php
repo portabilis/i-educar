@@ -22,10 +22,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Maurício Citadini Biléssimo <mauricio@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   $Id$
  */
 
@@ -37,10 +39,12 @@ require_once 'lib/Portabilis/String/Utils.php';
  * Portabilis_View_Helper_Input_MultipleSearchEtapacurso class.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ *
  * @category  i-Educar
- * @license   @@license@@
  * @package   Portabilis
+ *
  * @since     ?
+ *
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_MultipleSearchCursoAluno extends Portabilis_View_Helper_Input_MultipleSearch
@@ -50,11 +54,11 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCursoAluno extends Por
         return $this->insertOption(null, '', $resources);
     }
 
-    public function multipleSearchCursoAluno($attrName, $options = array())
+    public function multipleSearchCursoAluno($attrName, $options = [])
     {
-        $defaultOptions = array('objectName'    => 'cursoaluno',
+        $defaultOptions = ['objectName'    => 'cursoaluno',
                             'apiController' => 'CursoAluno',
-                            'apiResource'   => 'cursoaluno-search');
+                            'apiResource'   => 'cursoaluno-search'];
 
         $options                         = $this->mergeOptions($options, $defaultOptions);
         $options['options']['resources'] = $this->getOptions($options['options']['resources']);
@@ -66,7 +70,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCursoAluno extends Por
 
     protected function placeholderJs($options)
     {
-        $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
+        $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} }; $optionsVarName.placeholder = safeUtf8Decode('Selecione os cursos do aluno');";
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
