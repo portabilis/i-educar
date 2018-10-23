@@ -21,9 +21,12 @@
  * endereחo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixדo <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Arquivo disponםvel desde a versדo 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -39,9 +42,12 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  * @author    Eriksen Costa Paixדo <eriksen.paixao_bs@cobra.com.br>
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Classe disponםvel desde a versדo 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Core_Controller_Page_ListController extends clsListagem implements Core_View_Tabulable
@@ -74,10 +80,11 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
      *
      * @var array
      */
-    protected $_tableMap = array();
+    protected $_tableMap = [];
 
     /**
      * Getter.
+     *
      * @see Core_View_Tabulable#getTableMap()
      */
     public function getTableMap()
@@ -96,6 +103,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
     public function getEntries()
     {
         $mapper = $this->getDataMapper();
+
         return $mapper->findAll();
     }
 
@@ -142,9 +150,9 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
           : 0;
 
         foreach ($entries as $entry) {
-            $item = array();
+            $item = [];
             $data = $entry->toArray();
-            $options = array('query' => array('id' => $entry->id));
+            $options = ['query' => ['id' => $entry->id]];
 
             foreach ($headers as $label => $attr) {
                 $item[] = CoreExt_View_Helper_UrlHelper::l(

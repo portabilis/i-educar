@@ -22,9 +22,12 @@
  * @author    Éber Freitas Dias <eber.freitas@gmail.com>
  * @author    bonot <paula_bonot@hotmail.com>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -41,54 +44,63 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
 {
     /**
      * Opções de configuração geral da classe.
+     *
      * @var array
      */
-    protected $_options = array(
+    protected $_options = [
         'id_usuario'            => null,
         'new_success'           => 'index',
-        'new_success_params'    => array(),
+        'new_success_params'    => [],
         'edit_success'          => 'view',
-        'edit_success_params'   => array(),
+        'edit_success_params'   => [],
         'delete_success'        => 'index',
-        'delete_success_params' => array(),
+        'delete_success_params' => [],
         'url_cancelar'          => null,
-    );
+    ];
 
     /**
      * Coleção de mensagens de erros retornados pelos validadores de
      * CoreExt_Entity.
+     *
      * @var array
      */
-    protected $_errors = array();
+    protected $_errors = [];
 
     /**
      * Instância de Core_View
+     *
      * @var Core_View
      */
     protected $_view = null;
 
     /**
      * Instância de CoreExt_DataMapper
+     *
      * @var CoreExt_DataMapper
      */
     protected $_dataMapper = null;
 
     /**
      * Instância de CoreExt_Entity
+     *
      * @var CoreExt_Entity
      */
     protected $_entity = null;
 
     /**
      * Identificador do número de processo para verificação de autorização.
+     *
      * @see clsBase#verificaPermissao()
+     *
      * @var int
      */
     protected $_processoAp = null;
 
     /**
      * Título a ser utilizado na barra de título.
+     *
      * @see clsBase#MakeHeadHtml()
+     *
      * @var string
      */
     protected $_titulo = null;
@@ -97,6 +109,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Array com labels para botões, inseridos no HTML via RenderHTML(). Marcado
      * como public para manter compatibilidade com as classes cls(Cadastro|Detalhe|
      * Listagem) que acessam o array diretamente.
+     *
      * @var array|NULL
      */
     public $array_botao = null;
@@ -105,6 +118,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Array com labels para botões, inseridos no HTML via RenderHTML(). Marcado
      * como public para manter compatibilidade com as classes cls(Cadastro|Detalhe|
      * Listagem) que acessam o array diretamente.
+     *
      * @var array|NULL
      */
     public $array_botao_url = null;
@@ -117,7 +131,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     /**
      * @var array
      */
-    private $_output = array();
+    private $_output = [];
 
     /**
      * @var integer
@@ -141,7 +155,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     /**
      * @see CoreExt_Configurable#setOptions($options)
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
@@ -170,6 +184,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         }
 
         $this->_options = array_merge($this->getOptions(), $options);
+
         return $this;
     }
 
@@ -183,8 +198,11 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
 
     /**
      * Setter.
+     *
      * @param CoreExt_Controller|string $dataMapper
+     *
      * @return Core_Controller_Page_Interface Provê interface fluída
+     *
      * @throws Core_Controller_Page_Exception|CoreExt_Exception_InvalidArgumentException
      */
     public function setDataMapper($dataMapper)
@@ -200,6 +218,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         } else {
             throw new CoreExt_Exception_InvalidArgumentException('Argumento inválido. São aceitos apenas argumentos do tipo string e CoreExt_DataMapper');
         }
+
         return $this;
     }
 
@@ -218,17 +237,21 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         } elseif (is_null($this->_dataMapper)) {
             throw new Core_Controller_Page_Exception('É necessário especificar um nome de classe para a propriedade "$_dataMapper" ou sobrescrever o método "getDataMapper()".');
         }
+
         return $this->_dataMapper;
     }
 
     /**
      * Setter.
+     *
      * @param CoreExt_Entity $entity
+     *
      * @return CoreExt_Controller_Page_Abstract Provê interface fluída
      */
     public function setEntity(CoreExt_Entity $entity)
     {
         $this->_entity = $entity;
+
         return $this;
     }
 
@@ -245,6 +268,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         if (is_null($this->_entity)) {
             $this->setEntity($this->getDataMapper()->createNewEntityInstance());
         }
+
         return $this->_entity;
     }
 
@@ -282,12 +306,15 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
 
     /**
      * Setter.
+     *
      * @param int $processoAp
+     *
      * @return Core_Controller_Page_Abstract
      */
     public function setBaseProcessoAp($processoAp)
     {
         $this->_processoAp = (int) $processoAp;
+
         return $this;
     }
 
@@ -298,6 +325,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * atributo $_processoAp ou da sobrescrição de setBaseProcessoAp().
      *
      * @return int
+     *
      * @see Core_Controller_Page_Interface#getBaseProcessoAp()
      */
     public function getBaseProcessoAp()
@@ -305,16 +333,19 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         if (is_null($this->_processoAp)) {
             throw new Core_Controller_Page_Exception('É necessário especificar um valor numérico para a propriedade "$_processoAp" ou sobrescrever o método "getBaseProcessoAp()".');
         }
+
         return $this->_processoAp;
     }
 
     /**
      * Setter.
+     *
      * @see Core_Controller_Page_Interface#setBaseTitulo($titulo)
      */
     public function setBaseTitulo($titulo)
     {
         $this->_titulo = (string) $titulo;
+
         return $this;
     }
 
@@ -325,6 +356,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * atributo $_titulo ou da sobrescrição de setBaseTitulo().
      *
      * @return string
+     *
      * @see Core_Controller_Page_Interface#getBaseTitulo()
      */
     public function getBaseTitulo()
@@ -332,6 +364,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         if (is_null($this->_titulo)) {
             throw new Core_Controller_Page_Exception('É necessário especificar uma string para a propriedade "$_titulo" ou sobrescrever o método "getBaseTitulo()".');
         }
+
         return $this->_titulo;
     }
 
@@ -341,17 +374,20 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      *
      * @param string $label
      * @param string $url
+     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     public function addBotao($label, $url)
     {
         $this->array_botao[]     = $label;
         $this->array_botao_url[] = $url;
+
         return $this;
     }
 
     /**
      * Configura botões padrão de clsCadastro
+     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     public function configurarBotoes()
@@ -368,11 +404,13 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
                 );
             }
         }
+
         return $this;
     }
 
     /**
      * Hook de pré-execução do método RenderHTML().
+     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     protected function _preRender()
@@ -385,6 +423,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Core_Controller_Page_Abstract.
      *
      * @param string $data A string HTML a ser adiciona após o conteúdo.
+     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     public function appendOutput($data)
@@ -392,12 +431,15 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         if (!empty($data) && is_string($data)) {
             $this->_output['append'][] = $data;
         }
+
         return $this;
     }
 
     /**
      * Retorna todo o conteúdo acrescentado como uma string.
+     *
      * @return string O conteúdo a ser acrescentado separado com uma quebra de linha.
+     *
      * @see clsBase#MakeBody()
      */
     public function getAppendedOutput()
@@ -410,6 +452,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      * Core_Controller_Page_Abstract.
      *
      * @param string $data A string HTML a ser adiciona após o conteúdo.
+     *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
     public function prependOutput($data)
@@ -417,12 +460,15 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         if (!empty($data) && is_string($data)) {
             $this->_output['prepend'][] = $data;
         }
+
         return $this;
     }
 
     /**
      * Retorna todo o conteúdo prefixado como uma string.
+     *
      * @return string O conteúdo a ser prefixado separado com uma quebra de linha.
+     *
      * @see clsBase#MakeBody()
      */
     public function getPrependedOutput()
@@ -432,15 +478,18 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
 
     /**
      * Retorna o conteúdo a ser adicionado a saída de acordo com a região.
+     *
      * @param string $pos Região para retornar o conteúdo a ser adicionado na saída.
+     *
      * @return string|NULL Conteúdo da região separado por uma quebra de linha ou
-     *   NULL caso a região não exista.
+     *                     NULL caso a região não exista.
      */
     private function _getOutput($pos = 'prepend')
     {
         if (isset($this->_output[$pos])) {
             return implode(PHP_EOL, $this->_output[$pos]);
         }
+
         return null;
     }
 
@@ -481,8 +530,10 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
 
     /**
      * breadcrumb
-     * @param  string $currentPage
-     * @param  array  $breadcrumbs
+     *
+     * @param string $currentPage
+     * @param array  $breadcrumbs
+     *
      * @return string
      */
     public function breadcrumb($currentPage, $breadcrumbs = [])

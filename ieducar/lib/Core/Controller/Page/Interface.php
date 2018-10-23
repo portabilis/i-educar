@@ -21,9 +21,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -34,9 +37,12 @@ require_once 'CoreExt/Controller/Page/Interface.php';
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Interface disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 interface Core_Controller_Page_Interface extends CoreExt_Controller_Page_Interface

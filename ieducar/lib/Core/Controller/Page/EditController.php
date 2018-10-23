@@ -21,9 +21,12 @@
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -39,12 +42,16 @@ require_once 'App/Model/NivelTipoUsuario.php';
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @todo      Documentar a API
  * @todo      Definir o atributo $_formMap que é diferente do atributo
  * @todo      Documentar as opções new_success e edit_success
+ *
  * @version   @@package_version@@
  */
 abstract class Core_Controller_Page_EditController extends clsCadastro implements

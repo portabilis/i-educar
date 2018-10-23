@@ -21,9 +21,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category  i-Educar
  * @package   Core_View
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -37,21 +40,26 @@ require_once 'include/clsBase.inc.php';
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_View
+ *
  * @since     Classe disponível desde a versão 1.1.0
+ *
  * @version   @@package_version@@
  */
 class Core_View extends clsBase
 {
     /**
      * Uma instância de CoreExt_Controller_Page_Interface.
+     *
      * @var CoreExt_Controller_Page_Interface
      */
     protected $_pageController = null;
 
     /**
      * Construtor.
+     *
      * @param Core_Controller_Page_Interface $instance
      */
     public function __construct(Core_Controller_Page_Interface $instance)
@@ -62,17 +70,21 @@ class Core_View extends clsBase
 
     /**
      * Setter.
+     *
      * @param Core_Controller_Page_Interface $instance
+     *
      * @return Core_View Provê interface fluída
      */
     protected function _setPageController(Core_Controller_Page_Interface $instance)
     {
         $this->_pageController = $instance;
+
         return $this;
     }
 
     /**
      * Getter.
+     *
      * @return CoreExt_Controller_Page_Interface
      */
     protected function _getPageController()
@@ -82,17 +94,21 @@ class Core_View extends clsBase
 
     /**
      * Setter
+     *
      * @param string $titulo
+     *
      * @return Core_View Provê interface fluída
      */
     public function setTitulo($titulo)
     {
         parent::SetTitulo($titulo);
+
         return $this;
     }
 
     /**
      * Getter.
+     *
      * @return string
      */
     public function getTitulo()
@@ -102,17 +118,21 @@ class Core_View extends clsBase
 
     /**
      * Setter.
+     *
      * @param int $processo
+     *
      * @return Core_View Provê interface fluída
      */
     public function setProcessoAp($processo)
     {
         $this->processoAp = (int) $processo;
+
         return $this;
     }
 
     /**
      * Getter.
+     *
      * @return int
      */
     public function getProcessoAp()
@@ -125,6 +145,7 @@ class Core_View extends clsBase
      * $coreExt.
      *
      * @global $coreExt
+     *
      * @see clsBase#Formular()
      */
     public function Formular()
@@ -138,6 +159,7 @@ class Core_View extends clsBase
 
     /**
      * Executa o método de geração de HTML para a classe.
+     *
      * @param Core_View $instance
      */
     public static function generate($instance)
