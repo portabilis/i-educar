@@ -20,9 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author Rodrigo Rodrigues <rodrigogbgod@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -43,67 +46,67 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
     private $configDataMapper;
-    protected $_formMap    = array(
-        'serie-0' => array(
+    protected $_formMap    = [
+        'serie-0' => [
             'label' => 'Educação infantil',
             'coluna'=> 0,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-1' => array(
+        ],
+        'serie-1' => [
             'label' => '1° ano',
             'coluna'=> 1,
-            'value' => array()
-        ),
-        'serie-2' => array(
+            'value' => []
+        ],
+        'serie-2' => [
             'label' => '2° ano',
             'coluna'=> 2,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-3' => array(
+        ],
+        'serie-3' => [
             'label' => '3° ano',
             'coluna'=> 3,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-4' => array(
+        ],
+        'serie-4' => [
             'label' => '4° ano',
             'coluna'=> 4,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-5' => array(
+        ],
+        'serie-5' => [
             'label' => '5° ano',
             'coluna'=> 5,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-6' => array(
+        ],
+        'serie-6' => [
             'label' => '6° ano',
             'coluna'=> 6,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-7' => array(
+        ],
+        'serie-7' => [
             'label' => '7° ano',
             'coluna'=> 7,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-8' => array(
+        ],
+        'serie-8' => [
             'label' => '8° ano',
             'coluna'=> 8,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        ),
-        'serie-9' => array(
+        ],
+        'serie-9' => [
             'label' => '9° ano',
             'coluna'=> 9,
-            'value' => array(),
+            'value' => [],
             'help'  => ''
-        )
-    );
+        ]
+    ];
 
     public function Inicializar()
     {
@@ -115,12 +118,13 @@ class indice extends clsCadastro
             'educar_index.php'
         );
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-            "educar_configuracoes_index.php"    => "Configurações",
-            ""                                  => "Configuração movimento geral"
-        ));
+        $localizacao->entradaCaminhos([
+            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
+            'educar_configuracoes_index.php'    => 'Configurações',
+            ''                                  => 'Configuração movimento geral'
+        ]);
         $this->enviaLocalizacao($localizacao->montar());
+
         return 'Editar';
     }
 
@@ -128,7 +132,7 @@ class indice extends clsCadastro
     {
         $this->loadConfig();
         foreach ($this->_formMap as $key => $value) {
-            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false, 'values' => $value['value'], 'coluna' => $value['coluna']), '');
+            $this->inputsHelper()->multipleSearchSerie($key, ['label' => $value['label'], 'required' => false, 'values' => $value['value'], 'coluna' => $value['coluna']], '');
         }
     }
 
@@ -156,12 +160,13 @@ class indice extends clsCadastro
                 $coluna = str_replace('multiple_search_serie_serie-', '', $key);
                 foreach ($series as $serie) {
                     if (!empty($serie)) {
-                        $this->configDataMapper->save($this->configDataMapper->createNewEntityInstance(array('coluna' => $coluna, 'serie' => $serie)));
+                        $this->configDataMapper->save($this->configDataMapper->createNewEntityInstance(['coluna' => $coluna, 'serie' => $serie]));
                     }
                 }
             }
         }
-        $this->mensagem .= "Edição efetuada com sucesso.<br>";
+        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+
         return $salvou;
     }
 

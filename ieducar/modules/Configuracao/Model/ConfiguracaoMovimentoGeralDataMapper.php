@@ -20,9 +20,12 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author Rodrigo Rodrigues <rodrigogbgod@gmail.com>
+ *
  * @category  i-Educar
  * @package   Core_Controller
+ *
  * @since     Arquivo disponível desde a versão 1.1.0
+ *
  * @version   $Id$
  */
 
@@ -35,8 +38,8 @@ class ConfiguracaoMovimentoGeralDataMapper extends CoreExt_DataMapper
     protected $_tableName   = 'config_movimento_geral';
     protected $_tableSchema = 'modules';
 
-    protected $_attributeMap = array(
+    protected $_attributeMap = [
         'serie'       => 'ref_cod_serie',
         'coluna'      => 'coluna'
-    );
+    ];
 }
