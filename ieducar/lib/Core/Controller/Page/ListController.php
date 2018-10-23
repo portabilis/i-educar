@@ -22,7 +22,6 @@
  *
  * @author    Eriksen Costa Paixדo <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Core_Controller
  * @since     Arquivo disponםvel desde a versדo 1.1.0
  * @version   $Id$
@@ -41,7 +40,6 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Core_Controller
  * @since     Classe disponםvel desde a versדo 1.1.0
  * @version   @@package_version@@

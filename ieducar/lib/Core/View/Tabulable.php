@@ -22,7 +22,6 @@
  *
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Core_View
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
@@ -36,7 +35,6 @@
  * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @author    Caroline Salib <carolinesalibc@gmail.com>
  * @category  i-Educar
- * @license   GPL-2.0+
  * @package   Core_View
  * @since     Interface disponível desde a versão 1.1.0
  * @version   @@package_version@@
