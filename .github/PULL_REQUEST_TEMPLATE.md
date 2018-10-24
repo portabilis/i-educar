@@ -22,5 +22,5 @@
 - ✅ Eu li o documento **CONTRIBUTING**. **[REQUIRED]**
 - ✅ Meu código segue a PSR2. **[REQUIRED]**
 - ✅ Todos os testes novos e existentes estão passando. **[REQUIRED]**
-- ✅ Minhas alterações necessitam de alteração na documetação e já foram feitas.
+- ✅ Minhas alterações necessitam de alteração na documentação e já foram feitas.
 - ✅ Criei testes automatizados que cobrem minhas alterações.
