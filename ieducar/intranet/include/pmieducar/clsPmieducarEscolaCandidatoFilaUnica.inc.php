@@ -123,7 +123,7 @@ class clsPmieducarEscolaCandidatoFilaUnica
             $campos .= "{$gruda}sequencial";
             $valores .= "{$gruda}'{$this->sequencial}'";
             $gruda = ", ";
-            
+
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES($valores)");
             return true;
         }
@@ -137,7 +137,16 @@ class clsPmieducarEscolaCandidatoFilaUnica
      */
     function lista()
     {
-        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+        $sql = "
+            SELECT
+                {$this->_campos_lista},
+                pessoa.nome AS nm_escola
+            FROM
+                {$this->_tabela}
+            INNER JOIN pmieducar.escola ON escola.cod_escola = escola_candidato_fila_unica.ref_cod_escola
+            INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
+        ";
+
         $filtros = "";
 
         $whereAnd = " WHERE ";
