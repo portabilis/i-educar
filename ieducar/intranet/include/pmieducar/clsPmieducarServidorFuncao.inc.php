@@ -419,11 +419,16 @@ class clsPmieducarServidorFuncao
      */
     function excluirFuncoesRemovidas($funcoes)
     {
-        if( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor && is_array($funcoes) && !empty($funcoes) ) )
+        if( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) && is_array( $funcoes )  )
         {
+            $delete = "DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'";
+            if (!empty($funcoes))
+            {
+                $delete .= " AND ref_cod_funcao NOT IN (". implode($funcoes,',') .")";
+            }
 
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND funcao NOT IN ('{implode($funcoes,',')}')" );
+            $db->Consulta( $delete );
             return true;
 
         }

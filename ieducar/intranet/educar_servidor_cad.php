@@ -998,10 +998,10 @@ class indice extends clsCadastro
             array_push($listFuncoesCadastradas,$funcao);
         }
 
-        $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
     }
+      $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
 
-    if ($existe_funcao_professor) {
+      if ($existe_funcao_professor) {
       if ($cursos_disciplina) {
         $this->excluiDisciplinas();
         foreach ($cursos_disciplina as $curso => $disciplinas) {
