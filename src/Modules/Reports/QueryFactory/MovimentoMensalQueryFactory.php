@@ -23,351 +23,123 @@ class MovimentoMensalQueryFactory extends QueryFactory
     ];
 
     protected $query = <<<'SQL'
-        select *
-        from
-            (
-                select
-                    s.cod_serie,
-                    s.nm_serie,
-                    t.cod_turma,
-                    t.nm_turma,
-                    (
-                        select nome
-                        from pmieducar.turma_turno
-                        where id = t.turma_turno_id
-                    ) as turno,
-                    (
-                        select count(distinct(m.cod_matricula))
-                        from pmieducar.matricula_turma mt
-                        inner join pmieducar.matricula m on m.cod_matricula = mt.ref_cod_matricula
-                        inner join pmieducar.aluno a on a.cod_aluno = m.ref_cod_aluno
-                        inner join cadastro.fisica f on f.idpes = a.ref_idpes
-                        where true
-                            and mt.ref_cod_turma = t.cod_turma
-                            and m.ativo = 1
-                            and f.sexo = 'M'
-                            and m.ano = t.ano
-                            and m.dependencia not in (true)
-                            and date(coalesce(mt.data_enturmacao, m.data_matricula,m.data_cadastro)) < :data_inicial::date
-                            and (case
-                                when date(coalesce(date(mt.data_exclusao), date(m.data_cancel))) is not null then 
-                                    date(coalesce(date(mt.data_exclusao),date(m.data_cancel))) >= :data_inicial::date
-                                else
-                                    true
-                            end)
-                    ) as mat_ini_m,
-                    (
-                        select count(distinct(m.cod_matricula))
-                        from pmieducar.matricula_turma mt
-                        inner join pmieducar.matricula m on m.cod_matricula = mt.ref_cod_matricula
-                        inner join pmieducar.aluno a on a.cod_aluno = m.ref_cod_aluno
-                        inner join cadastro.fisica f on f.idpes = a.ref_idpes
-                        where true
-                            and mt.ref_cod_turma = t.cod_turma
-                            and m.ativo = 1
-                            and f.sexo = 'F'
-                            and m.ano = t.ano
-                            and m.dependencia not in (true)
-                            and date(coalesce(mt.data_enturmacao, m.data_matricula, m.data_cadastro)) < :data_inicial::date
-                            and (case
-                                when date(coalesce(date(mt.data_exclusao), date(m.data_cancel))) is not null then
-                                    date(coalesce(date(mt.data_exclusao), date(m.data_cancel))) >= :data_inicial::date
-                                else
-                                    true
-                            end)
-                    ) as mat_ini_f,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on mt.ref_cod_matricula = m.cod_matricula
-                        inner join pmieducar.aluno a on a.cod_aluno = m.ref_cod_aluno
-                        inner join cadastro.fisica f on f.idpes = a.ref_idpes
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'M'
-                            and m.ativo = 1
-                            and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
-                            and mt.sequencial > 1
-                    ) as mat_trocae_m,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on mt.ref_cod_matricula = m.cod_matricula
-                        inner join pmieducar.aluno a on a.cod_aluno = m.ref_cod_aluno
-                        inner join cadastro.fisica f on f.idpes = a.ref_idpes
-                        where true 
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'F'
-                            and m.ativo = 1
-                            and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
-                            and mt.sequencial > 1
-                    ) as mat_trocae_f,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'M'
-                            and m.ativo = 1
-                            and mt.ativo = 0
-                            and mt.sequencial < (
-                                select max(sequencial)
-                                from pmieducar.matricula_turma
-                                where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
-                            )
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_trocas_m,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'F'
-                            and m.ativo = 1
-                            and mt.ativo = 0
-                            and mt.sequencial < (
-                                select max(sequencial)
-                                from pmieducar.matricula_turma
-                                where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
-                            )
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_trocas_f,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true 
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ativo = 1
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and mt.sequencial = 1
-                            and f.sexo = 'M'
-                            and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
-                    ) as mat_admit_m,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ativo = 1
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and mt.sequencial = 1
-                            and f.sexo = 'F'
-                            and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
-                    ) as mat_admit_f,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'M'
-                            and m.aprovado = 5
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_reclassificados_m,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'F'
-                            and m.aprovado = 5
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_reclassificados_f,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'M'
-                            and m.aprovado = 4
-                            and mt.transferido = 't'
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_transf_m,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'F'
-                            and m.aprovado = 4
-                            and mt.transferido = 't'
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_transf_f,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'M'
-                            and m.aprovado = 6
-                            and mt.abandono = 't'
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_aband_m,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'F'
-                            and m.aprovado = 6
-                            and mt.abandono = 't'
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_aband_f,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'M'
-                            and m.aprovado = 15
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_falecido_m,
-                    (
-                        select count(cod_matricula)
-                        from pmieducar.matricula m
-                        inner join pmieducar.matricula_turma mt on (mt.ref_cod_matricula = m.cod_matricula)
-                        inner join pmieducar.aluno a on (a.cod_aluno = m.ref_cod_aluno)
-                        inner join cadastro.fisica f on (f.idpes = a.ref_idpes)
-                        where true
-                            and m.ref_ref_cod_escola = e.cod_escola
-                            and m.ano = t.ano
-                            and m.ref_cod_curso = s.ref_cod_curso
-                            and m.ref_ref_cod_serie = s.cod_serie
-                            and mt.ref_cod_turma = t.cod_turma
-                            and f.sexo = 'F'
-                            and m.aprovado = 15
-                            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
-                    ) as mat_falecido_f
-                from pmieducar.serie s
-                inner join pmieducar.escola_serie es on (s.cod_serie = es.ref_cod_serie)
-                inner join pmieducar.escola e on (e.cod_escola = es.ref_cod_escola)
-                inner join pmieducar.turma t on (t.ref_ref_cod_serie = s.cod_serie)
-                where true
-                    and e.ref_cod_instituicao = :instituicao
-                    and e.cod_escola = :escola
-                    and t.ref_ref_cod_escola = :escola
-                    and t.ativo = 1
-                    and t.ano = :ano
-                    and (
-                        select case
-                            when :curso = 0 then
-                                true
-                            else
-                                s.ref_cod_curso = :curso
-                        end
-                    )
-                    and (
-                        select case
-                            when :turma = 0 then
-                                true
-                            else
-                                t.cod_turma = :turma
-                        end
-                    )
-                    and (
-                        select case
-                            when :serie = 0 then
-                                true
-                            else
-                                s.cod_serie = :serie
-                        end
-                    )
-            ) as movimento
-        order by
+        select
+            cod_serie,
             nm_serie,
-            nm_turma
+            cod_turma,
+            nm_turma,
+            turno,
+            sum(case when masculino and matricula_ativa and sem_dependencia and entrou_antes_inicio and saiu_depois_inicio then 1 else 0 end) as mat_ini_m,
+            sum(case when feminino and matricula_ativa and sem_dependencia and entrou_antes_inicio and saiu_depois_inicio then 1 else 0 end) as mat_ini_f,
+            sum(case when matricula_ativa and sem_dependencia and entrou_antes_inicio and saiu_depois_inicio then 1 else 0 end) as mat_ini,
+            sum(case when masculino and transferido and saiu_durante then 1 else 0 end) as mat_transf_m,
+            sum(case when feminino and transferido and saiu_durante then 1 else 0 end) as mat_transf_f,
+            sum(case when masculino and abandono and enturmacao_abandono and saiu_durante then 1 else 0 end) as mat_aband_m,
+            sum(case when feminino and abandono and enturmacao_abandono and saiu_durante then 1 else 0 end) as mat_aband_f,
+            sum(case when masculino and matricula_ativa and sequencial = 1 and entrada_reclassificado = false and entrou_durante then 1 else 0 end) as mat_admit_m,
+            sum(case when feminino and matricula_ativa and sequencial = 1 and entrada_reclassificado = false and entrou_durante then 1 else 0 end) as mat_admit_f,
+            sum(case when masculino and falecido and saiu_durante then 1 else 0 end) as mat_falecido_m,
+            sum(case when feminino and falecido and saiu_durante then 1 else 0 end) as mat_falecido_f,
+            sum(case when masculino and reclassificado and saiu_durante then 1 else 0 end) as mat_reclassificados_m,
+            sum(case when feminino and reclassificado and saiu_durante then 1 else 0 end) as mat_reclassificados_f,
+            sum(case when masculino and entrada_reclassificado and entrou_durante then 1 else 0 end) as mat_reclassificadose_m,
+            sum(case when feminino and entrada_reclassificado and entrou_durante then 1 else 0 end) as mat_reclassificadose_f,
+            sum(case when masculino and matricula_ativa and entrou_durante and sequencial > 1 then 1 else 0 end) as mat_trocae_m,
+            sum(case when feminino and matricula_ativa and entrou_durante and sequencial > 1 then 1 else 0 end) as mat_trocae_f,
+            sum(case when masculino and matricula_ativa and enturmacao_inativa and saiu_durante and sequencial < maior_sequencial then 1 else 0 end) as mat_trocas_m,
+            sum(case when feminino and matricula_ativa and enturmacao_inativa and saiu_durante and sequencial < maior_sequencial then 1 else 0 end) as mat_trocas_f,
+            sum(case when masculino and matricula_ativa and sem_dependencia and entrou_antes_fim and saiu_depois_fim then 1 else 0 end) as mat_fim_m,
+            sum(case when feminino and matricula_ativa and sem_dependencia and entrou_antes_fim and saiu_depois_fim then 1 else 0 end) as mat_fim_f,
+            sum(case when matricula_ativa and sem_dependencia and entrou_antes_fim and saiu_depois_fim then 1 else 0 end) as mat_fim
+        from (
+            select
+                serie.cod_serie,
+                serie.nm_serie,
+                turma.cod_turma,
+                turma.nm_turma,
+                turno.nome as turno,
+                enturmacao.sequencial,
+                sexo = 'F' as feminino,
+                sexo = 'M' as masculino,
+                matricula.ativo = 1 as matricula_ativa,
+                matricula.aprovado = 4 transferido,
+                matricula.aprovado = 5 as reclassificado,
+                matricula.aprovado = 6 as abandono,
+                matricula.aprovado = 15 as falecido,
+                matricula.matricula_reclassificacao = 1 as entrada_reclassificado,
+                enturmacao.ativo = 0 as enturmacao_inativa,
+                enturmacao.transferido as enturmacao_transferida,
+                enturmacao.abandono as enturmacao_abandono,
+                dependencia not in (true) as sem_dependencia,
+                coalesce(enturmacao.data_enturmacao, matricula.data_matricula, matricula.data_cadastro) < date(:data_inicial) as entrou_antes_inicio,
+                coalesce(enturmacao.data_enturmacao, matricula.data_matricula, matricula.data_cadastro) <= date(:data_final) as entrou_antes_fim,
+                coalesce(enturmacao.data_enturmacao, matricula.data_cadastro) between date(:data_inicial) and date(:data_final) as entrou_durante,
+                coalesce(enturmacao.data_exclusao, matricula.data_cancel) is null or coalesce(enturmacao.data_exclusao, matricula.data_cancel) >= date(:data_inicial) as saiu_depois_inicio,
+                coalesce(enturmacao.data_exclusao, matricula.data_cancel) is null or coalesce(enturmacao.data_exclusao, matricula.data_cancel) > date(:data_final) as saiu_depois_fim,
+                coalesce(enturmacao.data_exclusao, matricula.data_cancel) between date(:data_inicial) and date(:data_final) as saiu_durante,
+                (select max(sequencial) from pmieducar.matricula_turma where matricula_turma.ref_cod_matricula = matricula.cod_matricula) as maior_sequencial
+            from pmieducar.matricula_turma enturmacao
+            inner join pmieducar.matricula matricula on true
+                and matricula.cod_matricula = enturmacao.ref_cod_matricula
+            inner join pmieducar.turma turma on true
+                and turma.cod_turma = enturmacao.ref_cod_turma
+            inner join pmieducar.serie serie on true
+                and serie.cod_serie = turma.ref_ref_cod_serie
+            inner join pmieducar.turma_turno turno on true
+                and turno.id = turma.turma_turno_id
+            inner join pmieducar.aluno aluno on true
+                and aluno.cod_aluno = matricula.ref_cod_aluno
+            inner join cadastro.fisica pessoa on true
+                and pessoa.idpes = aluno.ref_idpes
+            inner join pmieducar.escola escola on true
+                and escola.cod_escola = matricula.ref_ref_cod_escola
+            where true
+                and escola.ref_cod_instituicao = :instituicao
+                and matricula.ref_ref_cod_escola = :escola
+                and matricula.ano = :ano
+                and
+                (
+                    case when :curso = 0 then
+                        true
+                    else
+                        serie.ref_cod_curso = :curso
+                    end
+                )
+                and
+                (
+                    case when :turma = 0 then
+                        true
+                    else
+                        turma.cod_turma = :turma
+                    end
+                )
+                and
+                (
+                    case when :serie = 0 then
+                        true
+                    else
+                        serie.cod_serie = :serie
+                    end
+                )
+        ) as matriculas
+        group by
+            cod_serie,
+            nm_serie,
+            cod_turma,
+            nm_turma,
+            turno
+        order by
+            nm_turma;
 SQL;
 
     public function getData(){
         $data = parent::getData();
 
         foreach ($data as $k => $v) {
-            $data[$k]['mat_ini_t'] = $v['mat_ini_m'] + $v['mat_ini_f'];
-            $data[$k]['mat_final_m'] = ($v['mat_ini_m'] + $v['mat_admit_m'] + $v['mat_trocae_m']) - ($v['mat_transf_m'] + $v['mat_aband_m'] + $v['mat_falecido_m'] + $v['mat_trocas_m'] + $v['mat_reclassificados_m']);
-            $data[$k]['mat_final_f'] = ($v['mat_ini_f'] + $v['mat_admit_f'] + $v['mat_trocae_f']) - ($v['mat_transf_f'] + $v['mat_aband_f'] + $v['mat_falecido_f'] + $v['mat_trocas_f'] + $v['mat_reclassificados_f']);
-            $data[$k]['mat_final_t'] = $data[$k]['mat_final_m'] + $data[$k]['mat_final_f'];
+            $data[$k]['mat_ini_t'] = $v['mat_ini'];
+            $data[$k]['mat_final_m'] = $v['mat_fim_m'];
+            $data[$k]['mat_final_f'] = $v['mat_fim_f'];
+            $data[$k]['mat_final_t'] = $v['mat_fim'];
         }
 
         return $data;
