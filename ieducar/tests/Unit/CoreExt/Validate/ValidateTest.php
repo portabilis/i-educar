@@ -92,7 +92,6 @@ class CoreExt_ValidateTest extends PHPUnit\Framework\TestCase
    */
   public function testValorArrayVazioLancaExcecao()
   {
-      $this->markTestSkipped('must be revisited.');
     $this->assertTrue($this->_validator->isValid(array()));
   }
 
