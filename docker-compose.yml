@@ -1,7 +1,5 @@
 version: '3'
-
 services:
-
   ieducar_1604:
     build: ./docker/ieducar_1604
     env_file:

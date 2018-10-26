@@ -660,7 +660,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $turmaId = $this->getRequest()->turma_id ?: $turmaId;
             $mediaAreaConhecimento = $this->getRequest()->media_area_conhecimento;
             $processarMediaGeral = $this->getRequest()->processar_media_geral;
-
+            $casasDecimais = $this->getService()->getRegra()->get('qtdCasasDecimais');
             $aprovadoDependencia = $this->getSituacaoMatricula($aluno['ref_cod_matricula']) == 12;
 
             foreach ($this->getService()->getComponentes() as $componenteCurricular) {
@@ -696,7 +696,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
 
                 if (is_numeric($nota)) {
-                    $nota = sprintf('%.1f', $nota);
+                    $nota = sprintf('%.'.$casasDecimais.'f', $nota);
+                }
+
+                if (is_numeric($notaConceitualNumerica)) {
+                    $notaConceitualNumerica = sprintf('%.'.$casasDecimais.'f', $notaConceitualNumerica);
                 }
 
                 if ($processarMediaGeral) {
