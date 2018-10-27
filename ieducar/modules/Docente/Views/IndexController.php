@@ -46,9 +46,9 @@ class IndexController extends Core_Controller_Page_ListController
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome]) ?
-            $_GET['pagina_' . $this->nome] * $this->limite - $this->limite :
-            0;
+        $this->offset = ($_GET['pagina_' . $this->nome])
+            ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
+            : 0;
 
         foreach ($entries as $entry) {
             $item = [];

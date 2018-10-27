@@ -4,22 +4,6 @@ require_once 'CoreExt/Entity.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'CoreExt/Validate/Email.php';
 
-/**
- * ComponenteCurricular_Model_Componente class.
- *
- * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     ComponenteCurricular
- * @subpackage  Modules
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
 class Biblioteca_Model_TipoExemplar extends CoreExt_Entity
 {
     /**

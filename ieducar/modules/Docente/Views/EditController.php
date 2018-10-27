@@ -131,9 +131,9 @@ class EditController extends Core_Controller_Page_EditController
         ksort($opcoes);
 
         // Caso não seja uma instância persistida, usa a UF do locale.
-        $uf = $this->getEntity()->ies->uf ?
-            $this->getEntity()->ies->uf :
-            $coreExt['Config']->app->locale->province;
+        $uf = $this->getEntity()->ies->uf
+            ? $this->getEntity()->ies->uf
+            : $coreExt['Config']->app->locale->province;
 
         $this->campoLista('uf', 'UF', $opcoes, $uf, 'getIes()');
 

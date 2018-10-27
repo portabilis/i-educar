@@ -1,20 +1,4 @@
 <?php
-/**
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   Biblioteca
- * @subpackage  Modules
- *
- * @since     Arquivo disponível desde a versão ?
- *
- * @version   $Id$
- */
-
 require_once 'Portabilis/Controller/Page/ListController.php';
 
 class EmprestimoController extends Portabilis_Controller_Page_ListController
