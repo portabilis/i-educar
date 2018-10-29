@@ -922,6 +922,8 @@ class clsPmieducarSerie
             return true;
         }
 
+        $dataBaseMatricula = explode("-", $dataBaseMatricula);
+
         $anoLimite = $ano;
         $mesLimite = $dataBaseMatricula[1];
         $diaLimite = $dataBaseMatricula[2];
