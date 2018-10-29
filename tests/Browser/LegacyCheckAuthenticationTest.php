@@ -25,12 +25,12 @@ class LegacyCheckAuthenticationTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $route = '/enrollment/update-enrollments-status';
 
+            $browser->loginLegacy();
             $browser->visit($route);
 
             $content = $browser->driver->getPageSource();
 
             $assert = Str::contains($content, 'Alterar situação de matrículas');
-
             $this->assertTrue($assert);
         });
     }
