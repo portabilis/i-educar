@@ -4,13 +4,14 @@ namespace iEducar\Modules\Navigation;
 
 class Breadcrumb
 {
+    private $htmlBreadcrumb;
 
     public function makeBreadcrumb($currentPage, $breadcrumbs)
     {
-        return $this->htmlBreadcrumb($currentPage, $breadcrumbs);
+        return $this->makeHtmlBreadcrumb($currentPage, $breadcrumbs);
     }
 
-    private function htmlBreadcrumb($currentPage, $breadcrumbs = [])
+    private function makeHtmlBreadcrumb($currentPage, $breadcrumbs = [])
     {
         $html = [];
         $html[] = '<div id="localizacao">';
@@ -26,7 +27,16 @@ class Breadcrumb
         $html[] = '<span class="pagina_atual">' . $currentPage . '</span>';
         $html[] = '</div>';
 
-        return implode("\n", $html);
+        $this->htmlBreadcrumb = implode("\n", $html);
+
+        return $this->htmlBreadcrumb;
     }
-    
+
+    /**
+     * @return array
+     */
+    public function getHtmlBreadcrumb()
+    {
+        return $this->htmlBreadcrumb;
+    }
 }

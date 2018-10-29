@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\IeducarAuthenticateSession;
+use App\Http\Middleware\Navigation;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -35,6 +37,7 @@ class Kernel extends HttpKernel
             // \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            Navigation::class,
         ],
 
         'api' => [
@@ -59,5 +62,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'navigation' => Navigation::class,
+        'ieducar.authenticatesession' => IeducarAuthenticateSession::class
     ];
 }

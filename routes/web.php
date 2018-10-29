@@ -17,3 +17,9 @@ Route::redirect('/', 'intranet/index.php');
 Route::any('/module/{uri}', 'LegacyController@module')->where('uri', '.*');
 Route::any('/modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
 Route::any('/intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
+
+Route::group(['middleware' => 'ieducar.authenticatesession'], function(){
+    Route::namespace('Enrollment')->prefix('enrollment')->group(function () {
+        Route::get('update-enrollments-status', 'UpdateEnrollmentsStatus@index');
+    });
+});
