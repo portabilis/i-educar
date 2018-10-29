@@ -28,7 +28,7 @@
  * @version   $Id$
  */
 
-require_once 'CoreExt/Singleton.php';
+require_once __DIR__ . '/Singleton.php';
 
 /**
  * CoreExt_Locale class.
