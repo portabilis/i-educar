@@ -395,79 +395,6 @@ class DiarioApiController extends ApiCoreController
 
     // post
 
-    protected function substituicaoMenorNotaRecuperacaoEspecifica($etapa = null, $componenteCurricularId = null)
-    {
-        // defaults
-        if (is_null($componenteCurricularId)) {
-            $componenteCurricularId = $this->getRequest()->componente_curricular_id;
-        }
-
-        if (is_null($etapa)) {
-            $etapa = $this->getRequest()->etapa;
-        }
-
-        // validacao
-        if (!is_numeric($componenteCurricularId)) {
-            throw new Exception('Erro ao realizar operações de recuperação específica, pois não foi obtido componente curricular.');
-        }
-
-        $regra = $this->serviceBoletim()->getRegra();
-        $tipoRecuperacaoParalela = $regra->get('tipoRecuperacaoParalela');
-
-        $regraRecuperacao = $regra->getRegraRecuperacaoByEtapa($etapa);
-
-        if ($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS
-            && $regraRecuperacao && dbBool($regraRecuperacao->get('substituiMenorNota'))) {
-
-            $nota_recuperacao = $this->serviceBoletim()->getNotaComponente($componenteCurricularId, $regraRecuperacao->getLastEtapa())
-                ->notaRecuperacaoEspecifica;
-
-            if (is_numeric($nota_recuperacao)) {
-
-                $etapas = $regraRecuperacao->getEtapas();
-                $menorNota = null;
-
-                // itera pelas etapas para obter menor nota
-                foreach ($etapas as $key => $_etapa) {
-                    $_notaEtapa = $this->serviceBoletim()->getNotaComponente($componenteCurricularId, $_etapa);
-
-                    // salva nota original para "zerar" possível nota substituída
-                    $nota = new Avaliacao_Model_NotaComponente(array(
-                        'componenteCurricular' => $componenteCurricularId,
-                        'nota' => $_notaEtapa->notaOriginal,
-                        'etapa' => $_notaEtapa->etapa,
-                        'notaOriginal' => $_notaEtapa->notaOriginal,
-                        'notaRecuperacaoParalela' => $_notaEtapa->notaRecuperacaoParalela,
-                        'notaRecuperacaoEspecifica' => $_notaEtapa->notaRecuperacaoEspecifica,
-                    ));
-
-                    $this->serviceBoletim()->addNota($nota);
-                    $this->trySaveServiceBoletim();
-
-                    // verifica menor nota
-                    if (is_null($menorNota) || ($_notaEtapa->notaOriginal < $menorNota->notaOriginal)) {
-                        $menorNota = $_notaEtapa;
-                    }
-                }
-
-                // Se nota de recuperação for maior que menor nota então substitui
-                if ($nota_recuperacao > $menorNota->notaOriginal) {
-                    $nota = new Avaliacao_Model_NotaComponente(array(
-                        'componenteCurricular' => $componenteCurricularId,
-                        'nota' => $nota_recuperacao,
-                        'etapa' => $menorNota->etapa,
-                        'notaOriginal' => $menorNota->notaOriginal,
-                        'notaRecuperacaoParalela' => $menorNota->notaRecuperacaoParalela,
-                        'notaRecuperacaoEspecifica' => $menorNota->notaRecuperacaoEspecifica,
-                    ));
-
-                    $this->serviceBoletim()->addNota($nota);
-                    $this->trySaveServiceBoletim();
-                }
-            }
-        }
-    }
-
     protected function postNota()
     {
         if ($this->canPostNota()) {
@@ -488,8 +415,6 @@ class DiarioApiController extends ApiCoreController
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
-
-        $this->substituicaoMenorNotaRecuperacaoEspecifica();
 
         $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
@@ -627,8 +552,6 @@ class DiarioApiController extends ApiCoreController
             $this->trySaveServiceBoletim();
             $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
-
-        $this->substituicaoMenorNotaRecuperacaoEspecifica();
 
         // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
         $this->appendResponse('should_show_recuperacao_especifica', true);
