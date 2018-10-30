@@ -303,6 +303,19 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    public function campoCheckMultiplo($nome, $label, $opcoes, $selecionados = [])
+    {
+        $opcoesCampo = [
+            'checkMultiplo',
+            $label,
+            $filtro = '',
+            $opcoes,
+            $selecionados
+        ];
+
+        $this->campos[$nome] = $opcoesCampo;
+    }
+
     public function campoCheck(
         $nome,
         $campo,
@@ -2702,6 +2715,19 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'avulso':
                         $retorno .= '<div>' . $componente[2] . '</div>';
+                        break;
+
+                    case 'checkMultiplo':
+                        $tmpRetorno = [];
+
+                        foreach ($componente[3] as $k => $v) {
+                            $checked = in_array($k, $componente[4]) ? ' checked="checked"' : '';
+                            $name = $nome . '[]';
+                            $tmpInput = sprintf('<label><input name="%s" type="checkbox" value="%s"%s> %s</label>', $name, $k, $checked, $v);
+                            $tmpRetorno[] = $tmpInput;
+                        }
+
+                        $retorno .= join('<br>', $tmpRetorno);
                         break;
                 } // endswitch
 
