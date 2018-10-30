@@ -8,7 +8,7 @@ class LoadConfigs extends ServiceProvider
 {
     public function register()
     {
-        $configObject = new \iEducar\Modules\Config\LegacyConfig(null, null);
+        $configObject = new \iEducar\Support\Config\LegacyConfig(config('app.env'), request()->getHttpHost());
         \Config::set($configObject->getArrayConfig());
     }
 }

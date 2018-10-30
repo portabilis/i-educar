@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\Modules\Config;
+namespace iEducar\Support\Config;
 
 class LegacyConfig implements ConfigInterface
 {
@@ -17,7 +17,7 @@ class LegacyConfig implements ConfigInterface
         return $this->config;
     }
 
-    private function loadConfig()
+    private function loadConfig($enviroment, $tenant)
     {
         $legacyPath = base_path() . '/' . config('legacy.path');
 
@@ -25,13 +25,7 @@ class LegacyConfig implements ConfigInterface
         require_once $legacyPath . '/lib/CoreExt/Config/Ini.class.php';
         require_once $legacyPath . '/lib/CoreExt/Locale.php';
 
-        if (getenv('CORE_EXT_CONFIGURATION_ENV')) {
-            define('CORE_EXT_CONFIGURATION_ENV', getenv('CORE_EXT_CONFIGURATION_ENV'));
-        } else {
-            define('CORE_EXT_CONFIGURATION_ENV', 'production');
-        }
-
-        $configFile = $legacyPath . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
+        $configFile = $legacyPath . '/configuration/' . $enviroment . '.ini';
 
         if (!file_exists($configFile)) {
             $configFile = $legacyPath . '/configuration/ieducar.ini';
@@ -40,16 +34,14 @@ class LegacyConfig implements ConfigInterface
         $locale = \CoreExt_Locale::getInstance();
         $locale->setCulture('pt_BR')->setLocale();
 
-        $configObject = new \CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
+        $configObject = new \CoreExt_Config_Ini($configFile, $enviroment);
 
         date_default_timezone_set($configObject->app->locale->timezone);
 
-        $tenantEnv = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
-
-        if ($configObject->hasEnviromentSection($tenantEnv)) {
-            $configObject->changeEnviroment($tenantEnv);
+        if ($configObject->hasEnviromentSection($tenant)) {
+            $configObject->changeEnviroment($tenant);
         } else {
-            if (!$configObject->hasEnviromentSection($tenantEnv) && CORE_EXT_CONFIGURATION_ENV !== "development") {
+            if (!$configObject->hasEnviromentSection($tenant) && $enviroment !== "development") {
                 $configObject->app->ambiente_inexistente = true;
             }
         }
