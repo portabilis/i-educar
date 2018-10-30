@@ -15,7 +15,8 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
         'componenteCurricular' => 'componente_curricular_id',
         'anoEscolar' => 'ano_escolar_id',
         'cargaHoraria' => 'carga_horaria',
-        'tipo_nota' => 'tipo_nota'
+        'tipo_nota' => 'tipo_nota',
+        'anosLetivos' => 'anos_letivos'
     ];
 
     protected $_primaryKey = [

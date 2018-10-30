@@ -124,7 +124,7 @@ class EditController extends Core_Controller_Page_EditController
             'help' => 'Separe as etapas com ponto e vírgula. Exemplo: 1;2.'
         ],
         'recuperacaoSubstituiMenorNota' => [
-            'label' => '<span style="padding-left: 10px"></span>Substituí menor nota:',
+            'label' => '<span style="padding-left: 10px"></span>Substituir menor nota:',
             'help' => 'Caso marcado irá substituir menor nota.'
         ],
         'recuperacaoMedia' => [

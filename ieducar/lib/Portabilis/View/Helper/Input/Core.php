@@ -147,7 +147,9 @@ class Portabilis_View_Helper_Input_Core
         }
 
         if (isset($this->viewInstance->ref_cod_escola) && is_numeric($this->viewInstance->ref_cod_escola)) {
-            return $this->viewInstance->ref_cod_escola;
+            $escola = App_Model_IedFinder::getEscola($this->viewInstance->ref_cod_escola);
+
+            return $escola['ref_cod_instituicao'];
         }
 
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
