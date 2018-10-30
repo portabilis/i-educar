@@ -50,8 +50,6 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        $retorno = '';
-
         $this->id = $this->getQueryString('id');
         $this->servidor_id = $this->getQueryString('ref_cod_servidor');
         $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
@@ -106,8 +104,6 @@ class indice extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-
         $this->breadcrumb('Vínculo do professor à turma', [
             'educar_servidores_index.php' => 'Servidores'
         ]);
@@ -117,6 +113,8 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
+        $ano = null;
+
         if ($this->id) {
             $objProfessorTurma = new clsModulesProfessorTurma($this->id);
             $detProfessorTurma = $objProfessorTurma->detalhe();
@@ -199,6 +197,7 @@ class indice extends clsCadastro
             $turmas = new clsPmieducarTurmas();
             foreach ($turmas->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->ano) as $reg) {
                 $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
+                // FIxME entender qual é o objeto correto
                 $professorTurmaId = $obj->cadastra();
                 // FIXME #parameters
                 $professorTurma->gravaComponentes($professorTurmaId, null);
