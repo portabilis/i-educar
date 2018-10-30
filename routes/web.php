@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::redirect('/', 'intranet/index.php');
+
+Route::get('intranet/index.php', 'LegacyController@intranet')
+    ->defaults('uri', 'index.php')
+    ->name('home');
+
+Route::get('intranet/educar_configuracoes_index.php', 'LegacyController@intranet')
+    ->defaults('uri', 'educar_configuracoes_index.php')
+    ->name('settings');
+
 Route::any('/module/{uri}', 'LegacyController@module')->where('uri', '.*');
 Route::any('/modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
 Route::any('/intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');

@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\View;
 
 class Navigation
 {
@@ -15,8 +17,7 @@ class Navigation
      */
     public function handle($request, Closure $next)
     {
-        $breadCrumb = \Route::current()->controller->getBreadCrumb();
-        \View::share('breadCrumb', $breadCrumb);
+        View::share('breadcrumb', app(Breadcrumb::class));
 
         return $next($request);
     }

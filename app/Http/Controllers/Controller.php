@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use iEducar\Modules\Navigation\Breadcrumb;
+use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -12,9 +12,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function getBreadCrumb()
+    public function breadcrumb($currentPage, $pages = [])
     {
-        $breadCrumb = new Breadcrumb();
-        return $breadCrumb;
+        app(Breadcrumb::class)->current($currentPage, $pages);
     }
 }

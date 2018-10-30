@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\Browser;
@@ -62,6 +63,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(Breadcrumb::class);
     }
 }
