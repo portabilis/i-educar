@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\Modules\Config;
+namespace iEducar\Support\Config;
 
 interface ConfigInterface
 {
