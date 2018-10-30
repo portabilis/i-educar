@@ -1622,7 +1622,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                     }
 
                     $retorno .= "<td align='center'><a href='javascript:void(0)' onclick='$click' id='link_remove[$key2]' style='outline: none;'>$img</a>$retorno_oculto</td>";
-                    $img = '<img src="imagens/banco_imagens/excluirrr.png" border="0" alt="excluir" />';
+                    $img = '<img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="excluir" />';
                     $id = count($valores);
 
                     $javascript .= "
