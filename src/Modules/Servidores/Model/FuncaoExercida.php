@@ -11,7 +11,7 @@ class FuncaoExercida
     const DOCENTE_TITULAR_EAD = 5;
     const DOCENTE_TUTOR_EAD = 6;
 
-    public function getDescriptiveValues()
+    public static function getDescriptiveValues()
     {
         return [
             self::DOCENTE => 'Docente',
