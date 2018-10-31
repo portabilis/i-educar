@@ -80,6 +80,7 @@ class indice extends clsCadastro
                 $this->funcao_exercida = $registro['funcao_exercida'];
                 $this->tipo_vinculo = $registro['tipo_vinculo'];
                 $this->permite_lancar_faltas_componente = $registro['permite_lancar_faltas_componente'];
+                $this->turma_turno_id = $registro['turno_id'];
 
                 $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
                 $obj_turma = $obj_turma->detalhe();
@@ -155,6 +156,10 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('tipo_vinculo', $options);
 
+        $this->inputsHelper()->turmaTurno([
+            'required' => false
+        ]);
+
         $options = [
             'label' => 'Professor de área específica?',
             'value' => $this->permite_lancar_faltas_componente,
@@ -184,7 +189,7 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
         if ($this->ref_cod_turma) {
-            $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
+            $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
             if ($professorTurma->existe2()) {
                 $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
 
@@ -196,7 +201,7 @@ class indice extends clsCadastro
         } else {
             $turmas = new clsPmieducarTurmas();
             foreach ($turmas->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->ano) as $reg) {
-                $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
+                $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
                 // FIxME entender qual é o objeto correto
                 $professorTurmaId = $obj->cadastra();
                 // FIXME #parameters
@@ -228,7 +233,8 @@ class indice extends clsCadastro
             $this->ref_cod_turma,
             $this->funcao_exercida,
             $this->tipo_vinculo,
-            $this->permite_lancar_faltas_componente
+            $this->permite_lancar_faltas_componente,
+            $this->turma_turno_id
         );
 
         if ($professorTurma->existe2()) {

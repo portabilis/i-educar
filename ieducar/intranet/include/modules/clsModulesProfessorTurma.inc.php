@@ -20,6 +20,8 @@ class clsModulesProfessorTurma
 
     public $permite_lancar_faltas_componente;
 
+    public $turno_id;
+
     public $codUsuario;
 
     public $pessoa_logada;
@@ -93,6 +95,7 @@ class clsModulesProfessorTurma
      * @param null $funcao_exercida
      * @param null $tipo_vinculo
      * @param null $permite_lancar_faltas_componente
+     * @param null $turno_id
      */
     public function __construct(
         $id = null,
@@ -102,14 +105,14 @@ class clsModulesProfessorTurma
         $turma_id = null,
         $funcao_exercida = null,
         $tipo_vinculo = null,
-        $permite_lancar_faltas_componente = null
+        $permite_lancar_faltas_componente = null,
+        $turno_id = null
     ) {
-        $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
         $this->pessoa_logada = $_SESSION['id_pessoa'];
 
-        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente';
+        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id';
 
         if (is_numeric($id)) {
             $this->id = $id;
@@ -137,6 +140,10 @@ class clsModulesProfessorTurma
 
         if (is_numeric($tipo_vinculo)) {
             $this->tipo_vinculo = $tipo_vinculo;
+        }
+
+        if (is_numeric($turno_id)) {
+            $this->turno_id = $turno_id;
         }
 
         if (isset($permite_lancar_faltas_componente)) {
@@ -206,6 +213,12 @@ class clsModulesProfessorTurma
             if (is_numeric($this->permite_lancar_faltas_componente)) {
                 $campos .= "{$gruda}permite_lancar_faltas_componente";
                 $valores .= "{$gruda}'{$this->permite_lancar_faltas_componente}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->turno_id)) {
+                $campos .= "{$gruda}turno_id";
+                $valores .= "{$gruda}'{$this->turno_id}'";
                 $gruda = ', ';
             }
 
@@ -282,6 +295,11 @@ class clsModulesProfessorTurma
 
             if (is_numeric($this->permite_lancar_faltas_componente)) {
                 $set .= "{$gruda}permite_lancar_faltas_componente = '{$this->permite_lancar_faltas_componente}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->turno_id)) {
+                $set .= "{$gruda}turno_id = '{$this->turno_id}'";
                 $gruda = ', ';
             }
 
