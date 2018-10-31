@@ -5,15 +5,25 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsModulesProfessorTurma
 {
     public $id;
+
     public $ano;
+
     public $instituicao_id;
+
     public $servidor_id;
+
     public $turma_id;
+
     public $funcao_exercida;
+
     public $tipo_vinculo;
+
     public $permite_lancar_faltas_componente;
+
     public $codUsuario;
+
     public $pessoa_logada;
+
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
      *
@@ -74,9 +84,26 @@ class clsModulesProfessorTurma
 
     /**
      * Construtor.
+     *
+     * @param null $id
+     * @param null $ano
+     * @param null $instituicao_id
+     * @param null $servidor_id
+     * @param null $turma_id
+     * @param null $funcao_exercida
+     * @param null $tipo_vinculo
+     * @param null $permite_lancar_faltas_componente
      */
-    public function __construct($id = null, $ano = null, $instituicao_id = null, $servidor_id = null, $turma_id = null, $funcao_exercida = null, $tipo_vinculo = null, $permite_lancar_faltas_componente = null)
-    {
+    public function __construct(
+        $id = null,
+        $ano = null,
+        $instituicao_id = null,
+        $servidor_id = null,
+        $turma_id = null,
+        $funcao_exercida = null,
+        $tipo_vinculo = null,
+        $permite_lancar_faltas_componente = null
+    ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
@@ -122,16 +149,23 @@ class clsModulesProfessorTurma
     /**
      * Cria um novo registro.
      *
-     * @return bool
+     * @return int|bool
+     *
+     * @throws Exception
      */
     public function cadastra()
     {
-        if (is_numeric($this->turma_id) && is_numeric($this->funcao_exercida) && is_numeric($this->ano)
-          && is_numeric($this->servidor_id) && is_numeric($this->instituicao_id)) {
+        if (
+            is_numeric($this->turma_id)
+            && is_numeric($this->funcao_exercida)
+            && is_numeric($this->ano)
+            && is_numeric($this->servidor_id)
+            && is_numeric($this->instituicao_id)
+        ) {
             $db = new clsBanco();
-            $campos  = '';
+            $campos = '';
             $valores = '';
-            $gruda   = '';
+            $gruda = '';
 
             if (is_numeric($this->instituicao_id)) {
                 $campos .= "{$gruda}instituicao_id";
@@ -196,12 +230,20 @@ class clsModulesProfessorTurma
      * Edita os dados de um registro.
      *
      * @return bool
+     *
+     * @throws Exception
      */
     public function edita()
     {
-        if (is_numeric($this->id) && is_numeric($this->turma_id) && is_numeric($this->funcao_exercida) && is_numeric($this->ano)
-          && is_numeric($this->servidor_id) && is_numeric($this->instituicao_id)) {
-            $db  = new clsBanco();
+        if (
+            is_numeric($this->id)
+            && is_numeric($this->turma_id)
+            && is_numeric($this->funcao_exercida)
+            && is_numeric($this->ano)
+            && is_numeric($this->servidor_id)
+            && is_numeric($this->instituicao_id)
+        ) {
+            $db = new clsBanco();
             $set = '';
             $gruda = '';
 
@@ -263,7 +305,19 @@ class clsModulesProfessorTurma
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @param null $servidor_id
+     * @param null $instituicao_id
+     * @param null $ano
+     * @param null $ref_cod_escola
+     * @param null $ref_cod_curso
+     * @param null $ref_cod_serie
+     * @param null $ref_cod_turma
+     * @param null $funcao_exercida
+     * @param null $tipo_vinculo
+     *
+     * @return array|bool
+     *
+     * @throws Exception
      */
     public function lista(
         $servidor_id = null,
@@ -276,9 +330,20 @@ class clsModulesProfessorTurma
         $funcao_exercida = null,
         $tipo_vinculo = null
     ) {
-        $sql = "SELECT {$this->_campos_lista}, t.nm_turma, t.cod_turma as ref_cod_turma, t.ref_ref_cod_serie as ref_cod_serie,
-            s.nm_serie, t.ref_cod_curso, c.nm_curso, t.ref_ref_cod_escola as ref_cod_escola, p.nome as nm_escola
-            FROM {$this->_tabela} pt";
+        $sql = "
+            
+            SELECT 
+                {$this->_campos_lista},
+                t.nm_turma,
+                t.cod_turma as ref_cod_turma,
+                t.ref_ref_cod_serie as ref_cod_serie,
+                s.nm_serie,
+                t.ref_cod_curso,
+                c.nm_curso,
+                t.ref_ref_cod_escola as ref_cod_escola,
+                p.nome as nm_escola
+            FROM {$this->_tabela} pt
+        ";
         $filtros = ' , pmieducar.turma t, pmieducar.serie s, pmieducar.curso c, pmieducar.escola e, cadastro.pessoa p WHERE pt.turma_id = t.cod_turma AND t.ref_ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso
                   AND t.ref_ref_cod_escola = e.cod_escola AND e.ref_idpes = p.idpes ';
 
@@ -336,7 +401,7 @@ class clsModulesProfessorTurma
         }
 
         $db = new clsBanco();
-        $countCampos = count(explode(',', $this->_campos_lista))+8;
+        $countCampos = count(explode(',', $this->_campos_lista)) + 8;
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
@@ -367,7 +432,9 @@ class clsModulesProfessorTurma
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|bool
+     *
+     * @throws Exception
      */
     public function detalhe()
     {
@@ -389,7 +456,9 @@ class clsModulesProfessorTurma
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
+     *
+     * @throws Exception
      */
     public function existe()
     {
@@ -404,10 +473,17 @@ class clsModulesProfessorTurma
         return false;
     }
 
+    /**
+     * @return int|bool
+     */
     public function existe2()
     {
-        if (is_numeric($this->ano) && is_numeric($this->instituicao_id) && is_numeric($this->servidor_id)
-        && is_numeric($this->turma_id)) {
+        if (
+            is_numeric($this->ano)
+            && is_numeric($this->instituicao_id)
+            && is_numeric($this->servidor_id)
+            && is_numeric($this->turma_id)
+        ) {
             $db = new clsBanco();
             $sql = "SELECT id FROM {$this->_tabela} pt WHERE ano = '{$this->ano}' AND turma_id = '{$this->turma_id}'
                AND instituicao_id = '{$this->instituicao_id}' AND servidor_id = '{$this->servidor_id}' ";
@@ -426,6 +502,8 @@ class clsModulesProfessorTurma
      * Exclui um registro.
      *
      * @return bool
+     *
+     * @throws Exception
      */
     public function excluir()
     {
@@ -473,6 +551,7 @@ class clsModulesProfessorTurma
             $tupla = $db->Tupla();
             $componentesVinculados[] = $tupla['componente_curricular_id'];
         }
+
         return $componentesVinculados;
     }
 
@@ -504,6 +583,7 @@ class clsModulesProfessorTurma
     {
         $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper;
         $componente = $mapperComponente->find(['id' => $idComponente]);
+
         return $componente->nome;
     }
 
