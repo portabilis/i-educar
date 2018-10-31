@@ -179,7 +179,7 @@ class indice extends clsCadastro
     $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio($turmaDestinoId);
     $dataAnoLetivoFim = $matriculaObj->pegaDataAnoLetivoFim($turmaDestinoId);
     $exclusaoEnturmacao = $enturmacaoObj->getDataExclusaoUltimaEnturmacao($matriculaId);
-    $dataSaidaDaTurma = $ultimaEnturmacao !== false
+    $dataSaidaDaTurma = $exclusaoEnturmacao !== false
         ? new \DateTime($exclusaoEnturmacao)
         : false;
 
