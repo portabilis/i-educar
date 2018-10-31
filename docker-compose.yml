@@ -11,11 +11,7 @@ services:
     links:
       - postgres_95
     container_name: ieducar_1604
-  composer:
-    image: composer
-    volumes:
-      - ./:/app
-    command: install --ignore-platform-reqs
+
   postgres_95:
     volumes:
       - /var/lib/postgresql/data

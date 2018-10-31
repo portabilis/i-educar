@@ -18,6 +18,7 @@ class clsPessoaEndereco
   var $bloco;
   var $apartamento;
   var $andar;
+  var $observacoes;
 
   var $banco           = 'gestao_homolog';
   var $schema_cadastro = 'cadastro';
@@ -27,7 +28,7 @@ class clsPessoaEndereco
     $int_idlog = FALSE, $int_idbai = FALSE, $numeric_numero = FALSE,
     $str_complemento = FALSE, $date_reside_desde = FALSE, $str1_letra = FALSE,
     $str_bloco = FALSE, $int_apartamento = FALSE, $int_andar = FALSE,
-    $idpes_cad = FALSE, $idpes_rev = FALSE)
+    $idpes_cad = FALSE, $idpes_rev = FALSE, $observacoes = null)
   {
     $this->idpes = $int_idpes;
     $numeric_cep = idFederal2Int($numeric_cep);
@@ -49,6 +50,7 @@ class clsPessoaEndereco
     $this->andar        = $int_andar;
     $this->idpes_cad    = $idpes_cad ? $idpes_cad : $_SESSION['id_pessoa'];
     $this->idpes_rev    = $idpes_rev ? $idpes_rev : $_SESSION['id_pessoa'];
+    $this->observacoes  = $observacoes;
   }
 
   function cadastra()
@@ -56,7 +58,7 @@ class clsPessoaEndereco
 
 
     if ($this->idpes && $this->cep && $this->idlog && $this->idbai &&
-      $this->idpes_cad) {      
+      $this->idpes_cad) {
 
       $campos  = '';
       $valores = '';
@@ -96,13 +98,20 @@ class clsPessoaEndereco
         $valores .= ", '$this->andar' ";
       }
 
+      if ($this->observacoes) {
+        $observacoes = pg_escape_string($this->observacoes);
+
+        $campos  .= ', observacoes';
+        $valores .= ", '$observacoes' ";
+      }
+
       $sql = sprintf(
         'INSERT INTO %s.%s (idpes, tipo, cep, idlog, idbai, origem_gravacao, ' .
         'idsis_cad, data_cad, operacao, idpes_cad %s) VALUES (\'%d\', \'1\', ' .
         '\'%s\', \'%s\', \'%d\', \'M\', 17, NOW(), \'I\', \'%d\' %s)',
         $this->schema_cadastro, $this->tabela, $campos, $this->idpes,
         $this->cep, $this->idlog, $this->idbai, $this->idpes_cad, $valores
-      );      
+      );
 
       $db = new clsBanco();
       $db->Consulta($sql);
@@ -179,6 +188,16 @@ class clsPessoaEndereco
       }
       else {
         $set   .= "$setVir andar = NULL ";
+        $setVir = ', ';
+      }
+
+      if ($this->observacoes) {
+        $observacoes = pg_escape_string($this->observacoes);
+
+        $set   .= "$setVir observacoes = '$observacoes' ";
+        $setVir = ', ';
+      } else {
+        $set   .= "$setVir observacoes = NULL ";
         $setVir = ', ';
       }
 
@@ -335,7 +354,7 @@ class clsPessoaEndereco
 
       $sql = sprintf(
         'SELECT idpes, tipo, cep, idlog, numero, letra, complemento, ' .
-        'reside_desde, idbai, bloco, apartamento, andar ' .
+        'reside_desde, idbai, bloco, apartamento, andar, observacoes ' .
         'FROM %s.%s WHERE idpes = %d',
         $this->schema_cadastro, $this->tabela, $this->idpes
       );
@@ -347,7 +366,7 @@ class clsPessoaEndereco
 
         $cep = $tupla['cep'];
 
-        $tupla['cep']   = new clsCepLogradouro($cep, $tupla['idlog']);
+        $tupla['cep'] = new clsCepLogradouro($cep, $tupla['idlog']);
         $tupla['zona_localizacao'] = null;
 
         return $tupla;

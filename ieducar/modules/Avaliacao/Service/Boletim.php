@@ -2781,15 +2781,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
         $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
+        $substituiMenorNota = (bool)$_regraRecuperacao->substituiMenorNota;
 
         // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
-        if($mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
+        if(!$substituiMenorNota || $mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
           $data['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
         else
           $data['RSPM'.$cont] = $mediaEtapasRecuperacao;
 
         // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
-        if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
+        if(!$substituiMenorNota || $notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
           $data['RSPS'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
         else
           $data['RSPS'.$cont] = $somaEtapasRecuperacao;
