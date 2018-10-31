@@ -173,7 +173,7 @@ class indice extends clsCadastro
 
   public function validaDataEnturmacao($matriculaId, $turmaDestinoId)
   {
-    $dataObj = new \DateTime($this->data_enturmacao);
+    $dataObj = new \DateTime($this->data_enturmacao . ' 23:59:59');
     $matriculaObj = new clsPmieducarMatricula();
     $enturmacaoObj = new clsPmieducarMatriculaTurma();
     $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio($turmaDestinoId);
@@ -197,6 +197,10 @@ class indice extends clsCadastro
   }
 
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
+    if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+        return false;
+    }
+
     if($this->removerEnturmacao($matriculaId, $turmaOrigemId, TRUE)) {
       return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
     }
