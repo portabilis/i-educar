@@ -11,6 +11,9 @@ class LoadLegacyConfig extends ServiceProvider
     {
         $legacyConfigPath = base_path() . '/' . config('legacy.path') . '/configuration/';
         $configObject = new LegacyConfig($legacyConfigPath, config('app.env'), request()->getHttpHost());
-        \Config::set($configObject->getArrayConfig());
+
+        $laravelLegacyConfig = config()->get('legacy');
+
+        config()->set(['legacy' => array_merge($configObject->getArrayConfig(), $laravelLegacyConfig)]);
     }
 }

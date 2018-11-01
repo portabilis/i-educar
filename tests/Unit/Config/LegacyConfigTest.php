@@ -17,7 +17,7 @@ class LegacyConfigTest extends TestCase
             $this->getFixturePath()
         );
 
-        $arrayConfig = $legacyConfigObject->getArrayConfig()['legacy'];
+        $arrayConfig = $legacyConfigObject->getArrayConfig();
         $this->assertEquals('ieducardb', $arrayConfig['app']['database']['name']);
     }
 
@@ -28,7 +28,7 @@ class LegacyConfigTest extends TestCase
             'fake-enviroment'
         );
 
-        $arrayConfig = $legacyConfigObject->getArrayConfig()['legacy'];
+        $arrayConfig = $legacyConfigObject->getArrayConfig();
         $this->assertEquals('fakedatabase', $arrayConfig['app']['database']['name']);
     }
 
@@ -50,7 +50,7 @@ class LegacyConfigTest extends TestCase
             'fake-tenant.ieducar.com.br'
         );
 
-        $arrayConfig = $legacyConfigObject->getArrayConfig()['legacy'];
+        $arrayConfig = $legacyConfigObject->getArrayConfig();
         $this->assertEquals('fake-tenant-database', $arrayConfig['app']['database']['name']);
     }
 }

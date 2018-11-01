@@ -11,7 +11,7 @@ class LegacyConfig
 
     public function __construct($legacyConfigPath, $enviroment = 'development', $tenant = null)
     {
-        $this->config['legacy'] = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
+        $this->config = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
     }
 
     public function getArrayConfig()
