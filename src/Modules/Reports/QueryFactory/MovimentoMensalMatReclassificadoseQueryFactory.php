@@ -67,6 +67,7 @@ class MovimentoMensalMatReclassificadoseQueryFactory extends QueryFactory
             and mt.ref_cod_turma = t.cod_turma
             and f.sexo = :sexo
             and m.matricula_reclassificacao = 1
+            and m.ativo = 1
             and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
         order by
             pessoa.nome asc
