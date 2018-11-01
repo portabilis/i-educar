@@ -149,7 +149,11 @@ class LegacyController extends Controller
      */
     private function startLegacySession()
     {
-        session_start();
+        try {
+            session_start();
+        } catch (\Exception $e) {
+
+        }
     }
 
     /**

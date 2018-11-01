@@ -5,19 +5,19 @@
     <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8" /-->
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="-1"/>
-    <!-- #&REFRESH&# -->
 
     <title>i-Educar - Pais</title>
 
     <script>
         dataLayer = [{
-            'slug': 'ieducar',
-            'user_id': 1,
-            'user_name': 'Administrador',
-            'user_email': ''
+            'slug': '{{$config->app->database->dbname}}',
+            'user_id': '{{$loggedUser->personId}}',
+            'user_name': '{{$loggedUser->name}}',
+            'user_email': '{{$loggedUser->email}}'
         }];
     </script>
 
+    @if(!empty($config['app']['gtm']['id']))
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
             w[l] = w[l] || [];
@@ -31,8 +31,9 @@
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '');</script>
+        })(window, document, 'script', 'dataLayer', '{{$config['app']['gtm']['id']}}');</script>
     <!-- End Google Tag Manager -->
+    @endif
 
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/main.css') }}'/>
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/styles.css') }}'/>
@@ -134,12 +135,14 @@
 </head>
 <body>
 
+@if(!empty($config['app']['gtm']['id']))
 <!-- Google Tag Manager (noscript) -->
 <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id="
+    <iframe src="https://www.googletagmanager.com/ns.html?id={{$config['app']['gtm']['id']}}"
             height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
+@endif
 
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
 <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>

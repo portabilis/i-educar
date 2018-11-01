@@ -2,8 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\GetLegacySession;
 use App\Http\Middleware\LegacyAuthenticateSession;
 use App\Http\Middleware\Navigation;
+use App\Http\Middleware\SetLayoutVariables;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -38,6 +40,8 @@ class Kernel extends HttpKernel
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             Navigation::class,
+            GetLegacySession::class,
+            SetLayoutVariables::class,
         ],
 
         'api' => [
