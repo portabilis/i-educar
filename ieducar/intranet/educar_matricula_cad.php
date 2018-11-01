@@ -441,7 +441,8 @@ class indice extends clsCadastro
                     $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
-                    if (($mesmoCursoAno || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas == 0) && !$cursoDeAtividadeComplementar) {
+                    if (($mesmoCursoAno || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas === 0) && !$cursoDeAtividadeComplementar) {
+
                         require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
                         require_once 'include/pessoa/clsJuridica.inc.php';
 
@@ -1050,8 +1051,13 @@ class indice extends clsCadastro
         $serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
         $aprovado = [1, 12, 13];
         $reprovado = [2, 14];
+        $transferido = 4;
 
         if (!$dadosUltimaMatricula) {
+            return true;
+        }
+
+        if ($situacaoUltimaMatricula == $transferido) {
             return true;
         }
 

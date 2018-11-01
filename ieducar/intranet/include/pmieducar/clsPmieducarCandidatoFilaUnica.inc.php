@@ -42,6 +42,7 @@ class clsPmieducarCandidatoFilaUnica
     var $ref_cod_pessoa_exc;
     var $ref_cod_matricula;
     var $ano_letivo;
+    var $data_nasc;
     var $data_cadastro;
     var $data_exclusao;
     var $data_solicitacao;
@@ -51,6 +52,7 @@ class clsPmieducarCandidatoFilaUnica
     var $situacao;
     var $via_judicial;
     var $via_judicial_doc;
+    var $protocolo;
     var $ativo;
 
     // propriedades padrao
@@ -430,6 +432,8 @@ class clsPmieducarCandidatoFilaUnica
                        d.num_livro,
                        d.num_folha,
                        d.comprovante_residencia,
+                       f.data_nasc,
+                       (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
                        (SELECT (replace(textcat_all(nome),' <br>',','))
                           FROM (SELECT p.nome
                                   FROM pmieducar.responsaveis_aluno ra
@@ -447,7 +451,7 @@ class clsPmieducarCandidatoFilaUnica
 
         $whereAnd = " WHERE ";
 
-        if(is_numeric($this->cod_candidato_fila_unica))
+        if(is_numeric($this->cod_candidato_fila_unica) && empty($this->protocolo))
         {
             $filtros .= "{$whereAnd} cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}";
             $whereAnd = " AND ";
@@ -477,7 +481,7 @@ class clsPmieducarCandidatoFilaUnica
             $filtros .= "{$whereAnd} ref_cod_matricula = {$this->ref_cod_matricula}";
             $whereAnd = " AND ";
         }
-        if(is_numeric($this->ano_letivo))
+        if(is_numeric($this->ano_letivo) && empty($this->protocolo))
         {
             $filtros .= "{$whereAnd} ano_letivo = {$this->ano_letivo}";
             $whereAnd = " AND ";
@@ -495,6 +499,11 @@ class clsPmieducarCandidatoFilaUnica
         if(is_string($this->hora_solicitacao))
         {
             $filtros .= "{$whereAnd} hora_solicitacao = '{$this->hora_solicitacao}'";
+            $whereAnd = " AND ";
+        }
+        if(is_string($this->data_nasc))
+        {
+            $filtros .= "{$whereAnd} f.data_nasc = '{$this->data_nasc}'";
             $whereAnd = " AND ";
         }
         if(is_string($this->horario_inicial))
@@ -552,6 +561,14 @@ class clsPmieducarCandidatoFilaUnica
                                                ORDER BY vinculo_familiar
                                                LIMIT 3) r) LIKE upper('%{$nome_responsavel}%')";
         }
+        if (is_numeric($this->protocolo)) {
+            $protocolo = $this->protocolo;
+            $ano_letivo = substr($protocolo, 0, 4);
+            $cod_candidato_fila_unica = substr_replace($protocolo, '', 0, 4) + 0;
+            $filtros .= "{$whereAnd} cod_candidato_fila_unica = {$cod_candidato_fila_unica}";
+            $filtros .= "{$whereAnd} ano_letivo = {$ano_letivo}";
+            $whereAnd = " AND ";
+        }
 
         $db = new clsBanco();
         $countCampos = count( explode( ",", $this->_campos_lista ) );
@@ -562,7 +579,8 @@ class clsPmieducarCandidatoFilaUnica
         $this->_total = $db->CampoUnico("SELECT COUNT(0)
                                             FROM {$this->_tabela} cfu
                                             INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = cfu.ref_cod_aluno)
-                                            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes) {$filtros}");
+                                            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                                            INNER JOIN cadastro.fisica f ON (f.idpes = aluno.ref_idpes) {$filtros}");
 
         $db->Consulta( $sql );
 
@@ -602,6 +620,7 @@ class clsPmieducarCandidatoFilaUnica
         {
             $db = new clsBanco();
             $db->Consulta("SELECT {$this->_todos_campos},
+                                  (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
                                   p.nome,
                                   f.data_nasc,
                                   s.nm_serie,
@@ -780,10 +799,10 @@ class clsPmieducarCandidatoFilaUnica
         $motivo = $motivo ?: 'NULL';
 
         $db = new clsBanco();
-        $db->Consulta("UPDATE pmieducar.candidato_fila_unica 
-                                   SET situacao = {$situacao}, 
+        $db->Consulta("UPDATE pmieducar.candidato_fila_unica
+                                   SET situacao = {$situacao},
                                        motivo = {$motivo},
-                                       data_situacao = NOW() 
+                                       data_situacao = NOW()
                                  WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
 
         return true;
