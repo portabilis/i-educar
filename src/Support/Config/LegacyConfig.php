@@ -2,14 +2,16 @@
 
 namespace iEducar\Support\Config;
 
-class LegacyConfig implements ConfigInterface
-{
+use iEducar\Modules\Config\CoreConfig;
+use iEducar\Modules\Config\IniConfig;
 
+class LegacyConfig
+{
     private $config;
 
-    public function __construct($enviroment, $tenant = null)
+    public function __construct($legacyConfigPath, $enviroment, $tenant = null)
     {
-        $this->config['legacy'] = $this->loadConfig($enviroment, $tenant);
+        $this->config['legacy'] = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
     }
 
     public function getArrayConfig()
@@ -17,24 +19,15 @@ class LegacyConfig implements ConfigInterface
         return $this->config;
     }
 
-    private function loadConfig($enviroment, $tenant)
+    private function loadConfig($legacyConfigPath, $enviroment, $tenant)
     {
-        $legacyPath = base_path() . '/' . config('legacy.path');
-
-        require_once $legacyPath . '/lib/CoreExt/Config.class.php';
-        require_once $legacyPath . '/lib/CoreExt/Config/Ini.class.php';
-        require_once $legacyPath . '/lib/CoreExt/Locale.php';
-
-        $configFile = $legacyPath . '/configuration/' . $enviroment . '.ini';
+        $configFile = $legacyConfigPath . $enviroment . '.ini';
 
         if (!file_exists($configFile)) {
-            $configFile = $legacyPath . '/configuration/ieducar.ini';
+            $configFile = $legacyConfigPath . '/ieducar.ini';
         }
 
-        $locale = \CoreExt_Locale::getInstance();
-        $locale->setCulture('pt_BR')->setLocale();
-
-        $configObject = new \CoreExt_Config_Ini($configFile, $enviroment);
+        $configObject = new IniConfig($configFile, $enviroment);
 
         date_default_timezone_set($configObject->app->locale->timezone);
 
@@ -60,7 +53,7 @@ class LegacyConfig implements ConfigInterface
                 continue;
             }
 
-            if ($config instanceof \CoreExt_Config) {
+            if ($config instanceof CoreConfig) {
                 $configResult[$key] = $this->handleConfigArray($config->toArray());
                 continue;
             }
