@@ -21,6 +21,7 @@
         "swiftmailer/swiftmailer": "^6.1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "fzaninotto/faker": "^1.4",
