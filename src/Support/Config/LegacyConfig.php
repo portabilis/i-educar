@@ -9,7 +9,7 @@ class LegacyConfig
 {
     private $config;
 
-    public function __construct($legacyConfigPath, $enviroment, $tenant = null)
+    public function __construct($legacyConfigPath, $enviroment = 'development', $tenant = null)
     {
         $this->config['legacy'] = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
     }
@@ -28,8 +28,6 @@ class LegacyConfig
         }
 
         $configObject = new IniConfig($configFile, $enviroment);
-
-        date_default_timezone_set($configObject->app->locale->timezone);
 
         if ($configObject->hasEnviromentSection($tenant)) {
             $configObject->changeEnviroment($tenant);
