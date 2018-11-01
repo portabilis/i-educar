@@ -18,7 +18,8 @@
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "robmorgan/phinx": "^0.10.6",
-        "swiftmailer/swiftmailer": "^6.1"
+        "swiftmailer/swiftmailer": "^6.1",
+        "tooleks/laravel-asset-version": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

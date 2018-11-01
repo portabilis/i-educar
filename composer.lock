@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "109afa8191fbac1d11649abef1f4ff06",
+    "content-hash": "5b167c229ff04d8269825e0163309151",
     "packages": [
         {
             "name": "cakephp/cache",
@@ -3218,6 +3218,57 @@
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "time": "2017-11-27T11:13:29+00:00"
+        },
+        {
+            "name": "tooleks/laravel-asset-version",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tooleks/laravel-asset-version.git",
+                "reference": "0eae13d91002c3c29e1ae7c5809b540150d797fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tooleks/laravel-asset-version/zipball/0eae13d91002c3c29e1ae7c5809b540150d797fe",
+                "reference": "0eae13d91002c3c29e1ae7c5809b540150d797fe",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.0"
+            },
+            "require-dev": {
+                "laravel/framework": "5.3.*",
+                "phpunit/phpunit": "5.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tooleks\\LaravelAssetVersion\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleksandr Tolochko",
+                    "email": "tooleks@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The Laravel Assets Versioning Package",
+            "homepage": "https://github.com/tooleks/laravel-asset-version",
+            "keywords": [
+                "JS",
+                "assets",
+                "cache",
+                "css",
+                "laravel",
+                "php",
+                "versioning"
+            ],
+            "time": "2016-10-28T13:33:18+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

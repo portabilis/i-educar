@@ -34,38 +34,38 @@
         })(window, document, 'script', 'dataLayer', '');</script>
     <!-- End Google Tag Manager -->
 
-    <link rel=stylesheet type='text/css' href='/intranet/styles/main.css?5'/>
-    <link rel=stylesheet type='text/css' href='/intranet/styles/styles.css?5'/>
-    <link rel=stylesheet type='text/css' href='/intranet/styles/novo.css?5'/>
-    <link rel=stylesheet type='text/css' href='/intranet/styles/menu.css?5'/>
-    <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css?5'/>
-    <!--link rel=stylesheet type='text/css' href='styles/reset.css?5' />
-    <link rel=stylesheet type='text/css' href='styles/portabilis.css?5' /-->
-    <link rel=stylesheet type='text/css' href='/intranet/styles/min-portabilis.css?5?rand=4'/>
-    <link rel=stylesheet type='text/css' href='/intranet/styles/mytdt.css?5'/>
-    <link rel=stylesheet type='text/css' href='/intranet/styles/jquery.modal.css?5'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/main.css') }}'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/styles.css') }}'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/novo.css') }}'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/menu.css') }}'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/font-awesome.css') }}'/>
+    <!--link rel=stylesheet type='text/css' href='{{ Asset::get('styles/reset.css') }}'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('styles/portabilis.css') }}' /-->
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/min-portabilis.css') }}' />
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/mytdt.css') }}'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/jquery.modal.css') }}'/>
     <script src="https://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
-    <link rel=stylesheet type='text/css' href='/intranet/styles/localizacaoSistema.css?assets_version=20181026-103001'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/localizacaoSistema.css') }} '/>
 
     <script>(function (e, t, n) {
             var r = e.querySelectorAll("html")[0];
             r.className = r.className.replace(/(^|\s)no-js(\s|$)/, "$1js$2")
         })(document, window, 0);</script>
 
-    <script type="text/javascript" src="/intranet/scripts/padrao.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/novo.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/dom.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/menu.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/ied/forms.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/ied/phpjs.js?5"></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/padrao.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/novo.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/dom.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/menu.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/forms.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/phpjs.js") }} "></script>
 
-    <script type="text/javascript" src="/intranet/scripts/jquery/jquery-1.8.3.min.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/jquery/jquery.modal.min.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/prototype/prototype-1.7.1.0.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/scriptaculous/effects.js?5"></script>
-    <script type="text/javascript" src="/intranet/scripts/jquery.mask.min.js?5"></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery.modal.min.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/prototype/prototype-1.7.1.0.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/scriptaculous/effects.js") }} "></script>
+    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery.mask.min.js") }} "></script>
     <script type="text/javascript">
         window.ambiente = 'development';
 
@@ -130,7 +130,7 @@
 
     </script>
 
-    <link rel=stylesheet type='text/css' href='/intranet/styles/custom.css?5'/>
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/custom.css') }}'/>
 </head>
 <body>
 
@@ -174,17 +174,17 @@
                             <tr>
                                 <td>
                                     <link rel=stylesheet type='text/css'
-                                          href='/intranet/styles/buscaMenu.css?assets_version=20181026-103001'/>
+                                          href='{{ Asset::get('/intranet/styles/buscaMenu.css') }}'/>
                                     <link rel=stylesheet type='text/css'
-                                          href='/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=20181026-103001'/>
+                                          href='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}'/>
                                     <script type='text/javascript'
-                                            src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>
+                                            src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
                                     <script type='text/javascript'
-                                            src='/modules/Portabilis/Assets/Javascripts/Utils.js'></script>
+                                            src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
                                     <script type='text/javascript'
-                                            src='/intranet/scripts/buscaMenu.js?assets_version= 20181026-103001'></script>
+                                            src='{{ Asset::get('/intranet/scripts/buscaMenu.js') }}'></script>
                                     <script type='text/javascript'
-                                            src='/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= 20181026-103001'></script>
+                                            src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
                                     <div title='Busca rápida' class='title-busca-rapida'>
                                         <table width='168' class='title active-section-title'
                                                style='-moz-user-select: none;'>
@@ -504,17 +504,17 @@
 </script>
 
 <script type='text/javascript'
-        src='/modules/Portabilis/Assets/Javascripts/Utils.js?assets_version=20181026-103001'></script>
+        src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
 <script type='text/javascript'>(function ($) {
         $(document).ready(function () {
             fixupFieldsWidth();
         });
     })(jQuery);</script>
 
-<script src="/intranet/scripts/custom-file-input.js"></script>
-<script type="text/javascript" src="/intranet/scripts/select2/select2.full.min.js"></script>
-<script type="text/javascript" src="/intranet/scripts/select2/pt-BR.js"></script>
-<link type="text/css" rel="stylesheet" href="/intranet/scripts/select2/select2.min.css"/>
+<script src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
+<link type="text/css" rel="stylesheet" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}"/>
 <script type="text/javascript">array_menu = new Array();
     array_id = new Array();
     array_menu[array_menu.length] = new Array("Cadastros ", 999930, '', '', '', '', '_self');
