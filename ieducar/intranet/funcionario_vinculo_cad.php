@@ -20,17 +20,25 @@ class indice extends clsCadastro
     public $cod_vinculo;
     public $abreviatura;
 
+    protected $db;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->db = new clsBanco;
+    }
+
     public function Inicializar()
     {
         $retorno = 'Novo';
 
         if ($_GET['cod_funcionario_vinculo']) {
             $this->cod_vinculo = $_GET['cod_funcionario_vinculo'];
-            $db =new clsBanco();
-            $db->Consulta("SELECT nm_vinculo, abreviatura FROM funcionario_vinculo WHERE cod_funcionario_vinculo = $this->cod_vinculo");
+            $this->db->Consulta("SELECT nm_vinculo, abreviatura FROM funcionario_vinculo WHERE cod_funcionario_vinculo = $this->cod_vinculo");
 
-            if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
+            if ($this->db->ProximoRegistro()) {
+                $tupla = $this->db->Tupla();
                 $this->nm_vinculo = $tupla[0];
                 $this->abreviatura = $tupla[1];
                 $retorno = 'Editar';
@@ -45,7 +53,7 @@ class indice extends clsCadastro
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos([
             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            ''=> "{$nomeMenu} v&iacute;nculo"
+            '' => "{$nomeMenu} v&iacute;nculo"
         ]);
 
         $this->enviaLocalizacao($localizacao->montar());
@@ -62,8 +70,13 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        $db = new clsBanco();
-        $db->Consulta("INSERT INTO funcionario_vinculo ( nm_vinculo, abreviatura ) VALUES ( '$this->nm_vinculo', '$this->abreviatura' )");
+        if ($this->duplicado($this->nm_vinculo, $this->abreviatura)) {
+            $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
+
+            return false;
+        }
+
+        $this->db->Consulta("INSERT INTO portal.funcionario_vinculo ( nm_vinculo, abreviatura ) VALUES ( '$this->nm_vinculo', '$this->abreviatura' )");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
         return true;
@@ -71,8 +84,13 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        $db = new clsBanco();
-        $db->Consulta("UPDATE funcionario_vinculo SET nm_vinculo = '$this->nm_vinculo', abreviatura = '$this->abreviatura' WHERE cod_funcionario_vinculo=$this->cod_vinculo");
+        if ($this->duplicado($this->nm_vinculo, $this->abreviatura, $this->cod_vinculo)) {
+            $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
+
+            return false;
+        }
+
+        $this->db->Consulta("UPDATE portal.funcionario_vinculo SET nm_vinculo = '$this->nm_vinculo', abreviatura = '$this->abreviatura' WHERE cod_funcionario_vinculo = $this->cod_vinculo");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
         return true;
@@ -80,10 +98,8 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        $db = new clsBanco();
-
-        $count = (int)$db->CampoUnico("SELECT COUNT(*) FROM pmieducar.servidor_alocacao WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
-        $count += (int)$db->CampoUnico("SELECT COUNT(*) FROM portal.funcionario WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
+        $count = (int)$this->db->CampoUnico("SELECT COUNT(*) FROM pmieducar.servidor_alocacao WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
+        $count += (int)$this->db->CampoUnico("SELECT COUNT(*) FROM portal.funcionario WHERE ref_cod_funcionario_vinculo = $this->cod_vinculo;");
 
         if ($count > 0) {
             $this->mensagem = 'Não é possível remover. Já existem funcionários cadastrados e alocados com este vínculo.';
@@ -91,10 +107,23 @@ class indice extends clsCadastro
             return false;
         }
 
-        $db->Consulta("DELETE FROM funcionario_vinculo WHERE cod_funcionario_vinculo=$this->cod_vinculo");
+        $this->db->Consulta("DELETE FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo=$this->cod_vinculo");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
         return true;
+    }
+
+    protected function duplicado($nmVinculo, $abreviatura, $id = null)
+    {
+        $sql = "SELECT COUNT(*) FROM portal.funcionario_vinculo WHERE TRUE AND (nm_vinculo LIKE '{$nmVinculo}' OR abreviatura LIKE '{$abreviatura}')";
+
+        if (!is_null($id)) {
+            $sql .= " AND cod_funcionario_vinculo <> {$id}";
+        }
+
+        $count = (int)$this->db->CampoUnico($sql);
+
+        return $count > 0;
     }
 }
 
