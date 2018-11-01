@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\IeducarAuthenticateSession;
+use App\Http\Middleware\LegacyAuthenticateSession;
 use App\Http\Middleware\Navigation;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -63,6 +63,6 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'navigation' => Navigation::class,
-        'ieducar.authenticatesession' => IeducarAuthenticateSession::class
+        'ieducar.authenticatesession' => LegacyAuthenticateSession::class
     ];
 }

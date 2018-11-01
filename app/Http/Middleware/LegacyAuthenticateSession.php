@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use iEducar\Modules\Auth\VerifyAuthenticateSession;
 
-class IeducarAuthenticateSession
+class LegacyAuthenticateSession
 {
     const LOGIN_ROUTE = '/intranet/index.php';
 
