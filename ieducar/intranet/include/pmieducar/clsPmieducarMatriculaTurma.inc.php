@@ -1445,6 +1445,7 @@ class clsPmieducarMatriculaTurma
             pmieducar.matricula_turma
         where true
             and ref_cod_matricula = $codMatricula
+            and data_exclusao is not null
         order by
             data_exclusao desc
         limit 1
