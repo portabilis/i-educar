@@ -87,7 +87,8 @@ class ServidorController extends ApiCoreController
                          NULL
                      END AS tipo_nota,
                      pt.updated_at as updated_at,
-                     s.ativo as ativo
+                     s.ativo as ativo,
+                     pt.turno_id
               FROM pmieducar.servidor s
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
               INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
@@ -101,7 +102,7 @@ class ServidorController extends ApiCoreController
 
             $_servidores = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano]);
 
-            $attrs = ['id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at', 'ativo'];
+            $attrs = ['id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at', 'ativo', 'turno_id'];
             $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
             $servidores = [];
             $__servidores = [];
@@ -109,9 +110,10 @@ class ServidorController extends ApiCoreController
             foreach ($_servidores as $servidor) {
                 $__servidores[$servidor['id']]['id'] = $servidor['id'];
                 $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
-                $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
+                $__servidores[$servidor['id']]['name'] = $servidor['name'];
                 $__servidores[$servidor['id']]['updated_at'] = $servidor['updated_at'];
                 $__servidores[$servidor['id']]['ativo'] = $servidor['ativo'];
+                $__servidores[$servidor['id']]['turno_id'] = $servidor['turno_id'];
                 $__servidores[$servidor['id']]['disciplinas_turmas'][] = [
                     'turma_id' => $servidor['turma_id'],
                     'disciplina_id' => $servidor['disciplina_id'],
@@ -123,9 +125,6 @@ class ServidorController extends ApiCoreController
             foreach ($__servidores as $servidor) {
                 $servidores[] = $servidor;
             }
-
-            $attrs = ['id', 'name', 'disciplinas_turmas'];
-            $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
 
             return ['servidores' => $servidores];
         }
