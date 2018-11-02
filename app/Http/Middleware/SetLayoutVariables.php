@@ -26,6 +26,11 @@ class SetLayoutVariables
     private function setLoggedUser()
     {
         $personId = session('id_pessoa');
+
+        if (!$personId) {
+            return;
+        }
+
         $person = DB::selectOne('SELECT nome, email FROM cadastro.pessoa WHERE idpes = :personId', ['personId' => $personId]);
 
         $loggedUser = new \stdClass();
