@@ -163,6 +163,7 @@ return [
 
         Barryvdh\Debugbar\ServiceProvider::class,
         Tooleks\LaravelAssetVersion\Providers\AssetServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
     ],
 
     /*
