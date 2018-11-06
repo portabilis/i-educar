@@ -23,6 +23,8 @@ class AbreviaturasFuncionarioVinculo extends AbstractMigration
                     END
                 );
         ");
+
+        $this->execute("SELECT SETVAL('portal.funcionario_vinculo_cod_funcionario_vinculo_seq', (SELECT MAX(cod_funcionario_vinculo) + 1 FROM portal.funcionario_vinculo));");
     }
 
     public function down()
