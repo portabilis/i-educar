@@ -429,54 +429,8 @@ class indice extends clsDetalhe
                 );
             }
         }
-        // Recupera os componentes curriculares da turma
-        $componentes = [];
 
-        try {
-            $componentes = App_Model_IedFinder::getComponentesTurma(
-                $this->ref_ref_cod_serie,
-                $this->ref_ref_cod_escola,
-                $this->cod_turma,
-                null,
-                null,
-                null,
-                null,
-                true,
-                $registro['ano']
-            );
-        } catch (Exception $e) {
-        }
-
-        $tabela3 = '
-      <table>
-        <tr align="center">
-          <td bgcolor="#f5f9fd "><b>Nome</b></td>
-          <td bgcolor="#f5f9fd "><b>Carga horária</b></td>
-        </tr>';
-
-        $cont = 0;
-        foreach ($componentes as $componente) {
-            $color = ($cont++ % 2 == 0) ? ' bgcolor="#f5f9fd " ' : ' bgcolor="#FFFFFF" ';
-
-            $tabela3 .= sprintf('
-        <tr>
-          <td %s align="left">%s</td>
-          <td %s align="center">%.0f h</td>
-        </tr>',
-                $color,
-                $componente,
-                $color,
-                $componente->cargaHoraria
-            );
-        }
-
-        $tabela3 .= '</table>';
-        $this->addDetalhe(
-            [
-                'Componentes curriculares',
-                $tabela3
-            ]
-        );
+        $this->montaListaComponentesSerieEscola();
 
         if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_turma_cad.php';
@@ -512,6 +466,78 @@ class indice extends clsDetalhe
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    function montaListaComponentesSerieEscola(){
+        $this->tabela3    = '';
+
+        try {
+            $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
+                $this->ref_ref_cod_serie,
+                $this->ref_ref_cod_escola,
+                null,
+                null,
+                null,
+                true,
+                $this->ano
+            );
+        }  catch (App_Model_Exception $e) {
+            $this->mensagem = $e->getMessage();
+            return;
+        }
+
+        // Instancia o mapper de turma
+        $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
+        $componentesTurma = [];
+
+        if (isset($this->cod_turma) && is_numeric($this->cod_turma)) {
+            $componentesTurma = $componenteTurmaMapper->findAll(
+                [], ['turma' => $this->cod_turma]
+            );
+        }
+
+        $componentes = [];
+        foreach ($componentesTurma as $componenteTurma) {
+            $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
+        }
+        unset($componentesTurma);
+
+        $this->escola_serie_disciplina = [];
+
+        if (is_array($lista) && count($lista)) {
+            $this->tabela3 .= '<div style="margin-bottom: 10px;">';
+            $this->tabela3 .= '  <span style="display: block; float: left; width: 250px; font-weight: bold">Nome</span>';
+            $this->tabela3 .= '  <span style="display: block; float: left; width: 100px; font-weight: bold">Carga horária</span>';
+            $this->tabela3 .= '</div>';
+            $this->tabela3 .= '<br style="clear: left" />';
+
+            foreach ($lista as $registro) {
+
+                if (!is_null($componentes[$registro->id]->cargaHoraria) || 0 != $componentes[$registro->id]->cargaHoraria) {
+                    $registro->cargaHoraria = $componentes[$registro->id]->cargaHoraria;
+                }
+
+                $this->tabela3 .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+                $this->tabela3 .= "  <span style='display: block; float: left; width: 250px'>{$registro}</span>";
+                $this->tabela3 .= "  <span style='display: block; float: left; width: 100px'>{$registro->cargaHoraria}</span>";
+                $this->tabela3 .= '</div>';
+                $this->tabela3 .= '<br style="clear: left" />';
+
+                $registro->cargaHoraria = '';
+            }
+
+            $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+            $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
+            $disciplinas .= '</table>';
+        } else {
+            $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
+        }
+        $this->addDetalhe(
+            [
+                'Componentes curriculares',
+                $disciplinas
+            ]
+        );
     }
 }
 
