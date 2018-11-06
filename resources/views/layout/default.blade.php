@@ -10,29 +10,29 @@
 
     <script>
         dataLayer = [{
-            'slug': '{{$config->app->database->dbname}}',
+            'slug': '{{$config['app']['database']['dbname']}}',
             'user_id': '{{$loggedUser->personId}}',
             'user_name': '{{$loggedUser->name}}',
             'user_email': '{{$loggedUser->email}}'
         }];
     </script>
 
-    @if(!empty($config['app']['gtm']['id']))
+@if(!empty($config['app']['gtm']['id']))
     <!-- Google Tag Manager -->
-    <script>(function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start':
-                    new Date().getTime(), event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '{{$config['app']['gtm']['id']}}');</script>
-    <!-- End Google Tag Manager -->
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', '{{$config['app']['gtm']['id']}}');</script>
+        <!-- End Google Tag Manager -->
     @endif
 
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/main.css') }}'/>
@@ -40,9 +40,9 @@
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/novo.css') }}'/>
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/menu.css') }}'/>
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/font-awesome.css') }}'/>
-    <!--link rel=stylesheet type='text/css' href='{{ Asset::get('styles/reset.css') }}'/>
+<!--link rel=stylesheet type='text/css' href='{{ Asset::get('styles/reset.css') }}'/>
     <link rel=stylesheet type='text/css' href='{{ Asset::get('styles/portabilis.css') }}' /-->
-    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/min-portabilis.css') }}' />
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/min-portabilis.css') }}'/>
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/mytdt.css') }}'/>
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/jquery.modal.css') }}'/>
     <script src="https://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
@@ -136,12 +136,12 @@
 <body>
 
 @if(!empty($config['app']['gtm']['id']))
-<!-- Google Tag Manager (noscript) -->
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id={{$config['app']['gtm']['id']}}"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
-<!-- End Google Tag Manager (noscript) -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id={{$config['app']['gtm']['id']}}"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
 @endif
 
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
@@ -200,179 +200,8 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <ul class='menu'>
-                                        <li id='busca-menu'><input class='geral ui-autocomplete-input' type='text'
-                                                                   name='menu' id='busca-menu-input' size=50
-                                                                   maxlength=50 placeholder='Informe o nome do menu'
-                                                                   autocomplete=off></li>
-                                    </ul>
-                                    <a href="/intranet/educar_enderecamento_index.php"
-                                       style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_enderecamento_index.php"
-                                                                id='link1_68' style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-map"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Endereçamento</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_68' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/intranet/educar_pessoas_index.php"
-                                       style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_pessoas_index.php" id='link1_7'
-                                                                style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-user"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Pessoas</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_7' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/intranet/educar_index.php" style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_index.php" id='link1_55'
-                                                                style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-leanpub"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Escola</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_55' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/intranet/educar_servidores_index.php"
-                                       style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_servidores_index.php"
-                                                                id='link1_71' style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-users"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Servidores</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_71' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/intranet/educar_educacenso_index.php"
-                                       style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_educacenso_index.php"
-                                                                id='link1_70' style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-bar-chart"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Educacenso</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_70' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/intranet/educar_transporte_escolar_index.php"
-                                       style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_transporte_escolar_index.php"
-                                                                id='link1_69' style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-bus"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Transporte escolar</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_69' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/intranet/educar_biblioteca_index.php"
-                                       style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_biblioteca_index.php"
-                                                                id='link1_57' style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-book"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Biblioteca</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_57' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/intranet/educar_configuracoes_index.php"
-                                       style="outline:none; text-decoration: none;">
-                                        <div>
-                                            <table width="168" class="title active-section-title"
-                                                   style="-moz-user-select: none;">
-                                                <tbody style="-moz-user-select: none;">
-                                                <tr style="-moz-user-select: none;">
-                                                    <td style="-moz-user-select: none;"><a
-                                                                href="/intranet/educar_configuracoes_index.php"
-                                                                id='link1_25' style="outline:none">
-                                                            <div id="fa-icons"><i class="fa fa-gear"
-                                                                                  aria-hidden="true"></i></div>
-                                                            Configurações</a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id='div_25' style="display:none;">
-                                                <ul class="menu"></ul>
-                                            </div>
-                                        </div>
-                                    </a></td>
+                                    @include('layout.menu')
+                                </td>
                             </tr>
                         </table>
                     </td>
@@ -386,14 +215,16 @@
                             </tr>
                             <tr>
                                 <td height="100%" valign="top" id="corpo">
-                                    <table class='tablelistagem' width='100%' border='0'  cellpadding='0' cellspacing='0'>
+                                    <table class='tablelistagem' width='100%' border='0' cellpadding='0'
+                                           cellspacing='0'>
                                         <tr height='10px'>
                                             <td class='fundoLocalizacao' colspan='2'>
                                                 @include('layout.breadcrumb')
                                             </td>
                                         </tr>
                                     </table>
-                                    <table class='tablelistagem' width='100%' border='0' cellpadding='2' cellspacing='1'>
+                                    <table class='tablelistagem' width='100%' border='0' cellpadding='2'
+                                           cellspacing='1'>
                                         <tr>
                                             <td class='formdktd' colspan='2' height='24'>
                                                 @yield('content')

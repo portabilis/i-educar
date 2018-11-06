@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\GetLegacySession;
 use App\Http\Middleware\LegacyAuthenticateSession;
+use App\Http\Middleware\Menu;
 use App\Http\Middleware\Navigation;
 use App\Http\Middleware\SetLayoutVariables;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -42,6 +43,7 @@ class Kernel extends HttpKernel
             Navigation::class,
             GetLegacySession::class,
             SetLayoutVariables::class,
+            Menu::class,
         ],
 
         'api' => [
