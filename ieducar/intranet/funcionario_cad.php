@@ -27,6 +27,7 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
+require_once 'include/pmieducar/clsPmieducarFuncionarioVinculo.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -113,9 +114,9 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "{$nomeMenu} funcion&aacute;rio"             
+         ""        => "{$nomeMenu} funcion&aacute;rio"
     ));
-    $this->enviaLocalizacao($localizacao->montar());        
+    $this->enviaLocalizacao($localizacao->montar());
 
         return $retorno;
     }
@@ -278,7 +279,8 @@ class indice extends clsCadastro
         $opcoes = array(0 => "Inativo", 1 => "Ativo");
         $this->campoLista("ativo", "Status", $opcoes, $this->ativo);
 
-        $opcoes = array("" => "Selecione", 5 => "Comissionado", 4 => "Contratado", 3 => "Efetivo", 6 => "Estagi&aacute;rio");
+        $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
+        $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
         $this->campoLista("ref_cod_funcionario_vinculo", "V&iacute;nculo", $opcoes, $this->ref_cod_funcionario_vinculo);
 
         $opcoes = array("" => "Selecione",
@@ -324,7 +326,7 @@ class indice extends clsCadastro
         $this->campoLista("proibido", "Banido", $opcoes, $this->proibido, '',false,'','',false,false);
 
         $opcoes = array(null => "Não", 1 => "Sim");
-        $this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);             
+        $this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);
 
         //-----------------------------------------------------------------------------------------------
 

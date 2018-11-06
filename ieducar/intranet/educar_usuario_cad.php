@@ -32,6 +32,7 @@ require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/clsPmieducarUsuario.inc.php");
 require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+require_once 'include/pmieducar/clsPmieducarFuncionarioVinculo.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -301,7 +302,8 @@ class indice extends clsCadastro
         else
             $this->campoLista("ativo", "Status", $opcoes, 1);
 
-        $opcoes = array("" => "Selecione", 5 => "Comissionado", 4 => "Contratado", 3 => "Efetivo", 6 => "Estagi&aacute;rio");
+        $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
+        $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
         $this->campoLista("ref_cod_funcionario_vinculo", "V&iacute;nculo", $opcoes, $this->ref_cod_funcionario_vinculo);
 
         $opcoes = array("" => "Selecione",

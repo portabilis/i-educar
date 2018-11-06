@@ -4,6 +4,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/pmieducar/clsPmieducarFuncionarioVinculo.inc.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 
@@ -193,7 +194,8 @@ class indice extends clsCadastro
         $this->campoLista('cod_servidor_funcao', 'Função', $opcoes, $this->cod_servidor_funcao, '', false, '', '', false, false);
 
         // Vínculos
-        $opcoes = ['' => 'Selecione', 5 => 'Comissionado', 4 => 'Contratado', 3 => 'Efetivo', 6 => 'Estagi&aacute;rio'];
+        $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
+        $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
 
         $this->campoLista('ref_cod_funcionario_vinculo', 'V&iacute;nculo', $opcoes, $this->ref_cod_funcionario_vinculo, null, false, '', '', false, false);
 
