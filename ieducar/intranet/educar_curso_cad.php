@@ -54,11 +54,8 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
-        $this->cod_curso = $_GET['cod_curso'];
+        $this->cod_curso = $this->getQueryString('cod_curso');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -90,14 +87,7 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == 'Editar') ?
         "educar_curso_det.php?cod_curso={$registro['cod_curso']}" : 'educar_curso_lst.php';
 
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-			$_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-			'educar_index.php'                  => 'Escola',
-			''        => "{$nomeMenu} curso"
-    	]);
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Cursos', ['educar_index.php' => 'Escola']);
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -180,7 +170,7 @@ class indice extends clsCadastro
 
         $this->campoLista(
 			'ref_cod_nivel_ensino',
-			'N&iacute;vel Ensino',
+			'Nível Ensino',
 			$opcoes,
 			$this->ref_cod_nivel_ensino,
 			'',
@@ -239,17 +229,17 @@ class indice extends clsCadastro
 			$objTemp->setOrderby('nm_tipo');
 
 			$lista = $objTemp->lista(
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			1,
-			$this->ref_cod_instituicao
-      	);
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                1,
+                $this->ref_cod_instituicao
+            );
 
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
@@ -323,7 +313,7 @@ class indice extends clsCadastro
 
         $this->campoTexto(
 			'ato_poder_publico',
-			'Ato Poder P&uacute;blico',
+			'Ato Poder Público',
 			$this->ato_poder_publico,
 			30,
 			255,
@@ -403,7 +393,7 @@ class indice extends clsCadastro
 
         $this->campoLista(
 			'habilitacao',
-			'Habilita&ccedil;&atilde;o',
+			'Habilitação',
 			$opcoes,
 			$this->habilitacao,
 			'',
@@ -417,7 +407,7 @@ class indice extends clsCadastro
         $this->campoQuebra();
 
         // Padrão ano escolar
-        $this->campoCheck('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar', $this->padrao_ano_escolar);
+        $this->campoCheck('padrao_ano_escolar', 'Padrão Ano Escolar', $this->padrao_ano_escolar);
 
         $this->campoCheck('multi_seriado', 'Multi seriado', $this->multi_seriado);
 
@@ -434,7 +424,7 @@ class indice extends clsCadastro
         // Público alvo
         $this->campoMemo(
 			'publico_alvo',
-			'P&uacute;blico Alvo',
+			'Público Alvo',
 			$this->publico_alvo,
 			60,
 			5,
@@ -443,13 +433,13 @@ class indice extends clsCadastro
 
         $resources = [
 			null => 'Selecione',
-			1 => Portabilis_String_Utils::toLatin1('Ensino regular'),
-			2 => Portabilis_String_Utils::toLatin1('Educação especial'),
-			3 => Portabilis_String_Utils::toLatin1('Educação jovens e adultos'),
-			4 => Portabilis_String_Utils::toLatin1('Educação profissional')
+			1 => 'Ensino regular',
+			2 => 'Educação especial',
+			3 => 'Educação jovens e adultos',
+			4 => 'Educação profissional'
 		];
 
-        $options = ['label' => Portabilis_String_Utils::toLatin1('Modalidade do curso'), 'resources' => $resources, 'value' => $this->modalidade_curso];
+        $options = ['label' => 'Modalidade do curso', 'resources' => $resources, 'value' => $this->modalidade_curso];
         $this->inputsHelper()->select('modalidade_curso', $options);
 
         $helperOptions = ['objectName' => 'etapacurso'];
@@ -461,10 +451,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         if ($this->habilitacao_curso && $this->incluir != 'S' && empty($this->excluir_)) {
             $this->carga_horaria     = str_replace('.', '', $this->carga_horaria);
             $this->carga_horaria     = str_replace(',', '.', $this->carga_horaria);
@@ -526,8 +512,8 @@ class indice extends clsCadastro
                         $cadastrou2  = $obj->cadastra();
 
                         if (!$cadastrou2) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-                            echo "<!--\nErro ao cadastrar clsPmieducarHabilitacaoCurso\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo['ref_cod_habilitacao_']} ) )\n-->";
+                            $this->mensagem = 'Cadastro não realizado.<br>';
+                            echo "<!--\nErro ao cadastrar clsPmieducarHabilitacaoCurso\nvalores obrigatórios\nis_numeric( $cadastrou ) && is_numeric( {$campo['ref_cod_habilitacao_']} ) )\n-->";
 
                             return false;
                         }
@@ -539,8 +525,8 @@ class indice extends clsCadastro
                 die();
             }
 
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            echo "<!--\nErro ao cadastrar clsPmieducarCurso\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_regime ) && is_numeric( $this->ref_cod_nivel_ensino ) && is_numeric( $this->ref_cod_tipo_ensino ) && is_string( $this->nm_curso ) && is_string( $this->sgl_curso ) && is_numeric( $this->qtd_etapas ) && is_numeric( $this->frequencia_minima ) && is_numeric( $this->media ) && is_numeric( $this->falta_ch_globalizada ) && is_numeric( $this->edicao_final ) && is_string( $this->data_inicio ) && is_string( $this->data_fim )\n-->";
+            $this->mensagem = 'Cadastro não realizado.<br>';
+            echo "<!--\nErro ao cadastrar clsPmieducarCurso\nvalores obrigatórios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_regime ) && is_numeric( $this->ref_cod_nivel_ensino ) && is_numeric( $this->ref_cod_tipo_ensino ) && is_string( $this->nm_curso ) && is_string( $this->sgl_curso ) && is_numeric( $this->qtd_etapas ) && is_numeric( $this->frequencia_minima ) && is_numeric( $this->media ) && is_numeric( $this->falta_ch_globalizada ) && is_numeric( $this->edicao_final ) && is_string( $this->data_inicio ) && is_string( $this->data_fim )\n-->";
 
             return false;
         }
@@ -550,10 +536,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         if ($this->habilitacao_curso && $this->incluir != 'S' && empty($this->excluir_)) {
             $this->carga_horaria     = str_replace('.', '', $this->carga_horaria);
             $this->carga_horaria     = str_replace(',', '.', $this->carga_horaria);
@@ -617,8 +599,8 @@ class indice extends clsCadastro
                             $cadastrou2  = $obj->cadastra();
 
                             if (!$cadastrou2) {
-                                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-                                echo "<!--\nErro ao editar clsPmieducarHabilitacaoCurso\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_curso ) && is_numeric( {$campo['ref_cod_habilitacao_']} ) )\n-->";
+                                $this->mensagem = 'Edição não realizada.<br>';
+                                echo "<!--\nErro ao editar clsPmieducarHabilitacaoCurso\nvalores obrigatórios\nis_numeric( $this->cod_curso ) && is_numeric( {$campo['ref_cod_habilitacao_']} ) )\n-->";
 
                                 return false;
                             }
@@ -626,13 +608,13 @@ class indice extends clsCadastro
                     }
                 }
 
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 header('Location: educar_curso_lst.php');
                 die();
             }
 
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-            echo "<!--\nErro ao editar clsPmieducarCurso\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->pessoa_logada ) )\n-->";
+            $this->mensagem = 'Edição não realizada.<br>';
+            echo "<!--\nErro ao editar clsPmieducarCurso\nvalores obrigatórios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
             return false;
         }
@@ -642,10 +624,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj = new clsPmieducarCurso(
 			$this->cod_curso,
 			null,
@@ -676,13 +654,13 @@ class indice extends clsCadastro
         if ($excluiu) {
             $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
             $auditoria->exclusao($curso);
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             header('Location: educar_curso_lst.php');
             die();
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao excluir clsPmieducarCurso\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = 'Exclusão não realizada.<br>';
+        echo "<!--\nErro ao excluir clsPmieducarCurso\nvalores obrigatórios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
         return false;
     }
