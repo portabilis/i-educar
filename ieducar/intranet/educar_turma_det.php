@@ -430,7 +430,7 @@ class indice extends clsDetalhe
             }
         }
 
-        $this->montaListaComponentesSerieEscola();
+        $this->montaListaComponentes();
 
         if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_turma_cad.php';
@@ -468,7 +468,7 @@ class indice extends clsDetalhe
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    function montaListaComponentesSerieEscola(){
+    function montaListaComponentes(){
         $this->tabela3    = '';
 
         try {
@@ -492,7 +492,8 @@ class indice extends clsDetalhe
 
         if (isset($this->cod_turma) && is_numeric($this->cod_turma)) {
             $componentesTurma = $componenteTurmaMapper->findAll(
-                [], ['turma' => $this->cod_turma]
+                [],
+                ['turma' => $this->cod_turma]
             );
         }
 
@@ -501,8 +502,11 @@ class indice extends clsDetalhe
             $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
         }
         unset($componentesTurma);
-
         $this->escola_serie_disciplina = [];
+
+        if (is_array($componentes) && !empty($componentes)) {
+            $lista = array_intersect_key($lista, $componentes);
+        }
 
         if (is_array($lista) && count($lista)) {
             $this->tabela3 .= '<div style="margin-bottom: 10px;">';
