@@ -46,7 +46,7 @@ class indice extends clsCadastro
     public $incluir;
     public $excluir_;
     public $habilitacao_curso;
-    public $curso_sem_avaliacao  = true;
+    public $curso_sem_avaliacao = true;
 
     public $multi_seriado;
     public $modalidade_curso;
@@ -67,7 +67,7 @@ class indice extends clsCadastro
 
         if (is_numeric($this->cod_curso)) {
             $obj = new clsPmieducarCurso($this->cod_curso);
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -443,8 +443,7 @@ class indice extends clsCadastro
         $this->inputsHelper()->select('modalidade_curso', $options);
 
         $helperOptions = ['objectName' => 'etapacurso'];
-        $options       = ['label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false,
-                           'options' => ['value' => null]];
+        $options = ['label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false, 'options' => ['value' => null]];
 
         $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
     }
@@ -452,10 +451,10 @@ class indice extends clsCadastro
     public function Novo()
     {
         if ($this->habilitacao_curso && $this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria     = str_replace('.', '', $this->carga_horaria);
-            $this->carga_horaria     = str_replace(',', '.', $this->carga_horaria);
-            $this->hora_falta        = str_replace('.', '', $this->hora_falta);
-            $this->hora_falta        = str_replace(',', '.', $this->hora_falta);
+            $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
+            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+            $this->hora_falta = str_replace('.', '', $this->hora_falta);
+            $this->hora_falta = str_replace(',', '.', $this->hora_falta);
 
             $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
@@ -509,7 +508,7 @@ class indice extends clsCadastro
 							$cadastrou
 						);
 
-                        $cadastrou2  = $obj->cadastra();
+                        $cadastrou2 = $obj->cadastra();
 
                         if (!$cadastrou2) {
                             $this->mensagem = 'Cadastro não realizado.<br>';
@@ -537,10 +536,10 @@ class indice extends clsCadastro
     public function Editar()
     {
         if ($this->habilitacao_curso && $this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria     = str_replace('.', '', $this->carga_horaria);
-            $this->carga_horaria     = str_replace(',', '.', $this->carga_horaria);
-            $this->hora_falta        = str_replace('.', '', $this->hora_falta);
-            $this->hora_falta        = str_replace(',', '.', $this->hora_falta);
+            $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
+            $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+            $this->hora_falta = str_replace('.', '', $this->hora_falta);
+            $this->hora_falta = str_replace(',', '.', $this->hora_falta);
 
             $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
@@ -596,7 +595,7 @@ class indice extends clsCadastro
 								$this->cod_curso
               				);
 
-                            $cadastrou2  = $obj->cadastra();
+                            $cadastrou2 = $obj->cadastra();
 
                             if (!$cadastrou2) {
                                 $this->mensagem = 'Edição não realizada.<br>';
@@ -815,14 +814,14 @@ document.getElementById('ref_cod_instituicao').onchange = function()
   xml_habilitacao.envia("educar_habilitacao_xml.php?ins="+campoInstituicao);
 
   if (this.value == '') {
-    $('img_nivel_ensino').style.display   = 'none;';
-    $('img_tipo_regime').style.display    = 'none;';
-    $('img_tipo_ensino').style.display    = 'none;';
+    $('img_nivel_ensino').style.display = 'none;';
+    $('img_tipo_regime').style.display = 'none;';
+    $('img_tipo_ensino').style.display = 'none;';
   }
   else {
-    $('img_nivel_ensino').style.display   = '';
-    $('img_tipo_regime').style.display    = '';
-    $('img_tipo_ensino').style.display    = '';
+    $('img_nivel_ensino').style.display = '';
+    $('img_tipo_regime').style.display = '';
+    $('img_tipo_ensino').style.display = '';
   }
 }
 
@@ -855,10 +854,10 @@ var getEtapacurso = function() {
     };
 
     var options = {
-      url      : getResourceUrlBuilder.buildUrl('/module/Api/etapacurso', 'etapacurso', additionalVars),
+      url : getResourceUrlBuilder.buildUrl('/module/Api/etapacurso', 'etapacurso', additionalVars),
       dataType : 'json',
-      data     : {},
-      success  : handleGetEtapacurso,
+      data : {},
+      success : handleGetEtapacurso,
     };
 
     getResource(options);
