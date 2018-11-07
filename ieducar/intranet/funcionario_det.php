@@ -34,7 +34,7 @@ class clsIndex extends clsBase
 
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Usu&aacute;rios" );
+        $this->SetTitulo("{$this->_instituicao} Usu&aacute;rios");
         $this->processoAp = "36";
         $this->addEstilo('localizacaoSistema');
     }
@@ -51,48 +51,48 @@ class indice extends clsDetalhe
         $obj_pessoa = new clsPessoa_($cod_pessoa);
         $det_pessoa = $obj_pessoa->detalhe();
 
-        $this->addDetalhe( array("Nome", $det_pessoa["nome"]) );
+        $this->addDetalhe(array("Nome", $det_pessoa["nome"]));
 
         $obj_fisica_cpf = new clsFisica($cod_pessoa);
         $det_fisica_cpf = $obj_fisica_cpf->detalhe();
-        $this->addDetalhe( array("CPF", int2CPF($det_fisica_cpf["cpf"])) );
+        $this->addDetalhe(array("CPF", int2CPF($det_fisica_cpf["cpf"])));
 
         $obj_endereco = new clsEndereco($cod_pessoa);
         $det_endereco = $obj_endereco->detalhe();
 
-        if($det_endereco["tipo_origem"] == "endereco_pessoa")
+        if ($det_endereco["tipo_origem"] == "endereco_pessoa")
         {
-            $this->addDetalhe( array("CEP", int2CEP($det_endereco["cep"])) );
+            $this->addDetalhe(array("CEP", int2CEP($det_endereco["cep"])));
 
             $obj_bairro = new clsBairro($det_endereco["idbai"]);
             $det_bairro = $obj_bairro->detalhe();
 
-            $this->addDetalhe( array("Bairro", $det_bairro["nome"]) );
+            $this->addDetalhe(array("Bairro", $det_bairro["nome"]));
 
             //echo "det: {$det_bairro["idmun"]}";
             $obj_municipio = $det_bairro["idmun"];
             $det_municipio = $obj_municipio->detalhe();
 
-            $this->addDetalhe( array("Cidade", $det_municipio["nome"]) );
-            for($i = 1; $i <= 4; $i++)
+            $this->addDetalhe(array("Cidade", $det_municipio["nome"]));
+            for ($i = 1; $i <= 4; $i++)
             {
                 $obj_fone_pessoa = new clsPessoaTelefone($cod_pessoa, $i);
                 $det_fone_pessoa = $obj_fone_pessoa->detalhe();
 
-                if($det_fone_pessoa)
+                if ($det_fone_pessoa)
                 {
-                    switch($i):
+                    switch ($i):
                     case 1:
-                        $this->addDetalhe( array("Telefone 1", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Telefone 1", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     case 2:
-                        $this->addDetalhe( array("Telefone 2", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Telefone 2", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     case 3:
-                        $this->addDetalhe( array("Celular", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Celular", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     case 4:
-                        $this->addDetalhe( array("Fax", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Fax", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     endswitch;
                 }
@@ -100,28 +100,28 @@ class indice extends clsDetalhe
         }
         elseif ($det_endereco["tipo_origem"] == "endereco_externo")
         {
-            $this->addDetalhe( array("CEP", int2CEP($det_endereco["cep"])) );
-            $this->addDetalhe( array("Bairro", $det_endereco["bairro"]) );
-            $this->addDetalhe( array("Cidade", $det_endereco["cidade"]) );
-            for($i = 1; $i <= 4; $i++)
+            $this->addDetalhe(array("CEP", int2CEP($det_endereco["cep"])));
+            $this->addDetalhe(array("Bairro", $det_endereco["bairro"]));
+            $this->addDetalhe(array("Cidade", $det_endereco["cidade"]));
+            for ($i = 1; $i <= 4; $i++)
             {
                 $obj_fone_pessoa = new clsPessoaTelefone($cod_pessoa, $i);
                 $det_fone_pessoa = $obj_fone_pessoa->detalhe();
 
-                if($det_fone_pessoa)
+                if ($det_fone_pessoa)
                 {
-                    switch($i):
+                    switch ($i):
                     case 1:
-                        $this->addDetalhe( array("Telefone 1", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Telefone 1", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     case 2:
-                        $this->addDetalhe( array("Telefone 2", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Telefone 2", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     case 3:
-                        $this->addDetalhe( array("Celular", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Celular", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     case 4:
-                        $this->addDetalhe( array("Fax", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}") );
+                        $this->addDetalhe(array("Fax", "({$det_fone_pessoa["ddd"]}) {$det_fone_pessoa["fone"]}"));
                         break;
                     endswitch;
                 }
@@ -131,30 +131,30 @@ class indice extends clsDetalhe
         $obj_funcionario = new clsFuncionario($cod_pessoa);
         $det_funcionario = $obj_funcionario->detalhe();
 
-        $this->addDetalhe( array("Ramal", $det_funcionario["ramal"]) );
+        $this->addDetalhe(array("Ramal", $det_funcionario["ramal"]));
 
-        $this->addDetalhe( array("Site", $det_pessoa["url"]) );
+        $this->addDetalhe(array("Site", $det_pessoa["url"]));
         //$this->addDetalhe( array("E-mail", $det_pessoa["email"]) );
-        $this->addDetalhe( array("E-mail usuário", $det_funcionario["email"]) );
+        $this->addDetalhe(array("E-mail usuário", $det_funcionario["email"]));
 
         if (!empty($det_funcionario['matricula_interna']))
-            $this->addDetalhe( array('Matr&iacute;cula interna', $det_funcionario['matricula_interna']));
+            $this->addDetalhe(array('Matr&iacute;cula interna', $det_funcionario['matricula_interna']));
 
         $obj_fisica = new clsFisica($cod_pessoa);
         $det_fisica = $obj_fisica->detalhe();
 
         $sexo = ($det_fisica["sexo"] == "M") ? "Masculino" : "Feminino";
-        $this->addDetalhe( array("Sexo", $sexo) );
+        $this->addDetalhe(array("Sexo", $sexo));
 
-        $this->addDetalhe( array("Matrícula", $det_funcionario["matricula"]) );
-        $this->addDetalhe( array("Sequencial", $det_funcionario["sequencial"]) );
+        $this->addDetalhe(array("Matrícula", $det_funcionario["matricula"]));
+        $this->addDetalhe(array("Sequencial", $det_funcionario["sequencial"]));
         $ativo_f = ($det_funcionario["ativo"] == '1') ? "Ativo" : "Inativo";
-        $this->addDetalhe( array("Status", $ativo_f) );
+        $this->addDetalhe(array("Status", $ativo_f));
 
         $dba = new clsBanco();
 
         if ($cod_pessoa) {
-            $dba->Consulta( "SELECT ref_cod_menu_submenu FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj={$cod_pessoa} " );
+            $dba->Consulta("SELECT ref_cod_menu_submenu FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj={$cod_pessoa} ");
         }
 
         $cod_menu = array();
@@ -174,22 +174,22 @@ class indice extends clsDetalhe
             }
         }
 
-        if ( $det_funcionario["proibido"] )
+        if ($det_funcionario["proibido"])
         {
-            $this->addDetalhe( array("M&oacute;dulos", "<b>Banido</b>") );
+            $this->addDetalhe(array("M&oacute;dulos", "<b>Banido</b>"));
         }
         if ($super_user)
         {
-            $this->addDetalhe( array("M&oacute;dulos", "<b>Super Usu&aacute;rio</b>") );
+            $this->addDetalhe(array("M&oacute;dulos", "<b>Super Usu&aacute;rio</b>"));
         }
         else
         {
             foreach ($cod_menu as $cod)
             {
-                $dba->Consulta( "SELECT nm_submenu FROM menu_submenu WHERE cod_menu_submenu={$cod}" );
+                $dba->Consulta("SELECT nm_submenu FROM menu_submenu WHERE cod_menu_submenu={$cod}");
                 $dba->ProximoRegistro();
                 list($nm_item) = $dba->Tupla();
-                $this->addDetalhe( array("M&oacute;dulos", $nm_item) );
+                $this->addDetalhe(array("M&oacute;dulos", $nm_item));
 
             }
         }
@@ -200,8 +200,8 @@ class indice extends clsDetalhe
         $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+    $localizacao->entradaCaminhos(array(
+         $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
          ""                                  => "Detalhe do funcion&aacute;rio"
     ));
     $this->enviaLocalizacao($localizacao->montar());        
@@ -210,7 +210,7 @@ class indice extends clsDetalhe
 
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
 
 ?>

@@ -42,13 +42,13 @@ require_once 'include/pmieducar/geral.inc.php';
  */
 class clsIndexBase extends clsBase
 {
-  public function Formular()
-  {
+    public function Formular()
+    {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
     $this->processoAp = '0';
     $this->renderMenu = FALSE;
     $this->renderMenuSuspenso = FALSE;
-  }
+    }
 }
 /**
  * indice class.
@@ -62,20 +62,20 @@ class clsIndexBase extends clsBase
  */
 class indice extends clsListagem
 {
-  var $pessoa_logada;
-  var $titulo;
-  var $limite;
-  var $offset;
-  var $cod_servidor;
-  var $ref_cod_funcao;
-  var $ref_cod_instituicao;
-  var $professor;
-  var $ref_cod_escola;
-  var $nome_servidor;
-  var $ref_cod_servidor;
-  var $identificador;
-  function Gerar()
-  {
+    var $pessoa_logada;
+    var $titulo;
+    var $limite;
+    var $offset;
+    var $cod_servidor;
+    var $ref_cod_funcao;
+    var $ref_cod_instituicao;
+    var $professor;
+    var $ref_cod_escola;
+    var $nome_servidor;
+    var $ref_cod_servidor;
+    var $identificador;
+    function Gerar()
+    {
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     $_SESSION['campo1']             = $_GET['campo1'] ? $_GET['campo1'] : $_SESSION['campo1'];
@@ -85,30 +85,30 @@ class indice extends clsListagem
     
     $_SESSION['identificador'] = $_GET['identificador'] ? $_GET['identificador'] : $_SESSION['identificador'];
     if (!isset($_GET['tipo'])) {
-       $_SESSION['setAllField1'] = $_SESSION['setAllField2'] = $_SESSION['tipo'] = '';
+        $_SESSION['setAllField1'] = $_SESSION['setAllField2'] = $_SESSION['tipo'] = '';
     }
     $this->ref_cod_instituicao = $_SESSION['ref_cod_instituicao'] = $_GET['ref_cod_instituicao'] ? $_GET['ref_cod_instituicao'] : $_SESSION['ref_cod_instituicao'];
-    $this->ref_cod_escola      = $_SESSION['ref_cod_escola']    = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
+    $this->ref_cod_escola      = $_SESSION['ref_cod_escola'] = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
     $this->ref_cod_servidor    = $_SESSION['ref_cod_servidor']    = $_GET['ref_cod_servidor'] ? $_GET['ref_cod_servidor'] : $_SESSION['ref_cod_servidor'];
     $this->professor           = $_SESSION['professor']           = $_GET['professor'] ? $_GET['professor'] : $_SESSION['professor'];
     $this->identificador       = $_SESSION['identificador']       = $_GET['identificador'] ? $_GET['identificador'] : $_SESSION['identificador'];
     if (isset($_GET['lst_matriculas']) && isset($_SESSION['lst_matriculas'])) {
-      $this->lst_matriculas = $_GET['lst_matriculas'] ?
+        $this->lst_matriculas = $_GET['lst_matriculas'] ?
         $_GET['lst_matriculas'] : $_SESSION['lst_matriculas'];
     }
     $_SESSION['tipo'] = $_GET['tipo'] ? $_GET['tipo'] : $_SESSION['tipo'];
     $this->titulo = 'Servidores P&uacute;blicos - Listagem';
     // Passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET as $var => $val)  {
-      $this->$var = $val === '' ? NULL : $val;
+        $this->$var = $val === '' ? NULL : $val;
     }
     if (isset($this->lst_matriculas)) {
-      $this->lst_matriculas = urldecode($this->lst_matriculas);
+        $this->lst_matriculas = urldecode($this->lst_matriculas);
     }
     $this->addCabecalhos(array(
-      'Nome do Servidor',
-      'Matr&iacute;cula',
-      'Institui&ccedil;&atilde;o'
+        'Nome do Servidor',
+        'Matr&iacute;cula',
+        'Institui&ccedil;&atilde;o'
     ));
     $this->campoTexto('nome_servidor', 'Nome Servidor', $this->nome_servidor, 30, 255, FALSE);
     $this->campoOculto('tipo', $_GET['tipo']);
@@ -123,44 +123,44 @@ class indice extends clsListagem
 
     // pega detalhes de foreign_keys
     if (class_exists('clsPmieducarInstituicao')) {
-      $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $lista_professor[0]["ref_cod_instituicao"] );
-      $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-      $nm_instituicao = $det_ref_cod_instituicao["nm_instituicao"];
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $lista_professor[0]["ref_cod_instituicao"] );
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+        $nm_instituicao = $det_ref_cod_instituicao["nm_instituicao"];
     }
 
     // monta a lista
     if (is_array($lista_professor) && count($lista_professor)) {
-      foreach ($lista_professor as $registro) {
+        foreach ($lista_professor as $registro) {
         if ($_SESSION['tipo']) {
-          if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
+            if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
             $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
-          }
-          elseif (is_string($_SESSION['campo1'])) {
+            }
+            elseif (is_string($_SESSION['campo1'])) {
             $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-          }
+            }
         }
         else {
-          if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
+            if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
             $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-          }
-          elseif (is_string($_SESSION['campo2'])) {
+            }
+            elseif (is_string($_SESSION['campo2'])) {
             $script = " onclick=\"addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-          }
-          elseif (is_string($_SESSION['campo1'])) {
+            }
+            elseif (is_string($_SESSION['campo1'])) {
             $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-          }
+            }
         }
         $this->addLinhas(array(
-          "<a href=\"javascript:void(0);\" $script>{$registro["nome"]}</a>",
-          "<a href=\"javascript:void(0);\" $script>{$registro["matricula"]}</a>",
-          "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>"
+            "<a href=\"javascript:void(0);\" $script>{$registro["nome"]}</a>",
+            "<a href=\"javascript:void(0);\" $script>{$registro["matricula"]}</a>",
+            "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>"
         ) );
-      }
+        }
     }
     $this->largura = '100%';
     $obj_permissoes = new clsPermissoes();
     session_write_close();
-  }
+    }
 }
 // Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();

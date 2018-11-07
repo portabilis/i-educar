@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Diaria" );
+        $this->SetTitulo("{$this->_instituicao} Diaria");
         $this->processoAp = "293";
         $this->addEstilo('localizacaoSistema');
     }
@@ -53,104 +53,104 @@ class indice extends clsDetalhe
         $db2 = new clsBanco();
 
         if ($cod_diaria) {
-            $db->Consulta( "SELECT ref_funcionario_cadastro, ref_cod_diaria_grupo, ref_funcionario, conta_corrente, agencia, banco,  dotacao_orcamentaria,  objetivo, data_partida, data_chegada, estadual, destino, data_pedido, vl100,  vl75, vl50, vl25, ref_cod_setor, num_diaria FROM pmidrh.diaria WHERE cod_diaria='{$cod_diaria}'" );
+            $db->Consulta("SELECT ref_funcionario_cadastro, ref_cod_diaria_grupo, ref_funcionario, conta_corrente, agencia, banco,  dotacao_orcamentaria,  objetivo, data_partida, data_chegada, estadual, destino, data_pedido, vl100,  vl75, vl50, vl25, ref_cod_setor, num_diaria FROM pmidrh.diaria WHERE cod_diaria='{$cod_diaria}'");
         }
 
         if ($cod_diaria && $db->ProximoRegistro()) {
-            list( $ref_funcionario_cadastro, $ref_cod_diaria_grupo, $ref_funcionario, $conta_corrente, $agencia, $banco, $dotacao_orcamentaria, $objetivo, $data_partida, $data_chegada, $estadual, $destino, $data_pedido, $vl100, $vl75, $vl50, $vl25, $ref_cod_setor, $num_diaria ) = $db->Tupla();
+            list($ref_funcionario_cadastro, $ref_cod_diaria_grupo, $ref_funcionario, $conta_corrente, $agencia, $banco, $dotacao_orcamentaria, $objetivo, $data_partida, $data_chegada, $estadual, $destino, $data_pedido, $vl100, $vl75, $vl50, $vl25, $ref_cod_setor, $num_diaria) = $db->Tupla();
             
-            $this->addDetalhe( array( "N&deg;. do roteiro", "<span style=\"font-size: 14px;font-weight:bold;\">{$cod_diaria}</span>" ));
+            $this->addDetalhe(array("N&deg;. do roteiro", "<span style=\"font-size: 14px;font-weight:bold;\">{$cod_diaria}</span>"));
             
-            $objPessoa = new clsPessoa_( $ref_funcionario_cadastro );
+            $objPessoa = new clsPessoa_($ref_funcionario_cadastro);
             $detalhePessoa = $objPessoa->detalhe();
-            $this->addDetalhe( array( "Ultimo Editor", $detalhePessoa["nome"] ) );
+            $this->addDetalhe(array("Ultimo Editor", $detalhePessoa["nome"]));
             
-            $nome_grupo = $db2->CampoUnico( "SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'" );
-            $this->addDetalhe( array( "Grupo", $nome_grupo ) );
+            $nome_grupo = $db2->CampoUnico("SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'");
+            $this->addDetalhe(array("Grupo", $nome_grupo));
             
-            $objPessoa = new clsPessoaFisica( $ref_funcionario );
+            $objPessoa = new clsPessoaFisica($ref_funcionario);
             $detalhePessoa = $objPessoa->detalhe();
-            $this->addDetalhe( array( "Funcion&aacute;rio", $detalhePessoa["nome"] ) );
-            $this->addDetalhe( array( "CPF", int2CPF( $detalhePessoa["cpf"] ) ) );
+            $this->addDetalhe(array("Funcion&aacute;rio", $detalhePessoa["nome"]));
+            $this->addDetalhe(array("CPF", int2CPF($detalhePessoa["cpf"])));
             
-            $objFuncionario = new clsFuncionario( $ref_funcionario );
+            $objFuncionario = new clsFuncionario($ref_funcionario);
             $detalheFuncionario = $objFuncionario->detalhe();
-            $this->addDetalhe( array( "Matricula", $detalheFuncionario["matricula"] ) );
+            $this->addDetalhe(array("Matricula", $detalheFuncionario["matricula"]));
             
             
-            $data = dataFromPgToBr( $data_pedido );
-            $data = explode( "/", $data );
+            $data = dataFromPgToBr($data_pedido);
+            $data = explode("/", $data);
             
-            if( $ref_cod_setor ) 
+            if ($ref_cod_setor) 
             {
-                $obj_setor = new clsSetor( $ref_cod_setor );
+                $obj_setor = new clsSetor($ref_cod_setor);
                 $det_setor = $obj_setor->detalhe();
                 $nm_secretaria = $det_setor['nm_setor'];
                 
-                $this->addDetalhe( array( "Secretaria", $nm_secretaria ) );
+                $this->addDetalhe(array("Secretaria", $nm_secretaria));
             }
 
-            $this->addDetalhe( array( "Conta Corrente", $conta_corrente ) );
-            if( strlen( $agencia ) < 5 )
+            $this->addDetalhe(array("Conta Corrente", $conta_corrente));
+            if (strlen($agencia) < 5)
             {
-                $agencia = str_repeat( "0", 5 - strlen( $agencia ) ) . $agencia;
+                $agencia = str_repeat("0", 5-strlen($agencia)) . $agencia;
             }
-            if( $agencia ) 
+            if ($agencia) 
             {
-                $this->addDetalhe( array( "Ag&ecirc;ncia", $agencia ) );
-            }
-            
-            if( strlen( $banco ) < 3 )
-            {
-                $banco = str_repeat( "0", 3 - strlen( $banco ) ) . $banco;
-            }
-            if( $banco ) 
-            {
-                $this->addDetalhe( array( "Banco", $banco ) );
-            }
-            if( $dotacao_orcamentaria ) 
-            {
-                $this->addDetalhe( array( "Dota&ccedil;&atilde;o or&ccedil;ament&aacute;ria", $dotacao_orcamentaria ) );
-            }
-            if( $objetivo ) 
-            {
-                $this->addDetalhe( array( "Objetivo", $objetivo ) );
+                $this->addDetalhe(array("Ag&ecirc;ncia", $agencia));
             }
             
-            if( $data_pedido ) 
+            if (strlen($banco) < 3)
             {
-                $this->addDetalhe( array( "Data Pedido", date( "d/m/Y", strtotime( substr( $data_pedido, 0, 16 ) ) ) ) );
+                $banco = str_repeat("0", 3-strlen($banco)) . $banco;
+            }
+            if ($banco) 
+            {
+                $this->addDetalhe(array("Banco", $banco));
+            }
+            if ($dotacao_orcamentaria) 
+            {
+                $this->addDetalhe(array("Dota&ccedil;&atilde;o or&ccedil;ament&aacute;ria", $dotacao_orcamentaria));
+            }
+            if ($objetivo) 
+            {
+                $this->addDetalhe(array("Objetivo", $objetivo));
             }
             
-            if( $data_partida ) 
+            if ($data_pedido) 
             {
-                $this->addDetalhe( array( "Data Partida", date( "d/m/Y H:i", strtotime( substr( $data_partida, 0, 16 ) ) ) ) );
+                $this->addDetalhe(array("Data Pedido", date("d/m/Y", strtotime(substr($data_pedido, 0, 16)))));
             }
             
-            if( $data_chegada ) 
+            if ($data_partida) 
             {
-                $this->addDetalhe( array( "Data Chegada", date( "d/m/Y H:i", strtotime( substr( $data_chegada, 0, 16 ) ) ) ) );
+                $this->addDetalhe(array("Data Partida", date("d/m/Y H:i", strtotime(substr($data_partida, 0, 16)))));
+            }
+            
+            if ($data_chegada) 
+            {
+                $this->addDetalhe(array("Data Chegada", date("d/m/Y H:i", strtotime(substr($data_chegada, 0, 16)))));
             }
             
             
-            $estadual = ( $estadual ) ? "Sim": "N&atilde;o";
-            $this->addDetalhe( array( "Estadual", $estadual ) );
+            $estadual = ($estadual) ? "Sim" : "N&atilde;o";
+            $this->addDetalhe(array("Estadual", $estadual));
             
-            if( $destino ) 
+            if ($destino) 
             {
-                $this->addDetalhe( array( "Destino", $destino ) );
+                $this->addDetalhe(array("Destino", $destino));
             }
             
-            $this->addDetalhe( array( "100%", number_format( $vl100, 2, ",", "." ) ) );
-            $this->addDetalhe( array( "75%", number_format( $vl75, 2, ",", "." ) ) );
-            $this->addDetalhe( array( "50%", number_format( $vl50, 2, ",", "." ) ) );
-            $this->addDetalhe( array( "25%", number_format( $vl25, 2, ",", "." ) ) );
-            $this->addDetalhe( array( "Total", "<span style=\"font-size: 12px;font-weight:bold;border-width:1px;border-color:#000000;border-style:solid;padding:2px;\">" . number_format( $vl25 + $vl50 + $vl75 + $vl100 , 2, ",", "." ) . "</span>" ) );
+            $this->addDetalhe(array("100%", number_format($vl100, 2, ",", ".")));
+            $this->addDetalhe(array("75%", number_format($vl75, 2, ",", ".")));
+            $this->addDetalhe(array("50%", number_format($vl50, 2, ",", ".")));
+            $this->addDetalhe(array("25%", number_format($vl25, 2, ",", ".")));
+            $this->addDetalhe(array("Total", "<span style=\"font-size: 12px;font-weight:bold;border-width:1px;border-color:#000000;border-style:solid;padding:2px;\">" . number_format($vl25+$vl50+$vl75+$vl100, 2, ",", ".") . "</span>"));
             
-            if( $num_diaria ) 
+            if ($num_diaria) 
             {
-                $num_diaria = sprintf("%06d",$num_diaria);
-                $this->addDetalhe( array( "Nº Di&aacute;ria", "{$num_diaria}/{$data['2']}" ) );
+                $num_diaria = sprintf("%06d", $num_diaria);
+                $this->addDetalhe(array("Nº Di&aacute;ria", "{$num_diaria}/{$data['2']}"));
             }
             
             
@@ -159,8 +159,8 @@ class indice extends clsDetalhe
             $this->array_botao[] = "Arquivo para impressão";
             $this->array_botao_url[] = "diaria_pdf.php?cod_diaria={$cod_diaria}";
 
-        } else {
-            $this->addDetalhe( array( "Erro", "Codigo de diaria invalido" ) );
+        }else {
+            $this->addDetalhe(array("Erro", "Codigo de diaria invalido"));
         }
         
         $this->url_novo = "diaria_cad.php";
@@ -169,8 +169,8 @@ class indice extends clsDetalhe
         $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+    $localizacao->entradaCaminhos(array(
+         $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe da di&aacute;ria"
     ));
@@ -181,7 +181,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 ?>

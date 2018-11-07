@@ -1,4 +1,4 @@
-<?php
+        <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *                                                                        *
     *   @author Prefeitura Municipal de Itajaí                               *
@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Licita&ccedil;&otilde;es" );
+        $this->SetTitulo("{$this->_instituicao} Licita&ccedil;&otilde;es");
         $this->processoAp = "29";
     }
 }
@@ -51,19 +51,19 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($id_licitacao) {
-            $db->Consulta( "SELECT l.ref_ref_cod_pessoa_fj, m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes={$id_licitacao}" );
+            $db->Consulta("SELECT l.ref_ref_cod_pessoa_fj, m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes={$id_licitacao}");
         }
 
         if ($id_licitacao && $db->ProximoRegistro()) {
-            list ( $cod_pessoa, $nm, $numero, $objeto, $data_c, $hora ) = $db->Tupla();
-            list ( $nome ) = $objPessoa->queryRapida($cod_pessoa, "nome");
-            $hora = date('H:i', strtotime(substr($data_c,0,19)));
-            $data_c= date('d/m/Y', strtotime(substr($data_c,0,19) ));
+            list ($cod_pessoa, $nm, $numero, $objeto, $data_c, $hora) = $db->Tupla();
+            list ($nome) = $objPessoa->queryRapida($cod_pessoa, "nome");
+            $hora = date('H:i', strtotime(substr($data_c, 0, 19)));
+            $data_c = date('d/m/Y', strtotime(substr($data_c, 0, 19)));
 
-            $this->addDetalhe( array("Modalidade", $nm." ".$numero) );
-            $this->addDetalhe( array("Objeto", $objeto) );
-            $this->addDetalhe( array("Data", "{$data_c}") );
-            $this->addDetalhe( array("Hora", $hora) );
+            $this->addDetalhe(array("Modalidade", $nm . " " . $numero));
+            $this->addDetalhe(array("Objeto", $objeto));
+            $this->addDetalhe(array("Data", "{$data_c}"));
+            $this->addDetalhe(array("Hora", $hora));
 
         }
         $this->url_novo = "licitacoes_cad.php";
@@ -78,7 +78,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

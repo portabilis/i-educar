@@ -34,11 +34,11 @@ class AppServiceProvider extends ServiceProvider
      */
     private function customBrowserForFakeAuth()
     {
-        Browser::macro('loginLegacy', function () {
+        Browser::macro('loginLegacy', function() {
             return $this->visit('/_dusk/legacy/login');
         });
 
-        Browser::macro('logoutLegacy', function () {
+        Browser::macro('logoutLegacy', function() {
             return $this->visit('/_dusk/legacy/logout');
         });
     }

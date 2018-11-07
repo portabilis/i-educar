@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Diaria Valores" );
+        $this->SetTitulo("{$this->_instituicao} Diaria Valores");
         $this->processoAp = "295";
         $this->addEstilo('localizacaoSistema');
     }
@@ -52,40 +52,40 @@ class indice extends clsDetalhe
         $db2 = new clsBanco();
 
         if ($cod_diaria_valores) {
-            $db->Consulta( "SELECT cod_diaria_valores, ref_funcionario_cadastro, ref_cod_diaria_grupo, estadual, p100, p75, p50, p25, data_vigencia FROM pmidrh.diaria_valores WHERE cod_diaria_valores='{$cod_diaria_valores}'" );
+            $db->Consulta("SELECT cod_diaria_valores, ref_funcionario_cadastro, ref_cod_diaria_grupo, estadual, p100, p75, p50, p25, data_vigencia FROM pmidrh.diaria_valores WHERE cod_diaria_valores='{$cod_diaria_valores}'");
         }
 
         if ($cod_diaria_valores && $db->ProximoRegistro()) {
-            list( $cod_diaria_valores, $ref_funcionario_cadastro, $ref_cod_diaria_grupo, $estadual, $p100, $p75, $p50, $p25, $data_vigencia ) = $db->Tupla();
+            list($cod_diaria_valores, $ref_funcionario_cadastro, $ref_cod_diaria_grupo, $estadual, $p100, $p75, $p50, $p25, $data_vigencia) = $db->Tupla();
             
-            $objPessoa = new clsPessoa_( $ref_funcionario_cadastro );
+            $objPessoa = new clsPessoa_($ref_funcionario_cadastro);
             $detalhePessoa = $objPessoa->detalhe();
-            $this->addDetalhe( array( "Ultimo Editor", $detalhePessoa["nome"] ) );
+            $this->addDetalhe(array("Ultimo Editor", $detalhePessoa["nome"]));
             
-            $nome_grupo = $db2->CampoUnico( "SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'" );
-            $this->addDetalhe( array( "Grupo", $nome_grupo ) );
+            $nome_grupo = $db2->CampoUnico("SELECT desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = '{$ref_cod_diaria_grupo}'");
+            $this->addDetalhe(array("Grupo", $nome_grupo));
             
-            $estadual = ( $estadual ) ? "Sim": "N&atilde;e";
-            $this->addDetalhe( array( "Estadual", $estadual ) );
+            $estadual = ($estadual) ? "Sim" : "N&atilde;e";
+            $this->addDetalhe(array("Estadual", $estadual));
             
-            $p100 = number_format( $p100, 2, ",", "." );
-            $this->addDetalhe( array( "100%", $p100 ) );
+            $p100 = number_format($p100, 2, ",", ".");
+            $this->addDetalhe(array("100%", $p100));
             
-            $p75 = number_format( $p75, 2, ",", "." );
-            $this->addDetalhe( array( "75%", $p75 ) );
+            $p75 = number_format($p75, 2, ",", ".");
+            $this->addDetalhe(array("75%", $p75));
             
-            $p50 = number_format( $p50, 2, ",", "." );
-            $this->addDetalhe( array( "50%", $p50 ) );
+            $p50 = number_format($p50, 2, ",", ".");
+            $this->addDetalhe(array("50%", $p50));
             
-            $p25 = number_format( $p25, 2, ",", "." );
-            $this->addDetalhe( array( "25%", $p25 ) );
+            $p25 = number_format($p25, 2, ",", ".");
+            $this->addDetalhe(array("25%", $p25));
             
-            $data_vigencia = date( "d/m/Y", strtotime( $data_vigencia ) );
-            $this->addDetalhe( array( "Data de vig&ecirc;ncia", $data_vigencia ) );
+            $data_vigencia = date("d/m/Y", strtotime($data_vigencia));
+            $this->addDetalhe(array("Data de vig&ecirc;ncia", $data_vigencia));
             
             $this->url_editar = "diaria_valores_cad.php?cod_diaria_valores={$cod_diaria_valores}";
-        } else {
-            $this->addDetalhe( array( "Erro", "Codigo de diaria-valor invalido" ) );
+        }else {
+            $this->addDetalhe(array("Erro", "Codigo de diaria-valor invalido"));
         }
         
         $this->url_novo = "diaria_valores_cad.php";
@@ -94,8 +94,8 @@ class indice extends clsDetalhe
         $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+    $localizacao->entradaCaminhos(array(
+         $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
          ""                                  => "Detalhe dos valores da di&aacute;ria"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -105,7 +105,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 ?>

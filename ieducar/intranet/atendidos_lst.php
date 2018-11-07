@@ -9,7 +9,7 @@ class clsIndex extends clsBase
 
     function Formular()
     {
-        $this->SetTitulo( "i-Educar - Pessoas Físicas" );
+        $this->SetTitulo("i-Educar - Pessoas Físicas");
         $this->processoAp = "43";
         $this->addEstilo('localizacaoSistema');
     }
@@ -26,11 +26,11 @@ class indice extends clsListagem
         $this->titulo = "Pessoas Físicas";
         
 
-        $this->addCabecalhos( array( "Nome", "CPF") );
-        $this->campoTexto( "nm_pessoa", "Nome",  $_GET['nm_pessoa'], "50", "255", true );
-        $this->campoCpf( "id_federal", "CPF",  $_GET['id_federal'], "50", "", true );
+        $this->addCabecalhos(array("Nome", "CPF"));
+        $this->campoTexto("nm_pessoa", "Nome", $_GET['nm_pessoa'], "50", "255", true);
+        $this->campoCpf("id_federal", "CPF", $_GET['id_federal'], "50", "", true);
 
-        $where="";
+        $where = "";
         $par_nome = false;
         if ($_GET['nm_pessoa'])
         {
@@ -47,11 +47,11 @@ class indice extends clsListagem
 
         // Paginador
         $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite : 0;
 
 
-        $pessoas = $objPessoa->lista($par_nome, $par_id_federal,$iniciolimit,$limite);
-        if($pessoas)
+        $pessoas = $objPessoa->lista($par_nome, $par_id_federal, $iniciolimit, $limite);
+        if ($pessoas)
         {
             foreach ($pessoas as $pessoa)
             {
@@ -59,24 +59,24 @@ class indice extends clsListagem
                 $nome = $pessoa['nome'];
                 $total = $pessoa['total'];
                 $cpf = $pessoa['cpf'] ? int2CPF($pessoa['cpf']) : "";
-                $this->addLinhas( array("<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>$nome</a>", $cpf ) );
+                $this->addLinhas(array("<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>$nome</a>", $cpf));
             }
         }
 
         $obj_permissao = new clsPermissoes();
 
-        if($obj_permissao->permissao_cadastra(43, $this->pessoa_logada,7,null,true))
+        if ($obj_permissao->permissao_cadastra(43, $this->pessoa_logada, 7, null, true))
         {
             $this->acao = "go(\"atendidos_cad.php\")";
             $this->nome_acao = "Novo";
         }       
 
         $this->largura = "100%";
-        $this->addPaginador2( "atendidos_lst.php", $total, $_GET, $this->nome, $limite );
+        $this->addPaginador2("atendidos_lst.php", $total, $_GET, $this->nome, $limite);
 
     $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+    $localizacao->entradaCaminhos(array(
+         $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
          "educar_pessoas_index.php"          => "Pessoas",
          ""                                  => "Listagem de pessoas f&iacute;sicas"
     ));
@@ -88,7 +88,7 @@ class indice extends clsListagem
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

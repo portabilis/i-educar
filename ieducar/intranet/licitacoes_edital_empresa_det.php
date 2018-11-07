@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Edital" );
+        $this->SetTitulo("{$this->_instituicao} Edital");
         $this->processoAp = "239";
     }
 }
@@ -50,28 +50,28 @@ class indice extends clsDetalhe
         $ref_sigla_uf = null;
 
         if ($cod_empresa) {
-            $db->Consulta( "SELECT cod_compras_editais_empresa, cnpj, nm_empresa, email, data_hora, endereco, ref_sigla_uf, cidade, bairro, telefone, fax, cep, nome_contato FROM compras_editais_empresa WHERE cod_compras_editais_empresa = '{$cod_empresa}'" );
+            $db->Consulta("SELECT cod_compras_editais_empresa, cnpj, nm_empresa, email, data_hora, endereco, ref_sigla_uf, cidade, bairro, telefone, fax, cep, nome_contato FROM compras_editais_empresa WHERE cod_compras_editais_empresa = '{$cod_empresa}'");
 
             $db->ProximoRegistro();
-            list ( $cod_compras_editais_empresa, $cnpj, $nm_empresa, $email, $data_hora, $endereco, $ref_sigla_uf, $cidade, $bairro, $telefone, $fax, $cep, $nome_contato ) = $db->Tupla();
+            list ($cod_compras_editais_empresa, $cnpj, $nm_empresa, $email, $data_hora, $endereco, $ref_sigla_uf, $cidade, $bairro, $telefone, $fax, $cep, $nome_contato) = $db->Tupla();
         }
 
         if ($ref_sigla_uf) {
-            $ref_sigla_uf = $db->CampoUnico( "SELECT nome FROM public.uf WHERE sigla_uf = '{$ref_sigla_uf}'" );
+            $ref_sigla_uf = $db->CampoUnico("SELECT nome FROM public.uf WHERE sigla_uf = '{$ref_sigla_uf}'");
         }
         
-        $this->addDetalhe( array("Nome", $nm_empresa ) );
-        $this->addDetalhe( array("CNPJ", $cnpj ) );
-        $this->addDetalhe( array("e-mail", $email ) );
-        $this->addDetalhe( array("Endereco", $endereco ) );
-        $this->addDetalhe( array("Estado", $ref_sigla_uf ) );
-        $this->addDetalhe( array("Cidade", $cidade ) );
-        $this->addDetalhe( array("Bairro", $bairro ) );
-        $this->addDetalhe( array("Cep", $cep ) );
-        $this->addDetalhe( array("Telefone", $telefone ) );
-        $this->addDetalhe( array("Fax", $fax ) );
-        $this->addDetalhe( array("Nome para contato", $nome_contato ) );
-        $this->addDetalhe( array("Data de cadastro", date( "d/m/Y H:i", strtotime(substr( $data_hora,0,19) ) ) ) );
+        $this->addDetalhe(array("Nome", $nm_empresa));
+        $this->addDetalhe(array("CNPJ", $cnpj));
+        $this->addDetalhe(array("e-mail", $email));
+        $this->addDetalhe(array("Endereco", $endereco));
+        $this->addDetalhe(array("Estado", $ref_sigla_uf));
+        $this->addDetalhe(array("Cidade", $cidade));
+        $this->addDetalhe(array("Bairro", $bairro));
+        $this->addDetalhe(array("Cep", $cep));
+        $this->addDetalhe(array("Telefone", $telefone));
+        $this->addDetalhe(array("Fax", $fax));
+        $this->addDetalhe(array("Nome para contato", $nome_contato));
+        $this->addDetalhe(array("Data de cadastro", date("d/m/Y H:i", strtotime(substr($data_hora, 0, 19)))));
         
         $this->url_novo = "licitacoes_edital_empresa_cad.php";
         $this->url_editar = "licitacoes_edital_empresa_cad.php?cod_empresa=$cod_empresa";
@@ -85,7 +85,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

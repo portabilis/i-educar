@@ -1,4 +1,4 @@
-<?php
+        <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *                                                                        *
     *   @author Prefeitura Municipal de Itajaí                               *
@@ -24,46 +24,46 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
+        $desvio_diretorio = "";
+        require_once ("include/clsBase.inc.php");
+        require_once ("include/clsDetalhe.inc.php");
+        require_once ("include/clsBanco.inc.php");
 
-class clsIndex extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} Tipos de Notícias!" );
-        $this->processoAp = "104";
-    }
+        class clsIndex extends clsBase
+        {
+            function Formular()
+            {
+                $this->SetTitulo( "{$this->_instituicao} Tipos de Notícias!" );
+                $this->processoAp = "104";
+            }
 }
 
-class indice extends clsDetalhe
-{
-    function Gerar()
-    {
-        $this->titulo = "Detalhe do Tipo";
+        class indice extends clsDetalhe
+        {
+            function Gerar()
+            {
+                $this->titulo = "Detalhe do Tipo";
         
-        $id_tipo = $_GET['id_tipo'] ?? null;
-        $db = new clsBanco();
+                $id_tipo = $_GET['id_tipo'] ?? null;
+                $db = new clsBanco();
 
-        if ($id_tipo) {
-            $db->Consulta( "SELECT cod_not_tipo, nm_tipo FROM not_tipo WHERE cod_not_tipo={$id_tipo}" );
-        }
+                if ($id_tipo) {
+                    $db->Consulta( "SELECT cod_not_tipo, nm_tipo FROM not_tipo WHERE cod_not_tipo={$id_tipo}" );
+                }
 
-        if ($id_tipo && $db->ProximoRegistro()) {
-            list ($cod_tipo, $nome) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nome) );
-        }
+                if ($id_tipo && $db->ProximoRegistro()) {
+                    list ($cod_tipo, $nome) = $db->Tupla();
+                    $this->addDetalhe( array("Nome", $nome) );
+                }
                 
-        $this->url_novo = "not_tipos_cad.php";
-        $this->url_editar = "not_tipos_cad.php?id_tipo={$id_tipo}";
-        $this->url_cancelar = "not_tipos_lst.php";
-        $this->largura = "100%";
-    }
+                $this->url_novo = "not_tipos_cad.php";
+                $this->url_editar = "not_tipos_cad.php?id_tipo={$id_tipo}";
+                $this->url_cancelar = "not_tipos_lst.php";
+                $this->largura = "100%";
+            }
 }
-$pagina = new clsIndex();
-$miolo = new indice();
-$pagina->addForm( $miolo );
-$pagina->MakeAll();
-?>
+        $pagina = new clsIndex();
+        $miolo = new indice();
+        $pagina->addForm( $miolo );
+        $pagina->MakeAll();
+        ?>

@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Menu" );
+        $this->SetTitulo("{$this->_instituicao} Menu");
         $this->processoAp = "79";
     }
 }
@@ -50,14 +50,14 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($id_item) {
-            $db->Consulta( "SELECT a.cod_menu_menu, a.nm_menu, a.title, pai.nm_menu FROM menu_menu a left outer join menu_menu pai on ( a.ref_cod_menu_pai = pai.cod_menu_menu) WHERE a.cod_menu_menu={$id_item}" );
+            $db->Consulta("SELECT a.cod_menu_menu, a.nm_menu, a.title, pai.nm_menu FROM menu_menu a left outer join menu_menu pai on ( a.ref_cod_menu_pai = pai.cod_menu_menu) WHERE a.cod_menu_menu={$id_item}");
         }
 
         if ($id_item && $db->ProximoRegistro()) {
-            list ($cod_menu, $nome, $title,$ref_cod_menu_pai) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nome) );
-            $this->addDetalhe( array("Title", $title) );
-            $this->addDetalhe( array("Menu Pai", $ref_cod_menu_pai) );
+            list ($cod_menu, $nome, $title, $ref_cod_menu_pai) = $db->Tupla();
+            $this->addDetalhe(array("Nome", $nome));
+            $this->addDetalhe(array("Title", $title));
+            $this->addDetalhe(array("Menu Pai", $ref_cod_menu_pai));
         }
 
         $this->url_novo = "menu_menu_cad.php";
@@ -70,7 +70,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 ?>

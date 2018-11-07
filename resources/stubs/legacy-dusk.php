@@ -24,7 +24,7 @@ class LegacyDuskClass extends RouteTestCase
      */
     public function testRoute()
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function(Browser $browser) {
             $route = self::ROUTE;
 
             $browser->loginLegacy();

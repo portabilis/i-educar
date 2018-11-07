@@ -34,7 +34,7 @@ class clsIndex extends clsBase
 
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Publicações!" );
+        $this->SetTitulo("{$this->_instituicao} Publicações!");
         $this->processoAp = "209";
     }
 }
@@ -44,7 +44,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe de concurso";
-        $this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+        $this->addBanner("/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet");
 
         $cod_portal_concurso = $_GET['cod_portal_concurso'] ?? null;
 
@@ -52,18 +52,18 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($cod_portal_concurso) {
-            $db->Consulta( "SELECT nm_concurso, descricao, data_hora, ref_ref_cod_pessoa_fj, caminho, tipo_arquivo FROM portal_concurso WHERE cod_portal_concurso = '{$cod_portal_concurso}'" );
+            $db->Consulta("SELECT nm_concurso, descricao, data_hora, ref_ref_cod_pessoa_fj, caminho, tipo_arquivo FROM portal_concurso WHERE cod_portal_concurso = '{$cod_portal_concurso}'");
         }
 
         if ($cod_portal_concurso && $db->ProximoRegistro()) {
-            list ( $nome, $descricao, $data, $pessoa, $caminho, $tipo ) = $db->Tupla();
+            list ($nome, $descricao, $data, $pessoa, $caminho, $tipo) = $db->Tupla();
             list($pessoa) = $objPessoa->queryRapida($pessoa, "nome");
 
-            $this->addDetalhe( array("Responsável", $pessoa ) );
-            $this->addDetalhe( array("Data", date( "d/m/Y H:i", strtotime(substr( $data,0,19) ) ) ) );
-            $this->addDetalhe( array("Nome", $nome) );
-            $this->addDetalhe( array("Descrição", $descricao) );
-            $this->addDetalhe( array("Arquivo", "<a href='arquivos/$caminho''><img src='/intranet/imagens/nvp_icon_{$tipo}.gif' border='0'></a>") );
+            $this->addDetalhe(array("Responsável", $pessoa));
+            $this->addDetalhe(array("Data", date("d/m/Y H:i", strtotime(substr($data, 0, 19)))));
+            $this->addDetalhe(array("Nome", $nome));
+            $this->addDetalhe(array("Descrição", $descricao));
+            $this->addDetalhe(array("Arquivo", "<a href='arquivos/$caminho''><img src='/intranet/imagens/nvp_icon_{$tipo}.gif' border='0'></a>"));
         }
         $this->url_novo = "concursos_cad.php";
         $this->url_editar = "concursos_cad.php?cod_portal_concurso=$cod_portal_concurso";
@@ -77,7 +77,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

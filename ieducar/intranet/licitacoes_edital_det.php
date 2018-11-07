@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Edital" );
+        $this->SetTitulo("{$this->_instituicao} Edital");
         $this->processoAp = "239";
     }
 }
@@ -51,50 +51,50 @@ class indice extends clsDetalhe
         $cod_licitacao = null;
 
         if ($cod_edital) {
-            $db->Consulta( "SELECT ref_cod_compras_licitacoes, versao, data_hora, ref_ref_cod_pessoa_fj, arquivo, motivo_alteracao, visivel FROM compras_editais_editais WHERE cod_compras_editais_editais = '{$cod_edital}'" );
+            $db->Consulta("SELECT ref_cod_compras_licitacoes, versao, data_hora, ref_ref_cod_pessoa_fj, arquivo, motivo_alteracao, visivel FROM compras_editais_editais WHERE cod_compras_editais_editais = '{$cod_edital}'");
             $db->ProximoRegistro();
 
-            list( $cod_licitacao, $versao, $data_hora, $ref_pessoa, $arquivo, $motivo_alteracao, $visivel ) = $db->Tupla();
+            list($cod_licitacao, $versao, $data_hora, $ref_pessoa, $arquivo, $motivo_alteracao, $visivel) = $db->Tupla();
         }
 
         $strVersoes = "";
 
         if ($cod_licitacao) {
-            $db2->Consulta( "SELECT cod_compras_editais_editais, versao FROM compras_editais_editais WHERE ref_cod_compras_licitacoes = $cod_licitacao ORDER BY versao ASC" );
+            $db2->Consulta("SELECT cod_compras_editais_editais, versao FROM compras_editais_editais WHERE ref_cod_compras_licitacoes = $cod_licitacao ORDER BY versao ASC");
         }
 
-        while ( $db2->ProximoRegistro() )
+        while ($db2->ProximoRegistro())
         {
-            list( $cod_sub_edital, $sub_versao ) = $db2->Tupla();
-            if( $sub_versao != $versao )
+            list($cod_sub_edital, $sub_versao) = $db2->Tupla();
+            if ($sub_versao != $versao)
             {
                 $strVersoes .= " <a href=\"licitacoes_edital_det.php?cod_edital={$cod_sub_edital}\">{$sub_versao}</a>";
             }
         }
-        if( $strVersoes )
+        if ($strVersoes)
         {
-            $this->addDetalhe( array( "Vers&otilde;es Anteriores", $strVersoes ) );
+            $this->addDetalhe(array("Vers&otilde;es Anteriores", $strVersoes));
         }
         
-        if( ! $visivel )
+        if (!$visivel)
         {
-            $this->addDetalhe( array( "Oculto" , "<b>Este edital esta oculto</b>" ) );
+            $this->addDetalhe(array("Oculto", "<b>Este edital esta oculto</b>"));
         }
         else 
         {
-            $this->addDetalhe( array( "Visivel" , "Este edital esta visivel" ) );
+            $this->addDetalhe(array("Visivel", "Este edital esta visivel"));
         }
         
-        $motivo_alteracao = str_replace( "\n", "<br>", $motivo_alteracao );
-        $this->addDetalhe( array("Motivo da altea&ccedil;&atilde;o", $motivo_alteracao ) );
+        $motivo_alteracao = str_replace("\n", "<br>", $motivo_alteracao);
+        $this->addDetalhe(array("Motivo da altea&ccedil;&atilde;o", $motivo_alteracao));
         
-        $this->addDetalhe( array("Versão do Edital", $versao ) );
-        $this->addDetalhe( array("Data da alteração", date( "d/m/Y H:i", strtotime(substr( $data_hora,0,19) ) ) ) );
+        $this->addDetalhe(array("Versão do Edital", $versao));
+        $this->addDetalhe(array("Data da alteração", date("d/m/Y H:i", strtotime(substr($data_hora, 0, 19)))));
         $objPessoa = new clsPessoaFisica();
-        $resp_nome = $objPessoa->queryRapida( $ref_pessoa, "nome" );
-        $this->addDetalhe( array( "Responsável", $resp_nome[0] ) );
-        $extensao = substr( $arquivo, -3 );
-        switch ( $extensao )
+        $resp_nome = $objPessoa->queryRapida($ref_pessoa, "nome");
+        $this->addDetalhe(array("Responsável", $resp_nome[0]));
+        $extensao = substr($arquivo, -3);
+        switch ($extensao)
         {
             case "zip":
                 $imagem = "imagens/nvp_icon_zip.gif";
@@ -109,19 +109,19 @@ class indice extends clsDetalhe
                 $imagem = "imagens/nvp_icon_download.gif";
                 break;
         }
-        $this->addDetalhe( array("Tipo de Arquivo", "<img src=\"$imagem\"> $extensao" ) );
-        $this->addDetalhe( array("Arquivo", "<a href=\"{$arquivo}\">{$arquivo}</a>" ) );
+        $this->addDetalhe(array("Tipo de Arquivo", "<img src=\"$imagem\"> $extensao"));
+        $this->addDetalhe(array("Arquivo", "<a href=\"{$arquivo}\">{$arquivo}</a>"));
 
         if ($cod_licitacao) {
-            $db->Consulta( "SELECT m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes='{$cod_licitacao}'" );
+            $db->Consulta("SELECT m.nm_modalidade, l.numero, l.objeto, l.data_hora FROM compras_licitacoes l, compras_modalidade m WHERE m.cod_compras_modalidade=l.ref_cod_compras_modalidade AND cod_compras_licitacoes='{$cod_licitacao}'");
         }
 
         if ($cod_licitacao && $db->ProximoRegistro()) {
-            list ($nm_modalidade, $numero, $objeto, $data ) = $db->Tupla();
+            list ($nm_modalidade, $numero, $objeto, $data) = $db->Tupla();
 
-            $this->addDetalhe( array("Numero da Licitação",$numero) );
-            $this->addDetalhe( array("Modalidade",$nm_modalidade) );
-            $this->addDetalhe( array("Data da Licitação", date( 'd/m/Y', strtotime(substr( $data,0,19) ) ) ) );
+            $this->addDetalhe(array("Numero da Licitação", $numero));
+            $this->addDetalhe(array("Modalidade", $nm_modalidade));
+            $this->addDetalhe(array("Data da Licitação", date('d/m/Y', strtotime(substr($data, 0, 19)))));
         }
         $this->url_novo = "licitacoes_edital_cad.php";
         $this->url_editar = "licitacoes_edital_cad.php?cod_edital=$cod_edital";
@@ -135,7 +135,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

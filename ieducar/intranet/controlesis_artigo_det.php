@@ -1,4 +1,4 @@
-<?php
+        <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *                                                                        *
     *   @author Prefeitura Municipal de Itajaí                               *
@@ -27,7 +27,7 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once("include/pmicontrolesis/geral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -60,16 +60,16 @@ class indice extends clsDetalhe
         session_write_close();
 
         $this->titulo = "Artigo - Detalhe";
-        $this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+        $this->addBanner("/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet");
 
-        $this->cod_artigo=$_GET["cod_artigo"];
+        $this->cod_artigo = $_GET["cod_artigo"];
 
-        $tmp_obj = new clsPmicontrolesisArtigo( $this->cod_artigo );
+        $tmp_obj = new clsPmicontrolesisArtigo($this->cod_artigo);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
+        if (!$registro)
         {
-            header( "location: controlesis_artigo_lst.php" );
+            header("location: controlesis_artigo_lst.php");
             die();
         }
 
@@ -78,10 +78,10 @@ class indice extends clsDetalhe
 //      {
 //          $this->addDetalhe( array( "Artigo", "{$registro["cod_artigo"]}") );
 //      }
-        if( $registro["texto"] )
+        if ($registro["texto"])
         {
             $registro["texto"] = nl2br($registro["texto"]);
-            $this->addDetalhe( array( "Texto", "{$registro["texto"]}") );
+            $this->addDetalhe(array("Texto", "{$registro["texto"]}"));
         }
 
         $this->url_novo = "controlesis_artigo_cad.php";
@@ -97,7 +97,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

@@ -33,7 +33,7 @@ class clsIndex extends clsBase
 {
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Emails!" );
+        $this->SetTitulo("{$this->_instituicao} Emails!");
         $this->processoAp = "86";
     }
 }
@@ -49,13 +49,13 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($id_email) {
-            $db->Consulta( "SELECT cod_mailling_email, nm_pessoa, email FROM mailling_email WHERE cod_mailling_email ={$id_email}" );
+            $db->Consulta("SELECT cod_mailling_email, nm_pessoa, email FROM mailling_email WHERE cod_mailling_email ={$id_email}");
         }
 
         if ($id_email && $db->ProximoRegistro()) {
-            list ($cod_email, $nome,$email) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nome) );
-            $this->addDetalhe( array("Email", $email) );
+            list ($cod_email, $nome, $email) = $db->Tupla();
+            $this->addDetalhe(array("Nome", $nome));
+            $this->addDetalhe(array("Email", $email));
         }
         $this->url_novo = "mailling_email_cad.php";
         $this->url_editar = "mailling_email_cad.php?id_email={$id_email}";
@@ -65,6 +65,6 @@ class indice extends clsDetalhe
 }
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>

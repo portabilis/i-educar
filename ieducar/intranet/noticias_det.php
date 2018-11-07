@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Not&iacute;cias" );
+        $this->SetTitulo("{$this->_instituicao} Not&iacute;cias");
         $this->processoAp = "26";
     }
 }
@@ -50,57 +50,57 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($id_noticia) {
-            $db->Consulta( "SELECT n.titulo, n.data_noticia, n.descricao, n.ref_ref_cod_pessoa_fj FROM not_portal n WHERE cod_not_portal={$id_noticia}" );
+            $db->Consulta("SELECT n.titulo, n.data_noticia, n.descricao, n.ref_ref_cod_pessoa_fj FROM not_portal n WHERE cod_not_portal={$id_noticia}");
         }
 
         if ($id_noticia && $db->ProximoRegistro()) {
             list ($titulo, $data, $descricao, $cod_responsavel) = $db->Tupla();
             $objPessoa = new clsPessoaFj();
-            list($responsavel) = $objPessoa->queryRapida($cod_responsavel,"nome");
-            $data = explode(".",$data);
-            $data= date("d/m/Y", strtotime(substr($data[0],0,19) ));
+            list($responsavel) = $objPessoa->queryRapida($cod_responsavel, "nome");
+            $data = explode(".", $data);
+            $data = date("d/m/Y", strtotime(substr($data[0], 0, 19)));
 
-            $this->addDetalhe( array("Responsável", $responsavel) );
-            $this->addDetalhe( array("Data", $data) );
+            $this->addDetalhe(array("Responsável", $responsavel));
+            $this->addDetalhe(array("Data", $data));
             
-            $this->addDetalhe( array("T&iacute;tulo", $titulo) );
+            $this->addDetalhe(array("T&iacute;tulo", $titulo));
 
             $descricao = str_replace("\n\r", "<br>", $descricao);
             $descricao = str_replace("\n", "<br>", $descricao);
 
-            $this->addDetalhe( array("Descri&ccedil;&atilde;o", $descricao) );
+            $this->addDetalhe(array("Descri&ccedil;&atilde;o", $descricao));
             
-            $db->Consulta( "SELECT tipo,cod_vinc,caminho,nome_arquivo FROM not_vinc_portal n WHERE ref_cod_not_portal={$id_noticia}" );
+            $db->Consulta("SELECT tipo,cod_vinc,caminho,nome_arquivo FROM not_vinc_portal n WHERE ref_cod_not_portal={$id_noticia}");
 
-            while($db->ProximoRegistro())
+            while ($db->ProximoRegistro())
             {
-                list($tipo,$cod,$caminho,$nome_arquivo) = $db->Tupla();
-                if($tipo =="F")
+                list($tipo, $cod, $caminho, $nome_arquivo) = $db->Tupla();
+                if ($tipo == "F")
                 {
                     $dba = new clsBanco();
-                    $dba->Consulta( "SELECT titulo, caminho, altura, largura FROM foto_portal WHERE cod_foto_portal={$cod}" );
+                    $dba->Consulta("SELECT titulo, caminho, altura, largura FROM foto_portal WHERE cod_foto_portal={$cod}");
                     $dba->ProximoRegistro();
-                    list ($titulo,$caminho,$altura,$largura) = $dba->Tupla();
-                    $this->addDetalhe( array("Fotos Vinculadas", "<a href='#' onclick='javascript:openfoto(\"$titulo\",\"$caminho\",$altura,$largura)'><img src='fotos/small/{$caminho}' border='0'></a>") );
+                    list ($titulo, $caminho, $altura, $largura) = $dba->Tupla();
+                    $this->addDetalhe(array("Fotos Vinculadas", "<a href='#' onclick='javascript:openfoto(\"$titulo\",\"$caminho\",$altura,$largura)'><img src='fotos/small/{$caminho}' border='0'></a>"));
                     
                 }
-                if($tipo =="N")
+                if ($tipo == "N")
                 {
                     $dba = new clsBanco();
-                    $dba->Consulta( "SELECT titulo FROM not_portal WHERE cod_not_portal={$cod}" );
+                    $dba->Consulta("SELECT titulo FROM not_portal WHERE cod_not_portal={$cod}");
                     $dba->ProximoRegistro();
                     list ($titulo) = $dba->Tupla();
-                    $this->addDetalhe( array("Noticias Vinculadas", "<img src='imagens/noticia.jpg' border=0>&nbsp;<a href='noticias_det.php?id_noticia=$cod'><strong>$titulo</strong></a>") );
-                    $dba->Consulta( "SELECT v.cod_vinc, n.titulo FROM not_vinc_portal v, not_portal n WHERE v.ref_cod_not_portal={$cod} AND v.tipo='N' AND v.cod_vinc = n.cod_not_portal " );
-                    while($dba->ProximoRegistro())
+                    $this->addDetalhe(array("Noticias Vinculadas", "<img src='imagens/noticia.jpg' border=0>&nbsp;<a href='noticias_det.php?id_noticia=$cod'><strong>$titulo</strong></a>"));
+                    $dba->Consulta("SELECT v.cod_vinc, n.titulo FROM not_vinc_portal v, not_portal n WHERE v.ref_cod_not_portal={$cod} AND v.tipo='N' AND v.cod_vinc = n.cod_not_portal ");
+                    while ($dba->ProximoRegistro())
                     {
                         list($cod, $titulo) = $dba->Tupla();
-                        $this->addDetalhe( array("Noticias Vinculadas", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src='imagens/noticia.jpg' border=0>&nbsp;<a href='noticias_det.php?id_noticia=$cod'><strong>$titulo</strong></a>") );
+                        $this->addDetalhe(array("Noticias Vinculadas", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src='imagens/noticia.jpg' border=0>&nbsp;<a href='noticias_det.php?id_noticia=$cod'><strong>$titulo</strong></a>"));
                     } 
                 }
-                if($tipo =="A")
+                if ($tipo == "A")
                 {
-                    $this->addDetalhe( array("Arquivos Vinculados", "<strong>$nome_arquivo</strong> &nbsp; <a href='$caminho'><img  width='20' height='20' src='imagens/noticia.jpg' border=0></a>") );
+                    $this->addDetalhe(array("Arquivos Vinculados", "<strong>$nome_arquivo</strong> &nbsp; <a href='$caminho'><img  width='20' height='20' src='imagens/noticia.jpg' border=0></a>"));
                 }
             
             }
@@ -116,7 +116,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

@@ -44,7 +44,7 @@ class LegacyMakeTestsCommand extends Command
      */
     private function parseRoute($route)
     {
-        if (Str::contains($route, 'module'))  {
+        if (Str::contains($route, 'module')) {
             return $route;
         }
 
@@ -70,7 +70,7 @@ class LegacyMakeTestsCommand extends Command
     {
         $result = DB::select("SELECT arquivo FROM portal.menu_submenu WHERE arquivo <> ''");
 
-        return array_map(function ($value) {
+        return array_map(function($value) {
             return $value->arquivo;
         }, $result);
     }

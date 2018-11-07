@@ -17,7 +17,7 @@ class LoginPageTest extends DuskTestCase
      */
     public function testSeeLoginPage()
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function(Browser $browser) {
             $browser->visit('/')
                 ->on(new LoginPage());
         });

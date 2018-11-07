@@ -17,7 +17,7 @@ class clsIndexBase extends clsBase
 class ConfiguracaoMovimentoGeralController extends clsCadastro
 {
     private $configDataMapper;
-    protected $_formMap    = array(
+    protected $_formMap = array(
         'serie-0' => array(
             'label' => 'Educação infantil',
             'coluna'=> 0,
@@ -88,8 +88,8 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
         $obj_permissoes->permissao_cadastra(9998866, $_SESSION['id_pessoa'], 1,
             'educar_index.php');
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-            $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+        $localizacao->entradaCaminhos(array(
+            $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
             "educar_configuracoes_index.php"    => "Configurações",
             ""                                  => "Configuração movimento geral"
         ));
@@ -100,20 +100,20 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
 
     public function Gerar() {
         $this->loadConfig();
-        foreach ($this->_formMap as $key => $value){
-            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false, 'values' => $value['value'], 'coluna' => $value['coluna']),'');
+        foreach ($this->_formMap as $key => $value) {
+            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false, 'values' => $value['value'], 'coluna' => $value['coluna']), '');
         }
     }
 
     function loadConfig() {
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
-        foreach ($this->configDataMapper->findAll() as $config){
+        foreach ($this->configDataMapper->findAll() as $config) {
             $config;
-            $series = $this->_formMap['serie-'.$config->get('coluna')]['value'];
+            $series = $this->_formMap['serie-' . $config->get('coluna')]['value'];
 
             $series[] = $config->get('serie');
 
-            $this->_formMap['serie-'.$config->get('coluna')]['value'] = $series;
+            $this->_formMap['serie-' . $config->get('coluna')]['value'] = $series;
         }
     }
 
@@ -123,12 +123,12 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
         $salvou = true;
         $this->deleteAllConfigs();
-        foreach ($_POST as $key => $value){
-            if (strpos($key,'multiple_search_serie_serie-') === 0) {
+        foreach ($_POST as $key => $value) {
+            if (strpos($key, 'multiple_search_serie_serie-') === 0) {
                 $series = $value;
                 $coluna = str_replace('multiple_search_serie_serie-', '', $key);
                 foreach ($series as $serie) {
-                    if (!empty($serie)){
+                    if (!empty($serie)) {
                         $this->configDataMapper->save($this->configDataMapper->createNewEntityInstance(array('coluna' => $coluna, 'serie' => $serie)));
                     }
                 }
@@ -140,7 +140,7 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
 
     function deleteAllConfigs() {
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
-        foreach ($this->configDataMapper->findAll() as $config){
+        foreach ($this->configDataMapper->findAll() as $config) {
             $this->configDataMapper->delete($config);
         }
     }

@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Banner" );
+        $this->SetTitulo("{$this->_instituicao} Banner");
         $this->processoAp = "89";
     }
 }
@@ -51,20 +51,20 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($cod_portal_banner) {
-            $db->Consulta( "SELECT b.ref_ref_cod_pessoa_fj, b.cod_portal_banner, b.caminho, b.title, b.prioridade, b.link, b.lateral_ FROM portal_banner b WHERE b.cod_portal_banner={$cod_portal_banner}" );
+            $db->Consulta("SELECT b.ref_ref_cod_pessoa_fj, b.cod_portal_banner, b.caminho, b.title, b.prioridade, b.link, b.lateral_ FROM portal_banner b WHERE b.cod_portal_banner={$cod_portal_banner}");
         }
 
         if ($cod_portal_banner && $db->ProximoRegistro()) {
-            list ($cod_pessoa, $cod_portal_banner, $caminho, $title, $prioridade, $link, $lateral ) = $db->Tupla();
+            list ($cod_pessoa, $cod_portal_banner, $caminho, $title, $prioridade, $link, $lateral) = $db->Tupla();
             list ($nm_pessoa) = $objPessoa->queryRapida($cod_pessoa, "nome");
-            $this->addDetalhe( array("Responsável", $nm_pessoa) );
-            $this->addDetalhe( array("Title", $title) );
-            $this->addDetalhe( array("Prioridade", $prioridade) );
-            $this->addDetalhe( array("Link", $link) );
-            $lateral = ( $lateral ) ? "Sim": "Não";
-            $this->addDetalhe( array("Lateral", $lateral ) );
+            $this->addDetalhe(array("Responsável", $nm_pessoa));
+            $this->addDetalhe(array("Title", $title));
+            $this->addDetalhe(array("Prioridade", $prioridade));
+            $this->addDetalhe(array("Link", $link));
+            $lateral = ($lateral) ? "Sim" : "Não";
+            $this->addDetalhe(array("Lateral", $lateral));
             
-            $this->addDetalhe( array("Banner", "<img src='fotos/imgs/{$caminho}' title='{$title}' width=\"149\">") );
+            $this->addDetalhe(array("Banner", "<img src='fotos/imgs/{$caminho}' title='{$title}' width=\"149\">"));
         }
 
         $this->url_novo = "banner_cad.php";
@@ -78,7 +78,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

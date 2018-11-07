@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
+        $this->SetTitulo("{$this->_instituicao} Diária Grupo");
         $this->processoAp = "297";
         $this->addEstilo('localizacaoSistema');
     }
@@ -51,14 +51,14 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($cod_diaria_grupo) {
-            $db->Consulta( "SELECT cod_diaria_grupo, desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo='{$cod_diaria_grupo}'" );
+            $db->Consulta("SELECT cod_diaria_grupo, desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo='{$cod_diaria_grupo}'");
         }
 
-        if( $cod_diaria_grupo && $db->ProximoRegistro()) {
-            list( $cod_diaria_grupo, $desc_grupo ) = $db->Tupla();
-            $this->addDetalhe( array("Grupo", $desc_grupo) );
-        } else {
-            $this->addDetalhe( array( "Erro", "Codigo de diária grupo inválido" ) );
+        if ($cod_diaria_grupo && $db->ProximoRegistro()) {
+            list($cod_diaria_grupo, $desc_grupo) = $db->Tupla();
+            $this->addDetalhe(array("Grupo", $desc_grupo));
+        }else {
+            $this->addDetalhe(array("Erro", "Codigo de diária grupo inválido"));
         }
 
         $this->url_editar = "diaria_grupo_cad.php?cod_diaria_grupo={$cod_diaria_grupo}";
@@ -67,8 +67,8 @@ class indice extends clsDetalhe
         $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+    $localizacao->entradaCaminhos(array(
+         $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe do grupo de di&aacute;rias"
     ));
@@ -79,7 +79,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 ?>

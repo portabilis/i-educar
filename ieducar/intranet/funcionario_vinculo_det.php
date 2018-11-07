@@ -35,7 +35,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários" );
+        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários");
         $this->processoAp = "190";
         $this->addEstilo('localizacaoSistema');
     }
@@ -58,12 +58,12 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($cod_func) {
-            $db->Consulta( "SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo= '$cod_func' " );
+            $db->Consulta("SELECT nm_vinculo FROM funcionario_vinculo WHERE cod_funcionario_vinculo= '$cod_func' ");
         }
 
         if ($cod_func && $db->ProximoRegistro()) {
             list($nm_vinculo) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nm_vinculo ) );
+            $this->addDetalhe(array("Nome", $nm_vinculo));
         }   
         $this->url_novo = "funcionario_vinculo_cad.php";
         $this->url_editar = "funcionario_vinculo_cad.php?cod_funcionario_vinculo={$cod_func}";
@@ -71,8 +71,8 @@ class indice extends clsDetalhe
         $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+    $localizacao->entradaCaminhos(array(
+         $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
          ""                                  => "Detalhe do v&iacute;nculo"
     ));
     $this->enviaLocalizacao($localizacao->montar());        
@@ -83,7 +83,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Fotos" );
+        $this->SetTitulo("{$this->_instituicao} Fotos");
         $this->processoAp = "669";
     }
 }
@@ -51,20 +51,20 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($id_foto) {
-            $db->Consulta( "SELECT f.ref_ref_cod_pessoa_fj, f.nm_credito, f.data_foto, f.titulo, f.descricao, f.caminho, f.altura, f.largura, f.ref_cod_foto_secao FROM foto_portal f WHERE cod_foto_portal={$id_foto}" );
+            $db->Consulta("SELECT f.ref_ref_cod_pessoa_fj, f.nm_credito, f.data_foto, f.titulo, f.descricao, f.caminho, f.altura, f.largura, f.ref_cod_foto_secao FROM foto_portal f WHERE cod_foto_portal={$id_foto}");
         }
 
         if ($id_foto && $db->ProximoRegistro()) {
-            list ($cod_pessoa, $nm_credito, $data, $titulo, $descricao, $foto, $altura, $largura, $secao ) = $db->Tupla();
+            list ($cod_pessoa, $nm_credito, $data, $titulo, $descricao, $foto, $altura, $largura, $secao) = $db->Tupla();
             list($nome) = $objPessoa->queryRapida($cod_pessoa, "nome");
             
-            $data = date('d/m/Y', strtotime(substr($data,0,19) ));
+            $data = date('d/m/Y', strtotime(substr($data, 0, 19)));
 
-            $this->addDetalhe( array("Data", $data) );
-            $this->addDetalhe( array("T&iacute;tulo", $titulo) );
-            $this->addDetalhe( array("Criador", $nome) );
-            $this->addDetalhe( array("Credito", $nm_credito) );
-            $this->addDetalhe( array("Foto", "<a href='#' onclick='javascript:openfoto(\"$foto\", \"$altura\",  \"$largura\")'><img src='fotos/small/{$foto}' border='0'></a>") );
+            $this->addDetalhe(array("Data", $data));
+            $this->addDetalhe(array("T&iacute;tulo", $titulo));
+            $this->addDetalhe(array("Criador", $nome));
+            $this->addDetalhe(array("Credito", $nm_credito));
+            $this->addDetalhe(array("Foto", "<a href='#' onclick='javascript:openfoto(\"$foto\", \"$altura\",  \"$largura\")'><img src='fotos/small/{$foto}' border='0'></a>"));
         }
 
         $this->url_novo = "fotos_galeria_cad.php";
@@ -78,7 +78,7 @@ class indice extends clsDetalhe
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

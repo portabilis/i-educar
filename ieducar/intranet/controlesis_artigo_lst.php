@@ -27,7 +27,7 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once("include/pmicontrolesis/geral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -82,15 +82,15 @@ class indice extends clsListagem
 
         $this->__titulo = "Artigo - Listagem";
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET AS $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === "") ? null: $val;
 
-        $this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
+        $this->addBanner("/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet");
 
-        $this->addCabecalhos( array(
+        $this->addCabecalhos(array(
             //"Artigo",
             "Texto"
-        ) );
+        ));
 
         // Filtros de Foreign Keys
 
@@ -100,11 +100,11 @@ class indice extends clsListagem
 
         // Paginador
         $this->__limite = 20;
-        $this->__offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
+        $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite : 0;
 
         $obj_artigo = new clsPmicontrolesisArtigo();
-        $obj_artigo->setOrderby( "texto ASC" );
-        $obj_artigo->setLimite( $this->__limite, $this->__offset );
+        $obj_artigo->setOrderby("texto ASC");
+        $obj_artigo->setLimite($this->__limite, $this->__offset);
 
         $lista = $obj_artigo->lista(
             $this->texto,
@@ -116,27 +116,27 @@ class indice extends clsListagem
         $total = $obj_artigo->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
+        if (is_array($lista) && count($lista))
         {
-            foreach ( $lista AS $registro )
+            foreach ($lista AS $registro)
             {
                 // muda os campos data
-                $registro["data_cadastro_time"] = strtotime( substr( $registro["data_cadastro"], 0, 16 ) );
-                $registro["data_cadastro_br"] = date( "d/m/Y H:i", $registro["data_cadastro_time"] );
+                $registro["data_cadastro_time"] = strtotime(substr($registro["data_cadastro"], 0, 16));
+                $registro["data_cadastro_br"] = date("d/m/Y H:i", $registro["data_cadastro_time"]);
 
-                $registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
-                $registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
+                $registro["data_exclusao_time"] = strtotime(substr($registro["data_exclusao"], 0, 16));
+                $registro["data_exclusao_br"] = date("d/m/Y H:i", $registro["data_exclusao_time"]);
 
 
                 // pega detalhes de foreign_keys
 
-                $this->addLinhas( array(
+                $this->addLinhas(array(
                     //"<a href=\"controlesis_artigo_det.php?cod_artigo={$registro["cod_artigo"]}\">{$registro["cod_artigo"]}</a>",
-                    "<a href=\"controlesis_artigo_det.php?cod_artigo={$registro["cod_artigo"]}\">" . truncate( $registro["texto"], 30 ) . "</a>"
-                ) );
+                    "<a href=\"controlesis_artigo_det.php?cod_artigo={$registro["cod_artigo"]}\">" . truncate($registro["texto"], 30) . "</a>"
+                ));
             }
         }
-        $this->addPaginador2( "controlesis_artigo_lst.php", $total, $_GET, $this->nome, $this->__limite );
+        $this->addPaginador2("controlesis_artigo_lst.php", $total, $_GET, $this->nome, $this->__limite);
 
         $this->acao = "go(\"controlesis_artigo_cad.php\")";
         $this->nome_acao = "Novo";
@@ -149,7 +149,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Banner!" );
+        $this->SetTitulo("{$this->_instituicao} Banner!");
         $this->processoAp = "89";
     }
 }
@@ -47,31 +47,31 @@ class indice extends clsListagem
         
 
         
-        $this->addCabecalhos( array( "Banner", "Prioridade") );
+        $this->addCabecalhos(array("Banner", "Prioridade"));
         
         $db = new clsBanco();
         
-        $soma_lateral = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=1" );
-        $soma_centro = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=0" );
+        $soma_lateral = $db->UnicoCampo("SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=1");
+        $soma_centro = $db->UnicoCampo("SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=0");
         
-        $db->Consulta( "SELECT cod_portal_banner, caminho, title, prioridade, link, lateral_ FROM portal_banner ORDER BY prioridade, title" );
+        $db->Consulta("SELECT cod_portal_banner, caminho, title, prioridade, link, lateral_ FROM portal_banner ORDER BY prioridade, title");
         while ($db->ProximoRegistro())
         {
             list ($cod_portal_banner, $caminho, $title, $prioridade, $link, $lateral) = $db->Tupla();
 
             if ($lateral)
             {
-                $porcentagem = number_format((100*$prioridade)/$soma_lateral, 2)."%";
+                $porcentagem = number_format((100*$prioridade)/$soma_lateral, 2) . "%";
             }
             else
             {
-                $porcentagem = number_format((100*$prioridade)/$soma_centro, 2)."%";
+                $porcentagem = number_format((100*$prioridade)/$soma_centro, 2) . "%";
             }
             
             $prioridade *= 15;
             $prioridade = $prioridade > 600 ? 600 : $prioridade;
 
-            $this->addLinhas( array("<a href='banner_det.php?cod_portal_banner=$cod_portal_banner'><img src='fotos/imgs/{$caminho}' border=\"0\" width=\"149\"></a>", "<img src='imagens/grafico_hp.png' border=0 height='8' width='{$prioridade}'><br>{$link}<br>{$porcentagem}"));
+            $this->addLinhas(array("<a href='banner_det.php?cod_portal_banner=$cod_portal_banner'><img src='fotos/imgs/{$caminho}' border=\"0\" width=\"149\"></a>", "<img src='imagens/grafico_hp.png' border=0 height='8' width='{$prioridade}'><br>{$link}<br>{$porcentagem}"));
         }
         $this->acao = "go(\"banner_cad.php\")";
         $this->nome_acao = "Novo";
@@ -84,7 +84,7 @@ class indice extends clsListagem
 $pagina = new clsIndex();
 
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 
 $pagina->MakeAll();
 

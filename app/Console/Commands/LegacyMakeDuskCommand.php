@@ -35,7 +35,7 @@ class LegacyMakeDuskCommand extends Command
 
         $class = Str::before($class, '?');
         $class = Str::before($class, '.php');
-        $class = Str::substr($class, Str::length($path) + 1);
+        $class = Str::substr($class, Str::length($path)+1);
         $class = Str::studly($class) . 'RouteTest';
         $class = str_replace('/', '', $class);
 

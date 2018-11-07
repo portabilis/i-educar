@@ -33,7 +33,7 @@ class clsIndex extends clsBase
 {
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Grupos de Email!" );
+        $this->SetTitulo("{$this->_instituicao} Grupos de Email!");
         $this->processoAp = "85";
     }
 }
@@ -48,12 +48,12 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         if ($id_grupo) {
-            $db->Consulta( "SELECT cod_mailling_grupo, nm_grupo FROM mailling_grupo WHERE cod_mailling_grupo={$id_grupo}" );
+            $db->Consulta("SELECT cod_mailling_grupo, nm_grupo FROM mailling_grupo WHERE cod_mailling_grupo={$id_grupo}");
         }
 
         if ($id_grupo && $db->ProximoRegistro()) {
             list ($cod_grupo, $nome) = $db->Tupla();
-            $this->addDetalhe( array("Nome", $nome) );
+            $this->addDetalhe(array("Nome", $nome));
         }
 
         if ($id_grupo) {
@@ -73,6 +73,6 @@ class indice extends clsDetalhe
 }
 $pagina = new clsIndex();
 $miolo = new indice();
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>

@@ -27,7 +27,7 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmicontrolesis/geral.inc.php" );
+require_once("include/pmicontrolesis/geral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -60,20 +60,20 @@ class indice extends clsCadastro
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $this->cod_artigo=$_GET["cod_artigo"];
+        $this->cod_artigo = $_GET["cod_artigo"];
 
 
-        if( is_numeric( $this->cod_artigo ) )
+        if (is_numeric($this->cod_artigo))
         {
 
-            $obj = new clsPmicontrolesisArtigo( $this->cod_artigo );
-            $registro  = $obj->detalhe();
-            if( $registro )
+            $obj = new clsPmicontrolesisArtigo($this->cod_artigo);
+            $registro = $obj->detalhe();
+            if ($registro)
             {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro AS $campo => $val)  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
-                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
+                $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
+                $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
 
                 $this->fexcluir = true;
@@ -89,12 +89,12 @@ class indice extends clsCadastro
     function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_artigo", $this->cod_artigo );
+        $this->campoOculto("cod_artigo", $this->cod_artigo);
 
         // foreign keys
 
         // text
-        $this->campoMemo( "texto", "Texto", $this->texto, 60, 10, false );
+        $this->campoMemo("texto", "Texto", $this->texto, 60, 10, false);
 
         // data
 
@@ -112,12 +112,12 @@ class indice extends clsCadastro
 
 
 
-        $obj = new clsPmicontrolesisArtigo( $this->cod_artigo, $this->texto, $this->data_cadastro, $this->data_exclusao, $this->ativo );
+        $obj = new clsPmicontrolesisArtigo($this->cod_artigo, $this->texto, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
+        if ($cadastrou)
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: controlesis_artigo_lst.php" );
+            header("Location: controlesis_artigo_lst.php");
             die();
             return true;
         }
@@ -137,10 +137,10 @@ class indice extends clsCadastro
 
         $obj = new clsPmicontrolesisArtigo($this->cod_artigo, $this->texto, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
-        if( $editou )
+        if ($editou)
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_artigo_lst.php" );
+            header("Location: controlesis_artigo_lst.php");
             die();
             return true;
         }
@@ -160,10 +160,10 @@ class indice extends clsCadastro
 
         $obj = new clsPmicontrolesisArtigo($this->cod_artigo, $this->texto, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
+        if ($excluiu)
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: controlesis_artigo_lst.php" );
+            header("Location: controlesis_artigo_lst.php");
             die();
             return true;
         }
@@ -179,7 +179,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
