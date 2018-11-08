@@ -7,7 +7,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'include/pmieducar/CopyOrRemoveClassSteps.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -610,11 +609,7 @@ class indice extends clsCadastro
                 }
 
                 if ($alterouPadraoAnoEscolar) {
-                    $copiaOuRemoveEtapasDasTurmas = new CopyOrRemoveClassSteps();
-                    $copiaOuRemoveEtapasDasTurmas->setCourseCode($this->cod_curso);
-                    $copiaOuRemoveEtapasDasTurmas->setStanderdSchoolYear($this->padrao_ano_escolar);
-                    $copiaOuRemoveEtapasDasTurmas->setCurrentYear(date("Y"));
-                    $copiaOuRemoveEtapasDasTurmas->updateClassStepsForCourse();
+                    $this->updateClassStepsForCourse($this->cod_curso, $this->padrao_ano_escolar, date("Y"));
                 }
                 
 
@@ -682,6 +677,17 @@ class indice extends clsCadastro
             if (! empty($etapaId)) {
                 Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO etapas_curso_educacenso VALUES ($1 , $2)', ['params' => [$etapaId, $cod_curso] ]);
             }
+        }
+    }
+
+    public function  updateClassStepsForCourse($courseCode, $standerdSchoolYear, $currentYear)
+    {
+        $classStepsObject = new ClsPmieducarTurmaModulo();
+
+        $classStepsObject->removeStepsOfClassesForCourseAndYear($courseCode, $currentYear);
+
+        if ($standerdSchoolYear == 0) {
+            $classStepsObject->copySchoolStepsIntoClassesForCourseAndYear($courseCode, $currentYear);
         }
     }
 }
