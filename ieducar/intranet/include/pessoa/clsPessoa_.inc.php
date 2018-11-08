@@ -1,29 +1,4 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaï¿½                                 *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro                  *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaï¿½           *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou   *
-*   modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme   *
-*   publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da   *
-*   Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.  *
-*                                                                        *
-*   Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM   *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-   *
-*   ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-   *
-*   sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU     *
-*   junto  com  este  programa. Se nï¿½o, escreva para a Free Software   *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBanco.inc.php");
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
@@ -272,8 +247,6 @@ class clsPessoa_
                     $nome .= $parte." ";
                 }
             }
-            $nome = str_replace( array( "ï¿½","ï¿½","ï¿½","ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½"),
-                                 array( "ï¿½","ï¿½","ï¿½","ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½"), $nome );
             $tupla['nome'] = $nome;
             $tupla['total']= $total;
             $resultado[] = $tupla;
@@ -395,8 +368,6 @@ class clsPessoa_
                     }
                 }
                 $nome = implode( " ", $arrNovoNome );
-                //$nome = str_replace( array( "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½",    "ï¿½", "ï¿½", "ï¿½", "ï¿½",     "ï¿½", "ï¿½", "ï¿½", "?", "ï¿½",    "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½",  "ï¿½", "ï¿½", "ï¿½", "?", "ï¿½",    "ï¿½", "?", "?", "?",   "ï¿½",  "ï¿½" ),
-                //          array( "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½",   "ï¿½", "ï¿½", "ï¿½", "ï¿½",     "ï¿½", "ï¿½", "ï¿½", "?", "ï¿½",    "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½",  "ï¿½", "ï¿½", "ï¿½", "?", "ï¿½",    "ï¿½", "?", "?", "y",   "ï¿½",  "ï¿½"), $nome );
                 $tupla['nome'] = $nome;
                 list($this->idpes, $this->nome, $this->idpes_cad, $this->data_cad, $this->url, $this->tipo, $this->idpes_rev, $this->data_rev, $this->situacao, $this->origem_gravacao, $this->email ) = $tupla;
                 return $tupla;
