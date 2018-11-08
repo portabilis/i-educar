@@ -611,10 +611,10 @@ class indice extends clsCadastro
 
                 if ($alterouPadraoAnoEscolar) {
                     $copiaOuRemoveEtapasDasTurmas = new CopyOrRemoveClassSteps();
-                    $copiaOuRemoveEtapasDasTurmas->setCurseCode($this->cod_curso);
+                    $copiaOuRemoveEtapasDasTurmas->setCourseCode($this->cod_curso);
                     $copiaOuRemoveEtapasDasTurmas->setStanderdSchoolYear($this->padrao_ano_escolar);
                     $copiaOuRemoveEtapasDasTurmas->setCurrentYear(date("Y"));
-                    $copiaOuRemoveEtapasDasTurmas->updateClassStepsForCurse();
+                    $copiaOuRemoveEtapasDasTurmas->updateClassStepsForCourse();
                 }
                 
 

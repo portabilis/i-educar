@@ -4,27 +4,27 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class CopyOrRemoveClassSteps
 {
-    private $curseCode = null;
+    private $courseCode = null;
     private $standerdSchoolYear = null;
     private $currentYear = null;
 
-    public function  updateClassStepsForCurse()
+    public function  updateClassStepsForCourse()
     {
         $classStepsObject = new ClsPmieducarTurmaModulo();
-        
+
+        $classStepsObject->removeStepsOfClassesForCourseAndYear($this->courseCode, $this->currentYear);
+
         if ($this->standerdSchoolYear == 0) {
-            $classStepsObject->copySchoolStepsIntoClassesForCurseAndYear($this->curseCode, $this->currentYear);
-        } else {
-            $classStepsObject->removeStepsOfClassesForCurseAndYear($this->curseCode, $this->currentYear);
+            $classStepsObject->copySchoolStepsIntoClassesForCourseAndYear($this->courseCode, $this->currentYear);
         }
     }
 
     /**
-     * @param integer $curseCode
+     * @param integer $courseCode
      */
-    public function setCurseCode($curseCode)
+    public function setCourseCode($courseCode)
     {
-        $this->curseCode = $curseCode;
+        $this->courseCode = $courseCode;
     }
 
     /**

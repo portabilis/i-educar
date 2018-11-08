@@ -41,6 +41,8 @@ class clsPmieducarTurmaModulo
     var $data_fim;
     var $dias_letivos;
 
+    var $pessoa_logada;
+
     // propriedades padrao
 
     /**
@@ -110,6 +112,7 @@ class clsPmieducarTurmaModulo
         $db = new clsBanco();
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}turma_modulo";
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
 
         $this->_campos_lista = $this->_todos_campos = "ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos";
 
@@ -449,40 +452,62 @@ class clsPmieducarTurmaModulo
         return false;
     }
     
-    public function removeStepsOfClassesForCurseAndYear($codCurso, $ano)
+    public function removeStepsOfClassesForCourseAndYear($courseCode, $year)
     {
-        if (is_numeric($codCurso) && is_numeric($ano)) {
+        if (is_numeric($courseCode) && is_numeric($year)) {
             $sql = "
                 DELETE FROM {$this->_tabela}
                 WHERE ref_cod_turma IN (
                     SELECT cod_turma FROM pmieducar.turma
-                    WHERE ref_cod_curso = {$codCurso}
-                    AND ano = {$ano}
-                );
+                    WHERE ref_cod_curso = {$courseCode}
+                    AND ano = {$year}
+                ) RETURNING *;
             ";
             $db = new clsBanco();
             $db->Consulta($sql);
+            while ($db->ProximoRegistro()) {
+                $tupla[] = $db->Tupla();
+            }
+            $this->auditStepsOfClasses($tupla, 3);
             return true;
         }
         return false;
     }
 
-    public function copySchoolStepsIntoClassesForCurseAndYear($codCurso, $ano)
+    public function copySchoolStepsIntoClassesForCourseAndYear($courseCode, $year)
     {
-        if (is_numeric($codCurso) && is_numeric($ano)) {
+        if (is_numeric($courseCode) && is_numeric($year)) {
             $sql = "
                 INSERT INTO pmieducar.turma_modulo
                 SELECT cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos
                 FROM pmieducar.turma
                 INNER JOIN pmieducar.ano_letivo_modulo ON (turma.ref_ref_cod_escola = ano_letivo_modulo.ref_ref_cod_escola
                     AND turma.ano = ano_letivo_modulo.ref_ano)
-                WHERE ref_cod_curso = {$codCurso} AND ano = {$ano};
+                WHERE ref_cod_curso = {$courseCode} AND ano = {$year}
+                RETURNING *;
             ";
             $db = new clsBanco();
             $db->Consulta($sql);
+            while ($db->ProximoRegistro()) {
+                $tupla[] = $db->Tupla();
+            }
+            $this->auditStepsOfClasses($tupla, 1);
             return true;
         }
         return false;
+    }
+
+    private function auditStepsOfClasses($infos, $operation)
+    {
+        foreach ($infos as $key => $info) {
+            $auditoria = new clsModulesAuditoriaGeral('turma_modulo', $this->pessoa_logada, $info['ref_cod_turma']);
+            if ($operation == 1) {
+                $auditoria->inclusao($info);
+            }
+            if ($operation == 3) {
+                $auditoria->exclusao($info);
+            }
+        }
     }
 
     /**
