@@ -7,6 +7,7 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+require_once 'include/pmieducar/CopyOrRemoveClassSteps.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -576,6 +577,7 @@ class indice extends clsCadastro
             $obj->modalidade_curso = $this->modalidade_curso;
 
             $detalheAntigo = $obj->detalhe();
+            $alterouPadraoAnoEscolar = $detalheAntigo['padrao_ano_escolar'] != $this->padrao_ano_escolar;
             $editou = $obj->edita();
             if ($editou) {
                 $detalheAtual = $obj->detalhe();
@@ -606,6 +608,15 @@ class indice extends clsCadastro
                         }
                     }
                 }
+
+                if ($alterouPadraoAnoEscolar) {
+                    $copiaOuRemoveEtapasDasTurmas = new CopyOrRemoveClassSteps();
+                    $copiaOuRemoveEtapasDasTurmas->setCurseCode($this->cod_curso);
+                    $copiaOuRemoveEtapasDasTurmas->setStanderdSchoolYear($this->padrao_ano_escolar);
+                    $copiaOuRemoveEtapasDasTurmas->setCurrentYear(date("Y"));
+                    $copiaOuRemoveEtapasDasTurmas->updateClassStepsForCurse();
+                }
+                
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 header('Location: educar_curso_lst.php');

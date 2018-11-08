@@ -448,6 +448,42 @@ class clsPmieducarTurmaModulo
         }
         return false;
     }
+    
+    public function removeStepsOfClassesForCurseAndYear($codCurso, $ano)
+    {
+        if (is_numeric($codCurso) && is_numeric($ano)) {
+            $sql = "
+                DELETE FROM {$this->_tabela}
+                WHERE ref_cod_turma IN (
+                    SELECT cod_turma FROM pmieducar.turma
+                    WHERE ref_cod_curso = {$codCurso}
+                    AND ano = {$ano}
+                );
+            ";
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            return true;
+        }
+        return false;
+    }
+
+    public function copySchoolStepsIntoClassesForCurseAndYear($codCurso, $ano)
+    {
+        if (is_numeric($codCurso) && is_numeric($ano)) {
+            $sql = "
+                INSERT INTO pmieducar.turma_modulo
+                SELECT cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos
+                FROM pmieducar.turma
+                INNER JOIN pmieducar.ano_letivo_modulo ON (turma.ref_ref_cod_escola = ano_letivo_modulo.ref_ref_cod_escola
+                    AND turma.ano = ano_letivo_modulo.ref_ano)
+                WHERE ref_cod_curso = {$codCurso} AND ano = {$ano};
+            ";
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
