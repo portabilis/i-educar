@@ -1057,6 +1057,8 @@ var handleGetPersonDetails = function (dataResponse) {
 
     var cpf = dataResponse.cpf;
 
+    var mascara = null;
+    
     if (cpf) {
         mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }
