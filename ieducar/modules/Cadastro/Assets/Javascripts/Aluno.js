@@ -1056,7 +1056,12 @@ var handleGetPersonDetails = function (dataResponse) {
     }
 
     var cpf = dataResponse.cpf;
-    mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+
+    var mascara = null;
+    
+    if (cpf) {
+        mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
 
     $j('#id_federal').val(mascara);
     $j('#data_emissao_rg').val(dataResponse.data_emissao_rg);
