@@ -162,7 +162,10 @@ class RegraController extends ApiCoreController
                 $__regras[$regra['id']]['media_recuperacao_paralela'] = $regra['media_recuperacao_paralela'];
                 $__regras[$regra['id']]['nota_maxima_geral'] = $regra['nota_maxima_geral'];
                 $__regras[$regra['id']]['nota_maxima_exame'] = $regra['nota_maxima_exame'];
-                $__regras[$regra['id']]['turmas'] = [];
+
+                if (!isset($__regras[$regra['id']]['turmas'])) {
+                    $__regras[$regra['id']]['turmas'] = [];
+                }
 
                 if ($regra['turma_id']) {
                     $__regras[$regra['id']]['turmas'][] = [

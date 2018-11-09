@@ -73,7 +73,7 @@ class MovimentoMensalMatTrocasQueryFactory extends QueryFactory
             and mt.ref_cod_turma = t.cod_turma
             and f.sexo = :sexo
             and m.ativo = 1
-            and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
+            and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
             and mt.sequencial < (
                 select max(sequencial)
                 from pmieducar.matricula_turma

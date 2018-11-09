@@ -21,6 +21,7 @@ class FilaUnicaController extends ApiCoreController
                        pessoa.nome,
                        pessoa.idpes,
                        to_char(fisica.data_nasc, 'dd/mm/yyyy') AS data_nasc,
+                       replace(to_char(fisica.cpf, '000:000:000-00'), ':', '.') AS cpf,
                        documento.num_termo,
                        documento.num_folha,
                        documento.num_livro,
@@ -39,7 +40,8 @@ class FilaUnicaController extends ApiCoreController
                        endereco_pessoa.complemento,
                        endereco_pessoa.bloco,
                        endereco_pessoa.andar,
-                       endereco_pessoa.apartamento
+                       endereco_pessoa.apartamento,
+                       endereco_pessoa.observacoes
                   FROM pmieducar.aluno
                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                  INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
@@ -62,6 +64,7 @@ class FilaUnicaController extends ApiCoreController
             'nome',
             'idpes',
             'data_nasc',
+            'cpf',
             'num_termo',
             'num_folha',
             'num_livro',
@@ -80,7 +83,8 @@ class FilaUnicaController extends ApiCoreController
             'complemento',
             'bloco',
             'andar',
-            'apartamento'
+            'apartamento',
+            'observacoes'
         ];
 
         $aluno = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
