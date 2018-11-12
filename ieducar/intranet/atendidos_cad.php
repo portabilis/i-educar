@@ -26,7 +26,6 @@ class clsIndex extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' Pessoas Físicas - Cadastro');
         $this->processoAp = 43;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -85,14 +84,10 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(43, $this->pessoa_logada, 7, 'atendidos_lst.php');
 
-        $this->cod_pessoa_fj = @$_GET['cod_pessoa_fj'];
+        $this->cod_pessoa_fj = $this->getQueryString('cod_pessoa_fj');
         $this->retorno = 'Novo';
 
         if (is_numeric($this->cod_pessoa_fj)) {
@@ -186,15 +181,7 @@ class indice extends clsCadastro
         );
 
         $this->nome_url_cancelar = 'Cancelar';
-
-        $nomeMenu = $this->retorno == 'Editar' ? $this->retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_pessoas_index.php' => 'Pessoas',
-            '' => "$nomeMenu pessoa f&iacute;sica"
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
 
         return $this->retorno;
     }
@@ -829,7 +816,7 @@ class indice extends clsCadastro
             false
         );
 
-        $options = ['label' => Portabilis_String_Utils::toLatin1('Município'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep];
+        $options = ['label' => 'Município', 'required' => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep];
 
         $helperOptions = [
             'objectName' => 'municipio',
@@ -838,7 +825,7 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->simpleSearchMunicipio('municipio', $options, $helperOptions);
 
-        $options = ['label' => Portabilis_String_Utils::toLatin1('Distrito'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep];
+        $options = ['label' => 'Distrito', 'required' => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep];
 
         $helperOptions = [
             'objectName' => 'distrito',
@@ -849,7 +836,7 @@ class indice extends clsCadastro
 
         $helperOptions = ['hiddenInputOptions' => ['options' => ['value' => $this->bairro_id]]];
 
-        $options = [ 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep];
+        $options = [ 'label' => 'Bairro / Zona de Localização - <b>Buscar</b>', 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep];
 
         $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
 
