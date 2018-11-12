@@ -41,7 +41,7 @@ try {
     print $frontController->getViewContents();
 
 } catch (Exception $e) {
-    if (getenv('APP_DEBUG')) {
+    if (config('app.debug')) {
         throw $e;
     }
 
