@@ -9,7 +9,7 @@ class TipoVinculo
     const TERCEIRIZADO = 3;
     const CLT = 4;
 
-    public function getDescriptiveValues()
+    public static function getDescriptiveValues()
     {
         return [
             self::EFETIVO => 'Concursado/efetivo/estável',

@@ -1916,7 +1916,11 @@ class clsPmieducarMatricula
     {
         $query = "
             select
-                coalesce(turma_modulo.data_inicio, ano_letivo_modulo.data_inicio) as data
+                CASE WHEN curso.padrao_ano_escolar = 1
+                    THEN ano_letivo_modulo.data_inicio
+                ELSE 
+                    turma_modulo.data_inicio
+                END as data
             from
                 pmieducar.turma
             inner join pmieducar.ano_letivo_modulo
@@ -1925,6 +1929,7 @@ class clsPmieducarMatricula
             left join pmieducar.turma_modulo
                 on turma_modulo.ref_cod_turma = turma.cod_turma
                 and turma_modulo.sequencial = 1
+            join pmieducar.curso on curso.cod_curso = turma.ref_cod_curso
             where true
                 and ano_letivo_modulo.sequencial = 1
                 and turma.cod_turma = {$cod_turma};
@@ -1943,7 +1948,11 @@ class clsPmieducarMatricula
     {
         $query = "
             select
-                coalesce(turma_modulo.data_fim, ano_letivo_modulo.data_fim) as data
+                CASE WHEN curso.padrao_ano_escolar = 1
+                    THEN ano_letivo_modulo.data_fim
+                ELSE 
+                    turma_modulo.data_fim
+                END as data
             from
                 pmieducar.turma
             inner join (
@@ -1972,6 +1981,7 @@ class clsPmieducarMatricula
                     and turma_modulo.sequencial = modulo.num_etapas
             ) as turma_modulo
                 on turma_modulo.ref_cod_turma = turma.cod_turma
+            join pmieducar.curso on curso.cod_curso = turma.ref_cod_curso
             where true
                 and turma.cod_turma = {$cod_turma};
         ";
