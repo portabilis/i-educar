@@ -141,7 +141,7 @@ class clsPessoaFisica extends clsPessoaFj
             $str_nome = addslashes($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
-            $where   .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $where   .= "{$whereAnd} translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
@@ -188,7 +188,7 @@ class clsPessoaFisica extends clsPessoaFj
         if ($str_orderBy) {
             $orderBy .= $str_orderBy . ' ';
         } else {
-            $orderBy .= 'nome ';
+            $orderBy .= 'COALESCE(nome_social, nome) ';
         }
 
         $db  = new clsBanco();
