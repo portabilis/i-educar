@@ -26,9 +26,10 @@ class indice extends clsDetalhe
         session_write_close();
         $this->titulo = 'Detalhe do Vínculo';
 
-        // Pega o codigo do chamado
-        $cod_func = @$_GET['cod_func'];
+        $cod_func = $_GET['cod_func'] ?? null;
+
         $db = new clsBanco();
+
         $db->Consulta("SELECT nm_vinculo, abreviatura FROM funcionario_vinculo WHERE cod_funcionario_vinculo = '$cod_func'");
 
         if ($db->ProximoRegistro()) {

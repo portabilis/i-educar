@@ -45,12 +45,13 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe da licita&ccedil;&atilde;o finalizada";
-        
 
-        $id_licitacao = @$_GET['id_licitacao'];
+        $id_licitacao = $_GET['id_licitacao'] ?? null;
 
         $db = new clsBanco();
-        $db->Consulta( "
+
+        if ($id_licitacao) {
+            $db->Consulta( "
             SELECT 
                 m.nm_modalidade, 
                 p.nm_pessoa, 
@@ -81,8 +82,11 @@ class indice extends clsDetalhe
                 cod_compras_licitacoes={$id_licitacao} AND 
                 ref_cod_compras_licitacoes = cod_compras_licitacoes
         " );
+        }
+
         $db2 = new clsBanco();
-        if ($db->ProximoRegistro())
+
+        if ($id_licitacao && $db->ProximoRegistro())
         {
             list ($nm, $nome, $numero, $objeto, $data_c, $cod_licitacao, $ref_pregoeiro, $ref_equipe1, $ref_equipe2, $ref_equipe3, $ano_processo, $mes_processo, $seq_processo, $seq_portaria, $ano_portaria, $valor_referencia, $valor_real, $ref_final ) = $db->Tupla();
             $hora = date('H:i', strtotime(substr($data_c,0,19)));
@@ -115,9 +119,9 @@ class indice extends clsDetalhe
             $nmFinal = $db2->UnicoCampo( "SELECT nm_final FROM compras_final_pregao WHERE cod_compras_final_pregao = '{$ref_final}'" );
             $this->addDetalhe( array("Status Final", $nmFinal ) );
         }
+
         $this->url_editar = "licitacoes_funcionarios_cad.php?id_licitacao=$id_licitacao";
         $this->url_cancelar = "licitacoes_finalizadas_lst.php";
-
         $this->largura = "100%";
     }
 }
