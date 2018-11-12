@@ -55,7 +55,8 @@ class indice extends clsDetalhe
             'url',
             'tipo',
             'sexo',
-            'zona_localizacao'
+            'zona_localizacao',
+            'nome_social'
         );
 
         $objFoto = new clsCadastroFisicaFoto($cod_pessoa);
@@ -65,6 +66,10 @@ class indice extends clsDetalhe
                 <p><img height="117" src="'.$caminhoFoto['caminho'].'"/></p>']);
         } else {
             $this->addDetalhe(['Nome', $detalhe['nome']]);
+        }
+
+        if ($detalhe['nome_social']) {
+            $this->addDetalhe(['Nome social', $detalhe['nome_social']]);
         }
 
         $this->addDetalhe(['CPF', int2cpf($detalhe['cpf'])]);

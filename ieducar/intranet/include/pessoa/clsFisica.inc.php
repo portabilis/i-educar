@@ -16,6 +16,7 @@ class clsFisica
     public $idpes_con;
     public $data_uniao;
     public $data_obito;
+    public $nome_social;
     /**
      * Nacionalidade 1 - Brasileiro 2 - Naturalizado Brasileiro 3 - Estrangeiro
      *
@@ -102,7 +103,8 @@ class clsFisica
         $tipo_trabalho = false,
         $local_trabalho = false,
         $horario_inicial_trabalho = false,
-        $horario_final_trabalho = false
+        $horario_final_trabalho = false,
+        $nome_social = false
     ) {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -188,6 +190,7 @@ class clsFisica
         $this->local_trabalho           = $local_trabalho;
         $this->horario_inicial_trabalho = $horario_inicial_trabalho;
         $this->horario_final_trabalho   = $horario_final_trabalho;
+        $this->nome_social              = $nome_social;
 
         $cpf = idFederal2int($cpf);
 
@@ -410,6 +413,14 @@ class clsFisica
                 $valores .= ", '$this->horario_final_trabalho'";
             } else {
                 $campos  .= ', horario_final_trabalho';
+                $valores .= ', NULL';
+            }
+
+            if (is_string($this->nome_social) && !empty($this->nome_social)) {
+                $campos  .= ', nome_social';
+                $valores .= ", '$this->nome_social'";
+            } else {
+                $campos  .= ', nome_social';
                 $valores .= ', NULL';
             }
 
@@ -651,6 +662,14 @@ class clsFisica
                 $gruda = ', ';
             } elseif (is_null($this->horario_final_trabalho)) {
                 $set .= "$gruda horario_final_trabalho = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->nome_social) && !empty($this->nome_social)) {
+                $set .= "$gruda nome_social = '{$this->nome_social}'";
+                $gruda = ', ';
+            } elseif (is_null($this->nome_social)) {
+                $set .= "$gruda nome_social = NULL";
                 $gruda = ', ';
             }
 
@@ -926,7 +945,7 @@ class clsFisica
     {
         if ($this->idpes) {
             $db = new clsBanco();
-            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome FROM {$this->schema}.{$this->tabela}
+            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) WHERE fisica.idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();

@@ -39,6 +39,11 @@ class indice extends clsListagem
             foreach ($pessoas as $pessoa) {
                 $cod = $pessoa['idpes'];
                 $nome = $pessoa['nome'];
+
+                if ($pessoa['nome_social']) {
+                    $nome = $pessoa['nome_social'] . '<br> <i>Nome de registro: </i>' . $pessoa['nome'];
+                }
+
                 $total = $pessoa['total'];
                 $cpf = $pessoa['cpf'] ? int2CPF($pessoa['cpf']) : '';
                 $this->addLinhas(["<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>$nome</a>", $cpf ]);

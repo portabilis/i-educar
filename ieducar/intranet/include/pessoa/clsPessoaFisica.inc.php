@@ -34,6 +34,7 @@ class clsPessoaFisica extends clsPessoaFj
     public $ativo;
     public $data_exclusao;
     public $zona_localizacao_censo;
+    public $nome_social;
 
     public $banco           = 'pmi';
     public $schema_cadastro = 'cadastro';
@@ -204,7 +205,7 @@ class clsPessoaFisica extends clsPessoaFj
         }
 
         $db->Consulta(sprintf(
-            'SELECT idpes, nome, url, \'F\' AS tipo, email, cpf FROM cadastro.v_pessoa_fisica %s %s %s',
+            'SELECT idpes, nome, nome_social, url, \'F\' AS tipo, email, cpf FROM cadastro.v_pessoa_fisica %s %s %s',
             $where,
             $orderBy,
             $limite
@@ -296,6 +297,7 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->ativo                    = $detalhe_fisica['ativo'];
                 $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
                 $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
+                $this->nome_social              = $detalhe_fisica['nome_social'];
 
                 $tupla['idpes'] = $this->idpes;
                 $tupla[]        = & $tupla['idpes'];
@@ -381,6 +383,9 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
                 $tupla[]                         = & $tupla['zona_localizacao_censo'];
 
+                $tupla['nome_social'] = $this->nome_social;
+                $tupla[] = & $tupla['nome_social'];
+
                 return $tupla;
             }
         } elseif ($this->cpf) {
@@ -460,6 +465,7 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->ativo                    = $detalhe_fisica['ativo'];
                     $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
                     $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
+                    $this->nome_social              = $detalhe_fisica['nome_social'];
 
                     $tupla['idpes'] = $this->idpes;
                     $tupla[]        = & $tupla['idpes'];
@@ -538,6 +544,9 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
                     $tupla[] = & $tupla['zona_localizacao_censo'];
+
+                    $tupla['nome_social'] = $this->nome_social;
+                    $tupla[] = & $tupla['nome_social'];
 
                     return $tupla;
                 }

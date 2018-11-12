@@ -33,6 +33,7 @@ class indice extends clsCadastro
 {
     public $cod_pessoa_fj;
     public $nm_pessoa;
+    public $nome_social;
     public $id_federal;
     public $data_nasc;
     public $endereco;
@@ -104,7 +105,8 @@ class indice extends clsCadastro
                 $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
-                $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido, $this->religiao_id, $this->zona_localizacao_censo
+                $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
+                $this->religiao_id, $this->zona_localizacao_censo, $this->nome_social
             ) =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -154,7 +156,8 @@ class indice extends clsCadastro
                 'data_admissao',
                 'falecido',
                 'ref_cod_religiao',
-                'zona_localizacao_censo'
+                'zona_localizacao_censo',
+                'nome_social'
             );
 
             // var_dump($objPessoa); die;
@@ -239,6 +242,7 @@ class indice extends clsCadastro
 
         $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
         $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, '50', '255', true);
+        $this->campoTexto('nome_social', 'Nome social', $this->nome_social, '50', '255', false);
 
         $foto = false;
         if (is_numeric($this->cod_pessoa_fj)) {
@@ -1418,6 +1422,7 @@ class indice extends clsCadastro
         $fisica->falecido = $this->falecido;
         $fisica->ref_cod_religiao = $this->religiao_id;
         $fisica->zona_localizacao_censo = empty($this->zona_localizacao_censo) ? null : $this->zona_localizacao_censo;
+        $fisica->nome_social = $this->nome_social;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 
