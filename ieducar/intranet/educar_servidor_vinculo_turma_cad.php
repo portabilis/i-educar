@@ -2,6 +2,7 @@
 
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -26,22 +27,29 @@ class indice extends clsCadastro
     public $pessoa_logada;
 
     public $id;
+
     public $ano;
+
     public $servidor_id;
+
     public $funcao_exercida;
+
     public $tipo_vinculo;
+
     public $permite_lancar_faltas_componente;
 
     public $ref_cod_instituicao;
+
     public $ref_cod_escola;
+
     public $ref_cod_curso;
+
     public $ref_cod_serie;
+
     public $ref_cod_turma;
 
     public function Inicializar()
     {
-        $retorno = '';
-
         $this->id = $this->getQueryString('id');
         $this->servidor_id = $this->getQueryString('ref_cod_servidor');
         $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
@@ -65,13 +73,14 @@ class indice extends clsCadastro
         if (is_numeric($this->id)) {
             $obj = new clsModulesProfessorTurma($this->id);
 
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
 
             if ($registro) {
                 $this->ref_cod_turma = $registro['turma_id'];
                 $this->funcao_exercida = $registro['funcao_exercida'];
                 $this->tipo_vinculo = $registro['tipo_vinculo'];
                 $this->permite_lancar_faltas_componente = $registro['permite_lancar_faltas_componente'];
+                $this->turma_turno_id = $registro['turno_id'];
 
                 $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
                 $obj_turma = $obj_turma->detalhe();
@@ -81,7 +90,7 @@ class indice extends clsCadastro
                 $this->ref_cod_serie = $obj_turma['ref_ref_cod_serie'];
 
                 if (!isset($_GET['copia'])) {
-                    $retorno     = 'Editar';
+                    $retorno = 'Editar';
                 }
 
                 if (isset($_GET['copia'])) {
@@ -90,21 +99,23 @@ class indice extends clsCadastro
             }
         }
 
-        $this->url_cancelar = ($retorno == 'Editar') ?
-        'educar_servidor_vinculo_turma_det.php?id=' . $this->id :
-        $backUrl;
+        $this->url_cancelar = $retorno == 'Editar'
+            ? 'educar_servidor_vinculo_turma_det.php?id=' . $this->id
+            : $backUrl;
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-
-        $this->breadcrumb('Vínculo do professor à turma',['educar_servidores_index.php' => 'Servidores']);
+        $this->breadcrumb('Vínculo do professor à turma', [
+            'educar_servidores_index.php' => 'Servidores'
+        ]);
 
         return $retorno;
     }
 
     public function Gerar()
     {
+        $ano = null;
+
         if ($this->id) {
             $objProfessorTurma = new clsModulesProfessorTurma($this->id);
             $detProfessorTurma = $objProfessorTurma->detalhe();
@@ -145,20 +156,24 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('tipo_vinculo', $options);
 
+        $this->inputsHelper()->turmaTurno([
+            'required' => false
+        ]);
+
         $options = [
             'label' => 'Professor de área específica?',
             'value' => $this->permite_lancar_faltas_componente,
-            'help' =>  'Marque esta opção somente se o professor leciona uma disciplina específica na turma selecionada.'
+            'help' => 'Marque esta opção somente se o professor leciona uma disciplina específica na turma selecionada.'
         ];
 
         $this->inputsHelper()->checkbox('permite_lancar_faltas_componente', $options);
-
         $this->inputsHelper()->checkbox('selecionar_todos', ['label' => 'Selecionar/remover todos']);
         $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true]);
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
         ];
+
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
@@ -174,7 +189,7 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
         if ($this->ref_cod_turma) {
-            $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
+            $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
             if ($professorTurma->existe2()) {
                 $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
 
@@ -186,7 +201,8 @@ class indice extends clsCadastro
         } else {
             $turmas = new clsPmieducarTurmas();
             foreach ($turmas->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->ano) as $reg) {
-                $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
+                $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
+                // FIxME entender qual é o objeto correto
                 $professorTurmaId = $obj->cadastra();
                 // FIXME #parameters
                 $professorTurma->gravaComponentes($professorTurmaId, null);
@@ -217,7 +233,8 @@ class indice extends clsCadastro
             $this->ref_cod_turma,
             $this->funcao_exercida,
             $this->tipo_vinculo,
-            $this->permite_lancar_faltas_componente
+            $this->permite_lancar_faltas_componente,
+            $this->turma_turno_id
         );
 
         if ($professorTurma->existe2()) {
@@ -236,6 +253,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
@@ -258,7 +276,6 @@ class indice extends clsCadastro
         header('Location:' . $backUrl);
         die();
     }
-
 }
 
 // Instancia objeto de página
