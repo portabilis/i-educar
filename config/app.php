@@ -211,4 +211,5 @@ return [
 
     ],
 
+    'trackerror' => env('APP_TRACK_ERROR', false),
 ];

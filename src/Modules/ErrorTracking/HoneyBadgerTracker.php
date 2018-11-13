@@ -2,27 +2,19 @@
 
 namespace iEducar\Modules\ErrorTracking;
 
+use Honeybadger\Honeybadger;
 use Throwable;
 
 class HoneyBadgerTracker implements Tracker
 {
-    public function notify(Throwable $exception, $data = [])
+    public function notify(Throwable $exception, $data = null)
     {
+        $honeybadger = Honeybadger::new(config('honeybadger'));
 
-    }
-
-    public function notifyBadImplemented(Throwable $exception, $data = [])
-    {
-        \Honeybadger\Honeybadger::$config->values(array(
-            'api_key' => $GLOBALS['coreExt']['Config']->modules->error->honeybadger_key,
-            'environment_name' => $_SERVER['HTTP_HOST'],
-        ));
-
-        \Honeybadger\Honeybadger::context($data);
-        if (empty($data)) {
-            \Honeybadger\Honeybadger::context($_REQUEST);
+        if ($data) {
+            $honeybadger->context('data', $data);
         }
 
-        \Honeybadger\Honeybadger::notify($exception);
+        $honeybadger->notify($exception);
     }
 }
