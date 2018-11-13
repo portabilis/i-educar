@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Response;
@@ -97,10 +98,18 @@ class LegacyController extends Controller
     {
         try {
             require_once $filename;
+        } catch (Exception $exception) {
+            /** @var ExceptionHandler $handler */
+            $handler = app(ExceptionHandler::class);
+            $handler->report($exception);
+
+            throw new HttpException(500, 'Error in legacy code.', $exception);
         } catch (Throwable $throwable) {
             /** @var ExceptionHandler $handler */
             $handler = app(ExceptionHandler::class);
-            $handler->report($throwable);
+            $handler->report(
+                new Exception($throwable->getMessage(), $throwable->getCode(), $throwable)
+            );
 
             throw new HttpException(500, 'Error in legacy code.', $throwable);
         }
