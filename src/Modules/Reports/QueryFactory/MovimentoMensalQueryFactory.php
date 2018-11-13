@@ -97,6 +97,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                 and escola.ref_cod_instituicao = :instituicao
                 and matricula.ref_ref_cod_escola = :escola
                 and matricula.ano = :ano
+                and turma.ativo = 1
                 and
                 (
                     case when :curso = 0 then
