@@ -22,7 +22,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Aluno');
         $this->processoAp = 578;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 class indice extends clsDetalhe
@@ -51,7 +50,6 @@ class indice extends clsDetalhe
     public function Gerar()
     {
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         unset($_SESSION['reload_faixa_etaria']);
         unset($_SESSION['reload_reserva_vaga']);
         session_write_close();
@@ -61,7 +59,7 @@ class indice extends clsDetalhe
 
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
         $this->titulo = 'Aluno - Detalhe';
-        $this->cod_aluno = $_GET['cod_aluno'];
+        $this->cod_aluno = $this->getQueryString('cod_aluno');
         $tmp_obj = new clsPmieducarAluno($this->cod_aluno);
         $registro = $tmp_obj->detalhe();
 
@@ -841,20 +839,20 @@ class indice extends clsDetalhe
             if (dbBool($reg['kit_completo'])) {
                 $this->addDetalhe(['<span id=\'funiforme\'></span>Recebeu kit completo', 'Sim']);
                 $this->addDetalhe([
-                    '<span id=\'ffuniforme\'></span>' . Portabilis_String_Utils::toLatin1('Data da distribuição'),
+                    '<span id=\'ffuniforme\'></span>' . 'Data da distribuição',
                     Portabilis_Date_Utils::pgSQLToBr($reg['data'])
                 ]);
             } else {
                 $this->addDetalhe([
                     '<span id=\'funiforme\'></span>Recebeu kit completo',
-                    Portabilis_String_Utils::toLatin1('Não')
+                    'Não'
                 ]);
                 $this->addDetalhe([
-                    Portabilis_String_Utils::toLatin1('Data da distribuição'),
+                    'Data da distribuição',
                     Portabilis_Date_Utils::pgSQLToBr($reg['data'])
                 ]);
                 $this->addDetalhe([
-                    Portabilis_String_Utils::toLatin1('Quantidade de agasalhos (jaqueta e calça)'),
+                    'Quantidade de agasalhos (jaqueta e calça)',
                     $reg['agasalho_qtd'] ?: '0'
                 ]);
                 $this->addDetalhe(['Quantidade de camisetas (manga curta)', $reg['camiseta_curta_qtd'] ?: '0']);
@@ -863,7 +861,7 @@ class indice extends clsDetalhe
                 $this->addDetalhe(['Bermudas tectels (masculino)', $reg['bermudas_tectels_qtd'] ?: '0']);
                 $this->addDetalhe(['Bermudas coton (feminino)', $reg['bermudas_coton_qtd'] ?: '0']);
                 $this->addDetalhe([
-                    '<span id=\'ffuniforme\'></span>' . Portabilis_String_Utils::toLatin1('Quantidade de tênis'),
+                    '<span id=\'ffuniforme\'></span>' . 'Quantidade de tênis',
                     $reg['tenis_qtd'] ?: '0'
                 ]);
             }
@@ -1006,20 +1004,12 @@ class indice extends clsDetalhe
 
         $this->url_cancelar = 'educar_aluno_lst.php';
         $this->largura = '100%';
-
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Matrícula'
-        ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
         $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
         $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
         $mostraDependencia = $GLOBALS['coreExt']['Config']->app->matricula->dependencia;
         $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
-
+        
+        $this->breadcrumb('Aluno', ['/intranet/educar_index.php' => 'Escola']);
         // js
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',

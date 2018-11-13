@@ -14,19 +14,11 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Aluno");
         $this->processoAp = '578';
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsListagem
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-
     /**
      * Titulo no topo da pagina
      *
@@ -75,10 +67,6 @@ class indice extends clsListagem
 
     public function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Aluno - Listagem';
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
@@ -91,10 +79,10 @@ class indice extends clsListagem
         $this->campoNumero('cod_aluno', _cl('aluno.detalhe.codigo_aluno'), $this->cod_aluno, 20, 9, false);
 
         if ($configuracoes['mostrar_codigo_inep_aluno']) {
-            $this->campoNumero('cod_inep', 'C&oacute;digo INEP', $this->cod_inep, 20, 255, false);
+            $this->campoNumero('cod_inep', 'Código INEP', $this->cod_inep, 20, 255, false);
         }
 
-        $this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1('Código rede estadual do aluno (RA)'), $this->aluno_estado_id, false);
+        $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
         $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
         $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
@@ -124,10 +112,11 @@ class indice extends clsListagem
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic(
-            'escola',
-            ['required' => false,
+            'escola', [
+                'required' => false,
                 'show-select' => true,
-                'value' => $this->ref_cod_escola]
+                'value' => $this->ref_cod_escola
+            ]
         );
         $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
 
@@ -144,22 +133,22 @@ class indice extends clsListagem
             }
         }
 
-        $array_matriculado = ['S' => 'Sim', 'N' => 'N&atilde;o'];
+        $array_matriculado = ['S' => 'Sim', 'N' => 'Não'];
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
-            $cabecalhos = ['C&oacute;digo Aluno',
+            $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
                 'Nome da Mãe',
-                'Nome do Respons&aacute;vel',
-                'CPF Respons&aacute;vel',];
+                'Nome do Responsável',
+                'CPF Responsável',];
         } else {
-            $cabecalhos = ['C&oacute;digo Aluno',
+            $cabecalhos = ['Código Aluno',
                 'Código INEP',
                 'Nome do Aluno',
                 'Nome da Mãe',
-                'Nome do Respons&aacute;vel',
-                'CPF Respons&aacute;vel',];
+                'Nome do Responsável',
+                'CPF Responsável',];
         }
 
         $this->addCabecalhos($cabecalhos);
@@ -250,13 +239,7 @@ class indice extends clsListagem
         //**
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Listagem de alunos'
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }
 
     protected function loadNomeMae($aluno)
