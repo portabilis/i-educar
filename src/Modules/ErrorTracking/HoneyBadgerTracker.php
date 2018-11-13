@@ -8,6 +8,11 @@ class HoneyBadgerTracker implements Tracker
 {
     public function notify(Throwable $exception, $data = [])
     {
+
+    }
+
+    public function notifyBadImplemented(Throwable $exception, $data = [])
+    {
         \Honeybadger\Honeybadger::$config->values(array(
             'api_key' => $GLOBALS['coreExt']['Config']->modules->error->honeybadger_key,
             'environment_name' => $_SERVER['HTTP_HOST'],

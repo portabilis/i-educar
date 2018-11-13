@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -60,7 +62,7 @@ class LegacyController extends Controller
             throw new HttpException(500, 'Legacy bootstrap file not found.');
         }
 
-        require_once $filename;
+        $this->loadFileOrAbort($filename);
     }
 
     /**
@@ -81,7 +83,27 @@ class LegacyController extends Controller
             throw new NotFoundHttpException('Legacy file not found.');
         }
 
-        require_once $legacyFile;
+        $this->loadFileOrAbort($legacyFile);
+    }
+
+    /**
+     * Load a file or abort the application.
+     *
+     * @param string $filename
+     *
+     * @return void
+     */
+    private function loadFileOrAbort($filename)
+    {
+        try {
+            require_once $filename;
+        } catch (Throwable $throwable) {
+            /** @var ExceptionHandler $handler */
+            $handler = app(ExceptionHandler::class);
+            $handler->report($throwable);
+
+            throw new HttpException(500, 'Error in legacy code.', $throwable);
+        }
     }
 
     /**
