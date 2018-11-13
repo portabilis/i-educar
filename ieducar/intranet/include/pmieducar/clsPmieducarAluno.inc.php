@@ -982,8 +982,7 @@ class clsPmieducarAluno
     $autorizado_quatro = NULL,
     $parentesco_quatro = NULL,
     $autorizado_cinco = NULL,
-    $parentesco_cinco = NULL,
-    $nome_social = NULL)//, $periodo = NULL )
+    $parentesco_cinco = NULL)
   {
     $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
 
