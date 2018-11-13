@@ -108,10 +108,10 @@ class LegacyController extends Controller
             /** @var ExceptionHandler $handler */
             $handler = app(ExceptionHandler::class);
             $handler->report(
-                new Exception($throwable->getMessage(), $throwable->getCode(), $throwable)
+                $exception = new Exception($throwable->getMessage(), $throwable->getCode(), $throwable)
             );
 
-            throw new HttpException(500, 'Error in legacy code.', $throwable);
+            throw new HttpException(500, 'Error in legacy code.', $exception);
         }
     }
 
