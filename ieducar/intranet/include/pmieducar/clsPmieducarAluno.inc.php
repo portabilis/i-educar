@@ -714,47 +714,47 @@ class clsPmieducarAluno
     return FALSE;
   }
 
-  /**
-   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
-   * @return array
-   */
-  function lista(
-    $int_cod_aluno = null,
-    $int_ref_cod_aluno_beneficio = null,
-    $int_ref_cod_religiao = null,
-    $int_ref_usuario_exc = null,
-    $int_ref_usuario_cad = null,
-    $int_ref_idpes = null,
-    $date_data_cadastro_ini = null,
-    $date_data_cadastro_fim = null,
-    $date_data_exclusao_ini = null,
-    $date_data_exclusao_fim = null,
-    $int_ativo = null,
-    $str_caminho_foto = null,
-    $str_nome_aluno = null,
-    $str_nome_responsavel = null,
-    $int_cpf_responsavel = null,
-    $int_analfabeto = null,
-    $str_nm_pai = null,
-    $str_nm_mae = null,
-    $int_ref_cod_escola = null,
-    $str_tipo_responsavel = null,
-    $str_autorizado_um = null,
-    $str_parentesco_um = null,
-    $str_autorizado_dois = null,
-    $str_parentesco_dois = null,
-    $str_autorizado_tres = null,
-    $str_parentesco_tres = null,
-    $str_autorizado_quatro = null,
-    $str_parentesco_quatro = null,
-    $str_autorizado_cinco = null,
-    $str_parentesco_cinco = null
-    )
-  {
-    $filtros = '';
-    $this->resetCamposLista();
+    /**
+     * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+     *
+     * @return array
+     */
+    public function lista(
+        $int_cod_aluno = null,
+        $int_ref_cod_aluno_beneficio = null,
+        $int_ref_cod_religiao = null,
+        $int_ref_usuario_exc = null,
+        $int_ref_usuario_cad = null,
+        $int_ref_idpes = null,
+        $date_data_cadastro_ini = null,
+        $date_data_cadastro_fim = null,
+        $date_data_exclusao_ini = null,
+        $date_data_exclusao_fim = null,
+        $int_ativo = null,
+        $str_caminho_foto = null,
+        $str_nome_aluno = null,
+        $str_nome_responsavel = null,
+        $int_cpf_responsavel = null,
+        $int_analfabeto = null,
+        $str_nm_pai = null,
+        $str_nm_mae = null,
+        $int_ref_cod_escola = null,
+        $str_tipo_responsavel = null,
+        $str_autorizado_um = null,
+        $str_parentesco_um = null,
+        $str_autorizado_dois = null,
+        $str_parentesco_dois = null,
+        $str_autorizado_tres = null,
+        $str_parentesco_tres = null,
+        $str_autorizado_quatro = null,
+        $str_parentesco_quatro = null,
+        $str_autorizado_cinco = null,
+        $str_parentesco_cinco = null
+    ) {
+        $filtros = '';
+        $this->resetCamposLista();
 
-    $this->_campos_lista .= "
+        $this->_campos_lista .= '
       , (
           SELECT
             nome
@@ -762,108 +762,118 @@ class clsPmieducarAluno
             cadastro.pessoa
           WHERE
             idpes = ref_idpes
-         ) AS nome_aluno";
+         ) AS nome_aluno';
 
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-    $whereAnd = ' WHERE ';
+         $this->_campos_lista .= '
+      , (
+          SELECT
+            nome_social
+          FROM
+            cadastro.fisica
+          WHERE
+            idpes = ref_idpes
+         ) AS nome_social';
 
-    if (is_numeric($int_cod_aluno)) {
-      $filtros .= "{$whereAnd} cod_aluno = '{$int_cod_aluno}'";
-      $whereAnd = ' AND ';
-    }
+        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+        $whereAnd = ' WHERE ';
 
+        if (is_numeric($int_cod_aluno)) {
+            $filtros .= "{$whereAnd} cod_aluno = '{$int_cod_aluno}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_numeric($int_ref_cod_religiao)) {
-      $filtros .= "{$whereAnd} ref_cod_religiao = '{$int_ref_cod_religiao}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_numeric($int_ref_cod_religiao)) {
+            $filtros .= "{$whereAnd} ref_cod_religiao = '{$int_ref_cod_religiao}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_numeric($int_ref_usuario_exc)) {
-      $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_numeric($int_ref_usuario_exc)) {
+            $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_numeric($int_ref_usuario_cad)) {
-      $filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_numeric($int_ref_usuario_cad)) {
+            $filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_numeric($int_ref_idpes)) {
-      $filtros .= "{$whereAnd} ref_idpes = '{$int_ref_idpes}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_numeric($int_ref_idpes)) {
+            $filtros .= "{$whereAnd} ref_idpes = '{$int_ref_idpes}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_string($date_data_cadastro_ini)) {
-      $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_string($date_data_cadastro_ini)) {
+            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_string($date_data_cadastro_fim)) {
-      $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_string($date_data_cadastro_fim)) {
+            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_string($date_data_exclusao_ini)) {
-      $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_string($date_data_exclusao_ini)) {
+            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_string($date_data_exclusao_fim)) {
-      $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_string($date_data_exclusao_fim)) {
+            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
+            $whereAnd = ' AND ';
+        }
 
-    if ($int_ativo) {
-      $filtros .= "{$whereAnd} ativo = '1'";
-      $whereAnd = ' AND ';
-    }
+        if ($int_ativo) {
+            $filtros .= "{$whereAnd} ativo = '1'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_string($str_caminho_foto)) {
-      $filtros .= "{$whereAnd} caminho_foto LIKE '%{$str_caminho_foto}%'";
-      $whereAnd = ' AND ';
-    }
+        if (is_string($str_caminho_foto)) {
+            $filtros .= "{$whereAnd} caminho_foto LIKE '%{$str_caminho_foto}%'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_numeric($int_analfabeto)) {
-      $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
-      $whereAnd = ' AND ';
-    }
+        if (is_numeric($int_analfabeto)) {
+            $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
+            $whereAnd = ' AND ';
+        }
 
-    if (is_string($str_nome_aluno)) {
-      $filtros .= "
+        if (is_string($str_nome_aluno)) {
+            $filtros .= "
         {$whereAnd} exists (
           SELECT
             1
           FROM
             cadastro.pessoa
+          INNER JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
+            AND translate(upper(coalesce(fisica.nome_social, '') || pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
         )";
 
-      $whereAnd = ' AND ';
-    }
+            $whereAnd = ' AND ';
+        }
 
-    if (is_string($str_nome_responsavel)  || is_numeric($int_cpf_responsavel)) {
-      $and_resp = '';
+        if (is_string($str_nome_responsavel)  || is_numeric($int_cpf_responsavel)) {
+            $and_resp = '';
 
-      if (is_string($str_nome_responsavel)) {
-        $and_nome_pai_mae  = "OR translate(upper(aluno.nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'p')";
+            if (is_string($str_nome_responsavel)) {
+                $and_nome_pai_mae  = "OR translate(upper(aluno.nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'p')";
 
-        $and_nome_pai_mae .= "OR translate(upper(aluno.nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'm')";
+                $and_nome_pai_mae .= "OR translate(upper(aluno.nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'm')";
 
-        $and_nome_resp     = "
+                $and_nome_resp     = "
           (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
           (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
 
-        $and_resp = ' AND ';
-      }
+                $and_resp = ' AND ';
+            }
 
-      if (is_numeric($int_cpf_responsavel)) {
-        $and_cpf_pai_mae = "and fisica_resp.cpf LIKE '$int_cpf_responsavel'";
-      }
+            if (is_numeric($int_cpf_responsavel)) {
+                $and_cpf_pai_mae = "and fisica_resp.cpf LIKE '$int_cpf_responsavel'";
+            }
 
-      $filtros .= "
+            $filtros .= "
         AND (EXISTS(
           SELECT
             1
@@ -901,62 +911,61 @@ class clsPmieducarAluno
           )
         )";
 
-      $whereAnd = ' AND ';
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($str_nm_pai)) {
+            $filtros .= "{$whereAnd} translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') nm_pai LIKE translate(upper('%{$str_nm_pai}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($str_nm_mae)) {
+            $filtros .= "{$whereAnd} translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_mae}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_escola)) {
+            $filtros .= "{$whereAnd} cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1 )";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($str_tipo_responsavel)) {
+            $filtros .= "{$whereAnd} tipo_responsavel = '{$str_tipo_responsavel}'";
+            $whereAnd = ' AND ';
+        }
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        if (!$this->getOrderby()) {
+            $this->setOrderby('coalesce(nome_social, nome_aluno)');
+        }
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
     }
-
-    if (is_string($str_nm_pai)) {
-      $filtros .= "{$whereAnd} translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') nm_pai LIKE translate(upper('%{$str_nm_pai}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_string($str_nm_mae)) {
-      $filtros .= "{$whereAnd} translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_mae}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_numeric($int_ref_cod_escola)) {
-      $filtros .= "{$whereAnd} cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1 )";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_numeric($str_tipo_responsavel)) {
-      $filtros .= "{$whereAnd} tipo_responsavel = '{$str_tipo_responsavel}'";
-      $whereAnd = ' AND ';
-    }
-
-    $db = new clsBanco();
-    $countCampos = count(explode(',', $this->_campos_lista));
-    $resultado = array();
-
-    if (!$this->getOrderby()) {
-      $this->setOrderby('nome_aluno');
-    }
-
-    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
-
-    $db->Consulta($sql);
-
-    if ($countCampos > 1) {
-      while ($db->ProximoRegistro()) {
-        $tupla = $db->Tupla();
-        $tupla['_total'] = $this->_total;
-        $resultado[] = $tupla;
-      }
-    }
-    else {
-      while ($db->ProximoRegistro()) {
-        $tupla = $db->Tupla();
-        $resultado[] = $tupla[$this->_campos_lista];
-      }
-    }
-
-    if (count($resultado)) {
-      return $resultado;
-    }
-
-    return FALSE;
-  }
 
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
