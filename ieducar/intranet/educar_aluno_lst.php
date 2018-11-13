@@ -200,6 +200,11 @@ class indice extends clsListagem
         foreach ($alunos as $registro) {
             $alunoInepId = $this->tryLoadAlunoInepId($registro['cod_aluno']);
             $nomeAluno = strtoupper($registro['nome_aluno']);
+            $nomeSocial = strtoupper($registro['nome_social']);
+
+            if ($nomeSocial) {
+                $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
+            }
             $nomeMae = strtoupper($this->loadNomeMae($registro));
 
             // responsavel

@@ -982,14 +982,15 @@ class clsPmieducarAluno
     $autorizado_quatro = NULL,
     $parentesco_quatro = NULL,
     $autorizado_cinco = NULL,
-    $parentesco_cinco = NULL)//, $periodo = NULL )
+    $parentesco_cinco = NULL,
+    $nome_social = NULL)//, $periodo = NULL )
   {
     $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
 
     $filtros = '';
     $this->resetCamposLista();
 
-    $this->_campos_lista .= ', pessoa.nome AS nome_aluno';
+    $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social';
 
     if($filtra_baseado_matricula)
       $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
@@ -997,7 +998,8 @@ class clsPmieducarAluno
       $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 
     $sql .= '
-             LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes';
+             LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
+             LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes';
     if($idsetorbai)
       $sql .= '
         INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
@@ -1085,9 +1087,10 @@ class clsPmieducarAluno
                        1
                      FROM
                        cadastro.pessoa
+                       inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
                      WHERE
                        cadastro.pessoa.idpes = ref_idpes
-                       AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
+                       AND translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
                    )";
 
       $whereAnd = ' AND ';
@@ -1268,7 +1271,7 @@ class clsPmieducarAluno
     $resultado = array();
 
     if (!$this->getOrderby()) {
-      $this->setOrderby('nome_aluno');
+      $this->setOrderby('COALESCE(nome_social, nome)');
     }
 
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
