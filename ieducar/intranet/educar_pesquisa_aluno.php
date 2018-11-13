@@ -101,7 +101,7 @@ class indice extends clsListagem
             "Aluno"
         ) );
 
-        $this->campoNumero( "cod_aluno", "C&oacute;digo Aluno", $this->cod_aluno, 8, 20, false );
+        $this->campoNumero( "cod_aluno", "Código Aluno", $this->cod_aluno, 8, 20, false );
         $this->campoTexto( "nm_aluno", "Nome Aluno", $this->nm_aluno, 30, 255, false );
 
         // Paginador

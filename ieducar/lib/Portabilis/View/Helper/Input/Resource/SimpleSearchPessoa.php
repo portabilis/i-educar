@@ -66,8 +66,6 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
       $options = array('params' => $id, 'return_only' => 'first-field');
       $nome = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-      debug($nome); die();
-
       return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
     }
   }
