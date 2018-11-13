@@ -103,6 +103,7 @@ class LegacyController extends Controller
     {
         try {
             require_once $filename;
+            return;
         } catch (Exception $exception) {
 
             // A maioria das vezes será pega a Exception neste catch, apenas
