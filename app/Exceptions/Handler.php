@@ -35,7 +35,7 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         if (app()->bound('honeybadger') && $this->shouldReport($exception)) {
-            app('honeybadger')->notify($exception, app('request'));
+            app('honeybadger')->notify($exception, $this->getRequest());
         }
 
         parent::report($exception);
@@ -51,5 +51,14 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         return parent::render($request, $exception);
+    }
+
+    private function getRequest()
+    {
+        if (app()->runningInConsole()) {
+            return null;
+        }
+
+        return app('request');
     }
 }
