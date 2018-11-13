@@ -155,6 +155,7 @@ class PessoaController extends ApiCoreController
              fisica.idpais_estrangeiro as pais_origem_id,
            fisica.nacionalidade as tipo_nacionalidade,
            fisica.zona_localizacao_censo,
+           fisica.nome_social,
            (SELECT pais.nome
                    FROM public.pais
                    WHERE pais.idpais = fisica.idpais_estrangeiro) AS pais_origem_nome,
@@ -244,6 +245,7 @@ class PessoaController extends ApiCoreController
             'cartorio_cert_civil',
             'id_cartorio',
             'nome_cartorio',
+            'nome_social',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -500,6 +502,7 @@ class PessoaController extends ApiCoreController
         $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
         $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
         $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
+        $fisica->nome_social = $this->getRequest()->nome_social;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 
