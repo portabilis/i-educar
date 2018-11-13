@@ -46,16 +46,17 @@ class indice extends clsDetalhe
         $this->titulo = "Detalhe de concurso";
         $this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
 
-        $cod_portal_concurso = @$_GET['cod_portal_concurso'];
+        $cod_portal_concurso = $_GET['cod_portal_concurso'] ?? null;
 
         $objPessoa = new clsPessoaFisica();
-
         $db = new clsBanco();
-        $db->Consulta( "SELECT nm_concurso, descricao, data_hora, ref_ref_cod_pessoa_fj, caminho, tipo_arquivo FROM portal_concurso WHERE cod_portal_concurso = '{$cod_portal_concurso}'" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($cod_portal_concurso) {
+            $db->Consulta( "SELECT nm_concurso, descricao, data_hora, ref_ref_cod_pessoa_fj, caminho, tipo_arquivo FROM portal_concurso WHERE cod_portal_concurso = '{$cod_portal_concurso}'" );
+        }
+
+        if ($cod_portal_concurso && $db->ProximoRegistro()) {
             list ( $nome, $descricao, $data, $pessoa, $caminho, $tipo ) = $db->Tupla();
-            //$pessoa = $db->CampoUnico( "SELECT nm_pessoa FROM pessoa_fj WHERE cod_pessoa_fj = '$pessoa'" );
             list($pessoa) = $objPessoa->queryRapida($pessoa, "nome");
 
             $this->addDetalhe( array("Responsável", $pessoa ) );

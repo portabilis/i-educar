@@ -2,25 +2,22 @@ matrix:
   include:
     - language: php
       php:
-        - 7.0
+        - 7.1
+        - 7.2
       addons:
         postgresql: 9.5
         apt:
           packages:
-          - postgresql-9.5
+            - postgresql-9.5
       cache:
         directories:
           - $HOME/.composer/cache
       before_script:
+        - cp .env.example .env
         - cp phinx.php.travis phinx.php
         - composer install
-        - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
-        - ieducar/vendor/bin/phinx migrate
-        - sed -i -e '/<log type="coverage-html.*UTF-8"\/>/g' ieducar/phpunit.xml
-        - sed -i -e 's/CORE_EXT_CONFIGURATION_ENV" value="testing/CORE_EXT_CONFIGURATION_ENV" value="travis/g' ieducar/phpunit.xml
-        - sed -i -e 's/API_URI" value="http:\/\/localhost/API_URI" value="http:\/\/localhost:8000/g' ieducar/phpunit.xml
-        - CORE_EXT_CONFIGURATION_ENV=travis php -S localhost:8000 -t ieducar/ &
-      script:
-        - composer test
+        - vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
+        - vendor/bin/phinx migrate
+        - php artisan legacy:link
       after_success:
-        - ieducar/vendor/bin/php-coveralls --verbose
+        - vendor/bin/php-coveralls --verbose
