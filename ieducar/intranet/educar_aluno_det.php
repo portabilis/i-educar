@@ -361,6 +361,10 @@ class indice extends clsDetalhe
             }
         }
 
+        if ($det_fisica['nome_social']) {
+            $this->addDetalhe(['Nome Social', strtoupper($det_fisica['nome_social'])]);
+        }
+        
         if (idFederal2int($registro['cpf'])) {
             $this->addDetalhe(['CPF', $registro['cpf']]);
         }
