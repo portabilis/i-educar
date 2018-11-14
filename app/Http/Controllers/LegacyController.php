@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Response;
@@ -53,6 +54,7 @@ class LegacyController extends Controller
      * @return void
      *
      * @throws HttpException
+     * @throws Exception
      */
     private function loadLegacyBootstrapFile()
     {
@@ -74,6 +76,7 @@ class LegacyController extends Controller
      * @return void
      *
      * @throws NotFoundHttpException
+     * @throws Exception
      */
     private function loadLegacyFile($filename)
     {
@@ -92,18 +95,42 @@ class LegacyController extends Controller
      * @param string $filename
      *
      * @return void
+     *
+     * @throws HttpException
+     * @throws Exception
      */
     private function loadFileOrAbort($filename)
     {
         try {
             require_once $filename;
-        } catch (Throwable $throwable) {
-            /** @var ExceptionHandler $handler */
-            $handler = app(ExceptionHandler::class);
-            $handler->report($throwable);
+            return;
+        } catch (Exception $exception) {
 
-            throw new HttpException(500, 'Error in legacy code.', $throwable);
+            // A maioria das vezes será pega a Exception neste catch, apenas
+            // será pega por Throwable quando for ErrorException ou uma exceção
+            // customizada que implementa apenas Throwable e não extende a
+            // Exception nativa.
+            //
+            // http://php.net/manual/en/class.throwable.php
+
+        } catch (Throwable $throwable) {
+
+            // Converte uma exceção que implementa apenas Throwable para
+            // Exception nativa do PHP. Isto é feito devido o Exception
+            // Handler do Laravel aceitar apenas exceções nativas.
+
+            $exception = new Exception(
+                $throwable->getMessage(), $throwable->getCode(), $throwable
+            );
         }
+
+        app(ExceptionHandler::class)->report($exception);
+
+        if (config('app.debug')) {
+            throw $exception;
+        }
+
+        throw new HttpException(500, 'Error in legacy code.', $exception);
     }
 
     /**
