@@ -50,8 +50,8 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
       $sql = "
         select
           (case
-            when fisica.nome_social not like \'\' then
-              fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+            when fisica.nome_social not like '' then
+              fisica.nome_social || ' - Nome de registro: ' || pessoa.nome
             else
               pessoa.nome
           end) as nome
