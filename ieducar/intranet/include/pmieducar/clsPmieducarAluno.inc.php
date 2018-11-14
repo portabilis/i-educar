@@ -989,7 +989,7 @@ class clsPmieducarAluno
     $filtros = '';
     $this->resetCamposLista();
 
-    $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social';
+    $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, nome) AS ordem_aluno';
 
     if($filtra_baseado_matricula)
       $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
@@ -1270,7 +1270,7 @@ class clsPmieducarAluno
     $resultado = array();
 
     if (!$this->getOrderby()) {
-      $this->setOrderby('COALESCE(nome_social, nome)');
+      $this->setOrderby('ordem_aluno');
     }
 
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
