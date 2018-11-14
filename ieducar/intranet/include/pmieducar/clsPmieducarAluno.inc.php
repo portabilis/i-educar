@@ -754,102 +754,81 @@ class clsPmieducarAluno
         $filtros = '';
         $this->resetCamposLista();
 
-        $this->_campos_lista .= '
-      , (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes
-         ) AS nome_aluno';
+        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social';
 
-         $this->_campos_lista .= '
-      , (
-          SELECT
-            nome_social
-          FROM
-            cadastro.fisica
-          WHERE
-            idpes = ref_idpes
-         ) AS nome_social';
+        $sql = "
+            SELECT
+                {$this->_campos_lista}
+            FROM
+                {$this->_tabela}
+            INNER JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
+            INNER JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
+        ";
 
-        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $whereAnd = ' WHERE ';
 
         if (is_numeric($int_cod_aluno)) {
-            $filtros .= "{$whereAnd} cod_aluno = '{$int_cod_aluno}'";
+            $filtros .= "{$whereAnd} a.cod_aluno = '{$int_cod_aluno}'";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_ref_cod_religiao)) {
-            $filtros .= "{$whereAnd} ref_cod_religiao = '{$int_ref_cod_religiao}'";
+            $filtros .= "{$whereAnd} a.ref_cod_religiao = '{$int_ref_cod_religiao}'";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_ref_usuario_exc)) {
-            $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
+            $filtros .= "{$whereAnd} a.ref_usuario_exc = '{$int_ref_usuario_exc}'";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_ref_usuario_cad)) {
-            $filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
+            $filtros .= "{$whereAnd} a.ref_usuario_cad = '{$int_ref_usuario_cad}'";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_ref_idpes)) {
-            $filtros .= "{$whereAnd} ref_idpes = '{$int_ref_idpes}'";
+            $filtros .= "{$whereAnd} a.ref_idpes = '{$int_ref_idpes}'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
+            $filtros .= "{$whereAnd} a.data_cadastro >= '{$date_data_cadastro_ini}'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
+            $filtros .= "{$whereAnd} a.data_cadastro <= '{$date_data_cadastro_fim}'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
+            $filtros .= "{$whereAnd} a.data_exclusao >= '{$date_data_exclusao_ini}'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
+            $filtros .= "{$whereAnd} a.data_exclusao <= '{$date_data_exclusao_fim}'";
             $whereAnd = ' AND ';
         }
 
         if ($int_ativo) {
-            $filtros .= "{$whereAnd} ativo = '1'";
+            $filtros .= "{$whereAnd} a.ativo = '1'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($str_caminho_foto)) {
-            $filtros .= "{$whereAnd} caminho_foto LIKE '%{$str_caminho_foto}%'";
+            $filtros .= "{$whereAnd} a.caminho_foto LIKE '%{$str_caminho_foto}%'";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_analfabeto)) {
-            $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
+            $filtros .= "{$whereAnd} a.analfabeto = '{$int_analfabeto}'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($str_nome_aluno)) {
-            $filtros .= "
-        {$whereAnd} exists (
-          SELECT
-            1
-          FROM
-            cadastro.pessoa
-          INNER JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
-          WHERE
-            cadastro.pessoa.idpes = ref_idpes
-            AND translate(upper(coalesce(fisica.nome_social, '') || pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
-        )";
-
+            $filtros .= "{$whereAnd} translate(upper(coalesce(fisica.nome_social, '') || pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
@@ -939,11 +918,19 @@ class clsPmieducarAluno
         $resultado = [];
 
         if (!$this->getOrderby()) {
-            $this->setOrderby('coalesce(nome_social, nome_aluno)');
+            $this->setOrderby('coalesce(fisica.nome_social, pessoa.nome_aluno)');
         }
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+        $this->_total = $db->CampoUnico("
+            SELECT
+                COUNT(0)
+            FROM
+                {$this->_tabela}
+            INNER JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
+            INNER JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
+            {$filtros}
+        ");
 
         $db->Consulta($sql);
 
