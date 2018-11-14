@@ -70,5 +70,7 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
         }
+
+        $this->app->bind(\iEducar\Modules\ErrorTracking\Tracker::class, \iEducar\Modules\ErrorTracking\HoneyBadgerTracker::class);
     }
 }
