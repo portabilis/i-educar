@@ -769,25 +769,67 @@ class AlunoController extends ApiCoreController
         // alunos com e sem matricula são selecionados.
         if (!$this->getRequest()->escola_id) {
             $sqls[] = '
-                select distinct aluno.cod_aluno as id, pessoa.nome as name from
-                pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
-                and aluno.ativo = 1 and aluno.cod_aluno::varchar(255) like $1||\'%\' and $2 = $2
-                order by cod_aluno limit 15
+                select
+                    distinct aluno.cod_aluno as id,
+                    (case
+                        when fisica.nome_social not like \'\' then
+                            fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                        else
+                            pessoa.nome
+                    end) as name
+                from
+                    pmieducar.aluno,
+                    cadastro.pessoa,
+                    cadastro.fisica
+                where true
+                    and pessoa.idpes = aluno.ref_idpes
+                    and fisica.idpes = aluno.ref_idpes
+                    and aluno.ativo = 1
+                    and aluno.cod_aluno::varchar(255) like $1||\'%\'
+                    and $2 = $2
+                order by
+                    cod_aluno
+                limit 15
             ';
         }
 
         $sqls[] = '
-            select * from
-            (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id, matricula.cod_matricula as matricula_id, pessoa.nome as name
-            from pmieducar.matricula, pmieducar.aluno, cadastro.pessoa
-            where aluno.cod_aluno = matricula.ref_cod_aluno
-            and pessoa.idpes = aluno.ref_idpes
-            and aluno.ativo = matricula.ativo
-            and matricula.ativo = 1
-            and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end)
-            and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
-            and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos
-            order by id
+            select
+                *
+            from (
+                select
+                    distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
+                    matricula.cod_matricula as matricula_id,
+                    (case
+                        when fisica.nome_social not like \'\' then
+                            fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                        else
+                            pessoa.nome
+                    end) as name
+                from
+                    pmieducar.matricula,
+                    pmieducar.aluno,
+                    cadastro.pessoa,
+                    cadastro.fisica
+                where true
+                    and aluno.cod_aluno = matricula.ref_cod_aluno
+                    and pessoa.idpes = aluno.ref_idpes
+                    and fisica.idpes = aluno.ref_idpes
+                    and aluno.ativo = matricula.ativo
+                    and matricula.ativo = 1
+                    and (
+                        select
+                            case
+                                when $2 != 0 then matricula.ref_ref_cod_escola = $2
+                                else 1=1
+                            end
+                    )
+                    and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
+                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
+                limit 15
+            ) as alunos
+            order by
+                id
         ';
 
         return $sqls;
@@ -801,25 +843,68 @@ class AlunoController extends ApiCoreController
         // alunos com e sem matricula são selecionados.
         if (!$this->getRequest()->escola_id) {
             $sqls[] = '
-                select distinct aluno.cod_aluno as id,
-                pessoa.nome as name from pmieducar.aluno, cadastro.pessoa where
-                pessoa.idpes = aluno.ref_idpes and aluno.ativo = 1 and
-                lower((pessoa.nome)) like \'%\'||lower(($1))||\'%\' and $2 = $2
-                order by nome limit 15
+                select
+                    distinct aluno.cod_aluno as id,
+                    (case
+                        when fisica.nome_social not like \'\' then
+                            fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                        else
+                            pessoa.nome
+                    end) as name
+                from
+                    pmieducar.aluno,
+                    cadastro.pessoa,
+                    cadastro.fisica
+                where true
+                    and pessoa.idpes = aluno.ref_idpes
+                    and fisica.idpes = aluno.ref_idpes
+                    and aluno.ativo = 1
+                    and lower(coalesce(fisica.nome_social, \'\') || pessoa.nome) like \'%\'||lower(($1))||\'%\'
+                    and $2 = $2
+                order by
+                    name
+                limit 15
             ';
         }
 
         // seleciona por nome aluno e e opcionalmente por codigo escola,
         // apenas alunos com matricula são selecionados.
         $sqls[] = '
-            select * from(select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
-            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
-            pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
-            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-            matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2
-            else 1=1 end) and
-            translate(upper(nome),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') like translate(upper(\'%\'|| $1 ||\'%\'),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') and matricula.aprovado in
-            (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by name
+            select
+                *
+            from (
+                select
+                    distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
+                    matricula.cod_matricula as matricula_id,
+                    (case
+                        when fisica.nome_social not like \'\' then
+                            fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                        else
+                            pessoa.nome
+                    end) as name
+                from
+                    pmieducar.matricula,
+                    pmieducar.aluno,
+                    cadastro.pessoa,
+                    cadastro.fisica
+                where true
+                    and aluno.cod_aluno = matricula.ref_cod_aluno
+                    and pessoa.idpes = aluno.ref_idpes
+                    and fisica.idpes = aluno.ref_idpes
+                    and aluno.ativo = matricula.ativo
+                    and matricula.ativo = 1 and (
+                        select
+                            case
+                                when $2 != 0 then matricula.ref_ref_cod_escola = $2
+                                else 1=1
+                            end
+                    )
+                    and translate(upper(coalesce(fisica.nome_social, \'\') || pessoa.nome),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') like translate(upper(\'%\'|| $1 ||\'%\'),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\')
+                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
+                limit 15
+            ) as alunos
+            order by
+                name
         ';
 
         return $sqls;

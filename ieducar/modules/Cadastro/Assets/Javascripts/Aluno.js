@@ -917,7 +917,13 @@ var handleGetPersonDetails = function (dataResponse) {
     }
 
     $j('#pessoa_id').val(dataResponse.id);
-    $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
+    var nameFull = dataResponse.id + ' - ' + dataResponse.nome;
+
+    if (dataResponse.nome_social) {
+      nameFull = dataResponse.id + ' - ' + dataResponse.nome_social + ' - Nome de registro: ' + dataResponse.nome;
+    }
+
+    $nomeField.val(nameFull);
 
     var nomePai = dataResponse.nome_pai;
     var nomeMae = dataResponse.nome_mae;
@@ -1058,7 +1064,7 @@ var handleGetPersonDetails = function (dataResponse) {
     var cpf = dataResponse.cpf;
 
     var mascara = null;
-    
+
     if (cpf) {
         mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }

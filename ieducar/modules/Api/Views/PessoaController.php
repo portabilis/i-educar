@@ -55,7 +55,16 @@ class PessoaController extends ApiCoreController
 
     protected function loadPessoa($id = null)
     {
-        $sql = 'select idpes as id, nome from cadastro.pessoa where idpes = $1';
+        $sql = '
+            select
+                idpes as id,
+                nome
+            from
+                cadastro.pessoa
+            where true
+                and idpes = $1
+        ';
+
         $pessoa = $this->fetchPreparedQuery($sql, $id, false, 'first-row');
         $pessoa['nome'] = $this->toUtf8($pessoa['nome'], ['transform' => true]);
 
@@ -86,6 +95,7 @@ class PessoaController extends ApiCoreController
         $sql = 'SELECT cpf, data_nasc as data_nascimento, idpes_pai as pai_id, ref_cod_religiao as religiao_id,
             idpes_mae as mae_id, idpes_responsavel as responsavel_id,
             ideciv as estadocivil, sexo, nis_pis_pasep,
+            nome_social,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
             (select nm_pai from pmieducar.aluno where cod_aluno = $1)) as nome_pai,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_mae),
@@ -96,15 +106,15 @@ class PessoaController extends ApiCoreController
             (select idorg_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as orgao_emissao_rg,
             (select data_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as data_emissao_rg,
             (select tipo_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as tipo_cert_civil,
-            
+
             (select data_emissao_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as data_emissao_cert_civil,
             (select sigla_uf_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as sigla_uf_cert_civil,
             (select cartorio_cert_civil_inep from cadastro.documento where documento.idpes = fisica.idpes) as cartorio_cert_civil_inep,
             (select cartorio_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as cartorio_cert_civil,
             (select id_cartorio FROM cadastro.codigo_cartorio_inep, cadastro.documento WHERE codigo_cartorio_inep.id = documento.cartorio_cert_civil_inep AND documento.idpes = fisica.idpes) as id_cartorio,
             (select descricao FROM cadastro.codigo_cartorio_inep, cadastro.documento WHERE codigo_cartorio_inep.id = documento.cartorio_cert_civil_inep AND documento.idpes = fisica.idpes) as nome_cartorio,
-            
-            
+
+
             (select num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
             (select num_livro from cadastro.documento where documento.idpes = fisica.idpes) as num_livro,
             (select num_folha from cadastro.documento where documento.idpes = fisica.idpes) as num_folha,
@@ -390,16 +400,57 @@ class PessoaController extends ApiCoreController
         $sqls = [];
 
         // search by idpes or cpf
-        $sqls[] = 'select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa,
-            cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and (pessoa.idpes::varchar like $1||\'%\' or
-            trim(leading \'0\' from fisica.cpf::varchar) like trim(leading \'0\' from $1)||\'%\' or
-            fisica.cpf::varchar like $1||\'%\') order by id limit 15';
+        $sqls[] = '
+            select
+                distinct pessoa.idpes as id,
+                (case
+                    when fisica.nome_social not like \'\' then
+                        fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                    else
+                        pessoa.nome
+                end) as name
+            from
+                cadastro.pessoa,
+                cadastro.fisica
+            where true
+                and fisica.idpes = pessoa.idpes
+                and fisica.ativo = 1
+                and (
+                    pessoa.idpes::varchar like $1||\'%\'
+                    or trim(leading \'0\' from fisica.cpf::varchar) like trim(leading \'0\' from $1)||\'%\'
+                    or fisica.cpf::varchar like $1||\'%\'
+                )
+            order by
+                id
+            limit 15
+        ';
 
         // search by rg
-        $sqls[] = 'select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento,
-            cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and
-            pessoa.idpes = documento.idpes and ((documento.rg like $1||\'%\') or
-            trim(leading \'0\' from documento.rg) like trim(leading \'0\' from $1)||\'%\') order by id limit 15';
+        $sqls[] = '
+            select
+                distinct pessoa.idpes as id,
+                (case
+                    when fisica.nome_social not like \'\' then
+                        fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                    else
+                        pessoa.nome
+                end) as name
+            from
+                cadastro.pessoa,
+                cadastro.documento,
+                cadastro.fisica
+            where true
+                and fisica.idpes = pessoa.idpes
+                and fisica.ativo = 1
+                and pessoa.idpes = documento.idpes
+                and (
+                    (documento.rg like $1||\'%\')
+                    or trim(leading \'0\' from documento.rg) like trim(leading \'0\' from $1)||\'%\'
+                )
+            order by
+                id
+            limit 15
+        ';
 
         return $sqls;
     }
@@ -686,17 +737,26 @@ class PessoaController extends ApiCoreController
     {
         $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
 
-        // $namespace = $searchOptions['namespace'];
-        // $table = $searchOptions['table'];
-        // $idAttr = $searchOptions['idAttr'];
-        // $labelAttr = $searchOptions['labelAttr'];
-
-        // $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
-        // $selectFields = join(', ', $searchOptions['selectFields']);
-
-        return 'select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-            where fisica.ativo = 1 and lower((pessoa.nome)) like \'%\'||lower(($1))||\'%\' order by id, name limit 15';
-        // return "select distinct $selectFields from $namespace.$table
-        //         where lower(($labelAttr)) like '%'||lower(($1))||'%' order by $labelAttr limit 15";
+        return '
+            select
+                distinct pessoa.idpes as id,
+                (case
+                    when fisica.nome_social not like \'\' then
+                        fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                    else
+                        pessoa.nome
+                end) as name
+            from
+                cadastro.pessoa
+            inner join cadastro.fisica
+                on fisica.idpes = pessoa.idpes
+            where true
+                and fisica.ativo = 1
+                and lower(coalesce(fisica.nome_social, \'\') || pessoa.nome) like \'%\'||lower(($1))||\'%\'
+            order by
+                id,
+                name
+            limit 15
+        ';
     }
 }
