@@ -391,9 +391,15 @@ class indice extends clsCadastro
                 continue;
             }
 
+            $ultimaDataSaida = $enturmacao->getDataSaidaEnturmacaoAnterior(
+                $matricula, $enturmacao->buscaSequencialMax()
+            );
+
+            $permiteEnturmar = empty($ultimaDataSaida) || $this->data_enturmacao >= $ultimaDataSaida;
+
             $enturmacao->data_enturmacao = $this->data_enturmacao;
 
-            if ($enturmacao->cadastra()) {
+            if ($permiteEnturmar && $enturmacao->cadastra()) {
                 continue;
             }
 
