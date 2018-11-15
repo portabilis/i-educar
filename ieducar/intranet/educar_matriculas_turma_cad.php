@@ -409,7 +409,11 @@ class indice extends clsCadastro
 
             // TODO rollback de todas as enturmações se houver erro
 
-            $this->mensagem .= 'Cadastro não realizado.<br>';
+            if ($permiteEnturmar) {
+                $this->mensagem .= 'Cadastro não realizado.<br>';
+            } else {
+                $this->mensagem .= 'A data de enturmação é anterior a data de saída da última enturmação.<br>';
+            }
 
             return false;
         }
