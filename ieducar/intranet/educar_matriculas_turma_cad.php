@@ -349,16 +349,17 @@ class indice extends clsCadastro
             return $this->simpleRedirect('educar_matriculas_turma_lst.php');
         }
 
-        $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
         $objTurma = new clsPmieducarTurma();
+        $objEnturmacoes = new clsPmieducarMatriculaTurma();
+        $objEscolaSerie = new clsPmieducarEscolaSerie();
+
+        $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
         $dadosTurma = $objTurma->lista($this->ref_cod_turma);
         $maxAlunos = $dadosTurma[0]['max_aluno'];
-        $objEnturmacoes = new clsPmieducarMatriculaTurma();
         $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
         $vagasDisponiveis = $maxAlunos - $alunosEnturmados[0];
-        $objEscolaSerie = new clsPmieducarEscolaSerie();
         $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_ref_cod_escola, $this->ref_ref_cod_serie);
-
+        
         if ($vagasDisponiveis >= $totalAlunosParaEnturmar || !$dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
             foreach ($this->ref_cod_matricula as $matricula => $campo) {
                 $obj = new clsPmieducarMatriculaTurma(
@@ -380,7 +381,7 @@ class indice extends clsCadastro
                     $cadastrou = $obj->cadastra();
 
                     if (!$cadastrou) {
-                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                        $this->mensagem = 'Cadastro não realizado.<br>';
 
                         return false;
                     }
@@ -388,9 +389,9 @@ class indice extends clsCadastro
             }
         } else {
             if ($vagasDisponiveis > 0) {
-                $this->mensagem = 'Cadastro n&atilde;o realizado. H&aacute; apenas ' . $vagasDisponiveis . ' vagas restantes para esta turma.';
+                $this->mensagem = 'Cadastro não realizado. Há apenas ' . $vagasDisponiveis . ' vagas restantes para esta turma.';
             } else {
-                $this->mensagem = 'Cadastro n&atilde;o realizado. N&atilde;o h&aacute; mais vagas dispon&iacute;veis para esta turma.';
+                $this->mensagem = 'Cadastro não realizado. Não há mais vagas disponíveis para esta turma.';
             }
 
             return false;
