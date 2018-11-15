@@ -375,7 +375,7 @@ class indice extends clsCadastro
         }
 
         foreach ($this->ref_cod_matricula as $matricula => $campo) {
-            $obj = new clsPmieducarMatriculaTurma(
+            $enturmacao = new clsPmieducarMatriculaTurma(
                 $matricula,
                 $this->ref_cod_turma,
                 null,
@@ -387,18 +387,21 @@ class indice extends clsCadastro
                 $campo['sequencial_']
             );
 
-            $existe = $obj->existeEnturmacaoAtiva();
-
-            if (!$existe) {
-                $obj->data_enturmacao = $this->data_enturmacao;
-                $cadastrou = $obj->cadastra();
-
-                if (!$cadastrou) {
-                    $this->mensagem = 'Cadastro não realizado.<br>';
-
-                    return false;
-                }
+            if ($enturmacao->existeEnturmacaoAtiva()) {
+                continue;
             }
+
+            $enturmacao->data_enturmacao = $this->data_enturmacao;
+
+            if ($enturmacao->cadastra()) {
+                continue;
+            }
+
+            // TODO rollback de todas as enturmações se houver erro
+
+            $this->mensagem = 'Cadastro não realizado.<br>';
+
+            return false;
         }
 
         $this->simpleRedirect('educar_matriculas_turma_lst.php');
