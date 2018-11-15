@@ -317,17 +317,17 @@ class indice extends clsCadastro
         if (count($opcoes)) {
             asort($opcoes);
 
-            $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')]);
-            $this->campoRotulo('tituloDois', 'Matr&iacute;culas', '<b>&nbsp;Alunos j&aacute; matriculados e n&atilde;o enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para enturmar</b><label style=\'display: block; width: 350px; margin-left: 256px;\'>&nbsp;&nbsp;&nbsp;<input checked type=\'checkbox\' name=\'CheckTodosDois\' onClick=\'marcarCheckDois(' . '"ref_cod_matricula[]"' . ');\'/>Marcar todos</label>');
+            $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data da enturmação']);
+            $this->campoRotulo('tituloDois', 'Matrículas', '<b>&nbsp;Alunos já matriculados e não enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para enturmar</b><label style=\'display: block; width: 350px; margin-left: 256px;\'>&nbsp;&nbsp;&nbsp;<input checked type=\'checkbox\' name=\'CheckTodosDois\' onClick=\'marcarCheckDois(' . '"ref_cod_matricula[]"' . ');\'/>Marcar todos</label>');
 
             foreach ($opcoes as $key => $aluno) {
                 $this->campoRotulo($key, '', '<table  style="font-size:11px; font-family: arial, verdana, lucida, helvetica, sans-serif;" border="0px"><tr><td width="258px">' . $aluno . '</td><td><input value="$key" type="checkbox" name="ref_cod_matricula[' . $key . ']" id="ref_cod_matricula[]"></td></tr></table>', '');
             }
 
         } elseif ($alunosEnturmados) {
-            $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na s&eacute;rie j&aacute; se encontram enturmados.');
+            $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na série já se encontram enturmados.');
         } else {
-            $this->campoRotulo('rotulo_1', '-', 'N&acirc;o h&aacute; alunos enturmados.');
+            $this->campoRotulo('rotulo_1', '-', 'Não há alunos enturmados.');
         }
 
         $this->campoQuebra();
