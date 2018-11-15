@@ -346,7 +346,9 @@ class indice extends clsCadastro
         }
 
         if (empty($this->matriculas_turma)) {
-            return $this->simpleRedirect('educar_matriculas_turma_lst.php');
+            $this->simpleRedirect('educar_matriculas_turma_lst.php');
+
+            return false;
         }
 
         $objTurma = new clsPmieducarTurma();
@@ -359,35 +361,10 @@ class indice extends clsCadastro
         $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
         $vagasDisponiveis = $maxAlunos - $alunosEnturmados[0];
         $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_ref_cod_escola, $this->ref_ref_cod_serie);
-        
-        if ($vagasDisponiveis >= $totalAlunosParaEnturmar || !$dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
-            foreach ($this->ref_cod_matricula as $matricula => $campo) {
-                $obj = new clsPmieducarMatriculaTurma(
-                    $matricula,
-                    $this->ref_cod_turma,
-                    null,
-                    $this->pessoa_logada,
-                    null,
-                    null,
-                    1,
-                    null,
-                    $campo['sequencial_']
-                );
+        $bloquearEnturmacaoSeNaoHouverVagas = $dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas'];
 
-                $existe = $obj->existeEnturmacaoAtiva();
+        if ($vagasDisponiveis < $totalAlunosParaEnturmar && $bloquearEnturmacaoSeNaoHouverVagas) {
 
-                if (!$existe) {
-                    $obj->data_enturmacao = $this->data_enturmacao;
-                    $cadastrou = $obj->cadastra();
-
-                    if (!$cadastrou) {
-                        $this->mensagem = 'Cadastro não realizado.<br>';
-
-                        return false;
-                    }
-                }
-            }
-        } else {
             if ($vagasDisponiveis > 0) {
                 $this->mensagem = 'Cadastro não realizado. Há apenas ' . $vagasDisponiveis . ' vagas restantes para esta turma.';
             } else {
@@ -395,6 +372,33 @@ class indice extends clsCadastro
             }
 
             return false;
+        }
+
+        foreach ($this->ref_cod_matricula as $matricula => $campo) {
+            $obj = new clsPmieducarMatriculaTurma(
+                $matricula,
+                $this->ref_cod_turma,
+                null,
+                $this->pessoa_logada,
+                null,
+                null,
+                1,
+                null,
+                $campo['sequencial_']
+            );
+
+            $existe = $obj->existeEnturmacaoAtiva();
+
+            if (!$existe) {
+                $obj->data_enturmacao = $this->data_enturmacao;
+                $cadastrou = $obj->cadastra();
+
+                if (!$cadastrou) {
+                    $this->mensagem = 'Cadastro não realizado.<br>';
+
+                    return false;
+                }
+            }
         }
 
         $this->mensagem .= 'Cadastro efetuada com sucesso.<br>';
