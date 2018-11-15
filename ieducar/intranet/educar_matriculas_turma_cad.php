@@ -403,9 +403,13 @@ class indice extends clsCadastro
                 continue;
             }
 
+            // FIXME resolver problema de XSS (Chrome bloqueia página)
+
+            header('X-XSS-Protection: 0');
+
             // TODO rollback de todas as enturmações se houver erro
 
-            $this->mensagem = 'Cadastro não realizado.<br>';
+            $this->mensagem .= 'Cadastro não realizado.<br>';
 
             return false;
         }
