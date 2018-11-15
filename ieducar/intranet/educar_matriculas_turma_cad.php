@@ -339,10 +339,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL($this->data_enturmacao);
-        @session_write_close();
 
         foreach ($this->check_desenturma as $matricula) {
             $this->removerEnturmacao($matricula, $this->ref_cod_turma);
