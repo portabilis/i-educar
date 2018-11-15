@@ -345,62 +345,58 @@ class indice extends clsCadastro
             $this->removerEnturmacao($matricula, $this->ref_cod_turma);
         }
 
-        if ($this->matriculas_turma) {
-            $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
-            $objTurma = new clsPmieducarTurma();
-            $dadosTurma = $objTurma->lista($this->ref_cod_turma);
-            $maxAlunos = $dadosTurma[0]['max_aluno'];
-            $objEnturmacoes = new clsPmieducarMatriculaTurma();
-            $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
-            $vagasDisponiveis = $maxAlunos - $alunosEnturmados[0];
-            $objEscolaSerie = new clsPmieducarEscolaSerie();
-            $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_ref_cod_escola, $this->ref_ref_cod_serie);
-
-            if ($vagasDisponiveis >= $totalAlunosParaEnturmar || !$dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
-                foreach ($this->ref_cod_matricula as $matricula => $campo) {
-                    $obj = new clsPmieducarMatriculaTurma(
-                        $matricula,
-                        $this->ref_cod_turma,
-                        null,
-                        $this->pessoa_logada,
-                        null,
-                        null,
-                        1,
-                        null,
-                        $campo['sequencial_']
-                    );
-
-                    $existe = $obj->existeEnturmacaoAtiva();
-
-                    if (!$existe) {
-                        $obj->data_enturmacao = $this->data_enturmacao;
-                        $cadastrou = $obj->cadastra();
-
-                        if (!$cadastrou) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                if ($vagasDisponiveis > 0) {
-                    $this->mensagem = 'Cadastro n&atilde;o realizado. H&aacute; apenas ' . $vagasDisponiveis . ' vagas restantes para esta turma.';
-                } else {
-                    $this->mensagem = 'Cadastro n&atilde;o realizado. N&atilde;o h&aacute; mais vagas dispon&iacute;veis para esta turma.';
-                }
-
-                return false;
-            }
-
-            $this->mensagem .= 'Cadastro efetuada com sucesso.<br>';
-
-            header('Location: educar_matriculas_turma_lst.php');
-            die();
+        if (empty($this->matriculas_turma)) {
+            return $this->simpleRedirect('educar_matriculas_turma_lst.php');
         }
 
-        header('Location: educar_matriculas_turma_lst.php');
-        die();
+        $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
+        $objTurma = new clsPmieducarTurma();
+        $dadosTurma = $objTurma->lista($this->ref_cod_turma);
+        $maxAlunos = $dadosTurma[0]['max_aluno'];
+        $objEnturmacoes = new clsPmieducarMatriculaTurma();
+        $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
+        $vagasDisponiveis = $maxAlunos - $alunosEnturmados[0];
+        $objEscolaSerie = new clsPmieducarEscolaSerie();
+        $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_ref_cod_escola, $this->ref_ref_cod_serie);
+
+        if ($vagasDisponiveis >= $totalAlunosParaEnturmar || !$dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
+            foreach ($this->ref_cod_matricula as $matricula => $campo) {
+                $obj = new clsPmieducarMatriculaTurma(
+                    $matricula,
+                    $this->ref_cod_turma,
+                    null,
+                    $this->pessoa_logada,
+                    null,
+                    null,
+                    1,
+                    null,
+                    $campo['sequencial_']
+                );
+
+                $existe = $obj->existeEnturmacaoAtiva();
+
+                if (!$existe) {
+                    $obj->data_enturmacao = $this->data_enturmacao;
+                    $cadastrou = $obj->cadastra();
+
+                    if (!$cadastrou) {
+                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+
+                        return false;
+                    }
+                }
+            }
+        } else {
+            if ($vagasDisponiveis > 0) {
+                $this->mensagem = 'Cadastro n&atilde;o realizado. H&aacute; apenas ' . $vagasDisponiveis . ' vagas restantes para esta turma.';
+            } else {
+                $this->mensagem = 'Cadastro n&atilde;o realizado. N&atilde;o h&aacute; mais vagas dispon&iacute;veis para esta turma.';
+            }
+
+            return false;
+        }
+
+        $this->mensagem .= 'Cadastro efetuada com sucesso.<br>';
     }
 
     public function Excluir()
