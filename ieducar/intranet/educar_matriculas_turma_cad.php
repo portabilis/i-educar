@@ -401,7 +401,7 @@ class indice extends clsCadastro
             }
         }
 
-        $this->mensagem .= 'Cadastro efetuada com sucesso.<br>';
+        $this->simpleRedirect('educar_matriculas_turma_lst.php');
     }
 
     public function Excluir()
