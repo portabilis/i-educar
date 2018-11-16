@@ -108,31 +108,40 @@ class RegraController extends ApiCoreController
             $ano = $this->getRequest()->ano;
 
             $sql = '
-              SELECT DISTINCT regra_avaliacao.id,
-                              tabela_arredondamento_id,
-                              tabela_arredondamento_id_conceitual,
-                              tipo_nota,
-                              tipo_presenca,
-                              parecer_descritivo,
-                              cod_turma AS turma_id,
-                              tipo_recuperacao_paralela AS tipo_recuperacao,
-                              media_recuperacao_paralela,
-                              nota_maxima_geral,
-                              nota_maxima_exame_final AS nota_maxima_exame,
-                              COALESCE(regra_avaliacao.regra_diferenciada_id, 0) AS regra_diferenciada_id
-              FROM modules.regra_avaliacao
-              LEFT JOIN modules.regra_avaliacao_serie_ano rasa
-                ON rasa.regra_avaliacao_id = regra_avaliacao.id
-              LEFT JOIN pmieducar.serie serie
-                ON rasa.serie_id = serie.cod_serie
-                AND serie.ativo = 1
-              LEFT JOIN pmieducar.turma turma ON turma.ref_ref_cod_serie = serie.cod_serie
-              AND turma.ativo = 1
-              AND regra_avaliacao.instituicao_id = $1
-              AND turma.ano = $2
-              ORDER BY COALESCE(regra_avaliacao.regra_diferenciada_id,0),
-                       regra_avaliacao.id,
-                       cod_turma';
+              SELECT 
+                DISTINCT id,
+                tabela_arredondamento_id,
+                tabela_arredondamento_id_conceitual,
+                tipo_nota,
+                tipo_presenca,
+                parecer_descritivo,
+                (
+                  select 
+                    jsonb_agg(json_build_object(\'turma_id\', t.cod_turma) ORDER BY t.cod_turma)
+                  from 
+                    pmieducar.turma t 
+                  inner join pmieducar.serie s on true 
+                    and s.cod_serie = t.ref_ref_cod_serie
+                  inner join modules.regra_avaliacao_serie_ano rasa on true 
+                    and rasa.serie_id = s.cod_serie 
+                    and rasa.ano_letivo = $2
+                  where true
+                    and rasa.regra_avaliacao_id = ra.id
+                    and t.ano = $2
+                    and t.ativo = 1
+                    and s.ativo = 1
+                  ) as turma,
+                  tipo_recuperacao_paralela AS tipo_recuperacao,
+                  media_recuperacao_paralela,
+                  nota_maxima_geral,
+                  nota_maxima_exame_final AS nota_maxima_exame,
+                  COALESCE(ra.rrouegra_diferenciada_id, 0) AS regra_diferenciada_id
+              FROM modules.regra_avaliacao ra
+              WHERE true
+                AND ra.instituicao_id = $1
+              ORDER BY 
+                COALESCE(ra.regra_diferenciada_id,0),
+                ra.id';
 
             $_regras = $this->fetchPreparedQuery($sql, [
                 $instituicaoId, $ano
@@ -141,7 +150,7 @@ class RegraController extends ApiCoreController
 
             $attrs = [
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
-                'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turma_id',
+                'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turma',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
                 'nota_maxima_exame', 'regra_diferenciada_id'
             ];
@@ -162,16 +171,8 @@ class RegraController extends ApiCoreController
                 $__regras[$regra['id']]['media_recuperacao_paralela'] = $regra['media_recuperacao_paralela'];
                 $__regras[$regra['id']]['nota_maxima_geral'] = $regra['nota_maxima_geral'];
                 $__regras[$regra['id']]['nota_maxima_exame'] = $regra['nota_maxima_exame'];
+                $__regras[$regra['id']]['turmas'] = empty($regra['turma']) ? [] : json_decode($regra['turma']);
 
-                if (!isset($__regras[$regra['id']]['turmas'])) {
-                    $__regras[$regra['id']]['turmas'] = [];
-                }
-
-                if ($regra['turma_id']) {
-                    $__regras[$regra['id']]['turmas'][] = [
-                        'turma_id' => $regra['turma_id'],
-                    ];
-                }
             }
 
             foreach ($__regras as $regra) {
