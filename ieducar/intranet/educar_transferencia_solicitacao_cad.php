@@ -111,30 +111,32 @@ class indice extends clsCadastro
         $sql = "select ref_cod_turma, sequencial from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and sequencial = (select max(sequencial) from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId) and not exists(select 1 from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and ativo = 1 limit 1) limit 1";
 
         $db = new clsBanco();
-        $ultimaEnturmacao = $db->Consulta($sql);
+        $db->Consulta($sql);
         $db->ProximoRegistro();
         $ultimaEnturmacao = $db->Tupla();
 
-        if ($ultimaEnturmacao) {
-            $enturmacao = new clsPmieducarMatriculaTurma($matriculaId, $ultimaEnturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 1, null, $ultimaEnturmacao['sequencial']);
-            $detEnturmacao = $enturmacao->detalhe();
-            $detEnturmacao = $detEnturmacao['data_enturmacao'];
-            $enturmacao->data_enturmacao = $detEnturmacao;
-            $enturmacao->edita();
-
-            $instituicaoId = (new clsBanco)->unicoCampo('select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;');
-
-            $fakeRequest = new CoreExt_Controller_Request(['data' => [
-                'oper' => 'post',
-                'resource' => 'promocao',
-                'instituicao_id' => $instituicaoId,
-                'matricula_id' => $matriculaId
-            ]]);
-
-            $promocaoApi = new PromocaoApiController();
-            $promocaoApi->setRequest($fakeRequest);
-            $promocaoApi->Gerar();
+        if (empty($ultimaEnturmacao)) {
+            return;
         }
+
+        $enturmacao = new clsPmieducarMatriculaTurma($matriculaId, $ultimaEnturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 1, null, $ultimaEnturmacao['sequencial']);
+        $detEnturmacao = $enturmacao->detalhe();
+        $detEnturmacao = $detEnturmacao['data_enturmacao'];
+        $enturmacao->data_enturmacao = $detEnturmacao;
+        $enturmacao->edita();
+
+        $instituicaoId = (new clsBanco)->unicoCampo('select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;');
+
+        $fakeRequest = new CoreExt_Controller_Request(['data' => [
+            'oper' => 'post',
+            'resource' => 'promocao',
+            'instituicao_id' => $instituicaoId,
+            'matricula_id' => $matriculaId
+        ]]);
+
+        $promocaoApi = new PromocaoApiController();
+        $promocaoApi->setRequest($fakeRequest);
+        $promocaoApi->Gerar();
     }
 
     public function Gerar()
