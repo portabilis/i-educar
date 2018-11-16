@@ -263,14 +263,18 @@ class indice extends clsCadastro
             return false;
         }
         $cadastrou = $obj->cadastra();
+
         if ($cadastrou) {
             $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
             $det_matricula = $obj->detalhe();
             $obj->data_cancel = $this->data_cancel;
             $obj->edita();
 
-            $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                ->findAll(['id'], ['matricula_id' => $obj->cod_matricula])[0]->get('id');
+            $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(['id'], ['matricula_id' => $obj->cod_matricula]);
+
+            if ($notaAlunoId && count($notaAlunoId)) {
+                $notaAlunoId[0]->get('id');
+            }
 
             (new Avaliacao_Model_NotaComponenteMediaDataMapper())
                 ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
