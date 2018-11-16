@@ -1136,6 +1136,7 @@ class AlunoController extends ApiCoreController
             $sql = '
                 SELECT a.cod_aluno AS aluno_id,
                 p.nome as nome_aluno,
+                f.nome_social,
                 f.data_nasc as data_nascimento,
                 ff.caminho as foto_aluno,
                 COALESCE((SELECT NOT d.desconsidera_regra_diferenciada
@@ -1155,7 +1156,7 @@ class AlunoController extends ApiCoreController
 
             $alunos = $this->fetchPreparedQuery($sql);
 
-            $attrs = ['aluno_id', 'nome_aluno', 'foto_aluno', 'data_nascimento', 'utiliza_regra_diferenciada'];
+            $attrs = ['aluno_id', 'nome_aluno', 'nome_social', 'foto_aluno', 'data_nascimento', 'utiliza_regra_diferenciada'];
             $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
             foreach ($alunos as &$aluno) {
