@@ -14,7 +14,7 @@
         "cossou/jasperphp": "^2.7",
         "fideloper/proxy": "^4.0",
         "google/recaptcha": "^1.2",
-        "honeybadger-io/honeybadger-php": "^1.2",
+        "honeybadger-io/honeybadger-laravel": "^1.4",
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "robmorgan/phinx": "^0.10.6",
