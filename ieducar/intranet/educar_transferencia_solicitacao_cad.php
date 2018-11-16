@@ -23,13 +23,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-
     public $cod_transferencia_solicitacao;
 
     public $ref_cod_transferencia_tipo;
@@ -73,9 +66,6 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
@@ -150,7 +140,6 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
 
@@ -181,24 +170,19 @@ class indice extends clsCadastro
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');
 
-        // foreign keys
         $opcoes = ['' => 'Selecione'];
-        if (class_exists('clsPmieducarTransferenciaTipo')) {
-            $objTemp = new clsPmieducarTransferenciaTipo();
-            $objTemp->setOrderby(' nm_tipo ASC ');
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, $ref_cod_instituicao);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['cod_transferencia_tipo']}"] = "{$registro['nm_tipo']}";
-                }
+
+        $objTemp = new clsPmieducarTransferenciaTipo();
+        $objTemp->setOrderby(' nm_tipo ASC ');
+        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, $ref_cod_instituicao);
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes["{$registro['cod_transferencia_tipo']}"] = "{$registro['nm_tipo']}";
             }
-        } else {
-            echo "<!--\nErro\nClasse clsPmieducarTransferenciaTipo nao encontrada\n-->";
-            $opcoes = ['' => 'Erro na geracao'];
         }
+
         $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoes, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
-        // text
         $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
 
         $styles = ['/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'];
@@ -207,21 +191,9 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
-//      $obj_matricula = new clsPmieducarMatricula();
-//      $lst_matricula = $obj_matricula->lista( null,null,null,null,null,null,$this->ref_cod_aluno,null,null,null,null,null,1 );
-//      if ( is_array($lst_matricula) )
-//      {
-//          $det_matricula = array_shift($lst_matricula);
-//          $this->ref_cod_matricula_saida = $det_matricula["cod_matricula"];
-
-        // escola externa
         $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
         $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
         $det_matricula = $obj->detalhe();
@@ -231,14 +203,12 @@ class indice extends clsCadastro
                 $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
                 return false;
-                die();
             }
         } else {
             if (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
                 $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
                 return false;
-                die();
             }
         }
 
@@ -309,25 +279,14 @@ class indice extends clsCadastro
             header("Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             die();
         }
-//      }
-//      else
-//      {
-//          $this->mensagem = "N&atilde;o foi poss&iacute;vel encontrar a Matr&iacute;cula do Aluno.<br>";
-//          return false;
-//      }
 
         $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-        echo "<!--\nErro ao cadastrar clsPmieducarTransferenciaSolicitacao\nvalores obrigatorios\nis_numeric( $this->ref_cod_transferencia_tipo ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_aluno )\n-->";
 
         return false;
     }
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
@@ -342,8 +301,6 @@ class indice extends clsCadastro
                 $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
                 header("Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
                 die();
-
-                return true;
             }
         } else {
             $this->mensagem = 'N&atilde;o foi poss&iacute;vel encontrar a Solicita&ccedil;&atilde;o de Transfer&ecirc;ncia do Aluno.<br>';
@@ -352,17 +309,13 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao excluir clsPmieducarTransferenciaSolicitacao\nvalores obrigatorios\nif( is_numeric( $this->cod_transferencia_solicitacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
 
         return false;
     }
 }
 
-// cria uma extensao da classe base
 $pagina = new clsIndexBase();
-// cria o conteudo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
+
 $pagina->addForm($miolo);
-// gera o html
 $pagina->MakeAll();
