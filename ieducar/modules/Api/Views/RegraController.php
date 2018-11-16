@@ -109,28 +109,28 @@ class RegraController extends ApiCoreController
 
             $sql = '
               SELECT 
-                DISTINCT ra.id,
-                ra.tabela_arredondamento_id,
-                ra.tabela_arredondamento_id_conceitual,
-                ra.tipo_nota,
-                ra.tipo_presenca,
-                ra.parecer_descritivo,
-                (
-                  select 
-                    jsonb_agg(json_build_object(\'turma_id\', t.cod_turma) ORDER BY t.cod_turma)
-                  from 
-                    pmieducar.turma t 
-                  inner join pmieducar.serie s on true 
-                    and s.cod_serie = t.ref_ref_cod_serie
-                  inner join modules.regra_avaliacao_serie_ano rasa on true 
-                    and rasa.serie_id = s.cod_serie 
-                    and rasa.ano_letivo = $2
-                  where true
-                    and rasa.regra_avaliacao_id = ra.id
-                    and t.ano = $2
-                    and t.ativo = 1
-                    and s.ativo = 1
-                  ) as turmas,
+                  DISTINCT ra.id,
+                  ra.tabela_arredondamento_id,
+                  ra.tabela_arredondamento_id_conceitual,
+                  ra.tipo_nota,
+                  ra.tipo_presenca,
+                  ra.parecer_descritivo,
+                  (
+                      SELECT 
+                          jsonb_agg(json_build_object(\'turma_id\', t.cod_turma) ORDER BY t.cod_turma)
+                      FROM 
+                          pmieducar.turma t 
+                      INNER JOIN pmieducar.serie s ON true 
+                          AND s.cod_serie = t.ref_ref_cod_serie
+                      INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true 
+                          AND rasa.serie_id = s.cod_serie 
+                          AND rasa.ano_letivo = $2
+                      WHERE true
+                          AND rasa.regra_avaliacao_id = ra.id
+                          AND t.ano = $2
+                          AND t.ativo = 1
+                          AND s.ativo = 1
+                  ) AS turmas,
                   ra.tipo_recuperacao_paralela AS tipo_recuperacao,
                   ra.media_recuperacao_paralela,
                   ra.nota_maxima_geral,
@@ -138,7 +138,7 @@ class RegraController extends ApiCoreController
                   COALESCE(ra.regra_diferenciada_id, 0) AS regra_diferenciada_id
               FROM modules.regra_avaliacao ra
               WHERE true
-                AND ra.instituicao_id = $1
+                  AND ra.instituicao_id = $1
               ORDER BY 
                 COALESCE(ra.regra_diferenciada_id,0),
                 ra.id';
