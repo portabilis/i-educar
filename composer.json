@@ -37,8 +37,15 @@
     "autoload": {
         "classmap": [
             "database/seeds",
-            "database/factories"
+            "database/factories",
+            "ieducar/lib/App",
+            "ieducar/lib/Utils"
         ],
+        "psr-0": {
+            "Core\\": "ieducar/lib/Core/",
+            "CoreExt\\": "ieducar/lib/CoreExt/",
+            "Portabilis\\": "ieducar/lib/Portabilis/"
+        },
         "psr-4": {
             "App\\": "app/",
             "iEducar\\": "src"
@@ -49,6 +56,12 @@
             "Tests\\": "tests/"
         }
     },
+    "include-path": [
+        "ieducar",
+        "ieducar/intranet",
+        "ieducar/lib",
+        "ieducar/modules"
+    ],
     "extra": {
         "laravel": {
             "dont-discover": [
