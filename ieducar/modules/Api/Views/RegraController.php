@@ -109,12 +109,12 @@ class RegraController extends ApiCoreController
 
             $sql = '
               SELECT 
-                DISTINCT id,
-                tabela_arredondamento_id,
-                tabela_arredondamento_id_conceitual,
-                tipo_nota,
-                tipo_presenca,
-                parecer_descritivo,
+                DISTINCT ra.id,
+                ra.tabela_arredondamento_id,
+                ra.tabela_arredondamento_id_conceitual,
+                ra.tipo_nota,
+                ra.tipo_presenca,
+                ra.parecer_descritivo,
                 (
                   select 
                     jsonb_agg(json_build_object(\'turma_id\', t.cod_turma) ORDER BY t.cod_turma)
@@ -130,12 +130,12 @@ class RegraController extends ApiCoreController
                     and t.ano = $2
                     and t.ativo = 1
                     and s.ativo = 1
-                  ) as turma,
-                  tipo_recuperacao_paralela AS tipo_recuperacao,
-                  media_recuperacao_paralela,
-                  nota_maxima_geral,
-                  nota_maxima_exame_final AS nota_maxima_exame,
-                  COALESCE(ra.rrouegra_diferenciada_id, 0) AS regra_diferenciada_id
+                  ) as turmas,
+                  ra.tipo_recuperacao_paralela AS tipo_recuperacao,
+                  ra.media_recuperacao_paralela,
+                  ra.nota_maxima_geral,
+                  ra.nota_maxima_exame_final AS nota_maxima_exame,
+                  COALESCE(ra.regra_diferenciada_id, 0) AS regra_diferenciada_id
               FROM modules.regra_avaliacao ra
               WHERE true
                 AND ra.instituicao_id = $1
@@ -150,7 +150,7 @@ class RegraController extends ApiCoreController
 
             $attrs = [
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
-                'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turma',
+                'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turmas',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
                 'nota_maxima_exame', 'regra_diferenciada_id'
             ];
@@ -160,18 +160,9 @@ class RegraController extends ApiCoreController
             $__regras = [];
 
             foreach ($_regras as $regra) {
-                $__regras[$regra['id']]['id'] = $regra['id'];
+                $__regras[$regra['id']] = $regra;
                 $__regras[$regra['id']]['regra_diferenciada_id']= $regra['regra_diferenciada_id'] ?: null;
-                $__regras[$regra['id']]['tabela_arredondamento_id']= $regra['tabela_arredondamento_id'];
-                $__regras[$regra['id']]['tabela_arredondamento_id_conceitual'] = $regra['tabela_arredondamento_id_conceitual'];
-                $__regras[$regra['id']]['tipo_nota'] = $regra['tipo_nota'];
-                $__regras[$regra['id']]['tipo_presenca'] = $regra['tipo_presenca'];
-                $__regras[$regra['id']]['parecer_descritivo'] = $regra['parecer_descritivo'];
-                $__regras[$regra['id']]['tipo_recuperacao'] = $regra['tipo_recuperacao'];
-                $__regras[$regra['id']]['media_recuperacao_paralela'] = $regra['media_recuperacao_paralela'];
-                $__regras[$regra['id']]['nota_maxima_geral'] = $regra['nota_maxima_geral'];
-                $__regras[$regra['id']]['nota_maxima_exame'] = $regra['nota_maxima_exame'];
-                $__regras[$regra['id']]['turmas'] = empty($regra['turma']) ? [] : json_decode($regra['turma']);
+                $__regras[$regra['id']]['turmas'] = empty($regra['turmas']) ? [] : json_decode($regra['turmas']);
 
             }
 
