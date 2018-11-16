@@ -67,7 +67,7 @@ class clsCadastro extends clsCampos
 
   var $largura;
   var $tipoacao;
-  var $campos;
+  var $campos = [];
   var $erros;
   var $mensagem;
 
@@ -291,7 +291,7 @@ class clsCadastro extends clsCampos
     if ($this->campos) {
       reset($this->campos);
 
-      while (list($nome, $componente) = each($this->campos)) {
+      foreach ($this->campos as $nome => $componente) {
         if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
           $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3])."'>\n";
         }
@@ -381,7 +381,7 @@ class clsCadastro extends clsCampos
     function setColor(color)
     { \n";
       reset($this->campos);
-      while (list($nome, $componente) = each($this->campos)) {
+      foreach ($this->campos as $nome => $componente) {
         $validador = $componente[4];
 
         if (!empty($validador)) {
@@ -403,7 +403,7 @@ class clsCadastro extends clsCampos
 
     reset($this->campos);
 
-    while (list($nome, $componente) = each($this->campos)) {
+    foreach ($this->campos as $nome => $componente) {
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
