@@ -74,28 +74,27 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
-        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_aluno) && ($cancela == true)) {
-            if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)) {
-                if ($_GET['reabrir_matricula']) {
-                    $this->reabrirMatricula($this->ref_cod_matricula);
-                }
-
-                $this->Excluir();
+        if (
+            $cancela == true
+            && is_numeric($this->ref_cod_matricula)
+            && is_numeric($this->ref_cod_aluno)
+            && $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)
+        ) {
+            if ($_GET['reabrir_matricula']) {
+                $this->reabrirMatricula($this->ref_cod_matricula);
             }
+
+            $this->Excluir();
         }
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
-
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Registro da solicitação de transferência da matrícula'
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js']);
         $this->nome_url_cancelar = 'Cancelar';
+
+        $this->breadcrumb('Registro da solicitação de transferência da matrícula', [
+            'educar_index.php' => 'Escola',
+        ]);
+
+        Portabilis_View_Helper_Application::loadJavascript($this, ['/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js']);
 
         return $retorno;
     }
