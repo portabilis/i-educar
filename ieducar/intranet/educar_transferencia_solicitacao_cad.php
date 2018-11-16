@@ -146,11 +146,13 @@ class indice extends clsCadastro
 
         $obj_aluno = new clsPmieducarAluno();
         $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
+
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
             $this->nm_aluno = $det_aluno['nome_aluno'];
             $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, false, false, false, '', '', '', '', true);
         }
+
         $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_instituicao = $det_matricula['ref_cod_instituicao'];
@@ -176,6 +178,7 @@ class indice extends clsCadastro
         $objTemp = new clsPmieducarTransferenciaTipo();
         $objTemp->setOrderby(' nm_tipo ASC ');
         $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, $ref_cod_instituicao);
+
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $opcoes["{$registro['cod_transferencia_tipo']}"] = "{$registro['nm_tipo']}";
@@ -186,8 +189,9 @@ class indice extends clsCadastro
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
 
-        $styles = ['/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'];
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadStylesheet($this, [
+            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+        ]);
     }
 
     public function Novo()
