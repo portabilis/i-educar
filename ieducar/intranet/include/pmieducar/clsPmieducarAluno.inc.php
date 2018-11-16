@@ -918,7 +918,7 @@ class clsPmieducarAluno
         $resultado = [];
 
         if (!$this->getOrderby()) {
-            $this->setOrderby('coalesce(fisica.nome_social, pessoa.nome_aluno)');
+            $this->setOrderby('coalesce(fisica.nome_social, pessoa.nome)');
         }
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
