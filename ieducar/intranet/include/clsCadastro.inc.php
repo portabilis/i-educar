@@ -151,12 +151,12 @@ class clsCadastro extends clsCampos
     }
     else {
       reset($_POST);
-      while (list($variavel, $valor) = each($_POST)) {
-        $this->$variavel = $valor;
+      foreach ($_POST as $variavel => $valor) {
+          $this->$variavel = $valor;
       }
 
       reset($_FILES);
-      while (list($variavel, $valor) = each($_FILES)) {
+      foreach ($_FILES as $variavel => $valor) {
         $this->$variavel = $valor;
       }
 
@@ -443,7 +443,7 @@ class clsCadastro extends clsCampos
         $ct_campo = 0;
         $retorno .= "for(var id_campo=0;id_campo<$nome.getId();id_campo++)\n{\n";
 
-        while (list($name,$componente_campo ) = each( $componente)) {
+        foreach ($componente as $name => $componente_campo) {
           $nomeCampo =$componente_campo[1];
           $validador = $componente_campo[2];
 
