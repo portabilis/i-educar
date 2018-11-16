@@ -275,10 +275,10 @@ class indice extends clsCadastro
             $obj->data_cancel = $this->data_cancel;
             $obj->edita();
 
-            $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(['id'], ['matricula_id' => $obj->cod_matricula]);
+            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(['id'], ['matricula_id' => $obj->cod_matricula]);
 
-            if ($notaAlunoId && count($notaAlunoId)) {
-                $notaAlunoId[0]->get('id');
+            if ($notasAluno && count($notasAluno)) {
+                $notaAlunoId = $notasAluno[0]->get('id');
             }
 
             (new Avaliacao_Model_NotaComponenteMediaDataMapper())
