@@ -445,12 +445,11 @@ class indice extends clsCadastro
 
     public function copiarTurmasUltimoAno($escolaId, $anoDestino)
     {
-        $sql = 'select ano, turmas_por_ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
+        $sql = 'select ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
             'and ativo = 1 and ano in (select max(ano) from pmieducar.escola_ano_letivo where ' .
             'ref_cod_escola = $1 and ativo = 1)';
 
         $ultimoAnoLetivo = Portabilis_Utils_Database::selectRow($sql, $escolaId);
-        $anoTurmasPorAno = $ultimoAnoLetivo['turmas_por_ano'] == 1 ? $ultimoAnoLetivo['ano'] : null;
         $turmasEscola = new clsPmieducarTurma();
         $turmasEscola = $turmasEscola->lista(
             null,
@@ -489,7 +488,7 @@ class indice extends clsCadastro
             true,
             null,
             null,
-            $anoTurmasPorAno
+            $ultimoAnoLetivo['ano']
         );
 
         foreach ($turmasEscola as $turma) {
@@ -559,6 +558,8 @@ class indice extends clsCadastro
             }
 
             $turmaDestino->ano = $anoDestino;
+            $turmaDestino->ref_usuario_cad = $this->pessoa_logada;
+            $turmaDestino->ref_usuario_exc = $this->pessoa_logada;
             $turmaDestinoId = $turmaDestino->cadastra();
 
             $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);

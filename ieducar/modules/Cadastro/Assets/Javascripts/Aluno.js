@@ -1055,6 +1055,27 @@ var handleGetPersonDetails = function (dataResponse) {
         $j('#tipo_certidao_civil').val(dataResponse.tipo_cert_civil).change();
     }
 
+    var cpf = dataResponse.cpf;
+
+    var mascara = null;
+    
+    if (cpf) {
+        mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+
+    $j('#id_federal').val(mascara);
+    $j('#data_emissao_rg').val(dataResponse.data_emissao_rg);
+
+    $j('#uf_emissao_certidao_civil').val(dataResponse.sigla_uf_cert_civil);
+    $j('#data_emissao_certidao_civil').val(dataResponse.data_emissao_cert_civil);
+    $j('#cartorio_emissao_certidao_civil').val(dataResponse.cartorio_cert_civil);
+
+    $inepCartorio = $j('#cartorio_cert_civil_inep');
+    if (dataResponse.id_cartorio != null && dataResponse.nome_cartorio != null) {
+        $inepCartorio.val(dataResponse.id_cartorio + ' - ' + dataResponse.nome_cartorio);
+    }
+    $j('#cartorio_cert_civil_inep_id').val(dataResponse.cartorio_cert_civil_inep);
+
     // # TODO show aluno photo
     //$j('#aluno_foto').val(dataResponse.url_foto);
     canShowParentsFields();

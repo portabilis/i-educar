@@ -216,4 +216,5 @@ return [
         'Asset' => Tooleks\LaravelAssetVersion\Facades\Asset::class,
     ],
 
+    'trackerror' => env('APP_TRACK_ERROR', false),
 ];

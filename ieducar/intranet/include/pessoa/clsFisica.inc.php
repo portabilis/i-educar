@@ -756,7 +756,7 @@ class clsFisica
             {
                $set .= "$gruda tipo_trabalho = {$this->tipo_trabalho}";
                $gruda = ", ";
-            }elseif (is_null($this->tipo_trabalho)) {
+            } elseif (is_null($this->tipo_trabalho) || $this->tipo_trabalho == false) {
                 $set .= "$gruda tipo_trabalho = NULL";
                 $gruda = ", ";
             }
@@ -1104,7 +1104,7 @@ class clsFisica
         if($this->idpes)
         {
             $db = new clsBanco();
-            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome FROM {$this->schema}.{$this->tabela} 
+            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) WHERE fisica.idpes = {$this->idpes}");
             if( $db->ProximoRegistro() )
             {

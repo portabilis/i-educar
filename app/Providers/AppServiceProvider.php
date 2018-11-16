@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\DuskServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,6 +56,9 @@ class AppServiceProvider extends ServiceProvider
             $this->registerRoutesForFakeAuth();
             $this->customBrowserForFakeAuth();
         }
+
+        // https://laravel.com/docs/5.5/migrations#indexes
+        Schema::defaultStringLength(191);
     }
 
     /**
@@ -63,7 +68,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
         $this->app->register(RepositoryServiceProvider::class);
         $this->app->singleton(Breadcrumb::class);
+
+        if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
+            $this->app->register(DuskServiceProvider::class);
+        }
+
+        $this->app->bind(\iEducar\Modules\ErrorTracking\Tracker::class, \iEducar\Modules\ErrorTracking\HoneyBadgerTracker::class);
     }
 }

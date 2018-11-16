@@ -263,41 +263,36 @@ class clsPmieducarEscolaSerieDisciplina
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->ref_cod_disciplina)) {
             $db = new clsBanco();
-            $set = "";
-            $gruda = "";
+            $set = [];
 
             if (is_numeric($this->ativo)) {
-                $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ", ";
+                $set[] = "ativo = '{$this->ativo}'";
             }
 
             if (is_numeric($this->carga_horaria)) {
-                $set .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
-                $gruda = ", ";
+                $set[] = "carga_horaria = '{$this->carga_horaria}'";
             } else if (is_null($this->carga_horaria)) {
-                $set .= "{$gruda}carga_horaria = NULL";
             }
 
             if (is_string($this->etapas_especificas)) {
-                $set .= "{$gruda}etapas_especificas = '{$this->etapas_especificas}'";
-                $gruda = ", ";
+                $set[] = "etapas_especificas = '{$this->etapas_especificas}'";
             }
 
             if (is_string($this->etapas_utilizadas)) {
-                $set .= "{$gruda}etapas_utilizadas = '{$this->etapas_utilizadas}'";
-                $gruda = ", ";
+                $set[] = "etapas_utilizadas = '{$this->etapas_utilizadas}'";
             } else if (is_null($this->etapas_utilizadas)) {
-                $set .= "{$gruda}etapas_utilizadas = NULL";
+                $set[] = "etapas_utilizadas = NULL";
             }
 
             if( is_array( $this->anos_letivos ) )
             {
-                $set .= "{$gruda} anos_letivos = " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
-                $gruda = ", ";
+                $set[] = "anos_letivos = " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
             }
 
-            if ($set) {
-                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
+            $fields = implode(', ', $set);
+
+            if ($fields) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $fields WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
                 return TRUE;
             }
         }

@@ -108,22 +108,24 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Enturma&ccedil;&atilde;o da matr&iacute;cula"
+         "educar_index.php" => "Escola",
+         "" => "Enturma&ccedil;&atilde;o da matr&iacute;cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
     //nova lógica
     if (is_numeric($this->ref_cod_matricula)) {
 
-      if ($this->ref_cod_turma_origem == 'remover-enturmacao-destino')
+      if ($this->ref_cod_turma_origem == 'remover-enturmacao-destino') {
         $this->removerEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
-      elseif (! is_numeric($this->ref_cod_turma_origem))
+      } elseif (! is_numeric($this->ref_cod_turma_origem)) {
         $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
-      else {
-        $this->transferirEnturmacao($this->ref_cod_matricula,
-                                    $this->ref_cod_turma_origem,
-                                    $this->ref_cod_turma_destino);
+      } else {
+        $this->transferirEnturmacao(
+          $this->ref_cod_matricula,
+          $this->ref_cod_turma_origem,
+          $this->ref_cod_turma_destino
+        );
       }
 
       header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
@@ -136,6 +138,9 @@ class indice extends clsCadastro
   }
 
   function novaEnturmacao($matriculaId, $turmaDestinoId) {
+    if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+        return false;
+    }
 
     $enturmacaoExists = new clsPmieducarMatriculaTurma();
     $enturmacaoExists = $enturmacaoExists->lista($matriculaId,
@@ -149,7 +154,8 @@ class indice extends clsCadastro
                                                  1);
 
     $enturmacaoExists = is_array($enturmacaoExists) && count($enturmacaoExists) > 0;
-    if (! $enturmacaoExists) {
+
+    if (!$enturmacaoExists) {
       $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                    $turmaDestinoId,
                                                    $this->pessoa_logada,
@@ -157,16 +163,48 @@ class indice extends clsCadastro
                                                    NULL,
                                                    NULL,
                                                    1);
+
       $enturmacao->data_enturmacao = $this->data_enturmacao;
+
       return $enturmacao->cadastra();
     }
     return false;
   }
 
+  public function validaDataEnturmacao($matriculaId, $turmaDestinoId)
+  {
+    $dataObj = new \DateTime($this->data_enturmacao . ' 23:59:59');
+    $matriculaObj = new clsPmieducarMatricula();
+    $enturmacaoObj = new clsPmieducarMatriculaTurma();
+    $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio($turmaDestinoId);
+    $dataAnoLetivoFim = $matriculaObj->pegaDataAnoLetivoFim($turmaDestinoId);
+    $exclusaoEnturmacao = $enturmacaoObj->getDataExclusaoUltimaEnturmacao($matriculaId);
+    $dataSaidaDaTurma = !empty($exclusaoEnturmacao)
+        ? new \DateTime($exclusaoEnturmacao)
+        : null;
+
+    if ($dataObj > $dataAnoLetivoFim) {
+        return false;
+    }
+
+    if ($dataSaidaDaTurma !== null && $dataObj < $dataSaidaDaTurma) {
+        return false;
+    } elseif ($dataObj < $dataAnoLetivoInicio) {
+        return false;
+    }
+
+    return true;
+  }
 
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
-    if($this->removerEnturmacao($matriculaId, $turmaOrigemId, TRUE))
+    if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+        return false;
+    }
+
+    if($this->removerEnturmacao($matriculaId, $turmaOrigemId, TRUE)) {
       return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
+    }
+
     return false;
   }
 

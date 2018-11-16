@@ -94,7 +94,17 @@ class PessoaController extends ApiCoreController
             (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg,
             (select sigla_uf_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as uf_emissao_rg,
             (select idorg_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as orgao_emissao_rg,
+            (select data_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as data_emissao_rg,
             (select tipo_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as tipo_cert_civil,
+            
+            (select data_emissao_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as data_emissao_cert_civil,
+            (select sigla_uf_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as sigla_uf_cert_civil,
+            (select cartorio_cert_civil_inep from cadastro.documento where documento.idpes = fisica.idpes) as cartorio_cert_civil_inep,
+            (select cartorio_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as cartorio_cert_civil,
+            (select id_cartorio FROM cadastro.codigo_cartorio_inep, cadastro.documento WHERE codigo_cartorio_inep.id = documento.cartorio_cert_civil_inep AND documento.idpes = fisica.idpes) as id_cartorio,
+            (select descricao FROM cadastro.codigo_cartorio_inep, cadastro.documento WHERE codigo_cartorio_inep.id = documento.cartorio_cert_civil_inep AND documento.idpes = fisica.idpes) as nome_cartorio,
+            
+            
             (select num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
             (select num_livro from cadastro.documento where documento.idpes = fisica.idpes) as num_livro,
             (select num_folha from cadastro.documento where documento.idpes = fisica.idpes) as num_folha,
@@ -226,7 +236,14 @@ class PessoaController extends ApiCoreController
             'pais_origem_nome',
             'cor_raca',
             'uf_emissao_rg',
-            'orgao_emissao_rg'
+            'orgao_emissao_rg',
+            'data_emissao_rg',
+            'data_emissao_cert_civil',
+            'sigla_uf_cert_civil',
+            'cartorio_cert_civil_inep',
+            'cartorio_cert_civil',
+            'id_cartorio',
+            'nome_cartorio',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -291,6 +308,8 @@ class PessoaController extends ApiCoreController
         }
 
         $details['data_nascimento'] = Portabilis_Date_Utils::pgSQLToBr($details['data_nascimento']);
+        $details['data_emissao_rg'] = Portabilis_Date_Utils::pgSQLToBr($details['data_emissao_rg']);
+        $details['data_emissao_cert_civil'] = Portabilis_Date_Utils::pgSQLToBr($details['data_emissao_cert_civil']);
 
         return $details;
     }
