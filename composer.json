@@ -15,12 +15,13 @@
         "fideloper/proxy": "^4.0",
         "google/recaptcha": "^1.2",
         "honeybadger-io/honeybadger-laravel": "^1.4",
-        "laravel/framework": "5.6.*",
+        "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "robmorgan/phinx": "^0.10.6",
         "swiftmailer/swiftmailer": "^6.1"
     },
     "require-dev": {
+        "beyondcode/laravel-dump-server": "^1.0",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "fzaninotto/faker": "^1.4",
@@ -62,11 +63,11 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate"
+            "@php artisan key:generate --ansi"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "@php artisan package:discover --ansi"
         ]
     },
     "config": {
