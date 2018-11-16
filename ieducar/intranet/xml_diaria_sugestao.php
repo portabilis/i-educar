@@ -2,7 +2,7 @@
 
 require_once 'includes/bootstrap.php';
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-require_once("include/clsBanco.inc.php");
+require_once 'include/clsBanco.inc.php';
 
 header('Content-type: text/xml');
 
