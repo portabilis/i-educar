@@ -450,7 +450,6 @@ class indice extends clsCadastro
             'ref_cod_escola = $1 and ativo = 1)';
 
         $ultimoAnoLetivo = Portabilis_Utils_Database::selectRow($sql, $escolaId);
-        $anoTurmasPorAno = $ultimoAnoLetivo['ano'];
         $turmasEscola = new clsPmieducarTurma();
         $turmasEscola = $turmasEscola->lista(
             null,
@@ -489,7 +488,7 @@ class indice extends clsCadastro
             true,
             null,
             null,
-            $anoTurmasPorAno
+            $ultimoAnoLetivo['ano']
         );
 
         foreach ($turmasEscola as $turma) {
