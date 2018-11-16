@@ -1,11 +1,8 @@
 <?php
 
-// Inclui operações de bootstrap.
-require_once '../includes/bootstrap.php';
-
+require_once 'includes/bootstrap.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
-
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'include/pmieducar/clsPmieducarAlunoBeneficio.inc.php';
@@ -114,8 +111,6 @@ require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
 require_once 'include/pmieducar/clsPmieducarCandidatoFilaUnica.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaCandidatoFilaUnica.inc.php';
 require_once 'include/pmieducar/clsPmieducarResponsaveisAluno.inc.php';
-
-//Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoIdioma.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoColecao.inc.php';
@@ -144,7 +139,6 @@ require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
 require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
 require_once 'include/pmieducar/clsPmieducarBloqueioAnoLetivo.inc.php';
 require_once 'include/pmieducar/clsPmieducarBackup.inc.php';
-
 require_once 'include/pmieducar/clsPmieducarAlunoCmf.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
