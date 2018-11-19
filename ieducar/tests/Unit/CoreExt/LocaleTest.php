@@ -61,7 +61,7 @@ class CoreExt_LocaleTest extends UnitBaseTest
   public function testFloatComUmLocaleQueUsaVirgulaParaSepararDecimais()
   {
     $this->_instance->setCulture('pt_BR')->setLocale();
-    if ($this->_instance->actualCulture['LC_ALL'] == 'C') {
+    if (strpos($this->_instance->actualCulture['LC_NUMERIC'], 'pt_BR') === false) {
         $this->markTestSkipped('Locale pt_BR não instalado.');
     }
     $float = 3.5;
@@ -71,7 +71,7 @@ class CoreExt_LocaleTest extends UnitBaseTest
   public function testResetDeLocale()
   {
     $this->_instance->setLocale('pt_BR');
-    if ($this->_instance->actualCulture['LC_ALL'] == 'C') {
+    if (strpos($this->_instance->actualCulture['LC_NUMERIC'], 'pt_BR') === false) {
         $this->markTestSkipped('Locale pt_BR não instalado.');
     }
     $float = 3.5;
@@ -87,7 +87,7 @@ class CoreExt_LocaleTest extends UnitBaseTest
     $this->assertEquals('.', $this->_instance->getCultureInfo('decimal_point'));
 
     $this->_instance->setLocale('pt_BR');
-    if ($this->_instance->actualCulture['LC_ALL'] == 'C') {
+    if (strpos($this->_instance->actualCulture['LC_NUMERIC'], 'pt_BR') === false) {
         $this->markTestSkipped('Locale pt_BR não instalado.');
     }
     $this->assertEquals(',', $this->_instance->getCultureInfo('decimal_point'));
