@@ -12,6 +12,12 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
     $this->_validator = new CoreExt_Validate_Numeric();
   }
 
+  protected function tearDown()
+  {
+      $instance = CoreExt_Locale::getInstance();
+      $instance->resetLocale();
+  }
+
   /**
    * @expectedException Exception
    */
