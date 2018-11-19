@@ -12,6 +12,12 @@ class CoreExt_LocaleTest extends UnitBaseTest
     $this->_instance->resetLocale();
   }
 
+  protected function tearDown()
+  {
+      $this->_instance = CoreExt_Locale::getInstance();
+      $this->_instance->resetLocale();
+  }
+
   public function testFloatComOLocaleDefault()
   {
     $float = 3.5;
