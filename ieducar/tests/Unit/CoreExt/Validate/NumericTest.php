@@ -119,7 +119,7 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
     $locale = CoreExt_Locale::getInstance();
     $locale->setLocale('pt_BR');
 
-    if($locale->actualCulture['LC_ALL'] == 'C') {
+    if (strpos($this->_instance->actualCulture['LC_NUMERIC'], 'pt_BR') === false) {
         $this->markTestSkipped('Locale não instalado.');
     }
     $this->assertTrue($this->_validator->isValid('0,0'));
@@ -135,7 +135,7 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
     $locale = CoreExt_Locale::getInstance();
     $locale->setLocale('en_US');
 
-    if($locale->actualCulture['LC_ALL'] == 'C') {
+    if (strpos($this->_instance->actualCulture['LC_NUMERIC'], 'pt_BR') === false) {
         $this->markTestSkipped('Locale não instalado.');
     }
     $this->assertTrue($this->_validator->isValid('0.0'));
