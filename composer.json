@@ -17,7 +17,6 @@
         "honeybadger-io/honeybadger-laravel": "^1.4",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
-        "robmorgan/phinx": "^0.10.6",
         "swiftmailer/swiftmailer": "^6.1"
     },
     "require-dev": {
