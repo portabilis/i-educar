@@ -1751,8 +1751,8 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         $retorno .= "<tr><td colspan='2' class='$classe'><span class='form'><b>$componente[3]</b></span>{$explicacao}</td></tr>\n";
                     } else {
-                        if (!empty($componente[10]) && ($componente[0] == 'textoDuploInv'
-                            || $componente[0] == 'textoInv')) {
+                        if (!empty($componente[10]) && !empty($componente[0])
+                            && ($componente[0] == 'textoDuploInv' || $componente[0] == 'textoInv')) {
                             $name = " name='tr_{$componente[10]}'  ";
                         } else {
                             $name = '';
