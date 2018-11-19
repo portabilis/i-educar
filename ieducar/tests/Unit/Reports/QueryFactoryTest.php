@@ -7,11 +7,10 @@ use Tests\SuiteTestCase\TestCase;
 
 class QueryFactoryTest extends TestCase
 {
+    private static $pdo;
     public function testUnvaluedKey()
     {
-        $pdo = $this->getPdoConection();
-
-        $fakeClass = new class($pdo, []) extends QueryFactory{
+        $fakeClass = new class(self::$pdo, []) extends QueryFactory {
             protected $keys = ['fake_key'];
         };
 
@@ -21,23 +20,39 @@ class QueryFactoryTest extends TestCase
 
     public function testArrayValue()
     {
-        $this->setupDump('fakeusers.sql');
+        self::$pdo->exec(
+            "SET session_replication_role = replica;\n".
+            'INSERT INTO pmieducar.usuario (cod_usuario, ref_cod_instituicao, ref_funcionario_cad, data_cadastro, ativo) VALUES (-1, 1, 1, NOW(), 1), (-2, 1, 1, NOW(), 1);'
+        );
 
-        $pdo = $this->getPdoConection();
-
-        $fakeClass = new class($pdo, []) extends QueryFactory{
+        $fakeClass = new class(self::$pdo, []) extends QueryFactory {
             protected $keys = ['usuarios'];
             protected $query = 'SELECT * FROM pmieducar.usuario WHERE cod_usuario IN (:usuarios)';
         };
-        $fakeClass->setParams(['usuarios' => [1,2]]);
-        $this->assertCount(2, $fakeClass->getData());
+        $fakeClass->setParams(['usuarios' => [-1,-2]]);
+        $data = $fakeClass->getData();
+        $this->assertCount(2, $data);
+    }
+
+    public function setUp()
+    {
+        if (!self::$pdo) {
+            self::$pdo = self::getPdoConection();
+            self::tearDownAfterClass();
+        }
+    }
+
+    public static function tearDownAfterClass()
+    {
+        self::$pdo->exec(
+            "DELETE FROM pmieducar.usuario WHERE cod_usuario IN (-1,-2);\n".
+            'SET session_replication_role = DEFAULT;'
+        );
     }
 
     public function testSingleValue()
     {
-        $pdo = $this->getPdoConection();
-
-        $fakeClass = new class($pdo, []) extends QueryFactory{
+        $fakeClass = new class(self::$pdo, []) extends QueryFactory {
             protected $keys = ['usuario'];
             protected $query = 'SELECT * FROM pmieducar.usuario WHERE cod_usuario = :usuario';
         };
