@@ -37,7 +37,9 @@
     "autoload": {
         "classmap": [
             "database/seeds",
-            "database/factories"
+            "database/factories",
+            "ieducar/intranet/include",
+            "ieducar/lib"
         ],
         "psr-4": {
             "App\\": "app/",
@@ -49,6 +51,12 @@
             "Tests\\": "tests/"
         }
     },
+    "include-path": [
+        "ieducar",
+        "ieducar/intranet",
+        "ieducar/lib",
+        "ieducar/modules"
+    ],
     "extra": {
         "laravel": {
             "dont-discover": [
