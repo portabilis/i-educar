@@ -431,10 +431,14 @@ abstract class clsBancoSQL_
       echo $this->strStringSQL."\n<br>";
     }
 
+    $start = microtime(true);
+
     $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
     $this->strErro = pg_result_error($this->bConsulta_ID);
     $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
     $this->iLinha   = 0;
+
+    $this->logQuery($this->strStringSQL, [], $start);
 
     if (!$this->bConsulta_ID) {
       if ($this->getThrowException()) {
@@ -854,9 +858,13 @@ abstract class clsBancoSQL_
       if (! is_array($params))
         $params = array($params);
 
+      $start = microtime(true);
+
       $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
       $resultError = @pg_result_error($this->bConsulta_ID);
       $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($dbConn);
+
+      $this->logQuery($query, $params, $start);
 
       }
       catch(Exception $e) {
@@ -867,5 +875,25 @@ abstract class clsBancoSQL_
         throw new Exception("Erro ao preparar consulta ($query) no banco de dados: $errorMsgs");
 
       return $this->bConsulta_ID;
+  }
+
+  /**
+   * Lança um evento "QueryExecuted".
+   *
+   * @see \Illuminate\Database\Connection::logQuery()
+   *
+   * @param string $query
+   * @param array  $bindings
+   * @param string $time
+   *
+   * @return void
+   */
+  protected function logQuery($query, $bindings, $time)
+  {
+    /** @var \Illuminate\Database\Connection $connection */
+    $connection = app(\Illuminate\Database\Connection::class);
+
+    /** @see \Illuminate\Database\Connection::getElapsedTime() */
+    $connection->logQuery($query, $bindings, round((microtime(true) - $time) * 1000, 2));
   }
 }
