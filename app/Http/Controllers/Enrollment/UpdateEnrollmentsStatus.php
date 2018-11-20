@@ -12,6 +12,8 @@ class UpdateEnrollmentsStatus extends Controller
             route('settings') => 'Configurações'
         ]);
 
-        return view('update-enrollments-status.index');
+        return view('update-enrollments-status.index', [
+            'title' => 'Alterar situação de matrículas'
+        ]);
     }
 }

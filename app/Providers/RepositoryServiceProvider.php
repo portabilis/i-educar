@@ -27,6 +27,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\iEducar\Support\Repositories\SubmenuRepository::class, \App\Repositories\SubmenuRepositoryEloquent::class);
         $this->app->bind(\iEducar\Support\Repositories\UserRepository::class, \App\Repositories\UserRepositoryEloquent::class);
         $this->app->bind(\iEducar\Support\Repositories\UserTypeRepository::class, \App\Repositories\UserTypeRepositoryEloquent::class);
-        //:end-bindings:
+        $this->app->bind(\iEducar\Support\Repositories\ConfigurationRepository::class, \App\Repositories\ConfigurationRepositoryEloquent::class);
     }
 }

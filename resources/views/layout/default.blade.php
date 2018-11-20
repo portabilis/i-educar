@@ -6,7 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="-1"/>
 
-    <title>i-Educar - Pais</title>
+    <title>i-Educar @if(isset($title)) - {{$title}} @endif</title>
 
     <script>
         dataLayer = [{
@@ -242,9 +242,7 @@
     <tr class="rodape">
         <td colspan="3">
             <center>
-                <p>Conhe&ccedil;a mais sobre o i-Educar e a Portabilis, <a href="   http://blog.portabilis.com.br"
-                                                                           target="_blank">acesse nosso blog</a> &nbsp;&nbsp;&nbsp;
-                    &copy; Portabilis - Todos os direitos reservados</p>
+                @include('layout.footer')
             </center>
         </td>
     </tr>
