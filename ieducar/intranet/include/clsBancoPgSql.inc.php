@@ -438,7 +438,7 @@ abstract class clsBancoSQL_
     $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
     $this->iLinha   = 0;
 
-    $this->logQuery($this->strStringSQL, [], $start);
+    $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
     if (!$this->bConsulta_ID) {
       if ($this->getThrowException()) {
@@ -864,7 +864,7 @@ abstract class clsBancoSQL_
       $resultError = @pg_result_error($this->bConsulta_ID);
       $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($dbConn);
 
-      $this->logQuery($query, $params, $start);
+      $this->logQuery($query, $params, $this->getElapsedTime($start));
 
       }
       catch(Exception $e) {
@@ -893,7 +893,20 @@ abstract class clsBancoSQL_
     /** @var \Illuminate\Database\Connection $connection */
     $connection = app(\Illuminate\Database\Connection::class);
 
-    /** @see \Illuminate\Database\Connection::getElapsedTime() */
-    $connection->logQuery($query, $bindings, round((microtime(true) - $time) * 1000, 2));
+    $connection->logQuery($query, $bindings, $time);
+  }
+
+  /**
+   * Retorna o tempo gasto na operação.
+   *
+   * @see \Illuminate\Database\Connection::getElapsedTime()
+   *
+   * @param int $start
+   *
+   * @return float
+   */
+  protected function getElapsedTime($start)
+  {
+      return round((microtime(true) - $start) * 1000, 2);
   }
 }
