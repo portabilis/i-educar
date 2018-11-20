@@ -27,7 +27,7 @@ class Menu
     private function getCachedMenu()
     {
         // TODO: Criar classe de cache manager baseada na PSR-6
-        $cacheKey =  md5(request()->getHttpHost() . session('id_pessoa'));
+        $cacheKey =  'menu_' . md5( request()->getHttpHost() . session('id_pessoa'));
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
@@ -36,7 +36,7 @@ class Menu
         $menuService = app(MenuService::class);
         $menuArray = $menuService->getByUser(User::find(session('id_pessoa')));
 
-        Cache::add($cacheKey, $menuArray, 1);
+        Cache::add($cacheKey, $menuArray, 60);
 
         return $menuArray;
     }
