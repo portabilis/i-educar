@@ -50,8 +50,25 @@ class indice extends clsCadastro
         $anoLetivo = new clsPmieducarEscolaAnoLetivo();
         $anoLetivo = $anoLetivo->lista($this->ref_cod_escola, null, null, null, 1);
 
+        $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
+
         if (count($anoLetivo) > 1) {
-            $this->mensagem = '<span class=\'notice\'>Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.</span>';
+            $this->mensagem = 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.';
+
+            return false;
+        }
+
+        // Valida se a data da matrícula não é menor que a data do início do
+        // ano letivo.
+
+        $obj = new clsPmieducarAnoLetivoModulo();
+        $obj->setOrderBy('sequencial ASC');
+        $registros = $obj->lista($anoLetivo[0]['ano'], $this->ref_cod_escola);
+
+        $inicioAnoLetivo = $registros[0]['data_inicio'];
+
+        if ($this->data_matricula < $inicioAnoLetivo) {
+            $this->mensagem = 'A data da matrícula deve ser posterior ao dia ' . Portabilis_Date_Utils::pgSQLToBr($inicioAnoLetivo) . '.';
 
             return false;
         }
@@ -59,7 +76,6 @@ class indice extends clsCadastro
         $this->db = new clsBanco();
         $this->db2 = new clsBanco();
         $this->db3 = new clsBanco();
-        $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
 
         $result = $this->rematricularAlunos(
             $this->ref_cod_escola,
