@@ -1,47 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- *
- * @package     Core
- * @subpackage  pmieducar
- * @subpackage  Matricula
- * @subpackage  Rematricula
- *
- * @since       Arquivo disponível desde a versão 1.0.0
- *
- * @todo        Refatorar a lógica de indice::Novo() para uma classe na camada de domínio
- *
- * @version     $Id$
- */
-
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -55,32 +13,25 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
     public $pessoa_logada;
+
     public $data_matricula;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
-        session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
 
         $obj_permissao = new clsPermissoes();
         $obj_permissao->permissao_cadastra(845, $this->pessoa_logada, 7, 'educar_index.php');
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Rematr&iacute;cula autom&aacute;tica'
+        $this->breadcrumb('Rematrícula automática', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
         return $retorno;
     }
 
     public function Gerar()
     {
-        // inputs
         $anoLetivoHelperOptions = ['situacoes' => ['em_andamento', 'nao_iniciado']];
 
         $this->inputsHelper()->dynamic('ano');
@@ -89,19 +40,13 @@ class indice extends clsCadastro
         $this->inputsHelper()->dynamic('anoLetivo', ['label' => 'Ano destino'], $anoLetivoHelperOptions);
         $this->inputsHelper()->date('data_matricula', ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js'];
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        Portabilis_View_Helper_Application::loadJavascript($this, [
+            '/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js'
+        ]);
     }
 
-    /**
-     * @todo Refatorar a l?ica para uma classe na camada de dom?io.
-     */
     public function Novo()
     {
-        session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $anoLetivo = new clsPmieducarEscolaAnoLetivo();
         $anoLetivo = $anoLetivo->lista($this->ref_cod_escola, null, null, null, 1);
 
@@ -138,23 +83,31 @@ class indice extends clsCadastro
         $alunosSemInep = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
         $alunosComSaidaDaEscola = $this->getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano);
         $count = 0;
-        $nomesAlunos;
+        $nomesAlunos = [];
 
         if (count($alunosSemInep) == 0) {
             while ($result && $this->db->ProximoRegistro()) {
                 list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
 
-                $this->db2->Consulta("UPDATE pmieducar.matricula
-                                 SET ultima_matricula = '0'
-                               WHERE cod_matricula = $matriculaId");
+                $this->db2->Consulta(
+                    "
+                        UPDATE pmieducar.matricula
+                        SET ultima_matricula = '0'
+                        WHERE cod_matricula = $matriculaId
+                    "
+                );
 
-                $resultApDep = $this->db2->Consulta("SELECT ref_ref_cod_serie
-                                               FROM pmieducar.matricula
-                                              WHERE aprovado = 12
-                                                AND ref_cod_aluno = '{$alunoId}'
-                                                AND ano < '{$ano}'
-                                                AND ativo = 1
-                                                AND dependencia = FALSE");
+                $resultApDep = $this->db2->Consulta(
+                    "
+                        SELECT ref_ref_cod_serie
+                        FROM pmieducar.matricula
+                        WHERE aprovado = 12
+                        AND ref_cod_aluno = '{$alunoId}'
+                        AND ano < '{$ano}'
+                        AND ativo = 1
+                        AND dependencia = FALSE
+                    "
+                );
 
                 if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13) {
                     $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
@@ -248,49 +201,58 @@ class indice extends clsCadastro
 
     protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
+        $anoAnterior = $this->ano_letivo - 1;
+
+        $sql = "
+            SELECT 
+                cod_matricula,
+                ref_cod_aluno,
+                aprovado,
+                (
+                    SELECT upper(nome)
+                    FROM cadastro.pessoa, pmieducar.aluno
+                    WHERE pessoa.idpes = aluno.ref_idpes
+                    AND aluno.cod_aluno = ref_cod_aluno
+                ) as nome
+            FROM pmieducar.matricula m, pmieducar.matricula_turma
+            WHERE aprovado in (1, 2, 12, 13, 14)
+            AND m.ativo = 1
+            AND ref_ref_cod_escola = $escolaId
+            AND ref_ref_cod_serie = $serieId
+            AND ref_cod_curso = $cursoId
+            AND cod_matricula = ref_cod_matricula
+            AND matricula_turma.ativo = 1
+            AND ano  = $anoAnterior
+            AND m.dependencia = FALSE
+            AND m.saida_escola = FALSE
+            AND NOT EXISTS(
+                SELECT 1
+                FROM pmieducar.matricula m2
+                WHERE m2.ref_cod_aluno = m.ref_cod_aluno
+                AND m2.ano = $this->ano_letivo
+                AND m2.ativo = 1
+                AND m2.ref_ref_cod_escola = m.ref_ref_cod_escola
+            )
+            AND NOT EXISTS(
+                SELECT 1
+                FROM pmieducar.matricula m2
+                WHERE m2.ref_cod_aluno = m.ref_cod_aluno
+                AND m2.ano = $this->ano_letivo
+                AND m2.ativo = 1
+                AND m2.ref_ref_cod_serie = (
+                    SELECT ref_serie_destino
+                    FROM pmieducar.sequencia_serie
+                    WHERE ref_serie_origem = $serieId
+                    AND ativo = 1
+                )
+            )
+        ";
+
+        if ($turmaId) {
+            $sql .= "AND ref_cod_turma = $turmaId ORDER BY nome";
+        }
+
         try {
-            $anoAnterior = $this->ano_letivo - 1;
-
-            $sql = "SELECT cod_matricula,
-                     ref_cod_aluno,
-                     aprovado,
-                     (SELECT upper(nome)
-                        FROM cadastro.pessoa,
-                             pmieducar.aluno
-                       WHERE pessoa.idpes = aluno.ref_idpes
-                         AND aluno.cod_aluno = ref_cod_aluno) as nome
-                FROM pmieducar.matricula m, pmieducar.matricula_turma
-               WHERE aprovado in (1, 2, 12, 13, 14)
-                 AND m.ativo = 1
-                 AND ref_ref_cod_escola = $escolaId
-                 AND ref_ref_cod_serie = $serieId
-                 AND ref_cod_curso = $cursoId
-                 AND cod_matricula = ref_cod_matricula
-                 AND matricula_turma.ativo = 1
-                 AND ano  = $anoAnterior
-                 AND m.dependencia = FALSE
-                 AND m.saida_escola = FALSE
-                 AND NOT EXISTS(SELECT 1
-                                  FROM pmieducar.matricula m2
-                                 WHERE m2.ref_cod_aluno = m.ref_cod_aluno
-                                   AND m2.ano = $this->ano_letivo
-                                   AND m2.ativo = 1
-                                   AND m2.ref_ref_cod_escola = m.ref_ref_cod_escola)
-                 AND NOT EXISTS(SELECT 1
-                                  FROM pmieducar.matricula m2
-                                 WHERE m2.ref_cod_aluno = m.ref_cod_aluno
-                                   AND m2.ano = $this->ano_letivo
-                                   AND m2.ativo = 1
-                                   AND m2.ref_ref_cod_serie = (SELECT ref_serie_destino
-                                                                 FROM pmieducar.sequencia_serie
-                                                                WHERE ref_serie_origem = $serieId
-                                                                  AND ativo = 1))";
-
-            if ($turmaId) {
-                $sql .= "AND ref_cod_turma = $turmaId
-                 ORDER BY nome";
-            }
-
             $this->db->Consulta($sql);
         } catch (Exception $e) {
             $this->mensagem = "Erro ao selecionar matrículas ano anterior: $anoAnterior";
@@ -316,19 +278,25 @@ class indice extends clsCadastro
             }
         }
 
-        //var_dump(($qtdMatriculasAprovadasReprovadas != 0) ? true : false);die;
-
         return ($qtdMatriculasAprovadasReprovadas == 0) ? true : false;
     }
 
     protected function rematricularAlunoAprovado($escolaId, $serieId, $ano, $alunoId)
     {
-        $nextSerieId = $this->db2->campoUnico("SELECT ref_serie_destino FROM pmieducar.sequencia_serie
-                                           WHERE ref_serie_origem = $serieId AND ativo = 1");
+        $nextSerieId = $this->db2->campoUnico(
+            "
+                SELECT ref_serie_destino FROM pmieducar.sequencia_serie
+                WHERE ref_serie_origem = $serieId AND ativo = 1
+            "
+        );
 
         if (is_numeric($nextSerieId)) {
-            $nextCursoId = $this->db2->CampoUnico("SELECT ref_cod_curso FROM pmieducar.serie
-                                            WHERE cod_serie = $nextSerieId");
+            $nextCursoId = $this->db2->CampoUnico(
+                "
+                    SELECT ref_cod_curso FROM pmieducar.serie
+                    WHERE cod_serie = $nextSerieId
+                "
+            );
 
             if ($this->escolaSerieConfigurada($escolaId, $nextSerieId)) {
                 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $this->ano_letivo, $alunoId);
@@ -349,10 +317,14 @@ class indice extends clsCadastro
 
     protected function matricularAluno($escolaId, $cursoId, $serieId, $ano, $alunoId)
     {
+        $sql = "
+            INSERT INTO pmieducar.matricula (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula) 
+            VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1','{$this->data_matricula}')
+        ";
+
         try {
             $this->db2->Consulta(sprintf(
-                "INSERT INTO pmieducar.matricula
-        (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula) VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1','{$this->data_matricula}')",
+                $sql,
                 $escolaId,
                 $serieId,
                 $this->pessoa_logada,
@@ -393,6 +365,7 @@ class indice extends clsCadastro
         $escolaSerie = new clsPmieducarEscolaSerie($escolaId, $serieId);
 
         $escolaSerie = $escolaSerie->detalhe();
+
         if (count($escolaSerie) > 0) {
             if ($escolaSerie['ativo'] == '1') {
                 return true;
@@ -403,14 +376,8 @@ class indice extends clsCadastro
     }
 }
 
-// Instancia objeto de página
 $pagina = new clsIndexBase();
-
-// Instancia objeto de conteúddo
 $miolo = new indice();
 
-// Atribui o conteúdo dá página
 $pagina->addForm($miolo);
-
-// Gera o código HTML
 $pagina->MakeAll();
