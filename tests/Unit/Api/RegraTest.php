@@ -4,11 +4,6 @@ namespace Tests\unit\Api;
 
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 use Tests\SuiteTestCase\ApiTestCase;
-use Tests\SuiteTestCase\TestCase;
-use PHPUnit\Framework\Constraint\JsonMatches;
-use PHPUnit\Util\Json;
-
-require_once __DIR__ . '/../../../modules/Api/Views/RegraController.php';
 
 class RegraTest extends ApiTestCase
 {

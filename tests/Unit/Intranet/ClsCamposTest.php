@@ -5,9 +5,6 @@ namespace Tests\unit\Intranet;
 use clsCampos;
 use Tests\SuiteTestCase\TestCase;
 
-require_once __DIR__ . '/../../../intranet/include/clsCampos.inc.php';
-
-
 class ClsCamposTest extends TestCase
 {
     public function testShowFileField()

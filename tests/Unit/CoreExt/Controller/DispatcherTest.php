@@ -30,7 +30,6 @@
  */
 
 require_once __DIR__.'/_stub/Dispatcher.php';
-require_once __DIR__.'/../../../../lib/CoreExt/Controller/Request.php';
 
 /**
  * CoreExt_Controller_DispatcherTest class.

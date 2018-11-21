@@ -11,7 +11,7 @@ class ApiTestCase extends TestCase
      */
     private $http;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->http = new Client();

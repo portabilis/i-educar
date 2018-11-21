@@ -15,11 +15,11 @@ class TestCase extends AbstractTestCase
      */
     private static $connection;
 
-    public function setUp()
+    public function setUp(): void
     {
-        parent::setUp();
         @session_start();
         $_SESSION['id_pessoa'] = 1;
+        parent::setUp();
     }
 
     /**
