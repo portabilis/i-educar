@@ -52,7 +52,8 @@
             "Tests\\": "tests/"
         },
         "classmap": [
-            "tests"
+            "tests/SuiteTestCase",
+            "tests/Unit"
         ]
     },
     "include-path": [
