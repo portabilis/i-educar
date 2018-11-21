@@ -71,8 +71,6 @@ abstract class IntegrationBaseTest
   protected function setUp()
   {
     parent::setUp();
-      @session_start();
-      $_SESSION['id_pessoa'] = 1;
     CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
   }
 
