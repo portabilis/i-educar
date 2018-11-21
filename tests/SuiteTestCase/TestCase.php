@@ -15,13 +15,6 @@ class TestCase extends AbstractTestCase
      */
     private static $connection;
 
-    public function setUp(): void
-    {
-        @session_start();
-        $_SESSION['id_pessoa'] = 1;
-        parent::setUp();
-    }
-
     /**
      * Returns the test database connection.
      *
