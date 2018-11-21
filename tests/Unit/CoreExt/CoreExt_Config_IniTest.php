@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Config/Ini.class.php';
-
 /**
  * CoreExt_Config_IniTest class.
  *
@@ -46,13 +44,13 @@ class CoreExt_Config_IniTest extends PHPUnit\Framework\TestCase
 {
   public function testParsedIni()
   {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar.ini');
+    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../tests/fixtures/configuration/ieducar.ini');
     $this->assertNotNull($ini->app);
   }
 
   public function testChangeEnviroment()
   {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar.ini');
+    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../tests/fixtures/configuration/ieducar.ini');
     $this->assertEquals(FALSE, (bool) $ini->php->display_errors);
 
     $ini->changeEnviroment('development');
@@ -79,7 +77,7 @@ class CoreExt_Config_IniTest extends PHPUnit\Framework\TestCase
    */
   public function testSectionExtendsMoreThanOne()
   {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-extends-broken.ini');
+    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../tests/fixtures/configuration/ieducar-extends-broken.ini');
   }
 
   /**
@@ -87,7 +85,7 @@ class CoreExt_Config_IniTest extends PHPUnit\Framework\TestCase
    */
   public function testIniSyntaxError()
   {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-syntax-broken.ini');
+    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../tests/fixtures/configuration/ieducar-syntax-broken.ini');
   }
 
   /**
@@ -95,6 +93,6 @@ class CoreExt_Config_IniTest extends PHPUnit\Framework\TestCase
    */
   public function testSectionInheritanceNotExist()
   {
-    $ini = new CoreExt_Config_Ini('../tests/fixtures/configuration/ieducar-inheritance-broken.ini');
+    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../tests/fixtures/configuration/ieducar-inheritance-broken.ini');
   }
 }
