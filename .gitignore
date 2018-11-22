@@ -6,6 +6,7 @@
 /vendor
 .env
 .env.host
+.env.testing
 .php_cs.cache
 docker-compose.yml
 phinx.php
