@@ -3,7 +3,7 @@
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once '../includes/bootstrap.php';
+require_once 'includes/bootstrap.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';

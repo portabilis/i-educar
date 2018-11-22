@@ -24,10 +24,16 @@
     </filter>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="DB_HOST" value="localhost"/>
+        <env name="DB_DATABASE" value="test"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
         <env name="MAIL_DRIVER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="CORE_EXT_CONFIGURATION_ENV" value="testing" force="true"/>
+        <env name="API_URI" value="http://localhost/module/Api/Regra"/>
+        <env name="API_ACCESS_KEY" value=""/>
+        <env name="API_SECRET_KEY" value=""/>
     </php>
 </phpunit>

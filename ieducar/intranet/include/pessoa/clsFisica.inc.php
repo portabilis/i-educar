@@ -107,7 +107,7 @@ class clsFisica
         $nome_social = false
     ) {
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'] ?? null;
         session_write_close();
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
@@ -199,8 +199,8 @@ class clsFisica
         }
 
         $this->justificativa_provisorio = $justificativa_provisorio;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : $_SESSION['id_pessoa'];
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : $_SESSION['id_pessoa'];
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : ($_SESSION['id_pessoa'] ?? null);
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : ($_SESSION['id_pessoa'] ?? null);
 
         $this->tabela = 'fisica';
         $this->schema = 'cadastro';
