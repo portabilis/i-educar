@@ -665,11 +665,8 @@ class clsFisica
                 $gruda = ', ';
             }
 
-            if (is_string($this->nome_social) && !empty($this->nome_social)) {
+            if (is_string($this->nome_social)) {
                 $set .= "$gruda nome_social = '{$this->nome_social}'";
-                $gruda = ', ';
-            } else {
-                $set .= "$gruda nome_social = NULL";
                 $gruda = ', ';
             }
 
