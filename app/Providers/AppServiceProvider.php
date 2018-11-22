@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\DuskServiceProvider;
+use Laravel\Telescope\TelescopeServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -74,6 +75,7 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
         }
 
         $this->app->bind(\iEducar\Modules\ErrorTracking\Tracker::class, \iEducar\Modules\ErrorTracking\HoneyBadgerTracker::class);
