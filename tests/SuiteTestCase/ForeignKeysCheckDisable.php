@@ -8,7 +8,7 @@ use PHPUnit\DbUnit\Operation\DeleteAll;
 
 class ForeignKeysCheckDisable extends DeleteAll
 {
-    public function execute(Connection $connection, IDataSet $dataSet)
+    public function execute(Connection $connection, IDataSet $dataSet): void
     {
         $sql = "SET session_replication_role = replica;";
         $connection->getConnection()->query($sql);

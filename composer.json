@@ -50,7 +50,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "classmap": [
+            "tests/SuiteTestCase",
+            "tests/Unit"
+        ]
     },
     "include-path": [
         "ieducar",

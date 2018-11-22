@@ -29,8 +29,7 @@
  * @version     $Id: /ieducar/branches/1.1.0-dev/ieducar/tests/unit/CoreExt/_stub/Entity.php 586 2009-10-14T23:26:48.478692Z eriksen  $
  */
 
-require_once __DIR__.'/../../../../lib/CoreExt/DataMapper.php';
-require_once __DIR__.'/Entity.php';
+
 
 /**
  * CoreExt_EntityDataMapperStub class.

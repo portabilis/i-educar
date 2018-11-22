@@ -47,13 +47,13 @@ require_once __DIR__.'/../_stub/EntityDataMapper.php';
  */
 class CoreExt_DataMapper_StaticAdapterTest extends IntegrationBaseTest
 {
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
     CoreExt_DataMapper::setDefaultDbAdapter($this->getDbAdapter());
   }
 
-  protected function tearDown()
+  protected function tearDown(): void
   {
     parent::tearDown();
     CoreExt_DataMapper::resetDefaultDbAdapter();
