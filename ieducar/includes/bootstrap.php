@@ -1,8 +1,5 @@
 <?php
 
-define('PROJECT_ROOT', dirname(__DIR__));
-define('APP_ROOT', PROJECT_ROOT . DS . 'intranet');
-
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
@@ -12,6 +9,9 @@ if (getenv('CORE_EXT_CONFIGURATION_ENV')) {
 } else {
     define('CORE_EXT_CONFIGURATION_ENV', 'production');
 }
+
+define('PROJECT_ROOT', dirname(__DIR__));
+define('APP_ROOT', PROJECT_ROOT . DS . 'intranet');
 
 $configFile = PROJECT_ROOT . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
 
