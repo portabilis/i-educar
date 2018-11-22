@@ -43,11 +43,7 @@ class Kernel extends HttpKernel
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ChangeAppName::class,
-            Navigation::class,
             GetLegacySession::class,
-            SetLayoutVariables::class,
-            Menu::class,
-            Footer::class,
         ],
 
         'api' => [
@@ -74,6 +70,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'navigation' => Navigation::class,
         'ieducar.authenticatesession' => LegacyAuthenticateSession::class,
+        'ieducar.navigation' => Navigation::class,
+        'ieducar.setlayoutvariables' => SetLayoutVariables::class,
+        'ieducar.menu' => Menu::class,
+        'ieducar.footer' => Footer::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
