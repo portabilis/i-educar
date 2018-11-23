@@ -1,8 +1,5 @@
 <?php
 
-define('PROJECT_ROOT', dirname(__DIR__));
-define('APP_ROOT', PROJECT_ROOT . DS . 'intranet');
-
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
@@ -13,15 +10,14 @@ if (getenv('CORE_EXT_CONFIGURATION_ENV')) {
     define('CORE_EXT_CONFIGURATION_ENV', 'production');
 }
 
+define('PROJECT_ROOT', dirname(__DIR__));
+define('APP_ROOT', PROJECT_ROOT . DS . 'intranet');
+
 $configFile = PROJECT_ROOT . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
 
 if (!file_exists($configFile)) {
     $configFile = PROJECT_ROOT . '/configuration/ieducar.ini';
 }
-
-require_once 'CoreExt/Config.class.php';
-require_once 'CoreExt/Config/Ini.class.php';
-require_once 'CoreExt/Locale.php';
 
 $locale = CoreExt_Locale::getInstance();
 $locale->setCulture('pt_BR')->setLocale();
