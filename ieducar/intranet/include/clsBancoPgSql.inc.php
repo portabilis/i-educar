@@ -890,6 +890,10 @@ abstract class clsBancoSQL_
    */
   protected function logQuery($query, $bindings, $time)
   {
+    if (env('APP_ENV') == 'testing') {
+        return;
+    }
+
     /** @var \Illuminate\Database\Connection $connection */
     $connection = app(\Illuminate\Database\Connection::class);
 
