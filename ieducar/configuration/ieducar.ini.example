@@ -1,11 +1,11 @@
 [production]
 ; Configurações de banco de dados
-app.database.hostname = postgres
-app.database.port     = 5432
-app.database.dbname   = ieducar
-app.database.username = ieducar
-app.database.password = ieducar
-app.name              = "i-Educar"
+app.database.hostname = ${DB_HOST}
+app.database.port     = ${DB_PORT}
+app.database.dbname   = ${DB_DATABASE}
+app.database.username = ${DB_USERNAME}
+app.database.password = ${DB_PASSWORD}
+app.name              = ${APP_NAME}
 
 ; Define mensagem de pendência administrativa
 app.administrative_pending.exist = false
