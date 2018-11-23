@@ -47,9 +47,24 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
 
   protected function resourceValue($id) {
     if ($id) {
-      $sql     = "select nome from cadastro.pessoa where idpes = $1";
+      $sql = "
+        select
+          (case
+            when fisica.nome_social not like '' then
+              fisica.nome_social || ' - Nome de registro: ' || pessoa.nome
+            else
+              pessoa.nome
+          end) as nome
+        from
+          cadastro.pessoa,
+          cadastro.fisica
+        where true
+          and pessoa.idpes = $1
+          and fisica.idpes = pessoa.idpes
+      ";
+
       $options = array('params' => $id, 'return_only' => 'first-field');
-      $nome    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+      $nome = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
       return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false));
     }
