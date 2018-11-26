@@ -47,6 +47,9 @@ class indice extends clsCadastro
 
     public function Novo()
     {
+        $curso = new clsPmieducarCurso($this->ref_cod_curso);
+        $curso = $curso->detalhe();
+
         $anoLetivo = new clsPmieducarEscolaAnoLetivo();
         $anoLetivo = $anoLetivo->lista($this->ref_cod_escola, null, null, null, 1);
 
@@ -58,14 +61,27 @@ class indice extends clsCadastro
             return false;
         }
 
-        // Valida se a data da matrícula não é menor que a data do início do
-        // ano letivo.
+        if (empty($curso['padrao_ano_escola'])) {
 
-        $obj = new clsPmieducarAnoLetivoModulo();
-        $obj->setOrderBy('sequencial ASC');
-        $registros = $obj->lista($anoLetivo[0]['ano'], $this->ref_cod_escola);
+            // Valida se a data da matrícula não é menor que a data do início do
+            // ano letivo especificado na turma (fora do padrão ano escolar).
 
-        $inicioAnoLetivo = $registros[0]['data_inicio'];
+            $etapasTurma = new clsPmieducarTurmaModulo();
+            $etapasTurma = $etapasTurma->lista($this->ref_cod_turma);
+
+            $inicioAnoLetivo = $etapasTurma[0]['data_inicio'];
+
+        } else {
+
+            // Valida se a data da matrícula não é menor que a data do início do
+            // ano letivo.
+
+            $obj = new clsPmieducarAnoLetivoModulo();
+            $obj->setOrderBy('sequencial ASC');
+            $registros = $obj->lista($anoLetivo[0]['ano'], $this->ref_cod_escola);
+
+            $inicioAnoLetivo = $registros[0]['data_inicio'];
+        }
 
         if ($this->data_matricula < $inicioAnoLetivo) {
             $this->mensagem = 'A data da matrícula deve ser posterior ao dia ' . Portabilis_Date_Utils::pgSQLToBr($inicioAnoLetivo) . '.';
