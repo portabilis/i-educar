@@ -553,9 +553,15 @@ class AlunoController extends ApiCoreController
     protected function loadTurmaByMatriculaId($matriculaId)
     {
         $sql = '
-            select ref_cod_turma as id, turma.nm_turma as nome, turma.tipo_boletim from pmieducar.matricula_turma,
-            pmieducar.turma where ref_cod_matricula = $1 and matricula_turma.ativo = 1 and
-            turma.cod_turma = ref_cod_turma limit 1
+            SELECT ref_cod_turma as id,
+                   turma.nm_turma as nome,
+                   turma.tipo_boletim
+              FROM pmieducar.matricula_turma,
+                   pmieducar.turma
+             WHERE ref_cod_matricula = $1
+               AND turma.cod_turma = ref_cod_turma
+               AND (matricula_turma.ativo = 1 OR matricula_turma.transferido = TRUE)
+             LIMIT 1
         ';
 
         $turma = Portabilis_Utils_Database::selectRow($sql, $matriculaId);
