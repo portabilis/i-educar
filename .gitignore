@@ -5,6 +5,7 @@
 /public/module
 /public/modules
 /vendor
+/build
 .env
 .env.host
 .env.testing
