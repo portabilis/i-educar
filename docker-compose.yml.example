@@ -32,10 +32,13 @@ services:
   postgres:
     container_name: postgres
     image: postgres:9.5
+    environment:
+      POSTGRES_DB: ieducar
+      POSTGRES_USER: ieducar
+      POSTGRES_PASSWORD: ieducar
     ports:
       - 5432:5432
     volumes:
-      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql
       - ./database/data:/var/lib/postgresql/data
 
   redis:

@@ -38,4 +38,18 @@ return [
 
     'path' => env('LEGACY_PATH', 'ieducar'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Migrations
+    |--------------------------------------------------------------------------
+    |
+    | List of paths that contains migrations of the other repositories or
+    | packages that works with i-Educar.
+    |
+    */
+
+    'migrations' => [
+        base_path('ieducar/modules/Reports/database/migrations'),
+        database_path('migrations/extras'),
+    ],
 ];
