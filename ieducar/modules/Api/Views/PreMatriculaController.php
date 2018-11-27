@@ -53,8 +53,10 @@ class PreMatriculaController extends ApiCoreController
             // Dados responsaveis
             $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
             $cpfMae = $this->getRequest()->cpf_mae;
+
             $nomeResponsavel = Portabilis_String_utils::toLatin1($this->getRequest()->nome_responsavel);
             $cpfResponsavel = $this->getRequest()->cpf_responsavel;
+            $telefoneResponsavel = $this->getRequest()->telefone_responsavel;
 
             // Dados do endereço
             $cep = $this->getRequest()->cep;
@@ -138,7 +140,7 @@ class PreMatriculaController extends ApiCoreController
                 $pessoaFisicaMaeAluno->idpes_rev = 1;
                 $pessoaFisicaMaeAluno->edita();
             } elseif (is_numeric($cpfMae)) {
-                $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
+                $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae, $telefoneMae);
                 $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
             }
 
@@ -153,7 +155,7 @@ class PreMatriculaController extends ApiCoreController
                     $pessoaFisicaResponsavelAluno->idpes_rev = 1;
                     $pessoaFisicaResponsavelAluno->edita();
                 } elseif (is_numeric($cpfResponsavel)) {
-                    $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+                    $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel, $telefoneResponsavel);
                     $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
                 }
             }
@@ -475,13 +477,18 @@ class PreMatriculaController extends ApiCoreController
             $pessoa->edita();
         }
 
-        $telefone = new clsPessoaTelefone($pessoa->idpes, 1, str_replace("-", "", $telefone));
+        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
 
-        if ($telefone->detalhe()) {
-          $telefone->edita();
+        $ddd_telefone = substr($telefone, 0, 2);
+        $telefone = substr($telefone, 2);
+
+        $telefoneObj = new clsPessoaTelefone($pessoaId, 1, $telefone, $ddd_telefone);
+
+        if ($telefoneObj->detalhe()) {
+            $results = $telefoneObj->edita();
         }
         else {
-          $telefone->cadastra();
+            $results = $telefoneObj->cadastra();
         }
 
         return $pessoaId;
@@ -502,13 +509,18 @@ class PreMatriculaController extends ApiCoreController
             $pessoaId = $pessoa->cadastra();
         }
 
-        $telefone = new clsPessoaTelefone($pessoa->idpes, 1, str_replace("-", "", $telefone));
+        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
 
-        if ($telefone->detalhe()) {
-          $telefone->edita();
+        $ddd_telefone = substr($telefone, 0, 2);
+        $telefone = substr($telefone, 2);
+
+        $telefoneObj = new clsPessoaTelefone($pessoaId, 1, $telefone, $ddd_telefone);
+
+        if ($telefoneObj->detalhe()) {
+            $results = $telefoneObj->edita();
         }
         else {
-          $telefone->cadastra();
+            $results = $telefoneObj->cadastra();
         }
 
         return $pessoaId;
