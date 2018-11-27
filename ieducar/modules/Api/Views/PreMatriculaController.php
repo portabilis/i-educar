@@ -53,8 +53,10 @@ class PreMatriculaController extends ApiCoreController
             // Dados responsaveis
             $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
             $cpfMae = $this->getRequest()->cpf_mae;
+
             $nomeResponsavel = Portabilis_String_utils::toLatin1($this->getRequest()->nome_responsavel);
             $cpfResponsavel = $this->getRequest()->cpf_responsavel;
+            $telefoneResponsavel = $this->getRequest()->telefone_responsavel;
 
             // Dados do endereço
             $cep = $this->getRequest()->cep;
@@ -66,7 +68,7 @@ class PreMatriculaController extends ApiCoreController
             $estado = Portabilis_String_utils::toLatin1($this->getRequest()->estado);
             $pais = Portabilis_String_utils::toLatin1($this->getRequest()->pais);
 
-            $matriculaId = $this->getRequest()->matricula_id;
+            $this->atualizaPreMatricula($matriculaId, $escolaId);
 
             $obj_m = new clsPmieducarMatricula($matriculaId);
 
@@ -138,7 +140,7 @@ class PreMatriculaController extends ApiCoreController
                 $pessoaFisicaMaeAluno->idpes_rev = 1;
                 $pessoaFisicaMaeAluno->edita();
             } elseif (is_numeric($cpfMae)) {
-                $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
+                $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae, $telefoneMae);
                 $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
             }
 
@@ -153,7 +155,7 @@ class PreMatriculaController extends ApiCoreController
                     $pessoaFisicaResponsavelAluno->idpes_rev = 1;
                     $pessoaFisicaResponsavelAluno->edita();
                 } elseif (is_numeric($cpfResponsavel)) {
-                    $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+                    $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel, $telefoneResponsavel);
                     $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
                 }
             }
@@ -215,20 +217,23 @@ class PreMatriculaController extends ApiCoreController
             // Dados responsaveis
             $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
             $cpfMae = $this->getRequest()->cpf_mae;
+            $telefoneMae = $this->getRequest()->telefone_mae;
+
             $nomeResponsavel = Portabilis_String_utils::toLatin1($this->getRequest()->nome_responsavel);
             $cpfResponsavel = $this->getRequest()->cpf_responsavel;
+            $telefoneResponsavel = $this->getRequest()->telefone_responsavel;
 
             $pessoaAlunoId = $this->createPessoa($nomeAluno);
             $pessoaMaeId = null;
             $pessoaResponsavelId = null;
 
             if (is_numeric($cpfMae)) {
-                $pessoaMaeId = $this->createOrGetPessoaResponsavel($cpfMae, $nomeMae);
+                $pessoaMaeId = $this->createOrGetPessoaResponsavel($cpfMae, $nomeMae, $telefoneMae);
                 $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
             }
 
             if (is_numeric($cpfResponsavel)) {
-                $pessoaResponsavelId = $this->createOrGetPessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+                $pessoaResponsavelId = $this->createOrGetPessoaResponsavel($cpfResponsavel, $nomeResponsavel, $telefoneResponsavel);
                 $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
             }
 
@@ -387,6 +392,15 @@ class PreMatriculaController extends ApiCoreController
         return $matriculaId;
     }
 
+    protected function atualizaPreMatricula($matriculaId, $escolaId)
+    {
+        $preMatricula = new clsPmieducarMatricula($matriculaId);
+        $preMatricula->ref_ref_cod_escola = $escolaId;
+        $preMatricula->edita();
+
+        return $matriculaId;
+    }
+
     protected function enturmaPreMatricula($alunoId, $turmaId, $matriculaId, $maeIsResponsavel)
     {
         // $this->messenger->append($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId);
@@ -444,7 +458,7 @@ class PreMatriculaController extends ApiCoreController
         return $pessoa->cadastra();
     }
 
-    protected function createOrUpdatePessoaResponsavel($cpf, $nome)
+    protected function createOrUpdatePessoaResponsavel($cpf, $nome, $telefone)
     {
         $pessoa = new clsPessoa_();
         $pessoa->nome = addslashes($nome);
@@ -463,10 +477,24 @@ class PreMatriculaController extends ApiCoreController
             $pessoa->edita();
         }
 
+        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
+
+        $ddd_telefone = substr($telefone, 0, 2);
+        $telefone = substr($telefone, 2);
+
+        $telefoneObj = new clsPessoaTelefone($pessoaId, 1, $telefone, $ddd_telefone);
+
+        if ($telefoneObj->detalhe()) {
+            $results = $telefoneObj->edita();
+        }
+        else {
+            $results = $telefoneObj->cadastra();
+        }
+
         return $pessoaId;
     }
 
-    protected function createOrGetPessoaResponsavel($cpf, $nome)
+    protected function createOrGetPessoaResponsavel($cpf, $nome, $telefone)
     {
         $pessoa = new clsPessoa_();
         $pessoa->nome = addslashes($nome);
@@ -479,6 +507,20 @@ class PreMatriculaController extends ApiCoreController
         if (!$pessoaId || !$pessoaId > 0) {
             $pessoa->tipo = 'F';
             $pessoaId = $pessoa->cadastra();
+        }
+
+        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
+
+        $ddd_telefone = substr($telefone, 0, 2);
+        $telefone = substr($telefone, 2);
+
+        $telefoneObj = new clsPessoaTelefone($pessoaId, 1, $telefone, $ddd_telefone);
+
+        if ($telefoneObj->detalhe()) {
+            $results = $telefoneObj->edita();
+        }
+        else {
+            $results = $telefoneObj->cadastra();
         }
 
         return $pessoaId;
