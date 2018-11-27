@@ -50,6 +50,6 @@ return [
 
     'migrations' => [
         base_path('ieducar/modules/Reports/database/migrations'),
-        database_path('migrations/portabilis'),
+        database_path('migrations/extras'),
     ],
 ];
