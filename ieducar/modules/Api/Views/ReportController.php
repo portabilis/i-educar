@@ -31,14 +31,26 @@ class ReportController extends ApiCoreController
     // load
     protected function loadDadosForMatricula($matriculaId)
     {
-        $sql = 'select cod_matricula as id, ref_cod_aluno as aluno_id, matricula.ano,
-            escola.ref_cod_instituicao as instituicao_id, matricula.ref_ref_cod_escola
-            as escola_id, matricula.ref_cod_curso as curso_id, matricula.ref_ref_cod_serie
-            as serie_id, matricula_turma.ref_cod_turma as turma_id from
-            pmieducar.matricula_turma, pmieducar.matricula, pmieducar.escola where escola.cod_escola =
-            matricula.ref_ref_cod_escola and ref_cod_matricula = cod_matricula and ref_cod_matricula =
-            $1 and matricula.ativo = matricula_turma.ativo and matricula_turma.ativo = 1 order by
-            matricula_turma.sequencial limit 1';
+        $sql = '
+            SELECT cod_matricula AS id,
+                   ref_cod_aluno AS aluno_id,
+                   matricula.ano,
+                   escola.ref_cod_instituicao AS instituicao_id,
+                   matricula.ref_ref_cod_escola AS escola_id,
+                   matricula.ref_cod_curso AS curso_id,
+                   matricula.ref_ref_cod_serie AS serie_id,
+                   matricula_turma.ref_cod_turma AS turma_id
+              FROM pmieducar.matricula_turma,
+                   pmieducar.matricula,
+                   pmieducar.escola
+             WHERE escola.cod_escola = matricula.ref_ref_cod_escola
+               AND ref_cod_matricula = cod_matricula
+               AND ref_cod_matricula = $1
+               AND matricula.ativo = 1
+               AND (matricula_turma.ativo = 1 OR matricula_turma.transferido = TRUE)
+          ORDER BY matricula_turma.sequencial
+             LIMIT 1
+        ';
 
         $dadosMatricula = $this->fetchPreparedQuery($sql, $matriculaId, false, 'first-row');
 
