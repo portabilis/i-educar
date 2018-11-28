@@ -84,12 +84,14 @@ ajudar a alcançar nossos objetivos.
 
 ## Instalação
 
-> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e desenvolvimento. Não é recomendado para ambientes de produção!
+> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e 
+desenvolvimento. Não é recomendado para ambientes de produção!
 
 
 ### Depêndencias
 
-Para executar o projeto é necessário a utilização de alguns softwares para facilitar o desenvolvimento.
+Para executar o projeto é necessário a utilização de alguns softwares para 
+facilitar o desenvolvimento.
 
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
@@ -97,50 +99,25 @@ Para executar o projeto é necessário a utilização de alguns softwares para f
 
 ### Instalação
 
-Para instalar o projeto clone o repositório:
+Para instalar o projeto execute **todos os passos** abaixo.
+
+Clone o repositório:
 
 ```bash
 git clone https://github.com/portabilis/i-educar.git && cd i-educar
 ```
 
-Em seguida, clone o repositório de relatórios:
+Será necessário criar os arquivos de configuração do seu ambiente, modifique-os
+se necessário:
 
 ```bash
-git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
-```
-
-Será necessário criar os arquivos de configuração do seu ambiente, modifique-os se necessário:
-
-```bash
-cp docker-compose.yml.example docker-compose.yml
 cp .env.example .env
+cp docker-compose.yml.example docker-compose.yml
 cp ieducar/configuration/ieducar.ini.example ieducar/configuration/ieducar.ini
-cp phinx.php.example phinx.php
 ```
 
-Altere também o arquivo `phinx.php`, para adicionar as migrations dos relatórios:
-
-```php
-...
-
-$configuration = array(
-    "paths" => array(
-        "migrations" => array(
-            "ieducar/misc/database/migrations",
-            "ieducar/modules/Reports/database/migrations",   // <<<<< ADICIONAR ESTA LINHA
-        ),
-        "seeds" => array(
-            "ieducar/misc/database/seeds",
-            "ieducar/modules/Reports/database/seeds",        // <<<<< ADICIONAR ESTA LINHA
-        ),
-    ),
-    "environments" => $environments,
-);
-
-...
-```
-
-Faça o build das imagens Docker utilizadas no projeto (pode levar alguns minutos):
+Faça o build das imagens Docker utilizadas no projeto (pode levar alguns 
+minutos):
 
 ```bash
 docker-compose build
@@ -152,48 +129,24 @@ Então, inicie os containers da aplicação:
 docker-compose up -d
 ```
 
-Faça instalação das dependências do projeto execute apenas um dos comandos
-abaixo:
-
-# Caso você tenha o Composer instalado localmente
+Faça instalação das dependências do projeto:
 
 ```bash
-composer install
+docker run -it -v $(pwd):/app composer install --ignore-platform-reqs
 ```
 
-# Senão, execute
+Execute os comandos para permitir a escrita nas pastas necessárias, gerar a 
+chave da aplicação para encriptar os dados, popular o banco de dados com a 
+estrutura inicial, criar os links simbólicos para o código legado e rodar as 
+últimas migrações do banco de dados:
 
 ```bash
-docker run -it -v $(pwd):/app composer install
-```
-
-Acesse o container `php` para permitir a escrita nas pastas necessárias, criar 
-a chave da aplicação, links simbólicos e finalizar a instalação do banco de 
-dados e dos relatórios:
-
-```
-docker-compose exec php bash
-
-chmod -R 777 bootstrap/cache
-chmod -R 777 storage
-chmod -R 777 ieducar/modules/Reports/ReportSources/Portabilis
-chmod +x vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter
-
-php artisan key:generate
-php artisan legacy:link
-
-vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed -s StartingReportsSeed
-vendor/bin/phinx migrate
-
-exit
-```
-
-### Compilando arquivos do JasperReports
-
-```bash
-docker-compose exec php bash
-cd ieducar/modules/Reports/ReportSources
-for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(../../../vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter cp $line.jrxml -o $line); done
+docker-compose exec php chmod -R 777 bootstrap/cache
+docker-compose exec php chmod -R 777 storage
+docker-compose exec php php artisan key:generate
+docker-compose exec php php artisan legacy:database
+docker-compose exec php php artisan legacy:link
+docker-compose exec php php artisan migrate
 ```
 
 ### Primeiro acesso
@@ -205,38 +158,30 @@ para fazer o seu primeiro acesso ao i-Educar, acesse o endereço:
 
 O usuário padrão é: `admin` / A senha padrão é: `123456789`
 
-Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha padrão**.
+Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha 
+padrão**.
 
-### Utilização do Xdebug
+#### Xdebug
 
 A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o 
 intuito de facilitar o processo de debug durante o desenvolvimento. Para 
 configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo 
 `docker-compose.yml` conforme orientações da sua IDE de desenvolvimento.
 
-### Executando testes unitários
+#### Executando testes unitários
 
-Para ambiente de desenvolvimento edite o arquivo ieducar/phpunit.xml e removaou
-comente a linha que segue:
-```xml
-<log type="coverage-clover" target="./tests/log/clover.xml"/>
-```
-
-Esta linha acima é apenas para gerar o xml de coverage para a badge do
-repositório.
-
-Mantenha o coverage-html para visualizar local como está o status de coverage do
-projeto.
-
-Para rodar os testes, execute o comando que segue:
+Para rodar os testes, é necessário ter o i-Educar rodando e com uma base limpa,
+apenas a estrutura inicial e as migrations, crie o arquivo de configuração:
 
 ```bash
-docker-compose exec php vendor/bin/phpunit -c /application/ieducar/phpunit.xml 
+cp .env.example .env.testing
 ```
 
-#### Visualizar report de coverage
+Execute o comando:
 
-Acesse em seu navegador o arquivo index.html que consta na pasta `ieducar/tests/log/report/index.html`
+```bash
+docker-compose exec php vendor/bin/phpunit 
+```
 
 ## Perguntas frequentes (FAQ)
 
