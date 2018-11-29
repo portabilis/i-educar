@@ -52,7 +52,7 @@ installButton.addEventListener('click', function (e) {
       command: 'legacy:link',
       description: 'Gerando symlinks'
     }, {
-      command: 'migrate',
+      command: 'migrate --force',
       description: 'Executando migrações'
     }, {
       command: 'admin:password ' + password,
