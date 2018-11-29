@@ -70,8 +70,6 @@ $proceed = $phpVersionCheck && $extensionsCheck && $envExists && $dbCheck && $wr
 $user = posix_getpwuid(posix_getuid())['name'];
 $group = posix_getgrgid(posix_getgid())['name'];
 
-//Installer::install(realpath(__DIR__ . '/../'));
-
 ?><!doctype html>
 <html>
     <head>
@@ -89,7 +87,7 @@ $group = posix_getgrgid(posix_getgid())['name'];
             <header>
                 <p><img src="svg/logo_horizontal.svg" alt="i-Educar"></p>
                 <h1>i-Educar</h1>
-                <p>Bem vindo ao instalador do i-Educar!<br>Siga os passos abaixo
+                <p>Bem-vindo ao instalador do i-Educar!<br>Siga os passos abaixo
                     para instalar o i-Educar neste sistema.</p>
             </header>
 
