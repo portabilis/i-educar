@@ -42,3 +42,5 @@ RUN apt-get install -y zlib1g-dev
 RUN docker-php-ext-install zip
 
 RUN apt-get install -y unzip
+
+RUN ln -s /application/artisan /usr/local/bin/artisan
