@@ -54,10 +54,10 @@ class Installer
         return $report;
     }
 
-    static public function checkWritableFolders(array $folders): bool
+    static public function checkWritablePaths(array $paths): bool
     {
-        foreach ($folders as $folder) {
-            if (is_writable($folder)) {
+        foreach ($paths as $path) {
+            if (is_writable($path)) {
                 continue;
             }
 
@@ -67,18 +67,18 @@ class Installer
         return true;
     }
 
-    static public function getWritableFoldersReport(array $folders): array
+    static public function getWritablePathsReport(array $paths): array
     {
         $report = [];
 
-        foreach ($folders as $folder) {
+        foreach ($paths as $path) {
             $writable = false;
 
-            if (is_writable($folder)) {
+            if (is_writable($path)) {
                 $writable = true;
             }
 
-            $report[$folder] = $writable;
+            $report[$path] = $writable;
         }
 
         return $report;

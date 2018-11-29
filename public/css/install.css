@@ -94,16 +94,6 @@ header {
   grid-template-columns: repeat(3, 1fr);
 }
 
-.permissions ul {
-  font-family: 'PT Mono', monospace;
-  font-size: .75rem;
-  line-height: 2;
-}
-
-.permissions ul i {
-  font-size: 1rem;
-}
-
 .adminPassword {
   margin: 0 auto 1rem auto;
   width: 50%;

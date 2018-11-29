@@ -38,7 +38,7 @@ installButton.addEventListener('click', function (e) {
     return resolve(true);
   });
 
-  $.querySelector('.install').style.display = '';
+  $.querySelector('.install').style.display = 'none';
   $.querySelector('.installing').style.display = 'block';
 
   let steps = [
@@ -53,7 +53,7 @@ installButton.addEventListener('click', function (e) {
       description: 'Gerando symlinks'
     }, {
       command: 'migrate',
-      description: 'Rodando migrações'
+      description: 'Executando migrações'
     }, {
       command: 'admin:password ' + password,
       description: 'Definindo senha do admin'
@@ -91,6 +91,7 @@ installButton.addEventListener('click', function (e) {
   }
 
   base.then(function () {
+    progressBar.value = progressBar.value + 1;
     alert('Instalação concluída!');
     window.location = '/intranet/index.php';
   });
