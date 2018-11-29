@@ -144,6 +144,8 @@ app.recaptcha.options.theme  = white
 
 apis.access_key =
 apis.secret_key =
+apis.educacao_token_header =
+apis.educacao_token_key =
 
 ; Configuração do Administrative Tools Portabilis
 ;app.administrative_tools_url = https://172.17.0.1:3000/api/v1
