@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class LegacyLinkCommand extends Command
+class AdminPasswordCommand extends Command
 {
     /**
      * The name and signature of the console command.
