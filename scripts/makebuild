@@ -24,3 +24,7 @@ git clone git@github.com:portabilis/i-educar-reports-package.git ieducar/modules
 sudo rm -R ieducar/modules/Reports/.git
 cd ..
 tar -zcvf ieducar-v-${FILE_VERSION}.tar.gz ${BUILD_FOLDER}
+sudo rm -R ${BUILD_FOLDER}
+echo
+echo "Build realizado"
+exit 0
