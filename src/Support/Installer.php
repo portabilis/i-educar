@@ -144,4 +144,67 @@ class Installer
 
         return 1; // erro
     }
+
+    static public function isInstalled()
+    {
+        try {
+            $dsn = sprintf(
+                'pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',
+                getenv('DB_HOST'),
+                getenv('DB_PORT'),
+                getenv('DB_DATABASE'),
+                getenv('DB_USERNAME'),
+                getenv('DB_PASSWORD')
+            );
+
+            $conn = new \PDO($dsn);
+            $query = $conn->prepare('SELECT 1 AS installed FROM portal.funcionario WHERE matricula = ?');
+            $query->execute(['admin']);
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+
+            if (empty($result)) {
+                return false;
+            }
+
+            return $result['installed'] === 1;
+        } catch (\Exception $e) {
+            var_dump($e); die();
+            return false;
+        }
+    }
+
+    static public function getLatestRelease(): array
+    {
+        $opts = ['http' => [
+            'method' => 'GET',
+            'header' => ['User-Agent: PHP']
+        ]];
+
+        $context = stream_context_create($opts);
+        $content = file_get_contents('https://api.github.com/repos/portabilis/i-educar/releases/latest', false, $context);
+        $json = json_decode($content);
+
+        if (isset($json->name)) {
+            return [
+                'version' => $json->name,
+                'download' => $json->html_url
+            ];
+        }
+
+        return [
+            'version' => '0',
+            'download' => ''
+        ];
+    }
+
+    static public function needsUpdate(string $rootPath): bool
+    {
+        chdir($rootPath);
+
+        exec('php artisan migrate:status', $output);
+
+        $output = join("\n", $output);
+
+        return strpos($output, '| No') !== false;
+    }
 }

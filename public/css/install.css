@@ -57,6 +57,10 @@ button {
   padding: .75rem 1rem;
 }
 
+a {
+  color: #0498EE;
+}
+
 header {
   font-weight: 700;
   margin: 3rem 0;

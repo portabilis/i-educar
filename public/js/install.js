@@ -19,87 +19,131 @@ function get(url) {
 }
 
 let installButton = $.getElementById('install');
+let updateButton = $.getElementById('update');
 let passwordInput = $.getElementById('password');
 let taskDesc = $.getElementById('taskDesc');
 let progressBar = $.getElementById('installProgress');
 
-installButton.addEventListener('click', function (e) {
-  e.preventDefault();
+if (updateButton) {
+  updateButton.addEventListener('click', function (e) {
+    e.preventDefault();
 
-  let password = passwordInput.value;
-  let timestamp = + new Date();
+    let parent = updateButton.parentNode;
+    let loading = parent.previousElementSibling;
+    let timestamp = + new Date();
 
-  if (password == '') {
-    alert('É necessário definir uma senha antes de prosseguir com a instalação.');
-    return;
-  }
+    loading.style.display = 'block';
+    parent.parentNode.removeChild(parent);
 
-  let base = new Promise(function (resolve) {
-    return resolve(true);
-  });
+    get('/install.php?command=exec&param=migrate --force&time=' + timestamp)
+      .then(function (result) {
+        return new Promise(function (resolve, reject) {
+          let interval = setInterval(function() {
+            get('/install.php?command=consult&pid=' + result + '&time=' + timestamp)
+              .then(function (result) {
+                result = parseInt(result, 10);
 
-  $.querySelector('.install').style.display = 'none';
-  $.querySelector('.installing').style.display = 'block';
-
-  let steps = [
-    {
-      command: 'key:generate',
-      description: 'Gerando chave da aplicação'
-    }, {
-      command: 'legacy:database',
-      description: 'Inicializando banco de dados'
-    }, {
-      command: 'legacy:link',
-      description: 'Gerando symlinks'
-    }, {
-      command: 'migrate --force',
-      description: 'Executando migrações'
-    }, {
-      command: 'admin:password ' + password,
-      description: 'Definindo senha do admin'
-    }
-  ];
-
-  for (let i = 0; i < steps.length; i++) {
-    base = base.then(function () {
-      let step = steps[i];
-
-      progressBar.value = i;
-      taskDesc.innerHTML = step.description;
-
-      return get('/install.php?command=exec&param=' + step.command + '&time=' + timestamp);
-    }).then(function (result) {
-      let step = steps[i];
-
-      return new Promise(function (resolve, reject) {
-        let interval = setInterval(function() {
-          get('/install.php?command=consult&pid=' + result + '&time=' + timestamp)
-            .then(function (result) {
-              result = parseInt(result, 10);
-
-              if (result === 0) {
-                resolve(result);
-                clearInterval(interval);
-              } else if (result > 0) {
-                reject(step);
-                clearInterval(interval);
-              }
-            })
-        }, 1000);
+                if (result === 0) {
+                  resolve(result);
+                  clearInterval(interval);
+                } else if (result > 0) {
+                  reject(step);
+                  clearInterval(interval);
+                }
+              })
+          }, 1000);
+        });
+      }).then(function () {
+        alert('Atualização realizada com sucesso!');
+        $.location.reload(true);
+      }).catch(function () {
+        alert('Ocorreu um erro ao atualizar sua instalação' + "\n" + 'Verifique o log em storage/logs para identificar o problema e tente novamente.');
+        $.location.reload(true);
       });
+
+    return false;
+  });
+}
+
+if (installButton) {
+  installButton.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    let password = passwordInput.value;
+    let timestamp = + new Date();
+
+    if (password == '') {
+      alert('É necessário definir uma senha antes de prosseguir com a instalação.');
+      return;
+    }
+
+    let base = new Promise(function (resolve) {
+      return resolve(true);
     });
-  }
 
-  base.then(function () {
-    progressBar.value = progressBar.value + 1;
-    alert('Instalação concluída!');
-    window.location = '/intranet/index.php';
+    $.querySelector('.install').style.display = 'none';
+    $.querySelector('.installing').style.display = 'block';
+
+    let steps = [
+      {
+        command: 'key:generate',
+        description: 'Gerando chave da aplicação'
+      }, {
+        command: 'legacy:database',
+        description: 'Inicializando banco de dados'
+      }, {
+        command: 'legacy:link',
+        description: 'Gerando symlinks'
+      }, {
+        command: 'migrate --force',
+        description: 'Executando migrações'
+      }, {
+        command: 'admin:password ' + password,
+        description: 'Definindo senha do admin'
+      }
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      base = base.then(function () {
+        let step = steps[i];
+
+        progressBar.value = i;
+        taskDesc.innerHTML = step.description;
+
+        return get('/install.php?command=exec&param=' + step.command + '&time=' + timestamp);
+      }).then(function (result) {
+        let step = steps[i];
+
+        return new Promise(function (resolve, reject) {
+          let interval = setInterval(function() {
+            get('/install.php?command=consult&pid=' + result + '&time=' + timestamp)
+              .then(function (result) {
+                result = parseInt(result, 10);
+
+                if (result === 0) {
+                  resolve(result);
+                  clearInterval(interval);
+                } else if (result > 0) {
+                  reject(step);
+                  clearInterval(interval);
+                }
+              })
+          }, 1000);
+        });
+      });
+    }
+
+    base.then(function () {
+      progressBar.value = progressBar.value + 1;
+      alert('Instalação concluída!');
+      window.location = '/intranet/index.php';
+    });
+
+    base.catch(function (error) {
+      alert('Ocorreu um erro no passo "' + error.description + '"' + "\n" + 'Verifique o log em storage/logs para identificar o problema e tente novamente.');
+      $.location.reload(true);
+    });
+
+    return false;
   });
-
-  base.catch(function (error) {
-    alert('Ocorreu um erro no passo "' + error.description + '"' + "\n" + 'Verifique o log em storage/logs para identificar o problema e tente novamente.');
-    $.location.reload(true);
-  });
-
-  return false;
-});
+}

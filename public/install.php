@@ -4,6 +4,7 @@ set_time_limit(0);
 
 include __DIR__ . '/../vendor/autoload.php';
 
+use Composer\Semver\Comparator;
 use iEducar\Support\Installer;
 
 $basePath = realpath(__DIR__ . '/../');
@@ -46,6 +47,9 @@ function boolIcon(bool $bool): string {
 }
 
 $isInstalled = false;
+$currIeducarVersion = trim(file_get_contents($basePath . '/VERSION'));
+$latestIeducarVersion = Installer::getLatestRelease();
+$isOld = Comparator::greaterThan($latestIeducarVersion['version'], $currIeducarVersion);
 $minPhpVersion = '7.2.10';
 $phpVersionCheck = version_compare(PHP_VERSION, $minPhpVersion) >= 0;
 $extensionsCheck = Installer::checkExtensions();
@@ -56,6 +60,7 @@ $dbCheck = false;
 if ($envExists) {
     (new Dotenv\Dotenv($basePath))->load();
     $dbCheck = Installer::checkDatabaseConnection();
+    $isInstalled = Installer::isInstalled();
 }
 
 $writablePaths = [
@@ -69,6 +74,11 @@ $writablePathsReport = Installer::getWritablePathsReport($writablePaths);
 $proceed = $phpVersionCheck && $extensionsCheck && $envExists && $dbCheck && $writablePathsCheck;
 $user = posix_getpwuid(posix_getuid())['name'];
 $group = posix_getgrgid(posix_getgid())['name'];
+$needsUpdate = false;
+
+if ($isInstalled) {
+    $needsUpdate = Installer::needsUpdate($basePath);
+}
 
 ?><!doctype html>
 <html>
@@ -93,8 +103,25 @@ $group = posix_getgrgid(posix_getgid())['name'];
 
             <?php if ($isInstalled): ?>
                 <div class="module">
-                    <h2>Tudo ok!</h2>
-                    <p>O i-Educar ja está instalado neste sistema.</p>
+                    <h2><?= boolIcon(true) ?> Tudo ok</h2>
+                    <p>O i-Educar ja está instalado!</p>
+                    <p>A versão instalada é: <strong><?= $currIeducarVersion ?></strong></p>
+
+                    <?php if ($isOld): ?>
+                        <p>A versão mais recente é: <strong><?= $latestIeducarVersion['version'] ?></strong></p>
+                        <p>
+                            <a href="<?= $latestIeducarVersion['download'] ?>">
+                                Clique aqui para fazer download da versão mais recente
+                            </a>
+                        </p>
+                    <?php else: ?>
+                        <p>Você esta usando a versão mais recente.</p>
+                    <?php endif; ?>
+
+                    <?php if ($needsUpdate): ?>
+                        <p style="display: none;"><i class="fas fa-spinner fa-spin"></i> <strong>atualizando, aguarde...</strong></p>
+                        <p><button id="update"><i class="fas fa-cogs"></i> atualizar instalação</button></p>
+                    <?php endif; ?>
                 </div>
             <?php else: ?>
                 <div class="module phpVersion">
@@ -229,7 +256,7 @@ $ chmod -R 777 <?= $path . "\n" ?>
                             instalar o i-Educar.</p>
 
                         <p>
-                            <button class="reload" onclick="document.location.reload(true);">
+                            <button onclick="document.location.reload(true);">
                                 <i class="fas fa-sync"></i> recarregar
                             </button>
                         </p>
@@ -237,7 +264,7 @@ $ chmod -R 777 <?= $path . "\n" ?>
                 </div>
 
                 <div class="module installing">
-                    <h2>Instalando</h2>
+                    <h2><i class="fas fa-spinner fa-spin"></i> Instalando</h2>
 
                     <p id="taskDesc">Executando...</p>
 
