@@ -10,12 +10,14 @@ if [ "$VERSION" = "" ]; then
 fi
 
 FILE_VERSION=`echo $VERSION | tr . -`
+BUILD_FOLDER=ieducar-v-${FILE_VERSION}
 
-mkdir -p build/
-sudo rm -R build/* 2> /dev/null
-git checkout-index --prefix=build/ -a -f
-cd build
-composer install --no-dev --ignore-platform-reqs --optimize-autoloader
+mkdir -p ${BUILD_FOLDER}/
+sudo rm -R ${BUILD_FOLDER}/* 2> /dev/null
+git checkout-index --prefix=${BUILD_FOLDER}/ -a -f
+cd ${BUILD_FOLDER}
+composer install --ignore-platform-reqs --optimize-autoloader
 git clone git@github.com:portabilis/i-educar-reports-package.git ieducar/modules/Reports
 sudo rm -R ieducar/modules/Reports/.git
-tar -zcvf i-educar-${FILE_VERSION}.tar.gz *
+cd ..
+tar -zcvf ieducar-v-${FILE_VERSION}.tar.gz ${BUILD_FOLDER}

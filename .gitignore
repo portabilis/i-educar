@@ -5,7 +5,8 @@
 /public/module
 /public/modules
 /vendor
-/build
+/ieducar-v-*
+ieducar-v-*.tar.gz
 .env
 .env.host
 .env.testing
