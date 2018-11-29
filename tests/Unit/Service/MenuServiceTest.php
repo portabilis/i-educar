@@ -38,15 +38,7 @@ class MenuServiceTest extends TestCase
         $result = $this->service->getByUser($user);
         $this->assertEmpty($result);
     }
-
-    public function testSuperUserShouldReturnAll()
-    {
-        $adminUser = app(UserRepository::class)->find(1);
-
-        $result = $this->service->getByUser($adminUser);
-        $this->assertCount($this->repository->findWhere(['ativo' => 1])->count(), $result);
-    }
-
+    
     public function testCommonUserShouldReturnByPermission()
     {
         $user = factory(User::class)->create();
