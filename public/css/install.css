@@ -1,0 +1,135 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: #F3F3F3;
+  color: #494949;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
+code, pre {
+  font-family: 'PT Mono', monospace;
+}
+
+pre {
+  background-color: black;
+  color: greenyellow;
+  font-size: .75rem;
+  margin-bottom: 1rem;
+  overflow: auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+h1 {
+  display: none;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+ul {
+  list-style: none;
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: #0498EE;
+  border: 0;
+  border-radius: .5rem;
+  color: white;
+  cursor: pointer;
+  padding: .75rem 1rem;
+}
+
+header {
+  font-weight: 700;
+  margin: 3rem 0;
+  text-align: center;
+  width: 100%;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 40rem;
+  padding: 0 2rem;
+}
+
+.module {
+  background-color: white;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.4rem;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.fa-check {
+  color: green;
+}
+
+.fa-times {
+  color: darkred;
+}
+
+.extensions ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.permissions ul {
+  font-family: 'PT Mono', monospace;
+  font-size: .75rem;
+  line-height: 2;
+}
+
+.permissions ul i {
+  font-size: 1rem;
+}
+
+.adminPassword {
+  margin: 0 auto 1rem auto;
+  width: 50%;
+}
+
+.adminPassword label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: .2rem;
+}
+
+#password {
+  background-color: #E2E2E2;
+  border: 0;
+  border-radius: .5rem;
+  display: block;
+  margin: 0;
+  padding: .75rem 1rem;
+  width: 100%;
+}
+
+.installing {
+  display: none;
+}
+
+#installProgress {
+  height: 1rem;
+  width: 100%;
+}
