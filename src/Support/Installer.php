@@ -168,7 +168,6 @@ class Installer
 
             return $result['installed'] === 1;
         } catch (\Exception $e) {
-            var_dump($e); die();
             return false;
         }
     }
