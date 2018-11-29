@@ -196,7 +196,7 @@ DB_PASSWORD=ieducar
                             com o usuário e grupo responsáveis pelos processos do PHP:</p>
 
                         <pre>
-$ sudo chwon -R <?= $user ?>:<?= $group ?> <?= $basePath ?>/*
+$ sudo chown -R <?= $user ?>:<?= $group ?> <?= $basePath ?>
 </pre>
 
                         <p>Uma outra forma (menos segura e não recomendada) é liberando
