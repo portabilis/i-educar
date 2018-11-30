@@ -76,7 +76,7 @@ if (installButton) {
         if (password == '') {
             alert('É necessário definir uma senha antes de prosseguir com a instalação.');
             return;
-        }time
+        }
 
         $.querySelector('.install').style.display = 'none';
         $.querySelector('.installing').style.display = 'block';
