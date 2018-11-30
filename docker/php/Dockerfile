@@ -46,3 +46,4 @@ RUN apt-get install -y unzip
 RUN ln -s /application/artisan /usr/local/bin/artisan
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_PROCESS_TIMEOUT 900
