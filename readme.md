@@ -18,7 +18,7 @@ país por meio da educação. Junte-se a nós!**
 3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
 4. [Como contribuir](#como-contribuir)
 5. [Instalação](#instalação)
-6. [FAQ](#perguntas-frequentes-(FAQ))
+6. [FAQ](#perguntas-frequentes-faq)
 
 ## Sobre i-Educar
 
@@ -84,9 +84,10 @@ ajudar a alcançar nossos objetivos.
 
 ## Instalação
 
-> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e 
-desenvolvimento. Não é recomendado para ambientes de produção!
-
+- [Nova instalação](#nova-instalação)
+- [Primeiro acesso](#primeiro-acesso)
+- [Personalizando a instalação](#personalizando-a-instalação)
+- [Upgrade da versão 2.0 para a 2.1](#upgrade-para-21)
 
 ### Depêndencias
 
@@ -97,9 +98,13 @@ facilitar o desenvolvimento.
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Git](https://git-scm.com/downloads)
 
-### Instalação
+### Nova instalação
 
-Para instalar o projeto execute **todos os passos** abaixo.
+> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e 
+desenvolvimento. Não é recomendado para ambientes de produção!
+
+Para instalar o projeto execute **todos os passos** abaixo, caso você deseje 
+atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade-para-21).
 
 Clone o repositório:
 
@@ -136,7 +141,7 @@ O usuário padrão é: `admin` / A senha padrão é: `123456789`
 Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha 
 padrão**.
 
-#### Personalize sua instalação
+#### Personalizando a instalação
 
 Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua 
 instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos 
@@ -164,9 +169,46 @@ Execute o comando:
 docker-compose exec php vendor/bin/phpunit 
 ```
 
+#### Upgrade para 2.1
+
+Para fazer o upgrade da versão 2.0 para a 2.1 do i-Educar, você precisará 
+executar os seguintes passos:
+
+```bash
+git fetch
+git checkout 2.0.11
+
+git -C ieducar/modules/Reports fetch
+git checkout 2.0.1
+
+docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
+```
+
+Após este passo, você precisará fazer o backup do seu banco de dados para 
+restaurá-lo após a atualização do seu código fonte.
+
+```bash
+docker-compose down
+
+git checkout master
+git pull
+rm -rf ieducar/vendor
+git checkout ieducar/vendor
+
+git -C ieducar/modules/Reports checkout master
+git -C ieducar/modules/Reports pull
+
+docker-compose build
+docker-compose up -d
+docker-compose exec php composer update-install
+```
+
+Sua instalação estará atualizada e você poderá realizar seu [primeiro acesso](#primeiro-acesso)
+na nova versão do i-Educar.
+
 ## Perguntas frequentes (FAQ)
 
-Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](docs/faq.md)
+Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](https://github.com/portabilis/i-educar-website/blob/master/docs/faq.md)
 
 ---
 
