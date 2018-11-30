@@ -1,6 +1,6 @@
-[![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases) 
-![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master) 
-![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master) 
+[![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
+![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master)
+![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master)
 ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
 [![Coverage Status](https://coveralls.io/repos/github/portabilis/i-educar/badge.svg?branch=master)](https://coveralls.io/github/portabilis/i-educar?branch=master)
 
@@ -87,11 +87,12 @@ ajudar a alcançar nossos objetivos.
 - [Nova instalação](#nova-instalação)
 - [Primeiro acesso](#primeiro-acesso)
 - [Personalizando a instalação](#personalizando-a-instalação)
+- [Instalação em servidor](#instalação-em-servidor)
 - [Upgrade da versão 2.0 para a 2.1](#upgrade-para-21)
 
 ### Depêndencias
 
-Para executar o projeto é necessário a utilização de alguns softwares para 
+Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
 
 - [Docker](https://docs.docker.com/install/)
@@ -100,10 +101,10 @@ facilitar o desenvolvimento.
 
 ### Nova instalação
 
-> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e 
+> ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
 desenvolvimento. Não é recomendado para ambientes de produção!
 
-Para instalar o projeto execute **todos os passos** abaixo, caso você deseje 
+Para instalar o projeto execute **todos os passos** abaixo, caso você deseje
 atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade-para-21).
 
 Clone o repositório:
@@ -112,7 +113,7 @@ Clone o repositório:
 git clone https://github.com/portabilis/i-educar.git && cd i-educar
 ```
 
-Faça o build das imagens Docker utilizadas no projeto (pode levar alguns 
+Faça o build das imagens Docker utilizadas no projeto (pode levar alguns
 minutos) e inicie os containers da aplicação:
 
 ```bash
@@ -127,7 +128,7 @@ docker-compose exec php composer new-install
 
 ### Primeiro acesso
 
-Após finalizada a instalação, descubra em qual endereço o i-Educar está 
+Após finalizada a instalação, descubra em qual endereço o i-Educar está
 rodando, basta executar o comando:
 
 ```bash
@@ -138,21 +139,22 @@ Acesse o endereço que será exibido após rodar o comando acima.
 
 O usuário padrão é: `admin` / A senha padrão é: `123456789`
 
-Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha 
+Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha
 padrão**.
 
-#### Personalizando a instalação
+### Personalizando a instalação
 
-Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua 
-instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos 
-volumes extras para a aplicação. 
+Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua
+instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos
+volumes extras para a aplicação.
 
 #### Xdebug
 
-A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o 
-intuito de facilitar o processo de debug durante o desenvolvimento. Para 
-configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo 
-`docker-compose.override.yml` conforme orientações da sua IDE de desenvolvimento.
+A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o
+intuito de facilitar o processo de debug durante o desenvolvimento. Para
+configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo
+`docker-compose.override.yml` conforme orientações da sua IDE de
+desenvolvimento.
 
 #### Executando testes unitários
 
@@ -166,12 +168,94 @@ cp .env.example .env.testing
 Execute o comando:
 
 ```bash
-docker-compose exec php vendor/bin/phpunit 
+docker-compose exec php vendor/bin/phpunit
 ```
 
-#### Upgrade para 2.1
+### Instalação em servidor
 
-Para fazer o upgrade da versão 2.0 para a 2.1 do i-Educar, você precisará 
+O i-Educar possui um instalador que pode te auxiliar no processo de instalação
+em um servidor para produção.
+
+Antes de tudo faça [download](https://github.com/portabilis/i-educar/releases)
+da versão mais recente do i-Educar e extraia o conteúdo do release em uma pasta
+no seu servidor. O instalador está disponível desde a versão `2.1.0`.
+
+#### Requerimentos
+
+Para executar o i-Educar em um servidor você precisa dos seguintes programas:
+
+- [PHP](http://php.net/) versão 7.2.10 ou maior
+- [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
+- [Nginx](https://www.nginx.com/)
+
+Você precisa das seguintes extensões para PHP:
+
+- bcmath
+- curl
+- dom
+- fileinfo
+- json
+- libxml
+- mbstring
+- openssl
+- PDO
+- pgsql
+- Phar
+- SimpleXML
+- tokenizer
+- xml
+- xmlwriter
+- zip
+- pcre
+
+O instalador do i-Educar te avisa caso alguma extensão esteja faltando então não
+se preocupe em instalar tudo agora.
+
+#### Configurando o servidor
+
+O **Nginx** precisa estar devidamente configurado para rodar o i-Educar e
+permitir acesso ao instalador. Você encontra um exemplo de configuração
+[aqui](https://github.com/portabilis/i-educar/blob/master/docker/nginx/default.conf).
+
+Em sistemas **Ubuntu**, por exemplo, você colocaria este arquivo na pasta
+`/etc/nginx/sites-available` e criaria um symlink para ele na pasta
+`/etc/nginx/sites-enabled`.
+
+Não esqueça de adequar a configuração de acordo com a realidade do seu servidor
+principalmente as seguintes diretivas:
+
+- `root`
+- `fastcgi_pass`
+
+Depois de tudo pronto basta reiniciar o processo do nginx para que as
+configurações novas entrem em vigor.
+
+#### Executando o instalador
+
+Agora que o Nginx está configurado você pode acessar o instalador em:
+
+```
+http://www.example.com/install.php
+```
+
+Substitua "www.example.com" pelo seu domínio ou endereço de IP. A partir daqui o
+instalador deverá te dar todas as instruções necessárias para realizar a
+instalação com sucesso. Todo exemplo de comando ou código que possa vir a
+aparecer no processo de instalação leva em consideração o seu ambiente, ou seja,
+fique à vontade para copiar e colar os comandos que eles deverão funcionar
+corretamente.
+
+Quando tudo estiver ok você poderá definir uma senha para o usuário `admin` e
+iniciar o processo de instalação. Se tudo correr bem você poderá acessar o
+i-Educar normalmente.
+
+Em caso de erros no processo de instalação verifique os logs do sistema que se
+encontram em `storage/logs` para determinar suas causas. Não hesite em
+[entrar em contato](#comunicação) caso enfrente dificuldades!
+
+### Upgrade para 2.1
+
+Para fazer o upgrade da versão 2.0 para a 2.1 do i-Educar, você precisará
 executar os seguintes passos:
 
 ```bash
@@ -184,7 +268,7 @@ git checkout 2.0.0
 docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
 ```
 
-Após este passo, você precisará fazer o backup do seu banco de dados para 
+Após este passo, você precisará fazer o backup do seu banco de dados para
 restaurá-lo após a atualização do seu código fonte.
 
 ```bash
@@ -203,8 +287,8 @@ docker-compose up -d
 docker-compose exec php composer update-install
 ```
 
-Sua instalação estará atualizada e você poderá realizar seu [primeiro acesso](#primeiro-acesso)
-na nova versão do i-Educar.
+Sua instalação estará atualizada e você poderá realizar seu
+[primeiro acesso](#primeiro-acesso) na nova versão do i-Educar.
 
 ## Perguntas frequentes (FAQ)
 
