@@ -1,7 +1,8 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 set_time_limit(0);
-memory_limit(0);
+ini_set('memory_limit','-1');
 
 $rootDir = realpath(__DIR__ . '/../');
 
@@ -51,12 +52,17 @@ function boolIcon(bool $bool): string
 $isInstalled = false;
 $currIeducarVersion = trim(file_get_contents($rootDir . '/VERSION'));
 $latestIeducarVersion = $installer->getLatestRelease();
-$isOld = Comparator::greaterThan($latestIeducarVersion['version'], $currIeducarVersion);
+$isOld = Comparator::greaterThan(
+    $latestIeducarVersion['version'],
+    $currIeducarVersion
+);
 $minPhpVersion = '7.2.10';
 $phpVersionCheck = version_compare(PHP_VERSION, $minPhpVersion) >= 0;
 $extensionsCheck = $installer->checkExtensions();
 $extensionsReport = $installer->getExtensionsReport();
 $envExists = file_exists($rootDir . '/.env');
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$iniCheck = $installer->checkIniConfig($host);
 $dbCheck = false;
 
 if ($envExists) {
@@ -73,7 +79,13 @@ $writablePaths = [
 
 $writablePathsCheck = $installer->checkWritablePaths($writablePaths);
 $writablePathsReport = $installer->getWritablePathsReport($writablePaths);
-$proceed = $phpVersionCheck && $extensionsCheck && $envExists && $dbCheck && $writablePathsCheck;
+$proceed = $phpVersionCheck
+    && $extensionsCheck
+    && $envExists
+    && $dbCheck
+    && $writablePathsCheck
+    && $iniCheck;
+
 $user = posix_getpwuid(posix_getuid())['name'];
 $group = posix_getgrgid(posix_getgid())['name'];
 $needsUpdate = false;
@@ -88,9 +100,13 @@ if ($isInstalled) {
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Instalador do i-Educar</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|PT+Mono">
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+            crossorigin="anonymous">
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|PT+Mono">
         <link rel="stylesheet" href="css/install.css">
     </head>
 
@@ -100,20 +116,25 @@ if ($isInstalled) {
                 <p><img src="svg/logo_horizontal.svg" alt="i-Educar"></p>
                 <h1>i-Educar</h1>
                 <p>Bem-vindo ao instalador do i-Educar!<br>Siga os passos abaixo
-                    para instalar o i-Educar neste sistema.</p>
+                    para realizar a instalação.</p>
             </header>
 
             <?php if ($isInstalled): ?>
                 <div class="module">
                     <h2><?= boolIcon(true) ?> Tudo ok</h2>
                     <p>O i-Educar ja está instalado!</p>
-                    <p>A versão instalada é: <strong><?= $currIeducarVersion ?></strong></p>
+                    <p>A versão instalada é:
+                        <strong><?= $currIeducarVersion ?></strong></p>
 
                     <?php if ($isOld): ?>
-                        <p>A versão mais recente é: <strong><?= $latestIeducarVersion['version'] ?></strong></p>
+                        <p>A versão mais recente é:
+                            <strong>
+                                <?= $latestIeducarVersion['version'] ?>
+                            </strong></p>
                         <p>
                             <a href="<?= $latestIeducarVersion['download'] ?>">
-                                Clique aqui para fazer download da versão mais recente
+                                Clique aqui para fazer download da versão mais
+                                recente
                             </a>
                         </p>
                     <?php else: ?>
@@ -126,8 +147,13 @@ if ($isInstalled) {
                     <?php endif; ?>
 
                     <?php if ($needsUpdate): ?>
-                        <p style="display: none;"><i class="fas fa-spinner fa-spin"></i> <strong>atualizando, aguarde...</strong></p>
-                        <p><button id="update"><i class="fas fa-cogs"></i> atualizar instalação</button></p>
+                        <p style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <strong>atualizando, aguarde...</strong>
+                        </p>
+
+                        <p><button id="update"><i class="fas fa-cogs"></i>
+                            atualizar instalação</button></p>
                     <?php endif; ?>
                 </div>
             <?php else: ?>
@@ -136,11 +162,13 @@ if ($isInstalled) {
 
                     <?php if ($phpVersionCheck): ?>
                         <p>A versão do PHP (<?= PHP_VERSION ?>) é igual ou
-                            superior à versão requerida (<?= $minPhpVersion ?>).</p>
+                            superior à versão requerida
+                            (<?= $minPhpVersion ?>).</p>
                     <?php else: ?>
                         <p>A versão do PHP (<?= PHP_VERSION ?>) é menor que
-                            a versão requerida (<?= $minPhpVersion ?>). É necessário
-                            atualizar o PHP para prosseguir com a instalação.</p>
+                            a versão requerida (<?= $minPhpVersion ?>). É
+                            necessário atualizar o PHP para prosseguir com a
+                            instalação.</p>
                     <?php endif; ?>
                 </div>
 
@@ -159,42 +187,84 @@ if ($isInstalled) {
                     <?php if ($extensionsCheck): ?>
                         <p>O sistema contém todas as extensões necessárias.</p>
                     <?php else: ?>
-                        <p>Uma ou mais extensões não estão devidamente instaladas.
-                            Verifique a lista acima e instale as extensões de acordo
-                            com seu sistema operacional.</p>
+                        <p>Uma ou mais extensões não estão devidamente
+                            instaladas. Verifique a lista acima e instale as
+                            extensões de acordo com seu sistema operacional.</p>
                     <?php endif; ?>
                 </div>
 
                 <div class="module config">
-                    <h2><?= boolIcon($envExists) ?> Arquivo de configuração (.env)</h2>
+                    <h2>
+                        <?= boolIcon($envExists) ?>
+                        Arquivo de configuração (.env)
+                    </h2>
 
                     <?php if ($envExists): ?>
-                        <p>O arquivo de configuração (.env) está presente na
-                            raiz da aplicação.</p>
+                        <p>O arquivo de configuração <code>.env</code> está
+                            presente na raiz da aplicação.</p>
                     <?php else: ?>
-                        <p>O arquivo de configuração (.env) não está presente
-                            na raiz da aplicação. É necessário criá-lo. Você
-                            pode executar o seguinte comando para isto:</p>
+                        <p>O arquivo de configuração <code>.env</code> não está
+                            presente na raiz da aplicação. É necessário criá-lo.
+                            Você pode executar o seguinte comando para isto:</p>
 
                         <pre>
-$ cd <?= $rootDir . "\n" ?>
-$ cp .env.example .env
-$ vim .env # use seu editor de texto favorito
+cd <?= $rootDir . "\n" ?>
+cp .env.example .env
+vim .env # use seu editor de texto favorito
            # para configurar a aplicação
 </pre>
                     <?php endif; ?>
                 </div>
 
+                <div class="module ini">
+                    <h2>
+                        <?= boolIcon($iniCheck) ?>
+                        Arquivo de configuração (ieducar.ini)
+                    </h2>
+
+                    <?php if ($iniCheck): ?>
+                        <p>O arquivo <code>ieducar.ini</code> está presente e
+                            devidamente configurado.</p>
+                    <?php else: ?>
+                        <p>O arquivo <code>ieducar.ini</code> não está presente
+                            ou não está devidamente configurado. Antes de tudo
+                            verifique se o arquivo <code>ieducar.ini</code> está
+                            presente na pasta
+                            <code>ieducar/configuration</code>. Se não estiver
+                            lá faça uma cópia com o seguinte comando:</p>
+
+                            <pre>
+cd <?= $rootDir ?>/ieducar/configuration
+cp ieducar.ini.example ieducar.ini
+</pre>
+
+                        <p>Com o arquivo criado, abra-o no seu editor de texto
+                            favorito e acrescente seu host às configurações
+                            conforme exemplo abaixo:</p>
+
+                        <pre>
+# no final do arquivo coloque:
+
+[<?= $host ?> : production]
+
+</pre>
+                    <?php endif; ?>
+                </div>
+
                 <div class="module database">
-                    <h2><?= boolIcon($dbCheck) ?> Conexão com o banco de dados</h2>
+                    <h2>
+                        <?= boolIcon($dbCheck) ?>
+                        Conexão com o banco de dados
+                    </h2>
 
                     <?php if ($dbCheck): ?>
                         <p>O i-Educar consegue se comunicar com o banco de dados
                             corretamente.</p>
                     <?php else: ?>
-                        <p>Não foi possível estabelecer comunicação com o banco de
-                            dados. Verifique se os parâmetros abaixo estão configurados
-                            corretamente no seu arquivo .env:</p>
+                        <p>Não foi possível estabelecer comunicação com o banco
+                            de dados. Verifique se os parâmetros abaixo estão
+                            configurados corretamente no seu arquivo
+                            <code>.env</code>:</p>
 
                         <pre>
 DB_CONNECTION=pgsql
@@ -208,9 +278,13 @@ DB_PASSWORD=ieducar
                 </div>
 
                 <div class="module permissions">
-                    <h2><?= boolIcon($writablePathsCheck) ?> Permissões de escrita</h2>
+                    <h2>
+                        <?= boolIcon($writablePathsCheck) ?>
+                        Permissões de escrita
+                    </h2>
 
-                    <p>Os seguintes caminhos precisam ter permissão de escrita:</p>
+                    <p>Os seguintes caminhos precisam ter permissão de
+                        escrita:</p>
 
                     <ul>
                         <?php foreach ($writablePathsReport as $k => $v): ?>
@@ -221,22 +295,25 @@ DB_PASSWORD=ieducar
                     <?php if ($writablePathsCheck): ?>
                         <p>Todos os caminhos estão devidamente configurados.</p>
                     <?php else: ?>
-                        <p>Um ou mais caminhos precisam ser configurados para escrita.</p>
+                        <p>Um ou mais caminhos precisam ser configurados para
+                            escrita.</p>
 
-                        <p>A forma mais segura de resolver este problema é definindo
-                            o usuário e grupo dos diretórios do projeto de acordo
-                            com o usuário e grupo responsáveis pelos processos do PHP:</p>
+                        <p>A forma mais segura de resolver este problema é
+                            definindo o usuário e grupo dos diretórios do
+                            projeto de acordo com o usuário e grupo responsáveis
+                            pelos processos do PHP:</p>
 
                         <pre>
-$ sudo chown -R <?= $user ?>:<?= $group ?> <?= $rootDir ?>
+sudo chown -R <?= $user ?>:<?= $group ?> <?= $rootDir ?>
 </pre>
 
-                        <p>Uma outra forma (menos segura e não recomendada) é liberando
-                            a permissão de escrita para qualquer usuário ou grupo:</p>
+                        <p>Uma outra forma (menos segura e não recomendada) é
+                            liberando a permissão de escrita para qualquer
+                            usuário ou grupo:</p>
 
                         <pre>
 <?php foreach ($writablePaths as $path): ?>
-$ chmod -R 777 <?= $path . "\n" ?>
+chmod -R 777 <?= $path . "\n" ?>
 <?php endforeach; ?>
 </pre>
                     <?php endif; ?>
@@ -244,23 +321,33 @@ $ chmod -R 777 <?= $path . "\n" ?>
 
                 <div class="module install">
                     <?php if ($proceed): ?>
-                        <h2><?= boolIcon(true) ?> Tudo certo para instalação!</h2>
+                        <h2>
+                            <?= boolIcon(true) ?>
+                            Tudo certo para instalação!
+                        </h2>
 
-                        <p>Para acessar o sistema após a instalação é necessário fazer
-                            login com o usuário <code>admin</code>. Escola uma senha
-                            <strong>segura</strong> no campo abaixo:</p>
+                        <p>Para acessar o sistema após a instalação é necessário
+                            fazer login com o usuário <code>admin</code>. Escola
+                            uma senha <strong>segura</strong> no campo
+                            abaixo:</p>
 
                         <div class="adminPassword">
                             <label for="password">Senha</label>
-                            <input type="password" name="password" id="password">
+                            <input type="password" name="password"
+                                id="password">
                         </div>
 
-                        <p class="textCenter"><button id="install"><i class="fas fa-download"></i> instalar</button></p>
+                        <p class="textCenter"><button id="install">
+                            <i class="fas fa-download"></i>
+                            instalar</button></p>
                     <?php else: ?>
-                        <h2><?= boolIcon(false) ?> Não é possível instalar ainda</h2>
+                        <h2>
+                            <?= boolIcon(false) ?>
+                            Não é possível instalar ainda
+                        </h2>
 
-                        <p>Corrija os problemas descritos anteriormente para poder
-                            instalar o i-Educar.</p>
+                        <p>Corrija os problemas descritos anteriormente para
+                            poder instalar o i-Educar.</p>
 
                         <p>
                             <button onclick="document.location.reload(true);">
@@ -280,7 +367,9 @@ $ chmod -R 777 <?= $path . "\n" ?>
             <?php endif; ?>
         </div>
 
-        <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
+        <script
+            src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js">
+        </script>
         <script src="js/install.js"></script>
     </body>
 </html>
