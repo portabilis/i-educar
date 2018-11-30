@@ -1,8 +1,7 @@
 #!/bin/bash
 
 VERSION=`cat VERSION | tr -d '[:space:]'`
-FILE_VERSION=`echo ${VERSION} | tr . -`
-BUILD_FOLDER=ieducar-${FILE_VERSION}
+BUILD_FOLDER=ieducar-${VERSION}
 
 mkdir -p ${BUILD_FOLDER}/
 git checkout-index --prefix=${BUILD_FOLDER}/ -a -f
@@ -14,7 +13,7 @@ composer install --no-dev --ignore-platform-reqs --optimize-autoloader
 git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
 rm -fR ieducar/modules/Reports/.git
 cd ..
-tar -zcvf ieducar-${FILE_VERSION}.tar.gz ${BUILD_FOLDER}
+tar -zcvf ieducar-${VERSION}.tar.gz ${BUILD_FOLDER}
 rm -fR ${BUILD_FOLDER}
 echo
 echo "Build realizado!"
