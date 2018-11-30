@@ -184,7 +184,7 @@ no seu servidor. O instalador está disponível desde a versão `2.1.0`.
 
 Para executar o i-Educar em um servidor você precisa dos seguintes programas:
 
-- [PHP](http://php.net/) versão 7.2.10 ou maior
+- [PHP](http://php.net/) versão 7.1.3 ou maior
 - [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
 - [Nginx](https://www.nginx.com/)
 
