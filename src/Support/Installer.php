@@ -4,7 +4,9 @@ namespace iEducar\Support;
 
 class Installer
 {
-    static public $extensions = [
+    protected $rootDir;
+
+    protected $extensions = [
         'bcmath',
         'curl',
         'dom',
@@ -24,9 +26,24 @@ class Installer
         'pcre',
     ];
 
-    static public function checkExtensions(): bool
+    protected $githubApiEndpoint = 'https://api.github.com/repos/portabilis/i-educar/releases/latest';
+
+    protected $commandsMap = [
+        'key' => 'key:generate',
+        'database' => 'legacy:database',
+        'link' => 'legacy:link',
+        'migrate' => 'migrate --force',
+        'password' => 'admin:password',
+    ];
+
+    public function __construct(string $rootDir)
     {
-        foreach (self::$extensions as $ext) {
+        $this->rootDir = $rootDir;
+    }
+
+    public function checkExtensions(): bool
+    {
+        foreach ($this->extensions as $ext) {
             if (extension_loaded($ext)) {
                 continue;
             }
@@ -37,11 +54,11 @@ class Installer
         return true;
     }
 
-    static public function getExtensionsReport(): array
+    public function getExtensionsReport(): array
     {
         $report = [];
 
-        foreach (self::$extensions as $ext) {
+        foreach ($this->extensions as $ext) {
             $loaded = false;
 
             if (extension_loaded($ext)) {
@@ -54,7 +71,7 @@ class Installer
         return $report;
     }
 
-    static public function checkWritablePaths(array $paths): bool
+    public function checkWritablePaths(array $paths): bool
     {
         foreach ($paths as $path) {
             if (is_writable($path)) {
@@ -67,7 +84,7 @@ class Installer
         return true;
     }
 
-    static public function getWritablePathsReport(array $paths): array
+    public function getWritablePathsReport(array $paths): array
     {
         $report = [];
 
@@ -84,7 +101,7 @@ class Installer
         return $report;
     }
 
-    static public function checkDatabaseConnection(): bool
+    public function checkDatabaseConnection(): bool
     {
         try {
             $dsn = sprintf(
@@ -106,11 +123,20 @@ class Installer
         }
     }
 
-    static public function exec(string $rootPath, string $command, int $time): int
+    public function exec(string $command, int $time, string $extra = ''): int
     {
-        chdir($rootPath);
+        chdir($this->rootDir);
+
+        if (empty($this->commandsMap[$command])) {
+            return 0;
+        }
 
         $tmpFile = 'install-' . $time . '.tmp';
+        $command = $this->commandsMap[$command];
+
+        if (!empty($extra)) {
+            $command .= ' ' . $extra;
+        }
 
         exec('touch ./storage/framework/cache/' . $tmpFile);
 
@@ -121,9 +147,9 @@ class Installer
         return (int) exec($command);
     }
 
-    static public function consult(string $rootPath,int $pid, int $time): int
+    public function consult(int $pid, int $time): int
     {
-        chdir($rootPath);
+        chdir($this->rootDir);
 
         $tmpFile = 'install-' . $time . '.tmp';
         $status = posix_getpgid($pid);
@@ -145,7 +171,7 @@ class Installer
         return 1; // erro
     }
 
-    static public function isInstalled()
+    public function isInstalled(): bool
     {
         try {
             $dsn = sprintf(
@@ -172,7 +198,7 @@ class Installer
         }
     }
 
-    static public function getLatestRelease(): array
+    public function getLatestRelease(): array
     {
         $opts = ['http' => [
             'method' => 'GET',
@@ -180,7 +206,7 @@ class Installer
         ]];
 
         $context = stream_context_create($opts);
-        $content = file_get_contents('https://api.github.com/repos/portabilis/i-educar/releases/latest', false, $context);
+        $content = file_get_contents($this->githubApiEndpoint, false, $context);
         $json = json_decode($content);
 
         if (isset($json->name)) {
@@ -196,10 +222,9 @@ class Installer
         ];
     }
 
-    static public function needsUpdate(string $rootPath): bool
+    public function needsUpdate(): bool
     {
-        chdir($rootPath);
-
+        chdir($this->rootDir);
         exec('php artisan migrate:status', $output);
 
         $output = join("\n", $output);
