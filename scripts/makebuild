@@ -1,14 +1,6 @@
 #!/bin/bash
 
-VERSION=$1
-
-if [ "$VERSION" = "" ]; then
-    echo
-    echo "Defina a versão para gerar um build. Exemplo:"
-    echo "./makebuild 2.10.0"
-    exit 1
-fi
-
+VERSION=`cat VERSION | tr -d '[:space:]'`
 FILE_VERSION=`echo $VERSION | tr . -`
 BUILD_FOLDER=ieducar-v-${FILE_VERSION}
 
