@@ -101,7 +101,7 @@ class indice extends clsListagem
             "Aluno"
         ) );
 
-        $this->campoNumero( "cod_aluno", "C&oacute;digo Aluno", $this->nm_aluno, 8, 20, false );
+        $this->campoNumero( "cod_aluno", "Código Aluno", $this->cod_aluno, 8, 20, false );
         $this->campoTexto( "nm_aluno", "Nome Aluno", $this->nm_aluno, 30, 255, false );
 
         // Paginador
@@ -145,8 +145,14 @@ class indice extends clsListagem
                 $registro["nome_aluno"] = str_replace("'","", $registro['nome_aluno']);
                 $script = " onclick=\"addVal1('ref_cod_aluno','{$registro['cod_aluno']}'); addVal1('nm_aluno','{$registro['nome_aluno']}'); addVal1('nm_aluno_','{$registro['nome_aluno']}');fecha();\"";
 
+                $display = $registro['nome_aluno'];
+
+                if (!empty($registro['nome_social'])) {
+                    $display = $registro['nome_social'] . ' - Nome de registro: ' . $registro['nome_aluno'];
+                }
+
                 $this->addLinhas( array(
-                    "<a href=\"javascript:void(0);\" {$script}>{$registro["nome_aluno"]}</a>"
+                    "<a href=\"javascript:void(0);\" {$script}>{$display}</a>"
                 ) );
             }
         }

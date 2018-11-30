@@ -45,9 +45,8 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe do usu&aacute;rio";
-        
 
-        $cod_pessoa = @$_GET['ref_pessoa'];
+        $cod_pessoa = $_GET['ref_pessoa'] ?? null;
 
         $obj_pessoa = new clsPessoa_($cod_pessoa);
         $det_pessoa = $obj_pessoa->detalhe();
@@ -153,8 +152,13 @@ class indice extends clsDetalhe
         $this->addDetalhe( array("Status", $ativo_f) );
 
         $dba = new clsBanco();
-        $dba->Consulta( "SELECT ref_cod_menu_submenu FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj={$cod_pessoa} " );
+
+        if ($cod_pessoa) {
+            $dba->Consulta( "SELECT ref_cod_menu_submenu FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj={$cod_pessoa} " );
+        }
+
         $cod_menu = array();
+
         while ($dba->ProximoRegistro())
         {
             list ($cod_menu[]) = $dba->Tupla();

@@ -50,15 +50,17 @@ class indice extends clsDetalhe
         session_write_close();
 
         $this->titulo = "Agendas";
-        
 
-        $cod_agenda = @$_GET['cod_agenda'];
+        $cod_agenda = $_GET['cod_agenda'] ?? null;
         
         $db = new clsBanco();
         $db2 = new clsBanco();
-        $db->Consulta( "SELECT cod_agenda, nm_agenda, publica, envia_alerta, ref_ref_cod_pessoa_cad, data_cad, ref_ref_cod_pessoa_own FROM portal.agenda WHERE cod_agenda = '{$cod_agenda}'" );
-        if( $db->ProximoRegistro() )
-        {
+
+        if ($cod_agenda) {
+            $db->Consulta( "SELECT cod_agenda, nm_agenda, publica, envia_alerta, ref_ref_cod_pessoa_cad, data_cad, ref_ref_cod_pessoa_own FROM portal.agenda WHERE cod_agenda = '{$cod_agenda}'" );
+        }
+
+        if ($cod_agenda && $db->ProximoRegistro()) {
             list( $cod_agenda, $nm_agenda, $publica, $envia_alerta, $pessoa_cad, $data_cad, $pessoa_own ) = $db->Tupla();
 
             $objPessoa = new clsPessoaFisica();
@@ -103,9 +105,7 @@ class indice extends clsDetalhe
                 $editores .= implode( "<br>", $edit_array );
             }
             $this->addDetalhe( array("Editores autorizados", $editores ) );
-        }
-        else 
-        {
+        } else {
             $this->addDetalhe( array( "Erro", "Codigo de agenda inválido" ) );
         }
 

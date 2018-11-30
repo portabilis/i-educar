@@ -59,10 +59,15 @@
     }
  
     $j('body').append(htmlFormModal());
+
+      $j('#area_conhecimento').chosen({
+          width: '231px',
+          placeholder_text_multiple: "Selecione as opções",
+      });
  
     $j("#dialog_area_conhecimento").dialog({
       autoOpen: false,
-      height: 'auto',
+      height: '500',
       width: 'auto',
       modal: true,
       resizable: false,
@@ -89,11 +94,7 @@
     var handleGetAreaConhecimento = function(response) {
       $j('#area_conhecimento').html('').val('');
       var selectOptions = response['options'];
-      for(let key in selectOptions){
-        if (selectOptions.hasOwnProperty(key)) {
-          $j('#area_conhecimento').append($j('<option/>').val(key).text(selectOptions[key]));
-        }
-      }
+      updateChozen($j('#area_conhecimento'), selectOptions);
       $j("#dialog_area_conhecimento").dialog("open");
     }
  
@@ -122,7 +123,7 @@
       return `<div id="dialog_area_conhecimento">
                 <form>
                   <label for="area_conhecimento">Área de conhecimento</label>
-                  <select name="area_conhecimento" id="area_conhecimento">
+                  <select multiple="multiple" name="area_conhecimento" id="area_conhecimento">
                 </form>
               </div>`;
     }

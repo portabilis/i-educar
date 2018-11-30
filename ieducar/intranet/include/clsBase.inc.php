@@ -879,7 +879,7 @@ class clsBase extends clsConfig
                 $tracker->notify($e);
             }
 
-            if (getenv('APP_DEBUG')) {
+            if (config('app.debug')) {
                 throw new \Exception($e->getMessage(), 0, $e);
             }
 
