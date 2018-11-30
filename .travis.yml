@@ -22,5 +22,3 @@ matrix:
           - $HOME/.composer/cache
       before_script:
         - composer new-install
-      after_success:
-        - vendor/bin/php-coveralls --verbose
