@@ -114,6 +114,8 @@ app.recaptcha.options.theme = white
 ; Define chaves de acesso à API do i-Educar
 apis.access_key =
 apis.secret_key =
+apis.educacao_token_header =
+apis.educacao_token_key =
 
 ; Configurações de relatórios
 report.diario_classe.dias_temporarios = 30
