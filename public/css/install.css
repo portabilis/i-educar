@@ -25,6 +25,10 @@ pre {
   width: 100%;
 }
 
+pre:last-child {
+  margin-bottom: 0;
+}
+
 p {
   margin-bottom: 1rem;
 }

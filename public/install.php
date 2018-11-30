@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 set_time_limit(0);
 
 $rootDir = realpath(__DIR__ . '/../');
@@ -15,17 +17,19 @@ $command = $_GET['command'] ?? null;
 if (!is_null($command)) {
     switch ($command) {
         case 'exec':
-            $param = $_GET['param'];
-            $time = (int) $_GET['time'];
+            $param = $_GET['param'] ?? '';
+            $id = $_GET['id'] ?? 0;
+            $id = (int) $id;
             $extra = $_GET['extra'] ?? [];
 
-            $pid = $installer->exec($rootDir, $param, (int) $time);
+            $pid = $installer->exec($param, (int) $id);
             echo $pid;
             break;
         case 'consult':
-            $pid = $_GET['pid'];
-            $time = (int) $_GET['time'];
-            $status = $installer->consult($rootDir, $pid, $time);
+            $pid = $_GET['pid'] ?? '';
+            $id = $_GET['id'] ?? 0;
+            $id = (int) $id;
+            $status = $installer->consult($pid, $id);
             echo $status;
             break;
         default:
@@ -75,7 +79,7 @@ $group = posix_getgrgid(posix_getgid())['name'];
 $needsUpdate = false;
 
 if ($isInstalled) {
-    $needsUpdate = $installer->needsUpdate($rootDir);
+    $needsUpdate = $installer->needsUpdate();
 }
 
 ?><!doctype html>
@@ -114,6 +118,11 @@ if ($isInstalled) {
                         </p>
                     <?php else: ?>
                         <p>Você esta usando a versão mais recente.</p>
+                        <p>
+                            <a href="/intranet/index.php">
+                                Clique aqui para acessar o i-Educar
+                            </a>
+                        </p>
                     <?php endif; ?>
 
                     <?php if ($needsUpdate): ?>

@@ -36,11 +36,11 @@ if (updateButton) {
         loading.style.display = 'block';
         parent.parentNode.removeChild(parent);
 
-        get('/install.php?command=exec&param=migrate&time=' + timestamp)
+        get('/install.php?command=exec&param=migrate&id=' + timestamp)
             .then(function (result) {
                 return new Promise(function (resolve, reject) {
                     const interval = setInterval(function() {
-                        get('/install.php?command=consult&pid=' + result + '&time=' + timestamp)
+                        get('/install.php?command=consult&pid=' + result + '&id=' + timestamp)
                             .then(function (result) {
                                 result = parseInt(result, 10);
 
@@ -76,7 +76,7 @@ if (installButton) {
         if (password == '') {
             alert('É necessário definir uma senha antes de prosseguir com a instalação.');
             return;
-        }
+        }time
 
         $.querySelector('.install').style.display = 'none';
         $.querySelector('.installing').style.display = 'block';
@@ -111,7 +111,7 @@ if (installButton) {
             const step = steps[i];
 
             base = base.then(function () {
-                let url = '/install.php?command=exec&param=' + step.command + '&time=' + timestamp;
+                let url = '/install.php?command=exec&param=' + step.command + '&id=' + timestamp;
 
                 if (step.extra) {
                     url += '&extra=' + step.extra;
@@ -124,7 +124,7 @@ if (installButton) {
             }).then(function (result) {
                 return new Promise(function (resolve, reject) {
                     const interval = setInterval(function() {
-                        get('/install.php?command=consult&pid=' + result + '&time=' + timestamp)
+                        get('/install.php?command=consult&pid=' + result + '&id=' + timestamp)
                             .then(function (result) {
                                 result = parseInt(result, 10);
 
@@ -144,7 +144,7 @@ if (installButton) {
         base.then(function () {
             progressBar.value = progressBar.value + 1;
             alert('Instalação concluída!');
-            window.location = '/intranet/index.php';
+            $.location.reload(true);
         });
 
         base.catch(function (error) {

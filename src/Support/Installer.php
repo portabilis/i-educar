@@ -104,16 +104,7 @@ class Installer
     public function checkDatabaseConnection(): bool
     {
         try {
-            $dsn = sprintf(
-                'pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',
-                getenv('DB_HOST'),
-                getenv('DB_PORT'),
-                getenv('DB_DATABASE'),
-                getenv('DB_USERNAME'),
-                getenv('DB_PASSWORD')
-            );
-
-            $conn = new \PDO($dsn);
+            $conn = $this->getConnection();
 
             if ($conn) {
                 return true;
@@ -123,7 +114,7 @@ class Installer
         }
     }
 
-    public function exec(string $command, int $time, string $extra = ''): int
+    public function exec(string $command, int $id, string $extra = ''): int
     {
         chdir($this->rootDir);
 
@@ -131,7 +122,7 @@ class Installer
             return 0;
         }
 
-        $tmpFile = 'install-' . $time . '.tmp';
+        $tmpFile = 'install-' . $id . '.tmp';
         $command = $this->commandsMap[$command];
 
         if (!empty($extra)) {
@@ -147,11 +138,11 @@ class Installer
         return (int) exec($command);
     }
 
-    public function consult(int $pid, int $time): int
+    public function consult(int $pid, int $id): int
     {
         chdir($this->rootDir);
 
-        $tmpFile = 'install-' . $time . '.tmp';
+        $tmpFile = 'install-' . $id . '.tmp';
         $status = posix_getpgid($pid);
 
         if ((int) $status > 0) {
@@ -174,16 +165,7 @@ class Installer
     public function isInstalled(): bool
     {
         try {
-            $dsn = sprintf(
-                'pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',
-                getenv('DB_HOST'),
-                getenv('DB_PORT'),
-                getenv('DB_DATABASE'),
-                getenv('DB_USERNAME'),
-                getenv('DB_PASSWORD')
-            );
-
-            $conn = new \PDO($dsn);
+            $conn = $this->getConnection();
             $query = $conn->prepare('SELECT 1 AS installed FROM portal.funcionario WHERE matricula = ?');
             $query->execute(['admin']);
             $result = $query->fetch(\PDO::FETCH_ASSOC);
@@ -196,6 +178,20 @@ class Installer
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    protected function getConnection(): \PDO
+    {
+        $dsn = sprintf(
+            'pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',
+            getenv('DB_HOST'),
+            getenv('DB_PORT'),
+            getenv('DB_DATABASE'),
+            getenv('DB_USERNAME'),
+            getenv('DB_PASSWORD')
+        );
+
+        return new \PDO($dsn);
     }
 
     public function getLatestRelease(): array
