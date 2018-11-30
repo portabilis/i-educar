@@ -3,14 +3,17 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
+    "version": "2.1.0",
     "keywords": [
         "Portabilis",
         "i-Educar"
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2.10",
+        "ext-pgsql": "*",
         "cocur/slugify": "^3.1",
+        "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
         "fideloper/proxy": "^4.0",
         "google/recaptcha": "^1.2",

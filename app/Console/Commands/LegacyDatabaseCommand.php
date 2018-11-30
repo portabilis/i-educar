@@ -30,7 +30,8 @@ class LegacyDatabaseCommand extends Command
         $this->info('Seeding database..');
 
         $this->call('db:seed', [
-            '--class' => 'InitialDatabaseSeeder'
+            '--class' => 'InitialDatabaseSeeder',
+            '--force' => true
         ]);
     }
 }
