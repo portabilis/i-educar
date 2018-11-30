@@ -111,8 +111,7 @@ Faça o build das imagens Docker utilizadas no projeto (pode levar alguns
 minutos) e inicie os containers da aplicação:
 
 ```bash
-docker-compose build
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 Execute o comando para fazer uma nova instalação:
@@ -123,10 +122,14 @@ docker-compose exec php composer new-install
 
 ### Primeiro acesso
 
-Após realizar a instalação de acordo com as instruções acima você está pronto 
-para fazer o seu primeiro acesso ao i-Educar, acesse o endereço:
+Após finalizada a instalação, descubra em qual endereço o i-Educar está 
+rodando, basta executar o comando:
 
-[http://localhost](http://localhost)
+```bash
+docker-compose port nginx 80
+```
+
+Acesse o endereço que será exibido após rodar o comando acima.
 
 O usuário padrão é: `admin` / A senha padrão é: `123456789`
 
