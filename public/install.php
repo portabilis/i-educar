@@ -18,9 +18,9 @@ if (!is_null($command)) {
             $param = $_GET['param'] ?? '';
             $id = $_GET['id'] ?? 0;
             $id = (int) $id;
-            $extra = $_GET['extra'] ?? [];
+            $extra = $_GET['extra'] ?? '';
+            $pid = $installer->exec($param, (int) $id, $extra);
 
-            $pid = $installer->exec($param, (int) $id);
             echo $pid;
             break;
         case 'consult':
@@ -28,6 +28,7 @@ if (!is_null($command)) {
             $id = $_GET['id'] ?? 0;
             $id = (int) $id;
             $status = $installer->consult($pid, $id);
+
             echo $status;
             break;
         default:
