@@ -179,7 +179,7 @@ git fetch
 git checkout 2.0.11
 
 git -C ieducar/modules/Reports fetch
-git checkout 2.0.1
+git checkout 2.0.0
 
 docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
 ```
