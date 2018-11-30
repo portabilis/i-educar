@@ -72,8 +72,9 @@
     "scripts": {
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        "post-install-cmd": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php -r \"file_exists('ieducar/configuration/ieducar.ini') || copy('ieducar/configuration/ieducar.ini.example', 'ieducar/configuration/ieducar.ini');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
