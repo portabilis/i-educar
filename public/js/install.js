@@ -86,18 +86,18 @@ if (installButton) {
                 command: 'key',
                 description: 'Gerando chave da aplicação'
             }, {
+              command: 'link',
+              description: 'Gerando symlinks'
+            }, {
                 command: 'database',
                 description: 'Inicializando banco de dados'
-            }, {
-                command: 'link',
-                description: 'Gerando symlinks'
+            },{
+              command: 'password',
+              description: 'Definindo senha do admin',
+              extra: password
             }, {
                 command: 'migrate',
                 description: 'Executando migrações'
-            }, {
-                command: 'password',
-                description: 'Definindo senha do admin',
-                extra: password
             }
         ];
 
