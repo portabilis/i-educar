@@ -117,36 +117,26 @@ cp ieducar/configuration/ieducar.ini.example ieducar/configuration/ieducar.ini
 ```
 
 Faça o build das imagens Docker utilizadas no projeto (pode levar alguns 
-minutos):
+minutos) e inicie os containers da aplicação:
 
 ```bash
 docker-compose build
-```
-
-Então, inicie os containers da aplicação:
-
-```bash
 docker-compose up -d
 ```
 
-Faça instalação das dependências do projeto:
+Execute os comandos para instalar as dependências do projeto, permitir a 
+escrita nas pastas necessárias, gerar a chave da aplicação para encriptar os 
+dados, popular o banco de dados com a estrutura inicial, criar os links 
+simbólicos para o código legado e rodar as últimas migrações do banco de dados:
 
 ```bash
-docker run -it -v $(pwd):/app composer install --ignore-platform-reqs
-```
-
-Execute os comandos para permitir a escrita nas pastas necessárias, gerar a 
-chave da aplicação para encriptar os dados, popular o banco de dados com a 
-estrutura inicial, criar os links simbólicos para o código legado e rodar as 
-últimas migrações do banco de dados:
-
-```bash
+docker-compose exec php composer install
 docker-compose exec php chmod -R 777 bootstrap/cache
 docker-compose exec php chmod -R 777 storage
-docker-compose exec php php artisan key:generate
-docker-compose exec php php artisan legacy:database
-docker-compose exec php php artisan legacy:link
-docker-compose exec php php artisan migrate
+docker-compose exec php artisan key:generate
+docker-compose exec php artisan legacy:database
+docker-compose exec php artisan legacy:link
+docker-compose exec php artisan migrate
 ```
 
 ### Primeiro acesso
