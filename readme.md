@@ -136,12 +136,18 @@ O usuário padrão é: `admin` / A senha padrão é: `123456789`
 Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha 
 padrão**.
 
+#### Personalize sua instalação
+
+Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua 
+instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos 
+volumes extras para a aplicação. 
+
 #### Xdebug
 
 A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o 
 intuito de facilitar o processo de debug durante o desenvolvimento. Para 
 configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo 
-`docker-compose.yml` conforme orientações da sua IDE de desenvolvimento.
+`docker-compose.override.yml` conforme orientações da sua IDE de desenvolvimento.
 
 #### Executando testes unitários
 
