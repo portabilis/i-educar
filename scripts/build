@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=`cat VERSION | tr -d '[:space:]'`
+VERSION=`cat composer.json | jq -r '.version' | tr -d '[:space:]'`
 BUILD_FOLDER=ieducar-${VERSION}
 
 mkdir -p ${BUILD_FOLDER}/

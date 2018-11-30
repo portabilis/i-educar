@@ -1,6 +1,5 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
 set_time_limit(0);
 ini_set('memory_limit','-1');
 
@@ -50,7 +49,7 @@ function boolIcon(bool $bool): string
 }
 
 $isInstalled = false;
-$currIeducarVersion = trim(file_get_contents($rootDir . '/VERSION'));
+$currIeducarVersion = $installer->getCurrentVersion();
 $latestIeducarVersion = $installer->getLatestRelease();
 $isOld = Comparator::greaterThan(
     $latestIeducarVersion['version'],

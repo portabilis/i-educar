@@ -194,6 +194,14 @@ class Installer
         return new \PDO($dsn);
     }
 
+    public function getCurrentVersion(): string
+    {
+        $composerJson = file_get_contents($this->rootDir . '/composer.json');
+        $composerData = json_decode($composerJson);
+
+        return $composerData->version;
+    }
+
     public function getLatestRelease(): array
     {
         $opts = ['http' => [
