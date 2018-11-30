@@ -72,6 +72,15 @@
     "scripts": {
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
+        "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
+        "new-install": [
+            "@composer install",
+            "@set-permissions",
+            "@php artisan key:generate --ansi",
+            "@php artisan legacy:database --ansi",
+            "@php artisan legacy:link --ansi",
+            "@php artisan migrate --ansi"
+        ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php -r \"file_exists('ieducar/configuration/ieducar.ini') || copy('ieducar/configuration/ieducar.ini.example', 'ieducar/configuration/ieducar.ini');\""

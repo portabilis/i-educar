@@ -107,15 +107,6 @@ Clone o repositório:
 git clone https://github.com/portabilis/i-educar.git && cd i-educar
 ```
 
-Será necessário criar os arquivos de configuração do seu ambiente, modifique-os
-se necessário:
-
-```bash
-cp .env.example .env
-cp docker-compose.yml.example docker-compose.yml
-cp ieducar/configuration/ieducar.ini.example ieducar/configuration/ieducar.ini
-```
-
 Faça o build das imagens Docker utilizadas no projeto (pode levar alguns 
 minutos) e inicie os containers da aplicação:
 
@@ -124,19 +115,10 @@ docker-compose build
 docker-compose up -d
 ```
 
-Execute os comandos para instalar as dependências do projeto, permitir a 
-escrita nas pastas necessárias, gerar a chave da aplicação para encriptar os 
-dados, popular o banco de dados com a estrutura inicial, criar os links 
-simbólicos para o código legado e rodar as últimas migrações do banco de dados:
+Execute o comando para fazer uma nova instalação:
 
 ```bash
-docker-compose exec php composer install
-docker-compose exec php chmod -R 777 bootstrap/cache
-docker-compose exec php chmod -R 777 storage
-docker-compose exec php artisan key:generate
-docker-compose exec php artisan legacy:database
-docker-compose exec php artisan legacy:link
-docker-compose exec php artisan migrate
+docker-compose exec php composer new-install
 ```
 
 ### Primeiro acesso
