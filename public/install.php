@@ -2,33 +2,30 @@
 
 set_time_limit(0);
 
-include __DIR__ . '/../vendor/autoload.php';
+$rootDir = realpath(__DIR__ . '/../');
+
+include $rootDir . '/vendor/autoload.php';
 
 use Composer\Semver\Comparator;
 use iEducar\Support\Installer;
 
-$basePath = realpath(__DIR__ . '/../');
+$installer = new Installer($rootDir);
 $command = $_GET['command'] ?? null;
 
 if (!is_null($command)) {
     switch ($command) {
         case 'exec':
             $param = $_GET['param'];
-            $time = $_GET['time'];
+            $time = (int) $_GET['time'];
+            $extra = $_GET['extra'] ?? [];
 
-            if ($param === 'password') {
-                $password = $_GET['pass'];
-                echo Installer::password($password);
-                die();
-            }
-
-            $pid = Installer::exec($basePath, $param, (int) $time);
+            $pid = $installer->exec($rootDir, $param, (int) $time);
             echo $pid;
             break;
         case 'consult':
             $pid = $_GET['pid'];
-            $time = $_GET['time'];
-            $status = Installer::consult($basePath, $pid, $time);
+            $time = (int) $_GET['time'];
+            $status = $installer->consult($rootDir, $pid, $time);
             echo $status;
             break;
         default:
@@ -38,7 +35,8 @@ if (!is_null($command)) {
     die();
 }
 
-function boolIcon(bool $bool): string {
+function boolIcon(bool $bool): string
+{
     if ($bool) {
         return '<i class="fas fa-check"></i>';
     } else {
@@ -47,37 +45,37 @@ function boolIcon(bool $bool): string {
 }
 
 $isInstalled = false;
-$currIeducarVersion = trim(file_get_contents($basePath . '/VERSION'));
-$latestIeducarVersion = Installer::getLatestRelease();
+$currIeducarVersion = trim(file_get_contents($rootDir . '/VERSION'));
+$latestIeducarVersion = $installer->getLatestRelease();
 $isOld = Comparator::greaterThan($latestIeducarVersion['version'], $currIeducarVersion);
 $minPhpVersion = '7.2.10';
 $phpVersionCheck = version_compare(PHP_VERSION, $minPhpVersion) >= 0;
-$extensionsCheck = Installer::checkExtensions();
-$extensionsReport = Installer::getExtensionsReport();
-$envExists = file_exists($basePath . '/.env');
+$extensionsCheck = $installer->checkExtensions();
+$extensionsReport = $installer->getExtensionsReport();
+$envExists = file_exists($rootDir . '/.env');
 $dbCheck = false;
 
 if ($envExists) {
-    (new Dotenv\Dotenv($basePath))->load();
-    $dbCheck = Installer::checkDatabaseConnection();
-    $isInstalled = Installer::isInstalled();
+    (new Dotenv\Dotenv($rootDir))->load();
+    $dbCheck = $installer->checkDatabaseConnection();
+    $isInstalled = $installer->isInstalled();
 }
 
 $writablePaths = [
-    $basePath . '/.env',
-    $basePath . '/storage',
-    $basePath . '/bootstrap/cache',
+    $rootDir . '/.env',
+    $rootDir . '/storage',
+    $rootDir . '/bootstrap/cache',
 ];
 
-$writablePathsCheck = Installer::checkWritablePaths($writablePaths);
-$writablePathsReport = Installer::getWritablePathsReport($writablePaths);
+$writablePathsCheck = $installer->checkWritablePaths($writablePaths);
+$writablePathsReport = $installer->getWritablePathsReport($writablePaths);
 $proceed = $phpVersionCheck && $extensionsCheck && $envExists && $dbCheck && $writablePathsCheck;
 $user = posix_getpwuid(posix_getuid())['name'];
 $group = posix_getgrgid(posix_getgid())['name'];
 $needsUpdate = false;
 
 if ($isInstalled) {
-    $needsUpdate = Installer::needsUpdate($basePath);
+    $needsUpdate = $installer->needsUpdate($rootDir);
 }
 
 ?><!doctype html>
@@ -170,7 +168,7 @@ if ($isInstalled) {
                             pode executar o seguinte comando para isto:</p>
 
                         <pre>
-$ cd <?= $basePath . "\n" ?>
+$ cd <?= $rootDir . "\n" ?>
 $ cp .env.example .env
 $ vim .env # use seu editor de texto favorito
            # para configurar a aplicação
@@ -221,7 +219,7 @@ DB_PASSWORD=ieducar
                             com o usuário e grupo responsáveis pelos processos do PHP:</p>
 
                         <pre>
-$ sudo chown -R <?= $user ?>:<?= $group ?> <?= $basePath ?>
+$ sudo chown -R <?= $user ?>:<?= $group ?> <?= $rootDir ?>
 </pre>
 
                         <p>Uma outra forma (menos segura e não recomendada) é liberando
@@ -268,7 +266,7 @@ $ chmod -R 777 <?= $path . "\n" ?>
 
                     <p id="taskDesc">Executando...</p>
 
-                    <progress id="installProgress" max="5" value="0">
+                    <progress id="installProgress" max="0" value="0">
                 </div>
             <?php endif; ?>
         </div>
