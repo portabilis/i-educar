@@ -9,15 +9,18 @@ matrix:
         apt:
           packages:
             - postgresql-9.5
+      env:
+        - APP_ENV=testing
+        - DB_CONNECTION=pgsql
+        - DB_HOST=localhost
+        - DB_PORT=5432
+        - DB_DATABASE=travis
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=
       cache:
         directories:
           - $HOME/.composer/cache
       before_script:
-        - cp .env.example .env
-        - cp phinx.php.travis phinx.php
-        - composer install
-        - vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
-        - vendor/bin/phinx migrate
-        - php artisan legacy:link
+        - composer new-install
       after_success:
         - vendor/bin/php-coveralls --verbose
