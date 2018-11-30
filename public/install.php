@@ -146,7 +146,7 @@ if ($isInstalled) {
                     <?php endif; ?>
 
                     <?php if ($needsUpdate): ?>
-                        <p style="display: none;">
+                        <p class="updating">
                             <i class="fas fa-spinner fa-spin"></i>
                             <strong>atualizando, aguarde...</strong>
                         </p>
