@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use iEducar\Support\Navigation\Breadcrumb;
+use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -72,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->register(RepositoryServiceProvider::class);
         $this->app->singleton(Breadcrumb::class);
+        $this->app->singleton(TopMenu::class);
 
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use iEducar\Support\Navigation\Breadcrumb;
+use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,5 +16,10 @@ class Controller extends BaseController
     public function breadcrumb($currentPage, $pages = [])
     {
         app(Breadcrumb::class)->current($currentPage, $pages);
+    }
+
+    public function topMenu($currentSubmenuId)
+    {
+        app(TopMenu::class)->current($currentSubmenuId);
     }
 }

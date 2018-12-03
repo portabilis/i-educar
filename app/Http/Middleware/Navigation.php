@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use iEducar\Support\Navigation\Breadcrumb;
+use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\View;
 
 class Navigation
@@ -17,6 +18,7 @@ class Navigation
      */
     public function handle($request, Closure $next)
     {
+        View::share('topmenu', app(TopMenu::class));
         View::share('breadcrumb', app(Breadcrumb::class));
 
         return $next($request);

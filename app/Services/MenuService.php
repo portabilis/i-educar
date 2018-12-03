@@ -7,6 +7,7 @@ use App\Entities\User;
 use iEducar\Support\Repositories\MenuRepository;
 use iEducar\Support\Repositories\SubmenuRepository;
 use iEducar\Support\Repositories\UserRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 class MenuService
 {
@@ -32,14 +33,13 @@ class MenuService
         $this->submenuRepository = $submenuRepository;
     }
 
+    /**
+     * @param User $user
+     * @return Collection
+     */
     public function getByUser(User $user)
     {
-        $typeUser = $user->type->cod_tipo_usuario;
-
-        /** @var Submenu[] $submenus */
-        $submenus = $this->submenuRepository->whereHas('typeUsers', function($query) use ($typeUser) {
-            $query->where('ref_cod_tipo_usuario', $typeUser);
-        })->get();
+        $submenus = $this->getSubmenusByUser($user);
 
         if ($this->isSuperUser($submenus)) {
             return $this->menuRepository->orderBy('ord_menu')->findWhere(['ativo' => 1]);
@@ -57,6 +57,20 @@ class MenuService
         ksort($menus);
 
         return collect($menus);
+    }
+
+    /**
+     * @param User $user
+     * @return Collection
+     */
+    public function getSubmenusByUser(User $user)
+    {
+        $typeUser = $user->type->cod_tipo_usuario;
+
+        /** @var Submenu[] $submenus */
+        return $this->submenuRepository->whereHas('typeUsers', function($query) use ($typeUser) {
+            $query->where('ref_cod_tipo_usuario', $typeUser);
+        })->get();
     }
 
     private function isSuperUser($submenus)

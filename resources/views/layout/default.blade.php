@@ -347,22 +347,18 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <link type="text/css" rel="stylesheet" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}"/>
-<script type="text/javascript">array_menu = new Array();
-    array_id = new Array();
-    array_menu[array_menu.length] = new Array("Cadastros ", 999930, '', '', '', '', '_self');
-    array_id[array_id.length] = 999930;
-    array_menu[array_menu.length] = new Array("Ferramentas ", 999931, '', '', '', '', '_self');
-    array_id[array_id.length] = 999931;
-    array_menu[array_menu.length] = new Array("Países ", 753, '999930', '', '', 'public_pais_lst.php', '_self');
-    array_menu[array_menu.length] = new Array("Unificação de bairros ", 761, '999931', '', '', 'educar_unifica_bairro.php', '_self');
-    array_menu[array_menu.length] = new Array("Estados ", 754, '999930', '', '', 'public_uf_lst.php', '_self');
-    array_menu[array_menu.length] = new Array("Unificação de logradouros ", 762, '999931', '', '', 'educar_unifica_logradouro.php', '_self');
-    array_menu[array_menu.length] = new Array("Municípios ", 755, '999930', '', '', 'public_municipio_lst.php', '_self');
-    array_menu[array_menu.length] = new Array("Distritos ", 759, '999930', '', '', 'public_distrito_lst.php', '_self');
-    array_menu[array_menu.length] = new Array("Setores ", 760, '999930', '', '', 'public_setor_lst.php', '_self');
-    array_menu[array_menu.length] = new Array("Bairros ", 756, '999930', '', '', 'public_bairro_lst.php', '_self');
-    array_menu[array_menu.length] = new Array("Logradouros ", 757, '999930', '', '', 'public_logradouro_lst.php', '_self');
-    array_menu[array_menu.length] = new Array("CEP ", 758, '999930', '', '', 'urbano_cep_logradouro_lst.php', '_self');</script>
+<script type="text/javascript">
+    array_menu = [];
+    array_id = [];
+
+    @foreach ($topmenu->getTopMenuArray(\App\Entities\User::find(session('id_pessoa'))) as $item)
+        array_menu[array_menu.length] = ['{{$item['tt_menu']}}', {{$item['cod_menu']}},'{{$item['ref_cod_menu_pai']}}','', '', '{{$item['caminho']}}', '{{$item['alvo']}}'];
+
+        @if($item['ref_cod_menu_pai'])
+            array_id[array_id.length] = {{$item['cod_menu']}};
+        @endif
+    @endforeach
+</script>
 <script type="text/javascript">
     setTimeout("setXY();", 150);
     MontaMenu();

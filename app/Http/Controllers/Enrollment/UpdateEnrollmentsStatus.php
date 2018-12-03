@@ -8,6 +8,8 @@ class UpdateEnrollmentsStatus extends Controller
 {
     public function index()
     {
+        $this->topMenu(578);
+
         $this->breadcrumb('Alterar situação de matrículas', [
             route('settings') => 'Configurações'
         ]);
