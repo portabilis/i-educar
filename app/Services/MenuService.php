@@ -68,7 +68,7 @@ class MenuService
         $typeUser = $user->type->cod_tipo_usuario;
 
         /** @var Submenu[] $submenus */
-        return $this->submenuRepository->whereHas('typeUsers', function($query) use ($typeUser) {
+        return $this->submenuRepository->with('menu')->whereHas('typeUsers', function($query) use ($typeUser) {
             $query->where('ref_cod_tipo_usuario', $typeUser);
         })->get();
     }
