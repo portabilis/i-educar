@@ -2,7 +2,6 @@
 
 namespace App\Entities;
 
-use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -11,7 +10,7 @@ use Prettus\Repository\Traits\TransformableTrait;
  *
  * @package namespace App\Entities;
  */
-class Submenu extends Model implements Transformable
+class Submenu extends EloquentBaseModel implements Transformable
 {
     const SUPER_USER_MENU_ID = 0;
 
