@@ -1,14 +1,17 @@
 /database/data
+/database/migrations/extras
 /legacy
 /public/intranet
 /public/module
 /public/modules
 /vendor
+/ieducar-*
+ieducar-*.tar.gz
 .env
 .env.host
 .env.testing
 .php_cs.cache
-docker-compose.yml
+docker-compose.override.yml
 phinx.php
 phinx.yml
 
@@ -48,7 +51,6 @@ ieducar/configuration/ieducar.ini
 ieducar/modules/Reports
 ieducar/intranet/filaunica
 ieducar/intranet/reservavaga
-ieducar/misc/database/migrations/portabilis
 
 
 # Docusauros

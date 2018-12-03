@@ -1014,6 +1014,11 @@ td.area-conhecimento-destaque {
   vertical-align: top;
 }
 
+.tablelistagem .formmdtd a, .tablelistagem .formlttd a {
+  display: inline-block;
+  padding: 0 8px;
+}
+
 .tableDetalhe .formmdtd,
 .tableDetalhe .formlttd{
   color: #47728f;

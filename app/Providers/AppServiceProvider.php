@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use iEducar\Support\Navigation\Breadcrumb;
 use iEducar\Support\Navigation\TopMenu;
+use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
+use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -48,6 +50,20 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Load migrations from other repositories or packages.
+     *
+     * @return void
+     */
+    private function loadLegacyMigrations()
+    {
+        foreach (config('legacy.migrations') as $path) {
+            if (is_dir($path)) {
+                $this->loadMigrationsFrom($path);
+            }
+        }
+    }
+
+    /**
      * Bootstrap any application services.
      *
      * @return void
@@ -57,6 +73,10 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
             $this->registerRoutesForFakeAuth();
             $this->customBrowserForFakeAuth();
+        }
+
+        if ($this->app->runningInConsole()) {
+            $this->loadLegacyMigrations();
         }
 
         // https://laravel.com/docs/5.5/migrations#indexes
@@ -80,6 +100,6 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(TelescopeServiceProvider::class);
         }
 
-        $this->app->bind(\iEducar\Modules\ErrorTracking\Tracker::class, \iEducar\Modules\ErrorTracking\HoneyBadgerTracker::class);
+        $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
     }
 }
