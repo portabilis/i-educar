@@ -2,7 +2,7 @@
 
 namespace iEducar\Support\Repositories;
 
-use App\Entities\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Prettus\Repository\Contracts\RepositoryInterface;
 

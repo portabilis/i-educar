@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Entities;
+namespace App\Models;
 
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Fisica.
+ * Class Menu.
  *
  * @package namespace App\Entities;
  */
-class Individual extends EloquentBaseModel implements Transformable
+class SystemMenu extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'cadastro.fisica';
+    protected $table = 'pmicontrolesis.menu';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'idpes';
+    protected $primaryKey = 'cod_menu';
 
     /**
      * @var bool
@@ -35,5 +35,4 @@ class Individual extends EloquentBaseModel implements Transformable
      * @var array
      */
     protected $fillable = [];
-
 }

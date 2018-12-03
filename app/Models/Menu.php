@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Entities;
+namespace App\Models;
 
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Pessoa.
+ * Class Menu.
  *
  * @package namespace App\Entities;
  */
-class Configuration extends EloquentBaseModel implements Transformable
+class Menu extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'pmieducar.configuracoes_gerais';
+    protected $table = 'portal.menu_menu';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'ref_cod_instituicao';
+    protected $primaryKey = 'cod_menu_menu';
 
     /**
      * @var bool
@@ -36,4 +36,8 @@ class Configuration extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [];
 
+    public function submenus()
+    {
+        return $this->hasMany(Submenu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
+    }
 }

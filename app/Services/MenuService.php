@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Entities\Submenu;
-use App\Entities\User;
+use App\Models\Submenu;
+use App\Models\User;
 use iEducar\Support\Repositories\MenuRepository;
 use iEducar\Support\Repositories\SubmenuRepository;
 use iEducar\Support\Repositories\UserRepository;

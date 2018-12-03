@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Entities\User;
+use App\Models\User;
 use App\Services\MenuService;
 use Closure;
 use Illuminate\Support\Facades\Cache;

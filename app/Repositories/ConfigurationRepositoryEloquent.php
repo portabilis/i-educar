@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Entities\Configuration;
+use App\Models\Configuration;
 use iEducar\Support\Repositories\ConfigurationRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;

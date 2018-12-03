@@ -351,7 +351,7 @@
     array_menu = [];
     array_id = [];
 
-    @foreach ($topmenu->getTopMenuArray(\App\Entities\User::find(session('id_pessoa'))) as $item)
+    @foreach ($topmenu->getTopMenuArray(\App\Models\User::find(session('id_pessoa'))) as $item)
         array_menu[array_menu.length] = ['{{$item['tt_menu']}}', {{$item['cod_menu']}},'{{$item['ref_cod_menu_pai']}}','', '', '{{$item['caminho']}}', '{{$item['alvo']}}'];
 
         @if($item['ref_cod_menu_pai'])

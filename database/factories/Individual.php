@@ -2,10 +2,10 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Entities\Individual::class, function (Faker $faker) {
+$factory->define(\App\Models\Individual::class, function (Faker $faker) {
     return [
         'idpes' => function() {
-            return factory(\App\Entities\Person::class)->create()->idpes;
+            return factory(\App\Models\Person::class)->create()->idpes;
         },
         'origem_gravacao' => 'U',
         'data_cad' => $faker->dateTime,

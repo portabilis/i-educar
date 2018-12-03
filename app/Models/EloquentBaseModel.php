@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities;
+namespace App\Models;
 
 use iEducar\Support\Model\BaseModel;
 use Illuminate\Database\Eloquent\Model;

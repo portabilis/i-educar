@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Entities\SystemMenu;
+use App\Models\SystemMenu;
 use iEducar\Support\Repositories\SystemMenuRepository;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;

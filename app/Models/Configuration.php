@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities;
+namespace App\Models;
 
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -10,19 +10,19 @@ use Prettus\Repository\Traits\TransformableTrait;
  *
  * @package namespace App\Entities;
  */
-class Person extends EloquentBaseModel implements Transformable
+class Configuration extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'cadastro.pessoa';
+    protected $table = 'pmieducar.configuracoes_gerais';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'idpes';
+    protected $primaryKey = 'ref_cod_instituicao';
 
     /**
      * @var bool

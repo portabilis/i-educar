@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Entities\User;
+use App\Models\User;
 use iEducar\Support\Repositories\MenuRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Entities\Menu;
+use App\Models\Menu;
 use App\Validators\MenuValidator;
 
 /**

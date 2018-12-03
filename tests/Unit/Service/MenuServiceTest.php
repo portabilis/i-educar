@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Service;
 
-use App\Entities\Menu;
-use App\Entities\Submenu;
-use App\Entities\User;
+use App\Models\Menu;
+use App\Models\Submenu;
+use App\Models\User;
 use App\Services\MenuService;
 use iEducar\Support\Repositories\MenuRepository;
 use iEducar\Support\Repositories\UserRepository;

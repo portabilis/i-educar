@@ -5,7 +5,7 @@ namespace App\Repositories;
 use iEducar\Support\Repositories\UserRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Entities\User;
+use App\Models\User;
 use App\Validators\UserValidator;
 
 /**

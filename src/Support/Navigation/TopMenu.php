@@ -2,8 +2,8 @@
 
 namespace iEducar\Support\Navigation;
 
-use App\Entities\Menu;
-use App\Entities\User;
+use App\Models\Menu;
+use App\Models\User;
 use App\Services\MenuService;
 use iEducar\Support\Repositories\MenuRepository;
 use iEducar\Support\Repositories\SubmenuRepository;

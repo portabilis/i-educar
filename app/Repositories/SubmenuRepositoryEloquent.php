@@ -5,7 +5,7 @@ namespace App\Repositories;
 use iEducar\Support\Repositories\SubmenuRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Entities\Submenu;
+use App\Models\Submenu;
 use App\Validators\SubmenuValidator;
 
 /**

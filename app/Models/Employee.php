@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Entities;
+namespace App\Models;
 
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class User.
+ * Class Funcionario.
  *
  * @package namespace App\Entities;
  */
-class User extends EloquentBaseModel implements Transformable
+class Employee extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'pmieducar.usuario';
+    protected $table = 'portal.funcionario';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_usuario';
+    protected $primaryKey = 'ref_cod_pessoa_fj';
 
     /**
      * @var bool
@@ -36,8 +36,4 @@ class User extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [];
 
-    public function type()
-    {
-        return $this->belongsTo(UserType::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
-    }
 }
