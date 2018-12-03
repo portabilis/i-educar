@@ -18,8 +18,12 @@ class Controller extends BaseController
         app(Breadcrumb::class)->current($currentPage, $pages);
     }
 
-    public function topMenu($currentSubmenuId)
+    public function topMenu($currentSubmenuId, $currentUri = null)
     {
-        app(TopMenu::class)->current($currentSubmenuId);
+        if (!$currentUri) {
+            $currentUri = request()->getRequestUri();
+        }
+
+        app(TopMenu::class)->current($currentSubmenuId, $currentUri);
     }
 }

@@ -20,18 +20,26 @@ class TopMenu
      * @var SubmenuRepository
      */
     private $submenuRepository;
+
     /**
      * @var MenuRepository
      */
     private $menuRepository;
+
     /**
      * @var SystemMenuRepository
      */
     private $systemMenuRepository;
+
     /**
      * @var MenuService
      */
     private $menuService;
+
+    /**
+     * @var string
+     */
+    private $currentUri;
 
     public function __construct(
         SubmenuRepository $submenuRepository,
@@ -45,9 +53,10 @@ class TopMenu
         $this->menuService = $menuService;
     }
 
-    public function current($currentSubmenuId)
+    public function current($currentSubmenuId, $currentUri)
     {
         $submenu = $this->submenuRepository->find($currentSubmenuId);
+        $this->currentUri = $currentUri;
         $this->currentMenu = $submenu->menu;
     }
 
@@ -141,7 +150,7 @@ class TopMenu
      */
     private function getPath($menuArray)
     {
-        $uri = explode('/', $_SERVER['REQUEST_URI']);
+        $uri = explode('/', $this->currentUri);
 
         foreach ($menuArray as &$menu) {
             $menu['alvo'] = $menu['alvo'] ? $menu['alvo'] : '_self';
