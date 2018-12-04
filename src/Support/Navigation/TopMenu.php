@@ -8,6 +8,7 @@ use App\Services\MenuService;
 use iEducar\Support\Repositories\MenuRepository;
 use iEducar\Support\Repositories\SubmenuRepository;
 use iEducar\Support\Repositories\SystemMenuRepository;
+use Illuminate\Support\Facades\Cache;
 
 class TopMenu
 {
@@ -62,6 +63,12 @@ class TopMenu
 
     public function getTopMenuArray(User $user)
     {
+        $cacheKey = $this->getCacheKey();
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+        
         if (!$this->currentMenu) {
             return;
         }
@@ -80,6 +87,8 @@ class TopMenu
         $menuArray = $this->getItemsAndLevels($submenuIdArray, $tutorMenuId);
         $menuArray = $this->filter($menuArray);
         $menuArray = $this->getPath($menuArray);
+
+        Cache::add($cacheKey, $menuArray, 60);
 
         return $menuArray->all();
     }
@@ -169,9 +178,16 @@ class TopMenu
                 }
             } elseif (0 === strpos($menu['caminho'], 'module')) {
                 $menu['caminho'] = '../../' . $menu['caminho'];
+            } elseif(!empty($menu['caminho'])) {
+                $menu['caminho'] = '/intranet/' . $menu['caminho'];
             }
         }
 
         return $menuArray;
+    }
+
+    private function getCacheKey()
+    {
+        return md5($this->currentUri . config('app.name') . session('id_pessoa'));
     }
 }
