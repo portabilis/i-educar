@@ -43,7 +43,11 @@ class SystemMenuRepositoryEloquent extends BaseRepository implements SystemMenuR
             ->where(function ($query) use ($submenuIdArray) {
                 $query->orWhere('ref_cod_menu_submenu', null)
                     ->orWhereIn('ref_cod_menu_submenu', $submenuIdArray);
-            });
+            })
+            ->orderBy('level', 'ASC')
+            ->orderBy('tipo_menu', 'ASC')
+            ->orderBy('ord_menu', 'ASC')
+            ->orderBy('tt_menu', 'ASC');
 
         return $query->get();
     }
@@ -58,7 +62,12 @@ class SystemMenuRepositoryEloquent extends BaseRepository implements SystemMenuR
                 $query->orWhere('ref_cod_menu_submenu', null)
                     ->orWhereIn('ref_cod_menu_submenu', $submenuIdArray);
             })
-            ->whereNotIn('cod_menu', $parents);
+            ->whereNotIn('cod_menu', $parents)
+            ->orderBy('level', 'ASC')
+            ->orderBy('tipo_menu', 'ASC')
+            ->orderBy('ord_menu', 'ASC')
+            ->orderBy('tt_menu', 'ASC');
+
         return $query->get();
     }
 }
