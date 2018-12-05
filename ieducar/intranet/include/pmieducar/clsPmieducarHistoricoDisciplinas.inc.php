@@ -95,7 +95,7 @@ class clsPmieducarHistoricoDisciplinas
         $ordenamento = null,
         $carga_horaria_disciplina = null,
         $dependencia = false,
-        $tipo_base = 1
+        $tipo_base = ComponenteCurricular_Model_TipoBase::DEFAULT
     ) {
         $db = new clsBanco();
 
