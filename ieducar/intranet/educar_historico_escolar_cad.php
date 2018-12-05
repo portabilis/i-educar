@@ -330,8 +330,12 @@ class indice extends clsCadastro
             }
         }
 
-        $this->campoTabelaInicio('notas', 'Notas', ['Disciplina', 'Nota', 'Faltas', 'C.H', 'Ordem', 'Dependência'], $this->historico_disciplinas);
+        // Tipo Base
+        $tipoBase = ComponenteCurricular_Model_TipoBase::getInstance()->getEnums();
+
+        $this->campoTabelaInicio('notas', 'Notas', ['Disciplina', 'Base curricular', 'Nota', 'Faltas', 'C.H', 'Ordem', 'Dependência'], $this->historico_disciplinas);
         $this->campoTexto('nm_disciplina', 'Disciplina', $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus');
+        $this->campoLista('tipo_base', 'Base curricular', $tipoBase, ComponenteCurricular_Model_TipoBase::COMUM, '', false, '', '', false, false);
         $this->campoTexto('nota', 'Nota', $this->nota, 10, 255, false);
         $this->campoNumero('faltas', 'Faltas', $this->faltas, 3, 3, false);
         $this->campoNumero('carga_horaria_disciplina', 'carga_horaria_disciplina', $this->carga_horaria_disciplina, 3, 3, false, null, null, null, null, null, $habilitaCargaHoraria);
