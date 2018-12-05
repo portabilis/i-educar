@@ -634,7 +634,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $fields['falta'],
             $fields['ordenamento'],
             $fields['carga_horaria_disciplina'],
-            $fields['dependencia']
+            $fields['dependencia'],
+            $fields['tipo_base']
         );
         $historicoDisciplina->cadastra();
     }
@@ -672,6 +673,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $disciplinaDependencia = ($aprovadoDependencia && $reprovado);
                 $nome = $componenteCurricular->nome;
                 $ordenamento = $componenteCurricular->ordenamento;
+                $tipo_base = $componenteCurricular->get('tipo_base');
                 $carga_horaria_disciplina = $componenteCurricular->carga_horaria_disciplina;
                 $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
                 $nota = '';
@@ -716,6 +718,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['ordenamento'] = $componenteCurricular->area_conhecimento->ordenamento;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['carga_horaria_disciplina'] = $componenteCurricular->area_conhecimento->carga_horaria_disciplina;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['dependencia'] = $disciplinaDependencia;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['tipo_base'] = $tipo_base;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
                 } else {
                     $this->_createHistoricoDisciplinas(
@@ -728,7 +731,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                             'falta' => $this->getFalta($situacaoFaltasCc[$ccId]),
                             'ordenamento' => $ordenamento,
                             'carga_horaria_disciplina' => $carga_horaria_disciplina,
-                            'dependencia' => $disciplinaDependencia
+                            'dependencia' => $disciplinaDependencia,
+                            'tipo_base' => $tipo_base,
                         ]
                     );
                 }
@@ -756,7 +760,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                             'falta' => round($value['falta'] / $value['count']),
                             'ordenamento' => $value['ordenamento'],
                             'carga_horaria_disciplina' => $value['carga_horaria_disciplina'],
-                            'dependencia' => $value['dependencia']
+                            'dependencia' => $value['dependencia'],
+                            'tipo_base' => $tipo_base,
                         ]
                     );
                 }
