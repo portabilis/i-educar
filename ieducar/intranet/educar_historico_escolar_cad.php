@@ -20,13 +20,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-
     public $ref_cod_aluno;
 
     public $sequencial;
@@ -104,9 +97,6 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->sequencial = $_GET['sequencial'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
@@ -365,10 +355,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
@@ -421,10 +407,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
@@ -485,10 +467,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
