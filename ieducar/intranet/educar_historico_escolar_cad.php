@@ -56,6 +56,8 @@ class indice extends clsCadastro
 
     public $ref_cod_instituicao;
 
+    public $nm_curso;
+
     public $nm_serie;
 
     public $origem;
@@ -107,6 +109,7 @@ class indice extends clsCadastro
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial)) {
             $obj = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial);
             $registro = $obj->detalhe();
+
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -120,6 +123,7 @@ class indice extends clsCadastro
                 if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)) {
                     $this->fexcluir = true;
                 }
+
                 if (!isset($_GET['copia'])) {
                     $retorno = 'Editar';
                 } else {
@@ -127,6 +131,7 @@ class indice extends clsCadastro
                 }
             }
         }
+
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_historico_escolar_det.php?ref_cod_aluno={$registro['ref_cod_aluno']}&sequencial={$registro['sequencial']}" : "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
         $this->nome_url_cancelar = 'Cancelar';
         $this->dependencia = dbBool($this->dependencia);
@@ -162,8 +167,10 @@ class indice extends clsCadastro
         $this->campoOculto('codigoEscola', $codigoEscola);
         $this->campoOculto('nomeEscola', $nomeEscola);
         $this->campoOculto('numeroSequencial', $_GET['sequencial']);
+
         $obj_aluno = new clsPmieducarAluno();
         $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
+
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
             $this->nm_aluno = $det_aluno['nome_aluno'];
@@ -172,6 +179,7 @@ class indice extends clsCadastro
 
         $obj_nivelUser = new clsPermissoes();
         $user_nivel = $obj_nivelUser->nivel_acesso($this->pessoa_logada);
+
         if ($user_nivel != App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL) {
             $obj_permissoes = new clsPermissoes();
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -185,15 +193,18 @@ class indice extends clsCadastro
             $obj_instituicao = new clsPmieducarInstituicao();
             $lista = $obj_instituicao->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
             $opcoes['1'] = 'Selecione';
+
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
                     $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
                 }
             }
+
             $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, '');
         } else {
             $obj_instituicao = new clsPmieducarInstituicao($nivel_usuario['ref_cod_instituicao']);
             $inst = $obj_instituicao->detalhe();
+
             $this->campoOculto('ref_cod_instituicao', $inst['cod_instituicao']);
             $this->campoTexto('instituicao', 'Instiui&ccedil;&atilde;o', $inst['nm_instituicao'], 30, 255, false, false, false, '', '', '', '', true);
         }
@@ -379,8 +390,7 @@ class indice extends clsCadastro
                     $cadastrou1 = $obj->cadastra();
 
                     if (!$cadastrou1) {
-                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-                        echo "<!--\nErro ao cadastrar clsPmieducarHistoricoDisciplinas\nvalores obrigatorios\nis_numeric( {$this->ref_cod_aluno} ) && is_numeric( {$this->sequencial} ) && is_string( {$campo['nm_disciplina']} ) && is_numeric( {$campo['sequencial']} ) && is_string( {$campo['nota']} ) && is_numeric( {$campo['faltas']} )\n-->";
+                        $this->mensagem = 'Cadastro não realizado.<br>';
 
                         return false;
                     }
@@ -396,8 +406,7 @@ class indice extends clsCadastro
             }
             //--------------FIM CADASTRA DISCIPLINAS--------------//
         }
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-        echo "<!--\nErro ao cadastrar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nis_numeric( $this->ref_cod_aluno ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->dias_letivos ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_string( $this->escola_uf ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->extra_curricular )\n-->";
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -440,15 +449,14 @@ class indice extends clsCadastro
                         $obj = new clsPmieducarHistoricoDisciplinas($sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key], $this->disciplinaDependencia[$key] == 'on' ? true : false);
                         $cadastrou1 = $obj->cadastra();
                         if (!$cadastrou1) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-                            echo "<!--\nErro ao cadastrar clsPmieducarHistoricoDisciplinas\nvalores obrigatorios\nis_numeric( {$this->ref_cod_aluno} ) && is_numeric( {$this->sequencial} ) && is_string( {$campo['nm_disciplina_']} ) && is_numeric( {$campo['sequencial_']} ) && is_string( {$campo['nota_']} ) && is_numeric( {$campo['faltas_']} )\n-->";
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
                         $sequencial++;
                     }
                 }
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 header("Location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
                 die();
 
@@ -456,8 +464,7 @@ class indice extends clsCadastro
             }
             //--------------FIM EDITA DISCIPLINAS--------------//
         }
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao editar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -474,7 +481,7 @@ class indice extends clsCadastro
             $obj = new clsPmieducarHistoricoDisciplinas();
             $excluiu = $obj->excluirTodos($this->ref_cod_aluno, $this->sequencial);
             if ($excluiu) {
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                 header("Location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
                 die();
 
@@ -482,8 +489,7 @@ class indice extends clsCadastro
             }
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-        echo "<!--\nErro ao excluir clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
