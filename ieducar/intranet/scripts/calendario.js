@@ -77,35 +77,6 @@ else {
   objCSS.type = 'text/css';
 }
 
-function init()
-{
-  var div_calendario = document.getElementById('d_calendario');
-
-  if (! div_calendario) {
-    return;
-  }
-
-  // Internet Explorer:
-  if (document.all) {
-    div_calendario.onselectstart = function () { return false; };
-  }
-
-  // Netscape 4:
-  if (document.layers) {
-    document.captureEvents(Event.MOUSEDOWN);
-    div_calendario.onmousedown = function (evt) {
-      return false;
-    };
-  }
-
-  // Netscape 6:
-  div_calendario.onmousedown = function () {
-    return false;
-  };
-}
-
-window.onload = init;
-
 var cX = 0;
 var cY = 0;
 
