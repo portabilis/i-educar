@@ -2811,7 +2811,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $somaEtapasRecuperacao += $data['E' . $__etapa];
           $countEtapasRecuperacao++;
         }
-
+        $data['Se'] += $data['E'.$cont];
         $data['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
         $data['RSPS'.$cont] = $somaEtapasRecuperacao;
       }
