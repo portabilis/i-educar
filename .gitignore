@@ -5,11 +5,13 @@
 /public/module
 /public/modules
 /vendor
+/ieducar-*
+ieducar-*.tar.gz
 .env
 .env.host
 .env.testing
 .php_cs.cache
-docker-compose.yml
+docker-compose.override.yml
 phinx.php
 phinx.yml
 

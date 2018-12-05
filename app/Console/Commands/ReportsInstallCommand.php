@@ -47,7 +47,7 @@ class ReportsInstallCommand extends Command
         $file = $this->getInitialReportsDatabaseFile();
 
         if (!$filesystem->exists($file)) {
-            $this->error('Inicial reports database file not found.');
+            $this->error('Initial reports database file not found.');
 
             return;
         }
@@ -57,5 +57,9 @@ class ReportsInstallCommand extends Command
         $connection->unprepared(
             $filesystem->get($file)
         );
+
+        $this->call('migrate', [
+            '--force' => true
+        ]);
     }
 }
