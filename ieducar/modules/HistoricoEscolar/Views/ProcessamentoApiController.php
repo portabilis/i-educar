@@ -662,7 +662,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $mediaAreaConhecimento = $this->getRequest()->media_area_conhecimento;
             $processarMediaGeral = $this->getRequest()->processar_media_geral;
             $casasDecimais = $this->getService()->getRegra()->get('qtdCasasDecimais');
-            $aprovadoDependencia = $this->getSituacaoMatricula($aluno['ref_cod_matricula']) == 12;
+            $aprovadoDependencia = $this->getSituacaoMatricula() == 12;
 
             foreach ($this->getService()->getComponentes() as $componenteCurricular) {
                 if (!$this->shouldProcessAreaConhecimento($componenteCurricular->get('area_conhecimento'))) {
