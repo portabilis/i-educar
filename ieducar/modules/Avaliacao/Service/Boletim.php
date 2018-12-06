@@ -2763,7 +2763,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $regrasRecuperacoes = $this->getRegra()->findRegraRecuperacao();
 
     $cont = 0;
-    $data['Se'] = 0;
+
+    if (count($regrasRecuperacoes)) {
+        $data['Se'] = 0;
+    }
+    
     foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
       $cont++;
       $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
