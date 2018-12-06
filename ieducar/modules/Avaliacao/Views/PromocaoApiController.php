@@ -51,8 +51,7 @@ class PromocaoApiController extends ApiCoreController
   protected $_processoAp = 644;
 
   protected function canAcceptRequest() {
-    return parent::canAcceptRequest()    &&
-           $this->validatesUserIsAdmin() &&
+    return parent::canAcceptRequest() &
            $this->validatesPresenceOf('ano');
   }
 
