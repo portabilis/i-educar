@@ -2763,12 +2763,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $regrasRecuperacoes = $this->getRegra()->findRegraRecuperacao();
 
     $cont = 0;
+    $data['Se'] = 0;
     foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
       $cont++;
       $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
       if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
         // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
+        $substituiMenorNota = (bool)$_regraRecuperacao->substituiMenorNota;
         $data['RSP'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+        if (!$substituiMenorNota) {
+            $data['Se'] += $data['RSP'.$cont] ?? $data['E'.$cont];
+        } else {
+            $data['Se'] += $data['RSP'.$cont] > $data['E'.$cont] ? $data['RSP'.$cont] : $data['E'.$cont];
+        }
         $notaRecuperacao->notaRecuperacaoEspecifica;
 
         $somaEtapasRecuperacao = 0;
@@ -2781,7 +2788,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
         $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
-        $substituiMenorNota = (bool)$_regraRecuperacao->substituiMenorNota;
 
         // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
         if(!$substituiMenorNota || $mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
@@ -2805,7 +2811,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $somaEtapasRecuperacao += $data['E' . $__etapa];
           $countEtapasRecuperacao++;
         }
-
+        $data['Se'] += $data['E'.$cont];
         $data['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
         $data['RSPS'.$cont] = $somaEtapasRecuperacao;
       }
