@@ -2784,14 +2784,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $countEtapasRecuperacao++;
         }
 
+        $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+        $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
+
         if (!$substituiMenorNota) {
           $data['Se'] += $data['RSP'.$cont] ?? $somaEtapasRecuperacao;
         } else {
-          $data['Se'] += $data['RSP'.$cont] > $somaEtapasRecuperacao ? $data['RSP'.$cont] : $somaEtapasRecuperacao;
+          $data['Se'] += $data['RSP'.$cont] > $mediaEtapasRecuperacao ? $data['RSP'.$cont] * $countEtapasRecuperacao : $somaEtapasRecuperacao;
         }
-
-        $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-        $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
 
         // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
         if(!$substituiMenorNota || $mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
