@@ -1238,6 +1238,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacao->andamento = TRUE;
         break;
       case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
+        $situacao->andamento = FALSE;
         $situacao->recuperacao = TRUE;
         break;
       case App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA:
@@ -1266,30 +1267,34 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
             $andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
         }
-        $situacao->andamento = FALSE;
+
+        if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
+            $andamento = TRUE;
+        }
+        $situacao->andamento = $andamento;
         break;
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
         break;
     }
 
-    // seta situacao geral
-    if ($situacao->andamento and $situacao->recuperacao)
-      $situacao->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+      // seta situacao geral
+      if ($situacao->andamento and $situacao->recuperacao)
+          $situacao->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
-    elseif (! $situacao->andamento and $situacao->aprovado and $situacao->recuperacao)
-      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+      elseif (! $situacao->andamento and (!$situacao->aprovado || $situacao->retidoFalta))
+          $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
-    elseif (! $situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia)
-      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+      elseif (! $situacao->andamento and $situacao->aprovado and $situacao->recuperacao)
+          $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
 
-    elseif (! $situacao->andamento and (!$situacao->aprovado || $situacao->retidoFalta))
-        $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
+      elseif (! $situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia)
+          $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
 
-    elseif (! $situacao->andamento and $situacao->aprovado)
-      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+      elseif (! $situacao->andamento and $situacao->aprovado)
+          $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-    return $situacao;
+      return $situacao;
   }
 
 
