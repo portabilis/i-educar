@@ -674,7 +674,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $nome = $componenteCurricular->nome;
                 $ordenamento = $componenteCurricular->ordenamento;
                 $tipo_base = $componenteCurricular->get('tipo_base');
-                $carga_horaria_disciplina = $componenteCurricular->carga_horaria_disciplina;
+                $carga_horaria_disciplina = $componenteCurricular->cargaHoraria;
                 $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
                 $nota = '';
                 $notaConceitualNumerica = '';
