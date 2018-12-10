@@ -944,12 +944,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
+    $maiorEtapaUtilizada = explode(',', App_Model_IedFinder::getEtapasComponente($_GET['turma_id'], $_GET['componente_curricular_id']));
     $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
-    $etapaAtual = $_GET['etapa'] == 'Rc' ? $etapas : $_GET['etapa'];
+
+    $maiorEtapaUtilizada = count($maiorEtapaUtilizada) ? max($maiorEtapaUtilizada) : $etapas;
+
+    $etapaAtual = $_GET['etapa'] == 'Rc' ? $maiorEtapaUtilizada : $_GET['etapa'];
 
     $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
-            $codMatricula, $this->getRegraDataMapper(), $matricula
-           ));
+        $codMatricula, $this->getRegraDataMapper(), $matricula
+    ));
 
     $this->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), $this->getComponenteCurricularId(), $etapaAtual, null, $matricula));
 
