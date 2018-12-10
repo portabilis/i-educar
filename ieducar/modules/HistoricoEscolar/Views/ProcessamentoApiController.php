@@ -771,8 +771,23 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $alunoId);
             }
         } else {
+
+            $i = 0;
+
             foreach ($this->getRequest()->disciplinas as $disciplina) {
                 $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+
+                $i++;
+
+                $tipo_base = ComponenteCurricular_Model_TipoBase::DEFAULT;
+                $ordenamento = $i;
+
+                $componenteCurricular = (new ComponenteCurricular_Model_ComponenteDataMapper())->findByName($disciplina['nome']);
+
+                if ($componenteCurricular) {
+                    $ordenamento = $componenteCurricular->ordenamento;
+                    $tipo_base = $componenteCurricular->get('tipo_base');
+                }
 
                 $this->_createHistoricoDisciplinas(
                     [
@@ -782,9 +797,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         'nome' => $disciplina['nome'],
                         'nota' => $disciplina['nota'],
                         'falta' => $falta = $disciplina['falta'],
-                        'ordenamento' => $value['ordenamento'],
-                        'carga_horaria_disciplina' => $value['carga_horaria_disciplina'],
-                        'dependencia' => $value['dependencia']
+                        'ordenamento' => $ordenamento,
+                        'carga_horaria_disciplina' => null, // Não existe esta informação
+                        'dependencia' => false, // Não existe esta informação
+                        'tipo_base' => $tipo_base,
                     ]
                 );
             }
