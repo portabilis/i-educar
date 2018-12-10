@@ -944,7 +944,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
-    $maiorEtapaUtilizada = explode(',', App_Model_IedFinder::getEtapasComponente($_GET['turma_id'], $_GET['componente_curricular_id']));
+    $maiorEtapaUtilizada = [];
+
+    // Foi preciso adicionar esta validação pois é possível filtrar sem
+    // selecionar um componente curricular, neste caso um erro SQL era gerado.
+
+    if ($componenteCurricularId = $this->getComponenteCurricularId()) {
+        $maiorEtapaUtilizada = explode(',', App_Model_IedFinder::getEtapasComponente($matricula['ref_cod_turma'], $componenteCurricularId));
+    }
+
     $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
 
     $maiorEtapaUtilizada = count($maiorEtapaUtilizada) ? max($maiorEtapaUtilizada) : $etapas;
@@ -955,7 +963,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $codMatricula, $this->getRegraDataMapper(), $matricula
     ));
 
-    $this->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), $this->getComponenteCurricularId(), $etapaAtual, null, $matricula));
+    $this->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), $componenteCurricularId, $etapaAtual, null, $matricula));
 
     $this->setOption('matriculaData',     $matricula);
     $this->setOption('aprovado',          $matricula['aprovado']);
