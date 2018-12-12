@@ -206,6 +206,10 @@ class DiarioController extends ApiCoreController
                         continue;
                     }
 
+                    if (! $serviceBoletim = $this->serviceBoletim($turmaId, $alunoId)) {
+                        continue;
+                    }
+
                     $valor = $notaTurmaAlunoDisciplina['nota'];
                     $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
                     $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
@@ -216,6 +220,20 @@ class DiarioController extends ApiCoreController
                     $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
 
                     $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
+
+                    $regra = $serviceBoletim->getRegra();
+
+                    if ($valorNota > $regra->notaMaximaGeral) {
+                        $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.", 'error');
+
+                        return false;
+                    }
+
+                    if ($valorNota < $regra->notaMinimaGeral) {
+                        $this->messenger->append("A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}.", 'error');
+
+                        return false;
+                    }
 
                     $array_nota = [
                         'componenteCurricular' => $componenteCurricularId,
@@ -228,10 +246,6 @@ class DiarioController extends ApiCoreController
                     }
 
                     $nota = new Avaliacao_Model_NotaComponente($array_nota);
-
-                    if (! $serviceBoletim = $this->serviceBoletim($turmaId, $alunoId)) {
-                        continue;
-                    }
 
                     try {
                         $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
@@ -298,6 +312,18 @@ class DiarioController extends ApiCoreController
                             $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
                             $notaAposRecuperacao = (($notaRecuperacao > $notaOriginal) ? $notaRecuperacao : $notaOriginal);
                             $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
+
+                            if (! $serviceBoletim = $this->serviceBoletim($turmaId, $alunoId)) {
+                                continue;
+                            }
+
+                            $regra = $serviceBoletim->getRegra();
+
+                            if ($valorNota > $regra->notaMaximaExameFinal) {
+                                $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaGeral}.", 'error');
+
+                                return false;
+                            }
 
                             $notaOriginal = $this->truncate($notaOriginal, 4);
                             $array_nota = [
