@@ -313,6 +313,18 @@ class DiarioController extends ApiCoreController
                             $notaAposRecuperacao = (($notaRecuperacao > $notaOriginal) ? $notaRecuperacao : $notaOriginal);
                             $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
 
+                            if (! $serviceBoletim = $this->serviceBoletim($turmaId, $alunoId)) {
+                                continue;
+                            }
+
+                            $regra = $serviceBoletim->getRegra();
+
+                            if ($valorNota > $regra->notaMaximaExameFinal) {
+                                $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaGeral}.", 'error');
+
+                                return false;
+                            }
+
                             $notaOriginal = $this->truncate($notaOriginal, 4);
                             $array_nota = [
                                 'componenteCurricular' => $componenteCurricularId,
