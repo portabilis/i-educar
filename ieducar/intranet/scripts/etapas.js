@@ -43,7 +43,7 @@ $j(function () {
 
             $j('#btn_enviar').click(function (e) {
                 if (validationUtils.validatesFields(true)) {
-                    if ((parseInt($j('#padrao_ano_escolar').val(), 10) === 1)) {
+                    if (parseInt($j('#padrao_ano_escolar').val(), 10) === 1) {
                         window.acao();
 
                         return;
