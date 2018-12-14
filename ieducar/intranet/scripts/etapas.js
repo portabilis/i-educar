@@ -42,48 +42,49 @@ $j(function () {
             var that = this;
 
             $j('#btn_enviar').click(function (e) {
-                if (parseInt($j('#padrao_ano_escolar').val(), 10) === 1) {
-                    window.acao();
+                if (validationUtils.validatesFields(true)) {
+                    if (parseInt($j('#padrao_ano_escolar').val(), 10) === 1) {
+                        window.acao();
 
-                    return;
-                }
-
-                e.preventDefault();
-
-                that.resetErrors();
-
-                if (!that.validateDates()) {
-                    alert('Ocorreram erros na validação dos campos. Verifique as mensagens e tente novamente.');
-
-                    return false;
-                }
-
-                var validations = [
-                    'validateStartDates',
-                    'validateEndDates'
-                ];
-
-                var valid = true;
-
-                $j.each(validations, function (i, validation) {
-                    if (!that[validation]()) {
-                        valid = false;
+                        return;
                     }
-                });
 
-                if (valid) {
-                    if (typeof window.valida !== "undefined") {
-                        // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
-                        if (validationUtils.validatesFields(true)) {
-                            window.valida();
+                    e.preventDefault();
+
+                    that.resetErrors();
+
+                    if (!that.validateDates()) {
+                        alert('Ocorreram erros na validação dos campos. Verifique as mensagens e tente novamente.');
+
+                        return false;
+                    }
+
+                    var validations = [
+                        'validateStartDates',
+                        'validateEndDates'
+                    ];
+
+                    var valid = true;
+
+                    $j.each(validations, function (i, validation) {
+                        if (!that[validation]()) {
+                            valid = false;
+                        }
+                    });
+
+                    if (valid) {
+                        if (typeof window.valida !== "undefined") {
+                            // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
+                            if (validationUtils.validatesFields(true)) {
+                                window.valida();
+                            }
+                        } else {
+                            window.acao();
                         }
                     } else {
-                        window.acao();
+                        alert('Ocorreram erros na validação dos campos. Verifique as mensagens e tente novamente.');
                     }
-                } else {
-                    alert('Ocorreram erros na validação dos campos. Verifique as mensagens e tente novamente.');
                 }
-
                 return false;
             });
         },
