@@ -266,7 +266,6 @@ class indice extends clsCadastro
     $sequencial = $objMatriculaTurma->getMaxSequencialEnturmacao($matriculaId);
     $lst_ativo = $objMatriculaTurma->lista($matriculaId, $ultima_turma, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $sequencial);
     $ativo = $lst_ativo[0]['ativo'];
-
     if ($sequencial >= 1) {
         $remanejado = TRUE;
         $enturmacao = new clsPmieducarMatriculaTurma(
@@ -283,12 +282,11 @@ class indice extends clsCadastro
             NULL,
             NULL,
             $remanejado);
-
             return $enturmacao->edita();
         }
-
         return false;
   }
+
 
 
   function Gerar()
