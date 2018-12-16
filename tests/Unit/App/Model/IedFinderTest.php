@@ -503,7 +503,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
    */
   public function testGetQuantidadeDeModulosMatriculaCursoAnoNaoPadrao()
   {
-      $this->markTestSkipped('must be revisited.');
     // Curso não padrão
     $returnCurso = array('cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 0);
 
@@ -530,7 +529,13 @@ class App_Model_IedFinderTest extends UnitBaseTest
     App_Model_IedFinder::addClassToStorage('clsPmieducarTurmaModulo',
       $turmaModuloMock, NULL, TRUE);
 
-    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1);
+    $matricula = [
+        'ref_ref_cod_escola' => 1,
+        'ref_cod_curso'      => 1,
+        'ref_cod_turma'      => 1,
+        'ano'                => 2018
+    ];
+    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1, $matricula);
 
     $this->assertEquals(
       4, $etapas,
