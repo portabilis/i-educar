@@ -369,9 +369,8 @@ class App_Model_IedFinderTest extends UnitBaseTest
    */
   public function testGetComponentesPorMatricula()
   {
-      $this->markTestSkipped('must be revisited.');
     // A turma possui apenas 2 componentes, com os ids: 1 e 2
-    $mocks = $this->_getComponentesTurmaMock();
+        $mocks = $this->_getComponentesTurmaMock();
 
     // Retorna para clsPmieducarDispensaDisciplina
     $returnDispensa = array(
@@ -380,16 +379,22 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     // Mock para clsPmieducarDispensaDisciplina
     $dispensaMock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
-    $dispensaMock->expects($this->once())
-                 ->method('lista')
+     $dispensaMock->expects($this->once())
+                 ->method('disciplinaDispensadaEtapa')
                  ->with(1, 1, 1)
                  ->will($this->returnValue($returnDispensa));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarDispensaDisciplina',
       $dispensaMock, NULL, TRUE);
 
+    $matricula = [
+        'ref_ref_cod_serie'  => 1,
+        'ref_ref_cod_escola' => 1,
+        'ref_cod_turma'      => 1
+    ];
+
     $componentes = App_Model_IedFinder::getComponentesPorMatricula(
-      1, $mocks['componenteMock'], $mocks['turmaMock']
+      1, $mocks['componenteMock'], $mocks['turmaMock'], null, null, null, $matricula
     );
 
     $expected = $mocks['expected'];
