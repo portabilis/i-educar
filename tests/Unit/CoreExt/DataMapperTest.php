@@ -339,15 +339,19 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testAtualizaRegistro()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
          ->will($this->returnValue(TRUE));
+
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
 
     $entity = new CoreExt_EntityStub();
     $entity->id = 1;
     $entity->nome = 'Fernando Nascimento';
     $entity->estadoCivil = 'casado';
+    $entity->markOld();
 
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
