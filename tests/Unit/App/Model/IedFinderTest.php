@@ -411,7 +411,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
    */
   public function testGetQuantidadeDeModulosMatricula()
   {
-      $this->markTestSkipped('must be revisited.');
     $returnEscolaAno = array(
       array('ref_cod_escola' => 1, 'ano' => 2009, 'andamento' => 1, 'ativo' => 1)
     );
@@ -454,6 +453,23 @@ class App_Model_IedFinderTest extends UnitBaseTest
                ->method('detalhe')
                ->will($this->onConsecutiveCalls($returnModulo, $returnModulo));
 
+    $returnCurso = array('cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 0);
+    $cursoMock = $this->getCleanMock('clsPmieducarCurso');
+    $cursoMock->expects($this->any())
+               ->method('detalhe')
+               ->will($this->returnValue($returnCurso));
+   $returnTurmaModulo = array(
+       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 1),
+       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 2),
+       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 3),
+       array('ref_cod_turma' => 1, 'ref_cod_modulo' => 1, 'sequencial' => 4)
+   );
+   $turmaModuloMock = $this->getCleanMock('clsPmieducarTurmaModulo');
+   $turmaModuloMock->expects($this->at(0))
+               ->method('lista')
+               ->with(1)
+               ->will($this->returnValue($returnTurmaModulo));
+
     // Adiciona mocks ao repositório estático
     App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaAnoLetivo',
       $escolaAnoMock, NULL, TRUE);
@@ -463,8 +479,18 @@ class App_Model_IedFinderTest extends UnitBaseTest
       $matriculaTurmaMock, NULL, TRUE);
     App_Model_IedFinder::addClassToStorage('clsPmieducarModulo',
       $moduloMock, NULL, TRUE);
+    App_Model_IedFinder::addClassToStorage('clsPmieducarCurso',
+      $cursoMock, NULL, TRUE);
+    App_Model_IedFinder::addClassToStorage('clsPmieducarTurmaModulo',
+        $turmaModuloMock, NULL, TRUE);
 
-    $modulos = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1);
+    $matricula = [
+        'ref_ref_cod_escola' => 1,
+        'ref_cod_curso'      => 1,
+        'ref_cod_turma'      => 1,
+        'ano'                => 2018
+    ];
+    $modulos = App_Model_IedFinder::getQuantidadeDeModulosMatricula(1, $matricula);
 
     $this->assertEquals(
       4, $modulos,
