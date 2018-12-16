@@ -318,66 +318,11 @@ class App_Model_IedFinderTest extends UnitBaseTest
     );
   }
 
-  public function testGetMatricula()
+  public function testGetMatriculaAlunoNaoEnturmado()
   {
-      $this->markTestSkipped('must be revisited.');
-    $expected = array(
-      'cod_matricula'       => 1,
-      'ref_ref_cod_serie'   => 1,
-      'ref_ref_cod_escola'  => 1,
-      'ref_cod_curso'       => 1,
-      'ref_cod_turma'       => 1,
-      'turma_nome'          => 'Turma 1',
-      'curso_carga_horaria' => 800,
-      'curso_hora_falta'    => (50 /60),
-      'serie_carga_horaria' => 800,
-      'curso_nome'          => '',
-      'serie_nome'          => '',
-      'serie_concluinte'    => ''
-    );
-
-    $returnMatricula = array('cod_matricula' => 1, 'ref_ref_cod_serie' => 1, 'ref_ref_cod_escola' => 1, 'ref_cod_curso' => 1);
-    $returnTurma = array(array('ref_cod_matricula' => 1, 'ref_cod_turma' => 1, 'nm_turma' => 'Turma 1', 'ativo' => 1));
-    $returnSerie = array('cod_serie' => 1, 'carga_horaria' => 800, 'regra_avaliacao_id' => 1);
-    $returnCurso = array('cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 1);
-
-    $matriculaMock = $this->getCleanMock('clsPmieducarMatricula');
-    $matriculaMock->expects($this->once())
-                  ->method('detalhe')
-                  ->will($this->returnValue($returnMatricula));
-
-    $turmaMock = $this->getCleanMock('clsPmieducarMatriculaTurma');
-    $turmaMock->expects($this->any())
-              ->method('lista')
-              ->with(1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1)
-              ->will($this->returnValue($returnTurma));
-
-    $serieMock = $this->getCleanMock('clsPmieducarSerie');
-    $serieMock->expects($this->any())
-              ->method('detalhe')
-              ->will($this->returnValue($returnSerie));
-
-    $cursoMock = $this->getCleanMock('clsPmieducarCurso');
-    $cursoMock->expects($this->any())
-              ->method('detalhe')
-              ->will($this->returnValue($returnCurso));
-
-    $modelMock = $this->getCleanMock('Portabilis_Utils_Database');
-    $modelMock->expects($this->any())
-              ->method('selectRow')
-              ->will($this->returnValue($returnCurso));
-
-    CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matriculaMock, NULL, TRUE);
-    CoreExt_Entity::addClassToStorage('clsPmieducarMatriculaTurma', $turmaMock, NULL, TRUE);
-    CoreExt_Entity::addClassToStorage('clsPmieducarSerie', $serieMock, NULL, TRUE);
-    CoreExt_Entity::addClassToStorage('clsPmieducarCurso', $cursoMock, NULL, TRUE);
-    CoreExt_Entity::addClassToStorage('Portabilis_Utils_Database', $modelMock, NULL, TRUE);
-
-    $matricula = App_Model_IedFinder::getMatricula(1);
-    $this->assertEquals(
-      $expected, $matricula,
-      '::getMatricula() retorna os dados (escola, série, curso, turma e carga horária) de uma matrícula.'
-    );
+    $this->expectException('App_Model_Exception');
+    $this->expectExceptionMessage('Aluno não enturmado.');
+    App_Model_IedFinder::getMatricula(1);
   }
 
   public function testGetRegraAvaliacaoPorMatricula()
