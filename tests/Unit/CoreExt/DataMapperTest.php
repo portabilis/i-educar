@@ -299,15 +299,19 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testInsereNovoRegistroComChaveComposta()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
          ->will($this->returnValue(TRUE));
+
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
 
     $entity = new CoreExt_EntityCompoundStub();
     $entity->pessoa = 1;
     $entity->curso  = 1;
     $entity->confirmado = FALSE;
+    $entity->markOld();
 
     $mapper = new CoreExt_EntityCompoundDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
