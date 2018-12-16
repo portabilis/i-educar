@@ -319,10 +319,19 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testInsereNovoRegistroComChaveCompostaComUmaNulaLancaExcecao()
   {
-      $this->markTestSkipped('must be revisited.');
     $entity = new CoreExt_EntityCompoundStub();
     $entity->pessoa = 1;
     $entity->confirmado = FALSE;
+    $entity->markOld();
+
+    
+    $this->_db->expects($this->any())
+        ->method('Consulta')
+        ->will($this->returnValue(TRUE));
+
+    $this->_db->expects($this->any())
+        ->method('Tupla')
+        ->will($this->returnValue([]));
 
     $mapper = new CoreExt_EntityCompoundDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
