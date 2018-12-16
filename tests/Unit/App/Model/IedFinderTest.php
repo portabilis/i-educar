@@ -231,7 +231,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
   public function testGetTurmas()
   {
-      $this->markTestSkipped('must be revisited.');
     $returnValue = array(1 => array('cod_turma' => 1, 'nm_turma' => 'Primeiro ano'));
     $expected = array(1 => 'Primeiro ano - Sem ano');
 
