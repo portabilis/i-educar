@@ -343,8 +343,6 @@ class clsPmieducarMatriculaTurma
       $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
       $auditoria->inclusao($detalhe);
 
-      $this->limpaComponentesCurriculares();
-
       return TRUE;
     }
 
