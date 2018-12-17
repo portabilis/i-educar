@@ -67,7 +67,7 @@ class clsCadastro extends clsCampos
 
   var $largura;
   var $tipoacao;
-  var $campos;
+  var $campos = [];
   var $erros;
   var $mensagem;
 
@@ -151,12 +151,12 @@ class clsCadastro extends clsCampos
     }
     else {
       reset($_POST);
-      while (list($variavel, $valor) = each($_POST)) {
-        $this->$variavel = $valor;
+      foreach ($_POST as $variavel => $valor) {
+          $this->$variavel = $valor;
       }
 
       reset($_FILES);
-      while (list($variavel, $valor) = each($_FILES)) {
+      foreach ($_FILES as $variavel => $valor) {
         $this->$variavel = $valor;
       }
 
@@ -291,7 +291,7 @@ class clsCadastro extends clsCampos
     if ($this->campos) {
       reset($this->campos);
 
-      while (list($nome, $componente) = each($this->campos)) {
+      foreach ($this->campos as $nome => $componente) {
         if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
           $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3])."'>\n";
         }
@@ -381,7 +381,7 @@ class clsCadastro extends clsCampos
     function setColor(color)
     { \n";
       reset($this->campos);
-      while (list($nome, $componente) = each($this->campos)) {
+      foreach ($this->campos as $nome => $componente) {
         $validador = $componente[4];
 
         if (!empty($validador)) {
@@ -403,7 +403,7 @@ class clsCadastro extends clsCampos
 
     reset($this->campos);
 
-    while (list($nome, $componente) = each($this->campos)) {
+    foreach ($this->campos as $nome => $componente) {
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
@@ -443,7 +443,7 @@ class clsCadastro extends clsCampos
         $ct_campo = 0;
         $retorno .= "for(var id_campo=0;id_campo<$nome.getId();id_campo++)\n{\n";
 
-        while (list($name,$componente_campo ) = each( $componente)) {
+        foreach ($componente as $name => $componente_campo) {
           $nomeCampo =$componente_campo[1];
           $validador = $componente_campo[2];
 

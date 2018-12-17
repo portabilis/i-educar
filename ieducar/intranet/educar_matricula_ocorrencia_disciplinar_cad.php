@@ -263,7 +263,7 @@ class indice extends clsCadastro
             $ocorrenciaDisciplinar->cod_ocorrencia_disciplinar = $cod_ocorrencia_disciplinar;
 
             $ocorrenciaDisciplinar = $ocorrenciaDisciplinar->detalhe();
- 
+
             $auditoria = new clsModulesAuditoriaGeral("matricula_ocorrencia_disciplinar", $this->pessoa_logada, $cod_ocorrencia_disciplinar);
             $auditoria->inclusao($ocorrenciaDisciplinar);
 
@@ -384,17 +384,25 @@ class indice extends clsCadastro
 
     $tipo_ocorrencia = $det_tmp["nm_tipo"];
 
-    $params   = array('token'        => $GLOBALS['coreExt']['Config']->apis->access_key,
-                      'api_code'     => $cod_ocorrencia_disciplinar,
-                      'student_code' => $cod_aluno,
-                      'description'  => $this->observacao,
-                      'occurred_at'  => $this->data_cadastro,
-                      'unity_code'   => $cod_escola,
-                      'kind'         => $tipo_ocorrencia);
-    $requisicao = new ApiExternaController( array( 'url'            => $instituicao['url_novo_educacao'],
-                                                   'recurso'        => 'ocorrencias-disciplinares',
-                                                   'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
-                                                   'params'         => $params));
+    $params   = [
+      'token'        => $GLOBALS['coreExt']['Config']->apis->access_key,
+      'api_code'     => $cod_ocorrencia_disciplinar,
+      'student_code' => $cod_aluno,
+      'description'  => $this->observacao,
+      'occurred_at'  => $this->data_cadastro,
+      'unity_code'   => $cod_escola,
+      'kind'         => $tipo_ocorrencia,
+    ];
+
+    $requisicao = new ApiExternaController([
+      'url'            => $instituicao['url_novo_educacao'],
+      'recurso'        => 'ocorrencias-disciplinares',
+      'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
+      'params'         => $params,
+      'token_header' => $GLOBALS['coreExt']['Config']->apis->educacao_token_header,
+      'token_key'    => $GLOBALS['coreExt']['Config']->apis->educacao_token_key,
+    ]
+    );
 
 
     return $requisicao->executaRequisicao();

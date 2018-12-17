@@ -19,6 +19,9 @@ class ApiExternaController
         $this->tipoRequisicao = $options['tipoRequisicao'];
         $this->params = $options['params'];
 
+        $this->setTokenHeader($options['token_header']);
+        $this->setTokenKey($options['token_key']);
+
         $this->curl = curl_init();
     }
 
@@ -53,13 +56,34 @@ class ApiExternaController
         return $this->tipoRequisicao;
     }
 
+    private function setTokenHeader($tokenHeader)
+    {
+      $this->tokenHeader = $tokenHeader;
+    }
+
+    private function setTokenKey($tokenKey)
+    {
+      $this->tokenKey = $tokenKey;
+    }
+
+    private function getTokenHeader()
+    {
+      return $this->tokenHeader;
+    }
+
+    private function getTokenKey()
+    {
+      return $this->tokenKey;
+    }
+
     public function executaRequisicao()
     {
         $options = [
-            CURLOPT_URL => $this->getUrl(),
-            CURLOPT_POST => ($this->tipoRequisicao == self::REQUISICAO_POST),
-            CURLOPT_POSTFIELDS => $this->params,
-            CURLOPT_RETURNTRANSFER => true
+          CURLOPT_URL => $this->getUrl(),
+          CURLOPT_POST => ($this->tipoRequisicao == self::REQUISICAO_POST),
+          CURLOPT_POSTFIELDS => $this->params,
+          CURLOPT_RETURNTRANSFER => true,
+          $this->getTokenHeader() => $this->getTokenKey(),
         ];
 
         curl_setopt_array($this->curl, $options);

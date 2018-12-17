@@ -1,3 +1,30 @@
+/database/data
+/database/migrations/extras
+/legacy
+/public/intranet
+/public/module
+/public/modules
+/vendor
+/ieducar-*
+ieducar-*.tar.gz
+.env
+.env.host
+.env.testing
+.php_cs.cache
+docker-compose.override.yml
+phinx.php
+phinx.yml
+
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.phpunit.result.cache
+
 # IDE Files
 ## PHPStorm InteliJ
 *.idea
@@ -18,18 +45,12 @@
 /.gitkeep
 /.vagrant
 /deploy
-/phinx.php
-/phinx.yml
 Vagrantfile
 deploy/.ruby-version
 ieducar/configuration/ieducar.ini
 ieducar/modules/Reports
-ieducar/vendor
 ieducar/intranet/filaunica
 ieducar/intranet/reservavaga
-ieducar/misc/database/migrations/portabilis
-.env
-.php_cs.cache
 
 
 # Docusauros
