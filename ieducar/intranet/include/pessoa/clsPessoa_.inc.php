@@ -26,15 +26,15 @@ class clsPessoa_
     public function __construct($int_idpes = false, $str_nome = false, $int_idpes_cad =false, $str_url = false, $int_tipo = false, $int_idpes_rev =false, $str_data_rev = false, $str_email = false)
     {
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = $_SESSION['id_pessoa'] ?? null;
         session_write_close();
 
         $this->idpes = $int_idpes;
         $this->nome = $str_nome;
-        $this->idpes_cad = $int_idpes_cad ? $int_idpes_cad  : $_SESSION['id_pessoa'];
+        $this->idpes_cad = $int_idpes_cad ? $int_idpes_cad : ($_SESSION['id_pessoa'] ?? null);
         $this->url = $str_url;
         $this->tipo = $int_tipo;
-        $this->idpes_rev = is_numeric($int_idpes_rev) ? $int_idpes_rev :  $_SESSION['id_pessoa'];
+        $this->idpes_rev = is_numeric($int_idpes_rev) ? $int_idpes_rev : ($_SESSION['id_pessoa'] ?? null);
         $this->data_rev = $str_data_rev;
         $this->email = $str_email;
     }

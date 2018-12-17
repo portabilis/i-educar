@@ -44,11 +44,14 @@ class indice extends clsDetalhe
     {
         $this->titulo = "Detalhe do Tipo";
         
-        $id_tipo = @$_GET['id_tipo'];
+        $id_tipo = $_GET['id_tipo'] ?? null;
         $db = new clsBanco();
-        $db->Consulta( "SELECT cod_not_tipo, nm_tipo FROM not_tipo WHERE cod_not_tipo={$id_tipo}" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($id_tipo) {
+            $db->Consulta( "SELECT cod_not_tipo, nm_tipo FROM not_tipo WHERE cod_not_tipo={$id_tipo}" );
+        }
+
+        if ($id_tipo && $db->ProximoRegistro()) {
             list ($cod_tipo, $nome) = $db->Tupla();
             $this->addDetalhe( array("Nome", $nome) );
         }

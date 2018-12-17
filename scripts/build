@@ -1,0 +1,23 @@
+#!/bin/bash
+
+VERSION=`cat composer.json | jq -r '.version' | tr -d '[:space:]'`
+BUILD_FOLDER=ieducar-${VERSION}
+
+mkdir -p ${BUILD_FOLDER}/
+git checkout-index --prefix=${BUILD_FOLDER}/ -a -f
+cd ${BUILD_FOLDER}
+sed -i.bak 's/APP_ENV=local/APP_ENV=production/g' .env.example && rm .env.example.bak
+sed -i.bak 's/APP_DEBUG=true/APP_DEBUG=false/g' .env.example && rm .env.example.bak
+composer install --no-dev --ignore-platform-reqs --optimize-autoloader
+git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
+rm -fR ieducar/modules/Reports/.git
+cd ieducar/modules/Reports/ReportSources
+echo "Compilando relatórios..."
+for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(../../../../vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter cp $line.jrxml -o $line); done
+echo "Fim da compilação"
+cd ../../../../../
+tar -zcvf ieducar-${VERSION}.tar.gz ${BUILD_FOLDER}
+rm -fR ${BUILD_FOLDER}
+echo
+echo "Build realizado!"
+exit 0
