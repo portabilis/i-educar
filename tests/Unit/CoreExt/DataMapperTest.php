@@ -379,13 +379,15 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testApagaRegistroPassandoInstanciaDeEntity()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
-         ->will($this->returnValue(TRUE));
+         ->will($this->onConsecutiveCalls(true));
 
-    $entity = new CoreExt_EntityStub();
-    $entity->id = 1;
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
+
+     $entity = new CoreExt_EntityStub();
 
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $this->assertTrue($mapper->delete($entity));
