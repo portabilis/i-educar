@@ -45,26 +45,25 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe do Grupo";
-        
 
-        $cod_diaria_grupo = @$_GET['cod_diaria_grupo'];
+        $cod_diaria_grupo = $_GET['cod_diaria_grupo'] ?? null;
         
         $db = new clsBanco();
-        $db2 = new clsBanco();
-        $db->Consulta( "SELECT cod_diaria_grupo, desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo='{$cod_diaria_grupo}'" );
-        if( $db->ProximoRegistro() )
-        {
+
+        if ($cod_diaria_grupo) {
+            $db->Consulta( "SELECT cod_diaria_grupo, desc_grupo FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo='{$cod_diaria_grupo}'" );
+        }
+
+        if( $cod_diaria_grupo && $db->ProximoRegistro()) {
             list( $cod_diaria_grupo, $desc_grupo ) = $db->Tupla();
             $this->addDetalhe( array("Grupo", $desc_grupo) );
-        }
-        else 
-        {
+        } else {
             $this->addDetalhe( array( "Erro", "Codigo de diária grupo inválido" ) );
         }
+
         $this->url_editar = "diaria_grupo_cad.php?cod_diaria_grupo={$cod_diaria_grupo}";
         $this->url_novo = "diaria_grupo_cad.php";
         $this->url_cancelar = "diaria_grupo_lst.php";
-
         $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();

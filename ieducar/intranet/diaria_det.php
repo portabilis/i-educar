@@ -47,14 +47,16 @@ class indice extends clsDetalhe
         $this->titulo = "Detalhe do valor";
         
 
-        $cod_diaria = @$_GET['cod_diaria'];
+        $cod_diaria = $_GET['cod_diaria'] ?? null;
         
         $db = new clsBanco();
         $db2 = new clsBanco();
-        
-        $db->Consulta( "SELECT ref_funcionario_cadastro, ref_cod_diaria_grupo, ref_funcionario, conta_corrente, agencia, banco,  dotacao_orcamentaria,  objetivo, data_partida, data_chegada, estadual, destino, data_pedido, vl100,  vl75, vl50, vl25, ref_cod_setor, num_diaria FROM pmidrh.diaria WHERE cod_diaria='{$cod_diaria}'" );
-        if( $db->ProximoRegistro() )
-        {
+
+        if ($cod_diaria) {
+            $db->Consulta( "SELECT ref_funcionario_cadastro, ref_cod_diaria_grupo, ref_funcionario, conta_corrente, agencia, banco,  dotacao_orcamentaria,  objetivo, data_partida, data_chegada, estadual, destino, data_pedido, vl100,  vl75, vl50, vl25, ref_cod_setor, num_diaria FROM pmidrh.diaria WHERE cod_diaria='{$cod_diaria}'" );
+        }
+
+        if ($cod_diaria && $db->ProximoRegistro()) {
             list( $ref_funcionario_cadastro, $ref_cod_diaria_grupo, $ref_funcionario, $conta_corrente, $agencia, $banco, $dotacao_orcamentaria, $objetivo, $data_partida, $data_chegada, $estadual, $destino, $data_pedido, $vl100, $vl75, $vl50, $vl25, $ref_cod_setor, $num_diaria ) = $db->Tupla();
             
             $this->addDetalhe( array( "N&deg;. do roteiro", "<span style=\"font-size: 14px;font-weight:bold;\">{$cod_diaria}</span>" ));
@@ -156,9 +158,8 @@ class indice extends clsDetalhe
             
             $this->array_botao[] = "Arquivo para impressão";
             $this->array_botao_url[] = "diaria_pdf.php?cod_diaria={$cod_diaria}";
-        }
-        else 
-        {
+
+        } else {
             $this->addDetalhe( array( "Erro", "Codigo de diaria invalido" ) );
         }
         
