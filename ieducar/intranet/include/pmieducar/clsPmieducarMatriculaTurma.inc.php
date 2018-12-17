@@ -444,7 +444,7 @@ class clsPmieducarMatriculaTurma
 
         $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
         $auditoria->alteracao($detalheAntigo, $this->detalhe());
-        $this->limpaComponentesCurriculares();
+        
         return TRUE;
       }
     }
@@ -1673,11 +1673,6 @@ class clsPmieducarMatriculaTurma
     }
 
     return FALSE;
-  }
-
-  function limpaComponentesCurriculares(){
-    $ano = $this->getAnoMatricula();
-    CleanComponentesCurriculares::destroyOldResources($ano, $this->ref_cod_matricula);
   }
 
   function getAnoMatricula(){
