@@ -9,7 +9,6 @@ class ClsCamposTest extends TestCase
 {
     public function testShowFileField()
     {
-        $this->markTestSkipped('must be revisited.');
         $clsCampos = new clsCampos();
 
         $clsCampos->campoArquivo('file', 'Foto', '/caminho/foto', 40, '<b>Foto do aluno</b>');
