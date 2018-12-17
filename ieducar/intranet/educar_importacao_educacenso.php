@@ -596,7 +596,12 @@ class indice extends clsCadastro
             $codSerie,
             $codEscola,
             $codDisciplina,
-            1);
+            1,
+            null,
+            null,
+            null,
+            [$this->ano]
+          );
 
     if(!$obj->existe()){
       $obj->cadastra();
@@ -614,7 +619,7 @@ class indice extends clsCadastro
 
       $data['componenteCurricular'] = $codDisciplina;
       $data['anoEscolar'] = $codSerie;
-
+      $data['anosLetivos'] = '{' . $this->ano . '}';
       $entity = $dataMapper->createNewEntityInstance();
       $entity->setOptions($data);
 
@@ -749,6 +754,7 @@ class indice extends clsCadastro
         $vinculo->hora_final = "12:00:00";
         $vinculo->hora_inicio_intervalo = "09:50:00";
         $vinculo->hora_fim_intervalo = "10:20:00";
+        $vinculo->anos_letivos = [$this->ano];
         $vinculo->cadastra();
       }
     }
@@ -797,6 +803,7 @@ class indice extends clsCadastro
         $vinculo->ref_cod_escola = $codEscola;
         $vinculo->ref_usuario_cad = $this->pessoa_logada;
         $vinculo->ativo = 1;
+        $vinculo->anos_letivos = [$this->ano];
         $vinculo->cadastra();
       }
     }

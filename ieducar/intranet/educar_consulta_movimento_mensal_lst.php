@@ -163,35 +163,43 @@ class indice extends clsListagem
   
   table.push('<table class="tablelistagem" style="width: 100%; margin-bottom: 100px;" cellspacing="1" cellpadding="4" border="0">');
     table.push('<tr>');
-      table.push('<td class="titulo-tabela-listagem" colspan="23">Resultados</td>');
+      table.push('<td class="titulo-tabela-listagem" colspan="25">Resultados</td>');
     table.push('</tr>');
 
     table.push('<tr>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Série</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Turma</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">Turno</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="4">Série</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="4">Turma</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="4">Turno</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Matrícula inicial</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="14">Alunos</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="16">Alunos</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Matrícula final</td>');
     table.push('</tr>');
     
     table.push('<tr>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">M</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">F</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">T</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Transf.</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Aband.</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Admitido</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Óbito</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Reclassif.</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Troca (entrou)</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">Troca (saiu)</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">M</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">F</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">T</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">T</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2" rowspan="2">Transf.</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2" rowspan="2">Aband.</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2" rowspan="2">Admitido</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2" rowspan="2">Óbito</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="4">Reclassificado</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="4">Remanejado</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">F</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">T</td>');
     table.push('</tr>');
     
     table.push('<tr>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">saiu</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">entrou</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">saiu</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">entrou</td>');
+    table.push('</tr>');
+    
+    table.push('<tr>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
@@ -229,10 +237,12 @@ class indice extends clsListagem
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_falecido_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificados_m + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificados_f + '</td>');
-      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_m + '</td>');
-      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificadose_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_reclassificadose_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocas_m + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocas_f + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_m + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_m + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_t + '</td>');

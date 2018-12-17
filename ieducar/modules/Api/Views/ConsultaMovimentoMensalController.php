@@ -6,6 +6,7 @@ use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatAbandQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatAdmitQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatFalecidoQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatReclassificadosQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatReclassificadoseQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTrocaeQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTrocasQueryFactory;
 
@@ -135,6 +136,22 @@ class ConsultaMovimentoMensalController extends ConsultaBaseController
     {
         $params['sexo'] = 'F';
         $queryFactory = new MovimentoMensalMatReclassificadosQueryFactory($this->getPDO(), $params);
+
+        return ['alunos' => $queryFactory->getData()];
+    }
+
+    protected function getDataMatReclassificadoseM($params)
+    {
+        $params['sexo'] = 'M';
+        $queryFactory = new MovimentoMensalMatReclassificadoseQueryFactory($this->getPDO(), $params);
+
+        return ['alunos' => $queryFactory->getData()];
+    }
+
+    protected function getDataMatReclassificadoseF($params)
+    {
+        $params['sexo'] = 'F';
+        $queryFactory = new MovimentoMensalMatReclassificadoseQueryFactory($this->getPDO(), $params);
 
         return ['alunos' => $queryFactory->getData()];
     }

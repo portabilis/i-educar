@@ -52,6 +52,10 @@ abstract class Portabilis_Report_ReportCore
      */
     public function addArg($name, $value)
     {
+        if ((string) $name === '') {
+            return false;
+        }
+
         $this->args[$name] = $value;
     }
 

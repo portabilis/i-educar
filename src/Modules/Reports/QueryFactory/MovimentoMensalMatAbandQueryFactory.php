@@ -73,7 +73,7 @@ class MovimentoMensalMatAbandQueryFactory extends QueryFactory
             and mt.ref_cod_turma = t.cod_turma
             and f.sexo = :sexo
             and m.aprovado = 6
-            and mt.abandono = 't'
+            and mt.abandono
             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
         order by
             pessoa.nome asc

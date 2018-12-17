@@ -2,25 +2,48 @@ version: '3'
 
 services:
 
-  ieducar_1604:
-    build: ./docker/ieducar_1604
-    env_file:
-      - .env
-    ports:
-      - 8001:80
-    volumes:
-      - .:/home/portabilis/ieducar
+  nginx:
+    container_name: ieducar-nginx
+    build: docker/nginx
     links:
-      - postgres_95
-    container_name: ieducar_1604
-
-  postgres_95:
+      - php
+    ports:
+      - 80
+    working_dir: /application
     volumes:
-      - /var/lib/postgresql/data
-      - ./docker/postgres_95/init.sql:/docker-entrypoint-initdb.d/00-init.sql
+      - ./:/application
+
+  php:
+    container_name: ieducar-php
+    build: docker/php
+    links:
+      - postgres
+      - redis
+    environment:
+      CORE_EXT_CONFIGURATION_ENV: development
+      XDEBUG_IDEKEY: xdebug
+      XDEBUG_REMOTE_HOST: 127.0.0.1
+      XDEBUG_REMOTE_PORT: 9000
+      XDEBUG_REMOTE_ENABLE: 1
+    working_dir: /application
+    volumes:
+      - ./:/application
+
+  postgres:
+    container_name: ieducar-postgres
     image: postgres:9.5
     environment:
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_DB: ieducar
+      POSTGRES_USER: ieducar
+      POSTGRES_PASSWORD: ieducar
     ports:
-      - 5434:5432
-    container_name: postgres_95
+      - 5432
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+
+  redis:
+    container_name: ieducar-redis
+    image: redis
+    restart: always
+    ports:
+      - 6379

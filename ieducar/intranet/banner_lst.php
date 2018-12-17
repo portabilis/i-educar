@@ -54,7 +54,7 @@ class indice extends clsListagem
         $soma_lateral = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=1" );
         $soma_centro = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=0" );
         
-        $db->Consulta( "SELECT cod_portal_banner, caminho, title, prioridade, link, lateral FROM portal_banner ORDER BY prioridade, title" );
+        $db->Consulta( "SELECT cod_portal_banner, caminho, title, prioridade, link, lateral_ FROM portal_banner ORDER BY prioridade, title" );
         while ($db->ProximoRegistro())
         {
             list ($cod_portal_banner, $caminho, $title, $prioridade, $link, $lateral) = $db->Tupla();

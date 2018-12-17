@@ -1,0 +1,4 @@
+#!/bin/bash
+
+php artisan $1
+echo $? > $2

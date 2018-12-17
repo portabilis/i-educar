@@ -1,0 +1,167 @@
+[production]
+; Nome da aplicação (padrão "i-Educar")
+app.name = ${APP_NAME}
+
+; Define o nome do super usuário, para este usuário não se aplica limitação de multiplo acesso
+app.superuser = admin
+
+; Configurações de banco de dados - puxa valores do arquivo .env (não alterar)
+app.database.hostname = ${DB_HOST}
+app.database.port = ${DB_PORT}
+app.database.dbname = ${DB_DATABASE}
+app.database.username = ${DB_USERNAME}
+app.database.password = ${DB_PASSWORD}
+
+; Define mensagem de pendência administrativa
+app.administrative_pending.exist = false
+app.administrative_pending.msg = "<p>Identificamos pend&ecirc;ncias administrativas da sua institui&ccedil;&atilde;o para utiliza&ccedil;&atilde;o do sistema. Sendo assim, pedimos que o respons&aacute;vel pelo sistema entre em contato com a Portabilis o mais breve.</p><br/><b>Telefone:</b> (48) 3055-3001 <br/> <b>E-mail:</b> contato@portabilis.com.br"
+
+; Configurações da entidade (instituicao)
+; Define o nome da entidade a ser exibido no topo
+app.entity.name = Prefeitura Municipal de i-Educar
+
+; Configurações do armazenamento de imagem Amazon S3
+app.aws.bucketname =
+app.aws.awsacesskey =
+app.aws.awssecretkey =
+
+; Define uma url para redirecionar todas as requisições
+; app.routes.redirect_to = /intranet/manutencao.php
+
+; Define a nomenclatura do exame no diario ou relatórios (0 exame, 1 conselho);
+app.diario.nomenclatura_exame = 0
+
+; Configurações de template
+; Os caminhos de diretórios devem sempre ser relativos a intranet/
+app.template.vars.instituicao = i-Educar
+app.template.pdf.titulo = Relatório i-Educar
+app.template.pdf.logo =
+app.template.layout = login.tpl
+
+; Configurações do Google Tag Manager
+app.gtm.id =
+
+; Configurações do RD Station
+app.rdstation.token =
+app.rdstation.private_token =
+
+; Configurações de localização
+; Define valores padrão para algumas das tarefas de endereçamento como listagem
+; de municípios e de estados.
+; 45 = Brasil
+; SP = Estado de São Paulo
+app.locale.country = 45
+app.locale.province = SP
+
+; Timezone
+; Defina o timezone desejado. Consulte a lista de timezones disponíveis em:
+; <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>.
+app.locale.timezone = America/Sao_Paulo
+
+; Configurações de administração
+; sql_tempo e pagina_tempo são valores em segundo que ao serem excedidos,
+; enviaram um e-mail com um pequeno relatório sobre a página que excedeu
+; os valores. Para enviar o relatório a mais de um endereço de e-mail, adicione
+; mais e-mails ao array app.admin.reports.emails[] (veja a diretiva comentada
+; abaixo). Essa funcionalidade requer um MTA instalado no servidor.
+app.admin.reports.sql_tempo = 3
+app.admin.reports.pagina_tempo = 5
+app.admin.reports.emails[] =
+; app.admin.reports.emails[] = seu.email.2@example.com
+
+; Quantidade em dias para expirar a senha do usuário, ao definir um valor numerico
+; este será usado como padrão para todos usuários.
+app.user_accounts.default_password_expiration_period = 180
+
+; Define se o lançamento de notas será auditado
+app.auditoria.notas = 1
+
+; Permite dependência? Sim = 1;Não = 0
+app.matricula.dependencia = 1
+
+; Configurações de alunos
+; Laudo médico obrigatório para alunos com deficiência? (0 não 1 sim)
+app.alunos.laudo_medico_obrigatorio = 1
+
+app.alunos.nao_apresentar_campo_alfabetizado = 1
+; Label para campos do código no sistema dos alunos
+app.alunos.codigo_sistema = "Código sistema"
+app.alunos.mostrar_codigo_sistema = 1
+; Define se o botão para replicar faltas e notas deve aparecer ou não
+app.faltas_notas.mostrar_botao_replicar = 1
+
+; Configurações mailer
+app.mailer.smtp.from_name = Nome Completo Usuário
+app.mailer.smtp.from_email = username@domain.com.br
+app.mailer.smtp.host = smtp.gmail.com
+app.mailer.smtp.port = 587
+app.mailer.smtp.auth = true
+app.mailer.smtp.username = username@domain.com.br
+app.mailer.smtp.password =
+app.mailer.smtp.encryption =
+app.mailer.debug = false
+; Define dominios com envio de email permitido, senão definido ou vazio permite todos, ex:
+; app.mailer.allowed_domains[] = portabilis.com.br
+; app.mailer.allowed_domains[] = cidade.sc.gov.br
+
+; Configurações google.com/recaptcha (confirmação humana, para evitar robos)
+app.recaptcha.public_key =
+app.recaptcha.private_key =
+app.recaptcha.options.secure = true
+app.recaptcha.options.lang = pt
+app.recaptcha.options.theme = white
+
+; Define chaves de acesso à API do i-Educar
+apis.access_key =
+apis.secret_key =
+apis.educacao_token_header =
+apis.educacao_token_key =
+
+; Configurações de relatórios
+report.diario_classe.dias_temporarios = 30
+report.lei_estudante = Lei municipal TESTE LOCAL
+report.lei_conclusao_ensino_medio = 1319/99
+report.portaria_aprovacao_pontos = Resolução n° 12/2011 - CME, Artigo 7°, § 2°;
+report.modelo_ficha_individual = 'todos'
+report.mostrar_relatorios = ''
+
+; Define o nome do logo a ser usado nos relatórios (via parametro logo)
+; Logos são armazenados em /module/Reports/ReportLogos
+report.logo_file_name = brasil.png
+
+; Define se detalhes sobre os erros ocorridos serão exibidos
+report.show_error_details = true
+
+; Define a fabrica de relatórios padrão
+report.default_factory = Portabilis_Report_ReportFactoryPHPJasper
+
+; Define o diretório dos arquivos fontes dos relatórios
+report.source_path = /application/ieducar/modules/Reports/ReportSources/
+
+; Configurações usadas pelo modulo de tratamento de erros ocorridos na aplicação.
+modules.error.link_to_support = https://forum.ieducar.org/
+modules.error.send_notification_email = true
+; modules.error.notification_email = username@domain.com.br
+modules.error.show_details = true
+modules.error.track = false
+modules.error.tracker_name = EMAIL
+modules.error.honeybadger_key =
+modules.error.email_recipient =
+
+[development : production]
+
+[testing : development]
+
+[localhost : development]
+
+; Use seções especificas para adicionar configs que distinguem entre tenants,
+; Ex.: para o host https://tenant.ieducar.com.br/, pode-se usar esta seção
+; que herda as configurações de production
+
+[tenant.ieducar.com.br : production]
+app.database.dbname = tenant
+app.locale.province = SC
+app.entity.name = Prefeitura Municipal de Portabilis Tecnologia
+report.logo_file_name = tenant.png
+; app.routes.redirect_to = /intranet/suspenso.php
+; app.superuser = admin

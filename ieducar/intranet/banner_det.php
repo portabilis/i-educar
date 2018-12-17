@@ -44,16 +44,17 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Detalhe do Banner";
-        
 
-        $cod_portal_banner = @$_GET['cod_portal_banner'];
+        $cod_portal_banner = $_GET['cod_portal_banner'] ?? null;
 
         $objPessoa = new clsPessoaFisica();
-        
         $db = new clsBanco();
-        $db->Consulta( "SELECT b.ref_ref_cod_pessoa_fj, b.cod_portal_banner, b.caminho, b.title, b.prioridade, b.link, b.lateral FROM portal_banner b WHERE b.cod_portal_banner={$cod_portal_banner}" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($cod_portal_banner) {
+            $db->Consulta( "SELECT b.ref_ref_cod_pessoa_fj, b.cod_portal_banner, b.caminho, b.title, b.prioridade, b.link, b.lateral_ FROM portal_banner b WHERE b.cod_portal_banner={$cod_portal_banner}" );
+        }
+
+        if ($cod_portal_banner && $db->ProximoRegistro()) {
             list ($cod_pessoa, $cod_portal_banner, $caminho, $title, $prioridade, $link, $lateral ) = $db->Tupla();
             list ($nm_pessoa) = $objPessoa->queryRapida($cod_pessoa, "nome");
             $this->addDetalhe( array("Responsável", $nm_pessoa) );
@@ -65,6 +66,7 @@ class indice extends clsDetalhe
             
             $this->addDetalhe( array("Banner", "<img src='fotos/imgs/{$caminho}' title='{$title}' width=\"149\">") );
         }
+
         $this->url_novo = "banner_cad.php";
         $this->url_editar = "banner_cad.php?cod_portal_banner=$cod_portal_banner";
         $this->url_cancelar = "banner_lst.php";

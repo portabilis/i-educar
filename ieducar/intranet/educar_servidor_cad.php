@@ -975,25 +975,33 @@ class indice extends clsCadastro
     @session_write_close();
 
     $existe_funcao_professor = FALSE;
+    $listFuncoesCadastradas = array();
     if ($this->ref_cod_funcao) {
-      $cont = -1;
-      $this->excluiFuncoes();
-      foreach ($this->ref_cod_funcao as $funcao) {
-        $cont++;
-        $funcao_professor = explode('-', $funcao);
-        $funcao = array_shift($funcao_professor);
-        $professor = array_shift($funcao_professor);
+        $cont = -1;
 
-        if ($professor) {
-          $existe_funcao_professor = true;
+        foreach ($this->ref_cod_funcao as $funcao) {
+            $cont++;
+            $funcao_professor = explode('-', $funcao);
+            $funcao = array_shift($funcao_professor);
+            $professor = array_shift($funcao_professor);
+
+            if ($professor) {
+                $existe_funcao_professor = true;
+            }
+
+            $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao);
+            if ($obj_servidor_funcao->existe()) {
+                $this->atualizaFuncao($funcao,$this->matricula[$cont]);
+            } else {
+                $this->cadastraFuncao($funcao,$this->matricula[$cont]);
+            }
+            array_push($listFuncoesCadastradas,$funcao);
         }
 
-        $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $this->matricula[$cont]);
-        $obj_servidor_funcao->cadastra();
-      }
     }
+      $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
 
-    if ($existe_funcao_professor) {
+      if ($existe_funcao_professor) {
       if ($cursos_disciplina) {
         $this->excluiDisciplinas();
         foreach ($cursos_disciplina as $curso => $disciplinas) {
@@ -1024,10 +1032,22 @@ class indice extends clsCadastro
     }
   }
 
-  function excluiFuncoes()
+  function excluiFuncoesRemovidas($funcoes)
   {
     $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
-    $obj_servidor_funcao->excluirTodos();
+    $obj_servidor_funcao->excluirFuncoesRemovidas($funcoes);
+  }
+
+  function atualizaFuncao($funcao,$matricula)
+  {
+      $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $matricula);
+      $obj_servidor_funcao->edita();
+  }
+
+  function cadastraFuncao($funcao,$matricula)
+  {
+      $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $matricula);
+      $obj_servidor_funcao->cadastra();
   }
 
   function excluiDisciplinas()
