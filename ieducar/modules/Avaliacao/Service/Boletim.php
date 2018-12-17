@@ -2926,29 +2926,28 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function saveNotas()
   {
-    if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
-      return $this;
-    }
-
-    $notaAluno = $this->_getNotaAluno();
-    $notas = $this->getNotas();
-
-
-    foreach ($notas as $nota) {
-      $nota->notaAluno = $notaAluno;
-      if($nota instanceof Avaliacao_Model_NotaComponente){
-        $nota->id = $this->_getNotaIdEtapa($nota);
-        $this->getNotaComponenteDataMapper()->save($nota);
-
-      }elseif($nota instanceof Avaliacao_Model_NotaGeral){
-         $nota->id = $this->_getNotaGeralIdEtapa($nota);
-         $this->getNotaGeralDataMapper()->save($nota);
+      if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+          return $this;
       }
-    }
 
-    // Atualiza as médias
-    $this->_updateNotaComponenteMedia();
-    return $this;
+      $notaAluno = $this->_getNotaAluno();
+      $notas = $this->getNotas();
+      
+      foreach ($notas as $nota) {
+          $nota->notaAluno = $notaAluno;
+          if($nota instanceof Avaliacao_Model_NotaComponente){
+              $nota->id = $this->_getNotaIdEtapa($nota);
+              $this->getNotaComponenteDataMapper()->save($nota);
+
+          }elseif($nota instanceof Avaliacao_Model_NotaGeral){
+              $nota->id = $this->_getNotaGeralIdEtapa($nota);
+              $this->getNotaGeralDataMapper()->save($nota);
+          }
+      }
+
+      // Atualiza as médias
+      $this->_updateNotaComponenteMedia();
+      return $this;
   }
 
   /**
@@ -3297,25 +3296,31 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     return App_Model_Matricula::atualizaMatricula($matricula, $usuario, $promover);
   }
 
-
   public function deleteNota($etapa, $ComponenteCurricularId)
   {
-    // zera nota antes de deletar, para que a media seja recalculada
-    try {
-      $nota = new Avaliacao_Model_NotaComponente(array(
-        'componenteCurricular' => $ComponenteCurricularId,
-        'nota' => 0,
-        'etapa' => $etapa
-      ));
-      $this->addNota($nota);
-      $this->save();
-    }
-    catch (Exception $e) {
-      error_log("Excessao ignorada ao zerar nota a ser removida: " . $e->getMessage());
+    if ($etapa != 'Rc') {
+        try {
+            $nota = new Avaliacao_Model_NotaComponente(array(
+                'componenteCurricular' => $ComponenteCurricularId,
+                'nota' => 0,
+                'etapa' => $etapa
+            ));
+            $this->addNota($nota);
+            $this->save();
+        }
+        catch (Exception $e) {
+            error_log("Excessao ignorada ao zerar nota a ser removida: " . $e->getMessage());
+        }
     }
 
     $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
     $this->getNotaComponenteDataMapper()->delete($nota);
+
+    try {
+        $this->save();
+    } catch (Exception $e) {
+        error_log("Excessao ignorada ao zerar nota a ser removida: " . $e->getMessage());
+    }
 
     return $this;
   }
