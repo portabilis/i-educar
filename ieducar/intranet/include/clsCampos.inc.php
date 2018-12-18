@@ -1780,8 +1780,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><span class='form'>$campo</span>{$obrigatorio}{$explicacao}</td><td class='$classe' valign='top'><span class='form'>\n";
                     }
                 } elseif ($tipo) {
-                    if ($componente[10] == true) {
-                        $explicacao = isset($componente[6]) ?
+                    if (!empty($componente[10]) && $componente[10] == true) {
+                        $explicacao = !empty($componente[6]) ?
                             "<br><sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
 
                         $retorno .= "<span class='form'>$campo</span>{$explicacao}\n";
