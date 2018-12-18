@@ -33,6 +33,26 @@ class ReportsInstallCommand extends Command
     }
 
     /**
+     * Return the reports source path.
+     *
+     * @return string
+     */
+    protected function getJasperFiles()
+    {
+        return base_path('ieducar/modules/Reports/ReportSources');
+    }
+
+    /**
+     * Return the JasperStarter binary file.
+     *
+     * @return string
+     */
+    protected function getJasperStarter()
+    {
+        return base_path('vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter');
+    }
+
+    /**
      * Execute the console command.
      *
      * @param Filesystem $filesystem
@@ -57,6 +77,13 @@ class ReportsInstallCommand extends Command
         $connection->unprepared(
             $filesystem->get($file)
         );
+
+        $this->info('Compiling reports files..');
+
+        $jasperFiles = $this->getJasperFiles();
+        $jasperStarter = $this->getJasperStarter();
+
+        passthru('cd ' . $jasperFiles . '; for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(' . $jasperStarter . ' cp $line.jrxml -o $line); done');
 
         $this->call('migrate', [
             '--force' => true
