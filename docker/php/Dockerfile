@@ -43,10 +43,6 @@ RUN docker-php-ext-install zip
 
 RUN apt-get install -y unzip
 
-RUN apt-get install -y locales
-RUN sed -i 's/^#\s*\(pt_BR\)\.U/\1.U/' /etc/locale.gen
-RUN locale-gen
-
 RUN ln -s /application/artisan /usr/local/bin/artisan
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
