@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\unit\Reports;
+namespace Tests\Unit\Reports;
 
 use iEducar\Modules\Reports\QueryFactory\QueryFactory;
 use Tests\SuiteTestCase\TestCase;
