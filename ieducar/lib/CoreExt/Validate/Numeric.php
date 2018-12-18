@@ -29,7 +29,6 @@
  */
 
 require_once 'CoreExt/Validate/Abstract.php';
-require_once 'CoreExt/Locale.php';
 
 /**
  * CoreExt_Validate_Numeric class.
@@ -101,13 +100,10 @@ class CoreExt_Validate_Numeric extends CoreExt_Validate_Abstract
    */
   protected function _sanitize($value)
   {
-    $locale = CoreExt_Locale::getInstance();
-    $decimalPoint = $locale->getCultureInfo('decimal_point');
-
-    // Verifica se possui o ponto decimal do locale e substitui para o
+    // Verifica se possui vírgula como ponto decimal e substitui para o
     // padrão do locale en_US (ponto ".")
-    if (FALSE !== strstr($value, $decimalPoint)) {
-      $value = strtr($value, $decimalPoint, '.');
+    if (FALSE !== strstr($value, ',')) {
+      $value = strtr($value, ',', '.');
       $value = floatval($value);
     }
 

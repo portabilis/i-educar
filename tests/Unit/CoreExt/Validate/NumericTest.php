@@ -1,7 +1,6 @@
 <?php
 
 require_once 'CoreExt/Validate/Numeric.php';
-require_once 'CoreExt/Locale.php';
 
 class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
 {
@@ -10,12 +9,6 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $this->_validator = new CoreExt_Validate_Numeric();
-    }
-
-    protected function tearDown()
-    {
-        $instance = CoreExt_Locale::getInstance();
-        $instance->resetLocale();
     }
 
     /**
@@ -109,37 +102,5 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
     {
         $this->_validator->setOptions(['max' => 0]);
         $this->_validator->isValid(1.5);
-    }
-
-    /**
-     * @group CoreExt_Locale
-     */
-    public function testValorNumericoSemConfigurarOValidadorUsandoLocaleComSeparadorDecimalDiferenteDePonto()
-    {
-        $locale = CoreExt_Locale::getInstance();
-        $locale->setLocale('pt_BR');
-
-        if (strpos($locale->actualCulture['LC_NUMERIC'], 'pt_BR') === false) {
-            $this->markTestSkipped('Locale não instalado.');
-        }
-        $this->assertTrue($this->_validator->isValid('0,0'));
-        $this->assertTrue($this->_validator->isValid('1,5'));
-        $this->assertTrue($this->_validator->isValid('-1.5'));
-    }
-
-    /**
-     * @group CoreExt_Locale
-     */
-    public function testValorNumericoSemConfigurarOValidadorUsandoLocaleComSeparadorPontoParaDecimal()
-    {
-        $locale = CoreExt_Locale::getInstance();
-        $locale->setLocale('en_US');
-
-        if (strpos($locale->actualCulture['LC_NUMERIC'], 'pt_BR') === false) {
-            $this->markTestSkipped('Locale não instalado.');
-        }
-        $this->assertTrue($this->_validator->isValid('0.0'));
-        $this->assertTrue($this->_validator->isValid('1.5'));
-        $this->assertTrue($this->_validator->isValid('-1.5'));
     }
 }

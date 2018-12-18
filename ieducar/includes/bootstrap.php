@@ -19,14 +19,10 @@ if (!file_exists($configFile)) {
     $configFile = PROJECT_ROOT . '/configuration/ieducar.ini';
 }
 
-$locale = CoreExt_Locale::getInstance();
-$locale->setCulture('pt_BR')->setLocale();
-
 global $coreExt;
 
 $coreExt = [];
 $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
-$coreExt['Locale'] = $locale;
 
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 

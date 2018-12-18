@@ -198,14 +198,8 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
             }
         }
 
-        // Usa locale en_US para evitar problemas com pontos flutuantes
-        $this->getLocale()->resetLocale();
-
         // Substitui os tokens
         $replaced = preg_replace($patterns, $values, $formula);
-
-        // Retorna ao locale anterior
-        $this->getLocale()->setLocale();
 
         return $replaced;
     }
