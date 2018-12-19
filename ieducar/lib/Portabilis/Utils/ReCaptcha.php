@@ -2,8 +2,8 @@
 
 require_once 'vendor/autoload.php';
 
-class Portabilis_Utils_ReCaptcha {
-
+class Portabilis_Utils_ReCaptcha
+{
     public static function getWidget()
     {
         $config = $GLOBALS['coreExt']['Config']->app->recaptcha;

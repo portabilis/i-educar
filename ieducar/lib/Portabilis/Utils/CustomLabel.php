@@ -4,10 +4,10 @@ require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
 
 class CustomLabel
 {
-
-    static protected $instance;
+    protected static $instance;
 
     protected $defaults;
+
     protected $custom;
 
     public function __construct($defaultsPath)
