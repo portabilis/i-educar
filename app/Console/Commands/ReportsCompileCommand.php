@@ -18,7 +18,7 @@ class ReportsCompileCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Compile reports files';
 
     /**
      * Return the reports source path.
