@@ -517,9 +517,11 @@ class clsPmieducarTurmaModulo
             $auditoria = new clsModulesAuditoriaGeral('turma_modulo', $this->pessoa_logada, $info['ref_cod_turma']);
             if ($operation == clsModulesAuditoriaGeral::OPERACAO_INCLUSAO) {
                 $auditoria->inclusao($info);
+                continue;
             }
             if ($operation == clsModulesAuditoriaGeral::OPERACAO_EXCLUSAO) {
                 $auditoria->exclusao($info);
+                continue;
             }
         }
     }
