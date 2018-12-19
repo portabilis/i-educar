@@ -40,7 +40,7 @@ class App_Date_Utils
 
         foreach ($dates as $date) {
             $dateYear = self::getYear($date);
-            
+
             if ($year == $dateYear) {
                 $matches++;
             }
