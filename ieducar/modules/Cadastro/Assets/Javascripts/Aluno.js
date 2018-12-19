@@ -917,7 +917,13 @@ var handleGetPersonDetails = function (dataResponse) {
     }
 
     $j('#pessoa_id').val(dataResponse.id);
-    $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
+    var nameFull = dataResponse.id + ' - ' + dataResponse.nome;
+
+    if (dataResponse.nome_social) {
+      nameFull = dataResponse.id + ' - ' + dataResponse.nome_social + ' - Nome de registro: ' + dataResponse.nome;
+    }
+
+    $nomeField.val(nameFull);
 
     var nomePai = dataResponse.nome_pai;
     var nomeMae = dataResponse.nome_mae;
@@ -1056,7 +1062,12 @@ var handleGetPersonDetails = function (dataResponse) {
     }
 
     var cpf = dataResponse.cpf;
-    mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+
+    var mascara = null;
+
+    if (cpf) {
+        mascara = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
 
     $j('#id_federal').val(mascara);
     $j('#data_emissao_rg').val(dataResponse.data_emissao_rg);
@@ -1066,7 +1077,9 @@ var handleGetPersonDetails = function (dataResponse) {
     $j('#cartorio_emissao_certidao_civil').val(dataResponse.cartorio_cert_civil);
 
     $inepCartorio = $j('#cartorio_cert_civil_inep');
-    $inepCartorio.val(dataResponse.id_cartorio + ' - ' + dataResponse.nome_cartorio);
+    if (dataResponse.id_cartorio != null && dataResponse.nome_cartorio != null) {
+        $inepCartorio.val(dataResponse.id_cartorio + ' - ' + dataResponse.nome_cartorio);
+    }
     $j('#cartorio_cert_civil_inep_id').val(dataResponse.cartorio_cert_civil_inep);
 
     // # TODO show aluno photo
@@ -1642,7 +1655,9 @@ function canShowParentsFields() {
                     <fieldset>
                       <legend>Dados b&aacute;sicos</legend>
                       <label for="nome-pessoa-aluno">Nome<span class="campo_obrigatorio">*</span> </label>
-                      <input type="text " name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="49" maxlength="255" class="text">
+                      <input type="text" name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="49" maxlength="255" class="text">
+                      <label for="nome-social-pessoa-aluno">Nome social</label>
+                      <input type="text" name="nome-social-pessoa-aluno" id="nome-social-pessoa-aluno" size="49" maxlength="255" class="text">
                       <label for="sexo-pessoa-aluno">Sexo<span class="campo_obrigatorio">*</span> </label>
                       <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno">
                         <option value="" selected>Sexo</option>
@@ -1690,6 +1705,7 @@ function canShowParentsFields() {
         `);
 
         var name = $j("#nome-pessoa-aluno"),
+            nome_social = $j("#nome-social-pessoa-aluno"),
             sexo = $j("#sexo-pessoa-aluno"),
             estadocivil = $j("#estado-civil-pessoa-aluno"),
             datanasc = $j("#data-nasc-pessoa-aluno"),
@@ -1705,7 +1721,7 @@ function canShowParentsFields() {
             apartamento = $j("#apartamento"),
             bloco = $j("#bloco"),
             andar = $j("#andar"),
-            allFields = $j([]).add(name).add(sexo).add(estadocivil).add(datanasc).add(municipio).add(ddd_telefone_1).add(telefone_1).add(ddd_telefone_mov).add(telefone_mov).add(municipio_id).add(complemento).add(numero).add(letra).add(apartamento).add(bloco).add(andar);
+            allFields = $j([]).add(name).add(nome_social).add(sexo).add(estadocivil).add(datanasc).add(municipio).add(ddd_telefone_1).add(telefone_1).add(ddd_telefone_mov).add(telefone_mov).add(municipio_id).add(complemento).add(numero).add(letra).add(apartamento).add(bloco).add(andar);
 
         municipio.show().toggleClass('geral text').attr('display', 'block').appendTo('#dialog-form-pessoa-aluno tr td:first-child fieldset');
 
@@ -1816,7 +1832,7 @@ function canShowParentsFields() {
 
                     if (bValid) {
                         postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
-                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val());
+                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), nome_social.val());
                         $j(this).dialog("close");
                     }
                 },
@@ -1938,6 +1954,7 @@ function canShowParentsFields() {
             clearEnderecoFields();
 
             name.val(person_details.nome);
+            nome_social.val(person_details.nome_social);
             datanasc.val(person_details.data_nascimento);
             estadocivil.val(person_details.estadocivil);
             sexo.val(person_details.sexo);
@@ -2261,7 +2278,7 @@ function canShowParentsFields() {
 
 
     function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
-      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo) {
+      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social) {
         var data = {
             nome: nome,
             sexo: sexo,
@@ -2277,7 +2294,8 @@ function canShowParentsFields() {
             tipo_nacionalidade: tipo_nacionalidade,
             pais_origem_id: pais_origem_id,
             cor_raca: cor_raca,
-            zona_localizacao_censo: zona_localizacao_censo
+            zona_localizacao_censo: zona_localizacao_censo,
+            nome_social: nome_social
         };
 
         var options = {

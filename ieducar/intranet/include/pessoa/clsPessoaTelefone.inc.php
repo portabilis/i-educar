@@ -47,8 +47,8 @@ class clsPessoaTelefone
         $this->ddd   = $str_ddd;
         $this->fone  = $str_fone;
         $this->tipo  = $int_tipo;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : $_SESSION['id_pessoa'];
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : $_SESSION['id_pessoa'];
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : ($_SESSION['id_pessoa'] ?? null);
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : ($_SESSION['id_pessoa'] ?? null);
         
     }
     

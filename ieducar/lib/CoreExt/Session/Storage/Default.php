@@ -65,7 +65,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
     }
 
     if (!is_null(self::$_sessionId)) {
-      session_id(self::$_sessionId);
+      @session_id(self::$_sessionId);
     }
 
     if (TRUE == $this->getOption('session_auto_start')) {

@@ -44,11 +44,15 @@ class indice extends clsDetalhe
     {
         $this->titulo = "Detalhe do Email";
         
-        $id_email= @$_GET['id_email'];
+        $id_email = $_GET['id_email'] ?? null;
+
         $db = new clsBanco();
-        $db->Consulta( "SELECT cod_mailling_email, nm_pessoa, email FROM mailling_email WHERE cod_mailling_email ={$id_email}" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($id_email) {
+            $db->Consulta( "SELECT cod_mailling_email, nm_pessoa, email FROM mailling_email WHERE cod_mailling_email ={$id_email}" );
+        }
+
+        if ($id_email && $db->ProximoRegistro()) {
             list ($cod_email, $nome,$email) = $db->Tupla();
             $this->addDetalhe( array("Nome", $nome) );
             $this->addDetalhe( array("Email", $email) );

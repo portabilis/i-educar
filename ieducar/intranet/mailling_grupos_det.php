@@ -46,13 +46,20 @@ class indice extends clsDetalhe
         
         $id_grupo = @$_GET['id_grupo'];
         $db = new clsBanco();
-        $db->Consulta( "SELECT cod_mailling_grupo, nm_grupo FROM mailling_grupo WHERE cod_mailling_grupo={$id_grupo}" );
-        if ($db->ProximoRegistro())
-        {
+
+        if ($id_grupo) {
+            $db->Consulta( "SELECT cod_mailling_grupo, nm_grupo FROM mailling_grupo WHERE cod_mailling_grupo={$id_grupo}" );
+        }
+
+        if ($id_grupo && $db->ProximoRegistro()) {
             list ($cod_grupo, $nome) = $db->Tupla();
             $this->addDetalhe( array("Nome", $nome) );
         }
-        $db->Consulta("SELECT nm_pessoa, email FROM mailling_grupo_email mge, mailling_email me WHERE ref_cod_mailling_grupo={$id_grupo} AND cod_mailling_email=ref_cod_mailling_email");
+
+        if ($id_grupo) {
+            $db->Consulta("SELECT nm_pessoa, email FROM mailling_grupo_email mge, mailling_email me WHERE ref_cod_mailling_grupo={$id_grupo} AND cod_mailling_email=ref_cod_mailling_email");
+        }
+
         while ($db->ProximoRegistro()) {
             list($nome, $email) = $db->Tupla();
             $this->addDetalhe(array("Emails Vinculados", "{$nome} - {$email}"));

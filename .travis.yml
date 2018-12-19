@@ -1,42 +1,23 @@
 matrix:
   include:
-    - language: node_js
-      node_js:
-        - '8'
-      if: branch = master
-      branches:
-        only:
-          - master
-      cache:
-        yarn: true
-      script:
-        - if [[ $TRAVIS_BRANCH == "master" ]] && [[ $TRAVIS_PULL_REQUEST == "false" ]]; then
-            git config --global user.name "${GH_NAME}";
-            git config --global user.email "${GH_EMAIL}";
-            echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc;
-            cd website && yarn install && GIT_USER="${GH_NAME}" yarn run publish-gh-pages;
-          fi
     - language: php
       php:
-        - 7.0
+        - 7.2
       addons:
         postgresql: 9.5
         apt:
           packages:
-          - postgresql-9.5
+            - postgresql-9.5
+      env:
+        - APP_ENV=testing
+        - DB_CONNECTION=pgsql
+        - DB_HOST=localhost
+        - DB_PORT=5432
+        - DB_DATABASE=travis
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=
       cache:
         directories:
           - $HOME/.composer/cache
       before_script:
-        - cp phinx.php.travis phinx.php
-        - composer install
-        - ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
-        - ieducar/vendor/bin/phinx migrate
-        - sed -i -e '/<log type="coverage-html.*UTF-8"\/>/g' ieducar/phpunit.xml
-        - sed -i -e 's/CORE_EXT_CONFIGURATION_ENV" value="testing/CORE_EXT_CONFIGURATION_ENV" value="travis/g' ieducar/phpunit.xml
-        - sed -i -e 's/API_URI" value="http:\/\/localhost/API_URI" value="http:\/\/localhost:8000/g' ieducar/phpunit.xml
-        - CORE_EXT_CONFIGURATION_ENV=travis php -S localhost:8000 -t ieducar/ &
-      script:
-        - composer test
-      after_success:
-        - ieducar/vendor/bin/php-coveralls --verbose
+        - composer new-install
