@@ -301,8 +301,8 @@ Sua instalação estará atualizada e você poderá realizar seu
 
 ## Perguntas frequentes (FAQ)
 
-Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](https://github.com/portabilis/i-educar-website/blob/master/docs/faq.md)
+Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](https://github.com/portabilis/i-educar-website/blob/master/docs/faq.md).
 
 ---
 
-Powered by [Portabilis Tecnologia](http://www.portabilis.com.br/)
+Powered by [Portabilis Tecnologia](http://www.portabilis.com.br/).
