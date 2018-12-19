@@ -8,7 +8,6 @@ class App_Date_Utils
      * Retorna o ano de uma string nos formatos dd/mm/yyyy e dd/mm/yyyy hh:ii:ss.
      *
      * @param string $date
-     * @param int
      *
      * @return int
      */
