@@ -280,7 +280,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     public function rewind()
     {
         $data = $this->getSessionData();
-        
+
         reset($this->_sessionData);
     }
 
