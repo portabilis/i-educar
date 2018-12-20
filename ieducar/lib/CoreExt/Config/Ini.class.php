@@ -50,7 +50,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * Verifica se possui a seção desejada.
      *
      * @param string $section
-     * 
+     *
      * @return bool
      */
     public function hasEnviromentSection($section)
@@ -204,8 +204,8 @@ class CoreExt_Config_Ini extends CoreExt_Config
      * );
      * </code>
      *
-     * @param mixed $value O valor da diretiva parseada por parse_ini_file
-     * @param array $keys O array contendo as chaves das diretivas (0 => app, 1 => database, 2 => dbname)
+     * @param mixed $value  O valor da diretiva parseada por parse_ini_file
+     * @param array $keys   O array contendo as chaves das diretivas (0 => app, 1 => database, 2 => dbname)
      * @param array $config O array contêiner com as chaves em suas respectivas dimensões
      *
      * @return array

@@ -176,7 +176,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
      * Formata uma string para o uso de _createHtml().
      *
      * @param string $name
-     * @param bool $indent
+     * @param bool   $indent
      *
      * @return string
      */
@@ -191,8 +191,8 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
      * Cria código Html de um row de tabela.
      *
      * @param string $closure
-     * @param array $rows
-     * @param bool $indent
+     * @param array  $rows
+     * @param bool   $indent
      *
      * @return string
      */

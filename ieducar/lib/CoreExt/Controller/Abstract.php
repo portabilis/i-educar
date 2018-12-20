@@ -198,7 +198,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      * o status code.
      *
      * @param string $url
-     * @param int $code
+     * @param int    $code
      *
      * @return void
      */
@@ -225,7 +225,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
     /**
      * Faz redirecionamento caso condição seja válida e encerra aplicação
      *
-     * @param bool $condition
+     * @param bool   $condition
      * @param string $url
      *
      * @return void

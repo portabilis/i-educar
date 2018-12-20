@@ -109,8 +109,8 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      * // http://example.com
      * </code>
      *
-     * @param string $path O caminho relativo ou absoluto da URL
-     * @param array $options Opções para geração da URL
+     * @param string $path    O caminho relativo ou absoluto da URL
+     * @param array  $options Opções para geração da URL
      *
      * @return string
      */
@@ -125,7 +125,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      * Retorna uma URL formatada. Veja a documentação de url().
      *
      * @param string $path
-     * @param array $options
+     * @param array  $options
      *
      * @return string
      */
@@ -178,9 +178,9 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
     /**
      * Retorna um link HTML simples. Interface externa.
      *
-     * @param string $text O texto a ser apresentado como link HTML
-     * @param string $path O caminho relativo ou absoluto da URL do link
-     * @param array $options Opções para gerar a URL do link
+     * @param string $text    O texto a ser apresentado como link HTML
+     * @param string $path    O caminho relativo ou absoluto da URL do link
+     * @param array  $options Opções para gerar a URL do link
      *
      * @return string
      */
@@ -194,9 +194,9 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
     /**
      * Retorna um link HTML simples.
      *
-     * @param string $text O texto a ser apresentado como link HTML
-     * @param string $path O caminho relativo ou absoluto da URL do link
-     * @param array $options Opções para gerar a URL do link
+     * @param string $text    O texto a ser apresentado como link HTML
+     * @param string $path    O caminho relativo ou absoluto da URL do link
+     * @param array  $options Opções para gerar a URL do link
      *
      * @return string
      */

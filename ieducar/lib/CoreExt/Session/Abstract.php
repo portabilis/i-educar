@@ -183,7 +183,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
      * @link  http://php.net/manual/en/language.oop5.overloading.php
      *
      * @param string|int $key
-     * @param mixed $val
+     * @param mixed      $val
      */
     public function __set($key, $value)
     {
