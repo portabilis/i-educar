@@ -106,7 +106,7 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
      *
      * @return bool|void Redireciona caso a opção 'nivel_acesso_insuficiente' seja
      *                   diferente de NULL.
-     * 
+     *
      * @throws Core_Controller_Page_Exception
      */
     protected function _hasPermissaoCadastra()

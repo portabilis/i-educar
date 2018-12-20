@@ -9,8 +9,8 @@ class App_Model_Matricula
      * Atualiza os dados da matrícula do aluno, promovendo-o ou retendo-o. Usa
      * uma instância da classe legada clsPmieducarMatricula para tal.
      *
-     * @param int $matricula
-     * @param int $usuario
+     * @param int  $matricula
+     * @param int  $usuario
      * @param bool $aprovado
      *
      * @return bool

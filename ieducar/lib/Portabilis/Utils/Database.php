@@ -33,7 +33,6 @@ class Portabilis_Utils_Database
 
         $options = self::mergeOptions($options, $defaultOptions);
 
-
         try {
             if (self::db()->execPreparedQuery($sql, $options['params']) != false) {
                 while (self::db()->ProximoRegistro()) {

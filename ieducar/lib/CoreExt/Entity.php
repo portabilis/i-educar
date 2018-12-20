@@ -155,7 +155,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * @link   http://php.net/manual/en/language.oop5.overloading.php
      *
      * @param string $key
-     * @param mixed $val
+     * @param mixed  $val
      *
      * @return bool|NULL TRUE caso seja uma referência válida ou NULL para o fluxo
      *                   normal do método
@@ -190,7 +190,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             // consideração as referências, salvando-as ou atualizando-as.
             elseif ($val instanceof CoreExt_Entity && isset($val->id)) {
                 $this->_references[$key]['value'] = $this->_getValue($key, $val->id);
-                // Não retorna, queremos aproveitar a instância para não mais carregá-la
+            // Não retorna, queremos aproveitar a instância para não mais carregá-la
                 // em __get().
             }
 
@@ -366,8 +366,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Configura ou adiciona uma nova referência para possibilitar o lazy load
      * entre objetos.
      *
-     * @param string $key O nome do atributo que mapeia para a referência
-     * @param array $data O array com a especificação da referência
+     * @param string $key  O nome do atributo que mapeia para a referência
+     * @param array  $data O array com a especificação da referência
      *
      * @return CoreExt_Entity Provê interface fluída
      *
@@ -415,7 +415,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Setter para o valor de referência de uma reference.
      *
      * @param string $key
-     * @param int $value
+     * @param int    $value
      *
      * @return CoreExt_Entity Provê interface fluída
      */
@@ -430,7 +430,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Setter para uma classe ou nome de classe de um CoreExt_DataMapper da
      * reference.
      *
-     * @param string $key
+     * @param string                                 $key
      * @param CoreExt_DataMapper|CoreExt_Enum|string $class
      *
      * @return CoreExt_Entity Provê interface fluída
@@ -456,7 +456,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * informada por setReferenceClass.
      *
      * @param string $key
-     * @param int $value
+     * @param int    $value
      *
      * @return CoreExt_Entity Provê interface fluída
      */
@@ -601,10 +601,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * CoreExt_Entity::addClassToStorage('CoreExt_Entity', $obj);
      * </code>
      *
-     * @param string $class O nome da classe
-     * @param mixed $instance Uma instância da classe
-     * @param string $file O nome do arquivo onde se encontra a classe
-     * @param bool $sticky Se a instância da classe de ser "grundenda",
+     * @param string $class    O nome da classe
+     * @param mixed  $instance Uma instância da classe
+     * @param string $file     O nome do arquivo onde se encontra a classe
+     * @param bool   $sticky   Se a instância da classe de ser "grundenda",
      *                         não podendo ser posteriormente substituída por uma chamada subsequente
      *
      * @return mixed
@@ -636,7 +636,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * explicitamente para o repositório de classes estático.
      *
      * @param string $class
-     * @param mixed $instance
+     * @param mixed  $instance
      *
      * @return mixed
      *
@@ -949,13 +949,13 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * Retorna um instância de um validador caso um atributo da instância tenha
      * seu valor igual ao da condição.
      *
-     * @param string $key O atributo a ser comparado
-     * @param mixed $value O valor para comparação
+     * @param string $key                O atributo a ser comparado
+     * @param mixed  $value              O valor para comparação
      * @param string $validatorClassName O nome da classe de validação. Deve ser
      *                                   subclasse de CoreExt_Validate_Abstract
-     * @param array $equalsParams Array de opções para o a classe de
+     * @param array  $equalsParams       Array de opções para o a classe de
      *                                   validação caso de $key ser igual a $value
-     * @param array $notEqualsParams Array de opções para o a classe de
+     * @param array  $notEqualsParams    Array de opções para o a classe de
      *                                   validação caso de $key ser diferente de $value
      *
      * @return CoreExt_Validate_Abstract
@@ -990,7 +990,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     /**
      * Configura uma mensagem de erro.
      *
-     * @param string $key
+     * @param string      $key
      * @param string|NULL $message
      *
      * @return CoreExt_Entity Provê interface fluída
@@ -1087,7 +1087,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * </code>
      *
      * @param string $key O nome da propriedade
-     * @param mixed $val O valor original da propriedade
+     * @param mixed  $val O valor original da propriedade
      *
      * @return mixed O valor convertido da propriedade
      */
@@ -1202,8 +1202,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      * informado, retorna o valor referenciado por $atr1.
      *
      * @param CoreExt_Entity|array $instance
-     * @param string $atr1
-     * @param string $atr2
+     * @param string               $atr1
+     * @param string               $atr2
      *
      * @return array
      *

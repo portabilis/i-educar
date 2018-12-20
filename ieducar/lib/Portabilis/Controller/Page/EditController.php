@@ -56,7 +56,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
                 } elseif (!is_bool($result)) {
                     throw new Exception("Invalid value returned from '_save' method: '$result', please return null, true or false!");
                 }
-
             } catch (Exception $e) {
                 $this->messenger()->append('Erro ao gravar altera&ccedil;&otilde;es, por favor, tente novamente.', 'error');
                 error_log('Erro ao gravar alteracoes: ' . $e->getMessage());

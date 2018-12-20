@@ -26,8 +26,8 @@ class FileStream
     /**
      * Construtor.
      *
-     * @param Mimetype $mimetype Objeto Mimetype
-     * @param array $allowedDirs Diretórios permitidos para stream
+     * @param Mimetype $mimetype    Objeto Mimetype
+     * @param array    $allowedDirs Diretórios permitidos para stream
      */
     public function __construct(Mimetype $mimetype, array $allowedDirs = [])
     {

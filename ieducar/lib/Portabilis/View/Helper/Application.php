@@ -32,8 +32,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
      * $applicationHelper->javascript($viewInstance, array('/modules/ModuleName/Assets/Javascripts/ScriptName.js', '...'));
      * </code>
      *
-     * @param object $viewInstance Istancia da view a ser carregado os scripts.
-     * @param array|string $files Lista de scripts a serem carregados.
+     * @param object       $viewInstance Istancia da view a ser carregado os scripts.
+     * @param array|string $files        Lista de scripts a serem carregados.
      *
      * @return null
      */
@@ -64,8 +64,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
      * </code>
      *
      * @param $viewInstance
-     * @param array|string $files Lista de estilos a serem carregados.
-     * @param bool $appendAssetsVersionParam
+     * @param array|string $files                    Lista de estilos a serem carregados.
+     * @param bool         $appendAssetsVersionParam
      *
      * @return null
      */

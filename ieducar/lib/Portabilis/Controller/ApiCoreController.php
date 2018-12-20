@@ -236,7 +236,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $this->appendResponse('any_error_msg', $this->messenger->hasMsgWithType('error'));
 
             $response = SafeJson::encode($this->response);
-
         } catch (Exception $e) {
             error_log("Erro inesperado no metodo prepareResponse da classe ApiCoreController: {$e->getMessage()}");
 

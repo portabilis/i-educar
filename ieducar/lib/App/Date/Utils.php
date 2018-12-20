@@ -27,8 +27,8 @@ class App_Date_Utils
      * Verifica se ao menos uma das datas de um array é do ano especificado.
      *
      * @param array $dates Datas nos formatos dd/mm/yyyy [hh:ii:ss].
-     * @param int $year Ano esperado.
-     * @param int $at Quantidade mínima de datas esperadas no ano $year.
+     * @param int   $year  Ano esperado.
+     * @param int   $at    Quantidade mínima de datas esperadas no ano $year.
      *
      * @return bool TRUE se ao menos uma das datas estiver no ano esperado.
      *

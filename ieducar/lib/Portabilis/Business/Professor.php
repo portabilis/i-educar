@@ -17,7 +17,6 @@ class Portabilis_Business_Professor
             ';
 
             $options = ['params' => [$instituicaoId, $userId], 'return_only' => 'first-field'];
-
         } else {
             $sql = '
                 select funcao.professor 

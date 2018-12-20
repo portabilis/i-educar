@@ -485,10 +485,10 @@ abstract class CoreExt_DataMapper
      * Retorna todos os registros como objetos CoreExt_Entity retornados pela
      * query de _getFindAllStatment().
      *
-     * @param array $columns Atributos a serem carregados. O atributo id é sempre carregado.
+     * @param array $columns             Atributos a serem carregados. O atributo id é sempre carregado.
      * @param array $where
      * @param array $orderBy
-     * @param bool $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
+     * @param bool  $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
      *
      * @return array
      *
@@ -525,11 +525,11 @@ abstract class CoreExt_DataMapper
      * Retorna todos os registros como objetos CoreExt_Entity retornados pela
      * query de _getFindAllStatment() (usando consulta preparada, util para evitar sql injection).
      *
-     * @param array $columns Atributos a serem carregados. O atributo id é sempre carregado.
-     * @param array $where Condicoes preparadas ex: array('arg1 = $1', 'arg2 = $2');
-     * @param array $params Valor das condiçoes ($1, $2 ...) ex: array('1', '3');
+     * @param array $columns             Atributos a serem carregados. O atributo id é sempre carregado.
+     * @param array $where               Condicoes preparadas ex: array('arg1 = $1', 'arg2 = $2');
+     * @param array $params              Valor das condiçoes ($1, $2 ...) ex: array('1', '3');
      * @param array $orderBy
-     * @param bool $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
+     * @param bool  $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
      *
      * @return array
      *
@@ -811,7 +811,7 @@ abstract class CoreExt_DataMapper
      * Mapeia os campos relacionais para os atributos de uma instância de
      * CoreExt_Entity.
      *
-     * @param array $data
+     * @param array          $data
      * @param CoreExt_Entity $instance
      *
      * @return CoreExt_Entity A instância com os atributos mapeados

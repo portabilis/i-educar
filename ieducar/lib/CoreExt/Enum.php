@@ -100,7 +100,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      * @link   http://br2.php.net/manual/en/arrayaccess.offsetset.php
      *
      * @param string|int $offset
-     * @param mixed $value
+     * @param mixed      $value
      *
      * @throws CoreExt_Exception
      */

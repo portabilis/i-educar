@@ -45,7 +45,7 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
         ];
 
         $selectOptions = $this->mergeOptions($options['options'], $defaultSelectOptions);
-        
+
         call_user_func_array([$this->viewInstance, 'campoLista'], $selectOptions);
     }
 }

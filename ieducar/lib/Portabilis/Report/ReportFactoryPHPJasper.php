@@ -58,7 +58,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      * Renderiza o relatório.
      *
      * @param Portabilis_Report_ReportCore $report
-     * @param array $options
+     * @param array                        $options
      *
      * @return void
      *

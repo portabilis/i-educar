@@ -430,10 +430,10 @@ class App_Model_IedFinder extends CoreExt_Entity
      * );
      * </code>
      *
-     * @param int $codEscola
-     * @param int $codCurso
-     * @param int $codTurma
-     * @param int|NULL $ano Ano letivo da escola ou turma. Opcional.
+     * @param int      $codEscola
+     * @param int      $codCurso
+     * @param int      $codTurma
+     * @param int|NULL $ano       Ano letivo da escola ou turma. Opcional.
      *
      * @return array
      */
@@ -484,7 +484,6 @@ class App_Model_IedFinder extends CoreExt_Entity
             );
 
             $modulos = $anoLetivoModulo->lista($ano, $codEscola);
-
         } else {
             $turmaModulo = self::addClassToStorage(
                 'clsPmieducarTurmaModulo',
@@ -545,13 +544,13 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna array com as referências de pmieducar.escola_serie_disciplina
      * a modules.componente_curricular ('ref_ref_cod_disciplina').
      *
-     * @param int $serieId O código do ano escolar/série.
-     * @param int $escolaId
+     * @param int                                             $serieId        O código do ano escolar/série.
+     * @param int                                             $escolaId
      * @param ComponenteCurricular_Model_ComponenteDataMapper $mapper
-     * @param null $disciplinaId
-     * @param null $etapa
-     * @param bool $trazerDetalhes
-     * @param null $ano
+     * @param null                                            $disciplinaId
+     * @param null                                            $etapa
+     * @param bool                                            $trazerDetalhes
+     * @param null                                            $ano
      *
      * @return array
      *
@@ -612,10 +611,10 @@ class App_Model_IedFinder extends CoreExt_Entity
     /**
      * Retorna as instâncias de ComponenteCurricular_Model_Componente de uma turma.
      *
-     * @param int $serieId O código do ano escolar/série da turma.
-     * @param int $escola O código da escola da turma.
-     * @param int $turma O código da turma.
-     * @param ComponenteCurricular_Model_TurmaDataMapper $mapper
+     * @param int                                             $serieId          O código do ano escolar/série da turma.
+     * @param int                                             $escola           O código da escola da turma.
+     * @param int                                             $turma            O código da turma.
+     * @param ComponenteCurricular_Model_TurmaDataMapper      $mapper
      * @param ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper
      *
      * @return array
@@ -632,8 +631,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $etapa = null,
         $trazerDetalhes = true,
         $ano = null
-    )
-    {
+    ) {
         if (is_null($mapper)) {
             require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
             $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
@@ -706,8 +704,8 @@ class App_Model_IedFinder extends CoreExt_Entity
      * retornando-as com a carga horária padrão caso o componente identificado
      * em $componentes possua uma carga horária (atributo cargaHoraria) nula.
      *
-     * @param array $componentes
-     * @param int $anoEscolar
+     * @param array                                           $componentes
+     * @param int                                             $anoEscolar
      * @param ComponenteCurricular_Model_ComponenteDataMapper $mapper
      *
      * @return array
@@ -845,7 +843,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             LIMIT 1
     ';
 
-        $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => $codMatricula]);;
+        $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => $codMatricula]);
+        ;
 
         if (!$matricula) {
             throw new App_Model_Exception('Aluno não enturmado.');
@@ -860,9 +859,9 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados
      * da matrícula.
      *
-     * @param int $codMatricula
+     * @param int                                  $codMatricula
      * @param RegraAvaliacao_Model_RegraDataMapper $mapper
-     * @param array $matricula
+     * @param array                                $matricula
      *
      * @return RegraAvaliacao_Model_Regra
      *
@@ -903,7 +902,7 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados
      * da turma.
      *
-     * @param int $turmaId
+     * @param int                                  $turmaId
      * @param RegraAvaliacao_Model_RegraDataMapper $mapper
      *
      * @return RegraAvaliacao_Model_Regra
@@ -939,14 +938,14 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Exclui todas os componentes curriculares ao qual o aluno está dispensado
      * de cursar.
      *
-     * @param int $codMatricula
+     * @param int                                             $codMatricula
      * @param ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper
-     * @param ComponenteCurricular_Model_TurmaDataMapper $turmaMapper
-     * @param int|null $componenteCurricularId
-     * @param int|null $etapa
-     * @param int|null $turma
-     * @param int|null $matricula
-     * @param bool $trazerDetalhes
+     * @param ComponenteCurricular_Model_TurmaDataMapper      $turmaMapper
+     * @param int|null                                        $componenteCurricularId
+     * @param int|null                                        $etapa
+     * @param int|null                                        $turma
+     * @param int|null                                        $matricula
+     * @param bool                                            $trazerDetalhes
      *
      * @return array
      *
@@ -961,8 +960,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $turma = null,
         $matricula = null,
         $trazerDetalhes = true
-    )
-    {
+    ) {
         if (empty($matricula)) {
             $matricula = self::getMatricula($codMatricula);
         }
@@ -1022,7 +1020,6 @@ class App_Model_IedFinder extends CoreExt_Entity
 
                     $ret[$id] = $componente;
                 }
-
             } else {
                 foreach ($componentes as $id => $componente) {
                     if (in_array($id, $disciplinasDispensa)) {
@@ -1138,7 +1135,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     /**
      * Retorna a quantidade de módulos do ano letivo por uma dada matrícula.
      *
-     * @param int $codMatricula
+     * @param int   $codMatricula
      * @param array $matricula
      *
      * @return int

@@ -57,7 +57,7 @@ class Portabilis_String_Utils
      * @deprecated
      *
      * @param string $str
-     * @param array $options
+     * @param array  $options
      *
      * @return string
      */
@@ -70,7 +70,7 @@ class Portabilis_String_Utils
      * @deprecated
      *
      * @param string $str
-     * @param array $options
+     * @param array  $options
      *
      * @return string
      */
