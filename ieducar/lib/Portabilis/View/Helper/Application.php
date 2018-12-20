@@ -150,7 +150,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
     {
         // AjaxChosen requires this fixup, see https://github.com/meltingice/ajax-chosen
         $fixupCss = '.chzn-container .chzn-results .group-result { display: list-item; }';
-        
+
         Portabilis_View_Helper_Application::embedStylesheet($viewInstance, $fixupCss);
 
         self::loadJavascript($viewInstance, '/modules/Portabilis/Assets/Plugins/AjaxChosen/ajax-chosen.min.js', false);
