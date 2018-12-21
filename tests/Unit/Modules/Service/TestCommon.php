@@ -460,7 +460,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
    */
   protected function _getComponentesTurma()
   {
-    return array();
+    return array([]);
   }
 
   /**
@@ -481,7 +481,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
    */
   protected function _getDispensaDisciplina()
   {
-    return array();
+    return array([1]);
   }
 
   /**
