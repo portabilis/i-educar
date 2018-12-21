@@ -62,8 +62,9 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $expected->porcentagemPresenca = 100;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   public function testSituacaoFaltasAprovado()
