@@ -176,7 +176,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     'tabelaArredondamento' => NULL,
     'formulaMedia'         => NULL,
     'formulaRecuperacao'   => NULL,
-    'porcentagemPresenca'  => 75
+    'porcentagemPresenca'  => 75.0,
+    'notaMaximaExameFinal' => 10,
+    'mediaRecuperacao'     => 4.0
   );
 
   protected $_componenteDataMapperMock = NULL;
@@ -225,7 +227,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   protected function _getServiceInstance()
   {
-      $this->markTestSkipped('must be revisited.');
     // Configura mappers das dependências de Avalilacao_Service_Boletim
     $mappers = array(
       'RegraDataMapper'                     => $this->_getRegraDataMapperMock(),
@@ -572,7 +573,45 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       $mock, NULL, TRUE
     );
 
+    $this->mockDbQuery([[
+        'serie_regra_avaliacao_id' => 1,
+        'ref_ref_cod_escola' => 1,
+        'ref_cod_curso'      => 1,
+        'ref_cod_turma'      => 1,
+        'ref_cod_aluno'      => 1,
+        'ref_ref_cod_serie'  => 1,
+        'ano'                => 2009,
+        'serie_carga_horaria'=> 800,
+        'curso_hora_falta'   => 250 / 300
+    ]]);
+
     return $this;
+  }
+
+  public function mockDbQuery($return)
+  {
+      Portabilis_Utils_Database::$_db = $this->getDbMock();
+
+      Portabilis_Utils_Database::$_db->expects($this->any())
+          ->method('execPreparedQuery')
+          ->will($this->returnValue(true));
+
+      Portabilis_Utils_Database::$_db->expects($this->any())
+          ->method('ProximoRegistro')
+          ->will($this->returnCallback(function() use ($return) {
+              static $total = 0;
+              if($total == count($return)-1) {
+                  return ++$total;
+              }
+              return false;
+          }));
+
+      Portabilis_Utils_Database::$_db->expects($this->any())
+          ->method('Tupla')
+          ->will($this->returnCallback(function() use ($return) {
+              static $total = 0;
+              return $return[$total++];
+          }));
   }
 
   /**
@@ -639,7 +678,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     $mock->expects($this->any())
          ->method('lista')
-         ->with(1, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1)
+         ->with(1, 2009, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1)
          ->will($this->returnValue($this->_getConfigOptions('escolaAnoLetivo')));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarEscolaAnoLetivo',
@@ -710,8 +749,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     $mock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
 
     $mock->expects($this->any())
-         ->method('lista')
-         ->will($this->returnValue($this->_getConfigOptions('dispensaDisciplina')));
+        ->method('disciplinaDispensadaEtapa')
+        ->will($this->returnValue($this->_getConfigOptions('dispensaDisciplina')));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarDispensaDisciplina',
       $mock, NULL, TRUE
