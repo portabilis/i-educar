@@ -163,14 +163,7 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 
     $service = $this->_getServiceInstance();
 
-    $expected = new TabelaArredondamento_Model_TabelaValor(array(
-      'nome'        => 10,
-      'valorMinimo' => 9,
-      'valorMaximo' => 10
-    ));
-
     $ret = $service->preverNotaRecuperacao(1);
-    $this->assertEquals(array($expected->nome, $expected->valorMinimo, $expected->valorMaximo),
-                        array($ret->nome, $ret->valorMinimo, $ret->valorMaximo));
+    $this->assertEquals(4.0, $ret);
   }
 }
