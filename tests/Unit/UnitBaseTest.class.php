@@ -56,7 +56,7 @@ abstract class UnitBaseTest extends TestCase
    * Setter para o atributo $_excludedMethods.
    *
    * @param array $methods
-   * @return \PhpCsFixer\Tests\TestCase Provê interface fluída
+   * @return UnitBaseTest Provê interface fluída
    */
   public function setExcludedMethods(array $methods)
   {
