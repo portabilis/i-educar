@@ -12,7 +12,7 @@ class Portabilis_View_Helper_Input_Core
 {
     public function __construct($viewInstance, $inputsHelper)
     {
-        $this->viewInstance  = $viewInstance;
+        $this->viewInstance = $viewInstance;
         $this->_inputsHelper = $inputsHelper;
 
         $this->loadCoreAssets();

@@ -47,3 +47,6 @@ RUN ln -s /application/artisan /usr/local/bin/artisan
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_PROCESS_TIMEOUT 900
+
+RUN mkdir -p /usr/share/man/man7
+RUN apt-get install -y postgresql-client

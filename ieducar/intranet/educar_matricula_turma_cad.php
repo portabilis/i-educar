@@ -165,7 +165,7 @@ class indice extends clsCadastro
                                                    1);
 
       $enturmacao->data_enturmacao = $this->data_enturmacao;
-
+      $this->atualizaUltimaEnturmacao($matriculaId);
       return $enturmacao->cadastra();
     }
     return false;
@@ -258,6 +258,35 @@ class indice extends clsCadastro
     }
     return 1;
   }
+
+  function atualizaUltimaEnturmacao($matriculaId)
+  {
+    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+    $ultima_turma = $objMatriculaTurma->getUltimaTurmaEnturmacao($matriculaId);
+    $sequencial = $objMatriculaTurma->getMaxSequencialEnturmacao($matriculaId);
+    $lst_ativo = $objMatriculaTurma->lista($matriculaId, $ultima_turma, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $sequencial);
+    $ativo = $lst_ativo[0]['ativo'];
+    if ($sequencial >= 1) {
+        $remanejado = TRUE;
+        $enturmacao = new clsPmieducarMatriculaTurma(
+            $matriculaId,
+            $ultima_turma,
+            $this->pessoa_logada,
+            $this->pessoa_logada,
+            NULL,
+            NULL,
+            $ativo,
+            NULL,
+            $sequencial,
+            NULL,
+            NULL,
+            NULL,
+            $remanejado);
+            return $enturmacao->edita();
+        }
+        return false;
+  }
+
 
 
   function Gerar()

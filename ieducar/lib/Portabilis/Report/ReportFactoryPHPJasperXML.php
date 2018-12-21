@@ -69,7 +69,7 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
      * Renderiza o relatório.
      *
      * @param Portabilis_Report_ReportCore $report
-     * @param array $options
+     * @param array                        $options
      *
      * @return void
      *

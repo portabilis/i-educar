@@ -123,7 +123,7 @@ class EditController extends Core_Controller_Page_EditController
             'tipo_base',
             $this->_getLabel('tipo_base'),
             $tipoBase->getEnums(),
-            $this->getEntity()->get('tipo_base')
+            $this->getEntity()->get('tipo_base') ?? ComponenteCurricular_Model_TipoBase::DEFAULT
         );
 
         // Área de conhecimento
@@ -214,11 +214,3 @@ class EditController extends Core_Controller_Page_EditController
         }
     }
 }
-
-//seta o radio automaticamente como primeiro valor
-echo '<script type="text/javascript">
-        document.ready = function(){
-          element = document.getElementById("tipo_base");
-          element.checked = true;
-        };
-      </script>';
