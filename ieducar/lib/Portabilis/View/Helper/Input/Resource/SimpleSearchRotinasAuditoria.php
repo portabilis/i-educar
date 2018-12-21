@@ -5,7 +5,8 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class Portabilis_View_Helper_Input_Resource_SimpleSearchRotinasAuditoria extends Portabilis_View_Helper_Input_SimpleSearch
 {
-    protected function resourceValue($id) {
+    protected function resourceValue($id)
+    {
         return $id;
     }
 

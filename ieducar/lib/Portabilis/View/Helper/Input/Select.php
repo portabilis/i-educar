@@ -1,69 +1,34 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Portabilis
- * @since     Arquivo disponível desde a versão 1.1.0
- * @version   $Id$
- */
 
 require_once 'lib/Portabilis/View/Helper/Input/Core.php';
 
+class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core
+{
+    public function select($attrName, $options = [])
+    {
+        $defaultOptions = ['options' => [], 'objectName' => '', 'resources' => []];
 
-/**
- * Portabilis_View_Helper_Input_Select class.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Portabilis
- * @since     Classe disponível desde a versão 1.1.0
- * @version   @@package_version@@
- */
-class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core {
+        $options = $this->mergeOptions($options, $defaultOptions);
 
-  public function select($attrName, $options = array()) {
-    $defaultOptions       = array('options' => array(), 'objectName' => '', 'resources' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
+        $spacer = !empty($options['objectName']) && !empty($attrName) ? '_' : '';
 
-    $spacer              = ! empty($options['objectName']) && ! empty($attrName) ? '_' : '';
-    $defaultInputOptions = array('id'         => $options['objectName'] . $spacer . $attrName,
-                                 'label'      => ucwords($attrName),
-                                 'resources'  => $options['resources'],
-                                 'value'      => '',
-                                 'callback'   => '',
-                                 'inline'     => false,
-                                 'label_hint' => '',
-                                 'input_hint' => '',
-                                 'disabled'   => false,
-                                 'required'   => true,
-                                 'multiple'   => false);
+        $defaultInputOptions = [
+            'id' => $options['objectName'] . $spacer . $attrName,
+            'label' => ucwords($attrName),
+            'resources' => $options['resources'],
+            'value' => '',
+            'callback' => '',
+            'inline' => false,
+            'label_hint' => '',
+            'input_hint' => '',
+            'disabled' => false,
+            'required' => true,
+            'multiple' => false
+        ];
 
-    $inputOptions          = $this->mergeOptions($options['options'], $defaultInputOptions);
-    $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], array('escape' => false));
+        $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
+        $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], ['escape' => false]);
 
-    call_user_func_array(array($this->viewInstance, 'campoLista'), $inputOptions);
-  }
+        call_user_func_array([$this->viewInstance, 'campoLista'], $inputOptions);
+    }
 }

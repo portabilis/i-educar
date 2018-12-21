@@ -2,16 +2,16 @@
 
 class App_Unificacao_Base
 {
-    protected $chavesManterPrimeiroVinculo = array();
-    protected $chavesManterTodosVinculos = array();
-    protected $chavesDeletarDuplicados = array();
+    protected $chavesManterPrimeiroVinculo = [];
+    protected $chavesManterTodosVinculos = [];
+    protected $chavesDeletarDuplicados = [];
     protected $codigoUnificador;
     protected $codigosDuplicados;
     protected $codPessoaLogada;
     protected $db;
     protected $transacao;
 
-    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, $transacao = TRUE)
+    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, $transacao = true)
     {
         $this->codigoUnificador = $codigoUnificador;
         $this->codigosDuplicados = $codigosDuplicados;
@@ -23,9 +23,11 @@ class App_Unificacao_Base
     public function unifica()
     {
         $this->validaParametros();
+
         if ($this->transacao) {
             $db->begin();
         }
+
         $this->desabilitaTodasTriggers();
         $this->processaChavesDeletarDuplicados();
         $this->processaChavesManterTodosVinculos();
@@ -39,32 +41,40 @@ class App_Unificacao_Base
 
     protected function processaChavesDeletarDuplicados()
     {
-        $stringCodigosDuplicados = implode(',',$this->codigosDuplicados);
+        $stringCodigosDuplicados = implode(',', $this->codigosDuplicados);
+
         foreach ($this->chavesDeletarDuplicados as $key => $value) {
             try {
-                $this->db->Consulta("
-                    UPDATE {$value['tabela']}
-                    SET {$value['coluna']} = {$this->codigoUnificador}
-                    WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
-                ");
+                $this->db->Consulta(
+                    "
+                        UPDATE {$value['tabela']}
+                        SET {$value['coluna']} = {$this->codigoUnificador}
+                        WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
+                    "
+                );
             } catch (Exception $e) {
-                $this->db->Consulta("
-                    DELETE FROM {$value['tabela']}
-                    WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
-                ");
+                $this->db->Consulta(
+                    "
+                        DELETE FROM {$value['tabela']}
+                        WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
+                    "
+                );
             }
         }
     }
 
     protected function processaChavesManterTodosVinculos()
     {
-        $stringCodigosDuplicados = implode(',',$this->codigosDuplicados);
+        $stringCodigosDuplicados = implode(',', $this->codigosDuplicados);
+
         foreach ($this->chavesManterTodosVinculos as $key => $value) {
-            $this->db->Consulta("
-                UPDATE {$value['tabela']}
+            $this->db->Consulta(
+                "
+                    UPDATE {$value['tabela']}
                     SET {$value['coluna']} = {$this->codigoUnificador}
                     WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
-            ");
+                "
+            );
         }
     }
 
@@ -73,30 +83,37 @@ class App_Unificacao_Base
         $chavesConsultar = $this->codigosDuplicados;
         $chavesConsultar[] = $this->codigoUnificador;
         $chavesConsultarString = implode(',', $chavesConsultar);
+
         foreach ($this->chavesManterPrimeiroVinculo as $key => $value) {
-            $this->db->Consulta("
-                DELETE FROM {$value['tabela']}
-                WHERE {$value['coluna']} <>
-                (
-                    SELECT {$value['coluna']}
-                    from {$value['tabela']}
-                    WHERE {$value['coluna']} in ({$chavesConsultarString})
-                    ORDER BY {$value['coluna']} = {$this->codigoUnificador} DESC
-                    LIMIT 1 )
-                AND {$value['coluna']} in ({$chavesConsultarString})
-            ");
-            $this->db->Consulta("
-                UPDATE {$value['tabela']}
-                SET {$value['coluna']} = {$this->codigoUnificador}
-                WHERE {$value['coluna']} IN ({$chavesConsultarString})
-            ");
+            $this->db->Consulta(
+                "
+                    DELETE FROM {$value['tabela']}
+                    WHERE {$value['coluna']} <>
+                    (
+                        SELECT {$value['coluna']}
+                        from {$value['tabela']}
+                        WHERE {$value['coluna']} in ({$chavesConsultarString})
+                        ORDER BY {$value['coluna']} = {$this->codigoUnificador} DESC
+                        LIMIT 1 
+                    )
+                    AND {$value['coluna']} in ({$chavesConsultarString})
+                "
+            );
+
+            $this->db->Consulta(
+                "
+                    UPDATE {$value['tabela']}
+                    SET {$value['coluna']} = {$this->codigoUnificador}
+                    WHERE {$value['coluna']} IN ({$chavesConsultarString})
+                "
+            );
         }
     }
 
     protected function tabelasEnvolvidas()
     {
         $todasChaves = array_merge($this->chavesManterPrimeiroVinculo, $this->chavesManterTodosVinculos);
-        $todasTabelas = array();
+        $todasTabelas = [];
 
         foreach ($todasChaves as $key => $value) {
             $todasTabelas[$value['tabela']] = $value['tabela'];
@@ -108,6 +125,7 @@ class App_Unificacao_Base
     protected function desabilitaTodasTriggers()
     {
         $tabelasEnvolvidas = $this->tabelasEnvolvidas();
+
         foreach ($tabelasEnvolvidas as $key => $tabela) {
             $this->db->Consulta("ALTER TABLE {$tabela} DISABLE TRIGGER ALL");
         }
@@ -116,6 +134,7 @@ class App_Unificacao_Base
     protected function habilitaTodasTriggers()
     {
         $tabelasEnvolvidas = $this->tabelasEnvolvidas();
+
         foreach ($tabelasEnvolvidas as $key => $tabela) {
             $this->db->Consulta("ALTER TABLE {$tabela} ENABLE TRIGGER ALL");
         }
@@ -123,12 +142,14 @@ class App_Unificacao_Base
 
     protected function validaParametros()
     {
-        if ($this->codigoUnificador != (int) $this->codigoUnificador ) {
+        if ($this->codigoUnificador != (int) $this->codigoUnificador) {
             throw new CoreExt_Exception('Parâmetro 1 deve ser o código unificador');
         }
+
         if (!is_array($this->codigosDuplicados) || !count($this->codigosDuplicados)) {
             throw new CoreExt_Exception('Parâmetro 2 deve ser um array de códigos duplicados');
         }
+
         if ($this->codPessoaLogada != (int) $this->codPessoaLogada) {
             throw new CoreExt_Exception('Parâmetro 3 deve ser um inteiro');
         }

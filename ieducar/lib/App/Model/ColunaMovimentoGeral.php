@@ -15,7 +15,7 @@ class ColunaMovimentoGeral extends CoreExt_Enum
     const OITAVO_ANO = 8;
     const NONO_ANO = 9;
 
-    protected $_data = array(
+    protected $_data = [
         self::EDUCACAO_INFANTIL => 'Educação infantil',
         self::PRIMEIRO_ANO => '1° ano',
         self::SEGUNDO_ANO => '2° ano',
@@ -26,7 +26,7 @@ class ColunaMovimentoGeral extends CoreExt_Enum
         self::SETIMO_ANO => '7° ano',
         self::OITAVO_ANO => '8° ano',
         self::NONO_ANO => '9° ano'
-    );
+    ];
 
     public static function getInstance()
     {

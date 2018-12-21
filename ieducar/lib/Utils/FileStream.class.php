@@ -2,19 +2,19 @@
 
 class FileStream
 {
-  /**
-   * Instância da classe Mimetype
-   *
-   * @var Mimetype
-   */
-    protected $mimetype    = null;
+    /**
+     * Instância da classe Mimetype
+     *
+     * @var Mimetype
+     */
+    protected $mimetype = null;
 
     /**
      * Caminho do arquivo para stream
      *
      * @var string
      */
-    protected $filepath    = null;
+    protected $filepath = null;
 
     /**
      * Array de diretórios permitidos para stream de arquivos.
@@ -32,6 +32,7 @@ class FileStream
     public function __construct(Mimetype $mimetype, array $allowedDirs = [])
     {
         $this->mimetype = $mimetype;
+
         $this->setAllowedDirectories((array) $allowedDirs);
     }
 
@@ -71,11 +72,11 @@ class FileStream
     {
         $fileinfo = pathinfo($filepath);
 
-        if (! $this->isDirectoryAllowed($fileinfo['dirname'])) {
+        if (!$this->isDirectoryAllowed($fileinfo['dirname'])) {
             throw new Exception('Acesso ao diretório negado.');
         }
 
-        if (! is_readable($filepath)) {
+        if (!is_readable($filepath)) {
             throw new Exception('Arquivo não existe.');
         }
     }

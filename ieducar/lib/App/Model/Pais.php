@@ -2,5 +2,5 @@
 
 class App_Model_Pais
 {
-  const BRASIL = 45;
+    const BRASIL = 45;
 }
