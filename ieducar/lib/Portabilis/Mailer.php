@@ -2,19 +2,18 @@
 
 require_once 'vendor/autoload.php';
 
-class Portabilis_Mailer {
-
+class Portabilis_Mailer
+{
     public $config = [];
 
     protected $transport;
+
     protected $mailer;
+
     protected $logger;
 
     public function __construct()
     {
-        /* Configurações podem ser alteradas em tempo de execução, ex:
-        $mailerInstance->configs->smtp->username = 'new_username'; */
-
         $this->config = $GLOBALS['coreExt']['Config']->app->mailer;
     }
 
@@ -40,7 +39,7 @@ class Portabilis_Mailer {
 
             $this->mailer = new Swift_Mailer($this->transport);
 
-            if ((bool)$this->config->debug || (bool)$options['debug']) {
+            if ((bool) $this->config->debug || (bool) $options['debug']) {
                 $this->logger = new Swift_Plugins_Loggers_ArrayLogger();
                 $this->mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($this->logger));
             }
@@ -77,7 +76,7 @@ class Portabilis_Mailer {
 
     public function debug()
     {
-        if ((bool)$this->config->debug || (bool)$options['debug']) {
+        if ((bool) $this->config->debug || (bool) $options['debug']) {
             return $this->logger->dump();
         }
     }

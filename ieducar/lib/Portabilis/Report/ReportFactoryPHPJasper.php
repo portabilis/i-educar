@@ -58,10 +58,10 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      * Renderiza o relatório.
      *
      * @param Portabilis_Report_ReportCore $report
-     * @param array $options
+     * @param array                        $options
      *
      * @return void
-     * 
+     *
      * @throws Exception
      */
     public function dumps($report, $options = [])
@@ -99,7 +99,6 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         // informar qual tipo de data source será utilizado.
 
         if ($report->useJson()) {
-
             $data = $report->getJsonData();
             $json = json_encode($data);
 
@@ -113,15 +112,14 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
                 ['pdf'],
                 $report->args,
                 [
-                    'driver'=>'json',
+                    'driver' => 'json',
                     'json_query' => $report->getJsonQuery(),
-                    'data_file' =>  $dataFile
+                    'data_file' => $dataFile
                 ],
                 false // Não executar em background garante que o erro será retornado
             )->execute();
 
             unlink($dataFile);
-
         } else {
             $builder->process(
                 $jasperFile,

@@ -98,6 +98,7 @@ class ServidorController extends ApiCoreController
                                                                             AND ccae.componente_curricular_id = ptd.componente_curricular_id)
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
+              AND $2 = any(ccae.anos_letivos)
               GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id, ccae.tipo_nota, s.ativo';
 
             $_servidores = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano]);
