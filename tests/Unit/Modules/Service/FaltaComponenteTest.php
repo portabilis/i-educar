@@ -79,9 +79,11 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
     // Opções dos validadores
 
     // Componentes curriculares existentes para o aluno
+    $expected = $this->_getConfigOptions('componenteCurricular');
+    $actual = $validators['componenteCurricular']->getOption('choices');
     $this->assertEquals(
-      array_keys($this->_getConfigOptions('componenteCurricular')),
-      array_values($validators['componenteCurricular']->getOption('choices'))
+      array_keys($expected),
+      array_values($actual)
     );
 
     // Etapas possíveis para o lançamento de nota
