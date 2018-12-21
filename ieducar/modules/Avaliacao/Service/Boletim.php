@@ -2705,7 +2705,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * escolar.
    *
    * @param  int $id
-   * @return TabelaArredondamento_Model_TabelaValor|NULL
+   * @return int|NULL
    * @see    TabelaArredondamento_Model_Tabela#predictValue()
    */
   public function preverNotaRecuperacao($id)
