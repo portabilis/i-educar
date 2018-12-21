@@ -41,6 +41,8 @@ class clsPmieducarTurmaModulo
     var $data_fim;
     var $dias_letivos;
 
+    var $pessoa_logada;
+
     // propriedades padrao
 
     /**
@@ -110,6 +112,7 @@ class clsPmieducarTurmaModulo
         $db = new clsBanco();
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}turma_modulo";
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
 
         $this->_campos_lista = $this->_todos_campos = "ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos";
 
@@ -447,6 +450,80 @@ class clsPmieducarTurmaModulo
             return true;
         }
         return false;
+    }
+    
+    public function removeStepsOfClassesForCourseAndYear($courseCode, $year)
+    {
+        if (!is_numeric($courseCode) || !is_numeric($year)) {
+            return false;
+        }
+        
+        $sql = "
+            DELETE FROM {$this->_tabela}
+            WHERE ref_cod_turma IN (
+                SELECT cod_turma FROM pmieducar.turma
+                WHERE ref_cod_curso = {$courseCode}
+                AND ano = {$year}
+            ) RETURNING *;
+        ";
+
+        try {
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            while ($db->ProximoRegistro()) {
+                $tupla[] = $db->Tupla();
+            }
+            $this->auditStepsOfClasses($tupla, clsModulesAuditoriaGeral::OPERACAO_EXCLUSAO);
+        } catch (Throwable $throwable) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function copySchoolStepsIntoClassesForCourseAndYear($courseCode, $year)
+    {
+        if (!is_numeric($courseCode) || !is_numeric($year)) {
+            return false;
+        }
+        
+        $sql = "
+            INSERT INTO pmieducar.turma_modulo
+            SELECT cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos
+            FROM pmieducar.turma
+            INNER JOIN pmieducar.ano_letivo_modulo ON (turma.ref_ref_cod_escola = ano_letivo_modulo.ref_ref_cod_escola
+                AND turma.ano = ano_letivo_modulo.ref_ano)
+            WHERE ref_cod_curso = {$courseCode} AND ano = {$year}
+            RETURNING *;
+        ";
+
+        try {
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            while ($db->ProximoRegistro()) {
+                $tupla[] = $db->Tupla();
+            }
+            $this->auditStepsOfClasses($tupla, clsModulesAuditoriaGeral::OPERACAO_INCLUSAO);
+        } catch (Throwable $throwable) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function auditStepsOfClasses($infos, $operation)
+    {
+        foreach ($infos as $key => $info) {
+            $auditoria = new clsModulesAuditoriaGeral('turma_modulo', $this->pessoa_logada, $info['ref_cod_turma']);
+            if ($operation == clsModulesAuditoriaGeral::OPERACAO_INCLUSAO) {
+                $auditoria->inclusao($info);
+                continue;
+            }
+            if ($operation == clsModulesAuditoriaGeral::OPERACAO_EXCLUSAO) {
+                $auditoria->exclusao($info);
+                continue;
+            }
+        }
     }
 
     /**
