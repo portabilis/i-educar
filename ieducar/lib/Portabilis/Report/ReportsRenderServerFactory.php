@@ -40,7 +40,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
      * Renderiza o relatório.
      *
      * @param Portabilis_Report_ReportCore $report
-     * @param array $options
+     * @param array                        $options
      *
      * @return string
      *

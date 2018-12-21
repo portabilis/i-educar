@@ -45,7 +45,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
         $this->validationErrors = [];
 
-        // clsCadastro settings
         $this->acao_executa_submit = false;
         $this->acao_enviar = 'printReport()';
 
@@ -137,8 +136,10 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
             }
 
             $this->headers($result);
+
             ob_clean();
             flush();
+
             echo $result;
         } catch (Exception $e) {
             if ($GLOBALS['coreExt']['Config']->modules->error->track) {

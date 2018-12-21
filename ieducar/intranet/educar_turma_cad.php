@@ -857,13 +857,6 @@ class indice extends clsCadastro
     $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
     $editou = $objTurma->edita();
 
-    // Caso tenham sido selecionadas discplinas, como se trata de uma edição de turma será rodado uma consulta
-    // que limpa os Componentes Curriculares antigos.
-    if ($this->disciplinas != 1) {
-      $anoLetivo = $this->ano ? $this->ano : date("Y");
-      CleanComponentesCurriculares::destroyOldResources($anoLetivo);
-    }
-
     if (!$editou) {
         $this->mensagem = 'Edição não realizada.';
         echo "<!--\nErro ao editar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";

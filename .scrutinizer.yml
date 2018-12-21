@@ -27,18 +27,19 @@ tools:
 
 build:
   environment:
-    postgresql: true
     variables:
       APP_ENV: 'testing'
       DB_CONNECTION: 'pgsql'
       DB_HOST: 'localhost'
       DB_PORT: '5432'
-      DB_DATABASE: 'ieducar_test'
+      DB_DATABASE: 'scrutinizer'
       DB_USERNAME: 'scrutinizer'
       DB_PASSWORD: 'scrutinizer'
   dependencies:
     before:
-      - psql -c "CREATE DATABASE ieducar_test WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
+      - composer new-install
   tests:
     override:
       command: "true"
+  services:
+    postgres: 9.5

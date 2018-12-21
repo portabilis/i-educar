@@ -132,4 +132,26 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
 
         return $componenteCurricular;
     }
+
+    /**
+     * Busca um componente curricular por nome.
+     *
+     * @param string $name
+     *
+     * @return CoreExt_Entity|null
+     *
+     * @throws Exception
+     */
+    public function findByName($name)
+    {
+        $sql = "SELECT {$this->_getTableColumns()} FROM {$this->_getTableName()} WHERE nome ILIKE '%{$name}%'";
+
+        $this->_getDbAdapter()->Consulta($sql);
+
+        if (empty($this->_getDbAdapter()->ProximoRegistro())) {
+            return null;
+        }
+
+        return $this->_createEntityObject($this->_getDbAdapter()->Tupla());
+    }
 }
