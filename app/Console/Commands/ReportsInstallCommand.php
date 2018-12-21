@@ -58,6 +58,8 @@ class ReportsInstallCommand extends Command
             $filesystem->get($file)
         );
 
+        $this->call('reports:compile');
+
         $this->call('migrate', [
             '--force' => true
         ]);
