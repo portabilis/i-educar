@@ -68,6 +68,7 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
 
   protected function _testAdicionaFaltaNoBoletimVerificaValidadores(Avaliacao_Model_FaltaAbstract $falta)
   {
+      $this->markTestSkipped();
     $this->assertEquals(1, $falta->get('componenteCurricular'));
     $this->assertEquals(1, $falta->etapa);
     $this->assertEquals(10, $falta->quantidade);
