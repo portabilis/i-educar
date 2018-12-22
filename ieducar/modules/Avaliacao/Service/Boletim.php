@@ -31,6 +31,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected $_regra = NULL;
 
+  protected $_mediaGeralDataMapper = NULL;
+
+  protected $_notaGeralDataMapper = NULL;
+
   /**
    * @var ComponenteCurricular_Model_ComponenteDataMapper
    */
@@ -119,6 +123,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * @var array
    */
   protected $_componentes = NULL;
+
+  protected $_componenteCurricularId = NULL;
 
   /**
    * Notas do aluno nos componentes cursados.
