@@ -31,6 +31,10 @@
 
 require_once __DIR__.'/TestCommon.php';
 
+class Fake{
+    public function get(){}
+}
+
 /**
  * Avaliacao_Service_UtilityTest class.
  *
@@ -44,25 +48,13 @@ require_once __DIR__.'/TestCommon.php';
  */
 class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 {
-  public function testArredondaNotaLancaExcecaoSeParametroNaoForInstanciaDeAvaliacaomodelnotacomponenteOuNumerico()
+  public function testArredondaNotaLancaExcecaoSeParametroNaoForNumerico()
   {
-      $this->markTestSkipped();
     $service = $this->_getServiceInstance();
 
-    try {
-      $service->arredondaNota(new Avaliacao_Model_NotaComponente());
-      $this->fail('O valor "instância Avaliacao_Model_NotaComponente()" deveria '
-                  . 'ter causado um exceção pois o atributo "nota" é NULL por padrão.');
-    }
-    catch (CoreExt_Exception_InvalidArgumentException $e) {
-    }
-
-    try {
-      $service->arredondaNota('abc 7.5');
-      $this->fail('O valor "abc 7.5" deveria ter causado um exceção.');
-    }
-    catch (CoreExt_Exception_InvalidArgumentException $e) {
-    }
+        $this->expectException('CoreExt_Exception_InvalidArgumentException');
+        $this->expectExceptionMessage('O parâmetro $nota ("") não é um valor numérico.');
+        $service->arredondaNota(new Avaliacao_Model_NotaComponente());
   }
 
   public function testArredondaNotaNumerica()
