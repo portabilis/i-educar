@@ -174,6 +174,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     'parecerDescritivo'    => RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM,
     'media'                => 6,
     'tabelaArredondamento' => NULL,
+    'tabelaArredondamentoConceitual' => NULL,
     'formulaMedia'         => NULL,
     'formulaRecuperacao'   => NULL,
     'porcentagemPresenca'  => 75.0,
@@ -223,8 +224,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     // Configura atributos de RegraAvaliacao_Model_Regra
     $this->_setRegraOption('formulaMedia', $this->_setUpFormulaMedia())
-         ->_setRegraOption('formulaRecuperacao', $this->_setUpFormulaRecuperacao())
-         ->_setRegraOption('tabelaArredondamento', $this->_setUpTabelaArredondamento());
+        ->_setRegraOption('formulaRecuperacao', $this->_setUpFormulaRecuperacao())
+        ->_setRegraOption('tabelaArredondamento', $this->_setUpTabelaArredondamento())
+        ->_setRegraOption('tabelaArredondamentoConceitual', $this->_setUpTabelaArredondamentoConceitual());
   }
 
   protected function _getServiceInstance()
@@ -852,6 +854,49 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'formulaMedia' => '(Se / Et * 0.6) + (Rc * 0.4)',
       'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO
     ));
+  }
+
+  /**
+   * @return TabelaArredondamento_Model_Tabela
+   */
+  protected function _setUpTabelaArredondamentoConceitual()
+  {
+      // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
+      $data = array(
+          'tabelaArredondamento' => 2,
+          'nome'                 => NULL,
+          'descricao'            => NULL,
+          'valorMinimo'          => -1,
+          'valorMaximo'          => 0
+      );
+
+      $tabelaValores = array();
+
+      for ($i = 0; $i <= 10; $i++) {
+          $data['nome'] = $i;
+          $data['valorMinimo'] += 1;
+          $data['valorMaximo'] += 1;
+
+          if ($i == 10) {
+              $data['valorMinimo'] = 9;
+              $data['valorMaximo'] = 10;
+          }
+
+          $tabelaValores[$i] = new TabelaArredondamento_Model_TabelaValor($data);
+      }
+
+      $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
+      $mock->expects($this->any())
+          ->method('findAll')
+          ->will($this->returnValue($tabelaValores));
+
+      $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
+      $tabelaDataMapper->setTabelaValorDataMapper($mock);
+
+      $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Numéricas'));
+      $tabela->setDataMapper($tabelaDataMapper);
+
+      return $tabela;
   }
 
   /**
