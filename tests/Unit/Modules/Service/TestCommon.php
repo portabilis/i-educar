@@ -577,7 +577,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       $mock, NULL, TRUE
     );
 
-    $this->mockDbQuery([[
+    $this->mockDbPreparedQuery([[
         'serie_regra_avaliacao_id' => 1,
         'ref_ref_cod_escola' => 1,
         'ref_cod_curso'      => 1,
@@ -597,23 +597,29 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     return $this;
   }
 
-  public function mockDbQuery($return)
+  public function mockDbPreparedQuery($return)
   {
       Portabilis_Utils_Database::$_db = $this->getDbMock();
 
-      Portabilis_Utils_Database::$_db->expects($this->any())
+      $execPreparedQuery = Portabilis_Utils_Database::$_db->expects($this->any())
           ->method('execPreparedQuery')
           ->will($this->returnValue(true));
 
+      $returnCallback = function($reset = false) use ($return) {
+          static $total = 0;
+          if($reset) {
+              $total = 0;
+              return false;
+          }
+          if($total == count($return)-1) {
+              return ++$total;
+          }
+          return false;
+      };
+      $returnCallback(true);
       Portabilis_Utils_Database::$_db->expects($this->any())
           ->method('ProximoRegistro')
-          ->will($this->returnCallback(function() use ($return) {
-              static $total = 0;
-              if($total == count($return)-1) {
-                  return ++$total;
-              }
-              return false;
-          }));
+          ->will($this->returnCallback($returnCallback));
 
       Portabilis_Utils_Database::$_db->expects($this->any())
           ->method('Tupla')
