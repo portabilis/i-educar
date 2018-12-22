@@ -2680,7 +2680,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function componenteUsaNotaConceitual($componenteId)
   {
-      $serieId = $this->_options['matriculaData'][ref_ref_cod_serie];
+      $serieId = $this->_options['matriculaData']['ref_ref_cod_serie'];
       $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
 
       if ($tipoNota == ComponenteSerie_Model_TipoNota::CONCEITUAL) {
