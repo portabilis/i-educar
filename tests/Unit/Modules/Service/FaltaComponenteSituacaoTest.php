@@ -52,7 +52,6 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
   public function testSituacaoFaltasEmAndamento()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
     $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, array());
 
@@ -61,10 +60,14 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     // Configura a expectativa
     $expected->situacao            = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     $expected->porcentagemPresenca = 100;
+    $expected->horasFaltas = 0.0;
+    $expected->totalFaltas = 0;
+    $expected->porcentagemFalta = 0.0;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   public function testSituacaoFaltasEmAndamentoUmComponenteAprovadoDeQuatroTotais()
