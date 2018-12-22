@@ -181,6 +181,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     'mediaRecuperacao'     => 4.0
   );
 
+  protected $_componenteCurricularMapperMock = NULL;
+
   protected $_componenteDataMapperMock = NULL;
 
   protected $_componenteTurmaDataMapperMock = NULL;
@@ -481,7 +483,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
    */
   protected function _getDispensaDisciplina()
   {
-    return array([1]);
+    return array([
+        'ref_cod_disciplina' => 1
+    ]);
   }
 
   /**
@@ -582,7 +586,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         'ref_ref_cod_serie'  => 1,
         'ano'                => 2009,
         'serie_carga_horaria'=> 800,
-        'curso_hora_falta'   => 250 / 300
+        'curso_hora_falta'   => 250 / 300,
+        'escola_utiliza_regra_diferenciada' => null,
+        'dependencia'        => null,
+        'aprovado'           => null,
+        'curso_carga_horaria'=> null,
+        'serie_dias_letivos' => null
     ]]);
 
     return $this;

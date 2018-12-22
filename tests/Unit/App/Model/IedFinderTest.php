@@ -231,7 +231,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
   public function testGetTurmas()
   {
-    $returnValue = array(1 => array('cod_turma' => 1, 'nm_turma' => 'Primeiro ano'));
+    $returnValue = array(1 => array('cod_turma' => 1, 'nm_turma' => 'Primeiro ano', 'ano' => null));
     $expected = array(1 => 'Primeiro ano - Sem ano');
 
     $mock = $this->getCleanMock('clsPmieducarTurma');
@@ -347,7 +347,9 @@ class App_Model_IedFinderTest extends UnitBaseTest
       'ref_ref_cod_serie'  => 1,
       'ref_cod_curso'      => 1,
       'aprovado'           => 1,
-      'serie_regra_avaliacao_id' => 1
+      'serie_regra_avaliacao_id' => 1,
+      'ref_cod_aluno'      => 1,
+      'escola_utiliza_regra_diferenciada' => null
     );
 
     // Mock para RegraAvaliacao_Model_DataMapper
@@ -390,7 +392,9 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $matricula = [
         'ref_ref_cod_serie'  => 1,
         'ref_ref_cod_escola' => 1,
-        'ref_cod_turma'      => 1
+        'ref_cod_turma'      => 1,
+        'ano'                => null,
+        'dependencia'        => null
     ];
 
     $componentes = App_Model_IedFinder::getComponentesPorMatricula(

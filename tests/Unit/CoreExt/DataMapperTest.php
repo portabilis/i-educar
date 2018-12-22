@@ -293,6 +293,8 @@ class CoreExt_DataMapperTest extends UnitBaseTest
     $entity->estadoCivil = 'casado';
     $entity->markOld();
 
+    $_SESSION['id_pessoa'] = 1;
+
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
   }
