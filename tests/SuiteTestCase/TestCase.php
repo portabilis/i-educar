@@ -7,9 +7,11 @@ use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 use PHPUnit\DbUnit\Operation\Composite;
 use PHPUnit\DbUnit\TestCase as AbstractTestCase;
+use PHPUnit\DbUnit\TestCaseTrait;
 
-class TestCase extends AbstractTestCase
+class TestCase extends \Tests\TestCase
 {
+    use TestCaseTrait;
     /**
      * @var Connection
      */
@@ -20,7 +22,7 @@ class TestCase extends AbstractTestCase
      *
      * @return Connection
      */
-    protected function getConnection()
+    protected function getConnection($connection = NULL)
     {
         if (!self::$connection) {
             $banco = new clsBanco();
