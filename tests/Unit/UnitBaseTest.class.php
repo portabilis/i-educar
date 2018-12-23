@@ -116,7 +116,7 @@ abstract class UnitBaseTest extends TestCase
    * @param  bool    $callOriginalConstructor
    * @param  bool    $callOriginalClone
    * @param  bool    $callOriginalAutoload
-   * @return PHPUnit_Framework_MockObject_MockObject
+   * @return PHPUnit\Framework\MockObject\MockObject
    */
   public function getCleanMock($className, array $mockMethods = array(),
     array $args = array(), $mockName = '', $callOriginalConstructor = FALSE,
