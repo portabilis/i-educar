@@ -340,7 +340,6 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
 
   public function testIntegracaoMatriculaPromoverAluno()
   {
-      $this->markTestSkipped('must be revisited.');
     $situacao = new stdClass();
     $situacao->aprovado    = TRUE;
     $situacao->andamento   = FALSE;
@@ -350,40 +349,27 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
     $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-    // Mock para RegraAvaliacao_Model_Regra
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
 
     $service = $this->setExcludedMethods(array('promover', '_updateMatricula'))
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->expects($this->at(0))
-            ->method('getSituacaoAluno')
+    $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->expects($this->at(1))
-            ->method('getOption')
-            ->with('aprovado')
-            ->will($this->returnValue(App_Model_MatriculaSituacao::EM_ANDAMENTO));
-
-    $service->expects($this->at(2))
-            ->method('getRegra')
+    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
+    $service->method('getRegra')
             ->will($this->returnValue($regra));
 
-    $service->expects($this->at(3))
-            ->method('getOption')
-            ->with('matricula')
-            ->will($this->returnValue($codMatricula));
-
-    $service->expects($this->at(4))
-            ->method('getOption')
-            ->with('usuario')
-            ->will($this->returnValue($codUsuario));
+    $service->method('getOption')
+            ->will($this->returnValueMap([
+                ['matricula', $codMatricula],
+                ['usuario', $codUsuario]
+            ]));
 
     // Configura mock de instância de classe legada
     $matricula = $this->getCleanMock('clsPmieducarMatricula');
 
-    $matricula->expects($this->at(0))
-              ->method('edita')
+    $matricula->method('edita')
               ->will($this->returnValue(TRUE));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matricula,
