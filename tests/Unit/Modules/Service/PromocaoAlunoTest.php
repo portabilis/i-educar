@@ -77,6 +77,16 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ['matricula', 1]
         ]));
 
+    $regra = $this->getCleanMock('RegraAvaliacao_Model_Regra');
+
+    $regra->expects($this->once())
+        ->method('get')
+        ->will($this->returnValue(0));
+
+    $service->expects($this->any())
+        ->method('getRegra')
+        ->will($this->returnValue($regra));
+
     $this->expectException('CoreExt_Service_Exception');
     $service->promover();
   }
