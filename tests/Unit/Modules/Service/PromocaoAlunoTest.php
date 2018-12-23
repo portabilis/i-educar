@@ -194,47 +194,35 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
 
   public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMedia()
   {
-      $this->markTestSkipped('must be revisited.');
     $situacao = new stdClass();
     $situacao->aprovado    = TRUE;
     $situacao->andamento   = FALSE;
     $situacao->recuperacao = FALSE;
     $situacao->retidoFalta = TRUE;  // Não considera retenção por falta
+    $situacao->aprovadoComDependencia = FALSE;
 
     $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
     $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
     // Mock para RegraAvaliacao_Model_Regra
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA);
 
     $service = $this->setExcludedMethods(array('promover'))
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->expects($this->at(0))
-            ->method('getSituacaoAluno')
+    $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->expects($this->at(1))
-            ->method('getOption')
-            ->with('aprovado')
-            ->will($this->returnValue(App_Model_MatriculaSituacao::EM_ANDAMENTO));
-
-    $service->expects($this->at(2))
-            ->method('getRegra')
+    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA);
+    $service->method('getRegra')
             ->will($this->returnValue($regra));
 
-    $service->expects($this->at(3))
-            ->method('getOption')
-            ->with('matricula')
-            ->will($this->returnValue($codMatricula));
+    $service->method('getOption')
+            ->will($this->returnValueMap([
+                ['matricula', $codMatricula],
+                ['usuario', $codUsuario]
+            ]));
 
-    $service->expects($this->at(4))
-            ->method('getOption')
-            ->with('usuario')
-            ->will($this->returnValue($codUsuario));
-
-    $service->expects($this->at(5))
-            ->method('_updateMatricula')
+    $service->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, TRUE)
             ->will($this->returnValue(TRUE));
 
