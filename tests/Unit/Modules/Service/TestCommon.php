@@ -456,7 +456,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   protected function _getEtapasPossiveis()
   {
     $etapas = count($this->_getConfigOptions('anoLetivoModulo'));
-    return array_merge(range(1, $etapas, 1), array('Rc'));
+    return array_merge(range(1, $etapas, 1), array('Rc', 'An'));
   }
 
   /**
