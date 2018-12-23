@@ -1860,7 +1860,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
     }
-    // #FIXME verificar porque para regras sem nota, não é retornado a situacao.
 
     return $situacao;
   }
