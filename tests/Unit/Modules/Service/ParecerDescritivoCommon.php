@@ -162,7 +162,6 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
    */
   public function testAdicionaParecerNoBoletim()
   {
-      $this->markTestSkipped();
     $service = $this->_getServiceInstance();
 
     $parecer = $this->_getTestAdicionaParecerNoBoletim();
