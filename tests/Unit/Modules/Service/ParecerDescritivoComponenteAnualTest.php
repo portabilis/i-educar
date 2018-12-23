@@ -163,4 +163,8 @@ class Avaliacao_Service_ParecerDescritivoComponenteAnualTest extends Avaliacao_S
       array_values($validators['componenteCurricular']->getOption('choices'))
     );
   }
+  public function testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
+  {
+      $this->markTestSkipped();
+  }
 }
