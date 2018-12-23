@@ -93,48 +93,32 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
 
   public function testPromoverAlunoAutomaticamenteProgressaoContinuada()
   {
-      $this->markTestSkipped('must be revisited.');
     $situacao = new stdClass();
     $situacao->aprovado    = TRUE;
     $situacao->andamento   = FALSE;
     $situacao->recuperacao = FALSE;
     $situacao->retidoFalta = FALSE;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
-
-    // Mock para RegraAvaliacao_Model_Regra
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
-
     $service = $this->setExcludedMethods(array('promover'))
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->expects($this->at(0))
-            ->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
-
-    $service->expects($this->at(1))
-            ->method('getOption')
-            ->with('aprovado')
-            ->will($this->returnValue(App_Model_MatriculaSituacao::EM_ANDAMENTO));
-
-    $service->expects($this->at(2))
+    // Mock para RegraAvaliacao_Model_Regra
+    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
+    $service->expects($this->any())
             ->method('getRegra')
             ->will($this->returnValue($regra));
 
-    $service->expects($this->at(3))
-            ->method('getOption')
-            ->with('matricula')
-            ->will($this->returnValue($codMatricula));
+    $service->expects($this->once())
+            ->method('getSituacaoAluno')
+            ->will($this->returnValue($situacao));
 
-    $service->expects($this->at(4))
-            ->method('getOption')
-            ->with('usuario')
-            ->will($this->returnValue($codUsuario));
+    $service->method('getOption')
+            ->will($this->returnValueMap([
+                ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO]
+            ]));
 
-    $service->expects($this->at(5))
+    $service->expects($this->once())
             ->method('_updateMatricula')
-            ->with($codMatricula, $codUsuario, TRUE)
             ->will($this->returnValue(TRUE));
 
     $this->assertTrue($service->promover());
