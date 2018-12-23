@@ -31,6 +31,14 @@
 
 require_once __DIR__.'/TestCommon.php';
 
+class mockBoletim
+{
+    public function get()
+    {
+        return RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+    }
+}
+
 /**
  * Avaliacao_Service_SituacaoTest class.
  *
@@ -51,6 +59,10 @@ class Avaliacao_Service_SituacaoTest extends Avaliacao_Service_TestCommon
 
     $service = $this->setExcludedMethods(['getSituacaoAluno', 'getSituacaoNotaFalta'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
+
+    $service->expects($this->any())
+        ->method('getRegra')
+        ->will($this->returnValue(new mockBoletim()));
 
     $notaSituacoes = [
       1 => App_Model_MatriculaSituacao::APROVADO,
