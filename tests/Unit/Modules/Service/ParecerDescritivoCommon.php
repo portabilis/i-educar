@@ -57,11 +57,6 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
       RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
     );
 
-    $etapas = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
-    );
-
     if (in_array($parecerDescritivo, $anuais)) {
       return array('An');
     }
