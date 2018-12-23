@@ -229,48 +229,6 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     $this->assertTrue($service->promover());
   }
 
-  public function testPromoverAlunoManualmenteProgressaoNaoContinuadaLancaExcecaoSeNaoConfirmada()
-  {
-      $this->markTestSkipped('must be revisited.');
-    $situacao = new stdClass();
-    $situacao->aprovado    = FALSE; // Reprovado por nota
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
-
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
-
-    // Mock para RegraAvaliacao_Model_Regra
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
-
-    $service = $this->setExcludedMethods(array('promover'))
-                    ->getCleanMock('Avaliacao_Service_Boletim');
-
-    $service->expects($this->at(0))
-            ->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
-
-    $service->expects($this->at(1))
-            ->method('getOption')
-            ->with('aprovado')
-            ->will($this->returnValue(App_Model_MatriculaSituacao::EM_ANDAMENTO));
-
-    $service->expects($this->at(2))
-            ->method('getRegra')
-            ->will($this->returnValue($regra));
-
-    try {
-      $service->promover();
-      $this->fail('Invocar o método "->promover()" sem uma confirmação booleana '
-                  . 'explícita (TRUE ou FALSE) em uma progressão "NAO_CONTINUADA_MANUAL" '
-                  . 'causa exceção.');
-    }
-    catch (CoreExt_Service_Exception $e)
-    {
-    }
-  }
-
   public function testPromoverAlunoManualmenteProgressaoNaoContinuada()
   {
       $this->markTestSkipped('must be revisited.');
