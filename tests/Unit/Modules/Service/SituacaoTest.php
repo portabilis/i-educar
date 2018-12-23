@@ -46,70 +46,69 @@ class Avaliacao_Service_SituacaoTest extends Avaliacao_Service_TestCommon
 {
   public function testSituacaoAluno()
   {
-      $this->markTestSkipped('must be revisited.');
-    $notaSituacoes = array(
+    $nota  = new stdClass();
+    $falta = new stdClass();
+
+    $service = $this->setExcludedMethods(['getSituacaoAluno', 'getSituacaoNotaFalta'])
+                    ->getCleanMock('Avaliacao_Service_Boletim');
+
+    $notaSituacoes = [
       1 => App_Model_MatriculaSituacao::APROVADO,
       2 => App_Model_MatriculaSituacao::APROVADO_APOS_EXAME,
       3 => App_Model_MatriculaSituacao::EM_ANDAMENTO,
       4 => App_Model_MatriculaSituacao::EM_EXAME,
       5 => App_Model_MatriculaSituacao::REPROVADO
-    );
+    ];
 
-    $faltaSituacoes = array(
+    $faltaSituacoes = [
       1 => App_Model_MatriculaSituacao::EM_ANDAMENTO,
       2 => App_Model_MatriculaSituacao::APROVADO,
       3 => App_Model_MatriculaSituacao::REPROVADO
-    );
+    ];
 
     // Possibilidades
-    $expected = array(
-      1 => array(
-        1 => array(FALSE, TRUE, FALSE, FALSE),
-        2 => array(TRUE, FALSE, FALSE, FALSE),
-        3 => array(FALSE, FALSE, TRUE, FALSE)
-      ),
-      2 => array(
-        1 => array(FALSE, TRUE, FALSE, TRUE),
-        2 => array(TRUE, FALSE, FALSE, TRUE),
-        3 => array(FALSE, FALSE, TRUE, TRUE)
-      ),
-      3 => array(
-        1 => array(FALSE, TRUE, FALSE, FALSE),
-        2 => array(FALSE, TRUE, FALSE, FALSE),
-        3 => array(FALSE, TRUE, TRUE, FALSE)
-      ),
-      4 => array(
-        1 => array(FALSE, TRUE, FALSE, TRUE),
-        2 => array(FALSE, TRUE, FALSE, TRUE),
-        3 => array(FALSE, TRUE, TRUE, TRUE)
-      ),
-      5 => array(
-        1 => array(FALSE, TRUE, FALSE, FALSE),
-        2 => array(FALSE, FALSE, FALSE, FALSE),
-        3 => array(FALSE, FALSE, TRUE, FALSE)
-      )
-    );
+    $expected = [
+        1 => [  //Aprova Andame Retido Recupe
+            1 => [FALSE, TRUE,  FALSE, FALSE],
+            2 => [TRUE,  FALSE, FALSE, FALSE],
+            3 => [TRUE,  FALSE, TRUE,  FALSE]
+        ],
+        2 => [
+            1 => [FALSE, TRUE,  FALSE, TRUE ],
+            2 => [TRUE,  FALSE, FALSE, TRUE ],
+            3 => [TRUE,  FALSE, TRUE,  TRUE ]
+        ],
+        3 => [
+            1 => [FALSE, TRUE,  FALSE, FALSE],
+            2 => [FALSE, TRUE,  FALSE, FALSE],
+            3 => [FALSE, FALSE, TRUE,  FALSE]
+        ],
+        4 => [
+            1 => [FALSE, TRUE,  FALSE, TRUE ],
+            2 => [FALSE, TRUE,  FALSE, TRUE ],
+            3 => [FALSE, TRUE,  TRUE,  TRUE ]
+        ],
+        5 => [
+            1 => [FALSE, TRUE,  FALSE, FALSE],
+            2 => [FALSE, FALSE, FALSE, FALSE],
+            3 => [FALSE, FALSE, TRUE,  FALSE]
+        ]
+    ];
 
     foreach ($notaSituacoes as $i => $notaSituacao) {
-      $nota = new stdClass();
       $nota->situacao = $notaSituacao;
 
       foreach ($faltaSituacoes as $ii => $faltaSituacao) {
-        $service = $this->setExcludedMethods(array('getSituacaoAluno'))
-                        ->getCleanMock('Avaliacao_Service_Boletim');
-
-        $falta = new stdClass();
         $falta->situacao = $faltaSituacao;
 
-        $service->expects($this->once())
-                ->method('getSituacaoComponentesCurriculares')
-                ->will($this->returnValue($nota));
-
-        $service->expects($this->once())
+        $service->expects($this->any())
                 ->method('getSituacaoFaltas')
                 ->will($this->returnValue($falta));
 
-        // Testa
+        $service->expects($this->any())
+                ->method('getSituacaoNotas')
+                ->will($this->returnValue($nota));
+
         $situacao = $service->getSituacaoAluno();
 
         $this->assertEquals($expected[$i][$ii][0], $situacao->aprovado, "Aprovado, caso $i - $ii");
