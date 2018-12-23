@@ -55,28 +55,29 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     return $mock;
   }
 
-  /**
-   * @expectedException CoreExt_Service_Exception
-   */
   public function testPromoverAlunoLancaExcecaoCasoSituacaoEstejaEmAndamento()
   {
-      $this->markTestSkipped('must be revisited.');
     $situacao = new stdClass();
-    $situacao->aprovado    = FALSE;
+    $situacao->aprovado    = true;
     $situacao->andamento   = TRUE;
     $situacao->recuperacao = FALSE;
     $situacao->retidoFalta = FALSE;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
-
-    $service = $this->setExcludedMethods(array('promover'))
+    $service = $this->setExcludedMethods(array('promover', '_updateMatricula'))
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->expects($this->at(0))
+    $service->expects($this->once())
             ->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
+    $service->expects($this->any())
+        ->method('getOption')
+        ->will($this->returnValueMap([
+            ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO],
+            ['matricula', 1]
+        ]));
+
+    $this->expectException('CoreExt_Service_Exception');
     $service->promover();
   }
 
