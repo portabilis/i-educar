@@ -62,7 +62,6 @@ class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
 
   public function testDadosDeMatriculaInicializados()
   {
-      $this->markTestSkipped();
     $service = $this->_getServiceInstance();
     $options = $service->getOptions();
 
@@ -84,8 +83,13 @@ class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
     $this->assertEquals(count($this->_getConfigOptions('anoLetivoModulo')),
       $options['etapas']);
 
-    $this->assertEquals($this->_getConfigOptions('componenteCurricular'),
-      $service->getComponentes());
+    $expected = $this->_getConfigOptions('componenteCurricular');
+    $dispensas = $this->_getDispensaDisciplina();
+    foreach($dispensas as $dispensa) {
+        unset($expected[$dispensa['ref_cod_disciplina']]);
+    }
+    $actual = $service->getComponentes();
+    $this->assertEquals($expected, $actual);
   }
 
   public function testInstanciaRegraDeAvaliacaoAtravesDeUmNumeroDeMatricula()
