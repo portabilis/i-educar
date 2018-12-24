@@ -52,7 +52,6 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
 
   public function testSituacaoFaltasEmAndamento()
   {
-      $this->markTestSkipped();
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
     $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, array());
 
@@ -74,11 +73,6 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(
-      new Avaliacao_Model_FaltaGeral(array(
-        'id'         => 1,
-        'quantidade' => 5,
-        'etapa'      => 1
-      )),
       new Avaliacao_Model_FaltaGeral(array(
         'id'         => 2,
         'quantidade' => 5,
@@ -109,8 +103,9 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   public function testSituacaoFaltasReprovado()
