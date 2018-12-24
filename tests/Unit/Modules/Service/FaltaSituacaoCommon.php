@@ -74,10 +74,10 @@ class Avaliacao_Service_FaltaSituacaoCommon extends Avaliacao_Service_TestCommon
     $expected->tipoFalta                = 0;
     $expected->cargaHoraria             = 0;
     $expected->cursoHoraFalta           = 0;
-    $expected->totalFaltas              = 20.0;
-    $expected->horasFaltas              = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
-    $expected->porcentagemFalta         = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
-    $expected->porcentagemPresenca      = 100 - $expected->porcentagemFalta;
+    $expected->totalFaltas              = 0;
+    $expected->horasFaltas              = 0;
+    $expected->porcentagemFalta         = 0;
+    $expected->porcentagemPresenca      = 100;
     $expected->porcentagemPresencaRegra = 0;
     $expected->componentesCurriculares  = array();
 
