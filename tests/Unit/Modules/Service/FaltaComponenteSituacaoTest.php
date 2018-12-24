@@ -63,6 +63,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->horasFaltas = 0.0;
     $expected->totalFaltas = 0;
     $expected->porcentagemFalta = 0.0;
+    $expected->diasLetivos = 960;
 
     $service = $this->_getServiceInstance();
     $actual = $service->getSituacaoFaltas();
@@ -113,6 +114,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos         = 960;
 
     // Configura expectativa para o componente de id '1'
     $componenteHoraFalta =
@@ -231,6 +233,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos         = 960;
 
     // Configura expectativa para o componente de id '2'
     $componenteHoraFalta =
@@ -387,6 +390,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos         = 960;
 
     // Configura expectativa para o componente de id '2'
     $componenteHoraFalta =

@@ -594,8 +594,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         'dependencia'        => null,
         'aprovado'           => 1,
         'curso_carga_horaria'=> 7200,
-        'serie_dias_letivos' => null,
-        'cod_matricula'      => 1
+        'serie_dias_letivos' => 960,
+        'cod_matricula'      => 1,
     ]]);
 
     return $this;
