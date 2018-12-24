@@ -486,7 +486,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   protected function _getDispensaDisciplina()
   {
     return array([
-        'ref_cod_disciplina' => 1
+        'ref_cod_disciplina' => 1,
+        'etapa'              => null
     ]);
   }
 
@@ -591,9 +592,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         'curso_hora_falta'   => 250 / 300,
         'escola_utiliza_regra_diferenciada' => null,
         'dependencia'        => null,
-        'aprovado'           => null,
-        'curso_carga_horaria'=> null,
-        'serie_dias_letivos' => null
+        'aprovado'           => 1,
+        'curso_carga_horaria'=> 7200,
+        'serie_dias_letivos' => null,
+        'cod_matricula'      => 1
     ]]);
 
     return $this;
