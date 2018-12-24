@@ -47,12 +47,11 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
 {
   public function testInstanciaDeNotaComponenteERegistradaApenasUmaVezNoBoletiom()
   {
-      $this->markTestSkipped();
     $service = $this->_getServiceInstance();
 
     $nota = new Avaliacao_Model_NotaComponente(array(
       'componenteCurricular' => 1,
-      'nota'                 => 5
+      'nota'                 => "5.1"
     ));
 
     // Atribuição simples
