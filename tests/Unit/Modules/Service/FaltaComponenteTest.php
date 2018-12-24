@@ -68,7 +68,6 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
 
   protected function _testAdicionaFaltaNoBoletimVerificaValidadores(Avaliacao_Model_FaltaAbstract $falta)
   {
-      $this->markTestSkipped();
     $this->assertEquals(1, $falta->get('componenteCurricular'));
     $this->assertEquals(1, $falta->etapa);
     $this->assertEquals(10, $falta->quantidade);
@@ -81,6 +80,11 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
 
     // Componentes curriculares existentes para o aluno
     $expected = $this->_getConfigOptions('componenteCurricular');
+    $dispensas = $this->_getDispensaDisciplina();
+    foreach($dispensas as $dispensa) {
+        unset($expected[$dispensa['ref_cod_disciplina']]);
+    }
+
     $actual = $validators['componenteCurricular']->getOption('choices');
     $this->assertEquals(
       array_keys($expected),
