@@ -18,5 +18,4 @@ matrix:
         directories:
           - $HOME/.composer/cache
       before_script:
-        - locale-gen pt_BR.UTF-8
         - composer new-install
