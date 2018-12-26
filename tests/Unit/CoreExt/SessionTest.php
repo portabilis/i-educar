@@ -112,9 +112,6 @@ class CoreExt_SessionTest extends TestCase
     $this->assertEquals(1, count($this->_session));
   }
 
-  /**
-   * @backupGlobals enabled
-   */
   public function testOverload()
   {
     $this->assertNull($this->_session->foo, '->foo is not null');
