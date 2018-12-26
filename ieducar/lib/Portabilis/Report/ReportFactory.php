@@ -55,7 +55,7 @@ abstract class Portabilis_Report_ReportFactory
      * Renderiza o relatório.
      *
      * @param Portabilis_Report_ReportCore $report
-     * @param array $options
+     * @param array                        $options
      *
      * @return mixed
      */
