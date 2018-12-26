@@ -605,7 +605,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   {
       Portabilis_Utils_Database::$_db = $this->getDbMock();
 
-      $execPreparedQuery = Portabilis_Utils_Database::$_db->expects($this->any())
+      Portabilis_Utils_Database::$_db->expects($this->any())
           ->method('execPreparedQuery')
           ->will($this->returnValue(true));
 
