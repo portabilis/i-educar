@@ -31,10 +31,6 @@
 
 require_once __DIR__.'/TestCommon.php';
 
-class Fake{
-    public function get(){}
-}
-
 /**
  * Avaliacao_Service_UtilityTest class.
  *
