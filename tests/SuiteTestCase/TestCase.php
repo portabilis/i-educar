@@ -6,10 +6,10 @@ use clsBanco;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 use PHPUnit\DbUnit\Operation\Composite;
-use PHPUnit\DbUnit\TestCase as AbstractTestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
+use \Tests\TestCase as AbstractTestCase;
 
-class TestCase extends \Tests\TestCase
+class TestCase extends AbstractTestCase
 {
     use TestCaseTrait;
     /**
