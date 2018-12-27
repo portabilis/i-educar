@@ -139,9 +139,6 @@ class CoreExt_EntityTest extends UnitBaseTest
     $this->assertFalse($entity->isNull());
   }
 
-  /**
-   * @group CoreExt_Locale
-   */
   public function testAutoConversaoTiposNumericos()
   {
     $entity = new CoreExt_ChildEntityStub();
@@ -169,15 +166,6 @@ class CoreExt_EntityTest extends UnitBaseTest
     $entity->setDataMapper($expected);
 
     $this->assertSame($expected, $entity->getDataMapper());
-  }
-
-  /**
-   * @group CoreExt_Locale
-   */
-  public function testInstanciaRetornaObjetoCoreextLocalePorPadrao()
-  {
-    $entity = new CoreExt_EntityStub();
-    $this->assertInstanceOf('CoreExt_Locale', $entity->getLocale());
   }
 
   /**
