@@ -5,12 +5,28 @@ namespace App\Http\Controllers;
 use Exception;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LegacyController extends Controller
 {
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * LegacyController constructor.
+     *
+     * @param Request $request
+     */
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * Return i-Educar legacy code path.
      *
@@ -172,12 +188,15 @@ class LegacyController extends Controller
      * @param string $filename
      *
      * @return Response
+     *
+     * @throws Exception
      */
     private function requireFileFromLegacy($filename)
     {
         ob_start();
 
         $this->startLegacySession();
+        $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
         $this->loadLegacyBootstrapFile();
         $this->loadLegacyFile($filename);
@@ -198,7 +217,22 @@ class LegacyController extends Controller
      */
     private function startLegacySession()
     {
-        session_start();
+        @session_start();
+    }
+
+    /**
+     * Override PHP Globals if not exists.
+     *
+     * @return void
+     */
+    private function overrideGlobals()
+    {
+        $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? $this->request->getRequestUri();
+
+        $_GET = empty($_GET) ? $this->request->query->all() : $_GET;
+        $_POST = empty($_POST) ? $this->request->request->all() : $_POST;
+        $_FILES = empty($_FILES) ? $this->request->files->all() : $_FILES;
+        $_COOKIE = empty($_COOKIE) ? $this->request->cookies->all() : $_COOKIE;
     }
 
     /**
@@ -207,6 +241,8 @@ class LegacyController extends Controller
      * @param string $uri
      *
      * @return Response
+     *
+     * @throws Exception
      */
     public function intranet($uri)
     {
@@ -217,6 +253,8 @@ class LegacyController extends Controller
      * Load module route file and generate a response.
      *
      * @return Response
+     *
+     * @throws Exception
      */
     public function module()
     {
@@ -229,6 +267,8 @@ class LegacyController extends Controller
      * @param string $uri
      *
      * @return Response
+     *
+     * @throws Exception
      */
     public function modules($uri)
     {

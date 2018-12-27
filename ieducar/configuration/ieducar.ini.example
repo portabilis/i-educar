@@ -112,8 +112,8 @@ app.recaptcha.options.lang = pt
 app.recaptcha.options.theme = white
 
 ; Define chaves de acesso à API do i-Educar
-apis.access_key =
-apis.secret_key =
+apis.access_key = ${API_ACCESS_KEY}
+apis.secret_key = ${API_SECRET_KEY}
 apis.educacao_token_header =
 apis.educacao_token_key =
 

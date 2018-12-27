@@ -1,5 +1,14 @@
 <?php
 
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
+
+$app = require_once __DIR__ . '/../../bootstrap/app.php';
+
+if ($app instanceof Application) {
+    (new LoadEnvironmentVariables())->bootstrap($app);
+}
+
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
