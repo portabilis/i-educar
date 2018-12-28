@@ -31,6 +31,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected $_regra = NULL;
 
+  protected $_mediaGeralDataMapper = NULL;
+
+  protected $_notaGeralDataMapper = NULL;
+
   /**
    * @var ComponenteCurricular_Model_ComponenteDataMapper
    */
@@ -119,6 +123,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * @var array
    */
   protected $_componentes = NULL;
+
+  protected $_componenteCurricularId = NULL;
 
   /**
    * Notas do aluno nos componentes cursados.
@@ -2674,7 +2680,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function componenteUsaNotaConceitual($componenteId)
   {
-      $serieId = $this->_options['matriculaData'][ref_ref_cod_serie];
+      $serieId = $this->_options['matriculaData']['ref_ref_cod_serie'];
       $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
 
       if ($tipoNota == ComponenteSerie_Model_TipoNota::CONCEITUAL) {
@@ -2722,7 +2728,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * escolar.
    *
    * @param  int $id
-   * @return TabelaArredondamento_Model_TabelaValor|NULL
+   * @return int|NULL
    * @see    TabelaArredondamento_Model_Tabela#predictValue()
    */
   public function preverNotaRecuperacao($id)

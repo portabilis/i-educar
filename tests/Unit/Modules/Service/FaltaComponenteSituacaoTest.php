@@ -52,7 +52,6 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
   public function testSituacaoFaltasEmAndamento()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
     $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, array());
 
@@ -61,40 +60,44 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     // Configura a expectativa
     $expected->situacao            = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     $expected->porcentagemPresenca = 100;
+    $expected->horasFaltas = 0.0;
+    $expected->totalFaltas = 0;
+    $expected->porcentagemFalta = 0.0;
+    $expected->diasLetivos = 960;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   public function testSituacaoFaltasEmAndamentoUmComponenteAprovadoDeQuatroTotais()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno  = $this->_getConfigOption('faltaAluno', 'instance');
     $componentes = $this->_getConfigOptions('escolaSerieDisciplina');
 
     $faltas = array(
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 1,
-        'componenteCurricular' => 1,
+        'componenteCurricular' => 2,
         'quantidade'           => 5,
         'etapa'                => 1
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 2,
-        'componenteCurricular' => 1,
+        'componenteCurricular' => 2,
         'quantidade'           => 5,
         'etapa'                => 2
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 3,
-        'componenteCurricular' => 1,
+        'componenteCurricular' => 2,
         'quantidade'           => 5,
         'etapa'                => 3
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 4,
-        'componenteCurricular' => 1,
+        'componenteCurricular' => 2,
         'quantidade'           => 5,
         'etapa'                => 4
       )),
@@ -111,6 +114,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos         = 960;
 
     // Configura expectativa para o componente de id '1'
     $componenteHoraFalta =
@@ -122,49 +126,25 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
     $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
-    $expected->componentesCurriculares[1] = new stdClass();
-    $expected->componentesCurriculares[1]->situacao            = App_Model_MatriculaSituacao::APROVADO;
-    $expected->componentesCurriculares[1]->horasFaltas         = $componenteHoraFalta;
-    $expected->componentesCurriculares[1]->porcentagemFalta    = $componentePorcentagemFalta;
-    $expected->componentesCurriculares[1]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[2] = new stdClass();
+    $expected->componentesCurriculares[2]->situacao            = App_Model_MatriculaSituacao::APROVADO;
+    $expected->componentesCurriculares[2]->horasFaltas         = $componenteHoraFalta;
+    $expected->componentesCurriculares[2]->porcentagemFalta    = $componentePorcentagemFalta;
+    $expected->componentesCurriculares[2]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[2]->total               = 20;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   public function testSituacaoFaltasAprovado()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno  = $this->_getConfigOption('faltaAluno', 'instance');
     $componentes = $this->_getConfigOptions('escolaSerieDisciplina');
 
     $faltas = array(
-      // Matemática
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 1,
-        'componenteCurricular' => 1,
-        'quantidade'           => 5,
-        'etapa'                => 1
-      )),
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 2,
-        'componenteCurricular' => 1,
-        'quantidade'           => 5,
-        'etapa'                => 2
-      )),
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 3,
-        'componenteCurricular' => 1,
-        'quantidade'           => 5,
-        'etapa'                => 3
-      )),
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 4,
-        'componenteCurricular' => 1,
-        'quantidade'           => 5,
-        'etapa'                => 4
-      )),
       // Português
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 5,
@@ -253,26 +233,11 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
-
-    // Configura expectativa para o componente de id '1'
-    $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 0, 4), 'id', 'quantidade')) *
-      $this->_getConfigOption('curso', 'hora_falta');
-
-    $componentePorcentagemFalta =
-      ($componenteHoraFalta / $componentes[0]['carga_horaria']) * 100;
-
-    $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
-
-    $expected->componentesCurriculares[1] = new stdClass();
-    $expected->componentesCurriculares[1]->situacao            = App_Model_MatriculaSituacao::APROVADO;
-    $expected->componentesCurriculares[1]->horasFaltas         = $componenteHoraFalta;
-    $expected->componentesCurriculares[1]->porcentagemFalta    = $componentePorcentagemFalta;
-    $expected->componentesCurriculares[1]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->diasLetivos         = 960;
 
     // Configura expectativa para o componente de id '2'
     $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 4, 4), 'id', 'quantidade')) *
+      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 0, 4), 'id', 'quantidade')) *
       $this->_getConfigOption('curso', 'hora_falta');
 
     $componentePorcentagemFalta =
@@ -285,10 +250,11 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->componentesCurriculares[2]->horasFaltas         = $componenteHoraFalta;
     $expected->componentesCurriculares[2]->porcentagemFalta    = $componentePorcentagemFalta;
     $expected->componentesCurriculares[2]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[2]->total               = 20;
 
     // Configura expectativa para o componente de id '3'
     $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 8, 4), 'id', 'quantidade')) *
+      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 4, 4), 'id', 'quantidade')) *
       $this->_getConfigOption('curso', 'hora_falta');
 
     $componentePorcentagemFalta =
@@ -301,10 +267,11 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->componentesCurriculares[3]->horasFaltas         = $componenteHoraFalta;
     $expected->componentesCurriculares[3]->porcentagemFalta    = $componentePorcentagemFalta;
     $expected->componentesCurriculares[3]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[3]->total               = 20;
 
     // Configura expectativa para o componente de id '4'
     $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 12, 4), 'id', 'quantidade')) *
+      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 8, 4), 'id', 'quantidade')) *
       $this->_getConfigOption('curso', 'hora_falta');
 
     $componentePorcentagemFalta =
@@ -317,10 +284,12 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->componentesCurriculares[4]->horasFaltas         = $componenteHoraFalta;
     $expected->componentesCurriculares[4]->porcentagemFalta    = $componentePorcentagemFalta;
     $expected->componentesCurriculares[4]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[4]->total               = 20.0;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   /**
@@ -329,59 +298,33 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
    */
   public function testSituacaoFaltasReprovado()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno  = $this->_getConfigOption('faltaAluno', 'instance');
     $componentes = $this->_getConfigOptions('escolaSerieDisciplina');
 
     $faltas = array(
-      // Matemática
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 1,
-        'componenteCurricular' => 1,
-        'quantidade'           => 60,
-        'etapa'                => 1
-      )),
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 2,
-        'componenteCurricular' => 1,
-        'quantidade'           => 60,
-        'etapa'                => 2
-      )),
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 3,
-        'componenteCurricular' => 1,
-        'quantidade'           => 60,
-        'etapa'                => 3
-      )),
-      new Avaliacao_Model_FaltaComponente(array(
-        'id'                   => 4,
-        'componenteCurricular' => 1,
-        'quantidade'           => 55,
-        'etapa'                => 4
-      )),
       // Português
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 5,
         'componenteCurricular' => 2,
-        'quantidade'           => 5,
+        'quantidade'           => 40,
         'etapa'                => 1
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 6,
         'componenteCurricular' => 2,
-        'quantidade'           => 5,
+        'quantidade'           => 40,
         'etapa'                => 2
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 7,
         'componenteCurricular' => 2,
-        'quantidade'           => 5,
+        'quantidade'           => 35,
         'etapa'                => 3
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 8,
         'componenteCurricular' => 2,
-        'quantidade'           => 5,
+        'quantidade'           => 15,
         'etapa'                => 4
       )),
       // Ciências
@@ -413,25 +356,25 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 13,
         'componenteCurricular' => 4,
-        'quantidade'           => 5,
+        'quantidade'           => 30,
         'etapa'                => 1
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 14,
         'componenteCurricular' => 4,
-        'quantidade'           => 5,
+        'quantidade'           => 40,
         'etapa'                => 2
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 15,
         'componenteCurricular' => 4,
-        'quantidade'           => 5,
+        'quantidade'           => 20,
         'etapa'                => 3
       )),
       new Avaliacao_Model_FaltaComponente(array(
         'id'                   => 16,
         'componenteCurricular' => 4,
-        'quantidade'           => 5,
+        'quantidade'           => 20,
         'etapa'                => 4
       )),
     );
@@ -447,26 +390,11 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
-
-    // Configura expectativa para o componente de id '1'
-    $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 0, 4), 'id', 'quantidade')) *
-      $this->_getConfigOption('curso', 'hora_falta');
-
-    $componentePorcentagemFalta =
-      ($componenteHoraFalta / $componentes[0]['carga_horaria']) * 100;
-
-    $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
-
-    $expected->componentesCurriculares[1] = new stdClass();
-    $expected->componentesCurriculares[1]->situacao            = App_Model_MatriculaSituacao::REPROVADO;
-    $expected->componentesCurriculares[1]->horasFaltas         = $componenteHoraFalta;
-    $expected->componentesCurriculares[1]->porcentagemFalta    = $componentePorcentagemFalta;
-    $expected->componentesCurriculares[1]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->diasLetivos         = 960;
 
     // Configura expectativa para o componente de id '2'
     $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 4, 4), 'id', 'quantidade')) *
+      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 0, 4), 'id', 'quantidade')) *
       $this->_getConfigOption('curso', 'hora_falta');
 
     $componentePorcentagemFalta =
@@ -475,14 +403,15 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
     $expected->componentesCurriculares[2] = new stdClass();
-    $expected->componentesCurriculares[2]->situacao            = App_Model_MatriculaSituacao::APROVADO;
+    $expected->componentesCurriculares[2]->situacao            = App_Model_MatriculaSituacao::REPROVADO;
     $expected->componentesCurriculares[2]->horasFaltas         = $componenteHoraFalta;
     $expected->componentesCurriculares[2]->porcentagemFalta    = $componentePorcentagemFalta;
     $expected->componentesCurriculares[2]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[2]->total               = 130.0;
 
     // Configura expectativa para o componente de id '3'
     $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 8, 4), 'id', 'quantidade')) *
+      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 4, 4), 'id', 'quantidade')) *
       $this->_getConfigOption('curso', 'hora_falta');
 
     $componentePorcentagemFalta =
@@ -495,10 +424,11 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->componentesCurriculares[3]->horasFaltas         = $componenteHoraFalta;
     $expected->componentesCurriculares[3]->porcentagemFalta    = $componentePorcentagemFalta;
     $expected->componentesCurriculares[3]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[3]->total               = 20.0;
 
     // Configura expectativa para o componente de id '4'
     $componenteHoraFalta =
-      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 12, 4), 'id', 'quantidade')) *
+      array_sum(CoreExt_Entity::entityFilterAttr(array_slice($faltas, 8, 4), 'id', 'quantidade')) *
       $this->_getConfigOption('curso', 'hora_falta');
 
     $componentePorcentagemFalta =
@@ -507,13 +437,15 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $componentePorcentagemPresenca = 100 - $componentePorcentagemFalta;
 
     $expected->componentesCurriculares[4] = new stdClass();
-    $expected->componentesCurriculares[4]->situacao            = App_Model_MatriculaSituacao::APROVADO;
+    $expected->componentesCurriculares[4]->situacao            = App_Model_MatriculaSituacao::REPROVADO;
     $expected->componentesCurriculares[4]->horasFaltas         = $componenteHoraFalta;
     $expected->componentesCurriculares[4]->porcentagemFalta    = $componentePorcentagemFalta;
     $expected->componentesCurriculares[4]->porcentagemPresenca = $componentePorcentagemPresenca;
+    $expected->componentesCurriculares[4]->total               = 110.0;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 }

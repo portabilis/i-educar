@@ -77,7 +77,7 @@ class Avaliacao_Service_FaltaSituacaoCommon extends Avaliacao_Service_TestCommon
     $expected->totalFaltas              = 0;
     $expected->horasFaltas              = 0;
     $expected->porcentagemFalta         = 0;
-    $expected->porcentagemPresenca      = 0;
+    $expected->porcentagemPresenca      = 100;
     $expected->porcentagemPresencaRegra = 0;
     $expected->componentesCurriculares  = array();
 
@@ -85,6 +85,7 @@ class Avaliacao_Service_FaltaSituacaoCommon extends Avaliacao_Service_TestCommon
     $expected->cursoHoraFalta           = $cursoHoraFalta;
     $expected->porcentagemPresencaRegra = $porcentagemPresenca;
     $expected->cargaHoraria             = $serieCargaHoraria;
+    $expected->diasLetivos              = null;
 
     return $expected;
   }
