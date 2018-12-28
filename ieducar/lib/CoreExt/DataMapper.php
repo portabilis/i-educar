@@ -66,11 +66,6 @@ abstract class CoreExt_DataMapper
     protected $_tableSchema = '';
 
     /**
-     * @var CoreExt_Locale
-     */
-    protected $_locale = null;
-
-    /**
      * Construtor.
      *
      * @param clsBanco $db
@@ -504,15 +499,9 @@ abstract class CoreExt_DataMapper
                 $columns['id'] = true;
             }
         }
-
-        // Reseta o locale para o default (en_US)
-        $this->getLocale()->resetLocale();
         $this->_getDbAdapter()->Consulta($this->_getFindAllStatment($columns, $where, $orderBy));
 
         $list = [];
-
-        // Retorna o locale para o usado no restante da aplicação
-        $this->getLocale()->setLocale();
 
         while ($this->_getDbAdapter()->ProximoRegistro()) {
             $list[] = $this->_createEntityObject($this->_getDbAdapter()->Tupla());
@@ -548,14 +537,9 @@ abstract class CoreExt_DataMapper
             }
         }
 
-        // Reseta o locale para o default (en_US)
-        $this->getLocale()->resetLocale();
-
         $sql = $this->_getFindAllStatment($columns, $where, $orderBy);
 
         if ($this->_getDbAdapter()->execPreparedQuery($sql, $params) != false) {
-            // Retorna o locale para o usado no restante da aplicação
-            $this->getLocale()->setLocale();
 
             while ($this->_getDbAdapter()->ProximoRegistro()) {
                 $list[] = $this->_createEntityObject($this->_getDbAdapter()->Tupla());
@@ -669,9 +653,6 @@ abstract class CoreExt_DataMapper
         }
 
         return $return;
-
-        // Retorna o locale para o usado no restante da aplicação
-        $this->getLocale()->setLocale();
     }
 
     /**
@@ -831,34 +812,5 @@ abstract class CoreExt_DataMapper
         }
 
         return $instance;
-    }
-
-    /**
-     * Setter.
-     *
-     * @param CoreExt_Locale $instance
-     *
-     * @return CoreExt_DataMapper Provê interface fluída
-     */
-    public function setLocale(CoreExt_Locale $instance)
-    {
-        $this->_locale = $instance;
-
-        return $this;
-    }
-
-    /**
-     * Getter.
-     *
-     * @return CoreExt_Locale
-     */
-    public function getLocale()
-    {
-        if (is_null($this->_locale)) {
-            require_once 'CoreExt/Locale.php';
-            $this->setLocale(CoreExt_Locale::getInstance());
-        }
-
-        return $this->_locale;
     }
 }

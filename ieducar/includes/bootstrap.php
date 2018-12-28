@@ -1,5 +1,14 @@
 <?php
 
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
+
+$app = require_once __DIR__ . '/../../bootstrap/app.php';
+
+if ($app instanceof Application) {
+    (new LoadEnvironmentVariables())->bootstrap($app);
+}
+
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
@@ -19,14 +28,10 @@ if (!file_exists($configFile)) {
     $configFile = PROJECT_ROOT . '/configuration/ieducar.ini';
 }
 
-$locale = CoreExt_Locale::getInstance();
-$locale->setCulture('pt_BR')->setLocale();
-
 global $coreExt;
 
 $coreExt = [];
 $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
-$coreExt['Locale'] = $locale;
 
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 

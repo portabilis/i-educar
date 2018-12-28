@@ -233,9 +233,6 @@ class CoreExt_DataMapperTest extends UnitBaseTest
     $this->assertEquals($expected, $found);
   }
 
-  /**
-   * @group CoreExt_Locale
-   */
   public function testRecuperaRegistroRetornaFloat()
   {
     $expectedOptions = array(

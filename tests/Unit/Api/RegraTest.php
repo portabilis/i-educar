@@ -1,23 +1,28 @@
 <?php
 
-namespace Tests\unit\Api;
+namespace Tests\Unit\Api;
 
-use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 use Tests\SuiteTestCase\ApiTestCase;
 
 class RegraTest extends ApiTestCase
 {
-    public function getDataSet()
-    {
-        $this->setupDump('regraavaliacao.sql');
-        return new DefaultDataSet();
-    }
-
     public function testRegression()
     {
-        $this->markTestSkipped();
-        $responseBody = $this->doAuthenticatedRequest('regras', ['instituicao_id' => 1, 'ano' => '2018']);
+        $query = [
+            'access_key' => $this->getApiKey(),
+            'secret_key' => $this->getApiSecret(),
+            'resource' => 'regras',
+            'oper' => 'get',
+            'instituicao_id' => 1,
+            'ano' => '2018',
+        ];
 
-        $this->assertJsonStringEqualsJsonFile($this->getJsonFile('regra_json_valid.json'), $responseBody);
+        $this->loadDump('regraavaliacao.sql');
+
+        $response = $this->getJson('/module/Api/Regra?' . http_build_query($query));
+
+        $this->assertJsonStringEqualsJsonFile(
+            $this->getJsonFile('regra_json_valid.json'), $response->getContent()
+        );
     }
 }

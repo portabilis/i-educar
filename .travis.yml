@@ -14,6 +14,9 @@ matrix:
         - DB_DATABASE=travis
         - DB_USERNAME=postgres
         - DB_PASSWORD=
+        - API_ACCESS_KEY=ieducar-access-key
+        - API_SECRET_KEY=ieducar-secret-key
+
       cache:
         directories:
           - $HOME/.composer/cache
