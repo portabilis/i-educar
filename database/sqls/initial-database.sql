@@ -22633,16 +22633,6 @@ SELECT pg_catalog.setval('pmidrh.setor_cod_setor_seq', 1, false);
 
 
 --
--- TOC entry 7790 (class 0 OID 9444231)
--- Dependencies: 501
--- Data for Name: abandono_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.abandono_tipo VALUES (1, 1, NULL, 1, 'Desistência', '2014-07-18 10:40:06.877894', NULL, 1);
-INSERT INTO pmieducar.abandono_tipo VALUES (2, 1, NULL, 1, 'Falecimento', '2014-07-18 10:40:06.877894', NULL, 1);
-
-
---
 -- TOC entry 8282 (class 0 OID 0)
 -- Dependencies: 500
 -- Name: abandono_tipo_cod_abandono_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
