@@ -24545,15 +24545,6 @@ SELECT pg_catalog.setval('pmieducar.tipo_regime_cod_tipo_regime_seq', 1, false);
 
 
 --
--- TOC entry 7996 (class 0 OID 9445129)
--- Dependencies: 707
--- Data for Name: tipo_usuario; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.tipo_usuario VALUES (1, 1, NULL, 'Administrador', '', 1, '2010-01-06 18:30:33.204604', NULL, 1);
-
-
---
 -- TOC entry 8363 (class 0 OID 0)
 -- Dependencies: 706
 -- Name: tipo_usuario_cod_tipo_usuario_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
