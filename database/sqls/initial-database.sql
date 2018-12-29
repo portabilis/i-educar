@@ -23847,15 +23847,6 @@ SELECT pg_catalog.setval('pmieducar.infra_predio_comodo_cod_infra_predio_comodo_
 
 
 --
--- TOC entry 7910 (class 0 OID 9444755)
--- Dependencies: 621
--- Data for Name: instituicao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.instituicao VALUES (1, NULL, 1, 'RUA', 'SC', 88820000, 'Modelópolis', 'Centro', 'Rua João Paulo Segundo', 2011, 'Centro', 'Secretaria de Educação e Cultura', 48, 99999999, '2010-01-04 08:00:00', '2011-07-22 11:24:02.914', 1, 'Prefeitura Municipal de Modelópolis', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false, false, NULL, NULL, true, NULL, NULL, NULL, false, false, false, NULL, NULL, NULL, false, false, false);
-
-
---
 -- TOC entry 8328 (class 0 OID 0)
 -- Dependencies: 620
 -- Name: instituicao_cod_instituicao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
