@@ -23386,15 +23386,6 @@ SELECT pg_catalog.setval('pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq', 1,
 
 
 --
--- TOC entry 7851 (class 0 OID 9444482)
--- Dependencies: 562
--- Data for Name: configuracoes_gerais; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.configuracoes_gerais VALUES (1, 1, NULL, 1, 1, NULL, 1, NULL, NULL, 1, NULL, NULL, '<p>Portabilis Tecnologia - suporte@portabilis.com.br - <a class="   light" href="http://suporte.portabilis.com.br" target="_blank"> Obter Suporte </a></p> ', '<p>Conhe&ccedil;a mais sobre o i-Educar e a Portabilis, acesse nosso <a href="   http://blog.portabilis.com.br">blog</a></p> ', '<p>Conhe&ccedil;a mais sobre o i-Educar e a Portabilis, <a href="   http://blog.portabilis.com.br" target="_blank">acesse nosso blog</a> &nbsp;&nbsp;&nbsp; &copy; Portabilis - Todos os direitos reservados</p>', 'https://www.facebook.com/portabilis', 'https://twitter.com/portabilis', 'https://www.linkedin.com/company/portabilis-tecnologia', NULL);
-
-
---
 -- TOC entry 7853 (class 0 OID 9444488)
 -- Dependencies: 564
 -- Data for Name: curso; Type: TABLE DATA; Schema: pmieducar; Owner: -
