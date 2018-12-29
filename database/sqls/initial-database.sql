@@ -24957,18 +24957,6 @@ SELECT pg_catalog.setval('portal.foto_secao_cod_foto_secao_seq', 1, false);
 
 
 --
--- TOC entry 8051 (class 0 OID 9445409)
--- Dependencies: 763
--- Data for Name: funcionario_vinculo; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-INSERT INTO portal.funcionario_vinculo VALUES (3, 'Efetivo', 'Efet');
-INSERT INTO portal.funcionario_vinculo VALUES (4, 'Contratado', 'Cont');
-INSERT INTO portal.funcionario_vinculo VALUES (5, 'Comissionado', 'Com');
-INSERT INTO portal.funcionario_vinculo VALUES (6, 'Estagiário', 'Est');
-
-
---
 -- TOC entry 8384 (class 0 OID 0)
 -- Dependencies: 762
 -- Name: funcionario_vinculo_cod_funcionario_vinculo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
