@@ -24975,16 +24975,6 @@ SELECT pg_catalog.setval('portal.imagem_cod_imagem_seq', 186, true);
 
 
 --
--- TOC entry 8055 (class 0 OID 9445422)
--- Dependencies: 767
--- Data for Name: imagem_tipo; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-INSERT INTO portal.imagem_tipo VALUES (1, 'Icone');
-INSERT INTO portal.imagem_tipo VALUES (6, 'Acervo');
-
-
---
 -- TOC entry 8386 (class 0 OID 0)
 -- Dependencies: 766
 -- Name: imagem_tipo_cod_imagem_tipo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
