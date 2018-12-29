@@ -24746,15 +24746,6 @@ SELECT pg_catalog.setval('portal.acesso_cod_acesso_seq', 19, true);
 
 
 --
--- TOC entry 8024 (class 0 OID 9445264)
--- Dependencies: 736
--- Data for Name: agenda; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-INSERT INTO portal.agenda VALUES (1, NULL, 1, 'Administrador', 0, 0, '2010-01-06 18:33:11.021729', NULL, 1);
-
-
---
 -- TOC entry 8373 (class 0 OID 0)
 -- Dependencies: 735
 -- Name: agenda_cod_agenda_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
