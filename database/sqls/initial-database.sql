@@ -22176,25 +22176,6 @@ SELECT pg_catalog.setval('modules.tabela_arredondamento_valor_id_seq', 26, true)
 
 
 --
--- TOC entry 7733 (class 0 OID 9443975)
--- Dependencies: 444
--- Data for Name: tipo_veiculo; Type: TABLE DATA; Schema: modules; Owner: -
---
-
-INSERT INTO modules.tipo_veiculo VALUES (1, 'Vans/Kombis');
-INSERT INTO modules.tipo_veiculo VALUES (2, 'Microônibus');
-INSERT INTO modules.tipo_veiculo VALUES (3, 'Ônibus');
-INSERT INTO modules.tipo_veiculo VALUES (4, 'Bicicleta');
-INSERT INTO modules.tipo_veiculo VALUES (5, 'Tração Animal');
-INSERT INTO modules.tipo_veiculo VALUES (6, 'Outro');
-INSERT INTO modules.tipo_veiculo VALUES (7, 'Capacidade de até 5 Alunos');
-INSERT INTO modules.tipo_veiculo VALUES (8, 'Capacidade entre 5 a 15 Alunos');
-INSERT INTO modules.tipo_veiculo VALUES (9, 'Capacidade entre 15 a 35 Alunos');
-INSERT INTO modules.tipo_veiculo VALUES (10, 'Capacidade acima de 35 Alunos');
-INSERT INTO modules.tipo_veiculo VALUES (11, 'Trem/Metrô');
-
-
---
 -- TOC entry 8257 (class 0 OID 0)
 -- Dependencies: 443
 -- Name: tipo_veiculo_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
