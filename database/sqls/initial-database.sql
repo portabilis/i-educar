@@ -24630,18 +24630,6 @@ SELECT pg_catalog.setval('pmieducar.turma_tipo_cod_turma_tipo_seq', 1, true);
 
 
 --
--- TOC entry 8007 (class 0 OID 9445183)
--- Dependencies: 718
--- Data for Name: turma_turno; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.turma_turno VALUES (1, 'Matutino', 1);
-INSERT INTO pmieducar.turma_turno VALUES (2, 'Vespertino', 1);
-INSERT INTO pmieducar.turma_turno VALUES (3, 'Noturno', 1);
-INSERT INTO pmieducar.turma_turno VALUES (4, 'Integral', 1);
-
-
---
 -- TOC entry 8368 (class 0 OID 0)
 -- Dependencies: 717
 -- Name: turma_turno_id_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
