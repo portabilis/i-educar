@@ -24452,18 +24452,6 @@ SELECT pg_catalog.setval('pmieducar.subnivel_cod_subnivel_seq', 1, false);
 
 
 --
--- TOC entry 7983 (class 0 OID 9445078)
--- Dependencies: 694
--- Data for Name: tipo_autor; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.tipo_autor VALUES (1, 'Autor');
-INSERT INTO pmieducar.tipo_autor VALUES (2, 'Evento');
-INSERT INTO pmieducar.tipo_autor VALUES (3, 'Entidade coletiva');
-INSERT INTO pmieducar.tipo_autor VALUES (4, 'Anônimo');
-
-
---
 -- TOC entry 7985 (class 0 OID 9445083)
 -- Dependencies: 696
 -- Data for Name: tipo_avaliacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
