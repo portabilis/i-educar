@@ -21870,17 +21870,6 @@ SELECT pg_catalog.setval('modules.falta_geral_id_seq', 1, false);
 --
 
 
-
---
--- TOC entry 7692 (class 0 OID 9443825)
--- Dependencies: 403
--- Data for Name: formula_media; Type: TABLE DATA; Schema: modules; Owner: -
---
-
-INSERT INTO modules.formula_media VALUES (1, 1, 'Média aritmética', 'Se / Et', 1, 0);
-INSERT INTO modules.formula_media VALUES (2, 1, 'Média recuperação ponderada', '(Rc * 0.4) + (Se / Et * 0.6)', 2, 0);
-
-
 --
 -- TOC entry 8240 (class 0 OID 0)
 -- Dependencies: 404
