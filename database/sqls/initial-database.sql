@@ -22158,16 +22158,6 @@ SELECT pg_catalog.setval('modules.rota_transporte_escolar_seq', 1, false);
 
 
 --
--- TOC entry 7728 (class 0 OID 9443962)
--- Dependencies: 439
--- Data for Name: tabela_arredondamento; Type: TABLE DATA; Schema: modules; Owner: -
---
-
-INSERT INTO modules.tabela_arredondamento VALUES (1, 1, 'Tabela padrão de notas numéricas', 1);
-INSERT INTO modules.tabela_arredondamento VALUES (2, 1, 'Tabela padrão de notas conceituais', 2);
-
-
---
 -- TOC entry 8255 (class 0 OID 0)
 -- Dependencies: 440
 -- Name: tabela_arredondamento_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
