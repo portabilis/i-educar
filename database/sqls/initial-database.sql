@@ -22556,23 +22556,6 @@ SELECT pg_catalog.setval('pmicontrolesis.topo_portal_cod_topo_portal_seq', 1, fa
 
 
 --
--- TOC entry 7780 (class 0 OID 9444191)
--- Dependencies: 491
--- Data for Name: tutormenu; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
-
-INSERT INTO pmicontrolesis.tutormenu VALUES (7, 'i-Pauta');
-INSERT INTO pmicontrolesis.tutormenu VALUES (15, 'i-Educar');
-INSERT INTO pmicontrolesis.tutormenu VALUES (16, 'i-Educar Biblioteca');
-INSERT INTO pmicontrolesis.tutormenu VALUES (17, 'Transporte Escolar');
-INSERT INTO pmicontrolesis.tutormenu VALUES (18, 'Configurações');
-INSERT INTO pmicontrolesis.tutormenu VALUES (19, 'Servidores');
-INSERT INTO pmicontrolesis.tutormenu VALUES (20, 'Pessoas');
-INSERT INTO pmicontrolesis.tutormenu VALUES (21, 'Endereçamento');
-INSERT INTO pmicontrolesis.tutormenu VALUES (22, 'Educacenso');
-
-
---
 -- TOC entry 8277 (class 0 OID 0)
 -- Dependencies: 490
 -- Name: tutormenu_cod_tutormenu_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
