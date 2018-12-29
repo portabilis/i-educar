@@ -24639,15 +24639,6 @@ SELECT pg_catalog.setval('pmieducar.turma_turno_id_seq', 1, false);
 
 
 --
--- TOC entry 8008 (class 0 OID 9445188)
--- Dependencies: 719
--- Data for Name: usuario; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.usuario VALUES (1, NULL, 1, NULL, 1, '2010-01-06 18:30:33.207458', NULL, 1);
-
-
---
 -- TOC entry 8009 (class 0 OID 9445197)
 -- Dependencies: 721
 -- Data for Name: funcionario_su; Type: TABLE DATA; Schema: pmiotopic; Owner: -
