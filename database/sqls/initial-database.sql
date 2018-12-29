@@ -1,12 +1,3 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 9.5.14
--- Dumped by pg_dump version 9.5.14
-
--- Started on 2018-11-19 15:03:12 -02
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -16,11 +7,6 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
-
---
--- TOC entry 873 (class 1255 OID 9442787)
--- Name: fcn_calcular_qtde_cardapio(character varying, integer, integer, numeric); Type: FUNCTION; Schema: alimentos; Owner: -
---
 
 CREATE FUNCTION alimentos.fcn_calcular_qtde_cardapio(character varying, integer, integer, numeric) RETURNS character varying
     LANGUAGE plpgsql
@@ -60,11 +46,6 @@ BEGIN
   RETURN v_qtde_retorno;
 END;$_$;
 
-
---
--- TOC entry 874 (class 1255 OID 9442788)
--- Name: fcn_calcular_qtde_percapita(character varying, integer, integer, integer, integer); Type: FUNCTION; Schema: alimentos; Owner: -
---
 
 CREATE FUNCTION alimentos.fcn_calcular_qtde_percapita(character varying, integer, integer, integer, integer) RETURNS numeric
     LANGUAGE plpgsql
@@ -114,11 +95,6 @@ BEGIN
   RETURN v_qtde_produto_periodo;
 END;$_$;
 
-
---
--- TOC entry 876 (class 1255 OID 9442789)
--- Name: fcn_calcular_qtde_unidade(character varying, integer, integer, numeric, integer, integer); Type: FUNCTION; Schema: alimentos; Owner: -
---
 
 CREATE FUNCTION alimentos.fcn_calcular_qtde_unidade(character varying, integer, integer, numeric, integer, integer) RETURNS numeric
     LANGUAGE plpgsql
@@ -184,11 +160,6 @@ BEGIN
   RETURN round(v_qtde/v_peso);
 END;$_$;
 
-
---
--- TOC entry 877 (class 1255 OID 9442790)
--- Name: fcn_gerar_guia_remessa(text, text, integer, integer, character varying, character varying, character varying, integer); Type: FUNCTION; Schema: alimentos; Owner: -
---
 
 CREATE FUNCTION alimentos.fcn_gerar_guia_remessa(text, text, integer, integer, character varying, character varying, character varying, integer) RETURNS text
     LANGUAGE plpgsql
@@ -888,11 +859,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 878 (class 1255 OID 9442793)
--- Name: fcn_aft_documento(); Type: FUNCTION; Schema: cadastro; Owner: -
---
-
 CREATE FUNCTION cadastro.fcn_aft_documento() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -904,11 +870,6 @@ CREATE FUNCTION cadastro.fcn_aft_documento() RETURNS trigger
                   RETURN NEW;
                 END; $$;
 
-
---
--- TOC entry 879 (class 1255 OID 9442794)
--- Name: fcn_aft_documento_provisorio(); Type: FUNCTION; Schema: cadastro; Owner: -
---
 
 CREATE FUNCTION cadastro.fcn_aft_documento_provisorio() RETURNS trigger
     LANGUAGE plpgsql
@@ -943,11 +904,6 @@ CREATE FUNCTION cadastro.fcn_aft_documento_provisorio() RETURNS trigger
     RETURN NEW;
   END; $$;
 
-
---
--- TOC entry 881 (class 1255 OID 9442795)
--- Name: fcn_aft_fisica(); Type: FUNCTION; Schema: cadastro; Owner: -
---
 
 CREATE FUNCTION cadastro.fcn_aft_fisica() RETURNS trigger
     LANGUAGE plpgsql
@@ -1087,11 +1043,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 882 (class 1255 OID 9442796)
--- Name: fcn_aft_fisica_cpf_provisorio(); Type: FUNCTION; Schema: cadastro; Owner: -
---
-
 CREATE FUNCTION cadastro.fcn_aft_fisica_cpf_provisorio() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -1123,11 +1074,6 @@ DECLARE
   RETURN NEW;
 END; $$;
 
-
---
--- TOC entry 883 (class 1255 OID 9442797)
--- Name: fcn_aft_fisica_provisorio(); Type: FUNCTION; Schema: cadastro; Owner: -
---
 
 CREATE FUNCTION cadastro.fcn_aft_fisica_provisorio() RETURNS trigger
     LANGUAGE plpgsql
@@ -1165,11 +1111,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 884 (class 1255 OID 9442798)
--- Name: fcn_aft_ins_endereco_externo(); Type: FUNCTION; Schema: cadastro; Owner: -
---
-
 CREATE FUNCTION cadastro.fcn_aft_ins_endereco_externo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -1183,11 +1124,6 @@ DECLARE
   RETURN NEW;
 END; $$;
 
-
---
--- TOC entry 875 (class 1255 OID 9442799)
--- Name: fcn_aft_ins_endereco_pessoa(); Type: FUNCTION; Schema: cadastro; Owner: -
---
 
 CREATE FUNCTION cadastro.fcn_aft_ins_endereco_pessoa() RETURNS trigger
     LANGUAGE plpgsql
@@ -1203,11 +1139,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 880 (class 1255 OID 9442800)
--- Name: fcn_delete_temp_cadastro_unificacao_cmf(integer); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_delete_temp_cadastro_unificacao_cmf(integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -1221,11 +1152,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 852 (class 1255 OID 9442801)
--- Name: fcn_delete_temp_cadastro_unificacao_siam(integer); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_delete_temp_cadastro_unificacao_siam(integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -1238,11 +1164,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 853 (class 1255 OID 9442802)
--- Name: fcn_documento_historico_campo(); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
 
 CREATE FUNCTION consistenciacao.fcn_documento_historico_campo() RETURNS trigger
     LANGUAGE plpgsql
@@ -1601,11 +1522,6 @@ CREATE FUNCTION consistenciacao.fcn_documento_historico_campo() RETURNS trigger
                         END;$$;
 
 
---
--- TOC entry 872 (class 1255 OID 9442805)
--- Name: fcn_endereco_externo_historico_campo(); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_endereco_externo_historico_campo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -1898,11 +1814,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 885 (class 1255 OID 9442808)
--- Name: fcn_endereco_pessoa_historico_campo(); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_endereco_pessoa_historico_campo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -2109,11 +2020,6 @@ DECLARE
   RETURN NEW;
 END; $$;
 
-
---
--- TOC entry 886 (class 1255 OID 9442809)
--- Name: fcn_fisica_historico_campo(); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
 
 CREATE FUNCTION consistenciacao.fcn_fisica_historico_campo() RETURNS trigger
     LANGUAGE plpgsql
@@ -2409,11 +2315,6 @@ CREATE FUNCTION consistenciacao.fcn_fisica_historico_campo() RETURNS trigger
                       END; $$;
 
 
---
--- TOC entry 887 (class 1255 OID 9442812)
--- Name: fcn_fone_historico_campo(); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_fone_historico_campo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -2529,11 +2430,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 889 (class 1255 OID 9442813)
--- Name: fcn_gravar_historico_campo(numeric, numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_gravar_historico_campo(numeric, numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -2560,11 +2456,6 @@ DECLARE
   RETURN 1;
 END; $_$;
 
-
---
--- TOC entry 890 (class 1255 OID 9442814)
--- Name: fcn_juridica_historico_campo(); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
 
 CREATE FUNCTION consistenciacao.fcn_juridica_historico_campo() RETURNS trigger
     LANGUAGE plpgsql
@@ -2670,11 +2561,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 891 (class 1255 OID 9442815)
--- Name: fcn_pessoa_historico_campo(); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_pessoa_historico_campo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -2778,11 +2664,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 892 (class 1255 OID 9442816)
--- Name: fcn_unifica_cadastro(numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_unifica_cadastro(numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -2864,11 +2745,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 893 (class 1255 OID 9442817)
--- Name: fcn_unifica_cmf(numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_unifica_cmf(numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -2897,11 +2773,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 888 (class 1255 OID 9442818)
--- Name: fcn_unifica_sca(numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
 
 CREATE FUNCTION consistenciacao.fcn_unifica_sca(numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
@@ -2960,11 +2831,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 894 (class 1255 OID 9442819)
--- Name: fcn_unifica_scd(numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_unifica_scd(numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -2982,11 +2848,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 895 (class 1255 OID 9442820)
--- Name: fcn_unifica_sgp(numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
 
 CREATE FUNCTION consistenciacao.fcn_unifica_sgp(numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
@@ -3011,11 +2872,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 896 (class 1255 OID 9442821)
--- Name: fcn_unifica_sgpa(numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
 
 CREATE FUNCTION consistenciacao.fcn_unifica_sgpa(numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
@@ -3060,11 +2916,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 898 (class 1255 OID 9442822)
--- Name: fcn_unifica_sgsp(numeric, numeric); Type: FUNCTION; Schema: consistenciacao; Owner: -
---
-
 CREATE FUNCTION consistenciacao.fcn_unifica_sgsp(numeric, numeric) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -3101,11 +2952,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 899 (class 1255 OID 9442823)
--- Name: pr_normaliza_enderecos(); Type: FUNCTION; Schema: conv_functions; Owner: -
---
 
 CREATE FUNCTION conv_functions.pr_normaliza_enderecos() RETURNS void
     LANGUAGE plpgsql
@@ -3227,11 +3073,6 @@ end;
 $$;
 
 
---
--- TOC entry 900 (class 1255 OID 9442824)
--- Name: fcn_delete_grava_historico_bairro(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_bairro() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -3271,11 +3112,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 901 (class 1255 OID 9442825)
--- Name: fcn_delete_grava_historico_cep_logradouro(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_delete_grava_historico_cep_logradouro() RETURNS trigger
     LANGUAGE plpgsql
@@ -3319,11 +3155,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 902 (class 1255 OID 9442826)
--- Name: fcn_delete_grava_historico_cep_logradouro_bairro(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_cep_logradouro_bairro() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -3364,11 +3195,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 903 (class 1255 OID 9442827)
--- Name: fcn_delete_grava_historico_documento(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_delete_grava_historico_documento() RETURNS trigger
     LANGUAGE plpgsql
@@ -3442,11 +3268,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 905 (class 1255 OID 9442828)
--- Name: fcn_delete_grava_historico_endereco_externo(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_endereco_externo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -3505,11 +3326,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 906 (class 1255 OID 9442829)
--- Name: fcn_delete_grava_historico_endereco_pessoa(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_endereco_pessoa() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -3561,11 +3377,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 907 (class 1255 OID 9442830)
--- Name: fcn_delete_grava_historico_fisica(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_delete_grava_historico_fisica() RETURNS trigger
     LANGUAGE plpgsql
@@ -3645,11 +3456,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 908 (class 1255 OID 9442831)
--- Name: fcn_delete_grava_historico_fisica_cpf(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_fisica_cpf() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -3687,11 +3493,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 909 (class 1255 OID 9442832)
--- Name: fcn_delete_grava_historico_fone_pessoa(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_delete_grava_historico_fone_pessoa() RETURNS trigger
     LANGUAGE plpgsql
@@ -3734,11 +3535,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 910 (class 1255 OID 9442833)
--- Name: fcn_delete_grava_historico_funcionario(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_delete_grava_historico_funcionario() RETURNS trigger
     LANGUAGE plpgsql
@@ -3784,11 +3580,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 911 (class 1255 OID 9442834)
--- Name: fcn_delete_grava_historico_juridica(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_juridica() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -3830,11 +3621,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 912 (class 1255 OID 9442835)
--- Name: fcn_delete_grava_historico_logradouro(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_delete_grava_historico_logradouro() RETURNS trigger
     LANGUAGE plpgsql
@@ -3879,11 +3665,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 913 (class 1255 OID 9442836)
--- Name: fcn_delete_grava_historico_municipio(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_delete_grava_historico_municipio() RETURNS trigger
     LANGUAGE plpgsql
@@ -3939,11 +3720,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 914 (class 1255 OID 9442837)
--- Name: fcn_delete_grava_historico_pessoa(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_pessoa() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -3990,11 +3766,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 915 (class 1255 OID 9442838)
--- Name: fcn_delete_grava_historico_socio(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_delete_grava_historico_socio() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4032,11 +3803,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 916 (class 1255 OID 9442839)
--- Name: fcn_grava_historico_bairro(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_bairro() RETURNS trigger
     LANGUAGE plpgsql
@@ -4079,11 +3845,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 917 (class 1255 OID 9442840)
--- Name: fcn_grava_historico_cep_logradouro(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_cep_logradouro() RETURNS trigger
     LANGUAGE plpgsql
@@ -4129,11 +3890,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 918 (class 1255 OID 9442841)
--- Name: fcn_grava_historico_cep_logradouro_bairro(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_grava_historico_cep_logradouro_bairro() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4175,11 +3931,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 919 (class 1255 OID 9442842)
--- Name: fcn_grava_historico_documento(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_documento() RETURNS trigger
     LANGUAGE plpgsql
@@ -4255,11 +4006,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 920 (class 1255 OID 9442843)
--- Name: fcn_grava_historico_endereco_externo(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_grava_historico_endereco_externo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4320,11 +4066,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 922 (class 1255 OID 9442844)
--- Name: fcn_grava_historico_endereco_pessoa(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_grava_historico_endereco_pessoa() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4378,11 +4119,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 923 (class 1255 OID 9442845)
--- Name: fcn_grava_historico_fisica(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_fisica() RETURNS trigger
     LANGUAGE plpgsql
@@ -4464,11 +4200,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 925 (class 1255 OID 9442846)
--- Name: fcn_grava_historico_fisica_cpf(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_grava_historico_fisica_cpf() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4508,11 +4239,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 926 (class 1255 OID 9442847)
--- Name: fcn_grava_historico_fone_pessoa(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_fone_pessoa() RETURNS trigger
     LANGUAGE plpgsql
@@ -4557,11 +4283,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 927 (class 1255 OID 9442848)
--- Name: fcn_grava_historico_funcionario(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_funcionario() RETURNS trigger
     LANGUAGE plpgsql
@@ -4609,11 +4330,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 929 (class 1255 OID 9442849)
--- Name: fcn_grava_historico_juridica(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_grava_historico_juridica() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4657,11 +4373,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 930 (class 1255 OID 9442850)
--- Name: fcn_grava_historico_logradouro(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_logradouro() RETURNS trigger
     LANGUAGE plpgsql
@@ -4708,11 +4419,6 @@ BEGIN
 
 END; $$;
 
-
---
--- TOC entry 931 (class 1255 OID 9442851)
--- Name: fcn_grava_historico_municipio(); Type: FUNCTION; Schema: historico; Owner: -
---
 
 CREATE FUNCTION historico.fcn_grava_historico_municipio() RETURNS trigger
     LANGUAGE plpgsql
@@ -4770,11 +4476,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 932 (class 1255 OID 9442852)
--- Name: fcn_grava_historico_pessoa(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_grava_historico_pessoa() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4823,11 +4524,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 933 (class 1255 OID 9442853)
--- Name: fcn_grava_historico_socio(); Type: FUNCTION; Schema: historico; Owner: -
---
-
 CREATE FUNCTION historico.fcn_grava_historico_socio() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4868,11 +4564,6 @@ BEGIN
 END; $$;
 
 
---
--- TOC entry 1032 (class 1255 OID 9474660)
--- Name: audita_falta_componente_curricular(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.audita_falta_componente_curricular() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4893,11 +4584,6 @@ CREATE FUNCTION modules.audita_falta_componente_curricular() RETURNS trigger
     END;
 $$;
 
-
---
--- TOC entry 1037 (class 1255 OID 9474658)
--- Name: audita_falta_geral(); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.audita_falta_geral() RETURNS trigger
     LANGUAGE plpgsql
@@ -4920,11 +4606,6 @@ CREATE FUNCTION modules.audita_falta_geral() RETURNS trigger
 $$;
 
 
---
--- TOC entry 1035 (class 1255 OID 9474666)
--- Name: audita_media_geral(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.audita_media_geral() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4945,11 +4626,6 @@ CREATE FUNCTION modules.audita_media_geral() RETURNS trigger
     END;
 $$;
 
-
---
--- TOC entry 1027 (class 1255 OID 9474650)
--- Name: audita_nota_componente_curricular(); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.audita_nota_componente_curricular() RETURNS trigger
     LANGUAGE plpgsql
@@ -4972,11 +4648,6 @@ CREATE FUNCTION modules.audita_nota_componente_curricular() RETURNS trigger
 $$;
 
 
---
--- TOC entry 1028 (class 1255 OID 9474652)
--- Name: audita_nota_componente_curricular_media(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.audita_nota_componente_curricular_media() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -4997,11 +4668,6 @@ CREATE FUNCTION modules.audita_nota_componente_curricular_media() RETURNS trigge
     END;
 $$;
 
-
---
--- TOC entry 1026 (class 1255 OID 9474648)
--- Name: audita_nota_exame(); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.audita_nota_exame() RETURNS trigger
     LANGUAGE plpgsql
@@ -5024,11 +4690,6 @@ CREATE FUNCTION modules.audita_nota_exame() RETURNS trigger
 $$;
 
 
---
--- TOC entry 1025 (class 1255 OID 9474646)
--- Name: audita_nota_geral(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.audita_nota_geral() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -5049,11 +4710,6 @@ CREATE FUNCTION modules.audita_nota_geral() RETURNS trigger
     END;
 $$;
 
-
---
--- TOC entry 1030 (class 1255 OID 9474656)
--- Name: audita_parecer_componente_curricular(); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.audita_parecer_componente_curricular() RETURNS trigger
     LANGUAGE plpgsql
@@ -5076,11 +4732,6 @@ CREATE FUNCTION modules.audita_parecer_componente_curricular() RETURNS trigger
 $$;
 
 
---
--- TOC entry 1029 (class 1255 OID 9474654)
--- Name: audita_parecer_geral(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.audita_parecer_geral() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -5101,11 +4752,6 @@ CREATE FUNCTION modules.audita_parecer_geral() RETURNS trigger
     END;
 $$;
 
-
---
--- TOC entry 934 (class 1255 OID 9442854)
--- Name: copia_notas_transf(integer, integer); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer) RETURNS character varying
     LANGUAGE plpgsql
@@ -5285,11 +4931,6 @@ CREATE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricu
               end;$$;
 
 
---
--- TOC entry 936 (class 1255 OID 9442856)
--- Name: corrige_sequencial_historico(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.corrige_sequencial_historico() RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -5313,11 +4954,6 @@ CREATE FUNCTION modules.corrige_sequencial_historico() RETURNS void
   ALTER TABLE pmieducar.historico_escolar ENABLE TRIGGER USER;
   end;$$;
 
-
---
--- TOC entry 937 (class 1255 OID 9442857)
--- Name: frequencia_da_matricula(integer); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.frequencia_da_matricula(p_matricula_id integer) RETURNS double precision
     LANGUAGE plpgsql
@@ -5373,11 +5009,6 @@ CREATE FUNCTION modules.frequencia_da_matricula(p_matricula_id integer) RETURNS 
                       END;$$;
 
 
---
--- TOC entry 938 (class 1255 OID 9442858)
--- Name: frequencia_etapa_padrao_ano_escolar_um(integer, integer, integer); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.frequencia_etapa_padrao_ano_escolar_um(cod_matricula_aluno integer, cod_etapa integer, id_componente_curricular integer) RETURNS numeric
     LANGUAGE plpgsql
     AS $$
@@ -5424,11 +5055,6 @@ CREATE FUNCTION modules.frequencia_etapa_padrao_ano_escolar_um(cod_matricula_alu
                       		end;
                       	$$;
 
-
---
--- TOC entry 939 (class 1255 OID 9442859)
--- Name: frequencia_etapa_padrao_ano_escolar_zero(integer, integer, integer); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.frequencia_etapa_padrao_ano_escolar_zero(cod_matricula_aluno integer, cod_etapa integer, id_componente_curricular integer) RETURNS numeric
     LANGUAGE plpgsql
@@ -5478,11 +5104,6 @@ CREATE FUNCTION modules.frequencia_etapa_padrao_ano_escolar_zero(cod_matricula_a
 		end;
 	$$;
 
-
---
--- TOC entry 940 (class 1255 OID 9442860)
--- Name: frequencia_matricula_por_etapa(integer, character varying); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.frequencia_matricula_por_etapa(matricula integer, etapa character varying) RETURNS numeric
     LANGUAGE plpgsql
@@ -5537,11 +5158,6 @@ CREATE FUNCTION modules.frequencia_matricula_por_etapa(matricula integer, etapa 
                           $_$;
 
 
---
--- TOC entry 941 (class 1255 OID 9442861)
--- Name: frequencia_por_componente(integer, integer, integer); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.frequencia_por_componente(cod_matricula_id integer, cod_disciplina_id integer, cod_turma_id integer) RETURNS character varying
     LANGUAGE plpgsql
     AS $$
@@ -5588,11 +5204,6 @@ CREATE FUNCTION modules.frequencia_por_componente(cod_matricula_id integer, cod_
             $$;
 
 
---
--- TOC entry 1031 (class 1255 OID 9474636)
--- Name: impede_duplicacao_falta_aluno(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.impede_duplicacao_falta_aluno() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -5608,11 +5219,6 @@ CREATE FUNCTION modules.impede_duplicacao_falta_aluno() RETURNS trigger
                     END;
                     $$;
 
-
---
--- TOC entry 1036 (class 1255 OID 9474632)
--- Name: impede_duplicacao_nota_aluno(); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.impede_duplicacao_nota_aluno() RETURNS trigger
     LANGUAGE plpgsql
@@ -5630,11 +5236,6 @@ CREATE FUNCTION modules.impede_duplicacao_nota_aluno() RETURNS trigger
                     $$;
 
 
---
--- TOC entry 1018 (class 1255 OID 9474634)
--- Name: impede_duplicacao_parecer_aluno(); Type: FUNCTION; Schema: modules; Owner: -
---
-
 CREATE FUNCTION modules.impede_duplicacao_parecer_aluno() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -5650,11 +5251,6 @@ CREATE FUNCTION modules.impede_duplicacao_parecer_aluno() RETURNS trigger
                     END;
                 $$;
 
-
---
--- TOC entry 924 (class 1255 OID 9442862)
--- Name: preve_data_emprestimo(integer, date); Type: FUNCTION; Schema: modules; Owner: -
---
 
 CREATE FUNCTION modules.preve_data_emprestimo(biblioteca_id integer, data_prevista date) RETURNS date
     LANGUAGE plpgsql
@@ -5674,11 +5270,6 @@ CREATE FUNCTION modules.preve_data_emprestimo(biblioteca_id integer, data_previs
 
   end;$$;
 
-
---
--- TOC entry 1033 (class 1255 OID 9474662)
--- Name: audita_matricula(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
 
 CREATE FUNCTION pmieducar.audita_matricula() RETURNS trigger
     LANGUAGE plpgsql
@@ -5701,11 +5292,6 @@ CREATE FUNCTION pmieducar.audita_matricula() RETURNS trigger
 $$;
 
 
---
--- TOC entry 1034 (class 1255 OID 9474664)
--- Name: audita_matricula_turma(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
-
 CREATE FUNCTION pmieducar.audita_matricula_turma() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -5726,11 +5312,6 @@ CREATE FUNCTION pmieducar.audita_matricula_turma() RETURNS trigger
     END;
 $$;
 
-
---
--- TOC entry 1017 (class 1255 OID 9474631)
--- Name: copiaanosletivos(smallint, integer); Type: FUNCTION; Schema: pmieducar; Owner: -
---
 
 CREATE FUNCTION pmieducar.copiaanosletivos(ianonovo smallint, icodescola integer) RETURNS void
     LANGUAGE plpgsql
@@ -5800,11 +5381,6 @@ CREATE FUNCTION pmieducar.copiaanosletivos(ianonovo smallint, icodescola integer
             $$;
 
 
---
--- TOC entry 904 (class 1255 OID 9442863)
--- Name: fcn_aft_update(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
-
 CREATE FUNCTION pmieducar.fcn_aft_update() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -5828,11 +5404,6 @@ DECLARE
 END; $$;
 
 
---
--- TOC entry 921 (class 1255 OID 9442864)
--- Name: migra_beneficios_para_tabela_aluno_aluno_beneficio(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
-
 CREATE FUNCTION pmieducar.migra_beneficios_para_tabela_aluno_aluno_beneficio() RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -5847,11 +5418,6 @@ CREATE FUNCTION pmieducar.migra_beneficios_para_tabela_aluno_aluno_beneficio() R
   ALTER TABLE pmieducar.aluno DROP COLUMN ref_cod_aluno_beneficio;
   end;$$;
 
-
---
--- TOC entry 942 (class 1255 OID 9442865)
--- Name: normalizadeficienciaservidor(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
 
 CREATE FUNCTION pmieducar.normalizadeficienciaservidor() RETURNS void
     LANGUAGE plpgsql
@@ -5873,11 +5439,6 @@ CREATE FUNCTION pmieducar.normalizadeficienciaservidor() RETURNS void
 
   end;$$;
 
-
---
--- TOC entry 943 (class 1255 OID 9442866)
--- Name: unifica_alunos(numeric, numeric[], integer); Type: FUNCTION; Schema: pmieducar; Owner: -
---
 
 CREATE FUNCTION pmieducar.unifica_alunos(alunoprincipal numeric, alunos numeric[], usuario integer) RETURNS void
     LANGUAGE plpgsql
@@ -5911,11 +5472,6 @@ CREATE FUNCTION pmieducar.unifica_alunos(alunoprincipal numeric, alunos numeric[
 
         END;$_$;
 
-
---
--- TOC entry 944 (class 1255 OID 9442867)
--- Name: unifica_pessoas(numeric, numeric[], integer); Type: FUNCTION; Schema: pmieducar; Owner: -
---
 
 CREATE FUNCTION pmieducar.unifica_pessoas(pessoaprincipal numeric, pessoas numeric[], usuario integer) RETURNS void
     LANGUAGE plpgsql
@@ -6013,11 +5569,6 @@ CREATE FUNCTION pmieducar.unifica_pessoas(pessoaprincipal numeric, pessoas numer
         END;$_$;
 
 
---
--- TOC entry 945 (class 1255 OID 9442868)
--- Name: unifica_tipos_transferencia(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
-
 CREATE FUNCTION pmieducar.unifica_tipos_transferencia() RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -6057,30 +5608,15 @@ CREATE FUNCTION pmieducar.unifica_tipos_transferencia() RETURNS void
   end;$$;
 
 
---
--- TOC entry 928 (class 1255 OID 9442869)
--- Name: updated_at_matricula(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
-
 CREATE FUNCTION pmieducar.updated_at_matricula() RETURNS trigger
     LANGUAGE plpgsql
     AS $$ BEGIN NEW.updated_at = now(); RETURN NEW; END; $$;
 
 
---
--- TOC entry 935 (class 1255 OID 9442870)
--- Name: updated_at_matricula_turma(); Type: FUNCTION; Schema: pmieducar; Owner: -
---
-
 CREATE FUNCTION pmieducar.updated_at_matricula_turma() RETURNS trigger
     LANGUAGE plpgsql
     AS $$ BEGIN NEW.updated_at = now(); RETURN NEW; END; $$;
 
-
---
--- TOC entry 897 (class 1255 OID 9442871)
--- Name: commacat_ignore_nulls(text, text); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.commacat_ignore_nulls(acc text, instr text) RETURNS text
     LANGUAGE plpgsql
@@ -6096,11 +5632,6 @@ CREATE FUNCTION public.commacat_ignore_nulls(acc text, instr text) RETURNS text
     END;
   $$;
 
-
---
--- TOC entry 946 (class 1255 OID 9442872)
--- Name: count_weekdays(date, date); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.count_weekdays(date, date) RETURNS integer
     LANGUAGE plpgsql STABLE
@@ -6128,11 +5659,6 @@ CREATE FUNCTION public.count_weekdays(date, date) RETURNS integer
   $_$;
 
 
---
--- TOC entry 947 (class 1255 OID 9442873)
--- Name: cria_distritos(); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.cria_distritos() RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -6153,11 +5679,6 @@ CREATE FUNCTION public.cria_distritos() RETURNS void
 
   end;$$;
 
-
---
--- TOC entry 948 (class 1255 OID 9442874)
--- Name: data_para_extenso(date); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.data_para_extenso(data date) RETURNS character varying
     LANGUAGE plpgsql
@@ -6199,22 +5720,12 @@ END;
 $$;
 
 
---
--- TOC entry 1015 (class 1255 OID 9474516)
--- Name: f_unaccent(text); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.f_unaccent(text) RETURNS text
     LANGUAGE sql IMMUTABLE
     AS $_$
             SELECT public.unaccent('public.unaccent', $1)
             $_$;
 
-
---
--- TOC entry 949 (class 1255 OID 9442875)
--- Name: fcn_aft_logradouro_fonetiza(); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_aft_logradouro_fonetiza() RETURNS trigger
     LANGUAGE plpgsql
@@ -6249,11 +5760,6 @@ CREATE FUNCTION public.fcn_aft_logradouro_fonetiza() RETURNS trigger
    END;
   $$;
 
-
---
--- TOC entry 950 (class 1255 OID 9442876)
--- Name: fcn_aft_pessoa_fonetiza(); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_aft_pessoa_fonetiza() RETURNS trigger
     LANGUAGE plpgsql
@@ -6290,11 +5796,6 @@ CREATE FUNCTION public.fcn_aft_pessoa_fonetiza() RETURNS trigger
   $$;
 
 
---
--- TOC entry 951 (class 1255 OID 9442877)
--- Name: fcn_bef_ins_fisica(); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_bef_ins_fisica() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -6310,11 +5811,6 @@ CREATE FUNCTION public.fcn_bef_ins_fisica() RETURNS trigger
    END;
   $$;
 
-
---
--- TOC entry 952 (class 1255 OID 9442878)
--- Name: fcn_bef_ins_juridica(); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_bef_ins_juridica() RETURNS trigger
     LANGUAGE plpgsql
@@ -6332,11 +5828,6 @@ CREATE FUNCTION public.fcn_bef_ins_juridica() RETURNS trigger
   $$;
 
 
---
--- TOC entry 953 (class 1255 OID 9442879)
--- Name: fcn_bef_logradouro_fonetiza(); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_bef_logradouro_fonetiza() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -6350,11 +5841,6 @@ CREATE FUNCTION public.fcn_bef_logradouro_fonetiza() RETURNS trigger
   $$;
 
 
---
--- TOC entry 954 (class 1255 OID 9442880)
--- Name: fcn_bef_pessoa_fonetiza(); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_bef_pessoa_fonetiza() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -6367,11 +5853,6 @@ CREATE FUNCTION public.fcn_bef_pessoa_fonetiza() RETURNS trigger
    END;
   $$;
 
-
---
--- TOC entry 955 (class 1255 OID 9442881)
--- Name: fcn_compara_nome_pessoa_fonetica(text, numeric); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_compara_nome_pessoa_fonetica(text, numeric) RETURNS integer
     LANGUAGE plpgsql
@@ -6433,11 +5914,6 @@ DECLARE
   $_$;
 
 
---
--- TOC entry 956 (class 1255 OID 9442882)
--- Name: fcn_cons_log_fonetica(text, bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_cons_log_fonetica(text, bigint) RETURNS SETOF public.typ_idlog
     LANGUAGE plpgsql
     AS $_$
@@ -6471,11 +5947,6 @@ CREATE FUNCTION public.fcn_cons_log_fonetica(text, bigint) RETURNS SETOF public.
   $_$;
 
 
---
--- TOC entry 957 (class 1255 OID 9442883)
--- Name: fcn_consulta_fonetica(text); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_consulta_fonetica(text) RETURNS SETOF public.typ_idpes
     LANGUAGE plpgsql
     AS $_$
@@ -6507,11 +5978,6 @@ CREATE FUNCTION public.fcn_consulta_fonetica(text) RETURNS SETOF public.typ_idpe
   $_$;
 
 
---
--- TOC entry 958 (class 1255 OID 9442884)
--- Name: fcn_delete_endereco_externo(integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_delete_endereco_externo(integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -6526,11 +5992,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 959 (class 1255 OID 9442885)
--- Name: fcn_delete_endereco_pessoa(integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_delete_endereco_pessoa(integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -6547,11 +6008,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 960 (class 1255 OID 9442886)
--- Name: fcn_delete_fone_pessoa(integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_delete_fone_pessoa(integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -6565,11 +6021,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 961 (class 1255 OID 9442887)
--- Name: fcn_delete_funcionario(integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_delete_funcionario(integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -6585,11 +6036,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 962 (class 1255 OID 9442888)
--- Name: fcn_dia_util(date, date); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_dia_util(date, date) RETURNS integer
     LANGUAGE plpgsql
@@ -6617,11 +6063,6 @@ BEGIN
   RETURN v_qtde;
 END;$_$;
 
-
---
--- TOC entry 963 (class 1255 OID 9442889)
--- Name: fcn_fonetiza(text); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_fonetiza(text) RETURNS SETOF text
     LANGUAGE plpgsql
@@ -6877,11 +6318,6 @@ CREATE FUNCTION public.fcn_fonetiza(text) RETURNS SETOF text
   $_$;
 
 
---
--- TOC entry 964 (class 1255 OID 9442890)
--- Name: fcn_fonetiza_logr_geral(); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_fonetiza_logr_geral() RETURNS text
     LANGUAGE plpgsql
     AS $$
@@ -6907,11 +6343,6 @@ CREATE FUNCTION public.fcn_fonetiza_logr_geral() RETURNS text
    END;
   $$;
 
-
---
--- TOC entry 966 (class 1255 OID 9442891)
--- Name: fcn_fonetiza_palavra(text); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_fonetiza_palavra(text) RETURNS text
     LANGUAGE plpgsql
@@ -7167,11 +6598,6 @@ DECLARE
   $_$;
 
 
---
--- TOC entry 967 (class 1255 OID 9442892)
--- Name: fcn_fonetiza_pessoa_geral(); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_fonetiza_pessoa_geral() RETURNS text
     LANGUAGE plpgsql
     AS $$
@@ -7198,11 +6624,6 @@ CREATE FUNCTION public.fcn_fonetiza_pessoa_geral() RETURNS text
   $$;
 
 
---
--- TOC entry 968 (class 1255 OID 9442893)
--- Name: fcn_fonetiza_primeiro_ultimo_nome(text); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_fonetiza_primeiro_ultimo_nome(text) RETURNS text
     LANGUAGE plpgsql
     AS $_$
@@ -7228,11 +6649,6 @@ DECLARE
    END;
   $_$;
 
-
---
--- TOC entry 969 (class 1255 OID 9442894)
--- Name: fcn_insert_documento(integer, character varying, character varying, character varying, character varying, integer, integer, integer, integer, character varying, character varying, character varying, character varying, integer, integer, character varying, character varying, integer, integer, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_insert_documento(integer, character varying, character varying, character varying, character varying, integer, integer, integer, integer, character varying, character varying, character varying, character varying, integer, integer, character varying, character varying, integer, integer, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -7377,11 +6793,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 970 (class 1255 OID 9442895)
--- Name: fcn_insert_endereco_externo(integer, integer, character varying, character varying, character varying, integer, character varying, character varying, character varying, integer, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_insert_endereco_externo(integer, integer, character varying, character varying, character varying, integer, character varying, character varying, character varying, integer, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -7412,11 +6823,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 971 (class 1255 OID 9442896)
--- Name: fcn_insert_endereco_pessoa(integer, integer, integer, integer, integer, integer, character varying, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_insert_endereco_pessoa(integer, integer, integer, integer, integer, integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -7441,11 +6847,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 972 (class 1255 OID 9442897)
--- Name: fcn_insert_fisica(integer, character varying, character varying, integer, integer, integer, integer, integer, integer, character varying, character varying, integer, integer, character varying, integer, character varying, integer, character varying, character varying, character varying, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_insert_fisica(integer, character varying, character varying, integer, integer, integer, integer, integer, integer, character varying, character varying, integer, integer, character varying, integer, character varying, integer, character varying, character varying, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -7566,11 +6967,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 973 (class 1255 OID 9442898)
--- Name: fcn_insert_fisica_cpf(integer, text, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_insert_fisica_cpf(integer, text, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -7586,11 +6982,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 974 (class 1255 OID 9442899)
--- Name: fcn_insert_fone_pessoa(integer, integer, integer, integer, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_insert_fone_pessoa(integer, integer, integer, integer, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -7611,11 +7002,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 975 (class 1255 OID 9442900)
--- Name: fcn_insert_funcionario(integer, integer, integer, integer, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_insert_funcionario(integer, integer, integer, integer, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -7645,11 +7031,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 976 (class 1255 OID 9442901)
--- Name: fcn_insert_juridica(integer, character varying, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_insert_juridica(integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -7670,11 +7051,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 977 (class 1255 OID 9442902)
--- Name: fcn_insert_pessoa(integer, character varying, character varying, character varying, character varying, integer, character varying, character varying, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_insert_pessoa(integer, character varying, character varying, character varying, character varying, integer, character varying, character varying, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -7703,11 +7079,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 978 (class 1255 OID 9442903)
--- Name: fcn_obter_primeiro_ultimo_nome(text); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_obter_primeiro_ultimo_nome(text) RETURNS text
     LANGUAGE plpgsql
@@ -7857,11 +7228,6 @@ DECLARE
   $_$;
 
 
---
--- TOC entry 979 (class 1255 OID 9442904)
--- Name: fcn_obter_primeiro_ultimo_nome_juridica(text); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_obter_primeiro_ultimo_nome_juridica(text) RETURNS text
     LANGUAGE plpgsql
     AS $_$
@@ -7984,11 +7350,6 @@ DECLARE
   END;
   $_$;
 
-
---
--- TOC entry 980 (class 1255 OID 9442905)
--- Name: fcn_update_documento(integer, character varying, character varying, character varying, character varying, integer, integer, integer, integer, character varying, character varying, character varying, character varying, integer, integer, character varying, character varying, integer, integer, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_update_documento(integer, character varying, character varying, character varying, character varying, integer, integer, integer, integer, character varying, character varying, character varying, character varying, integer, integer, character varying, character varying, integer, integer, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -8142,11 +7503,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 981 (class 1255 OID 9442906)
--- Name: fcn_update_endereco_externo(integer, integer, character varying, character varying, character varying, integer, character varying, character varying, character varying, integer, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_update_endereco_externo(integer, integer, character varying, character varying, character varying, integer, character varying, character varying, character varying, integer, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -8192,11 +7548,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 982 (class 1255 OID 9442907)
--- Name: fcn_update_endereco_pessoa(integer, integer, integer, integer, integer, integer, character varying, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_update_endereco_pessoa(integer, integer, integer, integer, integer, integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -8235,11 +7586,6 @@ BEGIN
     RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 983 (class 1255 OID 9442908)
--- Name: fcn_update_fisica(integer, character varying, character varying, integer, integer, integer, integer, integer, integer, character varying, character varying, integer, integer, character varying, integer, character varying, integer, character varying, character varying, character varying, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_update_fisica(integer, character varying, character varying, integer, integer, integer, integer, integer, integer, character varying, character varying, integer, integer, character varying, integer, character varying, integer, character varying, character varying, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -8374,11 +7720,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 984 (class 1255 OID 9442909)
--- Name: fcn_update_fisica_cpf(integer, text, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_update_fisica_cpf(integer, text, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -8403,11 +7744,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 985 (class 1255 OID 9442910)
--- Name: fcn_update_fone_pessoa(integer, integer, integer, integer, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_update_fone_pessoa(integer, integer, integer, integer, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -8437,11 +7773,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 986 (class 1255 OID 9442911)
--- Name: fcn_update_funcionario(numeric, integer, integer, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_update_funcionario(numeric, integer, integer, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -8500,11 +7831,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 987 (class 1255 OID 9442912)
--- Name: fcn_update_juridica(integer, character varying, character varying, character varying, character, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_update_juridica(integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
@@ -8533,11 +7859,6 @@ BEGIN
   RETURN 0;
 END;$_$;
 
-
---
--- TOC entry 988 (class 1255 OID 9442913)
--- Name: fcn_update_pessoa(integer, text, character varying, character varying, character varying, integer, character varying, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_update_pessoa(integer, text, character varying, character varying, character varying, integer, character varying, integer, integer) RETURNS integer
     LANGUAGE plpgsql
@@ -8588,11 +7909,6 @@ BEGIN
 END;$_$;
 
 
---
--- TOC entry 989 (class 1255 OID 9442914)
--- Name: fcn_upper(text); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.fcn_upper(text) RETURNS text
     LANGUAGE plpgsql
     AS $_$
@@ -8607,11 +7923,6 @@ CREATE FUNCTION public.fcn_upper(text) RETURNS text
    END;
   $_$;
 
-
---
--- TOC entry 965 (class 1255 OID 9442915)
--- Name: fcn_upper_nrm(text); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.fcn_upper_nrm(text) RETURNS text
     LANGUAGE plpgsql
@@ -8628,11 +7939,6 @@ CREATE FUNCTION public.fcn_upper_nrm(text) RETURNS text
   $_$;
 
 
---
--- TOC entry 1007 (class 1255 OID 9442916)
--- Name: formata_cpf(numeric); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.formata_cpf(cpf numeric) RETURNS character varying
     LANGUAGE plpgsql
     AS $$
@@ -8648,11 +7954,6 @@ END;
 $$;
 
 
---
--- TOC entry 1008 (class 1255 OID 9442917)
--- Name: isnumeric(text); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.isnumeric(text) RETURNS boolean
     LANGUAGE plpgsql IMMUTABLE
     AS $_$
@@ -8665,11 +7966,6 @@ CREATE FUNCTION public.isnumeric(text) RETURNS boolean
     END;
   $_$;
 
-
---
--- TOC entry 1009 (class 1255 OID 9442918)
--- Name: retira_data_cancel_matricula_fun(); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.retira_data_cancel_matricula_fun() RETURNS trigger
     LANGUAGE plpgsql
@@ -8687,11 +7983,6 @@ CREATE FUNCTION public.retira_data_cancel_matricula_fun() RETURNS trigger
   END
   $$;
 
-
---
--- TOC entry 1010 (class 1255 OID 9442919)
--- Name: unifica_bairro(integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.unifica_bairro(p_idbai_duplicado integer, p_idbai_principal integer) RETURNS void
     LANGUAGE plpgsql
@@ -8721,11 +8012,6 @@ DELETE FROM public.bairro WHERE idbai = p_idbai_duplicado;
 
 end;$$;
 
-
---
--- TOC entry 1011 (class 1255 OID 9442920)
--- Name: unifica_logradouro(integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.unifica_logradouro(p_idlog_duplicado integer, p_idlog_principal integer) RETURNS void
     LANGUAGE plpgsql
@@ -8768,11 +8054,6 @@ DELETE FROM public.logradouro WHERE idlog = p_idlog_duplicado;
 end;$$;
 
 
---
--- TOC entry 990 (class 1255 OID 9469009)
--- Name: update_updated_at(); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.update_updated_at() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -8782,11 +8063,6 @@ CREATE FUNCTION public.update_updated_at() RETURNS trigger
             END;
             $$;
 
-
---
--- TOC entry 1019 (class 1255 OID 9442921)
--- Name: verifica_existe_matricula_posterior_mesma_turma(integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
 
 CREATE FUNCTION public.verifica_existe_matricula_posterior_mesma_turma(cod_matricula integer, cod_turma integer) RETURNS boolean
     LANGUAGE plpgsql
@@ -8812,11 +8088,6 @@ CREATE FUNCTION public.verifica_existe_matricula_posterior_mesma_turma(cod_matri
                       $$;
 
 
---
--- TOC entry 1020 (class 1255 OID 9442922)
--- Name: verifica_existe_matricula_posterior_mesma_turma(integer, integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
 CREATE FUNCTION public.verifica_existe_matricula_posterior_mesma_turma(cod_matricula integer, cod_turma integer, sequencial integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
@@ -8841,11 +8112,6 @@ CREATE FUNCTION public.verifica_existe_matricula_posterior_mesma_turma(cod_matri
 
       $$;
 
-
---
--- TOC entry 1023 (class 1255 OID 9468961)
--- Name: count_weekdays(date, date); Type: FUNCTION; Schema: relatorio; Owner: -
---
 
 CREATE FUNCTION relatorio.count_weekdays(start_date date, end_date date) RETURNS integer
     LANGUAGE plpgsql
@@ -8875,11 +8141,6 @@ CREATE FUNCTION relatorio.count_weekdays(start_date date, end_date date) RETURNS
                         END; $$;
 
 
---
--- TOC entry 1024 (class 1255 OID 9468962)
--- Name: formata_nome(text); Type: FUNCTION; Schema: relatorio; Owner: -
---
-
 CREATE FUNCTION relatorio.formata_nome(var text) RETURNS text
     LANGUAGE sql
     AS $_$
@@ -8898,19 +8159,8 @@ CREATE FUNCTION relatorio.formata_nome(var text) RETURNS text
                         $_$;
 
 
---
--- TOC entry 8144 (class 0 OID 0)
--- Dependencies: 1024
--- Name: FUNCTION formata_nome(var text); Type: COMMENT; Schema: relatorio; Owner: -
---
-
 COMMENT ON FUNCTION relatorio.formata_nome(var text) IS 'Função que formata um nome, colocando iniciais em maiúsculas e demais em minúsculas';
 
-
---
--- TOC entry 1016 (class 1255 OID 9474520)
--- Name: get_nome_escola(integer); Type: FUNCTION; Schema: relatorio; Owner: -
---
 
 CREATE FUNCTION relatorio.get_nome_escola(integer) RETURNS character varying
     LANGUAGE sql
@@ -8927,11 +8177,6 @@ CREATE FUNCTION relatorio.get_nome_escola(integer) RETURNS character varying
          WHERE escola.cod_escola = $1;$_$;
 
 
---
--- TOC entry 1021 (class 1255 OID 9468959)
--- Name: get_texto_sem_caracter_especial(character varying); Type: FUNCTION; Schema: relatorio; Owner: -
---
-
 CREATE FUNCTION relatorio.get_texto_sem_caracter_especial(character varying) RETURNS character varying
     LANGUAGE sql
     AS $_$SELECT translate(public.fcn_upper($1),
@@ -8939,21 +8184,11 @@ CREATE FUNCTION relatorio.get_texto_sem_caracter_especial(character varying) RET
                        'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN');$_$;
 
 
---
--- TOC entry 1022 (class 1255 OID 9468960)
--- Name: get_texto_sem_espaco(character varying); Type: FUNCTION; Schema: relatorio; Owner: -
---
-
 CREATE FUNCTION relatorio.get_texto_sem_espaco(character varying) RETURNS character varying
     LANGUAGE sql
     AS $_$
 SELECT translate(public.fcn_upper(regexp_replace($1,' ','','g')), 'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN');$_$;
 
-
---
--- TOC entry 3050 (class 1255 OID 9442923)
--- Name: textcat_all(text); Type: AGGREGATE; Schema: public; Owner: -
---
 
 CREATE AGGREGATE public.textcat_all(text) (
     SFUNC = public.commacat_ignore_nulls,
@@ -8961,11 +8196,6 @@ CREATE AGGREGATE public.textcat_all(text) (
     INITCOND = ''
 );
 
-
---
--- TOC entry 204 (class 1259 OID 9442924)
--- Name: funcao_idfunc_seq; Type: SEQUENCE; Schema: acesso; Owner: -
---
 
 CREATE SEQUENCE acesso.funcao_idfunc_seq
     START WITH 1
@@ -8978,11 +8208,6 @@ CREATE SEQUENCE acesso.funcao_idfunc_seq
 SET default_tablespace = '';
 
 SET default_with_oids = true;
-
---
--- TOC entry 205 (class 1259 OID 9442926)
--- Name: funcao; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.funcao (
     idfunc integer DEFAULT nextval('acesso.funcao_idfunc_seq'::regclass) NOT NULL,
@@ -8997,11 +8222,6 @@ CREATE TABLE acesso.funcao (
 );
 
 
---
--- TOC entry 206 (class 1259 OID 9442934)
--- Name: grupo_idgrp_seq; Type: SEQUENCE; Schema: acesso; Owner: -
---
-
 CREATE SEQUENCE acesso.grupo_idgrp_seq
     START WITH 1
     INCREMENT BY 1
@@ -9009,11 +8229,6 @@ CREATE SEQUENCE acesso.grupo_idgrp_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 207 (class 1259 OID 9442936)
--- Name: grupo; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.grupo (
     idgrp integer DEFAULT nextval('acesso.grupo_idgrp_seq'::regclass) NOT NULL,
@@ -9024,11 +8239,6 @@ CREATE TABLE acesso.grupo (
 );
 
 
---
--- TOC entry 208 (class 1259 OID 9442941)
--- Name: grupo_funcao; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.grupo_funcao (
     idmen integer NOT NULL,
     idsis integer NOT NULL,
@@ -9037,22 +8247,12 @@ CREATE TABLE acesso.grupo_funcao (
 );
 
 
---
--- TOC entry 209 (class 1259 OID 9442944)
--- Name: grupo_menu; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.grupo_menu (
     idgrp integer NOT NULL,
     idsis integer NOT NULL,
     idmen integer NOT NULL
 );
 
-
---
--- TOC entry 210 (class 1259 OID 9442947)
--- Name: grupo_operacao; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.grupo_operacao (
     idfunc integer NOT NULL,
@@ -9063,21 +8263,11 @@ CREATE TABLE acesso.grupo_operacao (
 );
 
 
---
--- TOC entry 211 (class 1259 OID 9442950)
--- Name: grupo_sistema; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.grupo_sistema (
     idsis integer NOT NULL,
     idgrp integer NOT NULL
 );
 
-
---
--- TOC entry 212 (class 1259 OID 9442953)
--- Name: historico_senha; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.historico_senha (
     login character varying(16) NOT NULL,
@@ -9085,11 +8275,6 @@ CREATE TABLE acesso.historico_senha (
     data_cad timestamp without time zone NOT NULL
 );
 
-
---
--- TOC entry 213 (class 1259 OID 9442956)
--- Name: instituicao_idins_seq; Type: SEQUENCE; Schema: acesso; Owner: -
---
 
 CREATE SEQUENCE acesso.instituicao_idins_seq
     START WITH 1
@@ -9099,11 +8284,6 @@ CREATE SEQUENCE acesso.instituicao_idins_seq
     CACHE 1;
 
 
---
--- TOC entry 214 (class 1259 OID 9442958)
--- Name: instituicao; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.instituicao (
     idins integer DEFAULT nextval('acesso.instituicao_idins_seq'::regclass) NOT NULL,
     nome character varying(60) NOT NULL,
@@ -9111,11 +8291,6 @@ CREATE TABLE acesso.instituicao (
     CONSTRAINT ck_instituicao_situacao CHECK (((situacao = 'A'::bpchar) OR (situacao = 'I'::bpchar)))
 );
 
-
---
--- TOC entry 215 (class 1259 OID 9442963)
--- Name: log_acesso; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.log_acesso (
     data timestamp without time zone NOT NULL,
@@ -9128,11 +8303,6 @@ CREATE TABLE acesso.log_acesso (
 );
 
 
---
--- TOC entry 216 (class 1259 OID 9442967)
--- Name: log_erro; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.log_erro (
     data timestamp without time zone NOT NULL,
     idpes numeric(8,0),
@@ -9144,11 +8314,6 @@ CREATE TABLE acesso.log_erro (
 );
 
 
---
--- TOC entry 217 (class 1259 OID 9442973)
--- Name: menu_idmen_seq; Type: SEQUENCE; Schema: acesso; Owner: -
---
-
 CREATE SEQUENCE acesso.menu_idmen_seq
     START WITH 1
     INCREMENT BY 1
@@ -9156,11 +8321,6 @@ CREATE SEQUENCE acesso.menu_idmen_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 218 (class 1259 OID 9442975)
--- Name: menu; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.menu (
     idmen integer DEFAULT nextval('acesso.menu_idmen_seq'::regclass) NOT NULL,
@@ -9175,11 +8335,6 @@ CREATE TABLE acesso.menu (
 );
 
 
---
--- TOC entry 219 (class 1259 OID 9442980)
--- Name: operacao_idope_seq; Type: SEQUENCE; Schema: acesso; Owner: -
---
-
 CREATE SEQUENCE acesso.operacao_idope_seq
     START WITH 1
     INCREMENT BY 1
@@ -9187,11 +8342,6 @@ CREATE SEQUENCE acesso.operacao_idope_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 220 (class 1259 OID 9442982)
--- Name: operacao; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.operacao (
     idope integer DEFAULT nextval('acesso.operacao_idope_seq'::regclass) NOT NULL,
@@ -9203,11 +8353,6 @@ CREATE TABLE acesso.operacao (
 );
 
 
---
--- TOC entry 221 (class 1259 OID 9442987)
--- Name: operacao_funcao; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.operacao_funcao (
     idmen integer NOT NULL,
     idsis integer NOT NULL,
@@ -9216,21 +8361,11 @@ CREATE TABLE acesso.operacao_funcao (
 );
 
 
---
--- TOC entry 222 (class 1259 OID 9442990)
--- Name: pessoa_instituicao; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.pessoa_instituicao (
     idins integer NOT NULL,
     idpes numeric(8,0) NOT NULL
 );
 
-
---
--- TOC entry 223 (class 1259 OID 9442993)
--- Name: sistema_idsis_seq; Type: SEQUENCE; Schema: acesso; Owner: -
---
 
 CREATE SEQUENCE acesso.sistema_idsis_seq
     START WITH 0
@@ -9239,11 +8374,6 @@ CREATE SEQUENCE acesso.sistema_idsis_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 224 (class 1259 OID 9442995)
--- Name: sistema; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.sistema (
     idsis integer DEFAULT nextval('acesso.sistema_idsis_seq'::regclass) NOT NULL,
@@ -9254,11 +8384,6 @@ CREATE TABLE acesso.sistema (
     CONSTRAINT ck_sistema_situacao CHECK (((situacao = 'A'::bpchar) OR (situacao = 'I'::bpchar)))
 );
 
-
---
--- TOC entry 225 (class 1259 OID 9443000)
--- Name: usuario; Type: TABLE; Schema: acesso; Owner: -
---
 
 CREATE TABLE acesso.usuario (
     login character varying(16) NOT NULL,
@@ -9282,21 +8407,11 @@ CREATE TABLE acesso.usuario (
 );
 
 
---
--- TOC entry 226 (class 1259 OID 9443007)
--- Name: usuario_grupo; Type: TABLE; Schema: acesso; Owner: -
---
-
 CREATE TABLE acesso.usuario_grupo (
     idgrp integer NOT NULL,
     login character varying(16) NOT NULL
 );
 
-
---
--- TOC entry 227 (class 1259 OID 9443010)
--- Name: baixa_guia_produto_idbap_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.baixa_guia_produto_idbap_seq
     START WITH 1
@@ -9305,11 +8420,6 @@ CREATE SEQUENCE alimentos.baixa_guia_produto_idbap_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 228 (class 1259 OID 9443012)
--- Name: baixa_guia_produto; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.baixa_guia_produto (
     idbap integer DEFAULT nextval('alimentos.baixa_guia_produto_idbap_seq'::regclass) NOT NULL,
@@ -9322,11 +8432,6 @@ CREATE TABLE alimentos.baixa_guia_produto (
 );
 
 
---
--- TOC entry 229 (class 1259 OID 9443019)
--- Name: baixa_guia_remessa_idbai_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.baixa_guia_remessa_idbai_seq
     START WITH 1
     INCREMENT BY 1
@@ -9334,11 +8439,6 @@ CREATE SEQUENCE alimentos.baixa_guia_remessa_idbai_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 230 (class 1259 OID 9443021)
--- Name: baixa_guia_remessa; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.baixa_guia_remessa (
     idbai integer DEFAULT nextval('alimentos.baixa_guia_remessa_idbai_seq'::regclass) NOT NULL,
@@ -9351,11 +8451,6 @@ CREATE TABLE alimentos.baixa_guia_remessa (
 );
 
 
---
--- TOC entry 231 (class 1259 OID 9443025)
--- Name: calendario_idcad_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.calendario_idcad_seq
     START WITH 1
     INCREMENT BY 1
@@ -9363,11 +8458,6 @@ CREATE SEQUENCE alimentos.calendario_idcad_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 232 (class 1259 OID 9443027)
--- Name: calendario; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.calendario (
     idcad integer DEFAULT nextval('alimentos.calendario_idcad_seq'::regclass) NOT NULL,
@@ -9377,11 +8467,6 @@ CREATE TABLE alimentos.calendario (
 );
 
 
---
--- TOC entry 233 (class 1259 OID 9443031)
--- Name: cardapio_idcar_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.cardapio_idcar_seq
     START WITH 1
     INCREMENT BY 1
@@ -9389,11 +8474,6 @@ CREATE SEQUENCE alimentos.cardapio_idcar_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 234 (class 1259 OID 9443033)
--- Name: cardapio; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.cardapio (
     idcar integer DEFAULT nextval('alimentos.cardapio_idcar_seq'::regclass) NOT NULL,
@@ -9410,21 +8490,11 @@ CREATE TABLE alimentos.cardapio (
 );
 
 
---
--- TOC entry 235 (class 1259 OID 9443041)
--- Name: cardapio_faixa_unidade; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.cardapio_faixa_unidade (
     idfeu integer NOT NULL,
     idcar integer NOT NULL
 );
 
-
---
--- TOC entry 236 (class 1259 OID 9443044)
--- Name: cardapio_produto_idcpr_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.cardapio_produto_idcpr_seq
     START WITH 1
@@ -9433,11 +8503,6 @@ CREATE SEQUENCE alimentos.cardapio_produto_idcpr_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 237 (class 1259 OID 9443046)
--- Name: cardapio_produto; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.cardapio_produto (
     idcpr integer DEFAULT nextval('alimentos.cardapio_produto_idcpr_seq'::regclass) NOT NULL,
@@ -9448,21 +8513,11 @@ CREATE TABLE alimentos.cardapio_produto (
 );
 
 
---
--- TOC entry 238 (class 1259 OID 9443053)
--- Name: cardapio_receita; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.cardapio_receita (
     idcar integer NOT NULL,
     idrec integer NOT NULL
 );
 
-
---
--- TOC entry 239 (class 1259 OID 9443056)
--- Name: cliente; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.cliente (
     idcli character varying(10) NOT NULL,
@@ -9488,11 +8543,6 @@ CREATE TABLE alimentos.cliente (
 );
 
 
---
--- TOC entry 240 (class 1259 OID 9443060)
--- Name: composto_quimico_idcom_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.composto_quimico_idcom_seq
     START WITH 1
     INCREMENT BY 1
@@ -9500,11 +8550,6 @@ CREATE SEQUENCE alimentos.composto_quimico_idcom_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 241 (class 1259 OID 9443062)
--- Name: composto_quimico; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.composto_quimico (
     idcom integer DEFAULT nextval('alimentos.composto_quimico_idcom_seq'::regclass) NOT NULL,
@@ -9515,11 +8560,6 @@ CREATE TABLE alimentos.composto_quimico (
 );
 
 
---
--- TOC entry 242 (class 1259 OID 9443066)
--- Name: contrato_idcon_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.contrato_idcon_seq
     START WITH 1
     INCREMENT BY 1
@@ -9527,11 +8567,6 @@ CREATE SEQUENCE alimentos.contrato_idcon_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 243 (class 1259 OID 9443068)
--- Name: contrato; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.contrato (
     idcon integer DEFAULT nextval('alimentos.contrato_idcon_seq'::regclass) NOT NULL,
@@ -9556,11 +8591,6 @@ CREATE TABLE alimentos.contrato (
 );
 
 
---
--- TOC entry 244 (class 1259 OID 9443079)
--- Name: contrato_produto_idcop_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.contrato_produto_idcop_seq
     START WITH 1
     INCREMENT BY 1
@@ -9568,11 +8598,6 @@ CREATE SEQUENCE alimentos.contrato_produto_idcop_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 245 (class 1259 OID 9443081)
--- Name: contrato_produto; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.contrato_produto (
     idcop integer DEFAULT nextval('alimentos.contrato_produto_idcop_seq'::regclass) NOT NULL,
@@ -9590,11 +8615,6 @@ CREATE TABLE alimentos.contrato_produto (
 );
 
 
---
--- TOC entry 246 (class 1259 OID 9443089)
--- Name: evento_ideve_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.evento_ideve_seq
     START WITH 1
     INCREMENT BY 1
@@ -9602,11 +8622,6 @@ CREATE SEQUENCE alimentos.evento_ideve_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 247 (class 1259 OID 9443091)
--- Name: evento; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.evento (
     ideve integer DEFAULT nextval('alimentos.evento_ideve_seq'::regclass) NOT NULL,
@@ -9619,11 +8634,6 @@ CREATE TABLE alimentos.evento (
 );
 
 
---
--- TOC entry 248 (class 1259 OID 9443096)
--- Name: faixa_composto_quimico_idfcp_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.faixa_composto_quimico_idfcp_seq
     START WITH 1
     INCREMENT BY 1
@@ -9631,11 +8641,6 @@ CREATE SEQUENCE alimentos.faixa_composto_quimico_idfcp_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 249 (class 1259 OID 9443098)
--- Name: faixa_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.faixa_composto_quimico (
     idfcp integer DEFAULT nextval('alimentos.faixa_composto_quimico_idfcp_seq'::regclass) NOT NULL,
@@ -9647,11 +8652,6 @@ CREATE TABLE alimentos.faixa_composto_quimico (
 );
 
 
---
--- TOC entry 250 (class 1259 OID 9443106)
--- Name: faixa_etaria_idfae_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.faixa_etaria_idfae_seq
     START WITH 1
     INCREMENT BY 1
@@ -9659,11 +8659,6 @@ CREATE SEQUENCE alimentos.faixa_etaria_idfae_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 251 (class 1259 OID 9443108)
--- Name: faixa_etaria; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.faixa_etaria (
     idfae integer DEFAULT nextval('alimentos.faixa_etaria_idfae_seq'::regclass) NOT NULL,
@@ -9673,11 +8668,6 @@ CREATE TABLE alimentos.faixa_etaria (
 );
 
 
---
--- TOC entry 252 (class 1259 OID 9443115)
--- Name: fornecedor_idfor_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.fornecedor_idfor_seq
     START WITH 1
     INCREMENT BY 1
@@ -9685,11 +8675,6 @@ CREATE SEQUENCE alimentos.fornecedor_idfor_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 253 (class 1259 OID 9443117)
--- Name: fornecedor; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.fornecedor (
     idfor integer DEFAULT nextval('alimentos.fornecedor_idfor_seq'::regclass) NOT NULL,
@@ -9715,21 +8700,11 @@ CREATE TABLE alimentos.fornecedor (
 );
 
 
---
--- TOC entry 254 (class 1259 OID 9443122)
--- Name: fornecedor_unidade_atendida; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.fornecedor_unidade_atendida (
     iduni integer NOT NULL,
     idfor integer NOT NULL
 );
 
-
---
--- TOC entry 255 (class 1259 OID 9443125)
--- Name: grupo_quimico_idgrpq_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.grupo_quimico_idgrpq_seq
     START WITH 1
@@ -9739,22 +8714,12 @@ CREATE SEQUENCE alimentos.grupo_quimico_idgrpq_seq
     CACHE 1;
 
 
---
--- TOC entry 256 (class 1259 OID 9443127)
--- Name: grupo_quimico; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.grupo_quimico (
     idgrpq integer DEFAULT nextval('alimentos.grupo_quimico_idgrpq_seq'::regclass) NOT NULL,
     idcli character varying(10) NOT NULL,
     descricao character varying(50) NOT NULL
 );
 
-
---
--- TOC entry 257 (class 1259 OID 9443131)
--- Name: guia_produto_diario_idguiaprodiario_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.guia_produto_diario_idguiaprodiario_seq
     START WITH 1
@@ -9763,11 +8728,6 @@ CREATE SEQUENCE alimentos.guia_produto_diario_idguiaprodiario_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 258 (class 1259 OID 9443133)
--- Name: guia_produto_diario; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.guia_produto_diario (
     idguiaprodiario integer DEFAULT nextval('alimentos.guia_produto_diario_idguiaprodiario_seq'::regclass) NOT NULL,
@@ -9779,11 +8739,6 @@ CREATE TABLE alimentos.guia_produto_diario (
 );
 
 
---
--- TOC entry 259 (class 1259 OID 9443140)
--- Name: guia_remessa_idgui_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.guia_remessa_idgui_seq
     START WITH 1
     INCREMENT BY 1
@@ -9791,11 +8746,6 @@ CREATE SEQUENCE alimentos.guia_remessa_idgui_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 260 (class 1259 OID 9443142)
--- Name: guia_remessa; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.guia_remessa (
     idgui integer DEFAULT nextval('alimentos.guia_remessa_idgui_seq'::regclass) NOT NULL,
@@ -9821,11 +8771,6 @@ CREATE TABLE alimentos.guia_remessa (
 );
 
 
---
--- TOC entry 261 (class 1259 OID 9443148)
--- Name: guia_remessa_produto_idgup_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.guia_remessa_produto_idgup_seq
     START WITH 1
     INCREMENT BY 1
@@ -9833,11 +8778,6 @@ CREATE SEQUENCE alimentos.guia_remessa_produto_idgup_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 262 (class 1259 OID 9443150)
--- Name: guia_remessa_produto; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.guia_remessa_produto (
     idgup integer DEFAULT nextval('alimentos.guia_remessa_produto_idgup_seq'::regclass) NOT NULL,
@@ -9851,11 +8791,6 @@ CREATE TABLE alimentos.guia_remessa_produto (
 );
 
 
---
--- TOC entry 263 (class 1259 OID 9443157)
--- Name: log_guia_remessa_idlogguia_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.log_guia_remessa_idlogguia_seq
     START WITH 1
     INCREMENT BY 1
@@ -9863,11 +8798,6 @@ CREATE SEQUENCE alimentos.log_guia_remessa_idlogguia_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 264 (class 1259 OID 9443159)
--- Name: log_guia_remessa; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.log_guia_remessa (
     idlogguia integer DEFAULT nextval('alimentos.log_guia_remessa_idlogguia_seq'::regclass) NOT NULL,
@@ -9883,22 +8813,12 @@ CREATE TABLE alimentos.log_guia_remessa (
 );
 
 
---
--- TOC entry 265 (class 1259 OID 9443166)
--- Name: medidas_caseiras; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.medidas_caseiras (
     idmedcas character varying(20) NOT NULL,
     idcli character varying(10) NOT NULL,
     descricao character varying(50) NOT NULL
 );
 
-
---
--- TOC entry 266 (class 1259 OID 9443169)
--- Name: pessoa_idpes_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.pessoa_idpes_seq
     START WITH 1
@@ -9908,22 +8828,12 @@ CREATE SEQUENCE alimentos.pessoa_idpes_seq
     CACHE 1;
 
 
---
--- TOC entry 267 (class 1259 OID 9443171)
--- Name: pessoa; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.pessoa (
     idpes integer DEFAULT nextval('alimentos.pessoa_idpes_seq'::regclass) NOT NULL,
     tipo character varying(1) NOT NULL,
     CONSTRAINT ck_pessoa CHECK ((((tipo)::text = 'C'::text) OR ((tipo)::text = 'F'::text) OR ((tipo)::text = 'U'::text)))
 );
 
-
---
--- TOC entry 268 (class 1259 OID 9443176)
--- Name: produto_idpro_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.produto_idpro_seq
     START WITH 1
@@ -9932,11 +8842,6 @@ CREATE SEQUENCE alimentos.produto_idpro_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 269 (class 1259 OID 9443178)
--- Name: produto; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.produto (
     idpro integer DEFAULT nextval('alimentos.produto_idpro_seq'::regclass) NOT NULL,
@@ -9962,11 +8867,6 @@ CREATE TABLE alimentos.produto (
 );
 
 
---
--- TOC entry 270 (class 1259 OID 9443187)
--- Name: produto_composto_quimico_idpcq_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.produto_composto_quimico_idpcq_seq
     START WITH 1
     INCREMENT BY 1
@@ -9974,11 +8874,6 @@ CREATE SEQUENCE alimentos.produto_composto_quimico_idpcq_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 271 (class 1259 OID 9443189)
--- Name: produto_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.produto_composto_quimico (
     idpcq integer DEFAULT nextval('alimentos.produto_composto_quimico_idpcq_seq'::regclass) NOT NULL,
@@ -9988,11 +8883,6 @@ CREATE TABLE alimentos.produto_composto_quimico (
 );
 
 
---
--- TOC entry 272 (class 1259 OID 9443196)
--- Name: produto_fornecedor_idprf_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.produto_fornecedor_idprf_seq
     START WITH 1
     INCREMENT BY 1
@@ -10000,11 +8890,6 @@ CREATE SEQUENCE alimentos.produto_fornecedor_idprf_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 273 (class 1259 OID 9443198)
--- Name: produto_fornecedor; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.produto_fornecedor (
     idprf integer DEFAULT nextval('alimentos.produto_fornecedor_idprf_seq'::regclass) NOT NULL,
@@ -10014,11 +8899,6 @@ CREATE TABLE alimentos.produto_fornecedor (
 );
 
 
---
--- TOC entry 274 (class 1259 OID 9443202)
--- Name: produto_medida_caseira_idpmc_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.produto_medida_caseira_idpmc_seq
     START WITH 1
     INCREMENT BY 1
@@ -10026,11 +8906,6 @@ CREATE SEQUENCE alimentos.produto_medida_caseira_idpmc_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 275 (class 1259 OID 9443204)
--- Name: produto_medida_caseira; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.produto_medida_caseira (
     idpmc integer DEFAULT nextval('alimentos.produto_medida_caseira_idpmc_seq'::regclass) NOT NULL,
@@ -10041,11 +8916,6 @@ CREATE TABLE alimentos.produto_medida_caseira (
 );
 
 
---
--- TOC entry 276 (class 1259 OID 9443211)
--- Name: receita_idrec_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.receita_idrec_seq
     START WITH 1
     INCREMENT BY 1
@@ -10053,11 +8923,6 @@ CREATE SEQUENCE alimentos.receita_idrec_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 277 (class 1259 OID 9443213)
--- Name: receita; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.receita (
     idrec integer DEFAULT nextval('alimentos.receita_idrec_seq'::regclass) NOT NULL,
@@ -10070,11 +8935,6 @@ CREATE TABLE alimentos.receita (
 );
 
 
---
--- TOC entry 278 (class 1259 OID 9443220)
--- Name: receita_composto_quimico_idrcq_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.receita_composto_quimico_idrcq_seq
     START WITH 1
     INCREMENT BY 1
@@ -10082,11 +8942,6 @@ CREATE SEQUENCE alimentos.receita_composto_quimico_idrcq_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 279 (class 1259 OID 9443222)
--- Name: receita_composto_quimico; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.receita_composto_quimico (
     idrcq integer DEFAULT nextval('alimentos.receita_composto_quimico_idrcq_seq'::regclass) NOT NULL,
@@ -10096,11 +8951,6 @@ CREATE TABLE alimentos.receita_composto_quimico (
 );
 
 
---
--- TOC entry 280 (class 1259 OID 9443229)
--- Name: receita_produto_idrpr_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.receita_produto_idrpr_seq
     START WITH 1
     INCREMENT BY 1
@@ -10108,11 +8958,6 @@ CREATE SEQUENCE alimentos.receita_produto_idrpr_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 281 (class 1259 OID 9443231)
--- Name: receita_produto; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.receita_produto (
     idrpr integer DEFAULT nextval('alimentos.receita_produto_idrpr_seq'::regclass) NOT NULL,
@@ -10126,11 +8971,6 @@ CREATE TABLE alimentos.receita_produto (
 );
 
 
---
--- TOC entry 282 (class 1259 OID 9443238)
--- Name: tipo_produto_idtip_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.tipo_produto_idtip_seq
     START WITH 1
     INCREMENT BY 1
@@ -10139,22 +8979,12 @@ CREATE SEQUENCE alimentos.tipo_produto_idtip_seq
     CACHE 1;
 
 
---
--- TOC entry 283 (class 1259 OID 9443240)
--- Name: tipo_produto; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.tipo_produto (
     idtip integer DEFAULT nextval('alimentos.tipo_produto_idtip_seq'::regclass) NOT NULL,
     idcli character varying(10) NOT NULL,
     descricao character varying(50) NOT NULL
 );
 
-
---
--- TOC entry 284 (class 1259 OID 9443244)
--- Name: tipo_refeicao_idtre_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.tipo_refeicao_idtre_seq
     START WITH 1
@@ -10164,22 +8994,12 @@ CREATE SEQUENCE alimentos.tipo_refeicao_idtre_seq
     CACHE 1;
 
 
---
--- TOC entry 285 (class 1259 OID 9443246)
--- Name: tipo_refeicao; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.tipo_refeicao (
     idtre integer DEFAULT nextval('alimentos.tipo_refeicao_idtre_seq'::regclass) NOT NULL,
     idcli character varying(10) NOT NULL,
     descricao character varying(30) NOT NULL
 );
 
-
---
--- TOC entry 286 (class 1259 OID 9443250)
--- Name: tipo_unidade_idtip_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.tipo_unidade_idtip_seq
     START WITH 1
@@ -10189,22 +9009,12 @@ CREATE SEQUENCE alimentos.tipo_unidade_idtip_seq
     CACHE 1;
 
 
---
--- TOC entry 287 (class 1259 OID 9443252)
--- Name: tipo_unidade; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.tipo_unidade (
     idtip integer DEFAULT nextval('alimentos.tipo_unidade_idtip_seq'::regclass) NOT NULL,
     idcli character varying(10) NOT NULL,
     descricao character varying(50) NOT NULL
 );
 
-
---
--- TOC entry 288 (class 1259 OID 9443256)
--- Name: unidade_atendida_iduni_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
 
 CREATE SEQUENCE alimentos.unidade_atendida_iduni_seq
     START WITH 1
@@ -10213,11 +9023,6 @@ CREATE SEQUENCE alimentos.unidade_atendida_iduni_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 289 (class 1259 OID 9443258)
--- Name: unidade_atendida; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.unidade_atendida (
     iduni integer DEFAULT nextval('alimentos.unidade_atendida_iduni_seq'::regclass) NOT NULL,
@@ -10238,11 +9043,6 @@ CREATE TABLE alimentos.unidade_atendida (
 );
 
 
---
--- TOC entry 290 (class 1259 OID 9443262)
--- Name: unidade_faixa_etaria_idfeu_seq; Type: SEQUENCE; Schema: alimentos; Owner: -
---
-
 CREATE SEQUENCE alimentos.unidade_faixa_etaria_idfeu_seq
     START WITH 1
     INCREMENT BY 1
@@ -10250,11 +9050,6 @@ CREATE SEQUENCE alimentos.unidade_faixa_etaria_idfeu_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 291 (class 1259 OID 9443264)
--- Name: unidade_faixa_etaria; Type: TABLE; Schema: alimentos; Owner: -
---
 
 CREATE TABLE alimentos.unidade_faixa_etaria (
     idfeu integer DEFAULT nextval('alimentos.unidade_faixa_etaria_idfeu_seq'::regclass) NOT NULL,
@@ -10265,11 +9060,6 @@ CREATE TABLE alimentos.unidade_faixa_etaria (
 );
 
 
---
--- TOC entry 292 (class 1259 OID 9443268)
--- Name: unidade_produto; Type: TABLE; Schema: alimentos; Owner: -
---
-
 CREATE TABLE alimentos.unidade_produto (
     idunp character varying(20) NOT NULL,
     idcli character varying(10) NOT NULL,
@@ -10277,11 +9067,6 @@ CREATE TABLE alimentos.unidade_produto (
     peso numeric NOT NULL
 );
 
-
---
--- TOC entry 293 (class 1259 OID 9443274)
--- Name: aviso_nome; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.aviso_nome (
     idpes numeric(8,0) NOT NULL,
@@ -10291,11 +9076,6 @@ CREATE TABLE cadastro.aviso_nome (
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 846 (class 1259 OID 9474351)
--- Name: codigo_cartorio_inep; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.codigo_cartorio_inep (
     id integer NOT NULL,
@@ -10307,11 +9087,6 @@ CREATE TABLE cadastro.codigo_cartorio_inep (
 );
 
 
---
--- TOC entry 845 (class 1259 OID 9474349)
--- Name: codigo_cartorio_inep_id_seq; Type: SEQUENCE; Schema: cadastro; Owner: -
---
-
 CREATE SEQUENCE cadastro.codigo_cartorio_inep_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -10320,19 +9095,8 @@ CREATE SEQUENCE cadastro.codigo_cartorio_inep_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8145 (class 0 OID 0)
--- Dependencies: 845
--- Name: codigo_cartorio_inep_id_seq; Type: SEQUENCE OWNED BY; Schema: cadastro; Owner: -
---
-
 ALTER SEQUENCE cadastro.codigo_cartorio_inep_id_seq OWNED BY cadastro.codigo_cartorio_inep.id;
 
-
---
--- TOC entry 294 (class 1259 OID 9443278)
--- Name: deficiencia_cod_deficiencia_seq; Type: SEQUENCE; Schema: cadastro; Owner: -
---
 
 CREATE SEQUENCE cadastro.deficiencia_cod_deficiencia_seq
     START WITH 15
@@ -10344,11 +9108,6 @@ CREATE SEQUENCE cadastro.deficiencia_cod_deficiencia_seq
 
 SET default_with_oids = true;
 
---
--- TOC entry 295 (class 1259 OID 9443280)
--- Name: deficiencia; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.deficiencia (
     cod_deficiencia integer DEFAULT nextval('cadastro.deficiencia_cod_deficiencia_seq'::regclass) NOT NULL,
     nm_deficiencia character varying(70) NOT NULL,
@@ -10356,11 +9115,6 @@ CREATE TABLE cadastro.deficiencia (
     desconsidera_regra_diferenciada boolean DEFAULT false
 );
 
-
---
--- TOC entry 296 (class 1259 OID 9443284)
--- Name: documento; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.documento (
     idpes numeric(8,0) NOT NULL,
@@ -10402,11 +9156,6 @@ CREATE TABLE cadastro.documento (
 );
 
 
---
--- TOC entry 297 (class 1259 OID 9443293)
--- Name: endereco_externo; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.endereco_externo (
     idpes numeric(8,0) NOT NULL,
     tipo numeric(1,0) NOT NULL,
@@ -10438,11 +9187,6 @@ CREATE TABLE cadastro.endereco_externo (
 );
 
 
---
--- TOC entry 298 (class 1259 OID 9443303)
--- Name: endereco_pessoa; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.endereco_pessoa (
     idpes numeric(8,0) NOT NULL,
     tipo numeric(1,0) NOT NULL,
@@ -10471,11 +9215,6 @@ CREATE TABLE cadastro.endereco_pessoa (
 );
 
 
---
--- TOC entry 299 (class 1259 OID 9443312)
--- Name: escolaridade; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.escolaridade (
     idesco numeric(2,0) NOT NULL,
     descricao character varying(60) NOT NULL,
@@ -10483,21 +9222,11 @@ CREATE TABLE cadastro.escolaridade (
 );
 
 
---
--- TOC entry 300 (class 1259 OID 9443315)
--- Name: estado_civil; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.estado_civil (
     ideciv numeric(1,0) NOT NULL,
     descricao character varying(15) NOT NULL
 );
 
-
---
--- TOC entry 301 (class 1259 OID 9443318)
--- Name: fisica; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.fisica (
     idpes numeric(8,0) NOT NULL,
@@ -10559,11 +9288,6 @@ CREATE TABLE cadastro.fisica (
 );
 
 
---
--- TOC entry 302 (class 1259 OID 9443329)
--- Name: fisica_cpf; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.fisica_cpf (
     idpes numeric(8,0) NOT NULL,
     cpf numeric(11,0) NOT NULL,
@@ -10580,21 +9304,11 @@ CREATE TABLE cadastro.fisica_cpf (
 );
 
 
---
--- TOC entry 303 (class 1259 OID 9443337)
--- Name: fisica_deficiencia; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.fisica_deficiencia (
     ref_idpes integer NOT NULL,
     ref_cod_deficiencia integer NOT NULL
 );
 
-
---
--- TOC entry 304 (class 1259 OID 9443340)
--- Name: fisica_foto; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.fisica_foto (
     idpes integer NOT NULL,
@@ -10602,21 +9316,11 @@ CREATE TABLE cadastro.fisica_foto (
 );
 
 
---
--- TOC entry 305 (class 1259 OID 9443343)
--- Name: fisica_raca; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.fisica_raca (
     ref_idpes integer NOT NULL,
     ref_cod_raca integer NOT NULL
 );
 
-
---
--- TOC entry 306 (class 1259 OID 9443346)
--- Name: fisica_sangue; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.fisica_sangue (
     idpes numeric(8,0) NOT NULL,
@@ -10624,11 +9328,6 @@ CREATE TABLE cadastro.fisica_sangue (
     rh smallint NOT NULL
 );
 
-
---
--- TOC entry 307 (class 1259 OID 9443349)
--- Name: fone_pessoa; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.fone_pessoa (
     idpes numeric(8,0) NOT NULL,
@@ -10648,11 +9347,6 @@ CREATE TABLE cadastro.fone_pessoa (
     CONSTRAINT ck_fone_pessoa_tipo CHECK (((tipo >= (1)::numeric) AND (tipo <= (4)::numeric)))
 );
 
-
---
--- TOC entry 308 (class 1259 OID 9443358)
--- Name: funcionario; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.funcionario (
     matricula numeric(8,0) NOT NULL,
@@ -10674,11 +9368,6 @@ CREATE TABLE cadastro.funcionario (
 );
 
 
---
--- TOC entry 309 (class 1259 OID 9443367)
--- Name: historico_cartao; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.historico_cartao (
     idpes_cidadao numeric(8,0) NOT NULL,
     data_hora timestamp without time zone NOT NULL,
@@ -10687,11 +9376,6 @@ CREATE TABLE cadastro.historico_cartao (
     CONSTRAINT ck_historico_cartao_tipo CHECK (((tipo = 'P'::bpchar) OR (tipo = 'D'::bpchar)))
 );
 
-
---
--- TOC entry 310 (class 1259 OID 9443371)
--- Name: juridica; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.juridica (
     idpes numeric(8,0) NOT NULL,
@@ -10712,21 +9396,11 @@ CREATE TABLE cadastro.juridica (
 );
 
 
---
--- TOC entry 311 (class 1259 OID 9443379)
--- Name: ocupacao; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.ocupacao (
     idocup numeric(6,0) NOT NULL,
     descricao character varying(250) NOT NULL
 );
 
-
---
--- TOC entry 312 (class 1259 OID 9443382)
--- Name: orgao_emissor_rg_idorg_rg_seq; Type: SEQUENCE; Schema: cadastro; Owner: -
---
 
 CREATE SEQUENCE cadastro.orgao_emissor_rg_idorg_rg_seq
     START WITH 30
@@ -10735,11 +9409,6 @@ CREATE SEQUENCE cadastro.orgao_emissor_rg_idorg_rg_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 313 (class 1259 OID 9443384)
--- Name: orgao_emissor_rg; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.orgao_emissor_rg (
     idorg_rg integer DEFAULT nextval('cadastro.orgao_emissor_rg_idorg_rg_seq'::regclass) NOT NULL,
@@ -10750,11 +9419,6 @@ CREATE TABLE cadastro.orgao_emissor_rg (
     CONSTRAINT ck_orgao_emissor_rg_situacao CHECK (((situacao = 'A'::bpchar) OR (situacao = 'I'::bpchar)))
 );
 
-
---
--- TOC entry 314 (class 1259 OID 9443389)
--- Name: pessoa; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.pessoa (
     idpes numeric(8,0) DEFAULT nextval(('cadastro.seq_pessoa'::text)::regclass) NOT NULL,
@@ -10778,21 +9442,11 @@ CREATE TABLE cadastro.pessoa (
 );
 
 
---
--- TOC entry 315 (class 1259 OID 9443397)
--- Name: pessoa_fonetico; Type: TABLE; Schema: cadastro; Owner: -
---
-
 CREATE TABLE cadastro.pessoa_fonetico (
     idpes numeric(8,0) NOT NULL,
     fonema character varying(30) NOT NULL
 );
 
-
---
--- TOC entry 316 (class 1259 OID 9443400)
--- Name: raca_cod_raca_seq; Type: SEQUENCE; Schema: cadastro; Owner: -
---
 
 CREATE SEQUENCE cadastro.raca_cod_raca_seq
     START WITH 1
@@ -10801,11 +9455,6 @@ CREATE SEQUENCE cadastro.raca_cod_raca_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 317 (class 1259 OID 9443402)
--- Name: raca; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.raca (
     cod_raca integer DEFAULT nextval('cadastro.raca_cod_raca_seq'::regclass) NOT NULL,
@@ -10819,11 +9468,6 @@ CREATE TABLE cadastro.raca (
 );
 
 
---
--- TOC entry 318 (class 1259 OID 9443407)
--- Name: religiao_cod_religiao_seq; Type: SEQUENCE; Schema: cadastro; Owner: -
---
-
 CREATE SEQUENCE cadastro.religiao_cod_religiao_seq
     START WITH 1
     INCREMENT BY 1
@@ -10833,11 +9477,6 @@ CREATE SEQUENCE cadastro.religiao_cod_religiao_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 319 (class 1259 OID 9443409)
--- Name: religiao; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.religiao (
     cod_religiao integer DEFAULT nextval('cadastro.religiao_cod_religiao_seq'::regclass) NOT NULL,
@@ -10850,11 +9489,6 @@ CREATE TABLE cadastro.religiao (
 );
 
 
---
--- TOC entry 320 (class 1259 OID 9443414)
--- Name: seq_pessoa; Type: SEQUENCE; Schema: cadastro; Owner: -
---
-
 CREATE SEQUENCE cadastro.seq_pessoa
     START WITH 0
     INCREMENT BY 1
@@ -10864,11 +9498,6 @@ CREATE SEQUENCE cadastro.seq_pessoa
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 321 (class 1259 OID 9443416)
--- Name: socio; Type: TABLE; Schema: cadastro; Owner: -
---
 
 CREATE TABLE cadastro.socio (
     idpes_juridica numeric(8,0) NOT NULL,
@@ -10885,11 +9514,6 @@ CREATE TABLE cadastro.socio (
     CONSTRAINT ck_socio_origem_gravacao CHECK (((origem_gravacao = 'M'::bpchar) OR (origem_gravacao = 'U'::bpchar) OR (origem_gravacao = 'C'::bpchar) OR (origem_gravacao = 'O'::bpchar)))
 );
 
-
---
--- TOC entry 322 (class 1259 OID 9443424)
--- Name: bairro; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.bairro (
     idmun numeric(6,0) NOT NULL,
@@ -10912,11 +9536,6 @@ CREATE TABLE public.bairro (
 );
 
 
---
--- TOC entry 323 (class 1259 OID 9443434)
--- Name: logradouro; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE public.logradouro (
     idlog numeric(6,0) DEFAULT nextval(('public.seq_logradouro'::text)::regclass) NOT NULL,
     idtlog character varying(5) NOT NULL,
@@ -10937,11 +9556,6 @@ CREATE TABLE public.logradouro (
     CONSTRAINT ck_logradouro_origem_gravacao CHECK (((origem_gravacao = 'M'::bpchar) OR (origem_gravacao = 'U'::bpchar) OR (origem_gravacao = 'C'::bpchar) OR (origem_gravacao = 'O'::bpchar)))
 );
 
-
---
--- TOC entry 324 (class 1259 OID 9443444)
--- Name: municipio; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.municipio (
     idmun numeric(6,0) DEFAULT nextval(('public.seq_municipio'::text)::regclass) NOT NULL,
@@ -10967,11 +9581,6 @@ CREATE TABLE public.municipio (
     CONSTRAINT ck_municipio_tipo CHECK (((tipo = 'D'::bpchar) OR (tipo = 'M'::bpchar) OR (tipo = 'P'::bpchar) OR (tipo = 'R'::bpchar)))
 );
 
-
---
--- TOC entry 325 (class 1259 OID 9443454)
--- Name: v_endereco; Type: VIEW; Schema: cadastro; Owner: -
---
 
 CREATE VIEW cadastro.v_endereco AS
  SELECT e.idpes,
@@ -11015,11 +9624,6 @@ UNION
    FROM cadastro.endereco_externo e
   WHERE (e.tipo = (1)::numeric);
 
-
---
--- TOC entry 326 (class 1259 OID 9443459)
--- Name: v_fone_pessoa; Type: VIEW; Schema: cadastro; Owner: -
---
 
 CREATE VIEW cadastro.v_fone_pessoa AS
  SELECT DISTINCT t.idpes,
@@ -11067,11 +9671,6 @@ CREATE VIEW cadastro.v_fone_pessoa AS
           WHERE ((t1.tipo = (4)::numeric) AND (t.idpes = t1.idpes)));
 
 
---
--- TOC entry 327 (class 1259 OID 9443464)
--- Name: v_pessoa_fisica; Type: VIEW; Schema: cadastro; Owner: -
---
-
 CREATE OR REPLACE VIEW cadastro.v_pessoa_fisica AS
 SELECT
     p.idpes,
@@ -11091,11 +9690,6 @@ INNER JOIN cadastro.fisica f ON TRUE
 AND f.idpes = p.idpes;
 
 
---
--- TOC entry 328 (class 1259 OID 9443468)
--- Name: v_pessoa_fisica_simples; Type: VIEW; Schema: cadastro; Owner: -
---
-
 CREATE VIEW cadastro.v_pessoa_fisica_simples AS
  SELECT p.idpes,
     ( SELECT fisica_cpf.cpf
@@ -11107,11 +9701,6 @@ CREATE VIEW cadastro.v_pessoa_fisica_simples AS
     cadastro.fisica f
   WHERE (p.idpes = f.idpes);
 
-
---
--- TOC entry 329 (class 1259 OID 9443472)
--- Name: v_pessoa_fj; Type: VIEW; Schema: cadastro; Owner: -
---
 
 CREATE VIEW cadastro.v_pessoa_fj AS
  SELECT p.idpes,
@@ -11131,11 +9720,6 @@ CREATE VIEW cadastro.v_pessoa_fj AS
    FROM cadastro.pessoa p;
 
 
---
--- TOC entry 330 (class 1259 OID 9443477)
--- Name: v_pessoa_juridica; Type: VIEW; Schema: cadastro; Owner: -
---
-
 CREATE VIEW cadastro.v_pessoa_juridica AS
  SELECT j.idpes,
     j.fantasia,
@@ -11148,11 +9732,6 @@ CREATE VIEW cadastro.v_pessoa_juridica AS
    FROM cadastro.juridica j;
 
 
---
--- TOC entry 331 (class 1259 OID 9443481)
--- Name: v_pessoafj_count; Type: VIEW; Schema: cadastro; Owner: -
---
-
 CREATE VIEW cadastro.v_pessoafj_count AS
  SELECT fisica.ref_cod_sistema,
     fisica.cpf AS id_federal
@@ -11163,11 +9742,6 @@ UNION ALL
    FROM cadastro.juridica;
 
 
---
--- TOC entry 332 (class 1259 OID 9443485)
--- Name: campo_consistenciacao; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.campo_consistenciacao (
     idcam numeric(3,0) NOT NULL,
     campo character varying(50) NOT NULL,
@@ -11177,11 +9751,6 @@ CREATE TABLE consistenciacao.campo_consistenciacao (
 );
 
 
---
--- TOC entry 333 (class 1259 OID 9443489)
--- Name: campo_metadado_id_campo_met_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
-
 CREATE SEQUENCE consistenciacao.campo_metadado_id_campo_met_seq
     START WITH 1
     INCREMENT BY 1
@@ -11189,11 +9758,6 @@ CREATE SEQUENCE consistenciacao.campo_metadado_id_campo_met_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 334 (class 1259 OID 9443491)
--- Name: campo_metadado; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.campo_metadado (
     id_campo_met integer DEFAULT nextval('consistenciacao.campo_metadado_id_campo_met_seq'::regclass) NOT NULL,
@@ -11210,11 +9774,6 @@ CREATE TABLE consistenciacao.campo_metadado (
 );
 
 
---
--- TOC entry 335 (class 1259 OID 9443497)
--- Name: confrontacao_idcon_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
-
 CREATE SEQUENCE consistenciacao.confrontacao_idcon_seq
     START WITH 1
     INCREMENT BY 1
@@ -11222,11 +9781,6 @@ CREATE SEQUENCE consistenciacao.confrontacao_idcon_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 336 (class 1259 OID 9443499)
--- Name: confrontacao; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.confrontacao (
     idcon integer DEFAULT nextval('consistenciacao.confrontacao_idcon_seq'::regclass) NOT NULL,
@@ -11240,11 +9794,6 @@ CREATE TABLE consistenciacao.confrontacao (
 );
 
 
---
--- TOC entry 337 (class 1259 OID 9443503)
--- Name: fonte_idfon_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
-
 CREATE SEQUENCE consistenciacao.fonte_idfon_seq
     START WITH 1
     INCREMENT BY 1
@@ -11253,11 +9802,6 @@ CREATE SEQUENCE consistenciacao.fonte_idfon_seq
     CACHE 1;
 
 
---
--- TOC entry 338 (class 1259 OID 9443505)
--- Name: fonte; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.fonte (
     idfon integer DEFAULT nextval('consistenciacao.fonte_idfon_seq'::regclass) NOT NULL,
     nome character varying(60) NOT NULL,
@@ -11265,11 +9809,6 @@ CREATE TABLE consistenciacao.fonte (
     CONSTRAINT ck_fonte_situacao CHECK (((situacao = 'A'::bpchar) OR (situacao = 'I'::bpchar)))
 );
 
-
---
--- TOC entry 339 (class 1259 OID 9443510)
--- Name: historico_campo; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.historico_campo (
     idpes numeric(8,0) NOT NULL,
@@ -11280,11 +9819,6 @@ CREATE TABLE consistenciacao.historico_campo (
 );
 
 
---
--- TOC entry 340 (class 1259 OID 9443514)
--- Name: incoerencia_idinc_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
-
 CREATE SEQUENCE consistenciacao.incoerencia_idinc_seq
     START WITH 1
     INCREMENT BY 1
@@ -11292,11 +9826,6 @@ CREATE SEQUENCE consistenciacao.incoerencia_idinc_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 341 (class 1259 OID 9443516)
--- Name: incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.incoerencia (
     idinc integer DEFAULT nextval('consistenciacao.incoerencia_idinc_seq'::regclass) NOT NULL,
@@ -11326,11 +9855,6 @@ CREATE TABLE consistenciacao.incoerencia (
 );
 
 
---
--- TOC entry 342 (class 1259 OID 9443523)
--- Name: incoerencia_documento_id_inc_doc_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
-
 CREATE SEQUENCE consistenciacao.incoerencia_documento_id_inc_doc_seq
     START WITH 1
     INCREMENT BY 1
@@ -11338,11 +9862,6 @@ CREATE SEQUENCE consistenciacao.incoerencia_documento_id_inc_doc_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 343 (class 1259 OID 9443525)
--- Name: incoerencia_documento; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.incoerencia_documento (
     id_inc_doc integer DEFAULT nextval('consistenciacao.incoerencia_documento_id_inc_doc_seq'::regclass) NOT NULL,
@@ -11368,11 +9887,6 @@ CREATE TABLE consistenciacao.incoerencia_documento (
 );
 
 
---
--- TOC entry 344 (class 1259 OID 9443529)
--- Name: incoerencia_endereco_id_inc_end_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
-
 CREATE SEQUENCE consistenciacao.incoerencia_endereco_id_inc_end_seq
     START WITH 1
     INCREMENT BY 1
@@ -11380,11 +9894,6 @@ CREATE SEQUENCE consistenciacao.incoerencia_endereco_id_inc_end_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 345 (class 1259 OID 9443531)
--- Name: incoerencia_endereco; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.incoerencia_endereco (
     id_inc_end integer DEFAULT nextval('consistenciacao.incoerencia_endereco_id_inc_end_seq'::regclass) NOT NULL,
@@ -11403,11 +9912,6 @@ CREATE TABLE consistenciacao.incoerencia_endereco (
 );
 
 
---
--- TOC entry 346 (class 1259 OID 9443536)
--- Name: incoerencia_fone_id_inc_fone_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
-
 CREATE SEQUENCE consistenciacao.incoerencia_fone_id_inc_fone_seq
     START WITH 1
     INCREMENT BY 1
@@ -11415,11 +9919,6 @@ CREATE SEQUENCE consistenciacao.incoerencia_fone_id_inc_fone_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 347 (class 1259 OID 9443538)
--- Name: incoerencia_fone; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.incoerencia_fone (
     id_inc_fone integer DEFAULT nextval('consistenciacao.incoerencia_fone_id_inc_fone_seq'::regclass) NOT NULL,
@@ -11431,32 +9930,17 @@ CREATE TABLE consistenciacao.incoerencia_fone (
 );
 
 
---
--- TOC entry 348 (class 1259 OID 9443543)
--- Name: incoerencia_pessoa_possivel; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.incoerencia_pessoa_possivel (
     idinc integer NOT NULL,
     idpes numeric(8,0) NOT NULL
 );
 
 
---
--- TOC entry 349 (class 1259 OID 9443546)
--- Name: incoerencia_tipo_incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.incoerencia_tipo_incoerencia (
     id_tipo_inc numeric(3,0) NOT NULL,
     idinc integer NOT NULL
 );
 
-
---
--- TOC entry 350 (class 1259 OID 9443549)
--- Name: metadado_idmet_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
 
 CREATE SEQUENCE consistenciacao.metadado_idmet_seq
     START WITH 1
@@ -11465,11 +9949,6 @@ CREATE SEQUENCE consistenciacao.metadado_idmet_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 351 (class 1259 OID 9443551)
--- Name: metadado; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.metadado (
     idmet integer DEFAULT nextval('consistenciacao.metadado_idmet_seq'::regclass) NOT NULL,
@@ -11481,22 +9960,12 @@ CREATE TABLE consistenciacao.metadado (
 );
 
 
---
--- TOC entry 352 (class 1259 OID 9443556)
--- Name: ocorrencia_regra_campo; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.ocorrencia_regra_campo (
     idreg integer NOT NULL,
     conteudo_padrao character varying(60) NOT NULL,
     ocorrencias text NOT NULL
 );
 
-
---
--- TOC entry 353 (class 1259 OID 9443562)
--- Name: regra_campo_idreg_seq; Type: SEQUENCE; Schema: consistenciacao; Owner: -
---
 
 CREATE SEQUENCE consistenciacao.regra_campo_idreg_seq
     START WITH 1
@@ -11506,11 +9975,6 @@ CREATE SEQUENCE consistenciacao.regra_campo_idreg_seq
     CACHE 1;
 
 
---
--- TOC entry 354 (class 1259 OID 9443564)
--- Name: regra_campo; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.regra_campo (
     idreg integer DEFAULT nextval('consistenciacao.regra_campo_idreg_seq'::regclass) NOT NULL,
     nome character varying(60) NOT NULL,
@@ -11518,11 +9982,6 @@ CREATE TABLE consistenciacao.regra_campo (
     CONSTRAINT ck_regra_campo_tipo CHECK (((tipo = 'S'::bpchar) OR (tipo = 'N'::bpchar)))
 );
 
-
---
--- TOC entry 355 (class 1259 OID 9443569)
--- Name: temp_cadastro_unificacao_cmf; Type: TABLE; Schema: consistenciacao; Owner: -
---
 
 CREATE TABLE consistenciacao.temp_cadastro_unificacao_cmf (
     idpes numeric(8,0) NOT NULL,
@@ -11550,11 +10009,6 @@ CREATE TABLE consistenciacao.temp_cadastro_unificacao_cmf (
 );
 
 
---
--- TOC entry 356 (class 1259 OID 9443575)
--- Name: temp_cadastro_unificacao_siam; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.temp_cadastro_unificacao_siam (
     idpes numeric(8,0) NOT NULL,
     nome character varying(40) NOT NULL,
@@ -11570,22 +10024,12 @@ CREATE TABLE consistenciacao.temp_cadastro_unificacao_siam (
 );
 
 
---
--- TOC entry 357 (class 1259 OID 9443578)
--- Name: tipo_incoerencia; Type: TABLE; Schema: consistenciacao; Owner: -
---
-
 CREATE TABLE consistenciacao.tipo_incoerencia (
     id_tipo_inc numeric(3,0) NOT NULL,
     idcam numeric(3,0) NOT NULL,
     descricao character varying(250) NOT NULL
 );
 
-
---
--- TOC entry 358 (class 1259 OID 9443581)
--- Name: bairro; Type: TABLE; Schema: historico; Owner: -
---
 
 CREATE TABLE historico.bairro (
     idbai numeric(6,0) NOT NULL,
@@ -11605,11 +10049,6 @@ CREATE TABLE historico.bairro (
 );
 
 
---
--- TOC entry 359 (class 1259 OID 9443589)
--- Name: cep_logradouro; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.cep_logradouro (
     cep numeric(8,0) NOT NULL,
     idlog numeric(6,0) NOT NULL,
@@ -11628,11 +10067,6 @@ CREATE TABLE historico.cep_logradouro (
 );
 
 
---
--- TOC entry 360 (class 1259 OID 9443597)
--- Name: cep_logradouro_bairro; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.cep_logradouro_bairro (
     idbai numeric(6,0) NOT NULL,
     idlog numeric(6,0) NOT NULL,
@@ -11649,11 +10083,6 @@ CREATE TABLE historico.cep_logradouro_bairro (
     CONSTRAINT ck_cep_logradouro_bairro_origem_gravacao CHECK (((origem_gravacao = 'M'::bpchar) OR (origem_gravacao = 'U'::bpchar) OR (origem_gravacao = 'C'::bpchar) OR (origem_gravacao = 'O'::bpchar)))
 );
 
-
---
--- TOC entry 361 (class 1259 OID 9443605)
--- Name: documento; Type: TABLE; Schema: historico; Owner: -
---
 
 CREATE TABLE historico.documento (
     idpes numeric(8,0) NOT NULL,
@@ -11689,11 +10118,6 @@ CREATE TABLE historico.documento (
 );
 
 
---
--- TOC entry 362 (class 1259 OID 9443614)
--- Name: endereco_externo; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.endereco_externo (
     idpes numeric(8,0) NOT NULL,
     tipo numeric(1,0) NOT NULL,
@@ -11721,11 +10145,6 @@ CREATE TABLE historico.endereco_externo (
 );
 
 
---
--- TOC entry 363 (class 1259 OID 9443623)
--- Name: endereco_pessoa; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.endereco_pessoa (
     idpes numeric(8,0) NOT NULL,
     tipo numeric(1,0) NOT NULL,
@@ -11749,11 +10168,6 @@ CREATE TABLE historico.endereco_pessoa (
     CONSTRAINT ck_endereco_pessoa_tipo CHECK (((tipo >= (1)::numeric) AND (tipo <= (3)::numeric)))
 );
 
-
---
--- TOC entry 364 (class 1259 OID 9443632)
--- Name: fisica; Type: TABLE; Schema: historico; Owner: -
---
 
 CREATE TABLE historico.fisica (
     idpes numeric(8,0) NOT NULL,
@@ -11793,11 +10207,6 @@ CREATE TABLE historico.fisica (
 );
 
 
---
--- TOC entry 365 (class 1259 OID 9443642)
--- Name: fisica_cpf; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.fisica_cpf (
     idpes numeric(8,0) NOT NULL,
     cpf numeric(11,0) NOT NULL,
@@ -11813,11 +10222,6 @@ CREATE TABLE historico.fisica_cpf (
     CONSTRAINT ck_fone_pessoa_operacao CHECK (((operacao = 'I'::bpchar) OR (operacao = 'A'::bpchar) OR (operacao = 'E'::bpchar)))
 );
 
-
---
--- TOC entry 366 (class 1259 OID 9443650)
--- Name: fone_pessoa; Type: TABLE; Schema: historico; Owner: -
---
 
 CREATE TABLE historico.fone_pessoa (
     idpes numeric(8,0) NOT NULL,
@@ -11837,11 +10241,6 @@ CREATE TABLE historico.fone_pessoa (
     CONSTRAINT ck_fone_pessoa_tipo CHECK (((tipo >= (1)::numeric) AND (tipo <= (4)::numeric)))
 );
 
-
---
--- TOC entry 367 (class 1259 OID 9443659)
--- Name: funcionario; Type: TABLE; Schema: historico; Owner: -
---
 
 CREATE TABLE historico.funcionario (
     matricula numeric(8,0) NOT NULL,
@@ -11863,11 +10262,6 @@ CREATE TABLE historico.funcionario (
 );
 
 
---
--- TOC entry 368 (class 1259 OID 9443668)
--- Name: juridica; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.juridica (
     idpes numeric(8,0) NOT NULL,
     cnpj numeric(14,0) NOT NULL,
@@ -11885,11 +10279,6 @@ CREATE TABLE historico.juridica (
     CONSTRAINT ck_juridica_origem_gravacao CHECK (((origem_gravacao = 'M'::bpchar) OR (origem_gravacao = 'U'::bpchar) OR (origem_gravacao = 'C'::bpchar) OR (origem_gravacao = 'O'::bpchar)))
 );
 
-
---
--- TOC entry 369 (class 1259 OID 9443676)
--- Name: logradouro; Type: TABLE; Schema: historico; Owner: -
---
 
 CREATE TABLE historico.logradouro (
     idlog numeric(6,0) NOT NULL,
@@ -11911,11 +10300,6 @@ CREATE TABLE historico.logradouro (
     CONSTRAINT ck_logradouro_origem_gravacao CHECK (((origem_gravacao = 'M'::bpchar) OR (origem_gravacao = 'U'::bpchar) OR (origem_gravacao = 'C'::bpchar) OR (origem_gravacao = 'O'::bpchar)))
 );
 
-
---
--- TOC entry 370 (class 1259 OID 9443685)
--- Name: municipio; Type: TABLE; Schema: historico; Owner: -
---
 
 CREATE TABLE historico.municipio (
     idmun numeric(6,0) NOT NULL,
@@ -11942,11 +10326,6 @@ CREATE TABLE historico.municipio (
 );
 
 
---
--- TOC entry 371 (class 1259 OID 9443694)
--- Name: pessoa; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.pessoa (
     idpes numeric(8,0) NOT NULL,
     nome character varying(150) NOT NULL,
@@ -11969,11 +10348,6 @@ CREATE TABLE historico.pessoa (
 );
 
 
---
--- TOC entry 372 (class 1259 OID 9443704)
--- Name: socio; Type: TABLE; Schema: historico; Owner: -
---
-
 CREATE TABLE historico.socio (
     idpes_juridica numeric(8,0) NOT NULL,
     idpes_fisica numeric(8,0) NOT NULL,
@@ -11992,11 +10366,6 @@ CREATE TABLE historico.socio (
 
 SET default_with_oids = false;
 
---
--- TOC entry 373 (class 1259 OID 9443712)
--- Name: area_conhecimento; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.area_conhecimento (
     id integer NOT NULL,
     instituicao_id integer NOT NULL,
@@ -12006,11 +10375,6 @@ CREATE TABLE modules.area_conhecimento (
 );
 
 
---
--- TOC entry 374 (class 1259 OID 9443716)
--- Name: area_conhecimento_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.area_conhecimento_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12019,19 +10383,8 @@ CREATE SEQUENCE modules.area_conhecimento_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8146 (class 0 OID 0)
--- Dependencies: 374
--- Name: area_conhecimento_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.area_conhecimento_id_seq OWNED BY modules.area_conhecimento.id;
 
-
---
--- TOC entry 375 (class 1259 OID 9443718)
--- Name: auditoria; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.auditoria (
     usuario character varying(300),
@@ -12042,11 +10395,6 @@ CREATE TABLE modules.auditoria (
     data_hora timestamp without time zone
 );
 
-
---
--- TOC entry 376 (class 1259 OID 9443724)
--- Name: auditoria_geral; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.auditoria_geral (
     usuario_id integer,
@@ -12061,11 +10409,6 @@ CREATE TABLE modules.auditoria_geral (
 );
 
 
---
--- TOC entry 850 (class 1259 OID 9474619)
--- Name: auditoria_geral_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.auditoria_geral_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12074,19 +10417,8 @@ CREATE SEQUENCE modules.auditoria_geral_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8147 (class 0 OID 0)
--- Dependencies: 850
--- Name: auditoria_geral_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.auditoria_geral_id_seq OWNED BY modules.auditoria_geral.id;
 
-
---
--- TOC entry 377 (class 1259 OID 9443730)
--- Name: calendario_turma; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.calendario_turma (
     calendario_ano_letivo_id integer NOT NULL,
@@ -12096,11 +10428,6 @@ CREATE TABLE modules.calendario_turma (
     turma_id integer NOT NULL
 );
 
-
---
--- TOC entry 378 (class 1259 OID 9443733)
--- Name: componente_curricular; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.componente_curricular (
     id integer NOT NULL,
@@ -12114,11 +10441,6 @@ CREATE TABLE modules.componente_curricular (
 );
 
 
---
--- TOC entry 379 (class 1259 OID 9443740)
--- Name: componente_curricular_ano_escolar; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.componente_curricular_ano_escolar (
     componente_curricular_id integer NOT NULL,
     ano_escolar_id integer NOT NULL,
@@ -12128,11 +10450,6 @@ CREATE TABLE modules.componente_curricular_ano_escolar (
 );
 
 
---
--- TOC entry 380 (class 1259 OID 9443743)
--- Name: componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.componente_curricular_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12141,19 +10458,8 @@ CREATE SEQUENCE modules.componente_curricular_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8148 (class 0 OID 0)
--- Dependencies: 380
--- Name: componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.componente_curricular_id_seq OWNED BY modules.componente_curricular.id;
 
-
---
--- TOC entry 381 (class 1259 OID 9443745)
--- Name: componente_curricular_turma; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.componente_curricular_turma (
     componente_curricular_id integer NOT NULL,
@@ -12168,22 +10474,12 @@ CREATE TABLE modules.componente_curricular_turma (
 );
 
 
---
--- TOC entry 844 (class 1259 OID 9469019)
--- Name: config_movimento_geral; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.config_movimento_geral (
     id integer NOT NULL,
     ref_cod_serie integer NOT NULL,
     coluna integer NOT NULL
 );
 
-
---
--- TOC entry 843 (class 1259 OID 9469017)
--- Name: config_movimento_geral_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.config_movimento_geral_id_seq
     START WITH 1
@@ -12193,19 +10489,8 @@ CREATE SEQUENCE modules.config_movimento_geral_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8149 (class 0 OID 0)
--- Dependencies: 843
--- Name: config_movimento_geral_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.config_movimento_geral_id_seq OWNED BY modules.config_movimento_geral.id;
 
-
---
--- TOC entry 382 (class 1259 OID 9443751)
--- Name: docente_licenciatura; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.docente_licenciatura (
     id integer NOT NULL,
@@ -12220,11 +10505,6 @@ CREATE TABLE modules.docente_licenciatura (
 );
 
 
---
--- TOC entry 383 (class 1259 OID 9443754)
--- Name: docente_licenciatura_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.docente_licenciatura_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12233,19 +10513,8 @@ CREATE SEQUENCE modules.docente_licenciatura_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8150 (class 0 OID 0)
--- Dependencies: 383
--- Name: docente_licenciatura_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.docente_licenciatura_id_seq OWNED BY modules.docente_licenciatura.id;
 
-
---
--- TOC entry 384 (class 1259 OID 9443756)
--- Name: educacenso_cod_aluno; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.educacenso_cod_aluno (
     cod_aluno integer NOT NULL,
@@ -12257,11 +10526,6 @@ CREATE TABLE modules.educacenso_cod_aluno (
 );
 
 
---
--- TOC entry 385 (class 1259 OID 9443762)
--- Name: educacenso_cod_docente; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.educacenso_cod_docente (
     cod_servidor integer NOT NULL,
     cod_docente_inep bigint NOT NULL,
@@ -12271,11 +10535,6 @@ CREATE TABLE modules.educacenso_cod_docente (
     updated_at timestamp without time zone
 );
 
-
---
--- TOC entry 386 (class 1259 OID 9443768)
--- Name: educacenso_cod_escola; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.educacenso_cod_escola (
     cod_escola integer NOT NULL,
@@ -12287,11 +10546,6 @@ CREATE TABLE modules.educacenso_cod_escola (
 );
 
 
---
--- TOC entry 387 (class 1259 OID 9443774)
--- Name: educacenso_cod_turma; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.educacenso_cod_turma (
     cod_turma integer NOT NULL,
     cod_turma_inep bigint NOT NULL,
@@ -12301,11 +10555,6 @@ CREATE TABLE modules.educacenso_cod_turma (
     updated_at timestamp without time zone
 );
 
-
---
--- TOC entry 388 (class 1259 OID 9443780)
--- Name: educacenso_curso_superior; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.educacenso_curso_superior (
     id integer NOT NULL,
@@ -12319,11 +10568,6 @@ CREATE TABLE modules.educacenso_curso_superior (
 );
 
 
---
--- TOC entry 389 (class 1259 OID 9443783)
--- Name: educacenso_curso_superior_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.educacenso_curso_superior_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12332,19 +10576,8 @@ CREATE SEQUENCE modules.educacenso_curso_superior_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8151 (class 0 OID 0)
--- Dependencies: 389
--- Name: educacenso_curso_superior_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.educacenso_curso_superior_id_seq OWNED BY modules.educacenso_curso_superior.id;
 
-
---
--- TOC entry 390 (class 1259 OID 9443785)
--- Name: educacenso_ies; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.educacenso_ies (
     id integer NOT NULL,
@@ -12359,11 +10592,6 @@ CREATE TABLE modules.educacenso_ies (
 );
 
 
---
--- TOC entry 391 (class 1259 OID 9443788)
--- Name: educacenso_ies_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.educacenso_ies_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12372,30 +10600,14 @@ CREATE SEQUENCE modules.educacenso_ies_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8152 (class 0 OID 0)
--- Dependencies: 391
--- Name: educacenso_ies_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.educacenso_ies_id_seq OWNED BY modules.educacenso_ies.id;
 
-
---
--- TOC entry 847 (class 1259 OID 9474458)
--- Name: educacenso_orgao_regional; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.educacenso_orgao_regional (
     sigla_uf character varying(2) NOT NULL,
     codigo character varying(5) NOT NULL
 );
 
-
---
--- TOC entry 392 (class 1259 OID 9443790)
--- Name: empresa_transporte_escolar_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.empresa_transporte_escolar_seq
     START WITH 1
@@ -12407,11 +10619,6 @@ CREATE SEQUENCE modules.empresa_transporte_escolar_seq
 
 SET default_with_oids = true;
 
---
--- TOC entry 393 (class 1259 OID 9443792)
--- Name: empresa_transporte_escolar; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.empresa_transporte_escolar (
     cod_empresa_transporte_escolar integer DEFAULT nextval('modules.empresa_transporte_escolar_seq'::regclass) NOT NULL,
     ref_idpes integer NOT NULL,
@@ -12422,21 +10629,11 @@ CREATE TABLE modules.empresa_transporte_escolar (
 
 SET default_with_oids = false;
 
---
--- TOC entry 394 (class 1259 OID 9443796)
--- Name: etapas_curso_educacenso; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.etapas_curso_educacenso (
     etapa_id integer NOT NULL,
     curso_id integer NOT NULL
 );
 
-
---
--- TOC entry 395 (class 1259 OID 9443799)
--- Name: etapas_educacenso; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.etapas_educacenso (
     id integer NOT NULL,
@@ -12444,22 +10641,12 @@ CREATE TABLE modules.etapas_educacenso (
 );
 
 
---
--- TOC entry 396 (class 1259 OID 9443802)
--- Name: falta_aluno; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.falta_aluno (
     id integer NOT NULL,
     matricula_id integer NOT NULL,
     tipo_falta smallint NOT NULL
 );
 
-
---
--- TOC entry 397 (class 1259 OID 9443805)
--- Name: falta_aluno_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.falta_aluno_id_seq
     START WITH 1
@@ -12469,19 +10656,8 @@ CREATE SEQUENCE modules.falta_aluno_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8153 (class 0 OID 0)
--- Dependencies: 397
--- Name: falta_aluno_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.falta_aluno_id_seq OWNED BY modules.falta_aluno.id;
 
-
---
--- TOC entry 398 (class 1259 OID 9443807)
--- Name: falta_componente_curricular; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.falta_componente_curricular (
     id integer NOT NULL,
@@ -12492,11 +10668,6 @@ CREATE TABLE modules.falta_componente_curricular (
 );
 
 
---
--- TOC entry 399 (class 1259 OID 9443811)
--- Name: falta_componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.falta_componente_curricular_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12505,19 +10676,8 @@ CREATE SEQUENCE modules.falta_componente_curricular_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8154 (class 0 OID 0)
--- Dependencies: 399
--- Name: falta_componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.falta_componente_curricular_id_seq OWNED BY modules.falta_componente_curricular.id;
 
-
---
--- TOC entry 400 (class 1259 OID 9443813)
--- Name: falta_geral; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.falta_geral (
     id integer NOT NULL,
@@ -12527,11 +10687,6 @@ CREATE TABLE modules.falta_geral (
 );
 
 
---
--- TOC entry 401 (class 1259 OID 9443817)
--- Name: falta_geral_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.falta_geral_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12540,21 +10695,10 @@ CREATE SEQUENCE modules.falta_geral_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8155 (class 0 OID 0)
--- Dependencies: 401
--- Name: falta_geral_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.falta_geral_id_seq OWNED BY modules.falta_geral.id;
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 402 (class 1259 OID 9443819)
--- Name: ficha_medica_aluno; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.ficha_medica_aluno (
     ref_cod_aluno integer NOT NULL,
@@ -12608,11 +10752,6 @@ CREATE TABLE modules.ficha_medica_aluno (
 
 SET default_with_oids = false;
 
---
--- TOC entry 403 (class 1259 OID 9443825)
--- Name: formula_media; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.formula_media (
     id integer NOT NULL,
     instituicao_id integer NOT NULL,
@@ -12623,11 +10762,6 @@ CREATE TABLE modules.formula_media (
 );
 
 
---
--- TOC entry 404 (class 1259 OID 9443830)
--- Name: formula_media_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.formula_media_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12636,19 +10770,8 @@ CREATE SEQUENCE modules.formula_media_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8156 (class 0 OID 0)
--- Dependencies: 404
--- Name: formula_media_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.formula_media_id_seq OWNED BY modules.formula_media.id;
 
-
---
--- TOC entry 405 (class 1259 OID 9443832)
--- Name: itinerario_transporte_escolar_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.itinerario_transporte_escolar_seq
     START WITH 1
@@ -12659,11 +10782,6 @@ CREATE SEQUENCE modules.itinerario_transporte_escolar_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 406 (class 1259 OID 9443834)
--- Name: itinerario_transporte_escolar; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.itinerario_transporte_escolar (
     cod_itinerario_transporte_escolar integer DEFAULT nextval('modules.itinerario_transporte_escolar_seq'::regclass) NOT NULL,
@@ -12678,21 +10796,11 @@ CREATE TABLE modules.itinerario_transporte_escolar (
 
 SET default_with_oids = false;
 
---
--- TOC entry 407 (class 1259 OID 9443838)
--- Name: lingua_indigena_educacenso; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.lingua_indigena_educacenso (
     id integer NOT NULL,
     lingua character varying(255)
 );
 
-
---
--- TOC entry 408 (class 1259 OID 9443841)
--- Name: media_geral; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.media_geral (
     nota_aluno_id integer NOT NULL,
@@ -12703,11 +10811,6 @@ CREATE TABLE modules.media_geral (
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 409 (class 1259 OID 9443846)
--- Name: moradia_aluno; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.moradia_aluno (
     ref_cod_aluno integer NOT NULL,
@@ -12743,11 +10846,6 @@ CREATE TABLE modules.moradia_aluno (
 );
 
 
---
--- TOC entry 410 (class 1259 OID 9443850)
--- Name: motorista_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.motorista_seq
     START WITH 1
     INCREMENT BY 1
@@ -12755,11 +10853,6 @@ CREATE SEQUENCE modules.motorista_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 411 (class 1259 OID 9443852)
--- Name: motorista; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.motorista (
     cod_motorista integer DEFAULT nextval('modules.motorista_seq'::regclass) NOT NULL,
@@ -12775,21 +10868,11 @@ CREATE TABLE modules.motorista (
 
 SET default_with_oids = false;
 
---
--- TOC entry 412 (class 1259 OID 9443856)
--- Name: nota_aluno; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.nota_aluno (
     id integer NOT NULL,
     matricula_id integer NOT NULL
 );
 
-
---
--- TOC entry 413 (class 1259 OID 9443859)
--- Name: nota_aluno_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.nota_aluno_id_seq
     START WITH 1
@@ -12799,19 +10882,8 @@ CREATE SEQUENCE modules.nota_aluno_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8157 (class 0 OID 0)
--- Dependencies: 413
--- Name: nota_aluno_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.nota_aluno_id_seq OWNED BY modules.nota_aluno.id;
 
-
---
--- TOC entry 414 (class 1259 OID 9443861)
--- Name: nota_componente_curricular; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.nota_componente_curricular (
     id integer NOT NULL,
@@ -12826,11 +10898,6 @@ CREATE TABLE modules.nota_componente_curricular (
 );
 
 
---
--- TOC entry 415 (class 1259 OID 9443866)
--- Name: nota_componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.nota_componente_curricular_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12839,19 +10906,8 @@ CREATE SEQUENCE modules.nota_componente_curricular_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8158 (class 0 OID 0)
--- Dependencies: 415
--- Name: nota_componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.nota_componente_curricular_id_seq OWNED BY modules.nota_componente_curricular.id;
 
-
---
--- TOC entry 416 (class 1259 OID 9443868)
--- Name: nota_componente_curricular_media; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.nota_componente_curricular_media (
     nota_aluno_id integer NOT NULL,
@@ -12865,22 +10921,12 @@ CREATE TABLE modules.nota_componente_curricular_media (
 
 SET default_with_oids = true;
 
---
--- TOC entry 417 (class 1259 OID 9443873)
--- Name: nota_exame; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.nota_exame (
     ref_cod_matricula integer NOT NULL,
     ref_cod_componente_curricular integer NOT NULL,
     nota_exame numeric(6,3)
 );
 
-
---
--- TOC entry 418 (class 1259 OID 9443876)
--- Name: nota_geral_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.nota_geral_id_seq
     START WITH 958638
@@ -12892,11 +10938,6 @@ CREATE SEQUENCE modules.nota_geral_id_seq
 
 SET default_with_oids = false;
 
---
--- TOC entry 419 (class 1259 OID 9443878)
--- Name: nota_geral; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.nota_geral (
     id integer DEFAULT nextval('modules.nota_geral_id_seq'::regclass) NOT NULL,
     nota_aluno_id integer NOT NULL,
@@ -12906,22 +10947,12 @@ CREATE TABLE modules.nota_geral (
 );
 
 
---
--- TOC entry 420 (class 1259 OID 9443884)
--- Name: parecer_aluno; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.parecer_aluno (
     id integer NOT NULL,
     matricula_id integer NOT NULL,
     parecer_descritivo smallint NOT NULL
 );
 
-
---
--- TOC entry 421 (class 1259 OID 9443887)
--- Name: parecer_aluno_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.parecer_aluno_id_seq
     START WITH 1
@@ -12931,19 +10962,8 @@ CREATE SEQUENCE modules.parecer_aluno_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8159 (class 0 OID 0)
--- Dependencies: 421
--- Name: parecer_aluno_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.parecer_aluno_id_seq OWNED BY modules.parecer_aluno.id;
 
-
---
--- TOC entry 422 (class 1259 OID 9443889)
--- Name: parecer_componente_curricular; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.parecer_componente_curricular (
     id integer NOT NULL,
@@ -12954,11 +10974,6 @@ CREATE TABLE modules.parecer_componente_curricular (
 );
 
 
---
--- TOC entry 423 (class 1259 OID 9443895)
--- Name: parecer_componente_curricular_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.parecer_componente_curricular_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -12967,19 +10982,8 @@ CREATE SEQUENCE modules.parecer_componente_curricular_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8160 (class 0 OID 0)
--- Dependencies: 423
--- Name: parecer_componente_curricular_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.parecer_componente_curricular_id_seq OWNED BY modules.parecer_componente_curricular.id;
 
-
---
--- TOC entry 424 (class 1259 OID 9443897)
--- Name: parecer_geral; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.parecer_geral (
     id integer NOT NULL,
@@ -12989,11 +10993,6 @@ CREATE TABLE modules.parecer_geral (
 );
 
 
---
--- TOC entry 425 (class 1259 OID 9443903)
--- Name: parecer_geral_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.parecer_geral_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -13002,19 +11001,8 @@ CREATE SEQUENCE modules.parecer_geral_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8161 (class 0 OID 0)
--- Dependencies: 425
--- Name: parecer_geral_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.parecer_geral_id_seq OWNED BY modules.parecer_geral.id;
 
-
---
--- TOC entry 426 (class 1259 OID 9443905)
--- Name: pessoa_transporte_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.pessoa_transporte_seq
     START WITH 1
@@ -13025,11 +11013,6 @@ CREATE SEQUENCE modules.pessoa_transporte_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 427 (class 1259 OID 9443907)
--- Name: pessoa_transporte; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.pessoa_transporte (
     cod_pessoa_transporte integer DEFAULT nextval('modules.pessoa_transporte_seq'::regclass) NOT NULL,
@@ -13042,11 +11025,6 @@ CREATE TABLE modules.pessoa_transporte (
 );
 
 
---
--- TOC entry 428 (class 1259 OID 9443914)
--- Name: ponto_transporte_escolar_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.ponto_transporte_escolar_seq
     START WITH 1
     INCREMENT BY 1
@@ -13054,11 +11032,6 @@ CREATE SEQUENCE modules.ponto_transporte_escolar_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 429 (class 1259 OID 9443916)
--- Name: ponto_transporte_escolar; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.ponto_transporte_escolar (
     cod_ponto_transporte_escolar integer DEFAULT nextval('modules.ponto_transporte_escolar_seq'::regclass) NOT NULL,
@@ -13073,11 +11046,6 @@ CREATE TABLE modules.ponto_transporte_escolar (
 );
 
 
---
--- TOC entry 430 (class 1259 OID 9443920)
--- Name: professor_turma_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.professor_turma_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -13087,11 +11055,6 @@ CREATE SEQUENCE modules.professor_turma_id_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 431 (class 1259 OID 9443922)
--- Name: professor_turma; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.professor_turma (
     id integer DEFAULT nextval('modules.professor_turma_id_seq'::regclass) NOT NULL,
@@ -13107,21 +11070,11 @@ CREATE TABLE modules.professor_turma (
 );
 
 
---
--- TOC entry 432 (class 1259 OID 9443927)
--- Name: professor_turma_disciplina; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.professor_turma_disciplina (
     professor_turma_id integer NOT NULL,
     componente_curricular_id integer NOT NULL
 );
 
-
---
--- TOC entry 433 (class 1259 OID 9443930)
--- Name: regra_avaliacao; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.regra_avaliacao (
     id integer NOT NULL,
@@ -13154,11 +11107,6 @@ CREATE TABLE modules.regra_avaliacao (
 );
 
 
---
--- TOC entry 434 (class 1259 OID 9443948)
--- Name: regra_avaliacao_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.regra_avaliacao_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -13167,19 +11115,8 @@ CREATE SEQUENCE modules.regra_avaliacao_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8162 (class 0 OID 0)
--- Dependencies: 434
--- Name: regra_avaliacao_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
 
-
---
--- TOC entry 435 (class 1259 OID 9443950)
--- Name: regra_avaliacao_recuperacao_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.regra_avaliacao_recuperacao_id_seq
     START WITH 1
@@ -13188,11 +11125,6 @@ CREATE SEQUENCE modules.regra_avaliacao_recuperacao_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 436 (class 1259 OID 9443952)
--- Name: regra_avaliacao_recuperacao; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.regra_avaliacao_recuperacao (
     id integer DEFAULT nextval('modules.regra_avaliacao_recuperacao_id_seq'::regclass) NOT NULL,
@@ -13205,11 +11137,6 @@ CREATE TABLE modules.regra_avaliacao_recuperacao (
 );
 
 
---
--- TOC entry 849 (class 1259 OID 9474570)
--- Name: regra_avaliacao_serie_ano; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.regra_avaliacao_serie_ano (
     serie_id integer NOT NULL,
     regra_avaliacao_id integer NOT NULL,
@@ -13217,11 +11144,6 @@ CREATE TABLE modules.regra_avaliacao_serie_ano (
     ano_letivo smallint NOT NULL
 );
 
-
---
--- TOC entry 437 (class 1259 OID 9443956)
--- Name: rota_transporte_escolar_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.rota_transporte_escolar_seq
     START WITH 1
@@ -13232,11 +11154,6 @@ CREATE SEQUENCE modules.rota_transporte_escolar_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 438 (class 1259 OID 9443958)
--- Name: rota_transporte_escolar; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.rota_transporte_escolar (
     cod_rota_transporte_escolar integer DEFAULT nextval('modules.rota_transporte_escolar_seq'::regclass) NOT NULL,
@@ -13253,11 +11170,6 @@ CREATE TABLE modules.rota_transporte_escolar (
 
 SET default_with_oids = false;
 
---
--- TOC entry 439 (class 1259 OID 9443962)
--- Name: tabela_arredondamento; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.tabela_arredondamento (
     id integer NOT NULL,
     instituicao_id integer NOT NULL,
@@ -13265,11 +11177,6 @@ CREATE TABLE modules.tabela_arredondamento (
     tipo_nota smallint DEFAULT 1 NOT NULL
 );
 
-
---
--- TOC entry 440 (class 1259 OID 9443966)
--- Name: tabela_arredondamento_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.tabela_arredondamento_id_seq
     START WITH 1
@@ -13279,19 +11186,8 @@ CREATE SEQUENCE modules.tabela_arredondamento_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8163 (class 0 OID 0)
--- Dependencies: 440
--- Name: tabela_arredondamento_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.tabela_arredondamento_id_seq OWNED BY modules.tabela_arredondamento.id;
 
-
---
--- TOC entry 441 (class 1259 OID 9443968)
--- Name: tabela_arredondamento_valor; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.tabela_arredondamento_valor (
     id integer NOT NULL,
@@ -13305,11 +11201,6 @@ CREATE TABLE modules.tabela_arredondamento_valor (
 );
 
 
---
--- TOC entry 442 (class 1259 OID 9443971)
--- Name: tabela_arredondamento_valor_id_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.tabela_arredondamento_valor_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -13318,19 +11209,8 @@ CREATE SEQUENCE modules.tabela_arredondamento_valor_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8164 (class 0 OID 0)
--- Dependencies: 442
--- Name: tabela_arredondamento_valor_id_seq; Type: SEQUENCE OWNED BY; Schema: modules; Owner: -
---
-
 ALTER SEQUENCE modules.tabela_arredondamento_valor_id_seq OWNED BY modules.tabela_arredondamento_valor.id;
 
-
---
--- TOC entry 443 (class 1259 OID 9443973)
--- Name: tipo_veiculo_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
 
 CREATE SEQUENCE modules.tipo_veiculo_seq
     START WITH 1
@@ -13342,11 +11222,6 @@ CREATE SEQUENCE modules.tipo_veiculo_seq
 
 SET default_with_oids = true;
 
---
--- TOC entry 444 (class 1259 OID 9443975)
--- Name: tipo_veiculo; Type: TABLE; Schema: modules; Owner: -
---
-
 CREATE TABLE modules.tipo_veiculo (
     cod_tipo_veiculo integer DEFAULT nextval('modules.tipo_veiculo_seq'::regclass) NOT NULL,
     descricao character varying(60)
@@ -13354,11 +11229,6 @@ CREATE TABLE modules.tipo_veiculo (
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 445 (class 1259 OID 9443979)
--- Name: transporte_aluno; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.transporte_aluno (
     aluno_id integer NOT NULL,
@@ -13370,11 +11240,6 @@ CREATE TABLE modules.transporte_aluno (
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 446 (class 1259 OID 9443982)
--- Name: uniforme_aluno; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.uniforme_aluno (
     ref_cod_aluno integer NOT NULL,
@@ -13396,11 +11261,6 @@ CREATE TABLE modules.uniforme_aluno (
 );
 
 
---
--- TOC entry 447 (class 1259 OID 9443985)
--- Name: veiculo_seq; Type: SEQUENCE; Schema: modules; Owner: -
---
-
 CREATE SEQUENCE modules.veiculo_seq
     START WITH 1
     INCREMENT BY 1
@@ -13408,11 +11268,6 @@ CREATE SEQUENCE modules.veiculo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 448 (class 1259 OID 9443987)
--- Name: veiculo; Type: TABLE; Schema: modules; Owner: -
---
 
 CREATE TABLE modules.veiculo (
     cod_veiculo integer DEFAULT nextval('modules.veiculo_seq'::regclass) NOT NULL,
@@ -13436,11 +11291,6 @@ CREATE TABLE modules.veiculo (
 );
 
 
---
--- TOC entry 449 (class 1259 OID 9443994)
--- Name: acao_governo_cod_acao_governo_seq; Type: SEQUENCE; Schema: pmiacoes; Owner: -
---
-
 CREATE SEQUENCE pmiacoes.acao_governo_cod_acao_governo_seq
     START WITH 1
     INCREMENT BY 1
@@ -13448,11 +11298,6 @@ CREATE SEQUENCE pmiacoes.acao_governo_cod_acao_governo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 450 (class 1259 OID 9443996)
--- Name: acao_governo; Type: TABLE; Schema: pmiacoes; Owner: -
---
 
 CREATE TABLE pmiacoes.acao_governo (
     cod_acao_governo integer DEFAULT nextval('pmiacoes.acao_governo_cod_acao_governo_seq'::regclass) NOT NULL,
@@ -13471,11 +11316,6 @@ CREATE TABLE pmiacoes.acao_governo (
 );
 
 
---
--- TOC entry 451 (class 1259 OID 9444007)
--- Name: acao_governo_arquivo_cod_acao_governo_arquivo_seq; Type: SEQUENCE; Schema: pmiacoes; Owner: -
---
-
 CREATE SEQUENCE pmiacoes.acao_governo_arquivo_cod_acao_governo_arquivo_seq
     START WITH 1
     INCREMENT BY 1
@@ -13483,11 +11323,6 @@ CREATE SEQUENCE pmiacoes.acao_governo_arquivo_cod_acao_governo_arquivo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 452 (class 1259 OID 9444009)
--- Name: acao_governo_arquivo; Type: TABLE; Schema: pmiacoes; Owner: -
---
 
 CREATE TABLE pmiacoes.acao_governo_arquivo (
     cod_acao_governo_arquivo integer DEFAULT nextval('pmiacoes.acao_governo_arquivo_cod_acao_governo_arquivo_seq'::regclass) NOT NULL,
@@ -13499,21 +11334,11 @@ CREATE TABLE pmiacoes.acao_governo_arquivo (
 );
 
 
---
--- TOC entry 453 (class 1259 OID 9444016)
--- Name: acao_governo_categoria; Type: TABLE; Schema: pmiacoes; Owner: -
---
-
 CREATE TABLE pmiacoes.acao_governo_categoria (
     ref_cod_categoria integer NOT NULL,
     ref_cod_acao_governo integer NOT NULL
 );
 
-
---
--- TOC entry 454 (class 1259 OID 9444019)
--- Name: acao_governo_foto_cod_acao_governo_foto_seq; Type: SEQUENCE; Schema: pmiacoes; Owner: -
---
 
 CREATE SEQUENCE pmiacoes.acao_governo_foto_cod_acao_governo_foto_seq
     START WITH 1
@@ -13522,11 +11347,6 @@ CREATE SEQUENCE pmiacoes.acao_governo_foto_cod_acao_governo_foto_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 455 (class 1259 OID 9444021)
--- Name: acao_governo_foto; Type: TABLE; Schema: pmiacoes; Owner: -
---
 
 CREATE TABLE pmiacoes.acao_governo_foto (
     cod_acao_governo_foto integer DEFAULT nextval('pmiacoes.acao_governo_foto_cod_acao_governo_foto_seq'::regclass) NOT NULL,
@@ -13539,11 +11359,6 @@ CREATE TABLE pmiacoes.acao_governo_foto (
 );
 
 
---
--- TOC entry 456 (class 1259 OID 9444028)
--- Name: acao_governo_foto_portal; Type: TABLE; Schema: pmiacoes; Owner: -
---
-
 CREATE TABLE pmiacoes.acao_governo_foto_portal (
     ref_cod_acao_governo integer NOT NULL,
     ref_cod_foto_portal integer NOT NULL,
@@ -13551,11 +11366,6 @@ CREATE TABLE pmiacoes.acao_governo_foto_portal (
     data_cadastro timestamp without time zone NOT NULL
 );
 
-
---
--- TOC entry 457 (class 1259 OID 9444031)
--- Name: acao_governo_noticia; Type: TABLE; Schema: pmiacoes; Owner: -
---
 
 CREATE TABLE pmiacoes.acao_governo_noticia (
     ref_cod_acao_governo integer NOT NULL,
@@ -13565,11 +11375,6 @@ CREATE TABLE pmiacoes.acao_governo_noticia (
 );
 
 
---
--- TOC entry 458 (class 1259 OID 9444034)
--- Name: acao_governo_setor; Type: TABLE; Schema: pmiacoes; Owner: -
---
-
 CREATE TABLE pmiacoes.acao_governo_setor (
     ref_cod_acao_governo integer NOT NULL,
     ref_cod_setor integer NOT NULL,
@@ -13578,11 +11383,6 @@ CREATE TABLE pmiacoes.acao_governo_setor (
 );
 
 
---
--- TOC entry 459 (class 1259 OID 9444037)
--- Name: categoria_cod_categoria_seq; Type: SEQUENCE; Schema: pmiacoes; Owner: -
---
-
 CREATE SEQUENCE pmiacoes.categoria_cod_categoria_seq
     START WITH 1
     INCREMENT BY 1
@@ -13590,11 +11390,6 @@ CREATE SEQUENCE pmiacoes.categoria_cod_categoria_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 460 (class 1259 OID 9444039)
--- Name: categoria; Type: TABLE; Schema: pmiacoes; Owner: -
---
 
 CREATE TABLE pmiacoes.categoria (
     cod_categoria integer DEFAULT nextval('pmiacoes.categoria_cod_categoria_seq'::regclass) NOT NULL,
@@ -13607,22 +11402,12 @@ CREATE TABLE pmiacoes.categoria (
 );
 
 
---
--- TOC entry 461 (class 1259 OID 9444044)
--- Name: secretaria_responsavel; Type: TABLE; Schema: pmiacoes; Owner: -
---
-
 CREATE TABLE pmiacoes.secretaria_responsavel (
     ref_cod_setor integer NOT NULL,
     ref_cod_funcionario_cad integer NOT NULL,
     data_cadastro timestamp without time zone NOT NULL
 );
 
-
---
--- TOC entry 462 (class 1259 OID 9444047)
--- Name: acontecimento_cod_acontecimento_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE SEQUENCE pmicontrolesis.acontecimento_cod_acontecimento_seq
     START WITH 1
@@ -13631,11 +11416,6 @@ CREATE SEQUENCE pmicontrolesis.acontecimento_cod_acontecimento_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 463 (class 1259 OID 9444049)
--- Name: acontecimento; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.acontecimento (
     cod_acontecimento integer DEFAULT nextval('pmicontrolesis.acontecimento_cod_acontecimento_seq'::regclass) NOT NULL,
@@ -13657,11 +11437,6 @@ CREATE TABLE pmicontrolesis.acontecimento (
 );
 
 
---
--- TOC entry 464 (class 1259 OID 9444057)
--- Name: artigo_cod_artigo_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.artigo_cod_artigo_seq
     START WITH 1
     INCREMENT BY 1
@@ -13669,11 +11444,6 @@ CREATE SEQUENCE pmicontrolesis.artigo_cod_artigo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 465 (class 1259 OID 9444059)
--- Name: artigo; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.artigo (
     cod_artigo integer DEFAULT nextval('pmicontrolesis.artigo_cod_artigo_seq'::regclass) NOT NULL,
@@ -13684,11 +11454,6 @@ CREATE TABLE pmicontrolesis.artigo (
 );
 
 
---
--- TOC entry 466 (class 1259 OID 9444067)
--- Name: foto_evento_cod_foto_evento_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.foto_evento_cod_foto_evento_seq
     START WITH 1
     INCREMENT BY 1
@@ -13696,11 +11461,6 @@ CREATE SEQUENCE pmicontrolesis.foto_evento_cod_foto_evento_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 467 (class 1259 OID 9444069)
--- Name: foto_evento; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.foto_evento (
     cod_foto_evento integer DEFAULT nextval('pmicontrolesis.foto_evento_cod_foto_evento_seq'::regclass) NOT NULL,
@@ -13715,11 +11475,6 @@ CREATE TABLE pmicontrolesis.foto_evento (
 );
 
 
---
--- TOC entry 468 (class 1259 OID 9444077)
--- Name: foto_vinc_cod_foto_vinc_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.foto_vinc_cod_foto_vinc_seq
     START WITH 1
     INCREMENT BY 1
@@ -13730,22 +11485,12 @@ CREATE SEQUENCE pmicontrolesis.foto_vinc_cod_foto_vinc_seq
 
 SET default_with_oids = false;
 
---
--- TOC entry 469 (class 1259 OID 9444079)
--- Name: foto_vinc; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE TABLE pmicontrolesis.foto_vinc (
     cod_foto_vinc integer DEFAULT nextval('pmicontrolesis.foto_vinc_cod_foto_vinc_seq'::regclass) NOT NULL,
     ref_cod_acontecimento integer NOT NULL,
     ref_cod_foto_evento integer NOT NULL
 );
 
-
---
--- TOC entry 470 (class 1259 OID 9444083)
--- Name: itinerario_cod_itinerario_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE SEQUENCE pmicontrolesis.itinerario_cod_itinerario_seq
     START WITH 1
@@ -13756,11 +11501,6 @@ CREATE SEQUENCE pmicontrolesis.itinerario_cod_itinerario_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 471 (class 1259 OID 9444085)
--- Name: itinerario; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.itinerario (
     cod_itinerario integer DEFAULT nextval('pmicontrolesis.itinerario_cod_itinerario_seq'::regclass) NOT NULL,
@@ -13778,11 +11518,6 @@ CREATE TABLE pmicontrolesis.itinerario (
 );
 
 
---
--- TOC entry 472 (class 1259 OID 9444093)
--- Name: menu_cod_menu_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.menu_cod_menu_seq
     START WITH 0
     INCREMENT BY 1
@@ -13790,11 +11525,6 @@ CREATE SEQUENCE pmicontrolesis.menu_cod_menu_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 473 (class 1259 OID 9444095)
--- Name: menu; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.menu (
     cod_menu integer DEFAULT nextval('pmicontrolesis.menu_cod_menu_seq'::regclass) NOT NULL,
@@ -13811,11 +11541,6 @@ CREATE TABLE pmicontrolesis.menu (
 );
 
 
---
--- TOC entry 474 (class 1259 OID 9444103)
--- Name: menu_portal_cod_menu_portal_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.menu_portal_cod_menu_portal_seq
     START WITH 1
     INCREMENT BY 1
@@ -13823,11 +11548,6 @@ CREATE SEQUENCE pmicontrolesis.menu_portal_cod_menu_portal_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 475 (class 1259 OID 9444105)
--- Name: menu_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.menu_portal (
     cod_menu_portal integer DEFAULT nextval('pmicontrolesis.menu_portal_cod_menu_portal_seq'::regclass) NOT NULL,
@@ -13846,11 +11566,6 @@ CREATE TABLE pmicontrolesis.menu_portal (
 );
 
 
---
--- TOC entry 476 (class 1259 OID 9444116)
--- Name: portais_cod_portais_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.portais_cod_portais_seq
     START WITH 1
     INCREMENT BY 1
@@ -13858,11 +11573,6 @@ CREATE SEQUENCE pmicontrolesis.portais_cod_portais_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 477 (class 1259 OID 9444118)
--- Name: portais; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.portais (
     cod_portais integer DEFAULT nextval('pmicontrolesis.portais_cod_portais_seq'::regclass) NOT NULL,
@@ -13878,11 +11588,6 @@ CREATE TABLE pmicontrolesis.portais (
 );
 
 
---
--- TOC entry 478 (class 1259 OID 9444126)
--- Name: servicos_cod_servicos_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.servicos_cod_servicos_seq
     START WITH 1
     INCREMENT BY 1
@@ -13890,11 +11595,6 @@ CREATE SEQUENCE pmicontrolesis.servicos_cod_servicos_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 479 (class 1259 OID 9444128)
--- Name: servicos; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.servicos (
     cod_servicos integer DEFAULT nextval('pmicontrolesis.servicos_cod_servicos_seq'::regclass) NOT NULL,
@@ -13910,11 +11610,6 @@ CREATE TABLE pmicontrolesis.servicos (
 );
 
 
---
--- TOC entry 480 (class 1259 OID 9444136)
--- Name: sistema_cod_sistema_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.sistema_cod_sistema_seq
     START WITH 1
     INCREMENT BY 1
@@ -13922,11 +11617,6 @@ CREATE SEQUENCE pmicontrolesis.sistema_cod_sistema_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 481 (class 1259 OID 9444138)
--- Name: sistema; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.sistema (
     cod_sistema integer DEFAULT nextval('pmicontrolesis.sistema_cod_sistema_seq'::regclass) NOT NULL,
@@ -13939,11 +11629,6 @@ CREATE TABLE pmicontrolesis.sistema (
 );
 
 
---
--- TOC entry 482 (class 1259 OID 9444143)
--- Name: submenu_portal_cod_submenu_portal_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.submenu_portal_cod_submenu_portal_seq
     START WITH 1
     INCREMENT BY 1
@@ -13951,11 +11636,6 @@ CREATE SEQUENCE pmicontrolesis.submenu_portal_cod_submenu_portal_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 483 (class 1259 OID 9444145)
--- Name: submenu_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.submenu_portal (
     cod_submenu_portal integer DEFAULT nextval('pmicontrolesis.submenu_portal_cod_submenu_portal_seq'::regclass) NOT NULL,
@@ -13973,11 +11653,6 @@ CREATE TABLE pmicontrolesis.submenu_portal (
 );
 
 
---
--- TOC entry 484 (class 1259 OID 9444158)
--- Name: telefones_cod_telefones_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.telefones_cod_telefones_seq
     START WITH 1
     INCREMENT BY 1
@@ -13985,11 +11660,6 @@ CREATE SEQUENCE pmicontrolesis.telefones_cod_telefones_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 485 (class 1259 OID 9444160)
--- Name: telefones; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.telefones (
     cod_telefones integer DEFAULT nextval('pmicontrolesis.telefones_cod_telefones_seq'::regclass) NOT NULL,
@@ -14003,11 +11673,6 @@ CREATE TABLE pmicontrolesis.telefones (
 );
 
 
---
--- TOC entry 486 (class 1259 OID 9444168)
--- Name: tipo_acontecimento_cod_tipo_acontecimento_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq
     START WITH 1
     INCREMENT BY 1
@@ -14015,11 +11680,6 @@ CREATE SEQUENCE pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 487 (class 1259 OID 9444170)
--- Name: tipo_acontecimento; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.tipo_acontecimento (
     cod_tipo_acontecimento integer DEFAULT nextval('pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq'::regclass) NOT NULL,
@@ -14033,11 +11693,6 @@ CREATE TABLE pmicontrolesis.tipo_acontecimento (
 );
 
 
---
--- TOC entry 488 (class 1259 OID 9444178)
--- Name: topo_portal_cod_topo_portal_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.topo_portal_cod_topo_portal_seq
     START WITH 1
     INCREMENT BY 1
@@ -14045,11 +11700,6 @@ CREATE SEQUENCE pmicontrolesis.topo_portal_cod_topo_portal_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 489 (class 1259 OID 9444180)
--- Name: topo_portal; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
 
 CREATE TABLE pmicontrolesis.topo_portal (
     cod_topo_portal integer DEFAULT nextval('pmicontrolesis.topo_portal_cod_topo_portal_seq'::regclass) NOT NULL,
@@ -14065,11 +11715,6 @@ CREATE TABLE pmicontrolesis.topo_portal (
 );
 
 
---
--- TOC entry 490 (class 1259 OID 9444189)
--- Name: tutormenu_cod_tutormenu_seq; Type: SEQUENCE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE SEQUENCE pmicontrolesis.tutormenu_cod_tutormenu_seq
     START WITH 0
     INCREMENT BY 1
@@ -14078,21 +11723,11 @@ CREATE SEQUENCE pmicontrolesis.tutormenu_cod_tutormenu_seq
     CACHE 1;
 
 
---
--- TOC entry 491 (class 1259 OID 9444191)
--- Name: tutormenu; Type: TABLE; Schema: pmicontrolesis; Owner: -
---
-
 CREATE TABLE pmicontrolesis.tutormenu (
     cod_tutormenu integer DEFAULT nextval('pmicontrolesis.tutormenu_cod_tutormenu_seq'::regclass) NOT NULL,
     nm_tutormenu character varying(200) NOT NULL
 );
 
-
---
--- TOC entry 492 (class 1259 OID 9444195)
--- Name: diaria_cod_diaria_seq; Type: SEQUENCE; Schema: pmidrh; Owner: -
---
 
 CREATE SEQUENCE pmidrh.diaria_cod_diaria_seq
     START WITH 1
@@ -14101,11 +11736,6 @@ CREATE SEQUENCE pmidrh.diaria_cod_diaria_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 493 (class 1259 OID 9444197)
--- Name: diaria; Type: TABLE; Schema: pmidrh; Owner: -
---
 
 CREATE TABLE pmidrh.diaria (
     cod_diaria integer DEFAULT nextval('pmidrh.diaria_cod_diaria_seq'::regclass) NOT NULL,
@@ -14133,11 +11763,6 @@ CREATE TABLE pmidrh.diaria (
 );
 
 
---
--- TOC entry 494 (class 1259 OID 9444205)
--- Name: diaria_grupo_cod_diaria_grupo_seq; Type: SEQUENCE; Schema: pmidrh; Owner: -
---
-
 CREATE SEQUENCE pmidrh.diaria_grupo_cod_diaria_grupo_seq
     START WITH 1
     INCREMENT BY 1
@@ -14146,21 +11771,11 @@ CREATE SEQUENCE pmidrh.diaria_grupo_cod_diaria_grupo_seq
     CACHE 1;
 
 
---
--- TOC entry 495 (class 1259 OID 9444207)
--- Name: diaria_grupo; Type: TABLE; Schema: pmidrh; Owner: -
---
-
 CREATE TABLE pmidrh.diaria_grupo (
     cod_diaria_grupo integer DEFAULT nextval('pmidrh.diaria_grupo_cod_diaria_grupo_seq'::regclass) NOT NULL,
     desc_grupo character varying(255) NOT NULL
 );
 
-
---
--- TOC entry 496 (class 1259 OID 9444211)
--- Name: diaria_valores_cod_diaria_valores_seq; Type: SEQUENCE; Schema: pmidrh; Owner: -
---
 
 CREATE SEQUENCE pmidrh.diaria_valores_cod_diaria_valores_seq
     START WITH 1
@@ -14169,11 +11784,6 @@ CREATE SEQUENCE pmidrh.diaria_valores_cod_diaria_valores_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 497 (class 1259 OID 9444213)
--- Name: diaria_valores; Type: TABLE; Schema: pmidrh; Owner: -
---
 
 CREATE TABLE pmidrh.diaria_valores (
     cod_diaria_valores integer DEFAULT nextval('pmidrh.diaria_valores_cod_diaria_valores_seq'::regclass) NOT NULL,
@@ -14188,11 +11798,6 @@ CREATE TABLE pmidrh.diaria_valores (
 );
 
 
---
--- TOC entry 498 (class 1259 OID 9444217)
--- Name: setor_cod_setor_seq; Type: SEQUENCE; Schema: pmidrh; Owner: -
---
-
 CREATE SEQUENCE pmidrh.setor_cod_setor_seq
     START WITH 1
     INCREMENT BY 1
@@ -14200,11 +11805,6 @@ CREATE SEQUENCE pmidrh.setor_cod_setor_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 499 (class 1259 OID 9444219)
--- Name: setor; Type: TABLE; Schema: pmidrh; Owner: -
---
 
 CREATE TABLE pmidrh.setor (
     cod_setor integer DEFAULT nextval('pmidrh.setor_cod_setor_seq'::regclass) NOT NULL,
@@ -14224,11 +11824,6 @@ CREATE TABLE pmidrh.setor (
 );
 
 
---
--- TOC entry 500 (class 1259 OID 9444229)
--- Name: abandono_tipo_cod_abandono_tipo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.abandono_tipo_cod_abandono_tipo_seq
     START WITH 0
     INCREMENT BY 1
@@ -14238,11 +11833,6 @@ CREATE SEQUENCE pmieducar.abandono_tipo_cod_abandono_tipo_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 501 (class 1259 OID 9444231)
--- Name: abandono_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.abandono_tipo (
     cod_abandono_tipo integer DEFAULT nextval('pmieducar.abandono_tipo_cod_abandono_tipo_seq'::regclass) NOT NULL,
@@ -14256,11 +11846,6 @@ CREATE TABLE pmieducar.abandono_tipo (
 );
 
 
---
--- TOC entry 502 (class 1259 OID 9444235)
--- Name: acervo_cod_acervo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.acervo_cod_acervo_seq
     START WITH 1
     INCREMENT BY 1
@@ -14270,11 +11855,6 @@ CREATE SEQUENCE pmieducar.acervo_cod_acervo_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 503 (class 1259 OID 9444237)
--- Name: acervo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.acervo (
     cod_acervo integer DEFAULT nextval('pmieducar.acervo_cod_acervo_seq'::regclass) NOT NULL,
@@ -14309,21 +11889,11 @@ CREATE TABLE pmieducar.acervo (
 );
 
 
---
--- TOC entry 504 (class 1259 OID 9444245)
--- Name: acervo_acervo_assunto; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.acervo_acervo_assunto (
     ref_cod_acervo integer NOT NULL,
     ref_cod_acervo_assunto integer NOT NULL
 );
 
-
---
--- TOC entry 505 (class 1259 OID 9444248)
--- Name: acervo_acervo_autor; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.acervo_acervo_autor (
     ref_cod_acervo_autor integer NOT NULL,
@@ -14332,11 +11902,6 @@ CREATE TABLE pmieducar.acervo_acervo_autor (
 );
 
 
---
--- TOC entry 506 (class 1259 OID 9444252)
--- Name: acervo_assunto_cod_acervo_assunto_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.acervo_assunto_cod_acervo_assunto_seq
     START WITH 1
     INCREMENT BY 1
@@ -14344,11 +11909,6 @@ CREATE SEQUENCE pmieducar.acervo_assunto_cod_acervo_assunto_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 507 (class 1259 OID 9444254)
--- Name: acervo_assunto; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.acervo_assunto (
     cod_acervo_assunto integer DEFAULT nextval('pmieducar.acervo_assunto_cod_acervo_assunto_seq'::regclass) NOT NULL,
@@ -14363,11 +11923,6 @@ CREATE TABLE pmieducar.acervo_assunto (
 );
 
 
---
--- TOC entry 508 (class 1259 OID 9444262)
--- Name: acervo_autor_cod_acervo_autor_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.acervo_autor_cod_acervo_autor_seq
     START WITH 1
     INCREMENT BY 1
@@ -14375,11 +11930,6 @@ CREATE SEQUENCE pmieducar.acervo_autor_cod_acervo_autor_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 509 (class 1259 OID 9444264)
--- Name: acervo_autor; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.acervo_autor (
     cod_acervo_autor integer DEFAULT nextval('pmieducar.acervo_autor_cod_acervo_autor_seq'::regclass) NOT NULL,
@@ -14394,11 +11944,6 @@ CREATE TABLE pmieducar.acervo_autor (
 );
 
 
---
--- TOC entry 510 (class 1259 OID 9444272)
--- Name: acervo_colecao_cod_acervo_colecao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.acervo_colecao_cod_acervo_colecao_seq
     START WITH 1
     INCREMENT BY 1
@@ -14406,11 +11951,6 @@ CREATE SEQUENCE pmieducar.acervo_colecao_cod_acervo_colecao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 511 (class 1259 OID 9444274)
--- Name: acervo_colecao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.acervo_colecao (
     cod_acervo_colecao integer DEFAULT nextval('pmieducar.acervo_colecao_cod_acervo_colecao_seq'::regclass) NOT NULL,
@@ -14425,11 +11965,6 @@ CREATE TABLE pmieducar.acervo_colecao (
 );
 
 
---
--- TOC entry 512 (class 1259 OID 9444282)
--- Name: acervo_editora_cod_acervo_editora_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.acervo_editora_cod_acervo_editora_seq
     START WITH 1
     INCREMENT BY 1
@@ -14437,11 +11972,6 @@ CREATE SEQUENCE pmieducar.acervo_editora_cod_acervo_editora_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 513 (class 1259 OID 9444284)
--- Name: acervo_editora; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.acervo_editora (
     cod_acervo_editora integer DEFAULT nextval('pmieducar.acervo_editora_cod_acervo_editora_seq'::regclass) NOT NULL,
@@ -14464,11 +11994,6 @@ CREATE TABLE pmieducar.acervo_editora (
 );
 
 
---
--- TOC entry 514 (class 1259 OID 9444292)
--- Name: acervo_idioma_cod_acervo_idioma_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.acervo_idioma_cod_acervo_idioma_seq
     START WITH 1
     INCREMENT BY 1
@@ -14476,11 +12001,6 @@ CREATE SEQUENCE pmieducar.acervo_idioma_cod_acervo_idioma_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 515 (class 1259 OID 9444294)
--- Name: acervo_idioma; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.acervo_idioma (
     cod_acervo_idioma integer DEFAULT nextval('pmieducar.acervo_idioma_cod_acervo_idioma_seq'::regclass) NOT NULL,
@@ -14494,11 +12014,6 @@ CREATE TABLE pmieducar.acervo_idioma (
 );
 
 
---
--- TOC entry 516 (class 1259 OID 9444299)
--- Name: aluno_cod_aluno_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.aluno_cod_aluno_seq
     START WITH 0
     INCREMENT BY 1
@@ -14506,11 +12021,6 @@ CREATE SEQUENCE pmieducar.aluno_cod_aluno_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 517 (class 1259 OID 9444301)
--- Name: aluno; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.aluno (
     cod_aluno integer DEFAULT nextval('pmieducar.aluno_cod_aluno_seq'::regclass) NOT NULL,
@@ -14549,21 +12059,11 @@ CREATE TABLE pmieducar.aluno (
 
 SET default_with_oids = false;
 
---
--- TOC entry 518 (class 1259 OID 9444310)
--- Name: aluno_aluno_beneficio; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.aluno_aluno_beneficio (
     aluno_id integer NOT NULL,
     aluno_beneficio_id integer NOT NULL
 );
 
-
---
--- TOC entry 519 (class 1259 OID 9444313)
--- Name: aluno_beneficio_cod_aluno_beneficio_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.aluno_beneficio_cod_aluno_beneficio_seq
     START WITH 1
@@ -14574,11 +12074,6 @@ CREATE SEQUENCE pmieducar.aluno_beneficio_cod_aluno_beneficio_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 520 (class 1259 OID 9444315)
--- Name: aluno_beneficio; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.aluno_beneficio (
     cod_aluno_beneficio integer DEFAULT nextval('pmieducar.aluno_beneficio_cod_aluno_beneficio_seq'::regclass) NOT NULL,
@@ -14594,11 +12089,6 @@ CREATE TABLE pmieducar.aluno_beneficio (
 
 SET default_with_oids = false;
 
---
--- TOC entry 521 (class 1259 OID 9444323)
--- Name: aluno_historico_altura_peso; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.aluno_historico_altura_peso (
     ref_cod_aluno integer NOT NULL,
     data_historico date NOT NULL,
@@ -14608,11 +12098,6 @@ CREATE TABLE pmieducar.aluno_historico_altura_peso (
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 522 (class 1259 OID 9444326)
--- Name: ano_letivo_modulo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.ano_letivo_modulo (
     ref_ano integer NOT NULL,
@@ -14627,11 +12112,6 @@ CREATE TABLE pmieducar.ano_letivo_modulo (
 
 SET default_with_oids = false;
 
---
--- TOC entry 523 (class 1259 OID 9444329)
--- Name: auditoria_falta_componente_dispensa; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.auditoria_falta_componente_dispensa (
     id integer NOT NULL,
     ref_cod_matricula integer NOT NULL,
@@ -14642,11 +12122,6 @@ CREATE TABLE pmieducar.auditoria_falta_componente_dispensa (
 );
 
 
---
--- TOC entry 524 (class 1259 OID 9444332)
--- Name: auditoria_falta_componente_dispensa_id_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.auditoria_falta_componente_dispensa_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -14655,19 +12130,8 @@ CREATE SEQUENCE pmieducar.auditoria_falta_componente_dispensa_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8165 (class 0 OID 0)
--- Dependencies: 524
--- Name: auditoria_falta_componente_dispensa_id_seq; Type: SEQUENCE OWNED BY; Schema: pmieducar; Owner: -
---
-
 ALTER SEQUENCE pmieducar.auditoria_falta_componente_dispensa_id_seq OWNED BY pmieducar.auditoria_falta_componente_dispensa.id;
 
-
---
--- TOC entry 525 (class 1259 OID 9444334)
--- Name: auditoria_nota_dispensa; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.auditoria_nota_dispensa (
     id integer NOT NULL,
@@ -14681,11 +12145,6 @@ CREATE TABLE pmieducar.auditoria_nota_dispensa (
 );
 
 
---
--- TOC entry 526 (class 1259 OID 9444337)
--- Name: auditoria_nota_dispensa_id_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -14694,21 +12153,10 @@ CREATE SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8166 (class 0 OID 0)
--- Dependencies: 526
--- Name: auditoria_nota_dispensa_id_seq; Type: SEQUENCE OWNED BY; Schema: pmieducar; Owner: -
---
-
 ALTER SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq OWNED BY pmieducar.auditoria_nota_dispensa.id;
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 527 (class 1259 OID 9444339)
--- Name: avaliacao_desempenho; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.avaliacao_desempenho (
     sequencial integer NOT NULL,
@@ -14726,22 +12174,12 @@ CREATE TABLE pmieducar.avaliacao_desempenho (
 
 SET default_with_oids = false;
 
---
--- TOC entry 528 (class 1259 OID 9444346)
--- Name: backup; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.backup (
     id integer NOT NULL,
     caminho character varying(255) NOT NULL,
     data_backup timestamp without time zone
 );
 
-
---
--- TOC entry 529 (class 1259 OID 9444349)
--- Name: backup_id_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.backup_id_seq
     START WITH 1
@@ -14751,19 +12189,8 @@ CREATE SEQUENCE pmieducar.backup_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8167 (class 0 OID 0)
--- Dependencies: 529
--- Name: backup_id_seq; Type: SEQUENCE OWNED BY; Schema: pmieducar; Owner: -
---
-
 ALTER SEQUENCE pmieducar.backup_id_seq OWNED BY pmieducar.backup.id;
 
-
---
--- TOC entry 530 (class 1259 OID 9444351)
--- Name: biblioteca_cod_biblioteca_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.biblioteca_cod_biblioteca_seq
     START WITH 1
@@ -14774,11 +12201,6 @@ CREATE SEQUENCE pmieducar.biblioteca_cod_biblioteca_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 531 (class 1259 OID 9444353)
--- Name: biblioteca; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.biblioteca (
     cod_biblioteca integer DEFAULT nextval('pmieducar.biblioteca_cod_biblioteca_seq'::regclass) NOT NULL,
@@ -14798,21 +12220,11 @@ CREATE TABLE pmieducar.biblioteca (
 );
 
 
---
--- TOC entry 532 (class 1259 OID 9444360)
--- Name: biblioteca_dia; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.biblioteca_dia (
     ref_cod_biblioteca integer NOT NULL,
     dia numeric(1,0) NOT NULL
 );
 
-
---
--- TOC entry 533 (class 1259 OID 9444363)
--- Name: biblioteca_feriados_cod_feriado_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.biblioteca_feriados_cod_feriado_seq
     START WITH 1
@@ -14821,11 +12233,6 @@ CREATE SEQUENCE pmieducar.biblioteca_feriados_cod_feriado_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 534 (class 1259 OID 9444365)
--- Name: biblioteca_feriados; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.biblioteca_feriados (
     cod_feriado integer DEFAULT nextval('pmieducar.biblioteca_feriados_cod_feriado_seq'::regclass) NOT NULL,
@@ -14839,21 +12246,11 @@ CREATE TABLE pmieducar.biblioteca_feriados (
 );
 
 
---
--- TOC entry 535 (class 1259 OID 9444373)
--- Name: biblioteca_usuario; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.biblioteca_usuario (
     ref_cod_biblioteca integer NOT NULL,
     ref_cod_usuario integer NOT NULL
 );
 
-
---
--- TOC entry 536 (class 1259 OID 9444376)
--- Name: bloqueio_ano_letivo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.bloqueio_ano_letivo (
     ref_cod_instituicao integer NOT NULL,
@@ -14862,11 +12259,6 @@ CREATE TABLE pmieducar.bloqueio_ano_letivo (
     data_fim date NOT NULL
 );
 
-
---
--- TOC entry 537 (class 1259 OID 9444379)
--- Name: bloqueio_lancamento_faltas_notas_seq; Type: SEQUENCE; Schema: public; Owner: -
---
 
 CREATE SEQUENCE public.bloqueio_lancamento_faltas_notas_seq
     START WITH 1
@@ -14878,11 +12270,6 @@ CREATE SEQUENCE public.bloqueio_lancamento_faltas_notas_seq
 
 SET default_with_oids = false;
 
---
--- TOC entry 538 (class 1259 OID 9444381)
--- Name: bloqueio_lancamento_faltas_notas; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.bloqueio_lancamento_faltas_notas (
     cod_bloqueio integer DEFAULT nextval('public.bloqueio_lancamento_faltas_notas_seq'::regclass) NOT NULL,
     ano integer NOT NULL,
@@ -14893,11 +12280,6 @@ CREATE TABLE pmieducar.bloqueio_lancamento_faltas_notas (
 );
 
 
---
--- TOC entry 539 (class 1259 OID 9444385)
--- Name: calendario_ano_letivo_cod_calendario_ano_letivo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq
     START WITH 1
     INCREMENT BY 1
@@ -14907,11 +12289,6 @@ CREATE SEQUENCE pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 540 (class 1259 OID 9444387)
--- Name: calendario_ano_letivo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.calendario_ano_letivo (
     cod_calendario_ano_letivo integer DEFAULT nextval('pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq'::regclass) NOT NULL,
@@ -14925,11 +12302,6 @@ CREATE TABLE pmieducar.calendario_ano_letivo (
 );
 
 
---
--- TOC entry 541 (class 1259 OID 9444392)
--- Name: calendario_anotacao_cod_calendario_anotacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.calendario_anotacao_cod_calendario_anotacao_seq
     START WITH 1
     INCREMENT BY 1
@@ -14937,11 +12309,6 @@ CREATE SEQUENCE pmieducar.calendario_anotacao_cod_calendario_anotacao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 542 (class 1259 OID 9444394)
--- Name: calendario_anotacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.calendario_anotacao (
     cod_calendario_anotacao integer DEFAULT nextval('pmieducar.calendario_anotacao_cod_calendario_anotacao_seq'::regclass) NOT NULL,
@@ -14954,11 +12321,6 @@ CREATE TABLE pmieducar.calendario_anotacao (
     ativo smallint NOT NULL
 );
 
-
---
--- TOC entry 543 (class 1259 OID 9444401)
--- Name: calendario_dia; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.calendario_dia (
     ref_cod_calendario_ano_letivo integer NOT NULL,
@@ -14974,11 +12336,6 @@ CREATE TABLE pmieducar.calendario_dia (
 );
 
 
---
--- TOC entry 544 (class 1259 OID 9444408)
--- Name: calendario_dia_anotacao; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.calendario_dia_anotacao (
     ref_dia integer NOT NULL,
     ref_mes integer NOT NULL,
@@ -14987,11 +12344,6 @@ CREATE TABLE pmieducar.calendario_dia_anotacao (
 );
 
 
---
--- TOC entry 545 (class 1259 OID 9444411)
--- Name: calendario_dia_motivo_cod_calendario_dia_motivo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq
     START WITH 1
     INCREMENT BY 1
@@ -14999,11 +12351,6 @@ CREATE SEQUENCE pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 546 (class 1259 OID 9444413)
--- Name: calendario_dia_motivo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.calendario_dia_motivo (
     cod_calendario_dia_motivo integer DEFAULT nextval('pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq'::regclass) NOT NULL,
@@ -15020,11 +12367,6 @@ CREATE TABLE pmieducar.calendario_dia_motivo (
 );
 
 
---
--- TOC entry 547 (class 1259 OID 9444421)
--- Name: candidato_reserva_vaga_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.candidato_reserva_vaga_seq
     START WITH 1
     INCREMENT BY 1
@@ -15034,11 +12376,6 @@ CREATE SEQUENCE pmieducar.candidato_reserva_vaga_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 548 (class 1259 OID 9444423)
--- Name: candidato_reserva_vaga; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.candidato_reserva_vaga (
     cod_candidato_reserva_vaga integer DEFAULT nextval('pmieducar.candidato_reserva_vaga_seq'::regclass) NOT NULL,
@@ -15062,11 +12399,6 @@ CREATE TABLE pmieducar.candidato_reserva_vaga (
 );
 
 
---
--- TOC entry 549 (class 1259 OID 9444430)
--- Name: categoria_nivel_cod_categoria_nivel_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.categoria_nivel_cod_categoria_nivel_seq
     START WITH 1
     INCREMENT BY 1
@@ -15074,11 +12406,6 @@ CREATE SEQUENCE pmieducar.categoria_nivel_cod_categoria_nivel_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 550 (class 1259 OID 9444432)
--- Name: categoria_nivel; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.categoria_nivel (
     cod_categoria_nivel integer DEFAULT nextval('pmieducar.categoria_nivel_cod_categoria_nivel_seq'::regclass) NOT NULL,
@@ -15091,22 +12418,12 @@ CREATE TABLE pmieducar.categoria_nivel (
 );
 
 
---
--- TOC entry 551 (class 1259 OID 9444437)
--- Name: categoria_obra; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.categoria_obra (
     id integer NOT NULL,
     descricao character varying(100) NOT NULL,
     observacoes character varying(300)
 );
 
-
---
--- TOC entry 552 (class 1259 OID 9444440)
--- Name: categoria_obra_id_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.categoria_obra_id_seq
     START WITH 1
@@ -15116,19 +12433,8 @@ CREATE SEQUENCE pmieducar.categoria_obra_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8168 (class 0 OID 0)
--- Dependencies: 552
--- Name: categoria_obra_id_seq; Type: SEQUENCE OWNED BY; Schema: pmieducar; Owner: -
---
-
 ALTER SEQUENCE pmieducar.categoria_obra_id_seq OWNED BY pmieducar.categoria_obra.id;
 
-
---
--- TOC entry 553 (class 1259 OID 9444442)
--- Name: cliente_cod_cliente_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.cliente_cod_cliente_seq
     START WITH 1
@@ -15139,11 +12445,6 @@ CREATE SEQUENCE pmieducar.cliente_cod_cliente_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 554 (class 1259 OID 9444444)
--- Name: cliente; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.cliente (
     cod_cliente integer DEFAULT nextval('pmieducar.cliente_cod_cliente_seq'::regclass) NOT NULL,
@@ -15159,11 +12460,6 @@ CREATE TABLE pmieducar.cliente (
 );
 
 
---
--- TOC entry 555 (class 1259 OID 9444452)
--- Name: cliente_suspensao; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.cliente_suspensao (
     sequencial integer NOT NULL,
     ref_cod_cliente integer NOT NULL,
@@ -15176,11 +12472,6 @@ CREATE TABLE pmieducar.cliente_suspensao (
 );
 
 
---
--- TOC entry 556 (class 1259 OID 9444455)
--- Name: cliente_tipo_cod_cliente_tipo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.cliente_tipo_cod_cliente_tipo_seq
     START WITH 1
     INCREMENT BY 1
@@ -15188,11 +12479,6 @@ CREATE SEQUENCE pmieducar.cliente_tipo_cod_cliente_tipo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 557 (class 1259 OID 9444457)
--- Name: cliente_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.cliente_tipo (
     cod_cliente_tipo integer DEFAULT nextval('pmieducar.cliente_tipo_cod_cliente_tipo_seq'::regclass) NOT NULL,
@@ -15209,11 +12495,6 @@ CREATE TABLE pmieducar.cliente_tipo (
 
 SET default_with_oids = false;
 
---
--- TOC entry 558 (class 1259 OID 9444465)
--- Name: cliente_tipo_cliente; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.cliente_tipo_cliente (
     ref_cod_cliente_tipo integer NOT NULL,
     ref_cod_cliente integer NOT NULL,
@@ -15228,22 +12509,12 @@ CREATE TABLE pmieducar.cliente_tipo_cliente (
 
 SET default_with_oids = true;
 
---
--- TOC entry 559 (class 1259 OID 9444469)
--- Name: cliente_tipo_exemplar_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.cliente_tipo_exemplar_tipo (
     ref_cod_cliente_tipo integer NOT NULL,
     ref_cod_exemplar_tipo integer NOT NULL,
     dias_emprestimo numeric(3,0)
 );
 
-
---
--- TOC entry 560 (class 1259 OID 9444472)
--- Name: coffebreak_tipo_cod_coffebreak_tipo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq
     START WITH 1
@@ -15252,11 +12523,6 @@ CREATE SEQUENCE pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 561 (class 1259 OID 9444474)
--- Name: coffebreak_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.coffebreak_tipo (
     cod_coffebreak_tipo integer DEFAULT nextval('pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq'::regclass) NOT NULL,
@@ -15272,11 +12538,6 @@ CREATE TABLE pmieducar.coffebreak_tipo (
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 562 (class 1259 OID 9444482)
--- Name: configuracoes_gerais; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.configuracoes_gerais (
     ref_cod_instituicao integer NOT NULL,
@@ -15301,64 +12562,23 @@ CREATE TABLE pmieducar.configuracoes_gerais (
 );
 
 
---
--- TOC entry 8169 (class 0 OID 0)
--- Dependencies: 562
--- Name: COLUMN configuracoes_gerais.mostrar_codigo_inep_aluno; Type: COMMENT; Schema: pmieducar; Owner: -
---
-
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.mostrar_codigo_inep_aluno IS 'Mostrar código INEP do aluno nas telas de cadastro';
 
-
---
--- TOC entry 8170 (class 0 OID 0)
--- Dependencies: 562
--- Name: COLUMN configuracoes_gerais.justificativa_falta_documentacao_obrigatorio; Type: COMMENT; Schema: pmieducar; Owner: -
---
 
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.justificativa_falta_documentacao_obrigatorio IS 'Campo "Justificativa para a falta de documentação" obrigatório no cadastro de alunos';
 
 
---
--- TOC entry 8171 (class 0 OID 0)
--- Dependencies: 562
--- Name: COLUMN configuracoes_gerais.tamanho_min_rede_estadual; Type: COMMENT; Schema: pmieducar; Owner: -
---
-
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.tamanho_min_rede_estadual IS 'Tamanho mínimo do campo "Código rede estadual"';
 
-
---
--- TOC entry 8172 (class 0 OID 0)
--- Dependencies: 562
--- Name: COLUMN configuracoes_gerais.modelo_boletim_professor; Type: COMMENT; Schema: pmieducar; Owner: -
---
 
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.modelo_boletim_professor IS 'Modelo do boletim do professor. 1 - Padrão, 2 - Modelo recuperação por etapa, 3 - Modelo recuperação paralela';
 
 
---
--- TOC entry 8173 (class 0 OID 0)
--- Dependencies: 562
--- Name: COLUMN configuracoes_gerais.custom_labels; Type: COMMENT; Schema: pmieducar; Owner: -
---
-
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.custom_labels IS 'Guarda customizações em labels e textos do sistema.';
 
 
---
--- TOC entry 8174 (class 0 OID 0)
--- Dependencies: 562
--- Name: COLUMN configuracoes_gerais.url_cadastro_usuario; Type: COMMENT; Schema: pmieducar; Owner: -
---
-
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.url_cadastro_usuario IS 'URL da ferramenta externa de cadastro de usuários';
 
-
---
--- TOC entry 563 (class 1259 OID 9444486)
--- Name: curso_cod_curso_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.curso_cod_curso_seq
     START WITH 0
@@ -15369,11 +12589,6 @@ CREATE SEQUENCE pmieducar.curso_cod_curso_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 564 (class 1259 OID 9444488)
--- Name: curso; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.curso (
     cod_curso integer DEFAULT nextval('pmieducar.curso_cod_curso_seq'::regclass) NOT NULL,
@@ -15400,11 +12615,6 @@ CREATE TABLE pmieducar.curso (
 );
 
 
---
--- TOC entry 565 (class 1259 OID 9444498)
--- Name: disciplina_cod_disciplina_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.disciplina_cod_disciplina_seq
     START WITH 1
     INCREMENT BY 1
@@ -15412,11 +12622,6 @@ CREATE SEQUENCE pmieducar.disciplina_cod_disciplina_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 566 (class 1259 OID 9444500)
--- Name: disciplina; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.disciplina (
     cod_disciplina integer DEFAULT nextval('pmieducar.disciplina_cod_disciplina_seq'::regclass) NOT NULL,
@@ -15437,11 +12642,6 @@ CREATE TABLE pmieducar.disciplina (
 
 SET default_with_oids = false;
 
---
--- TOC entry 567 (class 1259 OID 9444509)
--- Name: disciplina_dependencia; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.disciplina_dependencia (
     ref_cod_matricula integer NOT NULL,
     ref_cod_disciplina integer NOT NULL,
@@ -15452,22 +12652,12 @@ CREATE TABLE pmieducar.disciplina_dependencia (
 );
 
 
---
--- TOC entry 568 (class 1259 OID 9444515)
--- Name: disciplina_serie; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.disciplina_serie (
     ref_cod_disciplina integer NOT NULL,
     ref_cod_serie integer NOT NULL,
     ativo smallint DEFAULT (1)::smallint NOT NULL
 );
 
-
---
--- TOC entry 569 (class 1259 OID 9444519)
--- Name: disciplina_topico_cod_disciplina_topico_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.disciplina_topico_cod_disciplina_topico_seq
     START WITH 1
@@ -15478,11 +12668,6 @@ CREATE SEQUENCE pmieducar.disciplina_topico_cod_disciplina_topico_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 570 (class 1259 OID 9444521)
--- Name: disciplina_topico; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.disciplina_topico (
     cod_disciplina_topico integer DEFAULT nextval('pmieducar.disciplina_topico_cod_disciplina_topico_seq'::regclass) NOT NULL,
@@ -15496,11 +12681,6 @@ CREATE TABLE pmieducar.disciplina_topico (
 );
 
 
---
--- TOC entry 851 (class 1259 OID 9474677)
--- Name: dispensa_disciplina_cod_dispensa_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.dispensa_disciplina_cod_dispensa_seq
     START WITH 1
     INCREMENT BY 1
@@ -15510,11 +12690,6 @@ CREATE SEQUENCE pmieducar.dispensa_disciplina_cod_dispensa_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 571 (class 1259 OID 9444529)
--- Name: dispensa_disciplina; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.dispensa_disciplina (
     ref_cod_matricula integer NOT NULL,
@@ -15532,21 +12707,11 @@ CREATE TABLE pmieducar.dispensa_disciplina (
 );
 
 
---
--- TOC entry 572 (class 1259 OID 9444536)
--- Name: dispensa_etapa; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.dispensa_etapa (
     ref_cod_dispensa integer,
     etapa integer
 );
 
-
---
--- TOC entry 573 (class 1259 OID 9444539)
--- Name: distribuicao_uniforme_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.distribuicao_uniforme_seq
     START WITH 1
@@ -15557,11 +12722,6 @@ CREATE SEQUENCE pmieducar.distribuicao_uniforme_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 574 (class 1259 OID 9444541)
--- Name: distribuicao_uniforme; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.distribuicao_uniforme (
     cod_distribuicao_uniforme integer DEFAULT nextval('pmieducar.distribuicao_uniforme_seq'::regclass) NOT NULL,
@@ -15589,11 +12749,6 @@ CREATE TABLE pmieducar.distribuicao_uniforme (
 );
 
 
---
--- TOC entry 575 (class 1259 OID 9444545)
--- Name: escola_cod_escola_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.escola_cod_escola_seq
     START WITH 0
     INCREMENT BY 1
@@ -15601,11 +12756,6 @@ CREATE SEQUENCE pmieducar.escola_cod_escola_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 576 (class 1259 OID 9444547)
--- Name: escola; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.escola (
     cod_escola integer DEFAULT nextval('pmieducar.escola_cod_escola_seq'::regclass) NOT NULL,
@@ -15728,11 +12878,6 @@ CREATE TABLE pmieducar.escola (
 );
 
 
---
--- TOC entry 577 (class 1259 OID 9444562)
--- Name: escola_ano_letivo; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.escola_ano_letivo (
     ref_cod_escola integer NOT NULL,
     ano integer NOT NULL,
@@ -15745,11 +12890,6 @@ CREATE TABLE pmieducar.escola_ano_letivo (
     turmas_por_ano smallint
 );
 
-
---
--- TOC entry 578 (class 1259 OID 9444567)
--- Name: escola_complemento; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.escola_complemento (
     ref_cod_escola integer NOT NULL,
@@ -15773,11 +12913,6 @@ CREATE TABLE pmieducar.escola_complemento (
 );
 
 
---
--- TOC entry 579 (class 1259 OID 9444574)
--- Name: escola_curso; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.escola_curso (
     ref_cod_escola integer NOT NULL,
     ref_cod_curso integer NOT NULL,
@@ -15791,11 +12926,6 @@ CREATE TABLE pmieducar.escola_curso (
 );
 
 
---
--- TOC entry 580 (class 1259 OID 9444578)
--- Name: escola_localizacao_cod_escola_localizacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.escola_localizacao_cod_escola_localizacao_seq
     START WITH 0
     INCREMENT BY 1
@@ -15803,11 +12933,6 @@ CREATE SEQUENCE pmieducar.escola_localizacao_cod_escola_localizacao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 581 (class 1259 OID 9444580)
--- Name: escola_localizacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.escola_localizacao (
     cod_escola_localizacao integer DEFAULT nextval('pmieducar.escola_localizacao_cod_escola_localizacao_seq'::regclass) NOT NULL,
@@ -15821,11 +12946,6 @@ CREATE TABLE pmieducar.escola_localizacao (
 );
 
 
---
--- TOC entry 582 (class 1259 OID 9444585)
--- Name: escola_rede_ensino_cod_escola_rede_ensino_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.escola_rede_ensino_cod_escola_rede_ensino_seq
     START WITH 0
     INCREMENT BY 1
@@ -15833,11 +12953,6 @@ CREATE SEQUENCE pmieducar.escola_rede_ensino_cod_escola_rede_ensino_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 583 (class 1259 OID 9444587)
--- Name: escola_rede_ensino; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.escola_rede_ensino (
     cod_escola_rede_ensino integer DEFAULT nextval('pmieducar.escola_rede_ensino_cod_escola_rede_ensino_seq'::regclass) NOT NULL,
@@ -15850,11 +12965,6 @@ CREATE TABLE pmieducar.escola_rede_ensino (
     ref_cod_instituicao integer NOT NULL
 );
 
-
---
--- TOC entry 584 (class 1259 OID 9444592)
--- Name: escola_serie; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.escola_serie (
     ref_cod_escola integer NOT NULL,
@@ -15876,11 +12986,6 @@ CREATE TABLE pmieducar.escola_serie (
 
 SET default_with_oids = false;
 
---
--- TOC entry 585 (class 1259 OID 9444596)
--- Name: escola_serie_disciplina; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.escola_serie_disciplina (
     ref_ref_cod_serie integer NOT NULL,
     ref_ref_cod_escola integer NOT NULL,
@@ -15894,11 +12999,6 @@ CREATE TABLE pmieducar.escola_serie_disciplina (
 );
 
 
---
--- TOC entry 586 (class 1259 OID 9444603)
--- Name: escola_usuario; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.escola_usuario (
     id integer NOT NULL,
     ref_cod_usuario integer NOT NULL,
@@ -15906,11 +13006,6 @@ CREATE TABLE pmieducar.escola_usuario (
     escola_atual integer
 );
 
-
---
--- TOC entry 587 (class 1259 OID 9444606)
--- Name: escola_usuario_id_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.escola_usuario_id_seq
     START WITH 1
@@ -15920,19 +13015,8 @@ CREATE SEQUENCE pmieducar.escola_usuario_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8175 (class 0 OID 0)
--- Dependencies: 587
--- Name: escola_usuario_id_seq; Type: SEQUENCE OWNED BY; Schema: pmieducar; Owner: -
---
-
 ALTER SEQUENCE pmieducar.escola_usuario_id_seq OWNED BY pmieducar.escola_usuario.id;
 
-
---
--- TOC entry 588 (class 1259 OID 9444608)
--- Name: exemplar_cod_exemplar_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.exemplar_cod_exemplar_seq
     START WITH 1
@@ -15943,11 +13027,6 @@ CREATE SEQUENCE pmieducar.exemplar_cod_exemplar_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 589 (class 1259 OID 9444610)
--- Name: exemplar; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.exemplar (
     cod_exemplar integer DEFAULT nextval('pmieducar.exemplar_cod_exemplar_seq'::regclass) NOT NULL,
@@ -15969,11 +13048,6 @@ CREATE TABLE pmieducar.exemplar (
 );
 
 
---
--- TOC entry 590 (class 1259 OID 9444616)
--- Name: exemplar_emprestimo_cod_emprestimo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.exemplar_emprestimo_cod_emprestimo_seq
     START WITH 1
     INCREMENT BY 1
@@ -15981,11 +13055,6 @@ CREATE SEQUENCE pmieducar.exemplar_emprestimo_cod_emprestimo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 591 (class 1259 OID 9444618)
--- Name: exemplar_emprestimo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.exemplar_emprestimo (
     cod_emprestimo integer DEFAULT nextval('pmieducar.exemplar_emprestimo_cod_emprestimo_seq'::regclass) NOT NULL,
@@ -15999,11 +13068,6 @@ CREATE TABLE pmieducar.exemplar_emprestimo (
 );
 
 
---
--- TOC entry 592 (class 1259 OID 9444622)
--- Name: exemplar_tipo_cod_exemplar_tipo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.exemplar_tipo_cod_exemplar_tipo_seq
     START WITH 1
     INCREMENT BY 1
@@ -16011,11 +13075,6 @@ CREATE SEQUENCE pmieducar.exemplar_tipo_cod_exemplar_tipo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 593 (class 1259 OID 9444624)
--- Name: exemplar_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.exemplar_tipo (
     cod_exemplar_tipo integer DEFAULT nextval('pmieducar.exemplar_tipo_cod_exemplar_tipo_seq'::regclass) NOT NULL,
@@ -16030,11 +13089,6 @@ CREATE TABLE pmieducar.exemplar_tipo (
 );
 
 
---
--- TOC entry 594 (class 1259 OID 9444632)
--- Name: falta_aluno_cod_falta_aluno_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.falta_aluno_cod_falta_aluno_seq
     START WITH 1
     INCREMENT BY 1
@@ -16044,11 +13098,6 @@ CREATE SEQUENCE pmieducar.falta_aluno_cod_falta_aluno_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 595 (class 1259 OID 9444634)
--- Name: falta_aluno; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.falta_aluno (
     cod_falta_aluno integer DEFAULT nextval('pmieducar.falta_aluno_cod_falta_aluno_seq'::regclass) NOT NULL,
@@ -16067,11 +13116,6 @@ CREATE TABLE pmieducar.falta_aluno (
 );
 
 
---
--- TOC entry 596 (class 1259 OID 9444639)
--- Name: falta_atraso_cod_falta_atraso_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.falta_atraso_cod_falta_atraso_seq
     START WITH 1
     INCREMENT BY 1
@@ -16081,11 +13125,6 @@ CREATE SEQUENCE pmieducar.falta_atraso_cod_falta_atraso_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 597 (class 1259 OID 9444641)
--- Name: falta_atraso; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.falta_atraso (
     cod_falta_atraso integer DEFAULT nextval('pmieducar.falta_atraso_cod_falta_atraso_seq'::regclass) NOT NULL,
@@ -16105,11 +13144,6 @@ CREATE TABLE pmieducar.falta_atraso (
 );
 
 
---
--- TOC entry 598 (class 1259 OID 9444647)
--- Name: falta_atraso_compensado_cod_compensado_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.falta_atraso_compensado_cod_compensado_seq
     START WITH 1
     INCREMENT BY 1
@@ -16117,11 +13151,6 @@ CREATE SEQUENCE pmieducar.falta_atraso_compensado_cod_compensado_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 599 (class 1259 OID 9444649)
--- Name: falta_atraso_compensado; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.falta_atraso_compensado (
     cod_compensado integer DEFAULT nextval('pmieducar.falta_atraso_compensado_cod_compensado_seq'::regclass) NOT NULL,
@@ -16138,11 +13167,6 @@ CREATE TABLE pmieducar.falta_atraso_compensado (
 );
 
 
---
--- TOC entry 600 (class 1259 OID 9444654)
--- Name: faltas_sequencial_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.faltas_sequencial_seq
     START WITH 1
     INCREMENT BY 1
@@ -16153,11 +13177,6 @@ CREATE SEQUENCE pmieducar.faltas_sequencial_seq
 
 SET default_with_oids = false;
 
---
--- TOC entry 601 (class 1259 OID 9444656)
--- Name: faltas; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.faltas (
     ref_cod_matricula integer NOT NULL,
     sequencial integer DEFAULT nextval('pmieducar.faltas_sequencial_seq'::regclass) NOT NULL,
@@ -16166,11 +13185,6 @@ CREATE TABLE pmieducar.faltas (
     data_cadastro timestamp without time zone NOT NULL
 );
 
-
---
--- TOC entry 602 (class 1259 OID 9444660)
--- Name: fonte_cod_fonte_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.fonte_cod_fonte_seq
     START WITH 1
@@ -16181,11 +13195,6 @@ CREATE SEQUENCE pmieducar.fonte_cod_fonte_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 603 (class 1259 OID 9444662)
--- Name: fonte; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.fonte (
     cod_fonte integer DEFAULT nextval('pmieducar.fonte_cod_fonte_seq'::regclass) NOT NULL,
@@ -16200,11 +13209,6 @@ CREATE TABLE pmieducar.fonte (
 );
 
 
---
--- TOC entry 604 (class 1259 OID 9444670)
--- Name: funcao_cod_funcao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.funcao_cod_funcao_seq
     START WITH 1
     INCREMENT BY 1
@@ -16212,11 +13216,6 @@ CREATE SEQUENCE pmieducar.funcao_cod_funcao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 605 (class 1259 OID 9444672)
--- Name: funcao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.funcao (
     cod_funcao integer DEFAULT nextval('pmieducar.funcao_cod_funcao_seq'::regclass) NOT NULL,
@@ -16232,11 +13231,6 @@ CREATE TABLE pmieducar.funcao (
 );
 
 
---
--- TOC entry 606 (class 1259 OID 9444678)
--- Name: habilitacao_cod_habilitacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.habilitacao_cod_habilitacao_seq
     START WITH 1
     INCREMENT BY 1
@@ -16244,11 +13238,6 @@ CREATE SEQUENCE pmieducar.habilitacao_cod_habilitacao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 607 (class 1259 OID 9444680)
--- Name: habilitacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.habilitacao (
     cod_habilitacao integer DEFAULT nextval('pmieducar.habilitacao_cod_habilitacao_seq'::regclass) NOT NULL,
@@ -16263,21 +13252,11 @@ CREATE TABLE pmieducar.habilitacao (
 );
 
 
---
--- TOC entry 608 (class 1259 OID 9444688)
--- Name: habilitacao_curso; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.habilitacao_curso (
     ref_cod_habilitacao integer NOT NULL,
     ref_cod_curso integer NOT NULL
 );
 
-
---
--- TOC entry 609 (class 1259 OID 9444691)
--- Name: historico_disciplinas; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.historico_disciplinas (
     sequencial integer NOT NULL,
@@ -16295,11 +13274,6 @@ CREATE TABLE pmieducar.historico_disciplinas (
 
 SET default_with_oids = false;
 
---
--- TOC entry 610 (class 1259 OID 9444698)
--- Name: historico_educar; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.historico_educar (
     tabela character varying(50),
     alteracao text,
@@ -16309,11 +13283,6 @@ CREATE TABLE pmieducar.historico_educar (
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 611 (class 1259 OID 9444705)
--- Name: historico_escolar; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.historico_escolar (
     ref_cod_aluno integer NOT NULL,
@@ -16351,11 +13320,6 @@ CREATE TABLE pmieducar.historico_escolar (
 );
 
 
---
--- TOC entry 612 (class 1259 OID 9444716)
--- Name: historico_grade_curso_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.historico_grade_curso_seq
     START WITH 3
     INCREMENT BY 1
@@ -16363,11 +13327,6 @@ CREATE SEQUENCE pmieducar.historico_grade_curso_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 613 (class 1259 OID 9444718)
--- Name: historico_grade_curso; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.historico_grade_curso (
     id integer DEFAULT nextval('pmieducar.historico_grade_curso_seq'::regclass) NOT NULL,
@@ -16379,11 +13338,6 @@ CREATE TABLE pmieducar.historico_grade_curso (
 );
 
 
---
--- TOC entry 614 (class 1259 OID 9444723)
--- Name: infra_comodo_funcao_cod_infra_comodo_funcao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq
     START WITH 0
     INCREMENT BY 1
@@ -16391,11 +13345,6 @@ CREATE SEQUENCE pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 615 (class 1259 OID 9444725)
--- Name: infra_comodo_funcao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.infra_comodo_funcao (
     cod_infra_comodo_funcao integer DEFAULT nextval('pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq'::regclass) NOT NULL,
@@ -16410,11 +13359,6 @@ CREATE TABLE pmieducar.infra_comodo_funcao (
 );
 
 
---
--- TOC entry 616 (class 1259 OID 9444733)
--- Name: infra_predio_cod_infra_predio_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.infra_predio_cod_infra_predio_seq
     START WITH 0
     INCREMENT BY 1
@@ -16422,11 +13366,6 @@ CREATE SEQUENCE pmieducar.infra_predio_cod_infra_predio_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 617 (class 1259 OID 9444735)
--- Name: infra_predio; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.infra_predio (
     cod_infra_predio integer DEFAULT nextval('pmieducar.infra_predio_cod_infra_predio_seq'::regclass) NOT NULL,
@@ -16442,11 +13381,6 @@ CREATE TABLE pmieducar.infra_predio (
 );
 
 
---
--- TOC entry 618 (class 1259 OID 9444743)
--- Name: infra_predio_comodo_cod_infra_predio_comodo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.infra_predio_comodo_cod_infra_predio_comodo_seq
     START WITH 0
     INCREMENT BY 1
@@ -16454,11 +13388,6 @@ CREATE SEQUENCE pmieducar.infra_predio_comodo_cod_infra_predio_comodo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 619 (class 1259 OID 9444745)
--- Name: infra_predio_comodo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.infra_predio_comodo (
     cod_infra_predio_comodo integer DEFAULT nextval('pmieducar.infra_predio_comodo_cod_infra_predio_comodo_seq'::regclass) NOT NULL,
@@ -16475,11 +13404,6 @@ CREATE TABLE pmieducar.infra_predio_comodo (
 );
 
 
---
--- TOC entry 620 (class 1259 OID 9444753)
--- Name: instituicao_cod_instituicao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.instituicao_cod_instituicao_seq
     START WITH 0
     INCREMENT BY 1
@@ -16487,11 +13411,6 @@ CREATE SEQUENCE pmieducar.instituicao_cod_instituicao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 621 (class 1259 OID 9444755)
--- Name: instituicao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.instituicao (
     cod_instituicao integer DEFAULT nextval('pmieducar.instituicao_cod_instituicao_seq'::regclass) NOT NULL,
@@ -16545,19 +13464,8 @@ CREATE TABLE pmieducar.instituicao (
 );
 
 
---
--- TOC entry 8176 (class 0 OID 0)
--- Dependencies: 621
--- Name: COLUMN instituicao.exibir_apenas_professores_alocados; Type: COMMENT; Schema: pmieducar; Owner: -
---
-
 COMMENT ON COLUMN pmieducar.instituicao.exibir_apenas_professores_alocados IS 'Para filtros de emissão de relatórios';
 
-
---
--- TOC entry 622 (class 1259 OID 9444767)
--- Name: instituicao_documentacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.instituicao_documentacao_seq
     START WITH 2
@@ -16569,11 +13477,6 @@ CREATE SEQUENCE pmieducar.instituicao_documentacao_seq
 
 SET default_with_oids = false;
 
---
--- TOC entry 623 (class 1259 OID 9444769)
--- Name: instituicao_documentacao; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.instituicao_documentacao (
     id integer DEFAULT nextval('pmieducar.instituicao_documentacao_seq'::regclass) NOT NULL,
     instituicao_id integer NOT NULL,
@@ -16584,11 +13487,6 @@ CREATE TABLE pmieducar.instituicao_documentacao (
 );
 
 
---
--- TOC entry 624 (class 1259 OID 9444774)
--- Name: material_didatico_cod_material_didatico_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.material_didatico_cod_material_didatico_seq
     START WITH 1
     INCREMENT BY 1
@@ -16598,11 +13496,6 @@ CREATE SEQUENCE pmieducar.material_didatico_cod_material_didatico_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 625 (class 1259 OID 9444776)
--- Name: material_didatico; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.material_didatico (
     cod_material_didatico integer DEFAULT nextval('pmieducar.material_didatico_cod_material_didatico_seq'::regclass) NOT NULL,
@@ -16619,11 +13512,6 @@ CREATE TABLE pmieducar.material_didatico (
 );
 
 
---
--- TOC entry 626 (class 1259 OID 9444784)
--- Name: material_tipo_cod_material_tipo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.material_tipo_cod_material_tipo_seq
     START WITH 1
     INCREMENT BY 1
@@ -16631,11 +13519,6 @@ CREATE SEQUENCE pmieducar.material_tipo_cod_material_tipo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 627 (class 1259 OID 9444786)
--- Name: material_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.material_tipo (
     cod_material_tipo integer DEFAULT nextval('pmieducar.material_tipo_cod_material_tipo_seq'::regclass) NOT NULL,
@@ -16650,11 +13533,6 @@ CREATE TABLE pmieducar.material_tipo (
 );
 
 
---
--- TOC entry 628 (class 1259 OID 9444794)
--- Name: matricula_cod_matricula_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.matricula_cod_matricula_seq
     START WITH 0
     INCREMENT BY 1
@@ -16662,11 +13540,6 @@ CREATE SEQUENCE pmieducar.matricula_cod_matricula_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 629 (class 1259 OID 9444796)
--- Name: matricula; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.matricula (
     cod_matricula integer DEFAULT nextval('pmieducar.matricula_cod_matricula_seq'::regclass) NOT NULL,
@@ -16702,11 +13575,6 @@ CREATE TABLE pmieducar.matricula (
 );
 
 
---
--- TOC entry 630 (class 1259 OID 9444812)
--- Name: matricula_excessao_cod_aluno_excessao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.matricula_excessao_cod_aluno_excessao_seq
     START WITH 1
     INCREMENT BY 1
@@ -16716,11 +13584,6 @@ CREATE SEQUENCE pmieducar.matricula_excessao_cod_aluno_excessao_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 631 (class 1259 OID 9444814)
--- Name: matricula_excessao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.matricula_excessao (
     cod_aluno_excessao integer DEFAULT nextval('pmieducar.matricula_excessao_cod_aluno_excessao_seq'::regclass) NOT NULL,
@@ -16736,11 +13599,6 @@ CREATE TABLE pmieducar.matricula_excessao (
 );
 
 
---
--- TOC entry 632 (class 1259 OID 9444818)
--- Name: ocorrencia_disciplinar_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.ocorrencia_disciplinar_seq
     START WITH 1
     INCREMENT BY 1
@@ -16750,11 +13608,6 @@ CREATE SEQUENCE pmieducar.ocorrencia_disciplinar_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 633 (class 1259 OID 9444820)
--- Name: matricula_ocorrencia_disciplinar; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.matricula_ocorrencia_disciplinar (
     ref_cod_matricula integer NOT NULL,
@@ -16770,11 +13623,6 @@ CREATE TABLE pmieducar.matricula_ocorrencia_disciplinar (
     cod_ocorrencia_disciplinar integer DEFAULT nextval('pmieducar.ocorrencia_disciplinar_seq'::regclass) NOT NULL
 );
 
-
---
--- TOC entry 634 (class 1259 OID 9444828)
--- Name: matricula_turma; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.matricula_turma (
     ref_cod_matricula integer NOT NULL,
@@ -16798,11 +13646,6 @@ CREATE TABLE pmieducar.matricula_turma (
 );
 
 
---
--- TOC entry 635 (class 1259 OID 9444833)
--- Name: menu_tipo_usuario; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.menu_tipo_usuario (
     ref_cod_tipo_usuario integer NOT NULL,
     ref_cod_menu_submenu integer NOT NULL,
@@ -16812,11 +13655,6 @@ CREATE TABLE pmieducar.menu_tipo_usuario (
 );
 
 
---
--- TOC entry 636 (class 1259 OID 9444839)
--- Name: modulo_cod_modulo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.modulo_cod_modulo_seq
     START WITH 0
     INCREMENT BY 1
@@ -16824,11 +13662,6 @@ CREATE SEQUENCE pmieducar.modulo_cod_modulo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 637 (class 1259 OID 9444841)
--- Name: modulo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.modulo (
     cod_modulo integer DEFAULT nextval('pmieducar.modulo_cod_modulo_seq'::regclass) NOT NULL,
@@ -16846,11 +13679,6 @@ CREATE TABLE pmieducar.modulo (
 );
 
 
---
--- TOC entry 638 (class 1259 OID 9444849)
--- Name: motivo_afastamento_cod_motivo_afastamento_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.motivo_afastamento_cod_motivo_afastamento_seq
     START WITH 1
     INCREMENT BY 1
@@ -16858,11 +13686,6 @@ CREATE SEQUENCE pmieducar.motivo_afastamento_cod_motivo_afastamento_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 639 (class 1259 OID 9444851)
--- Name: motivo_afastamento; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.motivo_afastamento (
     cod_motivo_afastamento integer DEFAULT nextval('pmieducar.motivo_afastamento_cod_motivo_afastamento_seq'::regclass) NOT NULL,
@@ -16877,11 +13700,6 @@ CREATE TABLE pmieducar.motivo_afastamento (
 );
 
 
---
--- TOC entry 640 (class 1259 OID 9444859)
--- Name: motivo_baixa_cod_motivo_baixa_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.motivo_baixa_cod_motivo_baixa_seq
     START WITH 1
     INCREMENT BY 1
@@ -16889,11 +13707,6 @@ CREATE SEQUENCE pmieducar.motivo_baixa_cod_motivo_baixa_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 641 (class 1259 OID 9444861)
--- Name: motivo_baixa; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.motivo_baixa (
     cod_motivo_baixa integer DEFAULT nextval('pmieducar.motivo_baixa_cod_motivo_baixa_seq'::regclass) NOT NULL,
@@ -16908,11 +13721,6 @@ CREATE TABLE pmieducar.motivo_baixa (
 );
 
 
---
--- TOC entry 642 (class 1259 OID 9444869)
--- Name: motivo_suspensao_cod_motivo_suspensao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.motivo_suspensao_cod_motivo_suspensao_seq
     START WITH 1
     INCREMENT BY 1
@@ -16920,11 +13728,6 @@ CREATE SEQUENCE pmieducar.motivo_suspensao_cod_motivo_suspensao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 643 (class 1259 OID 9444871)
--- Name: motivo_suspensao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.motivo_suspensao (
     cod_motivo_suspensao integer DEFAULT nextval('pmieducar.motivo_suspensao_cod_motivo_suspensao_seq'::regclass) NOT NULL,
@@ -16939,11 +13742,6 @@ CREATE TABLE pmieducar.motivo_suspensao (
 );
 
 
---
--- TOC entry 644 (class 1259 OID 9444879)
--- Name: nivel_cod_nivel_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.nivel_cod_nivel_seq
     START WITH 1
     INCREMENT BY 1
@@ -16953,11 +13751,6 @@ CREATE SEQUENCE pmieducar.nivel_cod_nivel_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 645 (class 1259 OID 9444881)
--- Name: nivel; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.nivel (
     cod_nivel integer DEFAULT nextval('pmieducar.nivel_cod_nivel_seq'::regclass) NOT NULL,
@@ -16973,11 +13766,6 @@ CREATE TABLE pmieducar.nivel (
 );
 
 
---
--- TOC entry 646 (class 1259 OID 9444886)
--- Name: nivel_ensino_cod_nivel_ensino_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.nivel_ensino_cod_nivel_ensino_seq
     START WITH 0
     INCREMENT BY 1
@@ -16987,11 +13775,6 @@ CREATE SEQUENCE pmieducar.nivel_ensino_cod_nivel_ensino_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 647 (class 1259 OID 9444888)
--- Name: nivel_ensino; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.nivel_ensino (
     cod_nivel_ensino integer DEFAULT nextval('pmieducar.nivel_ensino_cod_nivel_ensino_seq'::regclass) NOT NULL,
@@ -17006,11 +13789,6 @@ CREATE TABLE pmieducar.nivel_ensino (
 );
 
 
---
--- TOC entry 648 (class 1259 OID 9444896)
--- Name: nota_aluno_cod_nota_aluno_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.nota_aluno_cod_nota_aluno_seq
     START WITH 1
     INCREMENT BY 1
@@ -17020,11 +13798,6 @@ CREATE SEQUENCE pmieducar.nota_aluno_cod_nota_aluno_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 649 (class 1259 OID 9444898)
--- Name: nota_aluno; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.nota_aluno (
     cod_nota_aluno integer DEFAULT nextval('pmieducar.nota_aluno_cod_nota_aluno_seq'::regclass) NOT NULL,
@@ -17045,11 +13818,6 @@ CREATE TABLE pmieducar.nota_aluno (
 );
 
 
---
--- TOC entry 650 (class 1259 OID 9444903)
--- Name: operador_cod_operador_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.operador_cod_operador_seq
     START WITH 1
     INCREMENT BY 1
@@ -17059,11 +13827,6 @@ CREATE SEQUENCE pmieducar.operador_cod_operador_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 651 (class 1259 OID 9444905)
--- Name: operador; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.operador (
     cod_operador integer DEFAULT nextval('pmieducar.operador_cod_operador_seq'::regclass) NOT NULL,
@@ -17078,11 +13841,6 @@ CREATE TABLE pmieducar.operador (
 );
 
 
---
--- TOC entry 652 (class 1259 OID 9444914)
--- Name: pagamento_multa_cod_pagamento_multa_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.pagamento_multa_cod_pagamento_multa_seq
     START WITH 1
     INCREMENT BY 1
@@ -17090,11 +13848,6 @@ CREATE SEQUENCE pmieducar.pagamento_multa_cod_pagamento_multa_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 653 (class 1259 OID 9444916)
--- Name: pagamento_multa; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.pagamento_multa (
     cod_pagamento_multa integer DEFAULT nextval('pmieducar.pagamento_multa_cod_pagamento_multa_seq'::regclass) NOT NULL,
@@ -17106,11 +13859,6 @@ CREATE TABLE pmieducar.pagamento_multa (
 );
 
 
---
--- TOC entry 654 (class 1259 OID 9444920)
--- Name: pre_requisito_cod_pre_requisito_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.pre_requisito_cod_pre_requisito_seq
     START WITH 1
     INCREMENT BY 1
@@ -17118,11 +13866,6 @@ CREATE SEQUENCE pmieducar.pre_requisito_cod_pre_requisito_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 655 (class 1259 OID 9444922)
--- Name: pre_requisito; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.pre_requisito (
     cod_pre_requisito integer DEFAULT nextval('pmieducar.pre_requisito_cod_pre_requisito_seq'::regclass) NOT NULL,
@@ -17138,11 +13881,6 @@ CREATE TABLE pmieducar.pre_requisito (
 );
 
 
---
--- TOC entry 656 (class 1259 OID 9444930)
--- Name: projeto_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.projeto_seq
     START WITH 1
     INCREMENT BY 1
@@ -17151,22 +13889,12 @@ CREATE SEQUENCE pmieducar.projeto_seq
     CACHE 1;
 
 
---
--- TOC entry 657 (class 1259 OID 9444932)
--- Name: projeto; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.projeto (
     cod_projeto integer DEFAULT nextval('pmieducar.projeto_seq'::regclass) NOT NULL,
     nome character varying(50),
     observacao character varying(255)
 );
 
-
---
--- TOC entry 658 (class 1259 OID 9444936)
--- Name: projeto_aluno; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.projeto_aluno (
     ref_cod_projeto integer NOT NULL,
@@ -17177,11 +13905,6 @@ CREATE TABLE pmieducar.projeto_aluno (
 );
 
 
---
--- TOC entry 659 (class 1259 OID 9444939)
--- Name: quadro_horario_cod_quadro_horario_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.quadro_horario_cod_quadro_horario_seq
     START WITH 1
     INCREMENT BY 1
@@ -17189,11 +13912,6 @@ CREATE SEQUENCE pmieducar.quadro_horario_cod_quadro_horario_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 660 (class 1259 OID 9444941)
--- Name: quadro_horario; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.quadro_horario (
     cod_quadro_horario integer DEFAULT nextval('pmieducar.quadro_horario_cod_quadro_horario_seq'::regclass) NOT NULL,
@@ -17208,11 +13926,6 @@ CREATE TABLE pmieducar.quadro_horario (
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 661 (class 1259 OID 9444946)
--- Name: quadro_horario_horarios; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.quadro_horario_horarios (
     ref_cod_quadro_horario integer NOT NULL,
@@ -17233,11 +13946,6 @@ CREATE TABLE pmieducar.quadro_horario_horarios (
 );
 
 
---
--- TOC entry 662 (class 1259 OID 9444950)
--- Name: quadro_horario_horarios_aux; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.quadro_horario_horarios_aux (
     ref_cod_quadro_horario integer NOT NULL,
     sequencial integer NOT NULL,
@@ -17254,11 +13962,6 @@ CREATE TABLE pmieducar.quadro_horario_horarios_aux (
 );
 
 
---
--- TOC entry 663 (class 1259 OID 9444953)
--- Name: quantidade_reserva_externa; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.quantidade_reserva_externa (
     ref_cod_instituicao integer NOT NULL,
     ref_cod_escola integer NOT NULL,
@@ -17270,21 +13973,11 @@ CREATE TABLE pmieducar.quantidade_reserva_externa (
 );
 
 
---
--- TOC entry 664 (class 1259 OID 9444956)
--- Name: relacao_categoria_acervo; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.relacao_categoria_acervo (
     ref_cod_acervo integer NOT NULL,
     categoria_id integer NOT NULL
 );
 
-
---
--- TOC entry 665 (class 1259 OID 9444959)
--- Name: religiao_cod_religiao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.religiao_cod_religiao_seq
     START WITH 1
@@ -17295,11 +13988,6 @@ CREATE SEQUENCE pmieducar.religiao_cod_religiao_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 666 (class 1259 OID 9444961)
--- Name: religiao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.religiao (
     cod_religiao integer DEFAULT nextval('pmieducar.religiao_cod_religiao_seq'::regclass) NOT NULL,
@@ -17312,11 +14000,6 @@ CREATE TABLE pmieducar.religiao (
 );
 
 
---
--- TOC entry 667 (class 1259 OID 9444966)
--- Name: reserva_vaga_cod_reserva_vaga_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.reserva_vaga_cod_reserva_vaga_seq
     START WITH 1
     INCREMENT BY 1
@@ -17324,11 +14007,6 @@ CREATE SEQUENCE pmieducar.reserva_vaga_cod_reserva_vaga_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 668 (class 1259 OID 9444968)
--- Name: reserva_vaga; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.reserva_vaga (
     cod_reserva_vaga integer DEFAULT nextval('pmieducar.reserva_vaga_cod_reserva_vaga_seq'::regclass) NOT NULL,
@@ -17345,11 +14023,6 @@ CREATE TABLE pmieducar.reserva_vaga (
 );
 
 
---
--- TOC entry 669 (class 1259 OID 9444973)
--- Name: reservas_cod_reserva_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.reservas_cod_reserva_seq
     START WITH 1
     INCREMENT BY 1
@@ -17357,11 +14030,6 @@ CREATE SEQUENCE pmieducar.reservas_cod_reserva_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 670 (class 1259 OID 9444975)
--- Name: reservas; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.reservas (
     cod_reserva integer DEFAULT nextval('pmieducar.reservas_cod_reserva_seq'::regclass) NOT NULL,
@@ -17376,11 +14044,6 @@ CREATE TABLE pmieducar.reservas (
 );
 
 
---
--- TOC entry 671 (class 1259 OID 9444980)
--- Name: sequencia_serie; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.sequencia_serie (
     ref_serie_origem integer NOT NULL,
     ref_serie_destino integer NOT NULL,
@@ -17392,11 +14055,6 @@ CREATE TABLE pmieducar.sequencia_serie (
 );
 
 
---
--- TOC entry 672 (class 1259 OID 9444984)
--- Name: serie_cod_serie_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.serie_cod_serie_seq
     START WITH 0
     INCREMENT BY 1
@@ -17404,11 +14062,6 @@ CREATE SEQUENCE pmieducar.serie_cod_serie_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 673 (class 1259 OID 9444986)
--- Name: serie; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.serie (
     cod_serie integer DEFAULT nextval('pmieducar.serie_cod_serie_seq'::regclass) NOT NULL,
@@ -17436,11 +14089,6 @@ CREATE TABLE pmieducar.serie (
 );
 
 
---
--- TOC entry 674 (class 1259 OID 9444992)
--- Name: serie_pre_requisito; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.serie_pre_requisito (
     ref_cod_pre_requisito integer NOT NULL,
     ref_cod_operador integer NOT NULL,
@@ -17450,11 +14098,6 @@ CREATE TABLE pmieducar.serie_pre_requisito (
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 675 (class 1259 OID 9444998)
--- Name: serie_vaga; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.serie_vaga (
     ano integer NOT NULL,
@@ -17469,11 +14112,6 @@ CREATE TABLE pmieducar.serie_vaga (
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 676 (class 1259 OID 9445002)
--- Name: servidor; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.servidor (
     cod_servidor integer NOT NULL,
@@ -17508,11 +14146,6 @@ CREATE TABLE pmieducar.servidor (
 );
 
 
---
--- TOC entry 677 (class 1259 OID 9445006)
--- Name: servidor_afastamento; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.servidor_afastamento (
     ref_cod_servidor integer NOT NULL,
     sequencial integer NOT NULL,
@@ -17528,11 +14161,6 @@ CREATE TABLE pmieducar.servidor_afastamento (
 );
 
 
---
--- TOC entry 678 (class 1259 OID 9445010)
--- Name: servidor_alocacao_cod_servidor_alocacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.servidor_alocacao_cod_servidor_alocacao_seq
     START WITH 1
     INCREMENT BY 1
@@ -17540,11 +14168,6 @@ CREATE SEQUENCE pmieducar.servidor_alocacao_cod_servidor_alocacao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 679 (class 1259 OID 9445012)
--- Name: servidor_alocacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.servidor_alocacao (
     cod_servidor_alocacao integer DEFAULT nextval('pmieducar.servidor_alocacao_cod_servidor_alocacao_seq'::regclass) NOT NULL,
@@ -17570,11 +14193,6 @@ CREATE TABLE pmieducar.servidor_alocacao (
 );
 
 
---
--- TOC entry 680 (class 1259 OID 9445018)
--- Name: servidor_curso_cod_servidor_curso_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.servidor_curso_cod_servidor_curso_seq
     START WITH 1
     INCREMENT BY 1
@@ -17582,11 +14200,6 @@ CREATE SEQUENCE pmieducar.servidor_curso_cod_servidor_curso_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 681 (class 1259 OID 9445020)
--- Name: servidor_curso; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.servidor_curso (
     cod_servidor_curso integer DEFAULT nextval('pmieducar.servidor_curso_cod_servidor_curso_seq'::regclass) NOT NULL,
@@ -17599,22 +14212,12 @@ CREATE TABLE pmieducar.servidor_curso (
 
 SET default_with_oids = false;
 
---
--- TOC entry 682 (class 1259 OID 9445027)
--- Name: servidor_curso_ministra; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.servidor_curso_ministra (
     ref_cod_curso integer NOT NULL,
     ref_ref_cod_instituicao integer NOT NULL,
     ref_cod_servidor integer NOT NULL
 );
 
-
---
--- TOC entry 683 (class 1259 OID 9445030)
--- Name: servidor_disciplina; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.servidor_disciplina (
     ref_cod_disciplina integer NOT NULL,
@@ -17623,11 +14226,6 @@ CREATE TABLE pmieducar.servidor_disciplina (
     ref_cod_curso integer NOT NULL
 );
 
-
---
--- TOC entry 684 (class 1259 OID 9445033)
--- Name: servidor_formacao_cod_formacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.servidor_formacao_cod_formacao_seq
     START WITH 1
@@ -17638,11 +14236,6 @@ CREATE SEQUENCE pmieducar.servidor_formacao_cod_formacao_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 685 (class 1259 OID 9445035)
--- Name: servidor_formacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.servidor_formacao (
     cod_formacao integer DEFAULT nextval('pmieducar.servidor_formacao_cod_formacao_seq'::regclass) NOT NULL,
@@ -17659,11 +14252,6 @@ CREATE TABLE pmieducar.servidor_formacao (
 );
 
 
---
--- TOC entry 686 (class 1259 OID 9445043)
--- Name: servidor_funcao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.servidor_funcao_seq
     START WITH 1
     INCREMENT BY 1
@@ -17674,11 +14262,6 @@ CREATE SEQUENCE pmieducar.servidor_funcao_seq
 
 SET default_with_oids = false;
 
---
--- TOC entry 687 (class 1259 OID 9445045)
--- Name: servidor_funcao; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.servidor_funcao (
     ref_ref_cod_instituicao integer NOT NULL,
     ref_cod_servidor integer NOT NULL,
@@ -17687,11 +14270,6 @@ CREATE TABLE pmieducar.servidor_funcao (
     cod_servidor_funcao integer DEFAULT nextval('pmieducar.servidor_funcao_seq'::regclass) NOT NULL
 );
 
-
---
--- TOC entry 688 (class 1259 OID 9445052)
--- Name: servidor_titulo_concurso_cod_servidor_titulo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.servidor_titulo_concurso_cod_servidor_titulo_seq
     START WITH 1
@@ -17703,11 +14281,6 @@ CREATE SEQUENCE pmieducar.servidor_titulo_concurso_cod_servidor_titulo_seq
 
 SET default_with_oids = true;
 
---
--- TOC entry 689 (class 1259 OID 9445054)
--- Name: servidor_titulo_concurso; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.servidor_titulo_concurso (
     cod_servidor_titulo integer DEFAULT nextval('pmieducar.servidor_titulo_concurso_cod_servidor_titulo_seq'::regclass) NOT NULL,
     ref_cod_formacao integer NOT NULL,
@@ -17716,11 +14289,6 @@ CREATE TABLE pmieducar.servidor_titulo_concurso (
 );
 
 
---
--- TOC entry 690 (class 1259 OID 9445058)
--- Name: situacao_cod_situacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.situacao_cod_situacao_seq
     START WITH 1
     INCREMENT BY 1
@@ -17728,11 +14296,6 @@ CREATE SEQUENCE pmieducar.situacao_cod_situacao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 691 (class 1259 OID 9445060)
--- Name: situacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.situacao (
     cod_situacao integer DEFAULT nextval('pmieducar.situacao_cod_situacao_seq'::regclass) NOT NULL,
@@ -17750,11 +14313,6 @@ CREATE TABLE pmieducar.situacao (
 );
 
 
---
--- TOC entry 692 (class 1259 OID 9445071)
--- Name: subnivel_cod_subnivel_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.subnivel_cod_subnivel_seq
     START WITH 1
     INCREMENT BY 1
@@ -17764,11 +14322,6 @@ CREATE SEQUENCE pmieducar.subnivel_cod_subnivel_seq
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 693 (class 1259 OID 9445073)
--- Name: subnivel; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.subnivel (
     cod_subnivel integer DEFAULT nextval('pmieducar.subnivel_cod_subnivel_seq'::regclass) NOT NULL,
@@ -17784,21 +14337,11 @@ CREATE TABLE pmieducar.subnivel (
 );
 
 
---
--- TOC entry 694 (class 1259 OID 9445078)
--- Name: tipo_autor; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.tipo_autor (
     codigo integer,
     tipo_autor character varying(255)
 );
 
-
---
--- TOC entry 695 (class 1259 OID 9445081)
--- Name: tipo_avaliacao_cod_tipo_avaliacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
 
 CREATE SEQUENCE pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq
     START WITH 1
@@ -17809,11 +14352,6 @@ CREATE SEQUENCE pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 696 (class 1259 OID 9445083)
--- Name: tipo_avaliacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.tipo_avaliacao (
     cod_tipo_avaliacao integer DEFAULT nextval('pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq'::regclass) NOT NULL,
@@ -17828,11 +14366,6 @@ CREATE TABLE pmieducar.tipo_avaliacao (
 );
 
 
---
--- TOC entry 697 (class 1259 OID 9445089)
--- Name: tipo_avaliacao_valores; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.tipo_avaliacao_valores (
     ref_cod_tipo_avaliacao integer NOT NULL,
     sequencial integer NOT NULL,
@@ -17844,11 +14377,6 @@ CREATE TABLE pmieducar.tipo_avaliacao_valores (
 );
 
 
---
--- TOC entry 698 (class 1259 OID 9445093)
--- Name: tipo_dispensa_cod_tipo_dispensa_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.tipo_dispensa_cod_tipo_dispensa_seq
     START WITH 1
     INCREMENT BY 1
@@ -17856,11 +14384,6 @@ CREATE SEQUENCE pmieducar.tipo_dispensa_cod_tipo_dispensa_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 699 (class 1259 OID 9445095)
--- Name: tipo_dispensa; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.tipo_dispensa (
     cod_tipo_dispensa integer DEFAULT nextval('pmieducar.tipo_dispensa_cod_tipo_dispensa_seq'::regclass) NOT NULL,
@@ -17875,11 +14398,6 @@ CREATE TABLE pmieducar.tipo_dispensa (
 );
 
 
---
--- TOC entry 700 (class 1259 OID 9445103)
--- Name: tipo_ensino_cod_tipo_ensino_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.tipo_ensino_cod_tipo_ensino_seq
     START WITH 0
     INCREMENT BY 1
@@ -17887,11 +14405,6 @@ CREATE SEQUENCE pmieducar.tipo_ensino_cod_tipo_ensino_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 701 (class 1259 OID 9445105)
--- Name: tipo_ensino; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.tipo_ensino (
     cod_tipo_ensino integer DEFAULT nextval('pmieducar.tipo_ensino_cod_tipo_ensino_seq'::regclass) NOT NULL,
@@ -17906,11 +14419,6 @@ CREATE TABLE pmieducar.tipo_ensino (
 );
 
 
---
--- TOC entry 702 (class 1259 OID 9445111)
--- Name: tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq
     START WITH 1
     INCREMENT BY 1
@@ -17918,11 +14426,6 @@ CREATE SEQUENCE pmieducar.tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_discip
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 703 (class 1259 OID 9445113)
--- Name: tipo_ocorrencia_disciplinar; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.tipo_ocorrencia_disciplinar (
     cod_tipo_ocorrencia_disciplinar integer DEFAULT nextval('pmieducar.tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq'::regclass) NOT NULL,
@@ -17938,11 +14441,6 @@ CREATE TABLE pmieducar.tipo_ocorrencia_disciplinar (
 );
 
 
---
--- TOC entry 704 (class 1259 OID 9445121)
--- Name: tipo_regime_cod_tipo_regime_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.tipo_regime_cod_tipo_regime_seq
     START WITH 1
     INCREMENT BY 1
@@ -17950,11 +14448,6 @@ CREATE SEQUENCE pmieducar.tipo_regime_cod_tipo_regime_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 705 (class 1259 OID 9445123)
--- Name: tipo_regime; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.tipo_regime (
     cod_tipo_regime integer DEFAULT nextval('pmieducar.tipo_regime_cod_tipo_regime_seq'::regclass) NOT NULL,
@@ -17968,11 +14461,6 @@ CREATE TABLE pmieducar.tipo_regime (
 );
 
 
---
--- TOC entry 706 (class 1259 OID 9445127)
--- Name: tipo_usuario_cod_tipo_usuario_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.tipo_usuario_cod_tipo_usuario_seq
     START WITH 0
     INCREMENT BY 1
@@ -17980,11 +14468,6 @@ CREATE SEQUENCE pmieducar.tipo_usuario_cod_tipo_usuario_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 707 (class 1259 OID 9445129)
--- Name: tipo_usuario; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.tipo_usuario (
     cod_tipo_usuario integer DEFAULT nextval('pmieducar.tipo_usuario_cod_tipo_usuario_seq'::regclass) NOT NULL,
@@ -17999,11 +14482,6 @@ CREATE TABLE pmieducar.tipo_usuario (
 );
 
 
---
--- TOC entry 708 (class 1259 OID 9445137)
--- Name: transferencia_solicitacao_cod_transferencia_solicitacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq
     START WITH 1
     INCREMENT BY 1
@@ -18011,11 +14489,6 @@ CREATE SEQUENCE pmieducar.transferencia_solicitacao_cod_transferencia_solicitaca
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 709 (class 1259 OID 9445139)
--- Name: transferencia_solicitacao; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.transferencia_solicitacao (
     cod_transferencia_solicitacao integer DEFAULT nextval('pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq'::regclass) NOT NULL,
@@ -18036,11 +14509,6 @@ CREATE TABLE pmieducar.transferencia_solicitacao (
 );
 
 
---
--- TOC entry 710 (class 1259 OID 9445147)
--- Name: transferencia_tipo_cod_transferencia_tipo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.transferencia_tipo_cod_transferencia_tipo_seq
     START WITH 1
     INCREMENT BY 1
@@ -18048,11 +14516,6 @@ CREATE SEQUENCE pmieducar.transferencia_tipo_cod_transferencia_tipo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 711 (class 1259 OID 9445149)
--- Name: transferencia_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.transferencia_tipo (
     cod_transferencia_tipo integer DEFAULT nextval('pmieducar.transferencia_tipo_cod_transferencia_tipo_seq'::regclass) NOT NULL,
@@ -18067,11 +14530,6 @@ CREATE TABLE pmieducar.transferencia_tipo (
 );
 
 
---
--- TOC entry 712 (class 1259 OID 9445157)
--- Name: turma_cod_turma_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.turma_cod_turma_seq
     START WITH 0
     INCREMENT BY 1
@@ -18079,11 +14537,6 @@ CREATE SEQUENCE pmieducar.turma_cod_turma_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 713 (class 1259 OID 9445159)
--- Name: turma; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.turma (
     cod_turma integer DEFAULT nextval('pmieducar.turma_cod_turma_seq'::regclass) NOT NULL,
@@ -18149,11 +14602,6 @@ CREATE TABLE pmieducar.turma (
 );
 
 
---
--- TOC entry 714 (class 1259 OID 9445171)
--- Name: turma_modulo; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.turma_modulo (
     ref_cod_turma integer NOT NULL,
     ref_cod_modulo integer NOT NULL,
@@ -18164,11 +14612,6 @@ CREATE TABLE pmieducar.turma_modulo (
 );
 
 
---
--- TOC entry 715 (class 1259 OID 9445174)
--- Name: turma_tipo_cod_turma_tipo_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.turma_tipo_cod_turma_tipo_seq
     START WITH 0
     INCREMENT BY 1
@@ -18176,11 +14619,6 @@ CREATE SEQUENCE pmieducar.turma_tipo_cod_turma_tipo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 716 (class 1259 OID 9445176)
--- Name: turma_tipo; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.turma_tipo (
     cod_turma_tipo integer DEFAULT nextval('pmieducar.turma_tipo_cod_turma_tipo_seq'::regclass) NOT NULL,
@@ -18195,11 +14633,6 @@ CREATE TABLE pmieducar.turma_tipo (
 );
 
 
---
--- TOC entry 717 (class 1259 OID 9445181)
--- Name: turma_turno_id_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
---
-
 CREATE SEQUENCE pmieducar.turma_turno_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -18208,22 +14641,12 @@ CREATE SEQUENCE pmieducar.turma_turno_id_seq
     CACHE 1;
 
 
---
--- TOC entry 718 (class 1259 OID 9445183)
--- Name: turma_turno; Type: TABLE; Schema: pmieducar; Owner: -
---
-
 CREATE TABLE pmieducar.turma_turno (
     id integer DEFAULT nextval('pmieducar.turma_turno_id_seq'::regclass) NOT NULL,
     nome character varying(15) NOT NULL,
     ativo smallint DEFAULT (1)::smallint NOT NULL
 );
 
-
---
--- TOC entry 719 (class 1259 OID 9445188)
--- Name: usuario; Type: TABLE; Schema: pmieducar; Owner: -
---
 
 CREATE TABLE pmieducar.usuario (
     cod_usuario integer NOT NULL,
@@ -18236,11 +14659,6 @@ CREATE TABLE pmieducar.usuario (
     ativo smallint DEFAULT (1)::smallint NOT NULL
 );
 
-
---
--- TOC entry 720 (class 1259 OID 9445192)
--- Name: v_matricula_matricula_turma; Type: VIEW; Schema: pmieducar; Owner: -
---
 
 CREATE VIEW pmieducar.v_matricula_matricula_turma AS
  SELECT ma.cod_matricula,
@@ -18266,20 +14684,10 @@ CREATE VIEW pmieducar.v_matricula_matricula_turma AS
   WHERE ((mt.ref_cod_matricula = ma.cod_matricula) AND (mt.ativo = ma.ativo));
 
 
---
--- TOC entry 721 (class 1259 OID 9445197)
--- Name: funcionario_su; Type: TABLE; Schema: pmiotopic; Owner: -
---
-
 CREATE TABLE pmiotopic.funcionario_su (
     ref_ref_cod_pessoa_fj integer NOT NULL
 );
 
-
---
--- TOC entry 722 (class 1259 OID 9445200)
--- Name: grupomoderador; Type: TABLE; Schema: pmiotopic; Owner: -
---
 
 CREATE TABLE pmiotopic.grupomoderador (
     ref_ref_cod_pessoa_fj integer NOT NULL,
@@ -18291,11 +14699,6 @@ CREATE TABLE pmiotopic.grupomoderador (
     ativo smallint DEFAULT (1)::smallint NOT NULL
 );
 
-
---
--- TOC entry 723 (class 1259 OID 9445204)
--- Name: grupopessoa; Type: TABLE; Schema: pmiotopic; Owner: -
---
 
 CREATE TABLE pmiotopic.grupopessoa (
     ref_idpes integer NOT NULL,
@@ -18312,11 +14715,6 @@ CREATE TABLE pmiotopic.grupopessoa (
 );
 
 
---
--- TOC entry 724 (class 1259 OID 9445208)
--- Name: grupos_cod_grupos_seq; Type: SEQUENCE; Schema: pmiotopic; Owner: -
---
-
 CREATE SEQUENCE pmiotopic.grupos_cod_grupos_seq
     START WITH 1
     INCREMENT BY 1
@@ -18324,11 +14722,6 @@ CREATE SEQUENCE pmiotopic.grupos_cod_grupos_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 725 (class 1259 OID 9445210)
--- Name: grupos; Type: TABLE; Schema: pmiotopic; Owner: -
---
 
 CREATE TABLE pmiotopic.grupos (
     cod_grupos integer DEFAULT nextval('pmiotopic.grupos_cod_grupos_seq'::regclass) NOT NULL,
@@ -18342,11 +14735,6 @@ CREATE TABLE pmiotopic.grupos (
 );
 
 
---
--- TOC entry 726 (class 1259 OID 9445216)
--- Name: notas; Type: TABLE; Schema: pmiotopic; Owner: -
---
-
 CREATE TABLE pmiotopic.notas (
     sequencial integer NOT NULL,
     ref_idpes integer NOT NULL,
@@ -18359,11 +14747,6 @@ CREATE TABLE pmiotopic.notas (
 );
 
 
---
--- TOC entry 727 (class 1259 OID 9445223)
--- Name: participante; Type: TABLE; Schema: pmiotopic; Owner: -
---
-
 CREATE TABLE pmiotopic.participante (
     sequencial integer NOT NULL,
     ref_ref_cod_grupos integer NOT NULL,
@@ -18374,11 +14757,6 @@ CREATE TABLE pmiotopic.participante (
 );
 
 
---
--- TOC entry 728 (class 1259 OID 9445226)
--- Name: reuniao_cod_reuniao_seq; Type: SEQUENCE; Schema: pmiotopic; Owner: -
---
-
 CREATE SEQUENCE pmiotopic.reuniao_cod_reuniao_seq
     START WITH 1
     INCREMENT BY 1
@@ -18386,11 +14764,6 @@ CREATE SEQUENCE pmiotopic.reuniao_cod_reuniao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 729 (class 1259 OID 9445228)
--- Name: reuniao; Type: TABLE; Schema: pmiotopic; Owner: -
---
 
 CREATE TABLE pmiotopic.reuniao (
     cod_reuniao integer DEFAULT nextval('pmiotopic.reuniao_cod_reuniao_seq'::regclass) NOT NULL,
@@ -18406,11 +14779,6 @@ CREATE TABLE pmiotopic.reuniao (
 );
 
 
---
--- TOC entry 730 (class 1259 OID 9445236)
--- Name: topico_cod_topico_seq; Type: SEQUENCE; Schema: pmiotopic; Owner: -
---
-
 CREATE SEQUENCE pmiotopic.topico_cod_topico_seq
     START WITH 1
     INCREMENT BY 1
@@ -18418,11 +14786,6 @@ CREATE SEQUENCE pmiotopic.topico_cod_topico_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 731 (class 1259 OID 9445238)
--- Name: topico; Type: TABLE; Schema: pmiotopic; Owner: -
---
 
 CREATE TABLE pmiotopic.topico (
     cod_topico integer DEFAULT nextval('pmiotopic.topico_cod_topico_seq'::regclass) NOT NULL,
@@ -18437,11 +14800,6 @@ CREATE TABLE pmiotopic.topico (
 );
 
 
---
--- TOC entry 732 (class 1259 OID 9445243)
--- Name: topicoreuniao; Type: TABLE; Schema: pmiotopic; Owner: -
---
-
 CREATE TABLE pmiotopic.topicoreuniao (
     ref_cod_topico integer NOT NULL,
     ref_cod_reuniao integer NOT NULL,
@@ -18451,11 +14809,6 @@ CREATE TABLE pmiotopic.topicoreuniao (
 );
 
 
---
--- TOC entry 733 (class 1259 OID 9445249)
--- Name: acesso_cod_acesso_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.acesso_cod_acesso_seq
     START WITH 0
     INCREMENT BY 1
@@ -18463,11 +14816,6 @@ CREATE SEQUENCE portal.acesso_cod_acesso_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 734 (class 1259 OID 9445251)
--- Name: acesso; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.acesso (
     cod_acesso integer DEFAULT nextval('portal.acesso_cod_acesso_seq'::regclass) NOT NULL,
@@ -18480,11 +14828,6 @@ CREATE TABLE portal.acesso (
 );
 
 
---
--- TOC entry 735 (class 1259 OID 9445262)
--- Name: agenda_cod_agenda_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.agenda_cod_agenda_seq
     START WITH 0
     INCREMENT BY 1
@@ -18492,11 +14835,6 @@ CREATE SEQUENCE portal.agenda_cod_agenda_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 736 (class 1259 OID 9445264)
--- Name: agenda; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.agenda (
     cod_agenda integer DEFAULT nextval('portal.agenda_cod_agenda_seq'::regclass) NOT NULL,
@@ -18510,11 +14848,6 @@ CREATE TABLE portal.agenda (
     ref_ref_cod_pessoa_own integer
 );
 
-
---
--- TOC entry 737 (class 1259 OID 9445273)
--- Name: agenda_compromisso; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.agenda_compromisso (
     cod_agenda_compromisso integer NOT NULL,
@@ -18532,11 +14865,6 @@ CREATE TABLE portal.agenda_compromisso (
 );
 
 
---
--- TOC entry 738 (class 1259 OID 9445282)
--- Name: agenda_pref_cod_comp_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.agenda_pref_cod_comp_seq
     START WITH 1
     INCREMENT BY 1
@@ -18544,11 +14872,6 @@ CREATE SEQUENCE portal.agenda_pref_cod_comp_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 739 (class 1259 OID 9445284)
--- Name: agenda_pref; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.agenda_pref (
     cod_comp integer DEFAULT nextval('portal.agenda_pref_cod_comp_seq'::regclass) NOT NULL,
@@ -18565,22 +14888,12 @@ CREATE TABLE portal.agenda_pref (
 );
 
 
---
--- TOC entry 740 (class 1259 OID 9445295)
--- Name: agenda_responsavel; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.agenda_responsavel (
     ref_cod_agenda integer NOT NULL,
     ref_ref_cod_pessoa_fj integer NOT NULL,
     principal smallint
 );
 
-
---
--- TOC entry 741 (class 1259 OID 9445298)
--- Name: compras_editais_editais_cod_compras_editais_editais_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.compras_editais_editais_cod_compras_editais_editais_seq
     START WITH 1
@@ -18589,11 +14902,6 @@ CREATE SEQUENCE portal.compras_editais_editais_cod_compras_editais_editais_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 742 (class 1259 OID 9445300)
--- Name: compras_editais_editais; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.compras_editais_editais (
     cod_compras_editais_editais integer DEFAULT nextval('portal.compras_editais_editais_cod_compras_editais_editais_seq'::regclass) NOT NULL,
@@ -18607,22 +14915,12 @@ CREATE TABLE portal.compras_editais_editais (
 );
 
 
---
--- TOC entry 743 (class 1259 OID 9445312)
--- Name: compras_editais_editais_empresas; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.compras_editais_editais_empresas (
     ref_cod_compras_editais_editais integer DEFAULT 0 NOT NULL,
     ref_cod_compras_editais_empresa integer DEFAULT 0 NOT NULL,
     data_hora timestamp without time zone NOT NULL
 );
 
-
---
--- TOC entry 744 (class 1259 OID 9445317)
--- Name: compras_editais_empresa_cod_compras_editais_empresa_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.compras_editais_empresa_cod_compras_editais_empresa_seq
     START WITH 1
@@ -18631,11 +14929,6 @@ CREATE SEQUENCE portal.compras_editais_empresa_cod_compras_editais_empresa_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 745 (class 1259 OID 9445319)
--- Name: compras_editais_empresa; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.compras_editais_empresa (
     cod_compras_editais_empresa integer DEFAULT nextval('portal.compras_editais_empresa_cod_compras_editais_empresa_seq'::regclass) NOT NULL,
@@ -18655,11 +14948,6 @@ CREATE TABLE portal.compras_editais_empresa (
 );
 
 
---
--- TOC entry 746 (class 1259 OID 9445330)
--- Name: compras_final_pregao_cod_compras_final_pregao_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.compras_final_pregao_cod_compras_final_pregao_seq
     START WITH 1
     INCREMENT BY 1
@@ -18668,31 +14956,16 @@ CREATE SEQUENCE portal.compras_final_pregao_cod_compras_final_pregao_seq
     CACHE 1;
 
 
---
--- TOC entry 747 (class 1259 OID 9445332)
--- Name: compras_final_pregao; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.compras_final_pregao (
     cod_compras_final_pregao integer DEFAULT nextval('portal.compras_final_pregao_cod_compras_final_pregao_seq'::regclass) NOT NULL,
     nm_final character varying(255) DEFAULT ''::character varying NOT NULL
 );
 
 
---
--- TOC entry 748 (class 1259 OID 9445337)
--- Name: compras_funcionarios; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.compras_funcionarios (
     ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
 );
 
-
---
--- TOC entry 749 (class 1259 OID 9445341)
--- Name: compras_licitacoes_cod_compras_licitacoes_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.compras_licitacoes_cod_compras_licitacoes_seq
     START WITH 1
@@ -18701,11 +14974,6 @@ CREATE SEQUENCE portal.compras_licitacoes_cod_compras_licitacoes_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 750 (class 1259 OID 9445343)
--- Name: compras_licitacoes; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.compras_licitacoes (
     cod_compras_licitacoes integer DEFAULT nextval('portal.compras_licitacoes_cod_compras_licitacoes_seq'::regclass) NOT NULL,
@@ -18719,11 +14987,6 @@ CREATE TABLE portal.compras_licitacoes (
 );
 
 
---
--- TOC entry 751 (class 1259 OID 9445354)
--- Name: compras_modalidade_cod_compras_modalidade_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.compras_modalidade_cod_compras_modalidade_seq
     START WITH 1
     INCREMENT BY 1
@@ -18732,21 +14995,11 @@ CREATE SEQUENCE portal.compras_modalidade_cod_compras_modalidade_seq
     CACHE 1;
 
 
---
--- TOC entry 752 (class 1259 OID 9445356)
--- Name: compras_modalidade; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.compras_modalidade (
     cod_compras_modalidade integer DEFAULT nextval('portal.compras_modalidade_cod_compras_modalidade_seq'::regclass) NOT NULL,
     nm_modalidade character varying(255) DEFAULT ''::character varying NOT NULL
 );
 
-
---
--- TOC entry 753 (class 1259 OID 9445361)
--- Name: compras_pregao_execucao_cod_compras_pregao_execucao_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq
     START WITH 1
@@ -18755,11 +15008,6 @@ CREATE SEQUENCE portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 754 (class 1259 OID 9445363)
--- Name: compras_pregao_execucao; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.compras_pregao_execucao (
     cod_compras_pregao_execucao integer DEFAULT nextval('portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq'::regclass) NOT NULL,
@@ -18779,11 +15027,6 @@ CREATE TABLE portal.compras_pregao_execucao (
 );
 
 
---
--- TOC entry 755 (class 1259 OID 9445372)
--- Name: compras_prestacao_contas_cod_compras_prestacao_contas_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq
     START WITH 1
     INCREMENT BY 1
@@ -18791,11 +15034,6 @@ CREATE SEQUENCE portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 756 (class 1259 OID 9445374)
--- Name: compras_prestacao_contas; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.compras_prestacao_contas (
     cod_compras_prestacao_contas integer DEFAULT nextval('portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq'::regclass) NOT NULL,
@@ -18805,11 +15043,6 @@ CREATE TABLE portal.compras_prestacao_contas (
 );
 
 
---
--- TOC entry 757 (class 1259 OID 9445381)
--- Name: foto_portal_cod_foto_portal_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.foto_portal_cod_foto_portal_seq
     START WITH 1
     INCREMENT BY 1
@@ -18817,11 +15050,6 @@ CREATE SEQUENCE portal.foto_portal_cod_foto_portal_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 758 (class 1259 OID 9445383)
--- Name: foto_portal; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.foto_portal (
     cod_foto_portal integer DEFAULT nextval('portal.foto_portal_cod_foto_portal_seq'::regclass) NOT NULL,
@@ -18839,11 +15067,6 @@ CREATE TABLE portal.foto_portal (
 );
 
 
---
--- TOC entry 759 (class 1259 OID 9445391)
--- Name: foto_secao_cod_foto_secao_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.foto_secao_cod_foto_secao_seq
     START WITH 1
     INCREMENT BY 1
@@ -18852,21 +15075,11 @@ CREATE SEQUENCE portal.foto_secao_cod_foto_secao_seq
     CACHE 1;
 
 
---
--- TOC entry 760 (class 1259 OID 9445393)
--- Name: foto_secao; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.foto_secao (
     cod_foto_secao integer DEFAULT nextval('portal.foto_secao_cod_foto_secao_seq'::regclass) NOT NULL,
     nm_secao character varying(255)
 );
 
-
---
--- TOC entry 761 (class 1259 OID 9445397)
--- Name: funcionario; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.funcionario (
     ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
@@ -18899,11 +15112,6 @@ CREATE TABLE portal.funcionario (
 );
 
 
---
--- TOC entry 762 (class 1259 OID 9445407)
--- Name: funcionario_vinculo_cod_funcionario_vinculo_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.funcionario_vinculo_cod_funcionario_vinculo_seq
     START WITH 1
     INCREMENT BY 1
@@ -18912,22 +15120,12 @@ CREATE SEQUENCE portal.funcionario_vinculo_cod_funcionario_vinculo_seq
     CACHE 1;
 
 
---
--- TOC entry 763 (class 1259 OID 9445409)
--- Name: funcionario_vinculo; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.funcionario_vinculo (
     cod_funcionario_vinculo integer DEFAULT nextval('portal.funcionario_vinculo_cod_funcionario_vinculo_seq'::regclass) NOT NULL,
     nm_vinculo character varying(255) DEFAULT ''::character varying NOT NULL,
     abreviatura character varying(16)
 );
 
-
---
--- TOC entry 764 (class 1259 OID 9445414)
--- Name: imagem_cod_imagem_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.imagem_cod_imagem_seq
     START WITH 0
@@ -18936,11 +15134,6 @@ CREATE SEQUENCE portal.imagem_cod_imagem_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 765 (class 1259 OID 9445416)
--- Name: imagem; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.imagem (
     cod_imagem integer DEFAULT nextval('portal.imagem_cod_imagem_seq'::regclass) NOT NULL,
@@ -18957,11 +15150,6 @@ CREATE TABLE portal.imagem (
 );
 
 
---
--- TOC entry 766 (class 1259 OID 9445420)
--- Name: imagem_tipo_cod_imagem_tipo_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.imagem_tipo_cod_imagem_tipo_seq
     START WITH 0
     INCREMENT BY 1
@@ -18970,21 +15158,11 @@ CREATE SEQUENCE portal.imagem_tipo_cod_imagem_tipo_seq
     CACHE 1;
 
 
---
--- TOC entry 767 (class 1259 OID 9445422)
--- Name: imagem_tipo; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.imagem_tipo (
     cod_imagem_tipo integer DEFAULT nextval('portal.imagem_tipo_cod_imagem_tipo_seq'::regclass) NOT NULL,
     nm_tipo character varying(100) NOT NULL
 );
 
-
---
--- TOC entry 768 (class 1259 OID 9445426)
--- Name: intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq
     START WITH 1
@@ -18993,11 +15171,6 @@ CREATE SEQUENCE portal.intranet_segur_permissao_nega_cod_intranet_segur_permissa
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 769 (class 1259 OID 9445428)
--- Name: intranet_segur_permissao_negada; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.intranet_segur_permissao_negada (
     cod_intranet_segur_permissao_negada integer DEFAULT nextval('portal.intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq'::regclass) NOT NULL,
@@ -19010,22 +15183,12 @@ CREATE TABLE portal.intranet_segur_permissao_negada (
 );
 
 
---
--- TOC entry 770 (class 1259 OID 9445436)
--- Name: jor_arquivo; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.jor_arquivo (
     ref_cod_jor_edicao integer DEFAULT 0 NOT NULL,
     jor_arquivo smallint DEFAULT (0)::smallint NOT NULL,
     jor_caminho character varying(255) DEFAULT ''::character varying NOT NULL
 );
 
-
---
--- TOC entry 771 (class 1259 OID 9445442)
--- Name: jor_edicao_cod_jor_edicao_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.jor_edicao_cod_jor_edicao_seq
     START WITH 1
@@ -19034,11 +15197,6 @@ CREATE SEQUENCE portal.jor_edicao_cod_jor_edicao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 772 (class 1259 OID 9445444)
--- Name: jor_edicao; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.jor_edicao (
     cod_jor_edicao integer DEFAULT nextval('portal.jor_edicao_cod_jor_edicao_seq'::regclass) NOT NULL,
@@ -19051,11 +15209,6 @@ CREATE TABLE portal.jor_edicao (
 );
 
 
---
--- TOC entry 773 (class 1259 OID 9445452)
--- Name: mailling_email_cod_mailling_email_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.mailling_email_cod_mailling_email_seq
     START WITH 1
     INCREMENT BY 1
@@ -19064,22 +15217,12 @@ CREATE SEQUENCE portal.mailling_email_cod_mailling_email_seq
     CACHE 1;
 
 
---
--- TOC entry 774 (class 1259 OID 9445454)
--- Name: mailling_email; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.mailling_email (
     cod_mailling_email integer DEFAULT nextval('portal.mailling_email_cod_mailling_email_seq'::regclass) NOT NULL,
     nm_pessoa character varying(255) DEFAULT ''::character varying NOT NULL,
     email character varying(255) DEFAULT ''::character varying NOT NULL
 );
 
-
---
--- TOC entry 775 (class 1259 OID 9445463)
--- Name: mailling_email_conteudo_cod_mailling_email_conteudo_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq
     START WITH 1
@@ -19088,11 +15231,6 @@ CREATE SEQUENCE portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 776 (class 1259 OID 9445465)
--- Name: mailling_email_conteudo; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.mailling_email_conteudo (
     cod_mailling_email_conteudo integer DEFAULT nextval('portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq'::regclass) NOT NULL,
@@ -19104,11 +15242,6 @@ CREATE TABLE portal.mailling_email_conteudo (
 );
 
 
---
--- TOC entry 777 (class 1259 OID 9445473)
--- Name: mailling_fila_envio_cod_mailling_fila_envio_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.mailling_fila_envio_cod_mailling_fila_envio_seq
     START WITH 1
     INCREMENT BY 1
@@ -19116,11 +15249,6 @@ CREATE SEQUENCE portal.mailling_fila_envio_cod_mailling_fila_envio_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 778 (class 1259 OID 9445475)
--- Name: mailling_fila_envio; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.mailling_fila_envio (
     cod_mailling_fila_envio integer DEFAULT nextval('portal.mailling_fila_envio_cod_mailling_fila_envio_seq'::regclass) NOT NULL,
@@ -19132,11 +15260,6 @@ CREATE TABLE portal.mailling_fila_envio (
 );
 
 
---
--- TOC entry 779 (class 1259 OID 9445480)
--- Name: mailling_grupo_cod_mailling_grupo_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.mailling_grupo_cod_mailling_grupo_seq
     START WITH 1
     INCREMENT BY 1
@@ -19145,32 +15268,17 @@ CREATE SEQUENCE portal.mailling_grupo_cod_mailling_grupo_seq
     CACHE 1;
 
 
---
--- TOC entry 780 (class 1259 OID 9445482)
--- Name: mailling_grupo; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.mailling_grupo (
     cod_mailling_grupo integer DEFAULT nextval('portal.mailling_grupo_cod_mailling_grupo_seq'::regclass) NOT NULL,
     nm_grupo character varying(255) DEFAULT ''::character varying NOT NULL
 );
 
 
---
--- TOC entry 781 (class 1259 OID 9445487)
--- Name: mailling_grupo_email; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.mailling_grupo_email (
     ref_cod_mailling_email integer DEFAULT 0 NOT NULL,
     ref_cod_mailling_grupo integer DEFAULT 0 NOT NULL
 );
 
-
---
--- TOC entry 782 (class 1259 OID 9445492)
--- Name: mailling_historico_cod_mailling_historico_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.mailling_historico_cod_mailling_historico_seq
     START WITH 1
@@ -19179,11 +15287,6 @@ CREATE SEQUENCE portal.mailling_historico_cod_mailling_historico_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 783 (class 1259 OID 9445494)
--- Name: mailling_historico; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.mailling_historico (
     cod_mailling_historico integer DEFAULT nextval('portal.mailling_historico_cod_mailling_historico_seq'::regclass) NOT NULL,
@@ -19194,11 +15297,6 @@ CREATE TABLE portal.mailling_historico (
 );
 
 
---
--- TOC entry 784 (class 1259 OID 9445501)
--- Name: menu_funcionario; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.menu_funcionario (
     ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
     cadastra smallint DEFAULT (0)::smallint NOT NULL,
@@ -19207,11 +15305,6 @@ CREATE TABLE portal.menu_funcionario (
 );
 
 
---
--- TOC entry 785 (class 1259 OID 9445508)
--- Name: menu_menu_cod_menu_menu_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.menu_menu_cod_menu_menu_seq
     START WITH 0
     INCREMENT BY 1
@@ -19219,11 +15312,6 @@ CREATE SEQUENCE portal.menu_menu_cod_menu_menu_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 786 (class 1259 OID 9445510)
--- Name: menu_menu; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.menu_menu (
     cod_menu_menu integer DEFAULT nextval('portal.menu_menu_cod_menu_menu_seq'::regclass) NOT NULL,
@@ -19237,11 +15325,6 @@ CREATE TABLE portal.menu_menu (
 );
 
 
---
--- TOC entry 787 (class 1259 OID 9445521)
--- Name: menu_submenu_cod_menu_submenu_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.menu_submenu_cod_menu_submenu_seq
     START WITH 0
     INCREMENT BY 1
@@ -19249,11 +15332,6 @@ CREATE SEQUENCE portal.menu_submenu_cod_menu_submenu_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 788 (class 1259 OID 9445523)
--- Name: menu_submenu; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.menu_submenu (
     cod_menu_submenu integer DEFAULT nextval('portal.menu_submenu_cod_menu_submenu_seq'::regclass) NOT NULL,
@@ -19266,11 +15344,6 @@ CREATE TABLE portal.menu_submenu (
 );
 
 
---
--- TOC entry 789 (class 1259 OID 9445533)
--- Name: not_portal_cod_not_portal_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.not_portal_cod_not_portal_seq
     START WITH 1
     INCREMENT BY 1
@@ -19278,11 +15351,6 @@ CREATE SEQUENCE portal.not_portal_cod_not_portal_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 790 (class 1259 OID 9445535)
--- Name: not_portal; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.not_portal (
     cod_not_portal integer DEFAULT nextval('portal.not_portal_cod_not_portal_seq'::regclass) NOT NULL,
@@ -19293,21 +15361,11 @@ CREATE TABLE portal.not_portal (
 );
 
 
---
--- TOC entry 791 (class 1259 OID 9445543)
--- Name: not_portal_tipo; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.not_portal_tipo (
     ref_cod_not_portal integer DEFAULT 0 NOT NULL,
     ref_cod_not_tipo integer DEFAULT 0 NOT NULL
 );
 
-
---
--- TOC entry 792 (class 1259 OID 9445548)
--- Name: not_tipo_cod_not_tipo_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.not_tipo_cod_not_tipo_seq
     START WITH 1
@@ -19317,21 +15375,11 @@ CREATE SEQUENCE portal.not_tipo_cod_not_tipo_seq
     CACHE 1;
 
 
---
--- TOC entry 793 (class 1259 OID 9445550)
--- Name: not_tipo; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.not_tipo (
     cod_not_tipo integer DEFAULT nextval('portal.not_tipo_cod_not_tipo_seq'::regclass) NOT NULL,
     nm_tipo character varying(255) DEFAULT ''::character varying NOT NULL
 );
 
-
---
--- TOC entry 794 (class 1259 OID 9445555)
--- Name: not_vinc_portal; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.not_vinc_portal (
     ref_cod_not_portal integer DEFAULT 0 NOT NULL,
@@ -19343,11 +15391,6 @@ CREATE TABLE portal.not_vinc_portal (
 );
 
 
---
--- TOC entry 795 (class 1259 OID 9445564)
--- Name: notificacao_cod_notificacao_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.notificacao_cod_notificacao_seq
     START WITH 1
     INCREMENT BY 1
@@ -19355,11 +15398,6 @@ CREATE SEQUENCE portal.notificacao_cod_notificacao_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 796 (class 1259 OID 9445566)
--- Name: notificacao; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.notificacao (
     cod_notificacao integer DEFAULT nextval('portal.notificacao_cod_notificacao_seq'::regclass) NOT NULL,
@@ -19372,11 +15410,6 @@ CREATE TABLE portal.notificacao (
 );
 
 
---
--- TOC entry 797 (class 1259 OID 9445574)
--- Name: pessoa_atividade_cod_pessoa_atividade_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.pessoa_atividade_cod_pessoa_atividade_seq
     START WITH 1
     INCREMENT BY 1
@@ -19385,22 +15418,12 @@ CREATE SEQUENCE portal.pessoa_atividade_cod_pessoa_atividade_seq
     CACHE 1;
 
 
---
--- TOC entry 798 (class 1259 OID 9445576)
--- Name: pessoa_atividade; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.pessoa_atividade (
     cod_pessoa_atividade integer DEFAULT nextval('portal.pessoa_atividade_cod_pessoa_atividade_seq'::regclass) NOT NULL,
     ref_cod_ramo_atividade integer DEFAULT 0 NOT NULL,
     nm_atividade character varying(255)
 );
 
-
---
--- TOC entry 799 (class 1259 OID 9445581)
--- Name: pessoa_fj_cod_pessoa_fj_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.pessoa_fj_cod_pessoa_fj_seq
     START WITH 1
@@ -19409,11 +15432,6 @@ CREATE SEQUENCE portal.pessoa_fj_cod_pessoa_fj_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 800 (class 1259 OID 9445583)
--- Name: pessoa_fj; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.pessoa_fj (
     cod_pessoa_fj integer DEFAULT nextval('portal.pessoa_fj_cod_pessoa_fj_seq'::regclass) NOT NULL,
@@ -19445,21 +15463,11 @@ CREATE TABLE portal.pessoa_fj (
 );
 
 
---
--- TOC entry 801 (class 1259 OID 9445592)
--- Name: pessoa_fj_pessoa_atividade; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.pessoa_fj_pessoa_atividade (
     ref_cod_pessoa_atividade integer DEFAULT 0 NOT NULL,
     ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
 );
 
-
---
--- TOC entry 802 (class 1259 OID 9445597)
--- Name: pessoa_ramo_atividade_cod_ramo_atividade_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.pessoa_ramo_atividade_cod_ramo_atividade_seq
     START WITH 1
@@ -19469,21 +15477,11 @@ CREATE SEQUENCE portal.pessoa_ramo_atividade_cod_ramo_atividade_seq
     CACHE 1;
 
 
---
--- TOC entry 803 (class 1259 OID 9445599)
--- Name: pessoa_ramo_atividade; Type: TABLE; Schema: portal; Owner: -
---
-
 CREATE TABLE portal.pessoa_ramo_atividade (
     cod_ramo_atividade integer DEFAULT nextval('portal.pessoa_ramo_atividade_cod_ramo_atividade_seq'::regclass) NOT NULL,
     nm_ramo_atividade character varying(255)
 );
 
-
---
--- TOC entry 804 (class 1259 OID 9445603)
--- Name: portal_banner_cod_portal_banner_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
 
 CREATE SEQUENCE portal.portal_banner_cod_portal_banner_seq
     START WITH 1
@@ -19493,11 +15491,6 @@ CREATE SEQUENCE portal.portal_banner_cod_portal_banner_seq
     CACHE 1;
 
 
---
--- TOC entry 805 (class 1259 OID 9445605)
--- Name: portal_concurso_cod_portal_concurso_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.portal_concurso_cod_portal_concurso_seq
     START WITH 1
     INCREMENT BY 1
@@ -19505,11 +15498,6 @@ CREATE SEQUENCE portal.portal_concurso_cod_portal_concurso_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 806 (class 1259 OID 9445607)
--- Name: portal_concurso; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.portal_concurso (
     cod_portal_concurso integer DEFAULT nextval('portal.portal_concurso_cod_portal_concurso_seq'::regclass) NOT NULL,
@@ -19522,11 +15510,6 @@ CREATE TABLE portal.portal_concurso (
 );
 
 
---
--- TOC entry 807 (class 1259 OID 9445618)
--- Name: sistema_cod_sistema_seq; Type: SEQUENCE; Schema: portal; Owner: -
---
-
 CREATE SEQUENCE portal.sistema_cod_sistema_seq
     START WITH 1
     INCREMENT BY 1
@@ -19534,11 +15517,6 @@ CREATE SEQUENCE portal.sistema_cod_sistema_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 808 (class 1259 OID 9445620)
--- Name: sistema; Type: TABLE; Schema: portal; Owner: -
---
 
 CREATE TABLE portal.sistema (
     cod_sistema integer DEFAULT nextval('portal.sistema_cod_sistema_seq'::regclass) NOT NULL,
@@ -19549,11 +15527,6 @@ CREATE TABLE portal.sistema (
     tipo character varying(255)
 );
 
-
---
--- TOC entry 809 (class 1259 OID 9445627)
--- Name: v_funcionario; Type: VIEW; Schema: portal; Owner: -
---
 
 CREATE VIEW portal.v_funcionario AS
  SELECT f.ref_cod_pessoa_fj,
@@ -19580,11 +15553,6 @@ CREATE VIEW portal.v_funcionario AS
    FROM portal.funcionario f;
 
 
---
--- TOC entry 810 (class 1259 OID 9445632)
--- Name: bairro_regiao; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE public.bairro_regiao (
     ref_cod_regiao integer NOT NULL,
     ref_idbai integer NOT NULL
@@ -19592,11 +15560,6 @@ CREATE TABLE public.bairro_regiao (
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 811 (class 1259 OID 9445635)
--- Name: changelog; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.changelog (
     change_number bigint NOT NULL,
@@ -19609,11 +15572,6 @@ CREATE TABLE public.changelog (
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 812 (class 1259 OID 9445641)
--- Name: distrito; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.distrito (
     idmun numeric(6,0) NOT NULL,
@@ -19634,21 +15592,11 @@ CREATE TABLE public.distrito (
 );
 
 
---
--- TOC entry 813 (class 1259 OID 9445650)
--- Name: logradouro_fonetico; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE public.logradouro_fonetico (
     fonema character varying(30) NOT NULL,
     idlog numeric(8,0) NOT NULL
 );
 
-
---
--- TOC entry 814 (class 1259 OID 9445653)
--- Name: pais; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.pais (
     idpais numeric(3,0) NOT NULL,
@@ -19659,11 +15607,6 @@ CREATE TABLE public.pais (
 
 
 SET default_with_oids = false;
-
---
--- TOC entry 815 (class 1259 OID 9445659)
--- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.pghero_query_stats (
     id integer NOT NULL,
@@ -19677,11 +15620,6 @@ CREATE TABLE public.pghero_query_stats (
 );
 
 
---
--- TOC entry 816 (class 1259 OID 9445665)
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
 CREATE SEQUENCE public.pghero_query_stats_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -19690,19 +15628,8 @@ CREATE SEQUENCE public.pghero_query_stats_id_seq
     CACHE 1;
 
 
---
--- TOC entry 8177 (class 0 OID 0)
--- Dependencies: 816
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
 ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
 
-
---
--- TOC entry 200 (class 1259 OID 9442746)
--- Name: phinxlog; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.phinxlog (
     version bigint NOT NULL,
@@ -19713,11 +15640,6 @@ CREATE TABLE public.phinxlog (
 );
 
 
---
--- TOC entry 817 (class 1259 OID 9445667)
--- Name: portal_banner_cod_portal_banner_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
 CREATE SEQUENCE public.portal_banner_cod_portal_banner_seq
     START WITH 1
     INCREMENT BY 1
@@ -19725,11 +15647,6 @@ CREATE SEQUENCE public.portal_banner_cod_portal_banner_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 818 (class 1259 OID 9445669)
--- Name: portal_banner; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.portal_banner (
     cod_portal_banner integer DEFAULT nextval('public.portal_banner_cod_portal_banner_seq'::regclass) NOT NULL,
@@ -19742,11 +15659,6 @@ CREATE TABLE public.portal_banner (
 );
 
 
---
--- TOC entry 819 (class 1259 OID 9445681)
--- Name: regiao_cod_regiao_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
 CREATE SEQUENCE public.regiao_cod_regiao_seq
     START WITH 1
     INCREMENT BY 1
@@ -19757,21 +15669,11 @@ CREATE SEQUENCE public.regiao_cod_regiao_seq
 
 SET default_with_oids = true;
 
---
--- TOC entry 820 (class 1259 OID 9445683)
--- Name: regiao; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE public.regiao (
     cod_regiao integer DEFAULT nextval('public.regiao_cod_regiao_seq'::regclass) NOT NULL,
     nm_regiao character varying(100)
 );
 
-
---
--- TOC entry 821 (class 1259 OID 9445687)
--- Name: seq_bairro; Type: SEQUENCE; Schema: public; Owner: -
---
 
 CREATE SEQUENCE public.seq_bairro
     START WITH 1
@@ -19781,11 +15683,6 @@ CREATE SEQUENCE public.seq_bairro
     CACHE 1;
 
 
---
--- TOC entry 822 (class 1259 OID 9445689)
--- Name: seq_distrito; Type: SEQUENCE; Schema: public; Owner: -
---
-
 CREATE SEQUENCE public.seq_distrito
     START WITH 0
     INCREMENT BY 1
@@ -19793,11 +15690,6 @@ CREATE SEQUENCE public.seq_distrito
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 823 (class 1259 OID 9445691)
--- Name: seq_logradouro; Type: SEQUENCE; Schema: public; Owner: -
---
 
 CREATE SEQUENCE public.seq_logradouro
     START WITH 1
@@ -19807,11 +15699,6 @@ CREATE SEQUENCE public.seq_logradouro
     CACHE 1;
 
 
---
--- TOC entry 824 (class 1259 OID 9445693)
--- Name: seq_municipio; Type: SEQUENCE; Schema: public; Owner: -
---
-
 CREATE SEQUENCE public.seq_municipio
     START WITH 5565
     INCREMENT BY 1
@@ -19819,11 +15706,6 @@ CREATE SEQUENCE public.seq_municipio
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 825 (class 1259 OID 9445695)
--- Name: seq_setor_bai; Type: SEQUENCE; Schema: public; Owner: -
---
 
 CREATE SEQUENCE public.seq_setor_bai
     START WITH 1
@@ -19833,11 +15715,6 @@ CREATE SEQUENCE public.seq_setor_bai
     CACHE 1;
 
 
---
--- TOC entry 826 (class 1259 OID 9445697)
--- Name: setor_idset_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
 CREATE SEQUENCE public.setor_idset_seq
     START WITH 1
     INCREMENT BY 1
@@ -19845,11 +15722,6 @@ CREATE SEQUENCE public.setor_idset_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- TOC entry 827 (class 1259 OID 9445699)
--- Name: setor; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.setor (
     idset integer DEFAULT nextval('public.setor_idset_seq'::regclass) NOT NULL,
@@ -19865,21 +15737,11 @@ CREATE TABLE public.setor (
 );
 
 
---
--- TOC entry 828 (class 1259 OID 9445705)
--- Name: setor_bai; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE public.setor_bai (
     idsetorbai numeric(6,0) DEFAULT nextval(('public.seq_setor_bai'::text)::regclass) NOT NULL,
     nome character varying(80) NOT NULL
 );
 
-
---
--- TOC entry 829 (class 1259 OID 9445709)
--- Name: uf; Type: TABLE; Schema: public; Owner: -
---
 
 CREATE TABLE public.uf (
     sigla_uf character varying(3) NOT NULL,
@@ -19890,11 +15752,6 @@ CREATE TABLE public.uf (
 );
 
 
---
--- TOC entry 830 (class 1259 OID 9445715)
--- Name: vila; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE public.vila (
     idvil numeric(4,0) NOT NULL,
     idmun numeric(6,0) NOT NULL,
@@ -19902,11 +15759,6 @@ CREATE TABLE public.vila (
     geom character varying
 );
 
-
---
--- TOC entry 848 (class 1259 OID 9474521)
--- Name: view_componente_curricular; Type: VIEW; Schema: relatorio; Owner: -
---
 
 CREATE VIEW relatorio.view_componente_curricular AS
 ( SELECT escola_serie_disciplina.ref_cod_disciplina AS id,
@@ -19943,11 +15795,6 @@ UNION ALL
 
 SET default_with_oids = false;
 
---
--- TOC entry 832 (class 1259 OID 9445724)
--- Name: aluno_cod_aluno; Type: TABLE; Schema: serieciasc; Owner: -
---
-
 CREATE TABLE serieciasc.aluno_cod_aluno (
     cod_aluno integer NOT NULL,
     cod_ciasc bigint NOT NULL,
@@ -19956,11 +15803,6 @@ CREATE TABLE serieciasc.aluno_cod_aluno (
     updated_at timestamp without time zone
 );
 
-
---
--- TOC entry 833 (class 1259 OID 9445727)
--- Name: aluno_uniforme; Type: TABLE; Schema: serieciasc; Owner: -
---
 
 CREATE TABLE serieciasc.aluno_uniforme (
     ref_cod_aluno integer NOT NULL,
@@ -19982,11 +15824,6 @@ CREATE TABLE serieciasc.aluno_uniforme (
 );
 
 
---
--- TOC entry 834 (class 1259 OID 9445730)
--- Name: escola_agua; Type: TABLE; Schema: serieciasc; Owner: -
---
-
 CREATE TABLE serieciasc.escola_agua (
     ref_cod_escola integer NOT NULL,
     rede_publica integer DEFAULT 0,
@@ -19998,11 +15835,6 @@ CREATE TABLE serieciasc.escola_agua (
     updated_at timestamp without time zone
 );
 
-
---
--- TOC entry 835 (class 1259 OID 9445738)
--- Name: escola_energia; Type: TABLE; Schema: serieciasc; Owner: -
---
 
 CREATE TABLE serieciasc.escola_energia (
     ref_cod_escola integer NOT NULL,
@@ -20016,11 +15848,6 @@ CREATE TABLE serieciasc.escola_energia (
 );
 
 
---
--- TOC entry 836 (class 1259 OID 9445746)
--- Name: escola_lingua_indigena; Type: TABLE; Schema: serieciasc; Owner: -
---
-
 CREATE TABLE serieciasc.escola_lingua_indigena (
     ref_cod_escola integer NOT NULL,
     educacao_indigena integer DEFAULT 0,
@@ -20032,11 +15859,6 @@ CREATE TABLE serieciasc.escola_lingua_indigena (
     updated_at timestamp without time zone
 );
 
-
---
--- TOC entry 837 (class 1259 OID 9445754)
--- Name: escola_lixo; Type: TABLE; Schema: serieciasc; Owner: -
---
 
 CREATE TABLE serieciasc.escola_lixo (
     ref_cod_escola integer NOT NULL,
@@ -20050,11 +15872,6 @@ CREATE TABLE serieciasc.escola_lixo (
     updated_at timestamp without time zone
 );
 
-
---
--- TOC entry 838 (class 1259 OID 9445763)
--- Name: escola_projeto; Type: TABLE; Schema: serieciasc; Owner: -
---
 
 CREATE TABLE serieciasc.escola_projeto (
     ref_cod_escola integer NOT NULL,
@@ -20071,11 +15888,6 @@ CREATE TABLE serieciasc.escola_projeto (
     updated_at timestamp without time zone
 );
 
-
---
--- TOC entry 839 (class 1259 OID 9445775)
--- Name: escola_regulamentacao; Type: TABLE; Schema: serieciasc; Owner: -
---
 
 CREATE TABLE serieciasc.escola_regulamentacao (
     ref_cod_escola integer NOT NULL,
@@ -20097,11 +15909,6 @@ CREATE TABLE serieciasc.escola_regulamentacao (
 );
 
 
---
--- TOC entry 840 (class 1259 OID 9445783)
--- Name: escola_sanitario; Type: TABLE; Schema: serieciasc; Owner: -
---
-
 CREATE TABLE serieciasc.escola_sanitario (
     ref_cod_escola integer NOT NULL,
     rede_publica integer DEFAULT 0,
@@ -20113,11 +15920,6 @@ CREATE TABLE serieciasc.escola_sanitario (
 
 
 SET default_with_oids = true;
-
---
--- TOC entry 841 (class 1259 OID 9445789)
--- Name: cep_logradouro; Type: TABLE; Schema: urbano; Owner: -
---
 
 CREATE TABLE urbano.cep_logradouro (
     cep numeric(8,0) NOT NULL,
@@ -20137,11 +15939,6 @@ CREATE TABLE urbano.cep_logradouro (
 );
 
 
---
--- TOC entry 842 (class 1259 OID 9445797)
--- Name: cep_logradouro_bairro; Type: TABLE; Schema: urbano; Owner: -
---
-
 CREATE TABLE urbano.cep_logradouro_bairro (
     idlog numeric(6,0) NOT NULL,
     cep numeric(8,0) NOT NULL,
@@ -20159,18443 +15956,7210 @@ CREATE TABLE urbano.cep_logradouro_bairro (
 );
 
 
---
--- TOC entry 831 (class 1259 OID 9445721)
--- Name: tipo_logradouro; Type: TABLE; Schema: urbano; Owner: -
---
-
 CREATE TABLE urbano.tipo_logradouro (
     idtlog character varying(5) NOT NULL,
     descricao character varying(40) NOT NULL
 );
 
 
---
--- TOC entry 5486 (class 2604 OID 9474354)
--- Name: id; Type: DEFAULT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.codigo_cartorio_inep ALTER COLUMN id SET DEFAULT nextval('cadastro.codigo_cartorio_inep_id_seq'::regclass);
 
-
---
--- TOC entry 4928 (class 2604 OID 9445805)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.area_conhecimento ALTER COLUMN id SET DEFAULT nextval('modules.area_conhecimento_id_seq'::regclass);
 
 
---
--- TOC entry 4930 (class 2604 OID 9474621)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.auditoria_geral ALTER COLUMN id SET DEFAULT nextval('modules.auditoria_geral_id_seq'::regclass);
 
-
---
--- TOC entry 4931 (class 2604 OID 9445806)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.componente_curricular ALTER COLUMN id SET DEFAULT nextval('modules.componente_curricular_id_seq'::regclass);
 
 
---
--- TOC entry 5485 (class 2604 OID 9469022)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.config_movimento_geral ALTER COLUMN id SET DEFAULT nextval('modules.config_movimento_geral_id_seq'::regclass);
 
-
---
--- TOC entry 4935 (class 2604 OID 9445807)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.docente_licenciatura ALTER COLUMN id SET DEFAULT nextval('modules.docente_licenciatura_id_seq'::regclass);
 
 
---
--- TOC entry 4936 (class 2604 OID 9445808)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.educacenso_curso_superior ALTER COLUMN id SET DEFAULT nextval('modules.educacenso_curso_superior_id_seq'::regclass);
 
-
---
--- TOC entry 4937 (class 2604 OID 9445809)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.educacenso_ies ALTER COLUMN id SET DEFAULT nextval('modules.educacenso_ies_id_seq'::regclass);
 
 
---
--- TOC entry 4939 (class 2604 OID 9445810)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.falta_aluno ALTER COLUMN id SET DEFAULT nextval('modules.falta_aluno_id_seq'::regclass);
 
-
---
--- TOC entry 4940 (class 2604 OID 9445811)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.falta_componente_curricular ALTER COLUMN id SET DEFAULT nextval('modules.falta_componente_curricular_id_seq'::regclass);
 
 
---
--- TOC entry 4942 (class 2604 OID 9445812)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.falta_geral ALTER COLUMN id SET DEFAULT nextval('modules.falta_geral_id_seq'::regclass);
 
-
---
--- TOC entry 4944 (class 2604 OID 9445813)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.formula_media ALTER COLUMN id SET DEFAULT nextval('modules.formula_media_id_seq'::regclass);
 
 
---
--- TOC entry 4952 (class 2604 OID 9445814)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.nota_aluno ALTER COLUMN id SET DEFAULT nextval('modules.nota_aluno_id_seq'::regclass);
 
-
---
--- TOC entry 4953 (class 2604 OID 9445815)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.nota_componente_curricular ALTER COLUMN id SET DEFAULT nextval('modules.nota_componente_curricular_id_seq'::regclass);
 
 
---
--- TOC entry 4961 (class 2604 OID 9445816)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.parecer_aluno ALTER COLUMN id SET DEFAULT nextval('modules.parecer_aluno_id_seq'::regclass);
 
-
---
--- TOC entry 4962 (class 2604 OID 9445817)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.parecer_componente_curricular ALTER COLUMN id SET DEFAULT nextval('modules.parecer_componente_curricular_id_seq'::regclass);
 
 
---
--- TOC entry 4963 (class 2604 OID 9445818)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.parecer_geral ALTER COLUMN id SET DEFAULT nextval('modules.parecer_geral_id_seq'::regclass);
 
-
---
--- TOC entry 4982 (class 2604 OID 9445819)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.regra_avaliacao ALTER COLUMN id SET DEFAULT nextval('modules.regra_avaliacao_id_seq'::regclass);
 
 
---
--- TOC entry 4985 (class 2604 OID 9445820)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.tabela_arredondamento ALTER COLUMN id SET DEFAULT nextval('modules.tabela_arredondamento_id_seq'::regclass);
 
-
---
--- TOC entry 4987 (class 2604 OID 9445821)
--- Name: id; Type: DEFAULT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.tabela_arredondamento_valor ALTER COLUMN id SET DEFAULT nextval('modules.tabela_arredondamento_valor_id_seq'::regclass);
 
 
---
--- TOC entry 5064 (class 2604 OID 9445822)
--- Name: id; Type: DEFAULT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.auditoria_falta_componente_dispensa ALTER COLUMN id SET DEFAULT nextval('pmieducar.auditoria_falta_componente_dispensa_id_seq'::regclass);
 
-
---
--- TOC entry 5065 (class 2604 OID 9445823)
--- Name: id; Type: DEFAULT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.auditoria_nota_dispensa ALTER COLUMN id SET DEFAULT nextval('pmieducar.auditoria_nota_dispensa_id_seq'::regclass);
 
 
---
--- TOC entry 5067 (class 2604 OID 9445824)
--- Name: id; Type: DEFAULT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.backup ALTER COLUMN id SET DEFAULT nextval('pmieducar.backup_id_seq'::regclass);
 
-
---
--- TOC entry 5087 (class 2604 OID 9445825)
--- Name: id; Type: DEFAULT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.categoria_obra ALTER COLUMN id SET DEFAULT nextval('pmieducar.categoria_obra_id_seq'::regclass);
 
 
---
--- TOC entry 5145 (class 2604 OID 9445826)
--- Name: id; Type: DEFAULT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_usuario ALTER COLUMN id SET DEFAULT nextval('pmieducar.escola_usuario_id_seq'::regclass);
 
-
---
--- TOC entry 5431 (class 2604 OID 9445827)
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_query_stats_id_seq'::regclass);
 
 
---
--- TOC entry 7501 (class 0 OID 9442926)
--- Dependencies: 205
--- Data for Name: funcao; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 8178 (class 0 OID 0)
--- Dependencies: 204
--- Name: funcao_idfunc_seq; Type: SEQUENCE SET; Schema: acesso; Owner: -
---
 
 
 
 
---
--- TOC entry 7503 (class 0 OID 9442936)
--- Dependencies: 207
--- Data for Name: grupo; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7504 (class 0 OID 9442941)
--- Dependencies: 208
--- Data for Name: grupo_funcao; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 8179 (class 0 OID 0)
--- Dependencies: 206
--- Name: grupo_idgrp_seq; Type: SEQUENCE SET; Schema: acesso; Owner: -
---
 
 
 
 
---
--- TOC entry 7505 (class 0 OID 9442944)
--- Dependencies: 209
--- Data for Name: grupo_menu; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7506 (class 0 OID 9442947)
--- Dependencies: 210
--- Data for Name: grupo_operacao; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7507 (class 0 OID 9442950)
--- Dependencies: 211
--- Data for Name: grupo_sistema; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7508 (class 0 OID 9442953)
--- Dependencies: 212
--- Data for Name: historico_senha; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7510 (class 0 OID 9442958)
--- Dependencies: 214
--- Data for Name: instituicao; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 8180 (class 0 OID 0)
--- Dependencies: 213
--- Name: instituicao_idins_seq; Type: SEQUENCE SET; Schema: acesso; Owner: -
---
 
 
 
 
---
--- TOC entry 7511 (class 0 OID 9442963)
--- Dependencies: 215
--- Data for Name: log_acesso; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7512 (class 0 OID 9442967)
--- Dependencies: 216
--- Data for Name: log_erro; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7514 (class 0 OID 9442975)
--- Dependencies: 218
--- Data for Name: menu; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 8181 (class 0 OID 0)
--- Dependencies: 217
--- Name: menu_idmen_seq; Type: SEQUENCE SET; Schema: acesso; Owner: -
---
 
 
 
 
---
--- TOC entry 7516 (class 0 OID 9442982)
--- Dependencies: 220
--- Data for Name: operacao; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7517 (class 0 OID 9442987)
--- Dependencies: 221
--- Data for Name: operacao_funcao; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 8182 (class 0 OID 0)
--- Dependencies: 219
--- Name: operacao_idope_seq; Type: SEQUENCE SET; Schema: acesso; Owner: -
---
 
 
 
 
---
--- TOC entry 7518 (class 0 OID 9442990)
--- Dependencies: 222
--- Data for Name: pessoa_instituicao; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
---
--- TOC entry 8183 (class 0 OID 0)
--- Dependencies: 223
--- Name: sistema_idsis_seq; Type: SEQUENCE SET; Schema: acesso; Owner: -
---
 
 
 
 
---
--- TOC entry 7521 (class 0 OID 9443000)
--- Dependencies: 225
--- Data for Name: usuario; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7522 (class 0 OID 9443007)
--- Dependencies: 226
--- Data for Name: usuario_grupo; Type: TABLE DATA; Schema: acesso; Owner: -
---
 
 
 
---
--- TOC entry 7524 (class 0 OID 9443012)
--- Dependencies: 228
--- Data for Name: baixa_guia_produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8184 (class 0 OID 0)
--- Dependencies: 227
--- Name: baixa_guia_produto_idbap_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7526 (class 0 OID 9443021)
--- Dependencies: 230
--- Data for Name: baixa_guia_remessa; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8185 (class 0 OID 0)
--- Dependencies: 229
--- Name: baixa_guia_remessa_idbai_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7528 (class 0 OID 9443027)
--- Dependencies: 232
--- Data for Name: calendario; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8186 (class 0 OID 0)
--- Dependencies: 231
--- Name: calendario_idcad_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7530 (class 0 OID 9443033)
--- Dependencies: 234
--- Data for Name: cardapio; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7531 (class 0 OID 9443041)
--- Dependencies: 235
--- Data for Name: cardapio_faixa_unidade; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8187 (class 0 OID 0)
--- Dependencies: 233
--- Name: cardapio_idcar_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7533 (class 0 OID 9443046)
--- Dependencies: 237
--- Data for Name: cardapio_produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8188 (class 0 OID 0)
--- Dependencies: 236
--- Name: cardapio_produto_idcpr_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7534 (class 0 OID 9443053)
--- Dependencies: 238
--- Data for Name: cardapio_receita; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7535 (class 0 OID 9443056)
--- Dependencies: 239
--- Data for Name: cliente; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7537 (class 0 OID 9443062)
--- Dependencies: 241
--- Data for Name: composto_quimico; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8189 (class 0 OID 0)
--- Dependencies: 240
--- Name: composto_quimico_idcom_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7539 (class 0 OID 9443068)
--- Dependencies: 243
--- Data for Name: contrato; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8190 (class 0 OID 0)
--- Dependencies: 242
--- Name: contrato_idcon_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7541 (class 0 OID 9443081)
--- Dependencies: 245
--- Data for Name: contrato_produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8191 (class 0 OID 0)
--- Dependencies: 244
--- Name: contrato_produto_idcop_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7543 (class 0 OID 9443091)
--- Dependencies: 247
--- Data for Name: evento; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8192 (class 0 OID 0)
--- Dependencies: 246
--- Name: evento_ideve_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7545 (class 0 OID 9443098)
--- Dependencies: 249
--- Data for Name: faixa_composto_quimico; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8193 (class 0 OID 0)
--- Dependencies: 248
--- Name: faixa_composto_quimico_idfcp_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7547 (class 0 OID 9443108)
--- Dependencies: 251
--- Data for Name: faixa_etaria; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8194 (class 0 OID 0)
--- Dependencies: 250
--- Name: faixa_etaria_idfae_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7549 (class 0 OID 9443117)
--- Dependencies: 253
--- Data for Name: fornecedor; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8195 (class 0 OID 0)
--- Dependencies: 252
--- Name: fornecedor_idfor_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7550 (class 0 OID 9443122)
--- Dependencies: 254
--- Data for Name: fornecedor_unidade_atendida; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7552 (class 0 OID 9443127)
--- Dependencies: 256
--- Data for Name: grupo_quimico; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8196 (class 0 OID 0)
--- Dependencies: 255
--- Name: grupo_quimico_idgrpq_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7554 (class 0 OID 9443133)
--- Dependencies: 258
--- Data for Name: guia_produto_diario; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8197 (class 0 OID 0)
--- Dependencies: 257
--- Name: guia_produto_diario_idguiaprodiario_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7556 (class 0 OID 9443142)
--- Dependencies: 260
--- Data for Name: guia_remessa; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8198 (class 0 OID 0)
--- Dependencies: 259
--- Name: guia_remessa_idgui_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7558 (class 0 OID 9443150)
--- Dependencies: 262
--- Data for Name: guia_remessa_produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8199 (class 0 OID 0)
--- Dependencies: 261
--- Name: guia_remessa_produto_idgup_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7560 (class 0 OID 9443159)
--- Dependencies: 264
--- Data for Name: log_guia_remessa; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8200 (class 0 OID 0)
--- Dependencies: 263
--- Name: log_guia_remessa_idlogguia_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7561 (class 0 OID 9443166)
--- Dependencies: 265
--- Data for Name: medidas_caseiras; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7563 (class 0 OID 9443171)
--- Dependencies: 267
--- Data for Name: pessoa; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8201 (class 0 OID 0)
--- Dependencies: 266
--- Name: pessoa_idpes_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7565 (class 0 OID 9443178)
--- Dependencies: 269
--- Data for Name: produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7567 (class 0 OID 9443189)
--- Dependencies: 271
--- Data for Name: produto_composto_quimico; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8202 (class 0 OID 0)
--- Dependencies: 270
--- Name: produto_composto_quimico_idpcq_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7569 (class 0 OID 9443198)
--- Dependencies: 273
--- Data for Name: produto_fornecedor; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8203 (class 0 OID 0)
--- Dependencies: 272
--- Name: produto_fornecedor_idprf_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 8204 (class 0 OID 0)
--- Dependencies: 268
--- Name: produto_idpro_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7571 (class 0 OID 9443204)
--- Dependencies: 275
--- Data for Name: produto_medida_caseira; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8205 (class 0 OID 0)
--- Dependencies: 274
--- Name: produto_medida_caseira_idpmc_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7573 (class 0 OID 9443213)
--- Dependencies: 277
--- Data for Name: receita; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7575 (class 0 OID 9443222)
--- Dependencies: 279
--- Data for Name: receita_composto_quimico; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8206 (class 0 OID 0)
--- Dependencies: 278
--- Name: receita_composto_quimico_idrcq_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 8207 (class 0 OID 0)
--- Dependencies: 276
--- Name: receita_idrec_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7577 (class 0 OID 9443231)
--- Dependencies: 281
--- Data for Name: receita_produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8208 (class 0 OID 0)
--- Dependencies: 280
--- Name: receita_produto_idrpr_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7579 (class 0 OID 9443240)
--- Dependencies: 283
--- Data for Name: tipo_produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8209 (class 0 OID 0)
--- Dependencies: 282
--- Name: tipo_produto_idtip_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7581 (class 0 OID 9443246)
--- Dependencies: 285
--- Data for Name: tipo_refeicao; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8210 (class 0 OID 0)
--- Dependencies: 284
--- Name: tipo_refeicao_idtre_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7583 (class 0 OID 9443252)
--- Dependencies: 287
--- Data for Name: tipo_unidade; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8211 (class 0 OID 0)
--- Dependencies: 286
--- Name: tipo_unidade_idtip_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7585 (class 0 OID 9443258)
--- Dependencies: 289
--- Data for Name: unidade_atendida; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8212 (class 0 OID 0)
--- Dependencies: 288
--- Name: unidade_atendida_iduni_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7587 (class 0 OID 9443264)
--- Dependencies: 291
--- Data for Name: unidade_faixa_etaria; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 8213 (class 0 OID 0)
--- Dependencies: 290
--- Name: unidade_faixa_etaria_idfeu_seq; Type: SEQUENCE SET; Schema: alimentos; Owner: -
---
 
 
 
 
---
--- TOC entry 7588 (class 0 OID 9443268)
--- Dependencies: 292
--- Data for Name: unidade_produto; Type: TABLE DATA; Schema: alimentos; Owner: -
---
 
 
 
---
--- TOC entry 7589 (class 0 OID 9443274)
--- Dependencies: 293
--- Data for Name: aviso_nome; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
---
--- TOC entry 8214 (class 0 OID 0)
--- Dependencies: 845
--- Name: codigo_cartorio_inep_id_seq; Type: SEQUENCE SET; Schema: cadastro; Owner: -
---
 
 
 
 
---
--- TOC entry 8215 (class 0 OID 0)
--- Dependencies: 294
--- Name: deficiencia_cod_deficiencia_seq; Type: SEQUENCE SET; Schema: cadastro; Owner: -
---
 
 
 
 
---
--- TOC entry 7592 (class 0 OID 9443284)
--- Dependencies: 296
--- Data for Name: documento; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7593 (class 0 OID 9443293)
--- Dependencies: 297
--- Data for Name: endereco_externo; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7594 (class 0 OID 9443303)
--- Dependencies: 298
--- Data for Name: endereco_pessoa; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
---
--- TOC entry 7598 (class 0 OID 9443329)
--- Dependencies: 302
--- Data for Name: fisica_cpf; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7599 (class 0 OID 9443337)
--- Dependencies: 303
--- Data for Name: fisica_deficiencia; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7600 (class 0 OID 9443340)
--- Dependencies: 304
--- Data for Name: fisica_foto; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7601 (class 0 OID 9443343)
--- Dependencies: 305
--- Data for Name: fisica_raca; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7602 (class 0 OID 9443346)
--- Dependencies: 306
--- Data for Name: fisica_sangue; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7603 (class 0 OID 9443349)
--- Dependencies: 307
--- Data for Name: fone_pessoa; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7604 (class 0 OID 9443358)
--- Dependencies: 308
--- Data for Name: funcionario; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7605 (class 0 OID 9443367)
--- Dependencies: 309
--- Data for Name: historico_cartao; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7606 (class 0 OID 9443371)
--- Dependencies: 310
--- Data for Name: juridica; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 7607 (class 0 OID 9443379)
--- Dependencies: 311
--- Data for Name: ocupacao; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
---
--- TOC entry 8216 (class 0 OID 0)
--- Dependencies: 312
--- Name: orgao_emissor_rg_idorg_rg_seq; Type: SEQUENCE SET; Schema: cadastro; Owner: -
---
 
 
 
 
---
--- TOC entry 7611 (class 0 OID 9443397)
--- Dependencies: 315
--- Data for Name: pessoa_fonetico; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
---
--- TOC entry 8217 (class 0 OID 0)
--- Dependencies: 316
--- Name: raca_cod_raca_seq; Type: SEQUENCE SET; Schema: cadastro; Owner: -
---
 
 
 
 
---
--- TOC entry 7615 (class 0 OID 9443409)
--- Dependencies: 319
--- Data for Name: religiao; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
 
---
--- TOC entry 8218 (class 0 OID 0)
--- Dependencies: 318
--- Name: religiao_cod_religiao_seq; Type: SEQUENCE SET; Schema: cadastro; Owner: -
---
 
 
 
 
---
--- TOC entry 8219 (class 0 OID 0)
--- Dependencies: 320
--- Name: seq_pessoa; Type: SEQUENCE SET; Schema: cadastro; Owner: -
---
 
 
 
 
---
--- TOC entry 7617 (class 0 OID 9443416)
--- Dependencies: 321
--- Data for Name: socio; Type: TABLE DATA; Schema: cadastro; Owner: -
---
 
 
---
--- TOC entry 7623 (class 0 OID 9443491)
--- Dependencies: 334
--- Data for Name: campo_metadado; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8220 (class 0 OID 0)
--- Dependencies: 333
--- Name: campo_metadado_id_campo_met_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7625 (class 0 OID 9443499)
--- Dependencies: 336
--- Data for Name: confrontacao; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8221 (class 0 OID 0)
--- Dependencies: 335
--- Name: confrontacao_idcon_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7627 (class 0 OID 9443505)
--- Dependencies: 338
--- Data for Name: fonte; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8222 (class 0 OID 0)
--- Dependencies: 337
--- Name: fonte_idfon_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7628 (class 0 OID 9443510)
--- Dependencies: 339
--- Data for Name: historico_campo; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7630 (class 0 OID 9443516)
--- Dependencies: 341
--- Data for Name: incoerencia; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7632 (class 0 OID 9443525)
--- Dependencies: 343
--- Data for Name: incoerencia_documento; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8223 (class 0 OID 0)
--- Dependencies: 342
--- Name: incoerencia_documento_id_inc_doc_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7634 (class 0 OID 9443531)
--- Dependencies: 345
--- Data for Name: incoerencia_endereco; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8224 (class 0 OID 0)
--- Dependencies: 344
--- Name: incoerencia_endereco_id_inc_end_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7636 (class 0 OID 9443538)
--- Dependencies: 347
--- Data for Name: incoerencia_fone; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8225 (class 0 OID 0)
--- Dependencies: 346
--- Name: incoerencia_fone_id_inc_fone_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 8226 (class 0 OID 0)
--- Dependencies: 340
--- Name: incoerencia_idinc_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7637 (class 0 OID 9443543)
--- Dependencies: 348
--- Data for Name: incoerencia_pessoa_possivel; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7638 (class 0 OID 9443546)
--- Dependencies: 349
--- Data for Name: incoerencia_tipo_incoerencia; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7640 (class 0 OID 9443551)
--- Dependencies: 351
--- Data for Name: metadado; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8227 (class 0 OID 0)
--- Dependencies: 350
--- Name: metadado_idmet_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7641 (class 0 OID 9443556)
--- Dependencies: 352
--- Data for Name: ocorrencia_regra_campo; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7643 (class 0 OID 9443564)
--- Dependencies: 354
--- Data for Name: regra_campo; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 8228 (class 0 OID 0)
--- Dependencies: 353
--- Name: regra_campo_idreg_seq; Type: SEQUENCE SET; Schema: consistenciacao; Owner: -
---
 
 
 
 
---
--- TOC entry 7644 (class 0 OID 9443569)
--- Dependencies: 355
--- Data for Name: temp_cadastro_unificacao_cmf; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7645 (class 0 OID 9443575)
--- Dependencies: 356
--- Data for Name: temp_cadastro_unificacao_siam; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7646 (class 0 OID 9443578)
--- Dependencies: 357
--- Data for Name: tipo_incoerencia; Type: TABLE DATA; Schema: consistenciacao; Owner: -
---
 
 
 
---
--- TOC entry 7647 (class 0 OID 9443581)
--- Dependencies: 358
--- Data for Name: bairro; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7648 (class 0 OID 9443589)
--- Dependencies: 359
--- Data for Name: cep_logradouro; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7649 (class 0 OID 9443597)
--- Dependencies: 360
--- Data for Name: cep_logradouro_bairro; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7650 (class 0 OID 9443605)
--- Dependencies: 361
--- Data for Name: documento; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7651 (class 0 OID 9443614)
--- Dependencies: 362
--- Data for Name: endereco_externo; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7652 (class 0 OID 9443623)
--- Dependencies: 363
--- Data for Name: endereco_pessoa; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7653 (class 0 OID 9443632)
--- Dependencies: 364
--- Data for Name: fisica; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7654 (class 0 OID 9443642)
--- Dependencies: 365
--- Data for Name: fisica_cpf; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7655 (class 0 OID 9443650)
--- Dependencies: 366
--- Data for Name: fone_pessoa; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7656 (class 0 OID 9443659)
--- Dependencies: 367
--- Data for Name: funcionario; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7657 (class 0 OID 9443668)
--- Dependencies: 368
--- Data for Name: juridica; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7658 (class 0 OID 9443676)
--- Dependencies: 369
--- Data for Name: logradouro; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
---
--- TOC entry 7660 (class 0 OID 9443694)
--- Dependencies: 371
--- Data for Name: pessoa; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7661 (class 0 OID 9443704)
--- Dependencies: 372
--- Data for Name: socio; Type: TABLE DATA; Schema: historico; Owner: -
---
 
 
 
---
--- TOC entry 7662 (class 0 OID 9443712)
--- Dependencies: 373
--- Data for Name: area_conhecimento; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8229 (class 0 OID 0)
--- Dependencies: 374
--- Name: area_conhecimento_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7664 (class 0 OID 9443718)
--- Dependencies: 375
--- Data for Name: auditoria; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7665 (class 0 OID 9443724)
--- Dependencies: 376
--- Data for Name: auditoria_geral; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8230 (class 0 OID 0)
--- Dependencies: 850
--- Name: auditoria_geral_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7666 (class 0 OID 9443730)
--- Dependencies: 377
--- Data for Name: calendario_turma; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7667 (class 0 OID 9443733)
--- Dependencies: 378
--- Data for Name: componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7668 (class 0 OID 9443740)
--- Dependencies: 379
--- Data for Name: componente_curricular_ano_escolar; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8231 (class 0 OID 0)
--- Dependencies: 380
--- Name: componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7670 (class 0 OID 9443745)
--- Dependencies: 381
--- Data for Name: componente_curricular_turma; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8131 (class 0 OID 9469019)
--- Dependencies: 844
--- Data for Name: config_movimento_geral; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8232 (class 0 OID 0)
--- Dependencies: 843
--- Name: config_movimento_geral_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7671 (class 0 OID 9443751)
--- Dependencies: 382
--- Data for Name: docente_licenciatura; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8233 (class 0 OID 0)
--- Dependencies: 383
--- Name: docente_licenciatura_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7673 (class 0 OID 9443756)
--- Dependencies: 384
--- Data for Name: educacenso_cod_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7674 (class 0 OID 9443762)
--- Dependencies: 385
--- Data for Name: educacenso_cod_docente; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7675 (class 0 OID 9443768)
--- Dependencies: 386
--- Data for Name: educacenso_cod_escola; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7676 (class 0 OID 9443774)
--- Dependencies: 387
--- Data for Name: educacenso_cod_turma; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
---
--- TOC entry 8234 (class 0 OID 0)
--- Dependencies: 389
--- Name: educacenso_curso_superior_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 8235 (class 0 OID 0)
--- Dependencies: 391
--- Name: educacenso_ies_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7682 (class 0 OID 9443792)
--- Dependencies: 393
--- Data for Name: empresa_transporte_escolar; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8236 (class 0 OID 0)
--- Dependencies: 392
--- Name: empresa_transporte_escolar_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7683 (class 0 OID 9443796)
--- Dependencies: 394
--- Data for Name: etapas_curso_educacenso; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
---
--- TOC entry 7685 (class 0 OID 9443802)
--- Dependencies: 396
--- Data for Name: falta_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8237 (class 0 OID 0)
--- Dependencies: 397
--- Name: falta_aluno_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7687 (class 0 OID 9443807)
--- Dependencies: 398
--- Data for Name: falta_componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8238 (class 0 OID 0)
--- Dependencies: 399
--- Name: falta_componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7689 (class 0 OID 9443813)
--- Dependencies: 400
--- Data for Name: falta_geral; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8239 (class 0 OID 0)
--- Dependencies: 401
--- Name: falta_geral_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7691 (class 0 OID 9443819)
--- Dependencies: 402
--- Data for Name: ficha_medica_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
---
--- TOC entry 8240 (class 0 OID 0)
--- Dependencies: 404
--- Name: formula_media_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7695 (class 0 OID 9443834)
--- Dependencies: 406
--- Data for Name: itinerario_transporte_escolar; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8241 (class 0 OID 0)
--- Dependencies: 405
--- Name: itinerario_transporte_escolar_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7697 (class 0 OID 9443841)
--- Dependencies: 408
--- Data for Name: media_geral; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7698 (class 0 OID 9443846)
--- Dependencies: 409
--- Data for Name: moradia_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7700 (class 0 OID 9443852)
--- Dependencies: 411
--- Data for Name: motorista; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8242 (class 0 OID 0)
--- Dependencies: 410
--- Name: motorista_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7701 (class 0 OID 9443856)
--- Dependencies: 412
--- Data for Name: nota_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8243 (class 0 OID 0)
--- Dependencies: 413
--- Name: nota_aluno_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7703 (class 0 OID 9443861)
--- Dependencies: 414
--- Data for Name: nota_componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8244 (class 0 OID 0)
--- Dependencies: 415
--- Name: nota_componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7705 (class 0 OID 9443868)
--- Dependencies: 416
--- Data for Name: nota_componente_curricular_media; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7706 (class 0 OID 9443873)
--- Dependencies: 417
--- Data for Name: nota_exame; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7708 (class 0 OID 9443878)
--- Dependencies: 419
--- Data for Name: nota_geral; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8245 (class 0 OID 0)
--- Dependencies: 418
--- Name: nota_geral_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7709 (class 0 OID 9443884)
--- Dependencies: 420
--- Data for Name: parecer_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8246 (class 0 OID 0)
--- Dependencies: 421
--- Name: parecer_aluno_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7711 (class 0 OID 9443889)
--- Dependencies: 422
--- Data for Name: parecer_componente_curricular; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8247 (class 0 OID 0)
--- Dependencies: 423
--- Name: parecer_componente_curricular_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7713 (class 0 OID 9443897)
--- Dependencies: 424
--- Data for Name: parecer_geral; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8248 (class 0 OID 0)
--- Dependencies: 425
--- Name: parecer_geral_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7716 (class 0 OID 9443907)
--- Dependencies: 427
--- Data for Name: pessoa_transporte; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8249 (class 0 OID 0)
--- Dependencies: 426
--- Name: pessoa_transporte_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7718 (class 0 OID 9443916)
--- Dependencies: 429
--- Data for Name: ponto_transporte_escolar; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8250 (class 0 OID 0)
--- Dependencies: 428
--- Name: ponto_transporte_escolar_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7720 (class 0 OID 9443922)
--- Dependencies: 431
--- Data for Name: professor_turma; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7721 (class 0 OID 9443927)
--- Dependencies: 432
--- Data for Name: professor_turma_disciplina; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8251 (class 0 OID 0)
--- Dependencies: 430
--- Name: professor_turma_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 8252 (class 0 OID 0)
--- Dependencies: 434
--- Name: regra_avaliacao_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7725 (class 0 OID 9443952)
--- Dependencies: 436
--- Data for Name: regra_avaliacao_recuperacao; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8253 (class 0 OID 0)
--- Dependencies: 435
--- Name: regra_avaliacao_recuperacao_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 8135 (class 0 OID 9474570)
--- Dependencies: 849
--- Data for Name: regra_avaliacao_serie_ano; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7727 (class 0 OID 9443958)
--- Dependencies: 438
--- Data for Name: rota_transporte_escolar; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8254 (class 0 OID 0)
--- Dependencies: 437
--- Name: rota_transporte_escolar_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 8255 (class 0 OID 0)
--- Dependencies: 440
--- Name: tabela_arredondamento_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 8256 (class 0 OID 0)
--- Dependencies: 442
--- Name: tabela_arredondamento_valor_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 8257 (class 0 OID 0)
--- Dependencies: 443
--- Name: tipo_veiculo_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7734 (class 0 OID 9443979)
--- Dependencies: 445
--- Data for Name: transporte_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7735 (class 0 OID 9443982)
--- Dependencies: 446
--- Data for Name: uniforme_aluno; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 7737 (class 0 OID 9443987)
--- Dependencies: 448
--- Data for Name: veiculo; Type: TABLE DATA; Schema: modules; Owner: -
---
 
 
 
---
--- TOC entry 8258 (class 0 OID 0)
--- Dependencies: 447
--- Name: veiculo_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
---
 
 
 
 
---
--- TOC entry 7739 (class 0 OID 9443996)
--- Dependencies: 450
--- Data for Name: acao_governo; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 7741 (class 0 OID 9444009)
--- Dependencies: 452
--- Data for Name: acao_governo_arquivo; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 8259 (class 0 OID 0)
--- Dependencies: 451
--- Name: acao_governo_arquivo_cod_acao_governo_arquivo_seq; Type: SEQUENCE SET; Schema: pmiacoes; Owner: -
---
 
 
 
 
---
--- TOC entry 7742 (class 0 OID 9444016)
--- Dependencies: 453
--- Data for Name: acao_governo_categoria; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 8260 (class 0 OID 0)
--- Dependencies: 449
--- Name: acao_governo_cod_acao_governo_seq; Type: SEQUENCE SET; Schema: pmiacoes; Owner: -
---
 
 
 
 
---
--- TOC entry 7744 (class 0 OID 9444021)
--- Dependencies: 455
--- Data for Name: acao_governo_foto; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 8261 (class 0 OID 0)
--- Dependencies: 454
--- Name: acao_governo_foto_cod_acao_governo_foto_seq; Type: SEQUENCE SET; Schema: pmiacoes; Owner: -
---
 
 
 
 
---
--- TOC entry 7745 (class 0 OID 9444028)
--- Dependencies: 456
--- Data for Name: acao_governo_foto_portal; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 7746 (class 0 OID 9444031)
--- Dependencies: 457
--- Data for Name: acao_governo_noticia; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 7747 (class 0 OID 9444034)
--- Dependencies: 458
--- Data for Name: acao_governo_setor; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 7749 (class 0 OID 9444039)
--- Dependencies: 460
--- Data for Name: categoria; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 8262 (class 0 OID 0)
--- Dependencies: 459
--- Name: categoria_cod_categoria_seq; Type: SEQUENCE SET; Schema: pmiacoes; Owner: -
---
 
 
 
 
---
--- TOC entry 7750 (class 0 OID 9444044)
--- Dependencies: 461
--- Data for Name: secretaria_responsavel; Type: TABLE DATA; Schema: pmiacoes; Owner: -
---
 
 
 
---
--- TOC entry 7752 (class 0 OID 9444049)
--- Dependencies: 463
--- Data for Name: acontecimento; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8263 (class 0 OID 0)
--- Dependencies: 462
--- Name: acontecimento_cod_acontecimento_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7754 (class 0 OID 9444059)
--- Dependencies: 465
--- Data for Name: artigo; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8264 (class 0 OID 0)
--- Dependencies: 464
--- Name: artigo_cod_artigo_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7756 (class 0 OID 9444069)
--- Dependencies: 467
--- Data for Name: foto_evento; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8265 (class 0 OID 0)
--- Dependencies: 466
--- Name: foto_evento_cod_foto_evento_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7758 (class 0 OID 9444079)
--- Dependencies: 469
--- Data for Name: foto_vinc; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8266 (class 0 OID 0)
--- Dependencies: 468
--- Name: foto_vinc_cod_foto_vinc_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7760 (class 0 OID 9444085)
--- Dependencies: 471
--- Data for Name: itinerario; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8267 (class 0 OID 0)
--- Dependencies: 470
--- Name: itinerario_cod_itinerario_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 8268 (class 0 OID 0)
--- Dependencies: 472
--- Name: menu_cod_menu_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7764 (class 0 OID 9444105)
--- Dependencies: 475
--- Data for Name: menu_portal; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8269 (class 0 OID 0)
--- Dependencies: 474
--- Name: menu_portal_cod_menu_portal_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7766 (class 0 OID 9444118)
--- Dependencies: 477
--- Data for Name: portais; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8270 (class 0 OID 0)
--- Dependencies: 476
--- Name: portais_cod_portais_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7768 (class 0 OID 9444128)
--- Dependencies: 479
--- Data for Name: servicos; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8271 (class 0 OID 0)
--- Dependencies: 478
--- Name: servicos_cod_servicos_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7770 (class 0 OID 9444138)
--- Dependencies: 481
--- Data for Name: sistema; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8272 (class 0 OID 0)
--- Dependencies: 480
--- Name: sistema_cod_sistema_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7772 (class 0 OID 9444145)
--- Dependencies: 483
--- Data for Name: submenu_portal; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8273 (class 0 OID 0)
--- Dependencies: 482
--- Name: submenu_portal_cod_submenu_portal_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7774 (class 0 OID 9444160)
--- Dependencies: 485
--- Data for Name: telefones; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8274 (class 0 OID 0)
--- Dependencies: 484
--- Name: telefones_cod_telefones_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7776 (class 0 OID 9444170)
--- Dependencies: 487
--- Data for Name: tipo_acontecimento; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8275 (class 0 OID 0)
--- Dependencies: 486
--- Name: tipo_acontecimento_cod_tipo_acontecimento_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7778 (class 0 OID 9444180)
--- Dependencies: 489
--- Data for Name: topo_portal; Type: TABLE DATA; Schema: pmicontrolesis; Owner: -
---
 
 
 
---
--- TOC entry 8276 (class 0 OID 0)
--- Dependencies: 488
--- Name: topo_portal_cod_topo_portal_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 8277 (class 0 OID 0)
--- Dependencies: 490
--- Name: tutormenu_cod_tutormenu_seq; Type: SEQUENCE SET; Schema: pmicontrolesis; Owner: -
---
 
 
 
 
---
--- TOC entry 7782 (class 0 OID 9444197)
--- Dependencies: 493
--- Data for Name: diaria; Type: TABLE DATA; Schema: pmidrh; Owner: -
---
 
 
 
---
--- TOC entry 8278 (class 0 OID 0)
--- Dependencies: 492
--- Name: diaria_cod_diaria_seq; Type: SEQUENCE SET; Schema: pmidrh; Owner: -
---
 
 
 
 
---
--- TOC entry 7784 (class 0 OID 9444207)
--- Dependencies: 495
--- Data for Name: diaria_grupo; Type: TABLE DATA; Schema: pmidrh; Owner: -
---
 
 
 
---
--- TOC entry 8279 (class 0 OID 0)
--- Dependencies: 494
--- Name: diaria_grupo_cod_diaria_grupo_seq; Type: SEQUENCE SET; Schema: pmidrh; Owner: -
---
 
 
 
 
---
--- TOC entry 7786 (class 0 OID 9444213)
--- Dependencies: 497
--- Data for Name: diaria_valores; Type: TABLE DATA; Schema: pmidrh; Owner: -
---
 
 
 
---
--- TOC entry 8280 (class 0 OID 0)
--- Dependencies: 496
--- Name: diaria_valores_cod_diaria_valores_seq; Type: SEQUENCE SET; Schema: pmidrh; Owner: -
---
 
 
 
 
---
--- TOC entry 7788 (class 0 OID 9444219)
--- Dependencies: 499
--- Data for Name: setor; Type: TABLE DATA; Schema: pmidrh; Owner: -
---
 
 
 
---
--- TOC entry 8281 (class 0 OID 0)
--- Dependencies: 498
--- Name: setor_cod_setor_seq; Type: SEQUENCE SET; Schema: pmidrh; Owner: -
---
 
 
 
 
---
--- TOC entry 8282 (class 0 OID 0)
--- Dependencies: 500
--- Name: abandono_tipo_cod_abandono_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7792 (class 0 OID 9444237)
--- Dependencies: 503
--- Data for Name: acervo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7793 (class 0 OID 9444245)
--- Dependencies: 504
--- Data for Name: acervo_acervo_assunto; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7794 (class 0 OID 9444248)
--- Dependencies: 505
--- Data for Name: acervo_acervo_autor; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7796 (class 0 OID 9444254)
--- Dependencies: 507
--- Data for Name: acervo_assunto; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8283 (class 0 OID 0)
--- Dependencies: 506
--- Name: acervo_assunto_cod_acervo_assunto_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7798 (class 0 OID 9444264)
--- Dependencies: 509
--- Data for Name: acervo_autor; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8284 (class 0 OID 0)
--- Dependencies: 508
--- Name: acervo_autor_cod_acervo_autor_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 8285 (class 0 OID 0)
--- Dependencies: 502
--- Name: acervo_cod_acervo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7800 (class 0 OID 9444274)
--- Dependencies: 511
--- Data for Name: acervo_colecao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8286 (class 0 OID 0)
--- Dependencies: 510
--- Name: acervo_colecao_cod_acervo_colecao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7802 (class 0 OID 9444284)
--- Dependencies: 513
--- Data for Name: acervo_editora; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8287 (class 0 OID 0)
--- Dependencies: 512
--- Name: acervo_editora_cod_acervo_editora_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7804 (class 0 OID 9444294)
--- Dependencies: 515
--- Data for Name: acervo_idioma; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8288 (class 0 OID 0)
--- Dependencies: 514
--- Name: acervo_idioma_cod_acervo_idioma_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7806 (class 0 OID 9444301)
--- Dependencies: 517
--- Data for Name: aluno; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7807 (class 0 OID 9444310)
--- Dependencies: 518
--- Data for Name: aluno_aluno_beneficio; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7809 (class 0 OID 9444315)
--- Dependencies: 520
--- Data for Name: aluno_beneficio; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8289 (class 0 OID 0)
--- Dependencies: 519
--- Name: aluno_beneficio_cod_aluno_beneficio_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 8290 (class 0 OID 0)
--- Dependencies: 516
--- Name: aluno_cod_aluno_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7810 (class 0 OID 9444323)
--- Dependencies: 521
--- Data for Name: aluno_historico_altura_peso; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7811 (class 0 OID 9444326)
--- Dependencies: 522
--- Data for Name: ano_letivo_modulo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7812 (class 0 OID 9444329)
--- Dependencies: 523
--- Data for Name: auditoria_falta_componente_dispensa; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8291 (class 0 OID 0)
--- Dependencies: 524
--- Name: auditoria_falta_componente_dispensa_id_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7814 (class 0 OID 9444334)
--- Dependencies: 525
--- Data for Name: auditoria_nota_dispensa; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8292 (class 0 OID 0)
--- Dependencies: 526
--- Name: auditoria_nota_dispensa_id_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7816 (class 0 OID 9444339)
--- Dependencies: 527
--- Data for Name: avaliacao_desempenho; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
---
--- TOC entry 8293 (class 0 OID 0)
--- Dependencies: 529
--- Name: backup_id_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7820 (class 0 OID 9444353)
--- Dependencies: 531
--- Data for Name: biblioteca; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8294 (class 0 OID 0)
--- Dependencies: 530
--- Name: biblioteca_cod_biblioteca_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7821 (class 0 OID 9444360)
--- Dependencies: 532
--- Data for Name: biblioteca_dia; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7823 (class 0 OID 9444365)
--- Dependencies: 534
--- Data for Name: biblioteca_feriados; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8295 (class 0 OID 0)
--- Dependencies: 533
--- Name: biblioteca_feriados_cod_feriado_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7824 (class 0 OID 9444373)
--- Dependencies: 535
--- Data for Name: biblioteca_usuario; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7825 (class 0 OID 9444376)
--- Dependencies: 536
--- Data for Name: bloqueio_ano_letivo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7827 (class 0 OID 9444381)
--- Dependencies: 538
--- Data for Name: bloqueio_lancamento_faltas_notas; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7829 (class 0 OID 9444387)
--- Dependencies: 540
--- Data for Name: calendario_ano_letivo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8296 (class 0 OID 0)
--- Dependencies: 539
--- Name: calendario_ano_letivo_cod_calendario_ano_letivo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7831 (class 0 OID 9444394)
--- Dependencies: 542
--- Data for Name: calendario_anotacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8297 (class 0 OID 0)
--- Dependencies: 541
--- Name: calendario_anotacao_cod_calendario_anotacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7832 (class 0 OID 9444401)
--- Dependencies: 543
--- Data for Name: calendario_dia; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7833 (class 0 OID 9444408)
--- Dependencies: 544
--- Data for Name: calendario_dia_anotacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7835 (class 0 OID 9444413)
--- Dependencies: 546
--- Data for Name: calendario_dia_motivo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8298 (class 0 OID 0)
--- Dependencies: 545
--- Name: calendario_dia_motivo_cod_calendario_dia_motivo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7837 (class 0 OID 9444423)
--- Dependencies: 548
--- Data for Name: candidato_reserva_vaga; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8299 (class 0 OID 0)
--- Dependencies: 547
--- Name: candidato_reserva_vaga_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7839 (class 0 OID 9444432)
--- Dependencies: 550
--- Data for Name: categoria_nivel; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8300 (class 0 OID 0)
--- Dependencies: 549
--- Name: categoria_nivel_cod_categoria_nivel_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7840 (class 0 OID 9444437)
--- Dependencies: 551
--- Data for Name: categoria_obra; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8301 (class 0 OID 0)
--- Dependencies: 552
--- Name: categoria_obra_id_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7843 (class 0 OID 9444444)
--- Dependencies: 554
--- Data for Name: cliente; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8302 (class 0 OID 0)
--- Dependencies: 553
--- Name: cliente_cod_cliente_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7844 (class 0 OID 9444452)
--- Dependencies: 555
--- Data for Name: cliente_suspensao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7846 (class 0 OID 9444457)
--- Dependencies: 557
--- Data for Name: cliente_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7847 (class 0 OID 9444465)
--- Dependencies: 558
--- Data for Name: cliente_tipo_cliente; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8303 (class 0 OID 0)
--- Dependencies: 556
--- Name: cliente_tipo_cod_cliente_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7848 (class 0 OID 9444469)
--- Dependencies: 559
--- Data for Name: cliente_tipo_exemplar_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7850 (class 0 OID 9444474)
--- Dependencies: 561
--- Data for Name: coffebreak_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8304 (class 0 OID 0)
--- Dependencies: 560
--- Name: coffebreak_tipo_cod_coffebreak_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7853 (class 0 OID 9444488)
--- Dependencies: 564
--- Data for Name: curso; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8305 (class 0 OID 0)
--- Dependencies: 563
--- Name: curso_cod_curso_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7855 (class 0 OID 9444500)
--- Dependencies: 566
--- Data for Name: disciplina; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8306 (class 0 OID 0)
--- Dependencies: 565
--- Name: disciplina_cod_disciplina_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7856 (class 0 OID 9444509)
--- Dependencies: 567
--- Data for Name: disciplina_dependencia; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7857 (class 0 OID 9444515)
--- Dependencies: 568
--- Data for Name: disciplina_serie; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7859 (class 0 OID 9444521)
--- Dependencies: 570
--- Data for Name: disciplina_topico; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8307 (class 0 OID 0)
--- Dependencies: 569
--- Name: disciplina_topico_cod_disciplina_topico_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7860 (class 0 OID 9444529)
--- Dependencies: 571
--- Data for Name: dispensa_disciplina; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8308 (class 0 OID 0)
--- Dependencies: 851
--- Name: dispensa_disciplina_cod_dispensa_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7861 (class 0 OID 9444536)
--- Dependencies: 572
--- Data for Name: dispensa_etapa; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7863 (class 0 OID 9444541)
--- Dependencies: 574
--- Data for Name: distribuicao_uniforme; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8309 (class 0 OID 0)
--- Dependencies: 573
--- Name: distribuicao_uniforme_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7865 (class 0 OID 9444547)
--- Dependencies: 576
--- Data for Name: escola; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7866 (class 0 OID 9444562)
--- Dependencies: 577
--- Data for Name: escola_ano_letivo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8310 (class 0 OID 0)
--- Dependencies: 575
--- Name: escola_cod_escola_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7867 (class 0 OID 9444567)
--- Dependencies: 578
--- Data for Name: escola_complemento; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7868 (class 0 OID 9444574)
--- Dependencies: 579
--- Data for Name: escola_curso; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
---
--- TOC entry 8311 (class 0 OID 0)
--- Dependencies: 580
--- Name: escola_localizacao_cod_escola_localizacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7872 (class 0 OID 9444587)
--- Dependencies: 583
--- Data for Name: escola_rede_ensino; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8312 (class 0 OID 0)
--- Dependencies: 582
--- Name: escola_rede_ensino_cod_escola_rede_ensino_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7873 (class 0 OID 9444592)
--- Dependencies: 584
--- Data for Name: escola_serie; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7874 (class 0 OID 9444596)
--- Dependencies: 585
--- Data for Name: escola_serie_disciplina; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7875 (class 0 OID 9444603)
--- Dependencies: 586
--- Data for Name: escola_usuario; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8313 (class 0 OID 0)
--- Dependencies: 587
--- Name: escola_usuario_id_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7878 (class 0 OID 9444610)
--- Dependencies: 589
--- Data for Name: exemplar; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8314 (class 0 OID 0)
--- Dependencies: 588
--- Name: exemplar_cod_exemplar_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7880 (class 0 OID 9444618)
--- Dependencies: 591
--- Data for Name: exemplar_emprestimo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8315 (class 0 OID 0)
--- Dependencies: 590
--- Name: exemplar_emprestimo_cod_emprestimo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7882 (class 0 OID 9444624)
--- Dependencies: 593
--- Data for Name: exemplar_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8316 (class 0 OID 0)
--- Dependencies: 592
--- Name: exemplar_tipo_cod_exemplar_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7884 (class 0 OID 9444634)
--- Dependencies: 595
--- Data for Name: falta_aluno; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8317 (class 0 OID 0)
--- Dependencies: 594
--- Name: falta_aluno_cod_falta_aluno_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7886 (class 0 OID 9444641)
--- Dependencies: 597
--- Data for Name: falta_atraso; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8318 (class 0 OID 0)
--- Dependencies: 596
--- Name: falta_atraso_cod_falta_atraso_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7888 (class 0 OID 9444649)
--- Dependencies: 599
--- Data for Name: falta_atraso_compensado; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8319 (class 0 OID 0)
--- Dependencies: 598
--- Name: falta_atraso_compensado_cod_compensado_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7890 (class 0 OID 9444656)
--- Dependencies: 601
--- Data for Name: faltas; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8320 (class 0 OID 0)
--- Dependencies: 600
--- Name: faltas_sequencial_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7892 (class 0 OID 9444662)
--- Dependencies: 603
--- Data for Name: fonte; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8321 (class 0 OID 0)
--- Dependencies: 602
--- Name: fonte_cod_fonte_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7894 (class 0 OID 9444672)
--- Dependencies: 605
--- Data for Name: funcao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8322 (class 0 OID 0)
--- Dependencies: 604
--- Name: funcao_cod_funcao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7896 (class 0 OID 9444680)
--- Dependencies: 607
--- Data for Name: habilitacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8323 (class 0 OID 0)
--- Dependencies: 606
--- Name: habilitacao_cod_habilitacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7897 (class 0 OID 9444688)
--- Dependencies: 608
--- Data for Name: habilitacao_curso; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7898 (class 0 OID 9444691)
--- Dependencies: 609
--- Data for Name: historico_disciplinas; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7900 (class 0 OID 9444705)
--- Dependencies: 611
--- Data for Name: historico_escolar; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
---
--- TOC entry 8324 (class 0 OID 0)
--- Dependencies: 612
--- Name: historico_grade_curso_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7904 (class 0 OID 9444725)
--- Dependencies: 615
--- Data for Name: infra_comodo_funcao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8325 (class 0 OID 0)
--- Dependencies: 614
--- Name: infra_comodo_funcao_cod_infra_comodo_funcao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7906 (class 0 OID 9444735)
--- Dependencies: 617
--- Data for Name: infra_predio; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8326 (class 0 OID 0)
--- Dependencies: 616
--- Name: infra_predio_cod_infra_predio_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7908 (class 0 OID 9444745)
--- Dependencies: 619
--- Data for Name: infra_predio_comodo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8327 (class 0 OID 0)
--- Dependencies: 618
--- Name: infra_predio_comodo_cod_infra_predio_comodo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 8328 (class 0 OID 0)
--- Dependencies: 620
--- Name: instituicao_cod_instituicao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7912 (class 0 OID 9444769)
--- Dependencies: 623
--- Data for Name: instituicao_documentacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8329 (class 0 OID 0)
--- Dependencies: 622
--- Name: instituicao_documentacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7914 (class 0 OID 9444776)
--- Dependencies: 625
--- Data for Name: material_didatico; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8330 (class 0 OID 0)
--- Dependencies: 624
--- Name: material_didatico_cod_material_didatico_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7916 (class 0 OID 9444786)
--- Dependencies: 627
--- Data for Name: material_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8331 (class 0 OID 0)
--- Dependencies: 626
--- Name: material_tipo_cod_material_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7918 (class 0 OID 9444796)
--- Dependencies: 629
--- Data for Name: matricula; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8332 (class 0 OID 0)
--- Dependencies: 628
--- Name: matricula_cod_matricula_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7920 (class 0 OID 9444814)
--- Dependencies: 631
--- Data for Name: matricula_excessao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8333 (class 0 OID 0)
--- Dependencies: 630
--- Name: matricula_excessao_cod_aluno_excessao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7922 (class 0 OID 9444820)
--- Dependencies: 633
--- Data for Name: matricula_ocorrencia_disciplinar; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 7923 (class 0 OID 9444828)
--- Dependencies: 634
--- Data for Name: matricula_turma; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
---
--- TOC entry 7926 (class 0 OID 9444841)
--- Dependencies: 637
--- Data for Name: modulo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8334 (class 0 OID 0)
--- Dependencies: 636
--- Name: modulo_cod_modulo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7928 (class 0 OID 9444851)
--- Dependencies: 639
--- Data for Name: motivo_afastamento; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8335 (class 0 OID 0)
--- Dependencies: 638
--- Name: motivo_afastamento_cod_motivo_afastamento_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7930 (class 0 OID 9444861)
--- Dependencies: 641
--- Data for Name: motivo_baixa; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8336 (class 0 OID 0)
--- Dependencies: 640
--- Name: motivo_baixa_cod_motivo_baixa_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7932 (class 0 OID 9444871)
--- Dependencies: 643
--- Data for Name: motivo_suspensao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8337 (class 0 OID 0)
--- Dependencies: 642
--- Name: motivo_suspensao_cod_motivo_suspensao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7934 (class 0 OID 9444881)
--- Dependencies: 645
--- Data for Name: nivel; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8338 (class 0 OID 0)
--- Dependencies: 644
--- Name: nivel_cod_nivel_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7936 (class 0 OID 9444888)
--- Dependencies: 647
--- Data for Name: nivel_ensino; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8339 (class 0 OID 0)
--- Dependencies: 646
--- Name: nivel_ensino_cod_nivel_ensino_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7938 (class 0 OID 9444898)
--- Dependencies: 649
--- Data for Name: nota_aluno; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8340 (class 0 OID 0)
--- Dependencies: 648
--- Name: nota_aluno_cod_nota_aluno_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 8341 (class 0 OID 0)
--- Dependencies: 632
--- Name: ocorrencia_disciplinar_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7940 (class 0 OID 9444905)
--- Dependencies: 651
--- Data for Name: operador; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
 
---
--- TOC entry 8342 (class 0 OID 0)
--- Dependencies: 650
--- Name: operador_cod_operador_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
 
 
 
 
---
--- TOC entry 7942 (class 0 OID 9444916)
--- Dependencies: 653
--- Data for Name: pagamento_multa; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
 
 
-
---
--- TOC entry 8343 (class 0 OID 0)
--- Dependencies: 652
--- Name: pagamento_multa_cod_pagamento_multa_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7944 (class 0 OID 9444922)
--- Dependencies: 655
--- Data for Name: pre_requisito; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8344 (class 0 OID 0)
--- Dependencies: 654
--- Name: pre_requisito_cod_pre_requisito_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7946 (class 0 OID 9444932)
--- Dependencies: 657
--- Data for Name: projeto; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7947 (class 0 OID 9444936)
--- Dependencies: 658
--- Data for Name: projeto_aluno; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8345 (class 0 OID 0)
--- Dependencies: 656
--- Name: projeto_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7949 (class 0 OID 9444941)
--- Dependencies: 660
--- Data for Name: quadro_horario; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8346 (class 0 OID 0)
--- Dependencies: 659
--- Name: quadro_horario_cod_quadro_horario_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7950 (class 0 OID 9444946)
--- Dependencies: 661
--- Data for Name: quadro_horario_horarios; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7951 (class 0 OID 9444950)
--- Dependencies: 662
--- Data for Name: quadro_horario_horarios_aux; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7952 (class 0 OID 9444953)
--- Dependencies: 663
--- Data for Name: quantidade_reserva_externa; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7953 (class 0 OID 9444956)
--- Dependencies: 664
--- Data for Name: relacao_categoria_acervo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7955 (class 0 OID 9444961)
--- Dependencies: 666
--- Data for Name: religiao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8347 (class 0 OID 0)
--- Dependencies: 665
--- Name: religiao_cod_religiao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7957 (class 0 OID 9444968)
--- Dependencies: 668
--- Data for Name: reserva_vaga; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8348 (class 0 OID 0)
--- Dependencies: 667
--- Name: reserva_vaga_cod_reserva_vaga_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7959 (class 0 OID 9444975)
--- Dependencies: 670
--- Data for Name: reservas; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8349 (class 0 OID 0)
--- Dependencies: 669
--- Name: reservas_cod_reserva_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7960 (class 0 OID 9444980)
--- Dependencies: 671
--- Data for Name: sequencia_serie; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7962 (class 0 OID 9444986)
--- Dependencies: 673
--- Data for Name: serie; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8350 (class 0 OID 0)
--- Dependencies: 672
--- Name: serie_cod_serie_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7963 (class 0 OID 9444992)
--- Dependencies: 674
--- Data for Name: serie_pre_requisito; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7964 (class 0 OID 9444998)
--- Dependencies: 675
--- Data for Name: serie_vaga; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7965 (class 0 OID 9445002)
--- Dependencies: 676
--- Data for Name: servidor; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7966 (class 0 OID 9445006)
--- Dependencies: 677
--- Data for Name: servidor_afastamento; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7968 (class 0 OID 9445012)
--- Dependencies: 679
--- Data for Name: servidor_alocacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8351 (class 0 OID 0)
--- Dependencies: 678
--- Name: servidor_alocacao_cod_servidor_alocacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7970 (class 0 OID 9445020)
--- Dependencies: 681
--- Data for Name: servidor_curso; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8352 (class 0 OID 0)
--- Dependencies: 680
--- Name: servidor_curso_cod_servidor_curso_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7971 (class 0 OID 9445027)
--- Dependencies: 682
--- Data for Name: servidor_curso_ministra; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7972 (class 0 OID 9445030)
--- Dependencies: 683
--- Data for Name: servidor_disciplina; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7974 (class 0 OID 9445035)
--- Dependencies: 685
--- Data for Name: servidor_formacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8353 (class 0 OID 0)
--- Dependencies: 684
--- Name: servidor_formacao_cod_formacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7976 (class 0 OID 9445045)
--- Dependencies: 687
--- Data for Name: servidor_funcao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8354 (class 0 OID 0)
--- Dependencies: 686
--- Name: servidor_funcao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7978 (class 0 OID 9445054)
--- Dependencies: 689
--- Data for Name: servidor_titulo_concurso; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8355 (class 0 OID 0)
--- Dependencies: 688
--- Name: servidor_titulo_concurso_cod_servidor_titulo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7980 (class 0 OID 9445060)
--- Dependencies: 691
--- Data for Name: situacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8356 (class 0 OID 0)
--- Dependencies: 690
--- Name: situacao_cod_situacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7982 (class 0 OID 9445073)
--- Dependencies: 693
--- Data for Name: subnivel; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8357 (class 0 OID 0)
--- Dependencies: 692
--- Name: subnivel_cod_subnivel_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7985 (class 0 OID 9445083)
--- Dependencies: 696
--- Data for Name: tipo_avaliacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8358 (class 0 OID 0)
--- Dependencies: 695
--- Name: tipo_avaliacao_cod_tipo_avaliacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7986 (class 0 OID 9445089)
--- Dependencies: 697
--- Data for Name: tipo_avaliacao_valores; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 7988 (class 0 OID 9445095)
--- Dependencies: 699
--- Data for Name: tipo_dispensa; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8359 (class 0 OID 0)
--- Dependencies: 698
--- Name: tipo_dispensa_cod_tipo_dispensa_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7990 (class 0 OID 9445105)
--- Dependencies: 701
--- Data for Name: tipo_ensino; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8360 (class 0 OID 0)
--- Dependencies: 700
--- Name: tipo_ensino_cod_tipo_ensino_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7992 (class 0 OID 9445113)
--- Dependencies: 703
--- Data for Name: tipo_ocorrencia_disciplinar; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8361 (class 0 OID 0)
--- Dependencies: 702
--- Name: tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7994 (class 0 OID 9445123)
--- Dependencies: 705
--- Data for Name: tipo_regime; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8362 (class 0 OID 0)
--- Dependencies: 704
--- Name: tipo_regime_cod_tipo_regime_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 8363 (class 0 OID 0)
--- Dependencies: 706
--- Name: tipo_usuario_cod_tipo_usuario_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 7998 (class 0 OID 9445139)
--- Dependencies: 709
--- Data for Name: transferencia_solicitacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8364 (class 0 OID 0)
--- Dependencies: 708
--- Name: transferencia_solicitacao_cod_transferencia_solicitacao_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 8000 (class 0 OID 9445149)
--- Dependencies: 711
--- Data for Name: transferencia_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8365 (class 0 OID 0)
--- Dependencies: 710
--- Name: transferencia_tipo_cod_transferencia_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 8002 (class 0 OID 9445159)
--- Dependencies: 713
--- Data for Name: turma; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8366 (class 0 OID 0)
--- Dependencies: 712
--- Name: turma_cod_turma_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 8003 (class 0 OID 9445171)
--- Dependencies: 714
--- Data for Name: turma_modulo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8005 (class 0 OID 9445176)
--- Dependencies: 716
--- Data for Name: turma_tipo; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-
-
---
--- TOC entry 8367 (class 0 OID 0)
--- Dependencies: 715
--- Name: turma_tipo_cod_turma_tipo_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 8368 (class 0 OID 0)
--- Dependencies: 717
--- Name: turma_turno_id_seq; Type: SEQUENCE SET; Schema: pmieducar; Owner: -
---
-
-
-
-
---
--- TOC entry 8009 (class 0 OID 9445197)
--- Dependencies: 721
--- Data for Name: funcionario_su; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8010 (class 0 OID 9445200)
--- Dependencies: 722
--- Data for Name: grupomoderador; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8011 (class 0 OID 9445204)
--- Dependencies: 723
--- Data for Name: grupopessoa; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8013 (class 0 OID 9445210)
--- Dependencies: 725
--- Data for Name: grupos; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8369 (class 0 OID 0)
--- Dependencies: 724
--- Name: grupos_cod_grupos_seq; Type: SEQUENCE SET; Schema: pmiotopic; Owner: -
---
-
-
-
-
---
--- TOC entry 8014 (class 0 OID 9445216)
--- Dependencies: 726
--- Data for Name: notas; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8015 (class 0 OID 9445223)
--- Dependencies: 727
--- Data for Name: participante; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8017 (class 0 OID 9445228)
--- Dependencies: 729
--- Data for Name: reuniao; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8370 (class 0 OID 0)
--- Dependencies: 728
--- Name: reuniao_cod_reuniao_seq; Type: SEQUENCE SET; Schema: pmiotopic; Owner: -
---
-
-
-
-
---
--- TOC entry 8019 (class 0 OID 9445238)
--- Dependencies: 731
--- Data for Name: topico; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
-
---
--- TOC entry 8371 (class 0 OID 0)
--- Dependencies: 730
--- Name: topico_cod_topico_seq; Type: SEQUENCE SET; Schema: pmiotopic; Owner: -
---
-
-
-
-
---
--- TOC entry 8020 (class 0 OID 9445243)
--- Dependencies: 732
--- Data for Name: topicoreuniao; Type: TABLE DATA; Schema: pmiotopic; Owner: -
---
-
-
---
--- TOC entry 8372 (class 0 OID 0)
--- Dependencies: 733
--- Name: acesso_cod_acesso_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8373 (class 0 OID 0)
--- Dependencies: 735
--- Name: agenda_cod_agenda_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8025 (class 0 OID 9445273)
--- Dependencies: 737
--- Data for Name: agenda_compromisso; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8027 (class 0 OID 9445284)
--- Dependencies: 739
--- Data for Name: agenda_pref; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8374 (class 0 OID 0)
--- Dependencies: 738
--- Name: agenda_pref_cod_comp_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8028 (class 0 OID 9445295)
--- Dependencies: 740
--- Data for Name: agenda_responsavel; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8030 (class 0 OID 9445300)
--- Dependencies: 742
--- Data for Name: compras_editais_editais; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8375 (class 0 OID 0)
--- Dependencies: 741
--- Name: compras_editais_editais_cod_compras_editais_editais_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8031 (class 0 OID 9445312)
--- Dependencies: 743
--- Data for Name: compras_editais_editais_empresas; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8033 (class 0 OID 9445319)
--- Dependencies: 745
--- Data for Name: compras_editais_empresa; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8376 (class 0 OID 0)
--- Dependencies: 744
--- Name: compras_editais_empresa_cod_compras_editais_empresa_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8035 (class 0 OID 9445332)
--- Dependencies: 747
--- Data for Name: compras_final_pregao; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8377 (class 0 OID 0)
--- Dependencies: 746
--- Name: compras_final_pregao_cod_compras_final_pregao_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8036 (class 0 OID 9445337)
--- Dependencies: 748
--- Data for Name: compras_funcionarios; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8038 (class 0 OID 9445343)
--- Dependencies: 750
--- Data for Name: compras_licitacoes; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8378 (class 0 OID 0)
--- Dependencies: 749
--- Name: compras_licitacoes_cod_compras_licitacoes_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8040 (class 0 OID 9445356)
--- Dependencies: 752
--- Data for Name: compras_modalidade; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8379 (class 0 OID 0)
--- Dependencies: 751
--- Name: compras_modalidade_cod_compras_modalidade_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8042 (class 0 OID 9445363)
--- Dependencies: 754
--- Data for Name: compras_pregao_execucao; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8380 (class 0 OID 0)
--- Dependencies: 753
--- Name: compras_pregao_execucao_cod_compras_pregao_execucao_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8044 (class 0 OID 9445374)
--- Dependencies: 756
--- Data for Name: compras_prestacao_contas; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8381 (class 0 OID 0)
--- Dependencies: 755
--- Name: compras_prestacao_contas_cod_compras_prestacao_contas_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8046 (class 0 OID 9445383)
--- Dependencies: 758
--- Data for Name: foto_portal; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8382 (class 0 OID 0)
--- Dependencies: 757
--- Name: foto_portal_cod_foto_portal_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8048 (class 0 OID 9445393)
--- Dependencies: 760
--- Data for Name: foto_secao; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8383 (class 0 OID 0)
--- Dependencies: 759
--- Name: foto_secao_cod_foto_secao_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8384 (class 0 OID 0)
--- Dependencies: 762
--- Name: funcionario_vinculo_cod_funcionario_vinculo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8385 (class 0 OID 0)
--- Dependencies: 764
--- Name: imagem_cod_imagem_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8386 (class 0 OID 0)
--- Dependencies: 766
--- Name: imagem_tipo_cod_imagem_tipo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8387 (class 0 OID 0)
--- Dependencies: 768
--- Name: intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8057 (class 0 OID 9445428)
--- Dependencies: 769
--- Data for Name: intranet_segur_permissao_negada; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8058 (class 0 OID 9445436)
--- Dependencies: 770
--- Data for Name: jor_arquivo; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8060 (class 0 OID 9445444)
--- Dependencies: 772
--- Data for Name: jor_edicao; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8388 (class 0 OID 0)
--- Dependencies: 771
--- Name: jor_edicao_cod_jor_edicao_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8062 (class 0 OID 9445454)
--- Dependencies: 774
--- Data for Name: mailling_email; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8389 (class 0 OID 0)
--- Dependencies: 773
--- Name: mailling_email_cod_mailling_email_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8064 (class 0 OID 9445465)
--- Dependencies: 776
--- Data for Name: mailling_email_conteudo; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8390 (class 0 OID 0)
--- Dependencies: 775
--- Name: mailling_email_conteudo_cod_mailling_email_conteudo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8066 (class 0 OID 9445475)
--- Dependencies: 778
--- Data for Name: mailling_fila_envio; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8391 (class 0 OID 0)
--- Dependencies: 777
--- Name: mailling_fila_envio_cod_mailling_fila_envio_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8068 (class 0 OID 9445482)
--- Dependencies: 780
--- Data for Name: mailling_grupo; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8392 (class 0 OID 0)
--- Dependencies: 779
--- Name: mailling_grupo_cod_mailling_grupo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8069 (class 0 OID 9445487)
--- Dependencies: 781
--- Data for Name: mailling_grupo_email; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8071 (class 0 OID 9445494)
--- Dependencies: 783
--- Data for Name: mailling_historico; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8393 (class 0 OID 0)
--- Dependencies: 782
--- Name: mailling_historico_cod_mailling_historico_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8394 (class 0 OID 0)
--- Dependencies: 785
--- Name: menu_menu_cod_menu_menu_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8395 (class 0 OID 0)
--- Dependencies: 787
--- Name: menu_submenu_cod_menu_submenu_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8078 (class 0 OID 9445535)
--- Dependencies: 790
--- Data for Name: not_portal; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8396 (class 0 OID 0)
--- Dependencies: 789
--- Name: not_portal_cod_not_portal_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8079 (class 0 OID 9445543)
--- Dependencies: 791
--- Data for Name: not_portal_tipo; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8081 (class 0 OID 9445550)
--- Dependencies: 793
--- Data for Name: not_tipo; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8397 (class 0 OID 0)
--- Dependencies: 792
--- Name: not_tipo_cod_not_tipo_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8082 (class 0 OID 9445555)
--- Dependencies: 794
--- Data for Name: not_vinc_portal; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8084 (class 0 OID 9445566)
--- Dependencies: 796
--- Data for Name: notificacao; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8398 (class 0 OID 0)
--- Dependencies: 795
--- Name: notificacao_cod_notificacao_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8086 (class 0 OID 9445576)
--- Dependencies: 798
--- Data for Name: pessoa_atividade; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8399 (class 0 OID 0)
--- Dependencies: 797
--- Name: pessoa_atividade_cod_pessoa_atividade_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8088 (class 0 OID 9445583)
--- Dependencies: 800
--- Data for Name: pessoa_fj; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8400 (class 0 OID 0)
--- Dependencies: 799
--- Name: pessoa_fj_cod_pessoa_fj_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8089 (class 0 OID 9445592)
--- Dependencies: 801
--- Data for Name: pessoa_fj_pessoa_atividade; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8091 (class 0 OID 9445599)
--- Dependencies: 803
--- Data for Name: pessoa_ramo_atividade; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8401 (class 0 OID 0)
--- Dependencies: 802
--- Name: pessoa_ramo_atividade_cod_ramo_atividade_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8402 (class 0 OID 0)
--- Dependencies: 804
--- Name: portal_banner_cod_portal_banner_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8094 (class 0 OID 9445607)
--- Dependencies: 806
--- Data for Name: portal_concurso; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8403 (class 0 OID 0)
--- Dependencies: 805
--- Name: portal_concurso_cod_portal_concurso_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 8096 (class 0 OID 9445620)
--- Dependencies: 808
--- Data for Name: sistema; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-
-
---
--- TOC entry 8404 (class 0 OID 0)
--- Dependencies: 807
--- Name: sistema_cod_sistema_seq; Type: SEQUENCE SET; Schema: portal; Owner: -
---
-
-
-
-
---
--- TOC entry 7618 (class 0 OID 9443424)
--- Dependencies: 322
--- Data for Name: bairro; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8097 (class 0 OID 9445632)
--- Dependencies: 810
--- Data for Name: bairro_regiao; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8405 (class 0 OID 0)
--- Dependencies: 537
--- Name: bloqueio_lancamento_faltas_notas_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 7619 (class 0 OID 9443434)
--- Dependencies: 323
--- Data for Name: logradouro; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8100 (class 0 OID 9445650)
--- Dependencies: 813
--- Data for Name: logradouro_fonetico; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
---
--- TOC entry 8102 (class 0 OID 9445659)
--- Dependencies: 815
--- Data for Name: pghero_query_stats; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8406 (class 0 OID 0)
--- Dependencies: 816
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8105 (class 0 OID 9445669)
--- Dependencies: 818
--- Data for Name: portal_banner; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8407 (class 0 OID 0)
--- Dependencies: 817
--- Name: portal_banner_cod_portal_banner_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8107 (class 0 OID 9445683)
--- Dependencies: 820
--- Data for Name: regiao; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8408 (class 0 OID 0)
--- Dependencies: 819
--- Name: regiao_cod_regiao_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8409 (class 0 OID 0)
--- Dependencies: 821
--- Name: seq_bairro; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8410 (class 0 OID 0)
--- Dependencies: 822
--- Name: seq_distrito; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8411 (class 0 OID 0)
--- Dependencies: 823
--- Name: seq_logradouro; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8412 (class 0 OID 0)
--- Dependencies: 824
--- Name: seq_municipio; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8413 (class 0 OID 0)
--- Dependencies: 825
--- Name: seq_setor_bai; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8114 (class 0 OID 9445699)
--- Dependencies: 827
--- Data for Name: setor; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8115 (class 0 OID 9445705)
--- Dependencies: 828
--- Data for Name: setor_bai; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8414 (class 0 OID 0)
--- Dependencies: 826
--- Name: setor_idset_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-
-
-
---
--- TOC entry 8117 (class 0 OID 9445715)
--- Dependencies: 830
--- Data for Name: vila; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 8119 (class 0 OID 9445724)
--- Dependencies: 832
--- Data for Name: aluno_cod_aluno; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8120 (class 0 OID 9445727)
--- Dependencies: 833
--- Data for Name: aluno_uniforme; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8121 (class 0 OID 9445730)
--- Dependencies: 834
--- Data for Name: escola_agua; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8122 (class 0 OID 9445738)
--- Dependencies: 835
--- Data for Name: escola_energia; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8123 (class 0 OID 9445746)
--- Dependencies: 836
--- Data for Name: escola_lingua_indigena; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8124 (class 0 OID 9445754)
--- Dependencies: 837
--- Data for Name: escola_lixo; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8125 (class 0 OID 9445763)
--- Dependencies: 838
--- Data for Name: escola_projeto; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8126 (class 0 OID 9445775)
--- Dependencies: 839
--- Data for Name: escola_regulamentacao; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8127 (class 0 OID 9445783)
--- Dependencies: 840
--- Data for Name: escola_sanitario; Type: TABLE DATA; Schema: serieciasc; Owner: -
---
-
-
-
---
--- TOC entry 8128 (class 0 OID 9445789)
--- Dependencies: 841
--- Data for Name: cep_logradouro; Type: TABLE DATA; Schema: urbano; Owner: -
---
-
-
-
---
--- TOC entry 8129 (class 0 OID 9445797)
--- Dependencies: 842
--- Data for Name: cep_logradouro_bairro; Type: TABLE DATA; Schema: urbano; Owner: -
---
-
-
---
--- TOC entry 5490 (class 2606 OID 9463870)
--- Name: pk_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.funcao
     ADD CONSTRAINT pk_funcao PRIMARY KEY (idfunc, idsis, idmen);
 
 
---
--- TOC entry 5492 (class 2606 OID 9463872)
--- Name: pk_grupo; Type: CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo
     ADD CONSTRAINT pk_grupo PRIMARY KEY (idgrp);
 
-
---
--- TOC entry 5494 (class 2606 OID 9463874)
--- Name: pk_grupo_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.grupo_funcao
     ADD CONSTRAINT pk_grupo_funcao PRIMARY KEY (idmen, idsis, idgrp, idfunc);
 
 
---
--- TOC entry 5496 (class 2606 OID 9463876)
--- Name: pk_grupo_menu; Type: CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo_menu
     ADD CONSTRAINT pk_grupo_menu PRIMARY KEY (idgrp, idsis, idmen);
 
-
---
--- TOC entry 5498 (class 2606 OID 9463878)
--- Name: pk_grupo_operacao; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.grupo_operacao
     ADD CONSTRAINT pk_grupo_operacao PRIMARY KEY (idfunc, idgrp, idsis, idmen, idope);
 
 
---
--- TOC entry 5500 (class 2606 OID 9463880)
--- Name: pk_grupo_sistema; Type: CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo_sistema
     ADD CONSTRAINT pk_grupo_sistema PRIMARY KEY (idsis, idgrp);
 
-
---
--- TOC entry 5502 (class 2606 OID 9463882)
--- Name: pk_historico_senha; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.historico_senha
     ADD CONSTRAINT pk_historico_senha PRIMARY KEY (login, senha);
 
 
---
--- TOC entry 5504 (class 2606 OID 9463884)
--- Name: pk_instituicao; Type: CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.instituicao
     ADD CONSTRAINT pk_instituicao PRIMARY KEY (idins);
 
-
---
--- TOC entry 5506 (class 2606 OID 9463886)
--- Name: pk_menu; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.menu
     ADD CONSTRAINT pk_menu PRIMARY KEY (idsis, idmen);
 
 
---
--- TOC entry 5508 (class 2606 OID 9463888)
--- Name: pk_operacao; Type: CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.operacao
     ADD CONSTRAINT pk_operacao PRIMARY KEY (idope);
 
-
---
--- TOC entry 5510 (class 2606 OID 9463890)
--- Name: pk_operacao_funcao; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.operacao_funcao
     ADD CONSTRAINT pk_operacao_funcao PRIMARY KEY (idmen, idsis, idfunc, idope);
 
 
---
--- TOC entry 5512 (class 2606 OID 9463892)
--- Name: pk_pessoa_instituicao; Type: CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.pessoa_instituicao
     ADD CONSTRAINT pk_pessoa_instituicao PRIMARY KEY (idins, idpes);
 
-
---
--- TOC entry 5514 (class 2606 OID 9463894)
--- Name: pk_sistema; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.sistema
     ADD CONSTRAINT pk_sistema PRIMARY KEY (idsis);
 
 
---
--- TOC entry 5516 (class 2606 OID 9463896)
--- Name: pk_usuario; Type: CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.usuario
     ADD CONSTRAINT pk_usuario PRIMARY KEY (login);
 
-
---
--- TOC entry 5519 (class 2606 OID 9463898)
--- Name: pk_usuario_grupo; Type: CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.usuario_grupo
     ADD CONSTRAINT pk_usuario_grupo PRIMARY KEY (idgrp, login);
 
 
---
--- TOC entry 5521 (class 2606 OID 9463900)
--- Name: pk_baixa_guia_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.baixa_guia_produto
     ADD CONSTRAINT pk_baixa_guia_produto PRIMARY KEY (idbap);
 
-
---
--- TOC entry 5523 (class 2606 OID 9463902)
--- Name: pk_baixa_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.baixa_guia_remessa
     ADD CONSTRAINT pk_baixa_guia_remessa PRIMARY KEY (idbai);
 
 
---
--- TOC entry 5526 (class 2606 OID 9463904)
--- Name: pk_calendario; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.calendario
     ADD CONSTRAINT pk_calendario PRIMARY KEY (idcad);
 
-
---
--- TOC entry 5528 (class 2606 OID 9463906)
--- Name: pk_cardapio; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cardapio
     ADD CONSTRAINT pk_cardapio PRIMARY KEY (idcar);
 
 
---
--- TOC entry 5530 (class 2606 OID 9463908)
--- Name: pk_cardapio_faixa_unidade; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.cardapio_faixa_unidade
     ADD CONSTRAINT pk_cardapio_faixa_unidade PRIMARY KEY (idfeu, idcar);
 
-
---
--- TOC entry 5532 (class 2606 OID 9463910)
--- Name: pk_cardapio_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cardapio_produto
     ADD CONSTRAINT pk_cardapio_produto PRIMARY KEY (idcpr);
 
 
---
--- TOC entry 5535 (class 2606 OID 9463912)
--- Name: pk_cardapio_receita; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.cardapio_receita
     ADD CONSTRAINT pk_cardapio_receita PRIMARY KEY (idcar, idrec);
 
-
---
--- TOC entry 5537 (class 2606 OID 9463914)
--- Name: pk_cliente; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cliente
     ADD CONSTRAINT pk_cliente PRIMARY KEY (idcli);
 
 
---
--- TOC entry 5542 (class 2606 OID 9463916)
--- Name: pk_contrato; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.contrato
     ADD CONSTRAINT pk_contrato PRIMARY KEY (idcon);
 
-
---
--- TOC entry 5545 (class 2606 OID 9463918)
--- Name: pk_contrato_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.contrato_produto
     ADD CONSTRAINT pk_contrato_produto PRIMARY KEY (idcop);
 
 
---
--- TOC entry 5540 (class 2606 OID 9463920)
--- Name: pk_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.composto_quimico
     ADD CONSTRAINT pk_cp_quimico PRIMARY KEY (idcom);
 
-
---
--- TOC entry 5548 (class 2606 OID 9463922)
--- Name: pk_evento; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.evento
     ADD CONSTRAINT pk_evento PRIMARY KEY (ideve);
 
 
---
--- TOC entry 5551 (class 2606 OID 9463924)
--- Name: pk_faixa_composto_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.faixa_composto_quimico
     ADD CONSTRAINT pk_faixa_composto_quimico PRIMARY KEY (idfcp);
 
-
---
--- TOC entry 5554 (class 2606 OID 9463926)
--- Name: pk_faixa_etaria; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.faixa_etaria
     ADD CONSTRAINT pk_faixa_etaria PRIMARY KEY (idfae);
 
 
---
--- TOC entry 5556 (class 2606 OID 9463928)
--- Name: pk_fornecedor; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.fornecedor
     ADD CONSTRAINT pk_fornecedor PRIMARY KEY (idfor);
 
-
---
--- TOC entry 5560 (class 2606 OID 9463930)
--- Name: pk_grp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.grupo_quimico
     ADD CONSTRAINT pk_grp_quimico PRIMARY KEY (idgrpq);
 
 
---
--- TOC entry 5562 (class 2606 OID 9463932)
--- Name: pk_guia_produto_diario; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.guia_produto_diario
     ADD CONSTRAINT pk_guia_produto_diario PRIMARY KEY (idguiaprodiario);
 
-
---
--- TOC entry 5564 (class 2606 OID 9463934)
--- Name: pk_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.guia_remessa
     ADD CONSTRAINT pk_guia_remessa PRIMARY KEY (idgui);
 
 
---
--- TOC entry 5567 (class 2606 OID 9463936)
--- Name: pk_guia_remessa_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.guia_remessa_produto
     ADD CONSTRAINT pk_guia_remessa_produto PRIMARY KEY (idgup);
 
-
---
--- TOC entry 5570 (class 2606 OID 9463938)
--- Name: pk_log_guia_remessa; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.log_guia_remessa
     ADD CONSTRAINT pk_log_guia_remessa PRIMARY KEY (idlogguia);
 
 
---
--- TOC entry 5572 (class 2606 OID 9463940)
--- Name: pk_medidas_caseiras; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.medidas_caseiras
     ADD CONSTRAINT pk_medidas_caseiras PRIMARY KEY (idmedcas, idcli);
 
-
---
--- TOC entry 5574 (class 2606 OID 9463942)
--- Name: pk_pessoa; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.pessoa
     ADD CONSTRAINT pk_pessoa PRIMARY KEY (idpes);
 
 
---
--- TOC entry 5579 (class 2606 OID 9463944)
--- Name: pk_prod_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.produto_composto_quimico
     ADD CONSTRAINT pk_prod_cp_quimico PRIMARY KEY (idpcq);
 
-
---
--- TOC entry 5576 (class 2606 OID 9463946)
--- Name: pk_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto
     ADD CONSTRAINT pk_produto PRIMARY KEY (idpro);
 
 
---
--- TOC entry 5582 (class 2606 OID 9463948)
--- Name: pk_produto_fornecedor; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.produto_fornecedor
     ADD CONSTRAINT pk_produto_fornecedor PRIMARY KEY (idprf);
 
-
---
--- TOC entry 5585 (class 2606 OID 9463950)
--- Name: pk_produto_medida_caseira; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto_medida_caseira
     ADD CONSTRAINT pk_produto_medida_caseira PRIMARY KEY (idpmc);
 
 
---
--- TOC entry 5590 (class 2606 OID 9463952)
--- Name: pk_rec_cp_quimico; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.receita_composto_quimico
     ADD CONSTRAINT pk_rec_cp_quimico PRIMARY KEY (idrcq);
 
-
---
--- TOC entry 5593 (class 2606 OID 9463954)
--- Name: pk_rec_prod; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.receita_produto
     ADD CONSTRAINT pk_rec_prod PRIMARY KEY (idrpr);
 
 
---
--- TOC entry 5588 (class 2606 OID 9463956)
--- Name: pk_receita; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.receita
     ADD CONSTRAINT pk_receita PRIMARY KEY (idrec);
 
-
---
--- TOC entry 5600 (class 2606 OID 9463958)
--- Name: pk_tipo_unidade; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.tipo_unidade
     ADD CONSTRAINT pk_tipo_unidade PRIMARY KEY (idtip);
 
 
---
--- TOC entry 5596 (class 2606 OID 9463960)
--- Name: pk_tp_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.tipo_produto
     ADD CONSTRAINT pk_tp_produto PRIMARY KEY (idtip);
 
-
---
--- TOC entry 5598 (class 2606 OID 9463962)
--- Name: pk_tp_refeicao; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.tipo_refeicao
     ADD CONSTRAINT pk_tp_refeicao PRIMARY KEY (idtre);
 
 
---
--- TOC entry 5605 (class 2606 OID 9463964)
--- Name: pk_uni_faixa_etaria; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.unidade_faixa_etaria
     ADD CONSTRAINT pk_uni_faixa_etaria PRIMARY KEY (idfeu);
 
-
---
--- TOC entry 5608 (class 2606 OID 9463966)
--- Name: pk_uni_produto; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.unidade_produto
     ADD CONSTRAINT pk_uni_produto PRIMARY KEY (idunp, idcli);
 
 
---
--- TOC entry 5602 (class 2606 OID 9463968)
--- Name: pk_unidade_atendida; Type: CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.unidade_atendida
     ADD CONSTRAINT pk_unidade_atendida PRIMARY KEY (iduni);
 
-
---
--- TOC entry 5631 (class 2606 OID 9463970)
--- Name: fisica_foto_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica_foto
     ADD CONSTRAINT fisica_foto_pkey PRIMARY KEY (idpes);
 
 
---
--- TOC entry 5635 (class 2606 OID 9463972)
--- Name: fisica_sangue_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_sangue
     ADD CONSTRAINT fisica_sangue_pkey PRIMARY KEY (idpes);
 
-
---
--- TOC entry 5610 (class 2606 OID 9463974)
--- Name: pk_aviso_nome; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.aviso_nome
     ADD CONSTRAINT pk_aviso_nome PRIMARY KEY (idpes, aviso);
 
 
---
--- TOC entry 5612 (class 2606 OID 9463976)
--- Name: pk_cadastro_escolaridade; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.deficiencia
     ADD CONSTRAINT pk_cadastro_escolaridade PRIMARY KEY (cod_deficiencia);
 
-
---
--- TOC entry 5614 (class 2606 OID 9463978)
--- Name: pk_documento; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT pk_documento PRIMARY KEY (idpes);
 
 
---
--- TOC entry 5616 (class 2606 OID 9463980)
--- Name: pk_endereco_externo; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT pk_endereco_externo PRIMARY KEY (idpes, tipo);
 
-
---
--- TOC entry 5618 (class 2606 OID 9463982)
--- Name: pk_endereco_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_pessoa
     ADD CONSTRAINT pk_endereco_pessoa PRIMARY KEY (idpes, tipo);
 
 
---
--- TOC entry 5620 (class 2606 OID 9463984)
--- Name: pk_escolaridade; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.escolaridade
     ADD CONSTRAINT pk_escolaridade PRIMARY KEY (idesco);
 
-
---
--- TOC entry 5622 (class 2606 OID 9463986)
--- Name: pk_estado_civil; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.estado_civil
     ADD CONSTRAINT pk_estado_civil PRIMARY KEY (ideciv);
 
 
---
--- TOC entry 5624 (class 2606 OID 9463988)
--- Name: pk_fisica; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT pk_fisica PRIMARY KEY (idpes);
 
-
---
--- TOC entry 5626 (class 2606 OID 9463990)
--- Name: pk_fisica_cpf; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica_cpf
     ADD CONSTRAINT pk_fisica_cpf PRIMARY KEY (idpes);
 
 
---
--- TOC entry 5629 (class 2606 OID 9463992)
--- Name: pk_fisica_deficiencia; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_deficiencia
     ADD CONSTRAINT pk_fisica_deficiencia PRIMARY KEY (ref_idpes, ref_cod_deficiencia);
 
-
---
--- TOC entry 5633 (class 2606 OID 9463994)
--- Name: pk_fisica_raca; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica_raca
     ADD CONSTRAINT pk_fisica_raca PRIMARY KEY (ref_idpes);
 
 
---
--- TOC entry 5637 (class 2606 OID 9463996)
--- Name: pk_fone_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fone_pessoa
     ADD CONSTRAINT pk_fone_pessoa PRIMARY KEY (idpes, tipo);
 
-
---
--- TOC entry 5639 (class 2606 OID 9463998)
--- Name: pk_funcionario; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT pk_funcionario PRIMARY KEY (matricula, idins);
 
 
---
--- TOC entry 6389 (class 2606 OID 9474359)
--- Name: pk_id; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.codigo_cartorio_inep
     ADD CONSTRAINT pk_id PRIMARY KEY (id);
 
-
---
--- TOC entry 5641 (class 2606 OID 9464000)
--- Name: pk_juridica; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.juridica
     ADD CONSTRAINT pk_juridica PRIMARY KEY (idpes);
 
 
---
--- TOC entry 5644 (class 2606 OID 9464002)
--- Name: pk_ocupacao; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.ocupacao
     ADD CONSTRAINT pk_ocupacao PRIMARY KEY (idocup);
 
-
---
--- TOC entry 5646 (class 2606 OID 9464004)
--- Name: pk_orgao_emissor_rg; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.orgao_emissor_rg
     ADD CONSTRAINT pk_orgao_emissor_rg PRIMARY KEY (idorg_rg);
 
 
---
--- TOC entry 5648 (class 2606 OID 9464006)
--- Name: pk_pessoa; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.pessoa
     ADD CONSTRAINT pk_pessoa PRIMARY KEY (idpes);
 
-
---
--- TOC entry 5650 (class 2606 OID 9464008)
--- Name: pk_pessoa_fonetico; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.pessoa_fonetico
     ADD CONSTRAINT pk_pessoa_fonetico PRIMARY KEY (fonema, idpes);
 
 
---
--- TOC entry 5656 (class 2606 OID 9464010)
--- Name: pk_socio; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.socio
     ADD CONSTRAINT pk_socio PRIMARY KEY (idpes_juridica, idpes_fisica);
 
-
---
--- TOC entry 5652 (class 2606 OID 9464012)
--- Name: raca_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.raca
     ADD CONSTRAINT raca_pkey PRIMARY KEY (cod_raca);
 
 
---
--- TOC entry 5654 (class 2606 OID 9464014)
--- Name: religiao_pkey; Type: CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.religiao
     ADD CONSTRAINT religiao_pkey PRIMARY KEY (cod_religiao);
 
-
---
--- TOC entry 5664 (class 2606 OID 9464016)
--- Name: pk_campo_consistenciacao; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.campo_consistenciacao
     ADD CONSTRAINT pk_campo_consistenciacao PRIMARY KEY (idcam);
 
 
---
--- TOC entry 5666 (class 2606 OID 9464018)
--- Name: pk_campo_metadado; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.campo_metadado
     ADD CONSTRAINT pk_campo_metadado PRIMARY KEY (id_campo_met);
 
-
---
--- TOC entry 5668 (class 2606 OID 9464020)
--- Name: pk_confrontacao; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.confrontacao
     ADD CONSTRAINT pk_confrontacao PRIMARY KEY (idcon);
 
 
---
--- TOC entry 5670 (class 2606 OID 9464022)
--- Name: pk_fonte; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.fonte
     ADD CONSTRAINT pk_fonte PRIMARY KEY (idfon);
 
-
---
--- TOC entry 5672 (class 2606 OID 9464024)
--- Name: pk_historico_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.historico_campo
     ADD CONSTRAINT pk_historico_campo PRIMARY KEY (idpes, idcam);
 
 
---
--- TOC entry 5682 (class 2606 OID 9464026)
--- Name: pk_inc_pessoa_possivel; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.incoerencia_pessoa_possivel
     ADD CONSTRAINT pk_inc_pessoa_possivel PRIMARY KEY (idinc, idpes);
 
-
---
--- TOC entry 5674 (class 2606 OID 9464028)
--- Name: pk_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.incoerencia
     ADD CONSTRAINT pk_incoerencia PRIMARY KEY (idinc);
 
 
---
--- TOC entry 5676 (class 2606 OID 9464030)
--- Name: pk_incoerencia_documento; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.incoerencia_documento
     ADD CONSTRAINT pk_incoerencia_documento PRIMARY KEY (id_inc_doc);
 
-
---
--- TOC entry 5678 (class 2606 OID 9464032)
--- Name: pk_incoerencia_endereco; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.incoerencia_endereco
     ADD CONSTRAINT pk_incoerencia_endereco PRIMARY KEY (id_inc_end);
 
 
---
--- TOC entry 5680 (class 2606 OID 9464034)
--- Name: pk_incoerencia_fone; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.incoerencia_fone
     ADD CONSTRAINT pk_incoerencia_fone PRIMARY KEY (id_inc_fone);
 
-
---
--- TOC entry 5684 (class 2606 OID 9464036)
--- Name: pk_incoerencia_tipo_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.incoerencia_tipo_incoerencia
     ADD CONSTRAINT pk_incoerencia_tipo_incoerencia PRIMARY KEY (id_tipo_inc, idinc);
 
 
---
--- TOC entry 5686 (class 2606 OID 9464038)
--- Name: pk_metadado; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.metadado
     ADD CONSTRAINT pk_metadado PRIMARY KEY (idmet);
 
-
---
--- TOC entry 5688 (class 2606 OID 9464040)
--- Name: pk_ocorrencia_regra_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.ocorrencia_regra_campo
     ADD CONSTRAINT pk_ocorrencia_regra_campo PRIMARY KEY (idreg, conteudo_padrao);
 
 
---
--- TOC entry 5690 (class 2606 OID 9464042)
--- Name: pk_regra_campo; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.regra_campo
     ADD CONSTRAINT pk_regra_campo PRIMARY KEY (idreg);
 
-
---
--- TOC entry 5692 (class 2606 OID 9464044)
--- Name: pk_temp_cadastro_unificacao_cmf; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.temp_cadastro_unificacao_cmf
     ADD CONSTRAINT pk_temp_cadastro_unificacao_cmf PRIMARY KEY (idpes);
 
 
---
--- TOC entry 5694 (class 2606 OID 9464046)
--- Name: pk_temp_cadastro_unificacao_siam; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.temp_cadastro_unificacao_siam
     ADD CONSTRAINT pk_temp_cadastro_unificacao_siam PRIMARY KEY (idpes);
 
-
---
--- TOC entry 5696 (class 2606 OID 9464048)
--- Name: pk_tipo_incoerencia; Type: CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.tipo_incoerencia
     ADD CONSTRAINT pk_tipo_incoerencia PRIMARY KEY (id_tipo_inc);
 
 
---
--- TOC entry 5699 (class 2606 OID 9464050)
--- Name: area_conhecimento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.area_conhecimento
     ADD CONSTRAINT area_conhecimento_pkey PRIMARY KEY (id, instituicao_id);
 
-
---
--- TOC entry 5701 (class 2606 OID 9474623)
--- Name: auditoria_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.auditoria_geral
     ADD CONSTRAINT auditoria_geral_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 5703 (class 2606 OID 9464052)
--- Name: calendario_turma_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.calendario_turma
     ADD CONSTRAINT calendario_turma_pk PRIMARY KEY (calendario_ano_letivo_id, ano, mes, dia, turma_id);
 
-
---
--- TOC entry 6387 (class 2606 OID 9469024)
--- Name: cod_config_movimento_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.config_movimento_geral
     ADD CONSTRAINT cod_config_movimento_geral_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 5709 (class 2606 OID 9464054)
--- Name: componente_curricular_ano_escolar_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.componente_curricular_ano_escolar
     ADD CONSTRAINT componente_curricular_ano_escolar_pkey PRIMARY KEY (componente_curricular_id, ano_escolar_id);
 
-
---
--- TOC entry 5707 (class 2606 OID 9464056)
--- Name: componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.componente_curricular
     ADD CONSTRAINT componente_curricular_pkey PRIMARY KEY (id, instituicao_id);
 
 
---
--- TOC entry 5711 (class 2606 OID 9464058)
--- Name: componente_curricular_turma_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.componente_curricular_turma
     ADD CONSTRAINT componente_curricular_turma_pkey PRIMARY KEY (componente_curricular_id, turma_id);
 
-
---
--- TOC entry 5714 (class 2606 OID 9464060)
--- Name: docente_licenciatura_curso_unique; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.docente_licenciatura
     ADD CONSTRAINT docente_licenciatura_curso_unique UNIQUE (servidor_id, curso_id, ies_id);
 
 
---
--- TOC entry 5717 (class 2606 OID 9464062)
--- Name: docente_licenciatura_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.docente_licenciatura
     ADD CONSTRAINT docente_licenciatura_pk PRIMARY KEY (id);
 
-
---
--- TOC entry 5719 (class 2606 OID 9464064)
--- Name: educacenso_cod_aluno_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.educacenso_cod_aluno
     ADD CONSTRAINT educacenso_cod_aluno_pk PRIMARY KEY (cod_aluno, cod_aluno_inep);
 
 
---
--- TOC entry 5721 (class 2606 OID 9464066)
--- Name: educacenso_cod_docente_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.educacenso_cod_docente
     ADD CONSTRAINT educacenso_cod_docente_pk PRIMARY KEY (cod_servidor, cod_docente_inep);
 
-
---
--- TOC entry 5723 (class 2606 OID 9464068)
--- Name: educacenso_cod_escola_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.educacenso_cod_escola
     ADD CONSTRAINT educacenso_cod_escola_pk PRIMARY KEY (cod_escola, cod_escola_inep);
 
 
---
--- TOC entry 5725 (class 2606 OID 9464070)
--- Name: educacenso_cod_turma_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.educacenso_cod_turma
     ADD CONSTRAINT educacenso_cod_turma_pk PRIMARY KEY (cod_turma, cod_turma_inep);
 
-
---
--- TOC entry 5727 (class 2606 OID 9464072)
--- Name: educacenso_curso_superior_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.educacenso_curso_superior
     ADD CONSTRAINT educacenso_curso_superior_pk PRIMARY KEY (id);
 
 
---
--- TOC entry 5729 (class 2606 OID 9464074)
--- Name: educacenso_ies_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.educacenso_ies
     ADD CONSTRAINT educacenso_ies_pk PRIMARY KEY (id);
 
-
---
--- TOC entry 5733 (class 2606 OID 9464076)
--- Name: empresa_transporte_escolar_cod_empresa_transporte_escolar_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.empresa_transporte_escolar
     ADD CONSTRAINT empresa_transporte_escolar_cod_empresa_transporte_escolar_pkey PRIMARY KEY (cod_empresa_transporte_escolar);
 
 
---
--- TOC entry 5735 (class 2606 OID 9464078)
--- Name: etapas_curso_educacenso_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.etapas_curso_educacenso
     ADD CONSTRAINT etapas_curso_educacenso_pk PRIMARY KEY (etapa_id, curso_id);
 
-
---
--- TOC entry 5737 (class 2606 OID 9464080)
--- Name: etapas_educacenso_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.etapas_educacenso
     ADD CONSTRAINT etapas_educacenso_pk PRIMARY KEY (id);
 
 
---
--- TOC entry 5739 (class 2606 OID 9464082)
--- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.falta_aluno
     ADD CONSTRAINT falta_aluno_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 5743 (class 2606 OID 9464084)
--- Name: falta_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.falta_componente_curricular
     ADD CONSTRAINT falta_componente_curricular_pkey PRIMARY KEY (falta_aluno_id, componente_curricular_id, etapa);
 
 
---
--- TOC entry 5746 (class 2606 OID 9464086)
--- Name: falta_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.falta_geral
     ADD CONSTRAINT falta_geral_pkey PRIMARY KEY (falta_aluno_id, etapa);
 
-
---
--- TOC entry 5749 (class 2606 OID 9464088)
--- Name: ficha_medica_cod_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.ficha_medica_aluno
     ADD CONSTRAINT ficha_medica_cod_aluno_pkey PRIMARY KEY (ref_cod_aluno);
 
 
---
--- TOC entry 5751 (class 2606 OID 9464090)
--- Name: formula_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.formula_media
     ADD CONSTRAINT formula_media_pkey PRIMARY KEY (id, instituicao_id);
 
-
---
--- TOC entry 5753 (class 2606 OID 9464092)
--- Name: itinerario_transporte_escolar_cod_itinerario_transporte_escolar; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.itinerario_transporte_escolar
     ADD CONSTRAINT itinerario_transporte_escolar_cod_itinerario_transporte_escolar PRIMARY KEY (cod_itinerario_transporte_escolar);
 
 
---
--- TOC entry 5755 (class 2606 OID 9464094)
--- Name: lingua_indigena_educacenso_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.lingua_indigena_educacenso
     ADD CONSTRAINT lingua_indigena_educacenso_pk PRIMARY KEY (id);
 
-
---
--- TOC entry 5757 (class 2606 OID 9464096)
--- Name: media_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.media_geral
     ADD CONSTRAINT media_geral_pkey PRIMARY KEY (nota_aluno_id, etapa);
 
 
---
--- TOC entry 5759 (class 2606 OID 9464098)
--- Name: moradia_aluno_pkei; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.moradia_aluno
     ADD CONSTRAINT moradia_aluno_pkei PRIMARY KEY (ref_cod_aluno);
 
-
---
--- TOC entry 5761 (class 2606 OID 9464100)
--- Name: motorista_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.motorista
     ADD CONSTRAINT motorista_pkey PRIMARY KEY (cod_motorista);
 
 
---
--- TOC entry 5765 (class 2606 OID 9464102)
--- Name: nota_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.nota_aluno
     ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 5772 (class 2606 OID 9464104)
--- Name: nota_componente_curricular_media_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.nota_componente_curricular_media
     ADD CONSTRAINT nota_componente_curricular_media_pkey PRIMARY KEY (nota_aluno_id, componente_curricular_id);
 
 
---
--- TOC entry 5770 (class 2606 OID 9464106)
--- Name: nota_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.nota_componente_curricular
     ADD CONSTRAINT nota_componente_curricular_pkey PRIMARY KEY (nota_aluno_id, componente_curricular_id, etapa);
 
-
---
--- TOC entry 5774 (class 2606 OID 9464108)
--- Name: nota_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.nota_geral
     ADD CONSTRAINT nota_geral_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 5777 (class 2606 OID 9464110)
--- Name: parecer_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.parecer_aluno
     ADD CONSTRAINT parecer_aluno_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 5780 (class 2606 OID 9474537)
--- Name: parecer_componente_curricular_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.parecer_componente_curricular
     ADD CONSTRAINT parecer_componente_curricular_pkey PRIMARY KEY (parecer_aluno_id, componente_curricular_id, etapa);
 
 
---
--- TOC entry 5783 (class 2606 OID 9474535)
--- Name: parecer_geral_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.parecer_geral
     ADD CONSTRAINT parecer_geral_pkey PRIMARY KEY (parecer_aluno_id, etapa);
 
-
---
--- TOC entry 5785 (class 2606 OID 9464116)
--- Name: pessoa_transporte_cod_pessoa_transporte_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.pessoa_transporte
     ADD CONSTRAINT pessoa_transporte_cod_pessoa_transporte_pkey PRIMARY KEY (cod_pessoa_transporte);
 
 
---
--- TOC entry 6391 (class 2606 OID 9474462)
--- Name: pk_educacenso_orgao_regional; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.educacenso_orgao_regional
     ADD CONSTRAINT pk_educacenso_orgao_regional PRIMARY KEY (sigla_uf, codigo);
 
-
---
--- TOC entry 5787 (class 2606 OID 9464118)
--- Name: ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.ponto_transporte_escolar
     ADD CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar);
 
 
---
--- TOC entry 5791 (class 2606 OID 9464120)
--- Name: professor_turma_disciplina_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.professor_turma_disciplina
     ADD CONSTRAINT professor_turma_disciplina_pk PRIMARY KEY (professor_turma_id, componente_curricular_id);
 
-
---
--- TOC entry 5789 (class 2606 OID 9464122)
--- Name: professor_turma_id_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.professor_turma
     ADD CONSTRAINT professor_turma_id_pk PRIMARY KEY (id);
 
 
---
--- TOC entry 5794 (class 2606 OID 9464124)
--- Name: regra_avaliacao_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.regra_avaliacao
     ADD CONSTRAINT regra_avaliacao_pkey PRIMARY KEY (id, instituicao_id);
 
-
---
--- TOC entry 5796 (class 2606 OID 9464126)
--- Name: regra_avaliacao_recuperacao_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.regra_avaliacao_recuperacao
     ADD CONSTRAINT regra_avaliacao_recuperacao_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 6393 (class 2606 OID 9474574)
--- Name: regra_avaliacao_serie_ano_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.regra_avaliacao_serie_ano
     ADD CONSTRAINT regra_avaliacao_serie_ano_pkey PRIMARY KEY (serie_id, ano_letivo);
 
-
---
--- TOC entry 5798 (class 2606 OID 9464128)
--- Name: rota_transporte_escolar_cod_rota_transporte_escolar_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.rota_transporte_escolar
     ADD CONSTRAINT rota_transporte_escolar_cod_rota_transporte_escolar_pkey PRIMARY KEY (cod_rota_transporte_escolar);
 
 
---
--- TOC entry 5801 (class 2606 OID 9464130)
--- Name: tabela_arredondamento_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.tabela_arredondamento
     ADD CONSTRAINT tabela_arredondamento_pkey PRIMARY KEY (id, instituicao_id);
 
-
---
--- TOC entry 5804 (class 2606 OID 9464132)
--- Name: tabela_arredondamento_valor_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.tabela_arredondamento_valor
     ADD CONSTRAINT tabela_arredondamento_valor_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 5806 (class 2606 OID 9464134)
--- Name: tipo_veiculo_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.tipo_veiculo
     ADD CONSTRAINT tipo_veiculo_pkey PRIMARY KEY (cod_tipo_veiculo);
 
-
---
--- TOC entry 5808 (class 2606 OID 9464136)
--- Name: transporte_aluno_pk; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.transporte_aluno
     ADD CONSTRAINT transporte_aluno_pk PRIMARY KEY (aluno_id);
 
 
---
--- TOC entry 5810 (class 2606 OID 9464138)
--- Name: uniforme_aluno_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.uniforme_aluno
     ADD CONSTRAINT uniforme_aluno_pkey PRIMARY KEY (ref_cod_aluno);
 
-
---
--- TOC entry 5812 (class 2606 OID 9464140)
--- Name: veiculo_pkey; Type: CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.veiculo
     ADD CONSTRAINT veiculo_pkey PRIMARY KEY (cod_veiculo);
 
 
---
--- TOC entry 5816 (class 2606 OID 9464142)
--- Name: acao_governo_arquivo_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_arquivo
     ADD CONSTRAINT acao_governo_arquivo_pkey PRIMARY KEY (cod_acao_governo_arquivo);
 
-
---
--- TOC entry 5818 (class 2606 OID 9464144)
--- Name: acao_governo_categoria_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_categoria
     ADD CONSTRAINT acao_governo_categoria_pkey PRIMARY KEY (ref_cod_categoria, ref_cod_acao_governo);
 
 
---
--- TOC entry 5820 (class 2606 OID 9464146)
--- Name: acao_governo_foto_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_foto
     ADD CONSTRAINT acao_governo_foto_pkey PRIMARY KEY (cod_acao_governo_foto);
 
-
---
--- TOC entry 5822 (class 2606 OID 9464148)
--- Name: acao_governo_foto_portal_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_foto_portal
     ADD CONSTRAINT acao_governo_foto_portal_pkey PRIMARY KEY (ref_cod_acao_governo, ref_cod_foto_portal);
 
 
---
--- TOC entry 5824 (class 2606 OID 9464150)
--- Name: acao_governo_noticia_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_noticia
     ADD CONSTRAINT acao_governo_noticia_pkey PRIMARY KEY (ref_cod_acao_governo, ref_cod_not_portal);
 
-
---
--- TOC entry 5814 (class 2606 OID 9464152)
--- Name: acao_governo_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo
     ADD CONSTRAINT acao_governo_pkey PRIMARY KEY (cod_acao_governo);
 
 
---
--- TOC entry 5826 (class 2606 OID 9464154)
--- Name: acao_governo_setor_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_setor
     ADD CONSTRAINT acao_governo_setor_pkey PRIMARY KEY (ref_cod_acao_governo, ref_cod_setor);
 
-
---
--- TOC entry 5828 (class 2606 OID 9464156)
--- Name: categoria_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.categoria
     ADD CONSTRAINT categoria_pkey PRIMARY KEY (cod_categoria);
 
 
---
--- TOC entry 5830 (class 2606 OID 9464158)
--- Name: secretaria_responsavel_pkey; Type: CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.secretaria_responsavel
     ADD CONSTRAINT secretaria_responsavel_pkey PRIMARY KEY (ref_cod_setor);
 
-
---
--- TOC entry 5832 (class 2606 OID 9464160)
--- Name: acontecimento_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.acontecimento
     ADD CONSTRAINT acontecimento_pkey PRIMARY KEY (cod_acontecimento);
 
 
---
--- TOC entry 5834 (class 2606 OID 9464162)
--- Name: artigo_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.artigo
     ADD CONSTRAINT artigo_pkey PRIMARY KEY (cod_artigo);
 
-
---
--- TOC entry 5836 (class 2606 OID 9464164)
--- Name: foto_evento_pk; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.foto_evento
     ADD CONSTRAINT foto_evento_pk PRIMARY KEY (cod_foto_evento);
 
 
---
--- TOC entry 5838 (class 2606 OID 9464166)
--- Name: foto_vinc_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.foto_vinc
     ADD CONSTRAINT foto_vinc_pkey PRIMARY KEY (cod_foto_vinc);
 
-
---
--- TOC entry 5840 (class 2606 OID 9464168)
--- Name: itinerario_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.itinerario
     ADD CONSTRAINT itinerario_pkey PRIMARY KEY (cod_itinerario);
 
 
---
--- TOC entry 5842 (class 2606 OID 9464170)
--- Name: menu_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.menu
     ADD CONSTRAINT menu_pkey PRIMARY KEY (cod_menu);
 
-
---
--- TOC entry 5844 (class 2606 OID 9464172)
--- Name: menu_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.menu_portal
     ADD CONSTRAINT menu_portal_pkey PRIMARY KEY (cod_menu_portal);
 
 
---
--- TOC entry 5846 (class 2606 OID 9464174)
--- Name: portais_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.portais
     ADD CONSTRAINT portais_pkey PRIMARY KEY (cod_portais);
 
-
---
--- TOC entry 5848 (class 2606 OID 9464176)
--- Name: servicos_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.servicos
     ADD CONSTRAINT servicos_pkey PRIMARY KEY (cod_servicos);
 
 
---
--- TOC entry 5850 (class 2606 OID 9464178)
--- Name: sistema_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.sistema
     ADD CONSTRAINT sistema_pkey PRIMARY KEY (cod_sistema);
 
-
---
--- TOC entry 5852 (class 2606 OID 9464180)
--- Name: submenu_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.submenu_portal
     ADD CONSTRAINT submenu_portal_pkey PRIMARY KEY (cod_submenu_portal);
 
 
---
--- TOC entry 5854 (class 2606 OID 9464182)
--- Name: telefones_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.telefones
     ADD CONSTRAINT telefones_pkey PRIMARY KEY (cod_telefones);
 
-
---
--- TOC entry 5856 (class 2606 OID 9464184)
--- Name: tipo_acontecimento_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.tipo_acontecimento
     ADD CONSTRAINT tipo_acontecimento_pkey PRIMARY KEY (cod_tipo_acontecimento);
 
 
---
--- TOC entry 5858 (class 2606 OID 9464186)
--- Name: topo_portal_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.topo_portal
     ADD CONSTRAINT topo_portal_pkey PRIMARY KEY (cod_topo_portal);
 
-
---
--- TOC entry 5860 (class 2606 OID 9464188)
--- Name: tutormenu_pkey; Type: CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.tutormenu
     ADD CONSTRAINT tutormenu_pkey PRIMARY KEY (cod_tutormenu);
 
 
---
--- TOC entry 5864 (class 2606 OID 9464190)
--- Name: diaria_grupo_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -
---
-
 ALTER TABLE ONLY pmidrh.diaria_grupo
     ADD CONSTRAINT diaria_grupo_pkey PRIMARY KEY (cod_diaria_grupo);
 
-
---
--- TOC entry 5862 (class 2606 OID 9464192)
--- Name: diaria_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -
---
 
 ALTER TABLE ONLY pmidrh.diaria
     ADD CONSTRAINT diaria_pkey PRIMARY KEY (cod_diaria);
 
 
---
--- TOC entry 5866 (class 2606 OID 9464194)
--- Name: diaria_valores_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -
---
-
 ALTER TABLE ONLY pmidrh.diaria_valores
     ADD CONSTRAINT diaria_valores_pkey PRIMARY KEY (cod_diaria_valores);
 
-
---
--- TOC entry 5868 (class 2606 OID 9464196)
--- Name: setor_pkey; Type: CONSTRAINT; Schema: pmidrh; Owner: -
---
 
 ALTER TABLE ONLY pmidrh.setor
     ADD CONSTRAINT setor_pkey PRIMARY KEY (cod_setor);
 
 
---
--- TOC entry 5874 (class 2606 OID 9464198)
--- Name: acervo_acervo_assunto_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_acervo_assunto
     ADD CONSTRAINT acervo_acervo_assunto_pkey PRIMARY KEY (ref_cod_acervo, ref_cod_acervo_assunto);
 
-
---
--- TOC entry 5876 (class 2606 OID 9464200)
--- Name: acervo_acervo_autor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_acervo_autor
     ADD CONSTRAINT acervo_acervo_autor_pkey PRIMARY KEY (ref_cod_acervo_autor, ref_cod_acervo);
 
 
---
--- TOC entry 5878 (class 2606 OID 9464202)
--- Name: acervo_assunto_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_assunto
     ADD CONSTRAINT acervo_assunto_pkey PRIMARY KEY (cod_acervo_assunto);
 
-
---
--- TOC entry 5880 (class 2606 OID 9464204)
--- Name: acervo_autor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_autor
     ADD CONSTRAINT acervo_autor_pkey PRIMARY KEY (cod_acervo_autor);
 
 
---
--- TOC entry 5882 (class 2606 OID 9464206)
--- Name: acervo_colecao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_colecao
     ADD CONSTRAINT acervo_colecao_pkey PRIMARY KEY (cod_acervo_colecao);
 
-
---
--- TOC entry 5884 (class 2606 OID 9464208)
--- Name: acervo_editora_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_editora
     ADD CONSTRAINT acervo_editora_pkey PRIMARY KEY (cod_acervo_editora);
 
 
---
--- TOC entry 5886 (class 2606 OID 9464210)
--- Name: acervo_idioma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_idioma
     ADD CONSTRAINT acervo_idioma_pkey PRIMARY KEY (cod_acervo_idioma);
 
-
---
--- TOC entry 5872 (class 2606 OID 9464212)
--- Name: acervo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_pkey PRIMARY KEY (cod_acervo);
 
 
---
--- TOC entry 5896 (class 2606 OID 9464214)
--- Name: aluno_aluno_beneficio_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.aluno_aluno_beneficio
     ADD CONSTRAINT aluno_aluno_beneficio_pk PRIMARY KEY (aluno_id, aluno_beneficio_id);
 
-
---
--- TOC entry 5898 (class 2606 OID 9464216)
--- Name: aluno_beneficio_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.aluno_beneficio
     ADD CONSTRAINT aluno_beneficio_pkey PRIMARY KEY (cod_aluno_beneficio);
 
 
---
--- TOC entry 5888 (class 2606 OID 9464218)
--- Name: aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.aluno
     ADD CONSTRAINT aluno_pkey PRIMARY KEY (cod_aluno);
 
-
---
--- TOC entry 5890 (class 2606 OID 9464220)
--- Name: aluno_ref_idpes_un; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.aluno
     ADD CONSTRAINT aluno_ref_idpes_un UNIQUE (ref_idpes);
 
 
---
--- TOC entry 5903 (class 2606 OID 9464222)
--- Name: ano_letivo_modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.ano_letivo_modulo
     ADD CONSTRAINT ano_letivo_modulo_pkey PRIMARY KEY (ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo);
 
-
---
--- TOC entry 5905 (class 2606 OID 9464224)
--- Name: auditoria_falta_componente_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.auditoria_falta_componente_dispensa
     ADD CONSTRAINT auditoria_falta_componente_dispensa_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 5907 (class 2606 OID 9464226)
--- Name: auditoria_nota_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.auditoria_nota_dispensa
     ADD CONSTRAINT auditoria_nota_dispensa_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 5909 (class 2606 OID 9464228)
--- Name: avaliacao_desempenho_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.avaliacao_desempenho
     ADD CONSTRAINT avaliacao_desempenho_pkey PRIMARY KEY (sequencial, ref_cod_servidor, ref_ref_cod_instituicao);
 
 
---
--- TOC entry 5911 (class 2606 OID 9464230)
--- Name: backup_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.backup
     ADD CONSTRAINT backup_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 5915 (class 2606 OID 9464232)
--- Name: biblioteca_dia_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.biblioteca_dia
     ADD CONSTRAINT biblioteca_dia_pkey PRIMARY KEY (ref_cod_biblioteca, dia);
 
 
---
--- TOC entry 5917 (class 2606 OID 9464234)
--- Name: biblioteca_feriados_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.biblioteca_feriados
     ADD CONSTRAINT biblioteca_feriados_pkey PRIMARY KEY (cod_feriado);
 
-
---
--- TOC entry 5913 (class 2606 OID 9464236)
--- Name: biblioteca_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.biblioteca
     ADD CONSTRAINT biblioteca_pkey PRIMARY KEY (cod_biblioteca);
 
 
---
--- TOC entry 5919 (class 2606 OID 9464238)
--- Name: biblioteca_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.biblioteca_usuario
     ADD CONSTRAINT biblioteca_usuario_pkey PRIMARY KEY (ref_cod_biblioteca, ref_cod_usuario);
 
-
---
--- TOC entry 5926 (class 2606 OID 9464240)
--- Name: calendario_ano_letivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_ano_letivo
     ADD CONSTRAINT calendario_ano_letivo_pkey PRIMARY KEY (cod_calendario_ano_letivo);
 
 
---
--- TOC entry 5932 (class 2606 OID 9464242)
--- Name: calendario_anotacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_anotacao
     ADD CONSTRAINT calendario_anotacao_pkey PRIMARY KEY (cod_calendario_anotacao);
 
-
---
--- TOC entry 5941 (class 2606 OID 9464244)
--- Name: calendario_dia_anotacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_dia_anotacao
     ADD CONSTRAINT calendario_dia_anotacao_pkey PRIMARY KEY (ref_dia, ref_mes, ref_ref_cod_calendario_ano_letivo, ref_cod_calendario_anotacao);
 
 
---
--- TOC entry 5943 (class 2606 OID 9464246)
--- Name: calendario_dia_motivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_dia_motivo
     ADD CONSTRAINT calendario_dia_motivo_pkey PRIMARY KEY (cod_calendario_dia_motivo);
 
-
---
--- TOC entry 5934 (class 2606 OID 9464248)
--- Name: calendario_dia_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_dia
     ADD CONSTRAINT calendario_dia_pkey PRIMARY KEY (ref_cod_calendario_ano_letivo, mes, dia);
 
 
---
--- TOC entry 5952 (class 2606 OID 9464250)
--- Name: categoria_nivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.categoria_nivel
     ADD CONSTRAINT categoria_nivel_pkey PRIMARY KEY (cod_categoria_nivel);
 
-
---
--- TOC entry 5954 (class 2606 OID 9464252)
--- Name: categoria_obra_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.categoria_obra
     ADD CONSTRAINT categoria_obra_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 5956 (class 2606 OID 9464254)
--- Name: cliente_login_ukey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente
     ADD CONSTRAINT cliente_login_ukey UNIQUE (login);
 
-
---
--- TOC entry 5958 (class 2606 OID 9464256)
--- Name: cliente_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente
     ADD CONSTRAINT cliente_pkey PRIMARY KEY (cod_cliente);
 
 
---
--- TOC entry 5960 (class 2606 OID 9464258)
--- Name: cliente_suspensao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente_suspensao
     ADD CONSTRAINT cliente_suspensao_pkey PRIMARY KEY (sequencial, ref_cod_cliente, ref_cod_motivo_suspensao);
 
-
---
--- TOC entry 5964 (class 2606 OID 9464260)
--- Name: cliente_tipo_cliente_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_tipo_cliente
     ADD CONSTRAINT cliente_tipo_cliente_pk PRIMARY KEY (ref_cod_cliente_tipo, ref_cod_cliente);
 
 
---
--- TOC entry 5966 (class 2606 OID 9464262)
--- Name: cliente_tipo_exemplar_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente_tipo_exemplar_tipo
     ADD CONSTRAINT cliente_tipo_exemplar_tipo_pkey PRIMARY KEY (ref_cod_cliente_tipo, ref_cod_exemplar_tipo);
 
-
---
--- TOC entry 5962 (class 2606 OID 9464264)
--- Name: cliente_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_tipo
     ADD CONSTRAINT cliente_tipo_pkey PRIMARY KEY (cod_cliente_tipo);
 
 
---
--- TOC entry 5950 (class 2606 OID 9464266)
--- Name: cod_candidato_reserva_vaga_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
     ADD CONSTRAINT cod_candidato_reserva_vaga_pkey PRIMARY KEY (cod_candidato_reserva_vaga);
 
-
---
--- TOC entry 5995 (class 2606 OID 9464268)
--- Name: cod_disciplina_dependencia_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.disciplina_dependencia
     ADD CONSTRAINT cod_disciplina_dependencia_pkey PRIMARY KEY (cod_disciplina_dependencia);
 
 
---
--- TOC entry 6004 (class 2606 OID 9464270)
--- Name: cod_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.dispensa_disciplina
     ADD CONSTRAINT cod_dispensa_pkey PRIMARY KEY (cod_dispensa);
 
-
---
--- TOC entry 6177 (class 2606 OID 9464272)
--- Name: cod_serie_vaga_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie_vaga
     ADD CONSTRAINT cod_serie_vaga_pkey PRIMARY KEY (cod_serie_vaga);
 
 
---
--- TOC entry 6179 (class 2606 OID 9464274)
--- Name: cod_serie_vaga_unique; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie_vaga
     ADD CONSTRAINT cod_serie_vaga_unique UNIQUE (ano, ref_cod_instituicao, ref_cod_escola, ref_cod_curso, ref_cod_serie, turno);
 
-
---
--- TOC entry 6199 (class 2606 OID 9464276)
--- Name: cod_servidor_funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_funcao
     ADD CONSTRAINT cod_servidor_funcao_pkey PRIMARY KEY (cod_servidor_funcao);
 
 
---
--- TOC entry 5968 (class 2606 OID 9464278)
--- Name: coffebreak_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.coffebreak_tipo
     ADD CONSTRAINT coffebreak_tipo_pkey PRIMARY KEY (cod_coffebreak_tipo);
 
-
---
--- TOC entry 5974 (class 2606 OID 9464280)
--- Name: curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.curso
     ADD CONSTRAINT curso_pkey PRIMARY KEY (cod_curso);
 
 
---
--- TOC entry 5987 (class 2606 OID 9464282)
--- Name: disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.disciplina
     ADD CONSTRAINT disciplina_pkey PRIMARY KEY (cod_disciplina);
 
-
---
--- TOC entry 5997 (class 2606 OID 9464284)
--- Name: disciplina_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.disciplina_serie
     ADD CONSTRAINT disciplina_serie_pkey PRIMARY KEY (ref_cod_disciplina, ref_cod_serie);
 
 
---
--- TOC entry 5999 (class 2606 OID 9464286)
--- Name: disciplina_topico_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.disciplina_topico
     ADD CONSTRAINT disciplina_topico_pkey PRIMARY KEY (cod_disciplina_topico);
 
-
---
--- TOC entry 6007 (class 2606 OID 9464288)
--- Name: distribuicao_uniforme_cod_distribuicao_uniforme_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.distribuicao_uniforme
     ADD CONSTRAINT distribuicao_uniforme_cod_distribuicao_uniforme_pkey PRIMARY KEY (cod_distribuicao_uniforme);
 
 
---
--- TOC entry 6017 (class 2606 OID 9464290)
--- Name: escola_ano_letivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_ano_letivo
     ADD CONSTRAINT escola_ano_letivo_pkey PRIMARY KEY (ref_cod_escola, ano);
 
-
---
--- TOC entry 6019 (class 2606 OID 9464292)
--- Name: escola_complemento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_complemento
     ADD CONSTRAINT escola_complemento_pkey PRIMARY KEY (ref_cod_escola);
 
 
---
--- TOC entry 6031 (class 2606 OID 9464294)
--- Name: escola_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_curso
     ADD CONSTRAINT escola_curso_pkey PRIMARY KEY (ref_cod_escola, ref_cod_curso);
 
-
---
--- TOC entry 6035 (class 2606 OID 9464296)
--- Name: escola_localizacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_localizacao
     ADD CONSTRAINT escola_localizacao_pkey PRIMARY KEY (cod_escola_localizacao);
 
 
---
--- TOC entry 6009 (class 2606 OID 9464298)
--- Name: escola_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_pkey PRIMARY KEY (cod_escola);
 
-
---
--- TOC entry 6040 (class 2606 OID 9464300)
--- Name: escola_rede_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_rede_ensino
     ADD CONSTRAINT escola_rede_ensino_pkey PRIMARY KEY (cod_escola_rede_ensino);
 
 
---
--- TOC entry 6051 (class 2606 OID 9464302)
--- Name: escola_serie_disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_serie_disciplina
     ADD CONSTRAINT escola_serie_disciplina_pkey PRIMARY KEY (ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina);
 
-
---
--- TOC entry 6045 (class 2606 OID 9464304)
--- Name: escola_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_serie
     ADD CONSTRAINT escola_serie_pkey PRIMARY KEY (ref_cod_escola, ref_cod_serie);
 
 
---
--- TOC entry 6053 (class 2606 OID 9464306)
--- Name: escola_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_usuario
     ADD CONSTRAINT escola_usuario_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 6058 (class 2606 OID 9464308)
--- Name: exemplar_emprestimo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar_emprestimo
     ADD CONSTRAINT exemplar_emprestimo_pkey PRIMARY KEY (cod_emprestimo);
 
 
---
--- TOC entry 6055 (class 2606 OID 9464310)
--- Name: exemplar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.exemplar
     ADD CONSTRAINT exemplar_pkey PRIMARY KEY (cod_exemplar);
 
-
---
--- TOC entry 6060 (class 2606 OID 9464312)
--- Name: exemplar_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar_tipo
     ADD CONSTRAINT exemplar_tipo_pkey PRIMARY KEY (cod_exemplar_tipo);
 
 
---
--- TOC entry 6062 (class 2606 OID 9464314)
--- Name: falta_aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_aluno
     ADD CONSTRAINT falta_aluno_pkey PRIMARY KEY (cod_falta_aluno);
 
-
---
--- TOC entry 6066 (class 2606 OID 9464316)
--- Name: falta_atraso_compensado_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.falta_atraso_compensado
     ADD CONSTRAINT falta_atraso_compensado_pkey PRIMARY KEY (cod_compensado);
 
 
---
--- TOC entry 6064 (class 2606 OID 9464318)
--- Name: falta_atraso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_atraso
     ADD CONSTRAINT falta_atraso_pkey PRIMARY KEY (cod_falta_atraso);
 
-
---
--- TOC entry 6068 (class 2606 OID 9464320)
--- Name: faltas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.faltas
     ADD CONSTRAINT faltas_pkey PRIMARY KEY (ref_cod_matricula, sequencial);
 
 
---
--- TOC entry 5924 (class 2606 OID 9464322)
--- Name: fk_bloqueio_lancamento_faltas_notas; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.bloqueio_lancamento_faltas_notas
     ADD CONSTRAINT fk_bloqueio_lancamento_faltas_notas PRIMARY KEY (cod_bloqueio);
 
-
---
--- TOC entry 6070 (class 2606 OID 9464324)
--- Name: fonte_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.fonte
     ADD CONSTRAINT fonte_pkey PRIMARY KEY (cod_fonte);
 
 
---
--- TOC entry 6072 (class 2606 OID 9464326)
--- Name: funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.funcao
     ADD CONSTRAINT funcao_pkey PRIMARY KEY (cod_funcao);
 
-
---
--- TOC entry 6084 (class 2606 OID 9464328)
--- Name: habilitacao_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.habilitacao_curso
     ADD CONSTRAINT habilitacao_curso_pkey PRIMARY KEY (ref_cod_habilitacao, ref_cod_curso);
 
 
---
--- TOC entry 6079 (class 2606 OID 9464330)
--- Name: habilitacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.habilitacao
     ADD CONSTRAINT habilitacao_pkey PRIMARY KEY (cod_habilitacao);
 
-
---
--- TOC entry 6086 (class 2606 OID 9464332)
--- Name: historico_disciplinas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.historico_disciplinas
     ADD CONSTRAINT historico_disciplinas_pkey PRIMARY KEY (sequencial, ref_ref_cod_aluno, ref_sequencial);
 
 
---
--- TOC entry 6093 (class 2606 OID 9464334)
--- Name: historico_escolar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.historico_escolar
     ADD CONSTRAINT historico_escolar_pkey PRIMARY KEY (ref_cod_aluno, sequencial);
 
-
---
--- TOC entry 6099 (class 2606 OID 9464336)
--- Name: historico_grade_curso_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.historico_grade_curso
     ADD CONSTRAINT historico_grade_curso_pk PRIMARY KEY (id);
 
 
---
--- TOC entry 6101 (class 2606 OID 9464338)
--- Name: infra_comodo_funcao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.infra_comodo_funcao
     ADD CONSTRAINT infra_comodo_funcao_pkey PRIMARY KEY (cod_infra_comodo_funcao);
 
-
---
--- TOC entry 6105 (class 2606 OID 9464340)
--- Name: infra_predio_comodo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.infra_predio_comodo
     ADD CONSTRAINT infra_predio_comodo_pkey PRIMARY KEY (cod_infra_predio_comodo);
 
 
---
--- TOC entry 6103 (class 2606 OID 9464342)
--- Name: infra_predio_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.infra_predio
     ADD CONSTRAINT infra_predio_pkey PRIMARY KEY (cod_infra_predio);
 
-
---
--- TOC entry 6109 (class 2606 OID 9464344)
--- Name: instituicao_documentacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.instituicao_documentacao
     ADD CONSTRAINT instituicao_documentacao_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 6107 (class 2606 OID 9464346)
--- Name: instituicao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.instituicao
     ADD CONSTRAINT instituicao_pkey PRIMARY KEY (cod_instituicao);
 
-
---
--- TOC entry 6111 (class 2606 OID 9464348)
--- Name: material_didatico_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.material_didatico
     ADD CONSTRAINT material_didatico_pkey PRIMARY KEY (cod_material_didatico);
 
 
---
--- TOC entry 6113 (class 2606 OID 9464350)
--- Name: material_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.material_tipo
     ADD CONSTRAINT material_tipo_pkey PRIMARY KEY (cod_material_tipo);
 
-
---
--- TOC entry 6120 (class 2606 OID 9464352)
--- Name: matricula_excessao_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula_excessao
     ADD CONSTRAINT matricula_excessao_pk PRIMARY KEY (cod_aluno_excessao);
 
 
---
--- TOC entry 6122 (class 2606 OID 9464354)
--- Name: matricula_ocorrencia_disciplinar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula_ocorrencia_disciplinar
     ADD CONSTRAINT matricula_ocorrencia_disciplinar_pkey PRIMARY KEY (ref_cod_matricula, ref_cod_tipo_ocorrencia_disciplinar, sequencial);
 
-
---
--- TOC entry 6118 (class 2606 OID 9464356)
--- Name: matricula_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_pkey PRIMARY KEY (cod_matricula);
 
 
---
--- TOC entry 6125 (class 2606 OID 9464358)
--- Name: matricula_turma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula_turma
     ADD CONSTRAINT matricula_turma_pkey PRIMARY KEY (ref_cod_matricula, ref_cod_turma, sequencial);
 
-
---
--- TOC entry 6127 (class 2606 OID 9464360)
--- Name: menu_tipo_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.menu_tipo_usuario
     ADD CONSTRAINT menu_tipo_usuario_pkey PRIMARY KEY (ref_cod_tipo_usuario, ref_cod_menu_submenu);
 
 
---
--- TOC entry 6129 (class 2606 OID 9464362)
--- Name: modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.modulo
     ADD CONSTRAINT modulo_pkey PRIMARY KEY (cod_modulo);
 
-
---
--- TOC entry 6131 (class 2606 OID 9464364)
--- Name: motivo_afastamento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.motivo_afastamento
     ADD CONSTRAINT motivo_afastamento_pkey PRIMARY KEY (cod_motivo_afastamento);
 
 
---
--- TOC entry 6133 (class 2606 OID 9464366)
--- Name: motivo_baixa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.motivo_baixa
     ADD CONSTRAINT motivo_baixa_pkey PRIMARY KEY (cod_motivo_baixa);
 
-
---
--- TOC entry 6135 (class 2606 OID 9464368)
--- Name: motivo_suspensao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.motivo_suspensao
     ADD CONSTRAINT motivo_suspensao_pkey PRIMARY KEY (cod_motivo_suspensao);
 
 
---
--- TOC entry 6139 (class 2606 OID 9464370)
--- Name: nivel_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nivel_ensino
     ADD CONSTRAINT nivel_ensino_pkey PRIMARY KEY (cod_nivel_ensino);
 
-
---
--- TOC entry 6137 (class 2606 OID 9464372)
--- Name: nivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.nivel
     ADD CONSTRAINT nivel_pkey PRIMARY KEY (cod_nivel);
 
 
---
--- TOC entry 6142 (class 2606 OID 9464374)
--- Name: nota_aluno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nota_aluno
     ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (cod_nota_aluno);
 
-
---
--- TOC entry 6144 (class 2606 OID 9464376)
--- Name: operador_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.operador
     ADD CONSTRAINT operador_pkey PRIMARY KEY (cod_operador);
 
 
---
--- TOC entry 6146 (class 2606 OID 9464378)
--- Name: pagamento_multa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.pagamento_multa
     ADD CONSTRAINT pagamento_multa_pkey PRIMARY KEY (cod_pagamento_multa);
 
-
---
--- TOC entry 5870 (class 2606 OID 9464380)
--- Name: pk_cod_abandono_tipo; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.abandono_tipo
     ADD CONSTRAINT pk_cod_abandono_tipo PRIMARY KEY (cod_abandono_tipo);
 
 
---
--- TOC entry 5922 (class 2606 OID 9464382)
--- Name: pmieducar_bloqueio_ano_letivo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.bloqueio_ano_letivo
     ADD CONSTRAINT pmieducar_bloqueio_ano_letivo_pkey PRIMARY KEY (ref_cod_instituicao, ref_ano);
 
-
---
--- TOC entry 6152 (class 2606 OID 9464384)
--- Name: pmieducar_projeto_aluno_pk; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.projeto_aluno
     ADD CONSTRAINT pmieducar_projeto_aluno_pk PRIMARY KEY (ref_cod_projeto, ref_cod_aluno);
 
 
---
--- TOC entry 6150 (class 2606 OID 9464386)
--- Name: pmieducar_projeto_cod_projeto; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.projeto
     ADD CONSTRAINT pmieducar_projeto_cod_projeto PRIMARY KEY (cod_projeto);
 
-
---
--- TOC entry 6148 (class 2606 OID 9464388)
--- Name: pre_requisito_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.pre_requisito
     ADD CONSTRAINT pre_requisito_pkey PRIMARY KEY (cod_pre_requisito);
 
 
---
--- TOC entry 6159 (class 2606 OID 9464390)
--- Name: quadro_horario_horarios_aux_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios_aux
     ADD CONSTRAINT quadro_horario_horarios_aux_pkey PRIMARY KEY (ref_cod_quadro_horario, sequencial);
 
-
---
--- TOC entry 6157 (class 2606 OID 9464392)
--- Name: quadro_horario_horarios_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios
     ADD CONSTRAINT quadro_horario_horarios_pkey PRIMARY KEY (ref_cod_quadro_horario, sequencial);
 
 
---
--- TOC entry 6154 (class 2606 OID 9464394)
--- Name: quadro_horario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.quadro_horario
     ADD CONSTRAINT quadro_horario_pkey PRIMARY KEY (cod_quadro_horario);
 
-
---
--- TOC entry 6161 (class 2606 OID 9464396)
--- Name: quantidade_reserva_externa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.quantidade_reserva_externa
     ADD CONSTRAINT quantidade_reserva_externa_pkey PRIMARY KEY (ref_cod_instituicao, ref_cod_escola, ref_cod_curso, ref_cod_serie, ref_turma_turno_id, ano);
 
 
---
--- TOC entry 6163 (class 2606 OID 9464398)
--- Name: religiao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.religiao
     ADD CONSTRAINT religiao_pkey PRIMARY KEY (cod_religiao);
 
-
---
--- TOC entry 6165 (class 2606 OID 9464400)
--- Name: reserva_vaga_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.reserva_vaga
     ADD CONSTRAINT reserva_vaga_pkey PRIMARY KEY (cod_reserva_vaga);
 
 
---
--- TOC entry 6167 (class 2606 OID 9464402)
--- Name: reservas_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.reservas
     ADD CONSTRAINT reservas_pkey PRIMARY KEY (cod_reserva);
 
-
---
--- TOC entry 6169 (class 2606 OID 9464404)
--- Name: sequencia_serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.sequencia_serie
     ADD CONSTRAINT sequencia_serie_pkey PRIMARY KEY (ref_serie_origem, ref_serie_destino);
 
 
---
--- TOC entry 6173 (class 2606 OID 9464406)
--- Name: serie_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie
     ADD CONSTRAINT serie_pkey PRIMARY KEY (cod_serie);
 
-
---
--- TOC entry 6175 (class 2606 OID 9464408)
--- Name: serie_pre_requisito_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie_pre_requisito
     ADD CONSTRAINT serie_pre_requisito_pkey PRIMARY KEY (ref_cod_pre_requisito, ref_cod_operador, ref_cod_serie);
 
 
---
--- TOC entry 6186 (class 2606 OID 9464410)
--- Name: servidor_afastamento_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_afastamento
     ADD CONSTRAINT servidor_afastamento_pkey PRIMARY KEY (ref_cod_servidor, sequencial, ref_ref_cod_instituicao);
 
-
---
--- TOC entry 6189 (class 2606 OID 9464412)
--- Name: servidor_alocacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_alocacao
     ADD CONSTRAINT servidor_alocacao_pkey PRIMARY KEY (cod_servidor_alocacao);
 
 
---
--- TOC entry 6191 (class 2606 OID 9464414)
--- Name: servidor_curso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_curso
     ADD CONSTRAINT servidor_curso_pkey PRIMARY KEY (cod_servidor_curso);
 
-
---
--- TOC entry 6193 (class 2606 OID 9464416)
--- Name: servidor_cuso_ministra_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_curso_ministra
     ADD CONSTRAINT servidor_cuso_ministra_pkey PRIMARY KEY (ref_cod_curso, ref_ref_cod_instituicao, ref_cod_servidor);
 
 
---
--- TOC entry 6195 (class 2606 OID 9464418)
--- Name: servidor_disciplina_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_disciplina
     ADD CONSTRAINT servidor_disciplina_pkey PRIMARY KEY (ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso);
 
-
---
--- TOC entry 6197 (class 2606 OID 9464420)
--- Name: servidor_formacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_formacao
     ADD CONSTRAINT servidor_formacao_pkey PRIMARY KEY (cod_formacao);
 
 
---
--- TOC entry 6184 (class 2606 OID 9464422)
--- Name: servidor_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT servidor_pkey PRIMARY KEY (cod_servidor, ref_cod_instituicao);
 
-
---
--- TOC entry 6201 (class 2606 OID 9464424)
--- Name: servidor_titulo_concurso_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_titulo_concurso
     ADD CONSTRAINT servidor_titulo_concurso_pkey PRIMARY KEY (cod_servidor_titulo);
 
 
---
--- TOC entry 6203 (class 2606 OID 9464426)
--- Name: situacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.situacao
     ADD CONSTRAINT situacao_pkey PRIMARY KEY (cod_situacao);
 
-
---
--- TOC entry 6205 (class 2606 OID 9464428)
--- Name: subnivel_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.subnivel
     ADD CONSTRAINT subnivel_pkey PRIMARY KEY (cod_subnivel);
 
 
---
--- TOC entry 6207 (class 2606 OID 9464430)
--- Name: tipo_avaliacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_avaliacao
     ADD CONSTRAINT tipo_avaliacao_pkey PRIMARY KEY (cod_tipo_avaliacao);
 
-
---
--- TOC entry 6209 (class 2606 OID 9464432)
--- Name: tipo_avaliacao_valores_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_avaliacao_valores
     ADD CONSTRAINT tipo_avaliacao_valores_pkey PRIMARY KEY (ref_cod_tipo_avaliacao, sequencial);
 
 
---
--- TOC entry 6211 (class 2606 OID 9464434)
--- Name: tipo_dispensa_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_dispensa
     ADD CONSTRAINT tipo_dispensa_pkey PRIMARY KEY (cod_tipo_dispensa);
 
-
---
--- TOC entry 6213 (class 2606 OID 9464436)
--- Name: tipo_ensino_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_ensino
     ADD CONSTRAINT tipo_ensino_pkey PRIMARY KEY (cod_tipo_ensino);
 
 
---
--- TOC entry 6215 (class 2606 OID 9464438)
--- Name: tipo_ocorrencia_disciplinar_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_ocorrencia_disciplinar
     ADD CONSTRAINT tipo_ocorrencia_disciplinar_pkey PRIMARY KEY (cod_tipo_ocorrencia_disciplinar);
 
-
---
--- TOC entry 6217 (class 2606 OID 9464440)
--- Name: tipo_regime_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_regime
     ADD CONSTRAINT tipo_regime_pkey PRIMARY KEY (cod_tipo_regime);
 
 
---
--- TOC entry 6219 (class 2606 OID 9464442)
--- Name: tipo_usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_usuario
     ADD CONSTRAINT tipo_usuario_pkey PRIMARY KEY (cod_tipo_usuario);
 
-
---
--- TOC entry 6221 (class 2606 OID 9464444)
--- Name: transferencia_solicitacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.transferencia_solicitacao
     ADD CONSTRAINT transferencia_solicitacao_pkey PRIMARY KEY (cod_transferencia_solicitacao);
 
 
---
--- TOC entry 6223 (class 2606 OID 9464446)
--- Name: transferencia_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.transferencia_tipo
     ADD CONSTRAINT transferencia_tipo_pkey PRIMARY KEY (cod_transferencia_tipo);
 
-
---
--- TOC entry 6228 (class 2606 OID 9464450)
--- Name: turma_modulo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma_modulo
     ADD CONSTRAINT turma_modulo_pkey PRIMARY KEY (ref_cod_turma, ref_cod_modulo, sequencial);
 
 
---
--- TOC entry 6226 (class 2606 OID 9464452)
--- Name: turma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_pkey PRIMARY KEY (cod_turma);
 
-
---
--- TOC entry 6230 (class 2606 OID 9464454)
--- Name: turma_tipo_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma_tipo
     ADD CONSTRAINT turma_tipo_pkey PRIMARY KEY (cod_turma_tipo);
 
 
---
--- TOC entry 6232 (class 2606 OID 9464456)
--- Name: turma_turno_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma_turno
     ADD CONSTRAINT turma_turno_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 6234 (class 2606 OID 9464458)
--- Name: usuario_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.usuario
     ADD CONSTRAINT usuario_pkey PRIMARY KEY (cod_usuario);
 
 
---
--- TOC entry 6236 (class 2606 OID 9464460)
--- Name: funcionario_su_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.funcionario_su
     ADD CONSTRAINT funcionario_su_pkey PRIMARY KEY (ref_ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6238 (class 2606 OID 9464462)
--- Name: grupomoderador_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.grupomoderador
     ADD CONSTRAINT grupomoderador_pkey PRIMARY KEY (ref_ref_cod_pessoa_fj, ref_cod_grupos);
 
 
---
--- TOC entry 6240 (class 2606 OID 9464464)
--- Name: grupopessoa_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.grupopessoa
     ADD CONSTRAINT grupopessoa_pkey PRIMARY KEY (ref_idpes, ref_cod_grupos);
 
-
---
--- TOC entry 6242 (class 2606 OID 9464466)
--- Name: grupos_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.grupos
     ADD CONSTRAINT grupos_pkey PRIMARY KEY (cod_grupos);
 
 
---
--- TOC entry 6244 (class 2606 OID 9464468)
--- Name: notas_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.notas
     ADD CONSTRAINT notas_pkey PRIMARY KEY (sequencial, ref_idpes);
 
-
---
--- TOC entry 6246 (class 2606 OID 9464470)
--- Name: participante_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.participante
     ADD CONSTRAINT participante_pkey PRIMARY KEY (sequencial, ref_ref_cod_grupos, ref_ref_idpes, ref_cod_reuniao);
 
 
---
--- TOC entry 6248 (class 2606 OID 9464472)
--- Name: reuniao_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.reuniao
     ADD CONSTRAINT reuniao_pkey PRIMARY KEY (cod_reuniao);
 
-
---
--- TOC entry 6250 (class 2606 OID 9464474)
--- Name: topico_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.topico
     ADD CONSTRAINT topico_pkey PRIMARY KEY (cod_topico);
 
 
---
--- TOC entry 6252 (class 2606 OID 9464476)
--- Name: topicoreuniao_pkey; Type: CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.topicoreuniao
     ADD CONSTRAINT topicoreuniao_pkey PRIMARY KEY (ref_cod_topico, ref_cod_reuniao);
 
-
---
--- TOC entry 6254 (class 2606 OID 9464478)
--- Name: acesso_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.acesso
     ADD CONSTRAINT acesso_pk PRIMARY KEY (cod_acesso);
 
 
---
--- TOC entry 6258 (class 2606 OID 9464480)
--- Name: agenda_compromisso_pkey; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.agenda_compromisso
     ADD CONSTRAINT agenda_compromisso_pkey PRIMARY KEY (cod_agenda_compromisso, versao, ref_cod_agenda);
 
-
---
--- TOC entry 6256 (class 2606 OID 9464482)
--- Name: agenda_pkey; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.agenda
     ADD CONSTRAINT agenda_pkey PRIMARY KEY (cod_agenda);
 
 
---
--- TOC entry 6260 (class 2606 OID 9464484)
--- Name: agenda_pref_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.agenda_pref
     ADD CONSTRAINT agenda_pref_pk PRIMARY KEY (cod_comp);
 
-
---
--- TOC entry 6262 (class 2606 OID 9464486)
--- Name: agenda_responsavel_pkey; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.agenda_responsavel
     ADD CONSTRAINT agenda_responsavel_pkey PRIMARY KEY (ref_cod_agenda, ref_ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6266 (class 2606 OID 9464488)
--- Name: compras_editais_editais_empresas_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_editais_editais_empresas
     ADD CONSTRAINT compras_editais_editais_empresas_pk PRIMARY KEY (ref_cod_compras_editais_editais, ref_cod_compras_editais_empresa, data_hora);
 
-
---
--- TOC entry 6264 (class 2606 OID 9464490)
--- Name: compras_editais_editais_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_editais_editais
     ADD CONSTRAINT compras_editais_editais_pk PRIMARY KEY (cod_compras_editais_editais);
 
 
---
--- TOC entry 6268 (class 2606 OID 9464492)
--- Name: compras_editais_empresa_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_editais_empresa
     ADD CONSTRAINT compras_editais_empresa_pk PRIMARY KEY (cod_compras_editais_empresa);
 
-
---
--- TOC entry 6270 (class 2606 OID 9464494)
--- Name: compras_final_pregao_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_final_pregao
     ADD CONSTRAINT compras_final_pregao_pk PRIMARY KEY (cod_compras_final_pregao);
 
 
---
--- TOC entry 6272 (class 2606 OID 9464496)
--- Name: compras_funcionarios_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_funcionarios
     ADD CONSTRAINT compras_funcionarios_pk PRIMARY KEY (ref_ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6274 (class 2606 OID 9464498)
--- Name: compras_licitacoes_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_licitacoes
     ADD CONSTRAINT compras_licitacoes_pk PRIMARY KEY (cod_compras_licitacoes);
 
 
---
--- TOC entry 6276 (class 2606 OID 9464500)
--- Name: compras_modalidade_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_modalidade
     ADD CONSTRAINT compras_modalidade_pk PRIMARY KEY (cod_compras_modalidade);
 
-
---
--- TOC entry 6278 (class 2606 OID 9464502)
--- Name: compras_pregao_execucao_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_pregao_execucao
     ADD CONSTRAINT compras_pregao_execucao_pk PRIMARY KEY (cod_compras_pregao_execucao);
 
 
---
--- TOC entry 6280 (class 2606 OID 9464504)
--- Name: compras_prestacao_contas_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_prestacao_contas
     ADD CONSTRAINT compras_prestacao_contas_pk PRIMARY KEY (cod_compras_prestacao_contas);
 
-
---
--- TOC entry 6282 (class 2606 OID 9464506)
--- Name: foto_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.foto_portal
     ADD CONSTRAINT foto_portal_pk PRIMARY KEY (cod_foto_portal);
 
 
---
--- TOC entry 6284 (class 2606 OID 9464508)
--- Name: foto_secao_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.foto_secao
     ADD CONSTRAINT foto_secao_pk PRIMARY KEY (cod_foto_secao);
 
-
---
--- TOC entry 6286 (class 2606 OID 9464510)
--- Name: funcionario_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.funcionario
     ADD CONSTRAINT funcionario_pk PRIMARY KEY (ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6288 (class 2606 OID 9464512)
--- Name: funcionario_vinculo_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.funcionario_vinculo
     ADD CONSTRAINT funcionario_vinculo_pk PRIMARY KEY (cod_funcionario_vinculo);
 
-
---
--- TOC entry 6290 (class 2606 OID 9464514)
--- Name: imagem_pkey; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.imagem
     ADD CONSTRAINT imagem_pkey PRIMARY KEY (cod_imagem);
 
 
---
--- TOC entry 6292 (class 2606 OID 9464516)
--- Name: imagem_tipo_pkey; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.imagem_tipo
     ADD CONSTRAINT imagem_tipo_pkey PRIMARY KEY (cod_imagem_tipo);
 
-
---
--- TOC entry 6294 (class 2606 OID 9464518)
--- Name: intranet_segur_permissao_negada_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.intranet_segur_permissao_negada
     ADD CONSTRAINT intranet_segur_permissao_negada_pk PRIMARY KEY (cod_intranet_segur_permissao_negada);
 
 
---
--- TOC entry 6296 (class 2606 OID 9464520)
--- Name: jor_arquivo_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.jor_arquivo
     ADD CONSTRAINT jor_arquivo_pk PRIMARY KEY (ref_cod_jor_edicao, jor_arquivo);
 
-
---
--- TOC entry 6298 (class 2606 OID 9464522)
--- Name: jor_edicao_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.jor_edicao
     ADD CONSTRAINT jor_edicao_pk PRIMARY KEY (cod_jor_edicao);
 
 
---
--- TOC entry 6302 (class 2606 OID 9464524)
--- Name: mailling_email_conteudo_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_email_conteudo
     ADD CONSTRAINT mailling_email_conteudo_pk PRIMARY KEY (cod_mailling_email_conteudo);
 
-
---
--- TOC entry 6300 (class 2606 OID 9464526)
--- Name: mailling_email_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.mailling_email
     ADD CONSTRAINT mailling_email_pk PRIMARY KEY (cod_mailling_email);
 
 
---
--- TOC entry 6305 (class 2606 OID 9464528)
--- Name: mailling_fila_envio_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_fila_envio
     ADD CONSTRAINT mailling_fila_envio_pk PRIMARY KEY (cod_mailling_fila_envio);
 
-
---
--- TOC entry 6312 (class 2606 OID 9464530)
--- Name: mailling_grupo_email_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.mailling_grupo_email
     ADD CONSTRAINT mailling_grupo_email_pk PRIMARY KEY (ref_cod_mailling_email, ref_cod_mailling_grupo);
 
 
---
--- TOC entry 6310 (class 2606 OID 9464532)
--- Name: mailling_grupo_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_grupo
     ADD CONSTRAINT mailling_grupo_pk PRIMARY KEY (cod_mailling_grupo);
 
-
---
--- TOC entry 6314 (class 2606 OID 9464534)
--- Name: mailling_historico_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.mailling_historico
     ADD CONSTRAINT mailling_historico_pk PRIMARY KEY (cod_mailling_historico);
 
 
---
--- TOC entry 6316 (class 2606 OID 9464536)
--- Name: menu_funcionario_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.menu_funcionario
     ADD CONSTRAINT menu_funcionario_pk PRIMARY KEY (ref_ref_cod_pessoa_fj, ref_cod_menu_submenu);
 
-
---
--- TOC entry 6318 (class 2606 OID 9464538)
--- Name: menu_menu_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.menu_menu
     ADD CONSTRAINT menu_menu_pk PRIMARY KEY (cod_menu_menu);
 
 
---
--- TOC entry 6320 (class 2606 OID 9464540)
--- Name: menu_submenu_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.menu_submenu
     ADD CONSTRAINT menu_submenu_pk PRIMARY KEY (cod_menu_submenu);
 
-
---
--- TOC entry 6322 (class 2606 OID 9464542)
--- Name: not_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.not_portal
     ADD CONSTRAINT not_portal_pk PRIMARY KEY (cod_not_portal);
 
 
---
--- TOC entry 6324 (class 2606 OID 9464544)
--- Name: not_portal_tipo_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.not_portal_tipo
     ADD CONSTRAINT not_portal_tipo_pk PRIMARY KEY (ref_cod_not_portal, ref_cod_not_tipo);
 
-
---
--- TOC entry 6326 (class 2606 OID 9464546)
--- Name: not_tipo_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.not_tipo
     ADD CONSTRAINT not_tipo_pk PRIMARY KEY (cod_not_tipo);
 
 
---
--- TOC entry 6328 (class 2606 OID 9464548)
--- Name: not_vinc_portal_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.not_vinc_portal
     ADD CONSTRAINT not_vinc_portal_pk PRIMARY KEY (ref_cod_not_portal, vic_num);
 
-
---
--- TOC entry 6330 (class 2606 OID 9464550)
--- Name: pessoa_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.pessoa_atividade
     ADD CONSTRAINT pessoa_atividade_pk PRIMARY KEY (cod_pessoa_atividade);
 
 
---
--- TOC entry 6334 (class 2606 OID 9464552)
--- Name: pessoa_fj_pessoa_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.pessoa_fj_pessoa_atividade
     ADD CONSTRAINT pessoa_fj_pessoa_atividade_pk PRIMARY KEY (ref_cod_pessoa_atividade, ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6332 (class 2606 OID 9464554)
--- Name: pessoa_fj_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.pessoa_fj
     ADD CONSTRAINT pessoa_fj_pk PRIMARY KEY (cod_pessoa_fj);
 
 
---
--- TOC entry 6336 (class 2606 OID 9464556)
--- Name: pessoa_ramo_atividade_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.pessoa_ramo_atividade
     ADD CONSTRAINT pessoa_ramo_atividade_pk PRIMARY KEY (cod_ramo_atividade);
 
-
---
--- TOC entry 6338 (class 2606 OID 9464558)
--- Name: portal_concurso_pk; Type: CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.portal_concurso
     ADD CONSTRAINT portal_concurso_pk PRIMARY KEY (cod_portal_concurso);
 
 
---
--- TOC entry 6340 (class 2606 OID 9464560)
--- Name: bairro_regiao_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.bairro_regiao
     ADD CONSTRAINT bairro_regiao_pkey PRIMARY KEY (ref_cod_regiao, ref_idbai);
 
-
---
--- TOC entry 6351 (class 2606 OID 9464562)
--- Name: pghero_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.pghero_query_stats
     ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 5488 (class 2606 OID 9442751)
--- Name: phinxlog_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.phinxlog
     ADD CONSTRAINT phinxlog_pkey PRIMARY KEY (version);
 
-
---
--- TOC entry 5658 (class 2606 OID 9464564)
--- Name: pk_bairro; Type: CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT pk_bairro PRIMARY KEY (idbai);
 
 
---
--- TOC entry 6344 (class 2606 OID 9464566)
--- Name: pk_distrito; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.distrito
     ADD CONSTRAINT pk_distrito PRIMARY KEY (iddis);
 
-
---
--- TOC entry 5660 (class 2606 OID 9464568)
--- Name: pk_logradouro; Type: CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.logradouro
     ADD CONSTRAINT pk_logradouro PRIMARY KEY (idlog);
 
 
---
--- TOC entry 6346 (class 2606 OID 9464570)
--- Name: pk_logradouro_fonetico; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.logradouro_fonetico
     ADD CONSTRAINT pk_logradouro_fonetico PRIMARY KEY (fonema, idlog);
 
-
---
--- TOC entry 5662 (class 2606 OID 9464572)
--- Name: pk_municipio; Type: CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT pk_municipio PRIMARY KEY (idmun);
 
 
---
--- TOC entry 6348 (class 2606 OID 9464574)
--- Name: pk_pais; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.pais
     ADD CONSTRAINT pk_pais PRIMARY KEY (idpais);
 
-
---
--- TOC entry 6355 (class 2606 OID 9464576)
--- Name: pk_setor; Type: CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.setor
     ADD CONSTRAINT pk_setor PRIMARY KEY (idset);
 
 
---
--- TOC entry 6357 (class 2606 OID 9464578)
--- Name: pk_setorbai; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.setor_bai
     ADD CONSTRAINT pk_setorbai PRIMARY KEY (idsetorbai);
 
-
---
--- TOC entry 6359 (class 2606 OID 9464580)
--- Name: pk_uf; Type: CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.uf
     ADD CONSTRAINT pk_uf PRIMARY KEY (sigla_uf);
 
 
---
--- TOC entry 6361 (class 2606 OID 9464582)
--- Name: pk_vila; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.vila
     ADD CONSTRAINT pk_vila PRIMARY KEY (idvil);
 
-
---
--- TOC entry 6342 (class 2606 OID 9464584)
--- Name: pkchangelog; Type: CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.changelog
     ADD CONSTRAINT pkchangelog PRIMARY KEY (change_number, delta_set);
 
 
---
--- TOC entry 6353 (class 2606 OID 9464586)
--- Name: regiao_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.regiao
     ADD CONSTRAINT regiao_pkey PRIMARY KEY (cod_regiao);
 
-
---
--- TOC entry 6367 (class 2606 OID 9464588)
--- Name: aluno_uniforme_ref_cod_aluno_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.aluno_uniforme
     ADD CONSTRAINT aluno_uniforme_ref_cod_aluno_pk PRIMARY KEY (ref_cod_aluno, data_recebimento);
 
 
---
--- TOC entry 6365 (class 2606 OID 9464590)
--- Name: cod_aluno_serie_ref_cod_aluno_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.aluno_cod_aluno
     ADD CONSTRAINT cod_aluno_serie_ref_cod_aluno_pk PRIMARY KEY (cod_aluno, cod_ciasc);
 
-
---
--- TOC entry 6379 (class 2606 OID 9464592)
--- Name: educacenso_ref_cod_escola_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_regulamentacao
     ADD CONSTRAINT educacenso_ref_cod_escola_pk PRIMARY KEY (ref_cod_escola);
 
 
---
--- TOC entry 6369 (class 2606 OID 9464594)
--- Name: escola_agua_ref_cod_escola_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.escola_agua
     ADD CONSTRAINT escola_agua_ref_cod_escola_pk PRIMARY KEY (ref_cod_escola);
 
-
---
--- TOC entry 6371 (class 2606 OID 9464596)
--- Name: escola_energia_ref_cod_escola_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_energia
     ADD CONSTRAINT escola_energia_ref_cod_escola_pk PRIMARY KEY (ref_cod_escola);
 
 
---
--- TOC entry 6373 (class 2606 OID 9464598)
--- Name: escola_lingua_indigena_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.escola_lingua_indigena
     ADD CONSTRAINT escola_lingua_indigena_pk PRIMARY KEY (ref_cod_escola);
 
-
---
--- TOC entry 6375 (class 2606 OID 9464600)
--- Name: escola_lixo_ref_cod_escola_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_lixo
     ADD CONSTRAINT escola_lixo_ref_cod_escola_pk PRIMARY KEY (ref_cod_escola);
 
 
---
--- TOC entry 6377 (class 2606 OID 9464602)
--- Name: escola_projeto_ref_cod_escola_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.escola_projeto
     ADD CONSTRAINT escola_projeto_ref_cod_escola_pk PRIMARY KEY (ref_cod_escola);
 
-
---
--- TOC entry 6381 (class 2606 OID 9464604)
--- Name: escola_sanitario_ref_cod_escola_pk; Type: CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_sanitario
     ADD CONSTRAINT escola_sanitario_ref_cod_escola_pk PRIMARY KEY (ref_cod_escola);
 
 
---
--- TOC entry 6383 (class 2606 OID 9464606)
--- Name: pk_cep_logradouro; Type: CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.cep_logradouro
     ADD CONSTRAINT pk_cep_logradouro PRIMARY KEY (cep, idlog);
 
-
---
--- TOC entry 6385 (class 2606 OID 9464608)
--- Name: pk_cep_logradouro_bairro; Type: CONSTRAINT; Schema: urbano; Owner: -
---
 
 ALTER TABLE ONLY urbano.cep_logradouro_bairro
     ADD CONSTRAINT pk_cep_logradouro_bairro PRIMARY KEY (idbai, idlog, cep);
 
 
---
--- TOC entry 6363 (class 2606 OID 9464610)
--- Name: pk_tipo_logradouro; Type: CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.tipo_logradouro
     ADD CONSTRAINT pk_tipo_logradouro PRIMARY KEY (idtlog);
 
 
---
--- TOC entry 5517 (class 1259 OID 9464611)
--- Name: un_usuario_idpes; Type: INDEX; Schema: acesso; Owner: -
---
-
 CREATE UNIQUE INDEX un_usuario_idpes ON acesso.usuario USING btree (idpes);
 
-
---
--- TOC entry 5524 (class 1259 OID 9464612)
--- Name: un_baixa_guia_remessa; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_baixa_guia_remessa ON alimentos.baixa_guia_remessa USING btree (idgui, dt_recebimento);
 
 
---
--- TOC entry 5533 (class 1259 OID 9464613)
--- Name: un_cardapio_produto; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_cardapio_produto ON alimentos.cardapio_produto USING btree (idcar, idpro);
 
-
---
--- TOC entry 5538 (class 1259 OID 9464614)
--- Name: un_cliente; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_cliente ON alimentos.cliente USING btree (idcli, identificacao);
 
 
---
--- TOC entry 5543 (class 1259 OID 9464615)
--- Name: un_contrato; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_contrato ON alimentos.contrato USING btree (idcli, codigo, num_aditivo);
 
-
---
--- TOC entry 5546 (class 1259 OID 9464616)
--- Name: un_contrato_produto; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_contrato_produto ON alimentos.contrato_produto USING btree (idcon, idpro);
 
 
---
--- TOC entry 5549 (class 1259 OID 9464617)
--- Name: un_evento; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_evento ON alimentos.evento USING btree (idcad, mes, dia);
 
-
---
--- TOC entry 5552 (class 1259 OID 9464618)
--- Name: un_faixa_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_faixa_cp_quimico ON alimentos.faixa_composto_quimico USING btree (idcom, idfae);
 
 
---
--- TOC entry 5557 (class 1259 OID 9464619)
--- Name: un_fornecedor; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_fornecedor ON alimentos.fornecedor USING btree (idcli, nome_fantasia);
 
-
---
--- TOC entry 5558 (class 1259 OID 9464620)
--- Name: un_fornecedor_unidade_atend; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_fornecedor_unidade_atend ON alimentos.fornecedor_unidade_atendida USING btree (iduni, idfor);
 
 
---
--- TOC entry 5565 (class 1259 OID 9464621)
--- Name: un_guia_remessa; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_guia_remessa ON alimentos.guia_remessa USING btree (idcli, ano, sequencial);
 
-
---
--- TOC entry 5568 (class 1259 OID 9464622)
--- Name: un_guia_remessa_produto; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_guia_remessa_produto ON alimentos.guia_remessa_produto USING btree (idgui, idpro);
 
 
---
--- TOC entry 5580 (class 1259 OID 9464623)
--- Name: un_prod_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_prod_cp_quimico ON alimentos.produto_composto_quimico USING btree (idpro, idcom);
 
-
---
--- TOC entry 5577 (class 1259 OID 9464624)
--- Name: un_produto; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_produto ON alimentos.produto USING btree (idcli, nome_compra);
 
 
---
--- TOC entry 5583 (class 1259 OID 9464625)
--- Name: un_produto_fornecedor; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_produto_fornecedor ON alimentos.produto_fornecedor USING btree (idfor, idpro);
 
-
---
--- TOC entry 5586 (class 1259 OID 9464626)
--- Name: un_produto_medida_caseira; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_produto_medida_caseira ON alimentos.produto_medida_caseira USING btree (idmedcas, idcli, idpro);
 
 
---
--- TOC entry 5591 (class 1259 OID 9464627)
--- Name: un_rec_cp_quimico; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_rec_cp_quimico ON alimentos.receita_composto_quimico USING btree (idcom, idrec);
 
-
---
--- TOC entry 5594 (class 1259 OID 9464628)
--- Name: un_rec_prod; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_rec_prod ON alimentos.receita_produto USING btree (idpro, idrec);
 
 
---
--- TOC entry 5606 (class 1259 OID 9464629)
--- Name: un_uni_faixa_etaria; Type: INDEX; Schema: alimentos; Owner: -
---
-
 CREATE UNIQUE INDEX un_uni_faixa_etaria ON alimentos.unidade_faixa_etaria USING btree (iduni, idfae);
 
-
---
--- TOC entry 5603 (class 1259 OID 9464630)
--- Name: un_unidade_atendida; Type: INDEX; Schema: alimentos; Owner: -
---
 
 CREATE UNIQUE INDEX un_unidade_atendida ON alimentos.unidade_atendida USING btree (idcli, codigo);
 
 
---
--- TOC entry 5627 (class 1259 OID 9464631)
--- Name: un_fisica_cpf; Type: INDEX; Schema: cadastro; Owner: -
---
-
 CREATE UNIQUE INDEX un_fisica_cpf ON cadastro.fisica_cpf USING btree (cpf);
 
-
---
--- TOC entry 5642 (class 1259 OID 9464632)
--- Name: un_juridica_cnpj; Type: INDEX; Schema: cadastro; Owner: -
---
 
 CREATE UNIQUE INDEX un_juridica_cnpj ON cadastro.juridica USING btree (cnpj);
 
 
---
--- TOC entry 5778 (class 1259 OID 9464633)
--- Name: alunocomponenteetapa; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE UNIQUE INDEX alunocomponenteetapa ON modules.parecer_componente_curricular USING btree (parecer_aluno_id, componente_curricular_id, etapa);
 
-
---
--- TOC entry 5697 (class 1259 OID 9464634)
--- Name: area_conhecimento_nome_key; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX area_conhecimento_nome_key ON modules.area_conhecimento USING btree (nome);
 
 
---
--- TOC entry 5704 (class 1259 OID 9464635)
--- Name: componente_curricular_area_conhecimento_key; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX componente_curricular_area_conhecimento_key ON modules.componente_curricular USING btree (area_conhecimento_id);
 
-
---
--- TOC entry 5705 (class 1259 OID 9464636)
--- Name: componente_curricular_id_key; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE UNIQUE INDEX componente_curricular_id_key ON modules.componente_curricular USING btree (id);
 
 
---
--- TOC entry 5712 (class 1259 OID 9464637)
--- Name: componente_curricular_turma_turma_idx; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX componente_curricular_turma_turma_idx ON modules.componente_curricular_turma USING btree (turma_id);
 
-
---
--- TOC entry 5715 (class 1259 OID 9464638)
--- Name: docente_licenciatura_ies_idx; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX docente_licenciatura_ies_idx ON modules.docente_licenciatura USING btree (ies_id);
 
 
---
--- TOC entry 5730 (class 1259 OID 9474464)
--- Name: idx_educacenso_ies_ies_id; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX idx_educacenso_ies_ies_id ON modules.educacenso_ies USING btree (ies_id);
 
-
---
--- TOC entry 5740 (class 1259 OID 9464639)
--- Name: idx_falta_aluno_matricula_id; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX idx_falta_aluno_matricula_id ON modules.falta_aluno USING btree (matricula_id);
 
 
---
--- TOC entry 5741 (class 1259 OID 9464640)
--- Name: idx_falta_aluno_matricula_id_tipo; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX idx_falta_aluno_matricula_id_tipo ON modules.falta_aluno USING btree (matricula_id, tipo_falta);
 
-
---
--- TOC entry 5744 (class 1259 OID 9464641)
--- Name: idx_falta_componente_curricular_id1; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX idx_falta_componente_curricular_id1 ON modules.falta_componente_curricular USING btree (falta_aluno_id, componente_curricular_id, etapa);
 
 
---
--- TOC entry 5747 (class 1259 OID 9464642)
--- Name: idx_falta_geral_falta_aluno_id; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX idx_falta_geral_falta_aluno_id ON modules.falta_geral USING btree (falta_aluno_id);
 
-
---
--- TOC entry 5762 (class 1259 OID 9464643)
--- Name: idx_nota_aluno_matricula; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX idx_nota_aluno_matricula ON modules.nota_aluno USING btree (matricula_id);
 
 
---
--- TOC entry 5763 (class 1259 OID 9464644)
--- Name: idx_nota_aluno_matricula_id; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX idx_nota_aluno_matricula_id ON modules.nota_aluno USING btree (id, matricula_id);
 
-
---
--- TOC entry 5766 (class 1259 OID 9464645)
--- Name: idx_nota_componente_curricular_etapa; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX idx_nota_componente_curricular_etapa ON modules.nota_componente_curricular USING btree (nota_aluno_id, componente_curricular_id, etapa);
 
 
---
--- TOC entry 5767 (class 1259 OID 9464646)
--- Name: idx_nota_componente_curricular_etp; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX idx_nota_componente_curricular_etp ON modules.nota_componente_curricular USING btree (componente_curricular_id, etapa);
 
-
---
--- TOC entry 5768 (class 1259 OID 9464647)
--- Name: idx_nota_componente_curricular_id; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX idx_nota_componente_curricular_id ON modules.nota_componente_curricular USING btree (componente_curricular_id);
 
 
---
--- TOC entry 5775 (class 1259 OID 9464648)
--- Name: idx_parecer_aluno_matricula_id; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX idx_parecer_aluno_matricula_id ON modules.parecer_aluno USING btree (matricula_id);
 
-
---
--- TOC entry 5781 (class 1259 OID 9464649)
--- Name: idx_parecer_geral_parecer_aluno_etp; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE INDEX idx_parecer_geral_parecer_aluno_etp ON modules.parecer_geral USING btree (parecer_aluno_id, etapa);
 
 
---
--- TOC entry 5802 (class 1259 OID 9464650)
--- Name: idx_tabela_arredondamento_valor_tabela_id; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE INDEX idx_tabela_arredondamento_valor_tabela_id ON modules.tabela_arredondamento_valor USING btree (tabela_arredondamento_id);
 
-
---
--- TOC entry 5792 (class 1259 OID 9464651)
--- Name: regra_avaliacao_id_key; Type: INDEX; Schema: modules; Owner: -
---
 
 CREATE UNIQUE INDEX regra_avaliacao_id_key ON modules.regra_avaliacao USING btree (id);
 
 
---
--- TOC entry 5799 (class 1259 OID 9464652)
--- Name: tabela_arredondamento_id_key; Type: INDEX; Schema: modules; Owner: -
---
-
 CREATE UNIQUE INDEX tabela_arredondamento_id_key ON modules.tabela_arredondamento USING btree (id);
 
-
---
--- TOC entry 6056 (class 1259 OID 9464653)
--- Name: exemplar_tombo_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX exemplar_tombo_idx ON pmieducar.exemplar USING btree (tombo);
 
 
---
--- TOC entry 5920 (class 1259 OID 9464654)
--- Name: fki_biblioteca_usuario_ref_cod_biblioteca_fk; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX fki_biblioteca_usuario_ref_cod_biblioteca_fk ON pmieducar.biblioteca_usuario USING btree (ref_cod_biblioteca);
 
-
---
--- TOC entry 6180 (class 1259 OID 9464655)
--- Name: fki_servidor_ref_cod_subnivel; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX fki_servidor_ref_cod_subnivel ON pmieducar.servidor USING btree (ref_cod_subnivel);
 
 
---
--- TOC entry 6181 (class 1259 OID 9464656)
--- Name: fki_servidor_ref_cod_subnivel_; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX fki_servidor_ref_cod_subnivel_ ON pmieducar.servidor USING btree (ref_cod_subnivel);
 
-
---
--- TOC entry 6089 (class 1259 OID 9464657)
--- Name: historico_escolar_ano_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX historico_escolar_ano_idx ON pmieducar.historico_escolar USING btree (ano);
 
 
---
--- TOC entry 6090 (class 1259 OID 9464658)
--- Name: historico_escolar_ativo_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX historico_escolar_ativo_idx ON pmieducar.historico_escolar USING btree (ativo);
 
-
---
--- TOC entry 6091 (class 1259 OID 9464659)
--- Name: historico_escolar_nm_serie_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX historico_escolar_nm_serie_idx ON pmieducar.historico_escolar USING btree (nm_serie);
 
 
---
--- TOC entry 5891 (class 1259 OID 9464660)
--- Name: i_aluno_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_aluno_ativo ON pmieducar.aluno USING btree (ativo);
 
-
---
--- TOC entry 5899 (class 1259 OID 9464661)
--- Name: i_aluno_beneficio_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_aluno_beneficio_ativo ON pmieducar.aluno_beneficio USING btree (ativo);
 
 
---
--- TOC entry 5900 (class 1259 OID 9464662)
--- Name: i_aluno_beneficio_nm_beneficio; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_aluno_beneficio_nm_beneficio ON pmieducar.aluno_beneficio USING btree (nm_beneficio);
 
-
---
--- TOC entry 5901 (class 1259 OID 9464663)
--- Name: i_aluno_beneficio_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_aluno_beneficio_ref_usuario_cad ON pmieducar.aluno_beneficio USING btree (ref_usuario_cad);
 
 
---
--- TOC entry 5892 (class 1259 OID 9464664)
--- Name: i_aluno_ref_cod_religiao; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_aluno_ref_cod_religiao ON pmieducar.aluno USING btree (ref_cod_religiao);
 
-
---
--- TOC entry 5893 (class 1259 OID 9464665)
--- Name: i_aluno_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_aluno_ref_idpes ON pmieducar.aluno USING btree (ref_idpes);
 
 
---
--- TOC entry 5894 (class 1259 OID 9464666)
--- Name: i_aluno_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_aluno_ref_usuario_cad ON pmieducar.aluno USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 5927 (class 1259 OID 9464667)
--- Name: i_calendario_ano_letivo_ano; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_calendario_ano_letivo_ano ON pmieducar.calendario_ano_letivo USING btree (ano);
 
 
---
--- TOC entry 5928 (class 1259 OID 9464668)
--- Name: i_calendario_ano_letivo_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_calendario_ano_letivo_ativo ON pmieducar.calendario_ano_letivo USING btree (ativo);
 
-
---
--- TOC entry 5929 (class 1259 OID 9464669)
--- Name: i_calendario_ano_letivo_ref_cod_escola; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_calendario_ano_letivo_ref_cod_escola ON pmieducar.calendario_ano_letivo USING btree (ref_cod_escola);
 
 
---
--- TOC entry 5930 (class 1259 OID 9464670)
--- Name: i_calendario_ano_letivo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_calendario_ano_letivo_ref_usuario_cad ON pmieducar.calendario_ano_letivo USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 5935 (class 1259 OID 9464671)
--- Name: i_calendario_dia_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_calendario_dia_ativo ON pmieducar.calendario_dia USING btree (ativo);
 
 
---
--- TOC entry 5936 (class 1259 OID 9464672)
--- Name: i_calendario_dia_dia; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_calendario_dia_dia ON pmieducar.calendario_dia USING btree (dia);
 
-
---
--- TOC entry 5937 (class 1259 OID 9464673)
--- Name: i_calendario_dia_mes; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_calendario_dia_mes ON pmieducar.calendario_dia USING btree (mes);
 
 
---
--- TOC entry 5944 (class 1259 OID 9464674)
--- Name: i_calendario_dia_motivo_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_calendario_dia_motivo_ativo ON pmieducar.calendario_dia_motivo USING btree (ativo);
 
-
---
--- TOC entry 5945 (class 1259 OID 9464675)
--- Name: i_calendario_dia_motivo_ref_cod_escola; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_calendario_dia_motivo_ref_cod_escola ON pmieducar.calendario_dia_motivo USING btree (ref_cod_escola);
 
 
---
--- TOC entry 5946 (class 1259 OID 9464676)
--- Name: i_calendario_dia_motivo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_calendario_dia_motivo_ref_usuario_cad ON pmieducar.calendario_dia_motivo USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 5947 (class 1259 OID 9464677)
--- Name: i_calendario_dia_motivo_sigla; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_calendario_dia_motivo_sigla ON pmieducar.calendario_dia_motivo USING btree (sigla);
 
 
---
--- TOC entry 5948 (class 1259 OID 9464678)
--- Name: i_calendario_dia_motivo_tipo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_calendario_dia_motivo_tipo ON pmieducar.calendario_dia_motivo USING btree (tipo);
 
-
---
--- TOC entry 5938 (class 1259 OID 9464679)
--- Name: i_calendario_dia_ref_cod_calendario_dia_motivo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_calendario_dia_ref_cod_calendario_dia_motivo ON pmieducar.calendario_dia USING btree (ref_cod_calendario_dia_motivo);
 
 
---
--- TOC entry 5939 (class 1259 OID 9464680)
--- Name: i_calendario_dia_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_calendario_dia_ref_usuario_cad ON pmieducar.calendario_dia USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 5969 (class 1259 OID 9464681)
--- Name: i_coffebreak_tipo_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_coffebreak_tipo_ativo ON pmieducar.coffebreak_tipo USING btree (ativo);
 
 
---
--- TOC entry 5970 (class 1259 OID 9464682)
--- Name: i_coffebreak_tipo_custo_unitario; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_coffebreak_tipo_custo_unitario ON pmieducar.coffebreak_tipo USING btree (custo_unitario);
 
-
---
--- TOC entry 5971 (class 1259 OID 9464683)
--- Name: i_coffebreak_tipo_nm_tipo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_coffebreak_tipo_nm_tipo ON pmieducar.coffebreak_tipo USING btree (nm_tipo);
 
 
---
--- TOC entry 5972 (class 1259 OID 9464684)
--- Name: i_coffebreak_tipo_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_coffebreak_tipo_ref_usuario_cad ON pmieducar.coffebreak_tipo USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 5975 (class 1259 OID 9464685)
--- Name: i_curso_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_curso_ativo ON pmieducar.curso USING btree (ativo);
 
 
---
--- TOC entry 5976 (class 1259 OID 9464686)
--- Name: i_curso_ato_poder_publico; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_curso_ato_poder_publico ON pmieducar.curso USING btree (ato_poder_publico);
 
-
---
--- TOC entry 5977 (class 1259 OID 9464687)
--- Name: i_curso_carga_horaria; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_curso_carga_horaria ON pmieducar.curso USING btree (carga_horaria);
 
 
---
--- TOC entry 5978 (class 1259 OID 9464688)
--- Name: i_curso_nm_curso; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_curso_nm_curso ON pmieducar.curso USING btree (nm_curso);
 
-
---
--- TOC entry 5979 (class 1259 OID 9464689)
--- Name: i_curso_objetivo_curso; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_curso_objetivo_curso ON pmieducar.curso USING btree (objetivo_curso);
 
 
---
--- TOC entry 5980 (class 1259 OID 9464690)
--- Name: i_curso_qtd_etapas; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_curso_qtd_etapas ON pmieducar.curso USING btree (qtd_etapas);
 
-
---
--- TOC entry 5981 (class 1259 OID 9464691)
--- Name: i_curso_ref_cod_nivel_ensino; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_curso_ref_cod_nivel_ensino ON pmieducar.curso USING btree (ref_cod_nivel_ensino);
 
 
---
--- TOC entry 5982 (class 1259 OID 9464692)
--- Name: i_curso_ref_cod_tipo_ensino; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_curso_ref_cod_tipo_ensino ON pmieducar.curso USING btree (ref_cod_tipo_ensino);
 
-
---
--- TOC entry 5983 (class 1259 OID 9464693)
--- Name: i_curso_ref_cod_tipo_regime; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_curso_ref_cod_tipo_regime ON pmieducar.curso USING btree (ref_cod_tipo_regime);
 
 
---
--- TOC entry 5984 (class 1259 OID 9464694)
--- Name: i_curso_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_curso_ref_usuario_cad ON pmieducar.curso USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 5985 (class 1259 OID 9464695)
--- Name: i_curso_sgl_curso; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_curso_sgl_curso ON pmieducar.curso USING btree (sgl_curso);
 
 
---
--- TOC entry 5988 (class 1259 OID 9464696)
--- Name: i_disciplina_abreviatura; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_disciplina_abreviatura ON pmieducar.disciplina USING btree (abreviatura);
 
-
---
--- TOC entry 5989 (class 1259 OID 9464697)
--- Name: i_disciplina_apura_falta; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_disciplina_apura_falta ON pmieducar.disciplina USING btree (apura_falta);
 
 
---
--- TOC entry 5990 (class 1259 OID 9464698)
--- Name: i_disciplina_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_disciplina_ativo ON pmieducar.disciplina USING btree (ativo);
 
-
---
--- TOC entry 5991 (class 1259 OID 9464699)
--- Name: i_disciplina_carga_horaria; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_disciplina_carga_horaria ON pmieducar.disciplina USING btree (carga_horaria);
 
 
---
--- TOC entry 5992 (class 1259 OID 9464700)
--- Name: i_disciplina_nm_disciplina; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_disciplina_nm_disciplina ON pmieducar.disciplina USING btree (nm_disciplina);
 
-
---
--- TOC entry 5993 (class 1259 OID 9464701)
--- Name: i_disciplina_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_disciplina_ref_usuario_cad ON pmieducar.disciplina USING btree (ref_usuario_cad);
 
 
---
--- TOC entry 6000 (class 1259 OID 9464702)
--- Name: i_disciplina_topico_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_disciplina_topico_ativo ON pmieducar.disciplina_topico USING btree (ativo);
 
-
---
--- TOC entry 6001 (class 1259 OID 9464703)
--- Name: i_disciplina_topico_nm_topico; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_disciplina_topico_nm_topico ON pmieducar.disciplina_topico USING btree (nm_topico);
 
 
---
--- TOC entry 6002 (class 1259 OID 9464704)
--- Name: i_disciplina_topico_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_disciplina_topico_ref_usuario_cad ON pmieducar.disciplina_topico USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 6005 (class 1259 OID 9464705)
--- Name: i_dispensa_disciplina_ref_cod_matricula; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_dispensa_disciplina_ref_cod_matricula ON pmieducar.dispensa_disciplina USING btree (ref_cod_matricula);
 
 
---
--- TOC entry 6010 (class 1259 OID 9464706)
--- Name: i_escola_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_ativo ON pmieducar.escola USING btree (ativo);
 
-
---
--- TOC entry 6020 (class 1259 OID 9464707)
--- Name: i_escola_complemento_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_complemento_ativo ON pmieducar.escola_complemento USING btree (ativo);
 
 
---
--- TOC entry 6021 (class 1259 OID 9464708)
--- Name: i_escola_complemento_bairro; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_complemento_bairro ON pmieducar.escola_complemento USING btree (bairro);
 
-
---
--- TOC entry 6022 (class 1259 OID 9464709)
--- Name: i_escola_complemento_cep; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_complemento_cep ON pmieducar.escola_complemento USING btree (cep);
 
 
---
--- TOC entry 6023 (class 1259 OID 9464710)
--- Name: i_escola_complemento_complemento; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_complemento_complemento ON pmieducar.escola_complemento USING btree (complemento);
 
-
---
--- TOC entry 6024 (class 1259 OID 9464711)
--- Name: i_escola_complemento_email; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_complemento_email ON pmieducar.escola_complemento USING btree (email);
 
 
---
--- TOC entry 6025 (class 1259 OID 9464712)
--- Name: i_escola_complemento_logradouro; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_complemento_logradouro ON pmieducar.escola_complemento USING btree (logradouro);
 
-
---
--- TOC entry 6026 (class 1259 OID 9464713)
--- Name: i_escola_complemento_municipio; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_complemento_municipio ON pmieducar.escola_complemento USING btree (municipio);
 
 
---
--- TOC entry 6027 (class 1259 OID 9464714)
--- Name: i_escola_complemento_nm_escola; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_complemento_nm_escola ON pmieducar.escola_complemento USING btree (nm_escola);
 
-
---
--- TOC entry 6028 (class 1259 OID 9464715)
--- Name: i_escola_complemento_numero; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_complemento_numero ON pmieducar.escola_complemento USING btree (numero);
 
 
---
--- TOC entry 6029 (class 1259 OID 9464716)
--- Name: i_escola_complemento_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_complemento_ref_usuario_cad ON pmieducar.escola_complemento USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 6032 (class 1259 OID 9464717)
--- Name: i_escola_curso_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_curso_ativo ON pmieducar.escola_curso USING btree (ativo);
 
 
---
--- TOC entry 6033 (class 1259 OID 9464718)
--- Name: i_escola_curso_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_curso_ref_usuario_cad ON pmieducar.escola_curso USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 6036 (class 1259 OID 9464719)
--- Name: i_escola_localizacao_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_localizacao_ativo ON pmieducar.escola_localizacao USING btree (ativo);
 
 
---
--- TOC entry 6037 (class 1259 OID 9464720)
--- Name: i_escola_localizacao_nm_localizacao; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_localizacao_nm_localizacao ON pmieducar.escola_localizacao USING btree (nm_localizacao);
 
-
---
--- TOC entry 6038 (class 1259 OID 9464721)
--- Name: i_escola_localizacao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_localizacao_ref_usuario_cad ON pmieducar.escola_localizacao USING btree (ref_usuario_cad);
 
 
---
--- TOC entry 6041 (class 1259 OID 9464722)
--- Name: i_escola_rede_ensino_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_rede_ensino_ativo ON pmieducar.escola_rede_ensino USING btree (ativo);
 
-
---
--- TOC entry 6042 (class 1259 OID 9464723)
--- Name: i_escola_rede_ensino_nm_rede; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_rede_ensino_nm_rede ON pmieducar.escola_rede_ensino USING btree (nm_rede);
 
 
---
--- TOC entry 6043 (class 1259 OID 9464724)
--- Name: i_escola_rede_ensino_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_rede_ensino_ref_usuario_cad ON pmieducar.escola_rede_ensino USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 6011 (class 1259 OID 9464726)
--- Name: i_escola_ref_cod_escola_rede_ensino; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_ref_cod_escola_rede_ensino ON pmieducar.escola USING btree (ref_cod_escola_rede_ensino);
 
 
---
--- TOC entry 6012 (class 1259 OID 9464727)
--- Name: i_escola_ref_cod_instituicao; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_ref_cod_instituicao ON pmieducar.escola USING btree (ref_cod_instituicao);
 
-
---
--- TOC entry 6013 (class 1259 OID 9464728)
--- Name: i_escola_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_ref_idpes ON pmieducar.escola USING btree (ref_idpes);
 
 
---
--- TOC entry 6014 (class 1259 OID 9464729)
--- Name: i_escola_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_ref_usuario_cad ON pmieducar.escola USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 6046 (class 1259 OID 9464730)
--- Name: i_escola_serie_ensino_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_serie_ensino_ativo ON pmieducar.escola_serie USING btree (ativo);
 
 
---
--- TOC entry 6047 (class 1259 OID 9464731)
--- Name: i_escola_serie_hora_final; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_serie_hora_final ON pmieducar.escola_serie USING btree (hora_final);
 
-
---
--- TOC entry 6048 (class 1259 OID 9464732)
--- Name: i_escola_serie_hora_inicial; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_serie_hora_inicial ON pmieducar.escola_serie USING btree (hora_inicial);
 
 
---
--- TOC entry 6049 (class 1259 OID 9464733)
--- Name: i_escola_serie_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_escola_serie_ref_usuario_cad ON pmieducar.escola_serie USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 6015 (class 1259 OID 9464734)
--- Name: i_escola_sigla; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_escola_sigla ON pmieducar.escola USING btree (sigla);
 
 
---
--- TOC entry 6073 (class 1259 OID 9464735)
--- Name: i_funcao_abreviatura; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_funcao_abreviatura ON pmieducar.funcao USING btree (abreviatura);
 
-
---
--- TOC entry 6074 (class 1259 OID 9464736)
--- Name: i_funcao_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_funcao_ativo ON pmieducar.funcao USING btree (ativo);
 
 
---
--- TOC entry 6075 (class 1259 OID 9464737)
--- Name: i_funcao_nm_funcao; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_funcao_nm_funcao ON pmieducar.funcao USING btree (nm_funcao);
 
-
---
--- TOC entry 6076 (class 1259 OID 9464738)
--- Name: i_funcao_professor; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_funcao_professor ON pmieducar.funcao USING btree (professor);
 
 
---
--- TOC entry 6077 (class 1259 OID 9464739)
--- Name: i_funcao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_funcao_ref_usuario_cad ON pmieducar.funcao USING btree (ref_usuario_cad);
 
-
---
--- TOC entry 6080 (class 1259 OID 9464740)
--- Name: i_habilitacao_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_habilitacao_ativo ON pmieducar.habilitacao USING btree (ativo);
 
 
---
--- TOC entry 6081 (class 1259 OID 9464741)
--- Name: i_habilitacao_nm_tipo; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_habilitacao_nm_tipo ON pmieducar.habilitacao USING btree (nm_tipo);
 
-
---
--- TOC entry 6082 (class 1259 OID 9464742)
--- Name: i_habilitacao_ref_usuario_cad; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_habilitacao_ref_usuario_cad ON pmieducar.habilitacao USING btree (ref_usuario_cad);
 
 
---
--- TOC entry 6123 (class 1259 OID 9464743)
--- Name: i_matricula_turma_ref_cod_turma; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_matricula_turma_ref_cod_turma ON pmieducar.matricula_turma USING btree (ref_cod_turma);
 
-
---
--- TOC entry 6140 (class 1259 OID 9464744)
--- Name: i_nota_aluno_ref_cod_matricula; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX i_nota_aluno_ref_cod_matricula ON pmieducar.nota_aluno USING btree (ref_cod_matricula);
 
 
---
--- TOC entry 6224 (class 1259 OID 9464745)
--- Name: i_turma_nm_turma; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX i_turma_nm_turma ON pmieducar.turma USING btree (nm_turma);
 
-
---
--- TOC entry 6087 (class 1259 OID 9464746)
--- Name: idx_historico_disciplinas_id; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX idx_historico_disciplinas_id ON pmieducar.historico_disciplinas USING btree (sequencial, ref_ref_cod_aluno, ref_sequencial);
 
 
---
--- TOC entry 6088 (class 1259 OID 9464747)
--- Name: idx_historico_disciplinas_id1; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX idx_historico_disciplinas_id1 ON pmieducar.historico_disciplinas USING btree (ref_ref_cod_aluno, ref_sequencial);
 
-
---
--- TOC entry 6094 (class 1259 OID 9464748)
--- Name: idx_historico_escolar_aluno_ativo; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX idx_historico_escolar_aluno_ativo ON pmieducar.historico_escolar USING btree (ref_cod_aluno, ativo);
 
 
---
--- TOC entry 6095 (class 1259 OID 9464749)
--- Name: idx_historico_escolar_id1; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX idx_historico_escolar_id1 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, sequencial);
 
-
---
--- TOC entry 6096 (class 1259 OID 9464750)
--- Name: idx_historico_escolar_id2; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX idx_historico_escolar_id2 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, sequencial, ano);
 
 
---
--- TOC entry 6097 (class 1259 OID 9464751)
--- Name: idx_historico_escolar_id3; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX idx_historico_escolar_id3 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, ano);
 
-
---
--- TOC entry 6114 (class 1259 OID 9464752)
--- Name: idx_matricula_cod_escola_aluno; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX idx_matricula_cod_escola_aluno ON pmieducar.matricula USING btree (ref_ref_cod_escola, ref_cod_aluno);
 
 
---
--- TOC entry 6170 (class 1259 OID 9464753)
--- Name: idx_serie_cod_regra_avaliacao_id; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX idx_serie_cod_regra_avaliacao_id ON pmieducar.serie USING btree (cod_serie, regra_avaliacao_id);
 
-
---
--- TOC entry 6171 (class 1259 OID 9464754)
--- Name: idx_serie_regra_avaliacao_id; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX idx_serie_regra_avaliacao_id ON pmieducar.serie USING btree (regra_avaliacao_id);
 
 
---
--- TOC entry 6115 (class 1259 OID 9464755)
--- Name: matricula_ano_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX matricula_ano_idx ON pmieducar.matricula USING btree (ano);
 
-
---
--- TOC entry 6116 (class 1259 OID 9464756)
--- Name: matricula_ativo_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX matricula_ativo_idx ON pmieducar.matricula USING btree (ativo);
 
 
---
--- TOC entry 6155 (class 1259 OID 9464757)
--- Name: quadro_horario_horarios_busca_horarios_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX quadro_horario_horarios_busca_horarios_idx ON pmieducar.quadro_horario_horarios USING btree (ref_servidor, ref_cod_instituicao_servidor, dia_semana, hora_inicial, hora_final, ativo);
 
-
---
--- TOC entry 8415 (class 0 OID 0)
--- Dependencies: 6155
--- Name: INDEX quadro_horario_horarios_busca_horarios_idx; Type: COMMENT; Schema: pmieducar; Owner: -
---
 
 COMMENT ON INDEX pmieducar.quadro_horario_horarios_busca_horarios_idx IS 'Índice para otimizar a busca por professores na criação de quadro de horários.';
 
 
---
--- TOC entry 6187 (class 1259 OID 9464758)
--- Name: servidor_alocacao_busca_horarios_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
-
 CREATE INDEX servidor_alocacao_busca_horarios_idx ON pmieducar.servidor_alocacao USING btree (ref_ref_cod_instituicao, ref_cod_escola, ativo, periodo, carga_horaria);
 
-
---
--- TOC entry 6182 (class 1259 OID 9464759)
--- Name: servidor_idx; Type: INDEX; Schema: pmieducar; Owner: -
---
 
 CREATE INDEX servidor_idx ON pmieducar.servidor USING btree (cod_servidor, ref_cod_instituicao, ativo);
 
 
---
--- TOC entry 8416 (class 0 OID 0)
--- Dependencies: 6182
--- Name: INDEX servidor_idx; Type: COMMENT; Schema: pmieducar; Owner: -
---
-
 COMMENT ON INDEX pmieducar.servidor_idx IS 'Índice para otimização de acesso aos campos mais usados para queries na tabela.';
 
-
---
--- TOC entry 6303 (class 1259 OID 9464760)
--- Name: mailling_fila_envio_data_envio_idx; Type: INDEX; Schema: portal; Owner: -
---
 
 CREATE INDEX mailling_fila_envio_data_envio_idx ON portal.mailling_fila_envio USING btree (data_envio);
 
 
---
--- TOC entry 6306 (class 1259 OID 9464761)
--- Name: mailling_fila_envio_ref_cod_mailling_email; Type: INDEX; Schema: portal; Owner: -
---
-
 CREATE INDEX mailling_fila_envio_ref_cod_mailling_email ON portal.mailling_fila_envio USING btree (ref_cod_mailling_email);
 
-
---
--- TOC entry 6307 (class 1259 OID 9464762)
--- Name: mailling_fila_envio_ref_cod_mailling_email_conteudo; Type: INDEX; Schema: portal; Owner: -
---
 
 CREATE INDEX mailling_fila_envio_ref_cod_mailling_email_conteudo ON portal.mailling_fila_envio USING btree (ref_cod_mailling_email_conteudo);
 
 
---
--- TOC entry 6308 (class 1259 OID 9464763)
--- Name: mailling_fila_envio_ref_cod_mailling_fila_envio; Type: INDEX; Schema: portal; Owner: -
---
-
 CREATE INDEX mailling_fila_envio_ref_cod_mailling_fila_envio ON portal.mailling_fila_envio USING btree (cod_mailling_fila_envio);
 
-
---
--- TOC entry 6349 (class 1259 OID 9464764)
--- Name: pghero_query_stats_database_captured_at_idx; Type: INDEX; Schema: public; Owner: -
---
 
 CREATE INDEX pghero_query_stats_database_captured_at_idx ON public.pghero_query_stats USING btree (database, captured_at);
 
 
---
--- TOC entry 7211 (class 2620 OID 9464765)
--- Name: trg_aft_documento; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_documento AFTER INSERT OR UPDATE ON cadastro.documento FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_documento();
 
-
---
--- TOC entry 7212 (class 2620 OID 9464766)
--- Name: trg_aft_documento_historico_campo; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_documento_historico_campo AFTER INSERT OR UPDATE ON cadastro.documento FOR EACH ROW EXECUTE PROCEDURE consistenciacao.fcn_documento_historico_campo();
 
 
---
--- TOC entry 7213 (class 2620 OID 9464767)
--- Name: trg_aft_documento_provisorio; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_documento_provisorio AFTER INSERT OR UPDATE ON cadastro.documento FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_documento_provisorio();
 
-
---
--- TOC entry 7216 (class 2620 OID 9464768)
--- Name: trg_aft_endereco_externo_historico_campo; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_endereco_externo_historico_campo AFTER INSERT OR UPDATE ON cadastro.endereco_externo FOR EACH ROW EXECUTE PROCEDURE consistenciacao.fcn_endereco_externo_historico_campo();
 
 
---
--- TOC entry 7220 (class 2620 OID 9464769)
--- Name: trg_aft_endereco_pessoa_historico_campo; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_endereco_pessoa_historico_campo AFTER INSERT OR UPDATE ON cadastro.endereco_pessoa FOR EACH ROW EXECUTE PROCEDURE consistenciacao.fcn_endereco_pessoa_historico_campo();
 
-
---
--- TOC entry 7224 (class 2620 OID 9464770)
--- Name: trg_aft_fisica; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_fisica AFTER INSERT OR UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica();
 
 
---
--- TOC entry 7230 (class 2620 OID 9464771)
--- Name: trg_aft_fisica_cpf_provisorio; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_fisica_cpf_provisorio AFTER INSERT OR UPDATE ON cadastro.fisica_cpf FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica_cpf_provisorio();
 
-
---
--- TOC entry 7225 (class 2620 OID 9464772)
--- Name: trg_aft_fisica_historico_campo; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_fisica_historico_campo AFTER INSERT OR UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE consistenciacao.fcn_fisica_historico_campo();
 
 
---
--- TOC entry 7226 (class 2620 OID 9464773)
--- Name: trg_aft_fisica_provisorio; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_fisica_provisorio AFTER INSERT OR UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica_provisorio();
 
-
---
--- TOC entry 7233 (class 2620 OID 9464774)
--- Name: trg_aft_fone_historico_campo; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_fone_historico_campo AFTER INSERT OR UPDATE ON cadastro.fone_pessoa FOR EACH ROW EXECUTE PROCEDURE consistenciacao.fcn_fone_historico_campo();
 
 
---
--- TOC entry 7234 (class 2620 OID 9464775)
--- Name: trg_aft_fone_pessoa_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_fone_pessoa_historico AFTER DELETE ON cadastro.fone_pessoa FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_fone_pessoa();
 
-
---
--- TOC entry 7237 (class 2620 OID 9464776)
--- Name: trg_aft_funcionario_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_funcionario_historico AFTER DELETE ON cadastro.funcionario FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_funcionario();
 
 
---
--- TOC entry 7217 (class 2620 OID 9464777)
--- Name: trg_aft_ins_endereco_externo; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_ins_endereco_externo AFTER INSERT OR UPDATE ON cadastro.endereco_externo FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_externo();
 
-
---
--- TOC entry 7221 (class 2620 OID 9464778)
--- Name: trg_aft_ins_endereco_pessoa; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_ins_endereco_pessoa AFTER INSERT OR UPDATE ON cadastro.endereco_pessoa FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_pessoa();
 
 
---
--- TOC entry 7240 (class 2620 OID 9464779)
--- Name: trg_aft_juridica_historico_campo; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_juridica_historico_campo AFTER INSERT OR UPDATE ON cadastro.juridica FOR EACH ROW EXECUTE PROCEDURE consistenciacao.fcn_juridica_historico_campo();
 
-
---
--- TOC entry 7244 (class 2620 OID 9464780)
--- Name: trg_aft_pessoa_fonetiza; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_aft_pessoa_fonetiza AFTER INSERT OR UPDATE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE public.fcn_aft_pessoa_fonetiza();
 
 
---
--- TOC entry 7245 (class 2620 OID 9464781)
--- Name: trg_aft_pessoa_historico_campo; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_aft_pessoa_historico_campo AFTER INSERT OR UPDATE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE consistenciacao.fcn_pessoa_historico_campo();
 
-
---
--- TOC entry 7214 (class 2620 OID 9464782)
--- Name: trg_bef_documento_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_bef_documento_historico BEFORE UPDATE ON cadastro.documento FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_documento();
 
 
---
--- TOC entry 7218 (class 2620 OID 9464783)
--- Name: trg_bef_endereco_externo_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_bef_endereco_externo_historico BEFORE UPDATE ON cadastro.endereco_externo FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_endereco_externo();
 
-
---
--- TOC entry 7222 (class 2620 OID 9464784)
--- Name: trg_bef_endereco_pessoa_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_bef_endereco_pessoa_historico BEFORE UPDATE ON cadastro.endereco_pessoa FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_endereco_pessoa();
 
 
---
--- TOC entry 7231 (class 2620 OID 9464785)
--- Name: trg_bef_fisica_cpf_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_bef_fisica_cpf_historico BEFORE UPDATE ON cadastro.fisica_cpf FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_fisica_cpf();
 
-
---
--- TOC entry 7227 (class 2620 OID 9464786)
--- Name: trg_bef_fisica_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_bef_fisica_historico BEFORE UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_fisica();
 
 
---
--- TOC entry 7235 (class 2620 OID 9464787)
--- Name: trg_bef_fone_pessoa_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_bef_fone_pessoa_historico BEFORE UPDATE ON cadastro.fone_pessoa FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_fone_pessoa();
 
-
---
--- TOC entry 7238 (class 2620 OID 9464788)
--- Name: trg_bef_funcionario_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_bef_funcionario_historico BEFORE UPDATE ON cadastro.funcionario FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_funcionario();
 
 
---
--- TOC entry 7228 (class 2620 OID 9464789)
--- Name: trg_bef_ins_fisica; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_bef_ins_fisica BEFORE INSERT ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_ins_fisica();
 
-
---
--- TOC entry 7241 (class 2620 OID 9464790)
--- Name: trg_bef_ins_juridica; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_bef_ins_juridica BEFORE INSERT ON cadastro.juridica FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_ins_juridica();
 
 
---
--- TOC entry 7242 (class 2620 OID 9464791)
--- Name: trg_bef_juridica_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_bef_juridica_historico BEFORE UPDATE ON cadastro.juridica FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_juridica();
 
-
---
--- TOC entry 7246 (class 2620 OID 9464792)
--- Name: trg_bef_pessoa_fonetiza; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_bef_pessoa_fonetiza BEFORE DELETE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_pessoa_fonetiza();
 
 
---
--- TOC entry 7247 (class 2620 OID 9464793)
--- Name: trg_bef_pessoa_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_bef_pessoa_historico BEFORE UPDATE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_pessoa();
 
-
---
--- TOC entry 7249 (class 2620 OID 9464794)
--- Name: trg_bef_socio_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_bef_socio_historico BEFORE UPDATE ON cadastro.socio FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_socio();
 
 
---
--- TOC entry 7215 (class 2620 OID 9464795)
--- Name: trg_delete_documento_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_delete_documento_historico AFTER DELETE ON cadastro.documento FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_documento();
 
-
---
--- TOC entry 7219 (class 2620 OID 9464796)
--- Name: trg_delete_endereco_externo_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_delete_endereco_externo_historico AFTER DELETE ON cadastro.endereco_externo FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_endereco_externo();
 
 
---
--- TOC entry 7223 (class 2620 OID 9464797)
--- Name: trg_delete_endereco_pessoa_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_delete_endereco_pessoa_historico AFTER DELETE ON cadastro.endereco_pessoa FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_endereco_pessoa();
 
-
---
--- TOC entry 7232 (class 2620 OID 9464798)
--- Name: trg_delete_fisica_cpf_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_delete_fisica_cpf_historico AFTER DELETE ON cadastro.fisica_cpf FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_fisica_cpf();
 
 
---
--- TOC entry 7229 (class 2620 OID 9464799)
--- Name: trg_delete_fisica_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_delete_fisica_historico AFTER DELETE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_fisica();
 
-
---
--- TOC entry 7236 (class 2620 OID 9464800)
--- Name: trg_delete_fone_pessoa_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_delete_fone_pessoa_historico AFTER DELETE ON cadastro.fone_pessoa FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_fone_pessoa();
 
 
---
--- TOC entry 7239 (class 2620 OID 9464801)
--- Name: trg_delete_funcionario_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_delete_funcionario_historico AFTER DELETE ON cadastro.funcionario FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_funcionario();
 
-
---
--- TOC entry 7243 (class 2620 OID 9464802)
--- Name: trg_delete_juridica_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_delete_juridica_historico AFTER DELETE ON cadastro.juridica FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_juridica();
 
 
---
--- TOC entry 7248 (class 2620 OID 9464803)
--- Name: trg_delete_pessoa_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
-
 CREATE TRIGGER trg_delete_pessoa_historico AFTER DELETE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_pessoa();
 
-
---
--- TOC entry 7250 (class 2620 OID 9464804)
--- Name: trg_delete_socio_historico; Type: TRIGGER; Schema: cadastro; Owner: -
---
 
 CREATE TRIGGER trg_delete_socio_historico AFTER DELETE ON cadastro.socio FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_socio();
 
 
---
--- TOC entry 7260 (class 2620 OID 9474637)
--- Name: impede_duplicacao_falta_aluno; Type: TRIGGER; Schema: modules; Owner: -
---
-
 CREATE TRIGGER impede_duplicacao_falta_aluno BEFORE INSERT OR UPDATE ON modules.falta_aluno FOR EACH ROW EXECUTE PROCEDURE modules.impede_duplicacao_falta_aluno();
 
-
---
--- TOC entry 7264 (class 2620 OID 9474633)
--- Name: impede_duplicacao_nota_aluno; Type: TRIGGER; Schema: modules; Owner: -
---
 
 CREATE TRIGGER impede_duplicacao_nota_aluno BEFORE INSERT OR UPDATE ON modules.nota_aluno FOR EACH ROW EXECUTE PROCEDURE modules.impede_duplicacao_nota_aluno();
 
 
---
--- TOC entry 7269 (class 2620 OID 9474635)
--- Name: impede_duplicacao_parecer_aluno; Type: TRIGGER; Schema: modules; Owner: -
---
-
 CREATE TRIGGER impede_duplicacao_parecer_aluno BEFORE INSERT OR UPDATE ON modules.parecer_aluno FOR EACH ROW EXECUTE PROCEDURE modules.impede_duplicacao_parecer_aluno();
 
-
---
--- TOC entry 7261 (class 2620 OID 9474661)
--- Name: trigger_audita_falta_componente_curricular; Type: TRIGGER; Schema: modules; Owner: -
---
 
 CREATE TRIGGER trigger_audita_falta_componente_curricular AFTER INSERT OR DELETE OR UPDATE ON modules.falta_componente_curricular FOR EACH ROW EXECUTE PROCEDURE modules.audita_falta_componente_curricular();
 
 
---
--- TOC entry 7262 (class 2620 OID 9474659)
--- Name: trigger_audita_falta_geral; Type: TRIGGER; Schema: modules; Owner: -
---
-
 CREATE TRIGGER trigger_audita_falta_geral AFTER INSERT OR DELETE OR UPDATE ON modules.falta_geral FOR EACH ROW EXECUTE PROCEDURE modules.audita_falta_geral();
 
-
---
--- TOC entry 7263 (class 2620 OID 9474667)
--- Name: trigger_audita_media_geral; Type: TRIGGER; Schema: modules; Owner: -
---
 
 CREATE TRIGGER trigger_audita_media_geral AFTER INSERT OR DELETE OR UPDATE ON modules.media_geral FOR EACH ROW EXECUTE PROCEDURE modules.audita_media_geral();
 
 
---
--- TOC entry 7265 (class 2620 OID 9474651)
--- Name: trigger_audita_nota_componente_curricular; Type: TRIGGER; Schema: modules; Owner: -
---
-
 CREATE TRIGGER trigger_audita_nota_componente_curricular AFTER INSERT OR DELETE OR UPDATE ON modules.nota_componente_curricular FOR EACH ROW EXECUTE PROCEDURE modules.audita_nota_componente_curricular();
 
-
---
--- TOC entry 7266 (class 2620 OID 9474653)
--- Name: trigger_audita_nota_componente_curricular_media; Type: TRIGGER; Schema: modules; Owner: -
---
 
 CREATE TRIGGER trigger_audita_nota_componente_curricular_media AFTER INSERT OR DELETE OR UPDATE ON modules.nota_componente_curricular_media FOR EACH ROW EXECUTE PROCEDURE modules.audita_nota_componente_curricular_media();
 
 
---
--- TOC entry 7267 (class 2620 OID 9474649)
--- Name: trigger_audita_nota_exame; Type: TRIGGER; Schema: modules; Owner: -
---
-
 CREATE TRIGGER trigger_audita_nota_exame AFTER INSERT OR DELETE OR UPDATE ON modules.nota_exame FOR EACH ROW EXECUTE PROCEDURE modules.audita_nota_exame();
 
-
---
--- TOC entry 7268 (class 2620 OID 9474647)
--- Name: trigger_audita_nota_geral; Type: TRIGGER; Schema: modules; Owner: -
---
 
 CREATE TRIGGER trigger_audita_nota_geral AFTER INSERT OR DELETE OR UPDATE ON modules.nota_geral FOR EACH ROW EXECUTE PROCEDURE modules.audita_nota_geral();
 
 
---
--- TOC entry 7270 (class 2620 OID 9474657)
--- Name: trigger_audita_parecer_componente_curricular; Type: TRIGGER; Schema: modules; Owner: -
---
-
 CREATE TRIGGER trigger_audita_parecer_componente_curricular AFTER INSERT OR DELETE OR UPDATE ON modules.parecer_componente_curricular FOR EACH ROW EXECUTE PROCEDURE modules.audita_parecer_componente_curricular();
 
-
---
--- TOC entry 7271 (class 2620 OID 9474655)
--- Name: trigger_audita_parecer_geral; Type: TRIGGER; Schema: modules; Owner: -
---
 
 CREATE TRIGGER trigger_audita_parecer_geral AFTER INSERT OR DELETE OR UPDATE ON modules.parecer_geral FOR EACH ROW EXECUTE PROCEDURE modules.audita_parecer_geral();
 
 
---
--- TOC entry 7259 (class 2620 OID 9469011)
--- Name: update_componente_curricular_turma_updated_at; Type: TRIGGER; Schema: modules; Owner: -
---
-
 CREATE TRIGGER update_componente_curricular_turma_updated_at BEFORE UPDATE ON modules.componente_curricular_turma FOR EACH ROW EXECUTE PROCEDURE public.update_updated_at();
 
-
---
--- TOC entry 7324 (class 2620 OID 9464805)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.instituicao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7272 (class 2620 OID 9464806)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7273 (class 2620 OID 9464807)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo_acervo_assunto FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7274 (class 2620 OID 9464808)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo_acervo_autor FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7275 (class 2620 OID 9464809)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo_assunto FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7276 (class 2620 OID 9464810)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo_autor FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7277 (class 2620 OID 9464811)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo_colecao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7278 (class 2620 OID 9464812)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo_editora FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7279 (class 2620 OID 9464813)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.acervo_idioma FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7280 (class 2620 OID 9464814)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.aluno FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7281 (class 2620 OID 9464815)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.aluno_beneficio FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7282 (class 2620 OID 9464816)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.ano_letivo_modulo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7283 (class 2620 OID 9464817)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.avaliacao_desempenho FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7284 (class 2620 OID 9464818)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.biblioteca FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7285 (class 2620 OID 9464819)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.biblioteca_dia FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7286 (class 2620 OID 9464820)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.biblioteca_feriados FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7287 (class 2620 OID 9464821)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.biblioteca_usuario FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7288 (class 2620 OID 9464822)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.calendario_ano_letivo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7289 (class 2620 OID 9464823)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.calendario_anotacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7290 (class 2620 OID 9464824)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.calendario_dia FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7291 (class 2620 OID 9464825)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.calendario_dia_anotacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7292 (class 2620 OID 9464826)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.calendario_dia_motivo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7293 (class 2620 OID 9464827)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.cliente FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7294 (class 2620 OID 9464828)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.cliente_suspensao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7295 (class 2620 OID 9464829)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.cliente_tipo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7296 (class 2620 OID 9464830)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.cliente_tipo_cliente FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7297 (class 2620 OID 9464831)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.cliente_tipo_exemplar_tipo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7298 (class 2620 OID 9464832)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.coffebreak_tipo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7299 (class 2620 OID 9464833)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.curso FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7300 (class 2620 OID 9464834)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.disciplina FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7301 (class 2620 OID 9464835)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.disciplina_topico FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7302 (class 2620 OID 9464836)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.escola FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7303 (class 2620 OID 9464837)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.escola_ano_letivo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7304 (class 2620 OID 9464838)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.escola_complemento FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7305 (class 2620 OID 9464839)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.escola_curso FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7306 (class 2620 OID 9464840)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.escola_localizacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7307 (class 2620 OID 9464841)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.escola_rede_ensino FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7308 (class 2620 OID 9464842)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.escola_serie FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7310 (class 2620 OID 9464843)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.exemplar FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7311 (class 2620 OID 9464844)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.exemplar_emprestimo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7312 (class 2620 OID 9464845)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.exemplar_tipo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7313 (class 2620 OID 9464846)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.falta_atraso FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7314 (class 2620 OID 9464847)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.falta_atraso_compensado FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7315 (class 2620 OID 9464848)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.fonte FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7316 (class 2620 OID 9464849)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.funcao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7317 (class 2620 OID 9464850)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.habilitacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7318 (class 2620 OID 9464851)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.habilitacao_curso FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7319 (class 2620 OID 9464852)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.historico_disciplinas FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7320 (class 2620 OID 9464853)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.historico_escolar FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7321 (class 2620 OID 9464854)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.infra_comodo_funcao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7322 (class 2620 OID 9464855)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.infra_predio FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7323 (class 2620 OID 9464856)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.infra_predio_comodo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7325 (class 2620 OID 9464857)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.material_didatico FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7326 (class 2620 OID 9464858)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.material_tipo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7327 (class 2620 OID 9464859)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.matricula FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7331 (class 2620 OID 9464860)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.matricula_ocorrencia_disciplinar FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7334 (class 2620 OID 9464861)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.menu_tipo_usuario FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7335 (class 2620 OID 9464862)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.modulo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7336 (class 2620 OID 9464863)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.motivo_afastamento FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7337 (class 2620 OID 9464864)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.motivo_baixa FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7338 (class 2620 OID 9464865)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.motivo_suspensao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7339 (class 2620 OID 9464866)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.nivel_ensino FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7340 (class 2620 OID 9464867)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.operador FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7341 (class 2620 OID 9464868)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.pagamento_multa FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7342 (class 2620 OID 9464869)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.pre_requisito FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7343 (class 2620 OID 9464870)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.quadro_horario FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7344 (class 2620 OID 9464871)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.religiao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7345 (class 2620 OID 9464872)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.reserva_vaga FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7346 (class 2620 OID 9464873)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.reservas FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7347 (class 2620 OID 9464874)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.sequencia_serie FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7348 (class 2620 OID 9464875)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.serie FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7349 (class 2620 OID 9464876)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.serie_pre_requisito FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7350 (class 2620 OID 9464877)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.servidor FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7351 (class 2620 OID 9464878)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.servidor_afastamento FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7352 (class 2620 OID 9464879)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.servidor_alocacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7353 (class 2620 OID 9464880)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.servidor_curso FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7354 (class 2620 OID 9464881)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.servidor_formacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7355 (class 2620 OID 9464882)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.servidor_titulo_concurso FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7356 (class 2620 OID 9464883)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.situacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7357 (class 2620 OID 9464884)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.tipo_avaliacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7358 (class 2620 OID 9464885)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.tipo_avaliacao_valores FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7359 (class 2620 OID 9464886)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.tipo_dispensa FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7360 (class 2620 OID 9464887)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.tipo_ensino FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7361 (class 2620 OID 9464888)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.tipo_ocorrencia_disciplinar FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7362 (class 2620 OID 9464889)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.tipo_regime FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7363 (class 2620 OID 9464890)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.tipo_usuario FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7364 (class 2620 OID 9464891)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.transferencia_solicitacao FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7365 (class 2620 OID 9464892)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.transferencia_tipo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7366 (class 2620 OID 9464893)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.turma FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7367 (class 2620 OID 9464895)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.turma_modulo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7368 (class 2620 OID 9464896)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.turma_tipo FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
 
---
--- TOC entry 7369 (class 2620 OID 9464897)
--- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER fcn_aft_update AFTER INSERT OR UPDATE ON pmieducar.usuario FOR EACH ROW EXECUTE PROCEDURE pmieducar.fcn_aft_update();
 
-
---
--- TOC entry 7328 (class 2620 OID 9464898)
--- Name: retira_data_cancel_matricula_trg; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER retira_data_cancel_matricula_trg AFTER UPDATE ON pmieducar.matricula FOR EACH ROW EXECUTE PROCEDURE public.retira_data_cancel_matricula_fun();
 
 
---
--- TOC entry 7330 (class 2620 OID 9474663)
--- Name: trigger_audita_matricula; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER trigger_audita_matricula AFTER INSERT OR DELETE OR UPDATE ON pmieducar.matricula FOR EACH ROW EXECUTE PROCEDURE pmieducar.audita_matricula();
 
-
---
--- TOC entry 7332 (class 2620 OID 9474665)
--- Name: trigger_audita_matricula_turma; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER trigger_audita_matricula_turma AFTER INSERT OR DELETE OR UPDATE ON pmieducar.matricula_turma FOR EACH ROW EXECUTE PROCEDURE pmieducar.audita_matricula_turma();
 
 
---
--- TOC entry 7329 (class 2620 OID 9464899)
--- Name: trigger_updated_at_matricula; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER trigger_updated_at_matricula BEFORE UPDATE ON pmieducar.matricula FOR EACH ROW EXECUTE PROCEDURE pmieducar.updated_at_matricula();
 
-
---
--- TOC entry 7333 (class 2620 OID 9464900)
--- Name: trigger_updated_at_matricula_turma; Type: TRIGGER; Schema: pmieducar; Owner: -
---
 
 CREATE TRIGGER trigger_updated_at_matricula_turma BEFORE UPDATE ON pmieducar.matricula_turma FOR EACH ROW EXECUTE PROCEDURE pmieducar.updated_at_matricula_turma();
 
 
---
--- TOC entry 7309 (class 2620 OID 9469010)
--- Name: update_escola_serie_disciplina_updated_at; Type: TRIGGER; Schema: pmieducar; Owner: -
---
-
 CREATE TRIGGER update_escola_serie_disciplina_updated_at BEFORE UPDATE ON pmieducar.escola_serie_disciplina FOR EACH ROW EXECUTE PROCEDURE public.update_updated_at();
 
-
---
--- TOC entry 7253 (class 2620 OID 9464901)
--- Name: trg_aft_logradouro_fonetiza; Type: TRIGGER; Schema: public; Owner: -
---
 
 CREATE TRIGGER trg_aft_logradouro_fonetiza AFTER INSERT OR UPDATE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE public.fcn_aft_logradouro_fonetiza();
 
 
---
--- TOC entry 7251 (class 2620 OID 9464902)
--- Name: trg_bef_bairro_historico; Type: TRIGGER; Schema: public; Owner: -
---
-
 CREATE TRIGGER trg_bef_bairro_historico BEFORE UPDATE ON public.bairro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_bairro();
 
-
---
--- TOC entry 7254 (class 2620 OID 9464903)
--- Name: trg_bef_logradouro_fonetiza; Type: TRIGGER; Schema: public; Owner: -
---
 
 CREATE TRIGGER trg_bef_logradouro_fonetiza BEFORE DELETE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_logradouro_fonetiza();
 
 
---
--- TOC entry 7255 (class 2620 OID 9464904)
--- Name: trg_bef_logradouro_historico; Type: TRIGGER; Schema: public; Owner: -
---
-
 CREATE TRIGGER trg_bef_logradouro_historico BEFORE UPDATE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_logradouro();
 
-
---
--- TOC entry 7257 (class 2620 OID 9464905)
--- Name: trg_bef_municipio_historico; Type: TRIGGER; Schema: public; Owner: -
---
 
 CREATE TRIGGER trg_bef_municipio_historico BEFORE UPDATE ON public.municipio FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_municipio();
 
 
---
--- TOC entry 7252 (class 2620 OID 9464906)
--- Name: trg_delete_bairro_historico; Type: TRIGGER; Schema: public; Owner: -
---
-
 CREATE TRIGGER trg_delete_bairro_historico AFTER DELETE ON public.bairro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_bairro();
 
-
---
--- TOC entry 7256 (class 2620 OID 9464907)
--- Name: trg_delete_logradouro_historico; Type: TRIGGER; Schema: public; Owner: -
---
 
 CREATE TRIGGER trg_delete_logradouro_historico AFTER DELETE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_logradouro();
 
 
---
--- TOC entry 7258 (class 2620 OID 9464908)
--- Name: trg_delete_municipio_historico; Type: TRIGGER; Schema: public; Owner: -
---
-
 CREATE TRIGGER trg_delete_municipio_historico AFTER DELETE ON public.municipio FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_municipio();
 
-
---
--- TOC entry 7372 (class 2620 OID 9464909)
--- Name: trg_bef_cep_logradouro_bairro_historico; Type: TRIGGER; Schema: urbano; Owner: -
---
 
 CREATE TRIGGER trg_bef_cep_logradouro_bairro_historico BEFORE UPDATE ON urbano.cep_logradouro_bairro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_cep_logradouro_bairro();
 
 
---
--- TOC entry 7370 (class 2620 OID 9464910)
--- Name: trg_bef_cep_logradouro_historico; Type: TRIGGER; Schema: urbano; Owner: -
---
-
 CREATE TRIGGER trg_bef_cep_logradouro_historico BEFORE UPDATE ON urbano.cep_logradouro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_grava_historico_cep_logradouro();
 
-
---
--- TOC entry 7373 (class 2620 OID 9464911)
--- Name: trg_delete_cep_logradouro_bairro_historico; Type: TRIGGER; Schema: urbano; Owner: -
---
 
 CREATE TRIGGER trg_delete_cep_logradouro_bairro_historico AFTER DELETE ON urbano.cep_logradouro_bairro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_cep_logradouro_bairro();
 
 
---
--- TOC entry 7371 (class 2620 OID 9464912)
--- Name: trg_delete_cep_logradouro_historico; Type: TRIGGER; Schema: urbano; Owner: -
---
-
 CREATE TRIGGER trg_delete_cep_logradouro_historico AFTER DELETE ON urbano.cep_logradouro FOR EACH ROW EXECUTE PROCEDURE historico.fcn_delete_grava_historico_cep_logradouro();
 
-
---
--- TOC entry 6396 (class 2606 OID 9464913)
--- Name: fk_funcao_grp_funcao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.grupo_funcao
     ADD CONSTRAINT fk_funcao_grp_funcao FOREIGN KEY (idfunc, idsis, idmen) REFERENCES acesso.funcao(idfunc, idsis, idmen);
 
 
---
--- TOC entry 6407 (class 2606 OID 9464918)
--- Name: fk_funcao_operacao_funcao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.operacao_funcao
     ADD CONSTRAINT fk_funcao_operacao_funcao FOREIGN KEY (idfunc, idsis, idmen) REFERENCES acesso.funcao(idfunc, idsis, idmen);
 
-
---
--- TOC entry 6400 (class 2606 OID 9464923)
--- Name: fk_grp_fun_grp_operacao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.grupo_operacao
     ADD CONSTRAINT fk_grp_fun_grp_operacao FOREIGN KEY (idmen, idsis, idgrp, idfunc) REFERENCES acesso.grupo_funcao(idmen, idsis, idgrp, idfunc);
 
 
---
--- TOC entry 6395 (class 2606 OID 9464928)
--- Name: fk_grp_menu_grp_funcao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo_funcao
     ADD CONSTRAINT fk_grp_menu_grp_funcao FOREIGN KEY (idgrp, idsis, idmen) REFERENCES acesso.grupo_menu(idgrp, idsis, idmen);
 
-
---
--- TOC entry 6398 (class 2606 OID 9464933)
--- Name: fk_grp_sis_grp_menu; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.grupo_menu
     ADD CONSTRAINT fk_grp_sis_grp_menu FOREIGN KEY (idsis, idgrp) REFERENCES acesso.grupo_sistema(idsis, idgrp);
 
 
---
--- TOC entry 6402 (class 2606 OID 9464938)
--- Name: fk_grupo_grupo_sistema; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo_sistema
     ADD CONSTRAINT fk_grupo_grupo_sistema FOREIGN KEY (idgrp) REFERENCES acesso.grupo(idgrp);
 
-
---
--- TOC entry 6412 (class 2606 OID 9464943)
--- Name: fk_grupo_usuario_grupo; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.usuario_grupo
     ADD CONSTRAINT fk_grupo_usuario_grupo FOREIGN KEY (idgrp) REFERENCES acesso.grupo(idgrp);
 
 
---
--- TOC entry 6409 (class 2606 OID 9464948)
--- Name: fk_inst_pessoa_instituicao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.pessoa_instituicao
     ADD CONSTRAINT fk_inst_pessoa_instituicao FOREIGN KEY (idins) REFERENCES acesso.instituicao(idins);
 
-
---
--- TOC entry 6394 (class 2606 OID 9464953)
--- Name: fk_menu_funcao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.funcao
     ADD CONSTRAINT fk_menu_funcao FOREIGN KEY (idmen, idsis) REFERENCES acesso.menu(idmen, idsis);
 
 
---
--- TOC entry 6397 (class 2606 OID 9464958)
--- Name: fk_menu_grp_menu; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo_menu
     ADD CONSTRAINT fk_menu_grp_menu FOREIGN KEY (idmen, idsis) REFERENCES acesso.menu(idmen, idsis);
 
-
---
--- TOC entry 6404 (class 2606 OID 9464963)
--- Name: fk_menu_menu; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.menu
     ADD CONSTRAINT fk_menu_menu FOREIGN KEY (menu_idsis, menu_idmen) REFERENCES acesso.menu(idsis, idmen);
 
 
---
--- TOC entry 6399 (class 2606 OID 9464968)
--- Name: fk_oper_func_grp_oper; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo_operacao
     ADD CONSTRAINT fk_oper_func_grp_oper FOREIGN KEY (idmen, idsis, idfunc, idope) REFERENCES acesso.operacao_funcao(idmen, idsis, idfunc, idope);
 
-
---
--- TOC entry 6406 (class 2606 OID 9464973)
--- Name: fk_operacao_operacao_funcao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.operacao_funcao
     ADD CONSTRAINT fk_operacao_operacao_funcao FOREIGN KEY (idope) REFERENCES acesso.operacao(idope);
 
 
---
--- TOC entry 6408 (class 2606 OID 9464978)
--- Name: fk_pes_pessoa_instituicao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.pessoa_instituicao
     ADD CONSTRAINT fk_pes_pessoa_instituicao FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
-
---
--- TOC entry 6410 (class 2606 OID 9464983)
--- Name: fk_pessoa_usuario; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.usuario
     ADD CONSTRAINT fk_pessoa_usuario FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6401 (class 2606 OID 9464988)
--- Name: fk_sistema_grupo_sistema; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.grupo_sistema
     ADD CONSTRAINT fk_sistema_grupo_sistema FOREIGN KEY (idsis) REFERENCES acesso.sistema(idsis);
 
-
---
--- TOC entry 6403 (class 2606 OID 9464993)
--- Name: fk_sistema_menu; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.menu
     ADD CONSTRAINT fk_sistema_menu FOREIGN KEY (idsis) REFERENCES acesso.sistema(idsis);
 
 
---
--- TOC entry 6405 (class 2606 OID 9464998)
--- Name: fk_sistema_operacao; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
-
 ALTER TABLE ONLY acesso.operacao
     ADD CONSTRAINT fk_sistema_operacao FOREIGN KEY (idsis) REFERENCES acesso.sistema(idsis);
 
-
---
--- TOC entry 6411 (class 2606 OID 9465003)
--- Name: fk_usuario_usuario_grupo; Type: FK CONSTRAINT; Schema: acesso; Owner: -
---
 
 ALTER TABLE ONLY acesso.usuario_grupo
     ADD CONSTRAINT fk_usuario_usuario_grupo FOREIGN KEY (login) REFERENCES acesso.usuario(login);
 
 
---
--- TOC entry 6422 (class 2606 OID 9465008)
--- Name: fk_alterar_usuario_cardapio; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.cardapio
     ADD CONSTRAINT fk_alterar_usuario_cardapio FOREIGN KEY (login_alteracao) REFERENCES acesso.usuario(login);
 
-
---
--- TOC entry 6415 (class 2606 OID 9465013)
--- Name: fk_baixa_guia_baixa_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.baixa_guia_produto
     ADD CONSTRAINT fk_baixa_guia_baixa_produto FOREIGN KEY (idbai) REFERENCES alimentos.baixa_guia_remessa(idbai);
 
 
---
--- TOC entry 6437 (class 2606 OID 9465018)
--- Name: fk_calendario_evento; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.evento
     ADD CONSTRAINT fk_calendario_evento FOREIGN KEY (idcad) REFERENCES alimentos.calendario(idcad);
 
-
---
--- TOC entry 6482 (class 2606 OID 9465023)
--- Name: fk_calendario_unidade; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.unidade_atendida
     ADD CONSTRAINT fk_calendario_unidade FOREIGN KEY (idcad) REFERENCES alimentos.calendario(idcad);
 
 
---
--- TOC entry 6454 (class 2606 OID 9465028)
--- Name: fk_cancelar_usuario_guia_remessa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.guia_remessa
     ADD CONSTRAINT fk_cancelar_usuario_guia_remessa FOREIGN KEY (login_cancelamento) REFERENCES acesso.usuario(login);
 
-
---
--- TOC entry 6424 (class 2606 OID 9465033)
--- Name: fk_cardapio_cardapio_faixa_unidade; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cardapio_faixa_unidade
     ADD CONSTRAINT fk_cardapio_cardapio_faixa_unidade FOREIGN KEY (idcar) REFERENCES alimentos.cardapio(idcar);
 
 
---
--- TOC entry 6426 (class 2606 OID 9465038)
--- Name: fk_cardapio_cardapio_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.cardapio_produto
     ADD CONSTRAINT fk_cardapio_cardapio_produto FOREIGN KEY (idcar) REFERENCES alimentos.cardapio(idcar);
 
-
---
--- TOC entry 6428 (class 2606 OID 9465043)
--- Name: fk_cardapio_cardapio_receita; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cardapio_receita
     ADD CONSTRAINT fk_cardapio_cardapio_receita FOREIGN KEY (idcar) REFERENCES alimentos.cardapio(idcar);
 
 
---
--- TOC entry 6418 (class 2606 OID 9465048)
--- Name: fk_cliente_calendario; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.calendario
     ADD CONSTRAINT fk_cliente_calendario FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6421 (class 2606 OID 9465053)
--- Name: fk_cliente_cardapio; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cardapio
     ADD CONSTRAINT fk_cliente_cardapio FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6434 (class 2606 OID 9465058)
--- Name: fk_cliente_contrato; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.contrato
     ADD CONSTRAINT fk_cliente_contrato FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6431 (class 2606 OID 9465063)
--- Name: fk_cliente_cpquimico; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.composto_quimico
     ADD CONSTRAINT fk_cliente_cpquimico FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6442 (class 2606 OID 9465068)
--- Name: fk_cliente_fornecedor; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.fornecedor
     ADD CONSTRAINT fk_cliente_fornecedor FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6440 (class 2606 OID 9465073)
--- Name: fk_cliente_grpatencao; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.faixa_etaria
     ADD CONSTRAINT fk_cliente_grpatencao FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6445 (class 2606 OID 9465078)
--- Name: fk_cliente_grpquimico; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.grupo_quimico
     ADD CONSTRAINT fk_cliente_grpquimico FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6453 (class 2606 OID 9465083)
--- Name: fk_cliente_guia_remessa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.guia_remessa
     ADD CONSTRAINT fk_cliente_guia_remessa FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6458 (class 2606 OID 9465088)
--- Name: fk_cliente_log_guia; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.log_guia_remessa
     ADD CONSTRAINT fk_cliente_log_guia FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6471 (class 2606 OID 9465093)
--- Name: fk_cliente_receita; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.receita
     ADD CONSTRAINT fk_cliente_receita FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6476 (class 2606 OID 9465098)
--- Name: fk_cliente_tpproduto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.tipo_produto
     ADD CONSTRAINT fk_cliente_tpproduto FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6477 (class 2606 OID 9465103)
--- Name: fk_cliente_tprefeicao; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.tipo_refeicao
     ADD CONSTRAINT fk_cliente_tprefeicao FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6478 (class 2606 OID 9465108)
--- Name: fk_cliente_tpunidade; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.tipo_unidade
     ADD CONSTRAINT fk_cliente_tpunidade FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6481 (class 2606 OID 9465113)
--- Name: fk_cliente_unidade; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.unidade_atendida
     ADD CONSTRAINT fk_cliente_unidade FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6485 (class 2606 OID 9465118)
--- Name: fk_cliente_uniproduto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.unidade_produto
     ADD CONSTRAINT fk_cliente_uniproduto FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6436 (class 2606 OID 9465123)
--- Name: fk_contrato_contrato_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.contrato_produto
     ADD CONSTRAINT fk_contrato_contrato_produto FOREIGN KEY (idcon) REFERENCES alimentos.contrato(idcon);
 
 
---
--- TOC entry 6452 (class 2606 OID 9465128)
--- Name: fk_contrato_guia_remessa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.guia_remessa
     ADD CONSTRAINT fk_contrato_guia_remessa FOREIGN KEY (idcon) REFERENCES alimentos.contrato(idcon);
 
-
---
--- TOC entry 6439 (class 2606 OID 9465133)
--- Name: fk_cp_quimico_faixa_cp_quimico; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.faixa_composto_quimico
     ADD CONSTRAINT fk_cp_quimico_faixa_cp_quimico FOREIGN KEY (idcom) REFERENCES alimentos.composto_quimico(idcom);
 
 
---
--- TOC entry 6451 (class 2606 OID 9465138)
--- Name: fk_emitir_usuario_guia_remessa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.guia_remessa
     ADD CONSTRAINT fk_emitir_usuario_guia_remessa FOREIGN KEY (login_emissao) REFERENCES acesso.usuario(login);
 
-
---
--- TOC entry 6484 (class 2606 OID 9465143)
--- Name: fk_faixa_etaria_unidade_faixa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.unidade_faixa_etaria
     ADD CONSTRAINT fk_faixa_etaria_unidade_faixa FOREIGN KEY (idfae) REFERENCES alimentos.faixa_etaria(idfae);
 
 
---
--- TOC entry 6438 (class 2606 OID 9465148)
--- Name: fk_faixa_faixa_cp_quimico; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.faixa_composto_quimico
     ADD CONSTRAINT fk_faixa_faixa_cp_quimico FOREIGN KEY (idfae) REFERENCES alimentos.faixa_etaria(idfae);
 
-
---
--- TOC entry 6423 (class 2606 OID 9465153)
--- Name: fk_faixa_uni_cardapio_faixa_unidade; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cardapio_faixa_unidade
     ADD CONSTRAINT fk_faixa_uni_cardapio_faixa_unidade FOREIGN KEY (idfeu) REFERENCES alimentos.unidade_faixa_etaria(idfeu);
 
 
---
--- TOC entry 6433 (class 2606 OID 9465158)
--- Name: fk_fornecedor_contrato; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.contrato
     ADD CONSTRAINT fk_fornecedor_contrato FOREIGN KEY (idfor) REFERENCES alimentos.fornecedor(idfor);
 
-
---
--- TOC entry 6450 (class 2606 OID 9465163)
--- Name: fk_fornecedor_guia_remessa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.guia_remessa
     ADD CONSTRAINT fk_fornecedor_guia_remessa FOREIGN KEY (idfor) REFERENCES alimentos.fornecedor(idfor);
 
 
---
--- TOC entry 6467 (class 2606 OID 9465168)
--- Name: fk_fornecedor_produto_fornecedor; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.produto_fornecedor
     ADD CONSTRAINT fk_fornecedor_produto_fornecedor FOREIGN KEY (idfor) REFERENCES alimentos.fornecedor(idfor);
 
-
---
--- TOC entry 6444 (class 2606 OID 9465173)
--- Name: fk_fornecedor_unidade; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.fornecedor_unidade_atendida
     ADD CONSTRAINT fk_fornecedor_unidade FOREIGN KEY (idfor) REFERENCES alimentos.fornecedor(idfor);
 
 
---
--- TOC entry 6430 (class 2606 OID 9465178)
--- Name: fk_grupo_cp_quimico_cp_quimico; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.composto_quimico
     ADD CONSTRAINT fk_grupo_cp_quimico_cp_quimico FOREIGN KEY (idgrpq) REFERENCES alimentos.grupo_quimico(idgrpq);
 
-
---
--- TOC entry 6456 (class 2606 OID 9465183)
--- Name: fk_guia_guia_remessa_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.guia_remessa_produto
     ADD CONSTRAINT fk_guia_guia_remessa_produto FOREIGN KEY (idgui) REFERENCES alimentos.guia_remessa(idgui);
 
 
---
--- TOC entry 6414 (class 2606 OID 9465188)
--- Name: fk_guia_produto_baixa_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.baixa_guia_produto
     ADD CONSTRAINT fk_guia_produto_baixa_produto FOREIGN KEY (idgup) REFERENCES alimentos.guia_remessa_produto(idgup);
 
-
---
--- TOC entry 6417 (class 2606 OID 9465193)
--- Name: fk_guia_remessa_baixa_guia; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.baixa_guia_remessa
     ADD CONSTRAINT fk_guia_remessa_baixa_guia FOREIGN KEY (idgui) REFERENCES alimentos.guia_remessa(idgui);
 
 
---
--- TOC entry 6448 (class 2606 OID 9465198)
--- Name: fk_guia_remessa_guia_pro_diario; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.guia_produto_diario
     ADD CONSTRAINT fk_guia_remessa_guia_pro_diario FOREIGN KEY (idgui) REFERENCES alimentos.guia_remessa(idgui);
 
-
---
--- TOC entry 6420 (class 2606 OID 9465203)
--- Name: fk_incluir_usuario_cardapio; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cardapio
     ADD CONSTRAINT fk_incluir_usuario_cardapio FOREIGN KEY (login_inclusao) REFERENCES acesso.usuario(login);
 
 
---
--- TOC entry 6459 (class 2606 OID 9465208)
--- Name: fk_medidas_caseiras_cliente; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.medidas_caseiras
     ADD CONSTRAINT fk_medidas_caseiras_cliente FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6429 (class 2606 OID 9465213)
--- Name: fk_pessoa_cliente; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.cliente
     ADD CONSTRAINT fk_pessoa_cliente FOREIGN KEY (idpes) REFERENCES alimentos.pessoa(idpes);
 
 
---
--- TOC entry 6441 (class 2606 OID 9465218)
--- Name: fk_pessoa_fornecedor; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.fornecedor
     ADD CONSTRAINT fk_pessoa_fornecedor FOREIGN KEY (idpes) REFERENCES alimentos.pessoa(idpes);
 
-
---
--- TOC entry 6480 (class 2606 OID 9465223)
--- Name: fk_pessoa_unidade_atend; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.unidade_atendida
     ADD CONSTRAINT fk_pessoa_unidade_atend FOREIGN KEY (idpes) REFERENCES alimentos.pessoa(idpes);
 
 
---
--- TOC entry 6465 (class 2606 OID 9465228)
--- Name: fk_prod_cp_quimico_cp_quimico; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.produto_composto_quimico
     ADD CONSTRAINT fk_prod_cp_quimico_cp_quimico FOREIGN KEY (idcom) REFERENCES alimentos.composto_quimico(idcom);
 
-
---
--- TOC entry 6464 (class 2606 OID 9465233)
--- Name: fk_prod_cp_quimico_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto_composto_quimico
     ADD CONSTRAINT fk_prod_cp_quimico_produto FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
 
---
--- TOC entry 6425 (class 2606 OID 9465238)
--- Name: fk_produto_cardapio_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.cardapio_produto
     ADD CONSTRAINT fk_produto_cardapio_produto FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
-
---
--- TOC entry 6463 (class 2606 OID 9465243)
--- Name: fk_produto_cliente; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto
     ADD CONSTRAINT fk_produto_cliente FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
 
---
--- TOC entry 6435 (class 2606 OID 9465248)
--- Name: fk_produto_contrato_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.contrato_produto
     ADD CONSTRAINT fk_produto_contrato_produto FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
-
---
--- TOC entry 6462 (class 2606 OID 9465253)
--- Name: fk_produto_fornecedor; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto
     ADD CONSTRAINT fk_produto_fornecedor FOREIGN KEY (idfor) REFERENCES alimentos.fornecedor(idfor);
 
 
---
--- TOC entry 6447 (class 2606 OID 9465258)
--- Name: fk_produto_guia_pro_diario; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.guia_produto_diario
     ADD CONSTRAINT fk_produto_guia_pro_diario FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
-
---
--- TOC entry 6455 (class 2606 OID 9465263)
--- Name: fk_produto_guia_remessa_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.guia_remessa_produto
     ADD CONSTRAINT fk_produto_guia_remessa_produto FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
 
---
--- TOC entry 6470 (class 2606 OID 9465268)
--- Name: fk_produto_medida_caseira_cliente; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.produto_medida_caseira
     ADD CONSTRAINT fk_produto_medida_caseira_cliente FOREIGN KEY (idcli) REFERENCES alimentos.cliente(idcli);
 
-
---
--- TOC entry 6469 (class 2606 OID 9465273)
--- Name: fk_produto_medida_caseira_medidas; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto_medida_caseira
     ADD CONSTRAINT fk_produto_medida_caseira_medidas FOREIGN KEY (idmedcas, idcli) REFERENCES alimentos.medidas_caseiras(idmedcas, idcli);
 
 
---
--- TOC entry 6468 (class 2606 OID 9465278)
--- Name: fk_produto_medida_caseira_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.produto_medida_caseira
     ADD CONSTRAINT fk_produto_medida_caseira_produto FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
-
---
--- TOC entry 6466 (class 2606 OID 9465283)
--- Name: fk_produto_produto_fornecedor; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto_fornecedor
     ADD CONSTRAINT fk_produto_produto_fornecedor FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
 
---
--- TOC entry 6461 (class 2606 OID 9465288)
--- Name: fk_produto_tipo; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.produto
     ADD CONSTRAINT fk_produto_tipo FOREIGN KEY (idtip) REFERENCES alimentos.tipo_produto(idtip);
 
-
---
--- TOC entry 6460 (class 2606 OID 9465293)
--- Name: fk_produto_unidade; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.produto
     ADD CONSTRAINT fk_produto_unidade FOREIGN KEY (idunp, idcli) REFERENCES alimentos.unidade_produto(idunp, idcli);
 
 
---
--- TOC entry 6473 (class 2606 OID 9465298)
--- Name: fk_rec_cp_quimico_cp_quimico; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.receita_composto_quimico
     ADD CONSTRAINT fk_rec_cp_quimico_cp_quimico FOREIGN KEY (idcom) REFERENCES alimentos.composto_quimico(idcom);
 
-
---
--- TOC entry 6472 (class 2606 OID 9465303)
--- Name: fk_rec_cp_quimico_receita; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.receita_composto_quimico
     ADD CONSTRAINT fk_rec_cp_quimico_receita FOREIGN KEY (idrec) REFERENCES alimentos.receita(idrec);
 
 
---
--- TOC entry 6475 (class 2606 OID 9465308)
--- Name: fk_rec_prod_produto; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.receita_produto
     ADD CONSTRAINT fk_rec_prod_produto FOREIGN KEY (idpro) REFERENCES alimentos.produto(idpro);
 
-
---
--- TOC entry 6474 (class 2606 OID 9465313)
--- Name: fk_rec_prod_receita; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.receita_produto
     ADD CONSTRAINT fk_rec_prod_receita FOREIGN KEY (idrec) REFERENCES alimentos.receita(idrec);
 
 
---
--- TOC entry 6427 (class 2606 OID 9465318)
--- Name: fk_receita_cardapio_receita; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.cardapio_receita
     ADD CONSTRAINT fk_receita_cardapio_receita FOREIGN KEY (idrec) REFERENCES alimentos.receita(idrec);
 
-
---
--- TOC entry 6479 (class 2606 OID 9465323)
--- Name: fk_tipo_uni_uni_atendida; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.unidade_atendida
     ADD CONSTRAINT fk_tipo_uni_uni_atendida FOREIGN KEY (idtip) REFERENCES alimentos.tipo_unidade(idtip);
 
 
---
--- TOC entry 6419 (class 2606 OID 9465328)
--- Name: fk_tp_refeicao_cardapio; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.cardapio
     ADD CONSTRAINT fk_tp_refeicao_cardapio FOREIGN KEY (idtre) REFERENCES alimentos.tipo_refeicao(idtre);
 
-
---
--- TOC entry 6449 (class 2606 OID 9465333)
--- Name: fk_uni_atend_guia_remessa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.guia_remessa
     ADD CONSTRAINT fk_uni_atend_guia_remessa FOREIGN KEY (iduni) REFERENCES alimentos.unidade_atendida(iduni);
 
 
---
--- TOC entry 6483 (class 2606 OID 9465338)
--- Name: fk_uni_atend_uni_faixa_eta; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.unidade_faixa_etaria
     ADD CONSTRAINT fk_uni_atend_uni_faixa_eta FOREIGN KEY (iduni) REFERENCES alimentos.unidade_atendida(iduni);
 
-
---
--- TOC entry 6446 (class 2606 OID 9465343)
--- Name: fk_unidade_atendida_guia_pro_diario; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.guia_produto_diario
     ADD CONSTRAINT fk_unidade_atendida_guia_pro_diario FOREIGN KEY (iduni) REFERENCES alimentos.unidade_atendida(iduni);
 
 
---
--- TOC entry 6443 (class 2606 OID 9465348)
--- Name: fk_unidade_fornecedor; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.fornecedor_unidade_atendida
     ADD CONSTRAINT fk_unidade_fornecedor FOREIGN KEY (iduni) REFERENCES alimentos.unidade_atendida(iduni);
 
-
---
--- TOC entry 6413 (class 2606 OID 9465353)
--- Name: fk_usuario_baixa_guia; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.baixa_guia_produto
     ADD CONSTRAINT fk_usuario_baixa_guia FOREIGN KEY (login_baixa) REFERENCES acesso.usuario(login);
 
 
---
--- TOC entry 6416 (class 2606 OID 9465358)
--- Name: fk_usuario_baixa_guia_remessa; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.baixa_guia_remessa
     ADD CONSTRAINT fk_usuario_baixa_guia_remessa FOREIGN KEY (login_baixa) REFERENCES acesso.usuario(login);
 
-
---
--- TOC entry 6432 (class 2606 OID 9465363)
--- Name: fk_usuario_contrato; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
 
 ALTER TABLE ONLY alimentos.contrato
     ADD CONSTRAINT fk_usuario_contrato FOREIGN KEY (login) REFERENCES acesso.usuario(login);
 
 
---
--- TOC entry 6457 (class 2606 OID 9465368)
--- Name: fk_usuario_log_guia; Type: FK CONSTRAINT; Schema: alimentos; Owner: -
---
-
 ALTER TABLE ONLY alimentos.log_guia_remessa
     ADD CONSTRAINT fk_usuario_log_guia FOREIGN KEY (login) REFERENCES acesso.usuario(login);
 
-
---
--- TOC entry 6496 (class 2606 OID 9474453)
--- Name: cartorio_cert_civil_inep_fk; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT cartorio_cert_civil_inep_fk FOREIGN KEY (cartorio_cert_civil_inep) REFERENCES cadastro.codigo_cartorio_inep(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6532 (class 2606 OID 9465373)
--- Name: fisica_foto_idpes_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_foto
     ADD CONSTRAINT fisica_foto_idpes_fkey FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6510 (class 2606 OID 9465378)
--- Name: fisica_ref_cod_religiao; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fisica_ref_cod_religiao FOREIGN KEY (ref_cod_religiao) REFERENCES pmieducar.religiao(cod_religiao);
 
 
---
--- TOC entry 6535 (class 2606 OID 9465383)
--- Name: fisica_sangue_idpes_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_sangue
     ADD CONSTRAINT fisica_sangue_idpes_fkey FOREIGN KEY (idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6486 (class 2606 OID 9465388)
--- Name: fk_aviso_nome_fisica; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.aviso_nome
     ADD CONSTRAINT fk_aviso_nome_fisica FOREIGN KEY (idpes) REFERENCES cadastro.fisica(idpes) ON DELETE RESTRICT;
 
 
---
--- TOC entry 6487 (class 2606 OID 9465393)
--- Name: fk_documento_fisica; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_fisica FOREIGN KEY (idpes) REFERENCES cadastro.fisica(idpes);
 
-
---
--- TOC entry 6488 (class 2606 OID 9465398)
--- Name: fk_documento_orgao_emissor_rg; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_orgao_emissor_rg FOREIGN KEY (idorg_exp_rg) REFERENCES cadastro.orgao_emissor_rg(idorg_rg) ON DELETE RESTRICT;
 
 
---
--- TOC entry 6489 (class 2606 OID 9465403)
--- Name: fk_documento_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6490 (class 2606 OID 9465408)
--- Name: fk_documento_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6491 (class 2606 OID 9465413)
--- Name: fk_documento_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6492 (class 2606 OID 9465418)
--- Name: fk_documento_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6493 (class 2606 OID 9465423)
--- Name: fk_documento_uf_cart_trabalho; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_uf_cart_trabalho FOREIGN KEY (sigla_uf_cart_trabalho) REFERENCES public.uf(sigla_uf);
 
-
---
--- TOC entry 6494 (class 2606 OID 9465428)
--- Name: fk_documento_uf_cert_civil; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_uf_cert_civil FOREIGN KEY (sigla_uf_cert_civil) REFERENCES public.uf(sigla_uf);
 
 
---
--- TOC entry 6495 (class 2606 OID 9465433)
--- Name: fk_documento_uf_rg; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.documento
     ADD CONSTRAINT fk_documento_uf_rg FOREIGN KEY (sigla_uf_exp_rg) REFERENCES public.uf(sigla_uf);
 
-
---
--- TOC entry 6497 (class 2606 OID 9465438)
--- Name: fk_endereco_externo_pessoa; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT fk_endereco_externo_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6498 (class 2606 OID 9465443)
--- Name: fk_endereco_externo_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT fk_endereco_externo_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6499 (class 2606 OID 9465448)
--- Name: fk_endereco_externo_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT fk_endereco_externo_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6500 (class 2606 OID 9465453)
--- Name: fk_endereco_externo_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT fk_endereco_externo_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6501 (class 2606 OID 9465458)
--- Name: fk_endereco_externo_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT fk_endereco_externo_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6502 (class 2606 OID 9465463)
--- Name: fk_endereco_externo_tipo_log; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT fk_endereco_externo_tipo_log FOREIGN KEY (idtlog) REFERENCES urbano.tipo_logradouro(idtlog);
 
-
---
--- TOC entry 6503 (class 2606 OID 9465468)
--- Name: fk_endereco_externo_uf; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_externo
     ADD CONSTRAINT fk_endereco_externo_uf FOREIGN KEY (sigla_uf) REFERENCES public.uf(sigla_uf);
 
 
---
--- TOC entry 6504 (class 2606 OID 9465473)
--- Name: fk_endereco_pes_cep_log_bai; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.endereco_pessoa
     ADD CONSTRAINT fk_endereco_pes_cep_log_bai FOREIGN KEY (cep, idbai, idlog) REFERENCES urbano.cep_logradouro_bairro(cep, idbai, idlog) ON UPDATE CASCADE;
 
-
---
--- TOC entry 6505 (class 2606 OID 9465478)
--- Name: fk_endereco_pessoa_pessoa; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_pessoa
     ADD CONSTRAINT fk_endereco_pessoa_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6506 (class 2606 OID 9465483)
--- Name: fk_endereco_pessoa_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.endereco_pessoa
     ADD CONSTRAINT fk_endereco_pessoa_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6507 (class 2606 OID 9465488)
--- Name: fk_endereco_pessoa_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_pessoa
     ADD CONSTRAINT fk_endereco_pessoa_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6508 (class 2606 OID 9465493)
--- Name: fk_endereco_pessoa_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.endereco_pessoa
     ADD CONSTRAINT fk_endereco_pessoa_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6509 (class 2606 OID 9465498)
--- Name: fk_endereco_pessoa_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.endereco_pessoa
     ADD CONSTRAINT fk_endereco_pessoa_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6529 (class 2606 OID 9465503)
--- Name: fk_fisica_cpf_fisica; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_cpf
     ADD CONSTRAINT fk_fisica_cpf_fisica FOREIGN KEY (idpes) REFERENCES cadastro.fisica(idpes) ON DELETE RESTRICT;
 
-
---
--- TOC entry 6528 (class 2606 OID 9465508)
--- Name: fk_fisica_cpf_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica_cpf
     ADD CONSTRAINT fk_fisica_cpf_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6527 (class 2606 OID 9465513)
--- Name: fk_fisica_cpf_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_cpf
     ADD CONSTRAINT fk_fisica_cpf_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6526 (class 2606 OID 9465518)
--- Name: fk_fisica_cpf_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica_cpf
     ADD CONSTRAINT fk_fisica_cpf_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6525 (class 2606 OID 9465523)
--- Name: fk_fisica_cpf_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_cpf
     ADD CONSTRAINT fk_fisica_cpf_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6511 (class 2606 OID 9465528)
--- Name: fk_fisica_escolaridade; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_escolaridade FOREIGN KEY (idesco) REFERENCES cadastro.escolaridade(idesco);
 
 
---
--- TOC entry 6512 (class 2606 OID 9465533)
--- Name: fk_fisica_estado_civil; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_estado_civil FOREIGN KEY (ideciv) REFERENCES cadastro.estado_civil(ideciv);
 
-
---
--- TOC entry 6513 (class 2606 OID 9465538)
--- Name: fk_fisica_municipio; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_municipio FOREIGN KEY (idmun_nascimento) REFERENCES public.municipio(idmun);
 
 
---
--- TOC entry 6514 (class 2606 OID 9465543)
--- Name: fk_fisica_ocupacao; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_ocupacao FOREIGN KEY (idocup) REFERENCES cadastro.ocupacao(idocup);
 
-
---
--- TOC entry 6515 (class 2606 OID 9465548)
--- Name: fk_fisica_pais; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_pais FOREIGN KEY (idpais_estrangeiro) REFERENCES public.pais(idpais);
 
 
---
--- TOC entry 6516 (class 2606 OID 9465553)
--- Name: fk_fisica_pessoa; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes) ON DELETE RESTRICT;
 
-
---
--- TOC entry 6517 (class 2606 OID 9465558)
--- Name: fk_fisica_pessoa_conjuge; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_pessoa_conjuge FOREIGN KEY (idpes_con) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6518 (class 2606 OID 9465563)
--- Name: fk_fisica_pessoa_mae; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_pessoa_mae FOREIGN KEY (idpes_mae) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6519 (class 2606 OID 9465568)
--- Name: fk_fisica_pessoa_pai; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_pessoa_pai FOREIGN KEY (idpes_pai) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6520 (class 2606 OID 9465573)
--- Name: fk_fisica_pessoa_responsavel; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_pessoa_responsavel FOREIGN KEY (idpes_responsavel) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6521 (class 2606 OID 9465578)
--- Name: fk_fisica_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6522 (class 2606 OID 9465583)
--- Name: fk_fisica_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6523 (class 2606 OID 9465588)
--- Name: fk_fisica_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6524 (class 2606 OID 9465593)
--- Name: fk_fisica_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica
     ADD CONSTRAINT fk_fisica_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6540 (class 2606 OID 9465598)
--- Name: fk_fone_pessoa_pessoa; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fone_pessoa
     ADD CONSTRAINT fk_fone_pessoa_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6539 (class 2606 OID 9465603)
--- Name: fk_fone_pessoa_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fone_pessoa
     ADD CONSTRAINT fk_fone_pessoa_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6538 (class 2606 OID 9465608)
--- Name: fk_fone_pessoa_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fone_pessoa
     ADD CONSTRAINT fk_fone_pessoa_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6537 (class 2606 OID 9465613)
--- Name: fk_fone_pessoa_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fone_pessoa
     ADD CONSTRAINT fk_fone_pessoa_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6536 (class 2606 OID 9465618)
--- Name: fk_fone_pessoa_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fone_pessoa
     ADD CONSTRAINT fk_fone_pessoa_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6541 (class 2606 OID 9465623)
--- Name: fk_funcionario_fisica; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT fk_funcionario_fisica FOREIGN KEY (idpes) REFERENCES cadastro.fisica(idpes);
 
-
---
--- TOC entry 6542 (class 2606 OID 9465628)
--- Name: fk_funcionario_instituicao; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT fk_funcionario_instituicao FOREIGN KEY (idins) REFERENCES acesso.instituicao(idins);
 
 
---
--- TOC entry 6543 (class 2606 OID 9465633)
--- Name: fk_funcionario_setor; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT fk_funcionario_setor FOREIGN KEY (idset) REFERENCES public.setor(idset);
 
-
---
--- TOC entry 6544 (class 2606 OID 9465638)
--- Name: fk_funcionario_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT fk_funcionario_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6545 (class 2606 OID 9465643)
--- Name: fk_funcionario_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT fk_funcionario_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6546 (class 2606 OID 9465648)
--- Name: fk_funcionario_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT fk_funcionario_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6547 (class 2606 OID 9465653)
--- Name: fk_funcionario_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.funcionario
     ADD CONSTRAINT fk_funcionario_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6549 (class 2606 OID 9465658)
--- Name: fk_hist_cartao_pes_cidadao; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.historico_cartao
     ADD CONSTRAINT fk_hist_cartao_pes_cidadao FOREIGN KEY (idpes_cidadao) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6548 (class 2606 OID 9465663)
--- Name: fk_hist_cartao_pes_emitiu; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.historico_cartao
     ADD CONSTRAINT fk_hist_cartao_pes_emitiu FOREIGN KEY (idpes_emitiu) REFERENCES cadastro.pessoa(idpes);
 
-
---
--- TOC entry 6554 (class 2606 OID 9465668)
--- Name: fk_juridica_pessoa; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.juridica
     ADD CONSTRAINT fk_juridica_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6553 (class 2606 OID 9465673)
--- Name: fk_juridica_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.juridica
     ADD CONSTRAINT fk_juridica_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6552 (class 2606 OID 9465678)
--- Name: fk_juridica_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.juridica
     ADD CONSTRAINT fk_juridica_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6551 (class 2606 OID 9465683)
--- Name: fk_juridica_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.juridica
     ADD CONSTRAINT fk_juridica_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6550 (class 2606 OID 9465688)
--- Name: fk_juridica_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.juridica
     ADD CONSTRAINT fk_juridica_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6567 (class 2606 OID 9465693)
--- Name: fk_juridica_socio; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.socio
     ADD CONSTRAINT fk_juridica_socio FOREIGN KEY (idpes_juridica) REFERENCES cadastro.juridica(idpes);
 
-
---
--- TOC entry 6559 (class 2606 OID 9465698)
--- Name: fk_pessoa_fonetico_pessoa; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.pessoa_fonetico
     ADD CONSTRAINT fk_pessoa_fonetico_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6558 (class 2606 OID 9465703)
--- Name: fk_pessoa_pessoa_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.pessoa
     ADD CONSTRAINT fk_pessoa_pessoa_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6557 (class 2606 OID 9465708)
--- Name: fk_pessoa_pessoa_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.pessoa
     ADD CONSTRAINT fk_pessoa_pessoa_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6556 (class 2606 OID 9465713)
--- Name: fk_pessoa_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.pessoa
     ADD CONSTRAINT fk_pessoa_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6555 (class 2606 OID 9465718)
--- Name: fk_pessoa_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.pessoa
     ADD CONSTRAINT fk_pessoa_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6566 (class 2606 OID 9465723)
--- Name: fk_pessoa_socio; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.socio
     ADD CONSTRAINT fk_pessoa_socio FOREIGN KEY (idpes_fisica) REFERENCES cadastro.pessoa(idpes);
 
-
---
--- TOC entry 7207 (class 2606 OID 9474360)
--- Name: fk_ref_sigla_uf; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.codigo_cartorio_inep
     ADD CONSTRAINT fk_ref_sigla_uf FOREIGN KEY (ref_sigla_uf) REFERENCES public.uf(sigla_uf);
 
 
---
--- TOC entry 6565 (class 2606 OID 9465728)
--- Name: fk_socio_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.socio
     ADD CONSTRAINT fk_socio_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6564 (class 2606 OID 9465733)
--- Name: fk_socio_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.socio
     ADD CONSTRAINT fk_socio_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6563 (class 2606 OID 9465738)
--- Name: fk_socio_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.socio
     ADD CONSTRAINT fk_socio_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6562 (class 2606 OID 9465743)
--- Name: fk_socio_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.socio
     ADD CONSTRAINT fk_socio_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6531 (class 2606 OID 9465748)
--- Name: pessoa_deficiencia_ref_cod_deficiencia_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_deficiencia
     ADD CONSTRAINT pessoa_deficiencia_ref_cod_deficiencia_fkey FOREIGN KEY (ref_cod_deficiencia) REFERENCES cadastro.deficiencia(cod_deficiencia) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6530 (class 2606 OID 9465753)
--- Name: pessoa_deficiencia_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica_deficiencia
     ADD CONSTRAINT pessoa_deficiencia_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6534 (class 2606 OID 9465758)
--- Name: pessoa_raca_ref_cod_deficiencia_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.fisica_raca
     ADD CONSTRAINT pessoa_raca_ref_cod_deficiencia_fkey FOREIGN KEY (ref_cod_raca) REFERENCES cadastro.raca(cod_raca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6533 (class 2606 OID 9465763)
--- Name: pessoa_raca_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.fisica_raca
     ADD CONSTRAINT pessoa_raca_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6561 (class 2606 OID 9465768)
--- Name: religiao_idpes_cad_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
-
 ALTER TABLE ONLY cadastro.religiao
     ADD CONSTRAINT religiao_idpes_cad_fkey FOREIGN KEY (idpes_cad) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6560 (class 2606 OID 9465773)
--- Name: religiao_idpes_exc_fkey; Type: FK CONSTRAINT; Schema: cadastro; Owner: -
---
 
 ALTER TABLE ONLY cadastro.religiao
     ADD CONSTRAINT religiao_idpes_exc_fkey FOREIGN KEY (idpes_exc) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6589 (class 2606 OID 9465778)
--- Name: fk_campo_metadado_campo_consis; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.campo_metadado
     ADD CONSTRAINT fk_campo_metadado_campo_consis FOREIGN KEY (idcam) REFERENCES consistenciacao.campo_consistenciacao(idcam);
 
-
---
--- TOC entry 6588 (class 2606 OID 9465783)
--- Name: fk_campo_metadado_metadado; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.campo_metadado
     ADD CONSTRAINT fk_campo_metadado_metadado FOREIGN KEY (idmet) REFERENCES consistenciacao.metadado(idmet);
 
 
---
--- TOC entry 6587 (class 2606 OID 9465788)
--- Name: fk_campo_metadado_regra_campo; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.campo_metadado
     ADD CONSTRAINT fk_campo_metadado_regra_campo FOREIGN KEY (idreg) REFERENCES consistenciacao.regra_campo(idreg);
 
-
---
--- TOC entry 6591 (class 2606 OID 9465793)
--- Name: fk_confrontacao_metadado; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.confrontacao
     ADD CONSTRAINT fk_confrontacao_metadado FOREIGN KEY (idmet) REFERENCES consistenciacao.metadado(idmet);
 
 
---
--- TOC entry 6590 (class 2606 OID 9465798)
--- Name: fk_confrontacao_pessoa_instituicao; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.confrontacao
     ADD CONSTRAINT fk_confrontacao_pessoa_instituicao FOREIGN KEY (idins, idpes) REFERENCES acesso.pessoa_instituicao(idins, idpes);
 
-
---
--- TOC entry 6593 (class 2606 OID 9465803)
--- Name: fk_hist_campo_campo_consist; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.historico_campo
     ADD CONSTRAINT fk_hist_campo_campo_consist FOREIGN KEY (idcam) REFERENCES consistenciacao.campo_consistenciacao(idcam) ON DELETE CASCADE;
 
 
---
--- TOC entry 6592 (class 2606 OID 9465808)
--- Name: fk_historico_campo_pessoa; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.historico_campo
     ADD CONSTRAINT fk_historico_campo_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes) ON DELETE CASCADE;
 
-
---
--- TOC entry 6599 (class 2606 OID 9465813)
--- Name: fk_inc_pessoa_possivel_incoerencia; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.incoerencia_pessoa_possivel
     ADD CONSTRAINT fk_inc_pessoa_possivel_incoerencia FOREIGN KEY (idinc) REFERENCES consistenciacao.incoerencia(idinc) ON DELETE CASCADE;
 
 
---
--- TOC entry 6598 (class 2606 OID 9465818)
--- Name: fk_inc_pessoa_possivel_pessoa; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.incoerencia_pessoa_possivel
     ADD CONSTRAINT fk_inc_pessoa_possivel_pessoa FOREIGN KEY (idpes) REFERENCES cadastro.pessoa(idpes);
 
-
---
--- TOC entry 6601 (class 2606 OID 9465823)
--- Name: fk_inc_tipo_inc_incoerencia; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.incoerencia_tipo_incoerencia
     ADD CONSTRAINT fk_inc_tipo_inc_incoerencia FOREIGN KEY (idinc) REFERENCES consistenciacao.incoerencia(idinc) ON DELETE CASCADE;
 
 
---
--- TOC entry 6600 (class 2606 OID 9465828)
--- Name: fk_inc_tipo_inc_tipo_incoerencia; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.incoerencia_tipo_incoerencia
     ADD CONSTRAINT fk_inc_tipo_inc_tipo_incoerencia FOREIGN KEY (id_tipo_inc) REFERENCES consistenciacao.tipo_incoerencia(id_tipo_inc);
 
-
---
--- TOC entry 6594 (class 2606 OID 9465833)
--- Name: fk_incoerencia_confrontacao; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.incoerencia
     ADD CONSTRAINT fk_incoerencia_confrontacao FOREIGN KEY (idcon) REFERENCES consistenciacao.confrontacao(idcon);
 
 
---
--- TOC entry 6595 (class 2606 OID 9465838)
--- Name: fk_incoerencia_documento_incoerencia; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.incoerencia_documento
     ADD CONSTRAINT fk_incoerencia_documento_incoerencia FOREIGN KEY (idinc) REFERENCES consistenciacao.incoerencia(idinc) ON DELETE CASCADE;
 
-
---
--- TOC entry 6596 (class 2606 OID 9465843)
--- Name: fk_incoerencia_endereco_incoerencia; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.incoerencia_endereco
     ADD CONSTRAINT fk_incoerencia_endereco_incoerencia FOREIGN KEY (idinc) REFERENCES consistenciacao.incoerencia(idinc) ON DELETE CASCADE;
 
 
---
--- TOC entry 6597 (class 2606 OID 9465848)
--- Name: fk_incoerencia_fone_incoerencia; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.incoerencia_fone
     ADD CONSTRAINT fk_incoerencia_fone_incoerencia FOREIGN KEY (idinc) REFERENCES consistenciacao.incoerencia(idinc) ON DELETE CASCADE;
 
-
---
--- TOC entry 6602 (class 2606 OID 9465853)
--- Name: fk_metadado_fonte; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.metadado
     ADD CONSTRAINT fk_metadado_fonte FOREIGN KEY (idfon) REFERENCES consistenciacao.fonte(idfon);
 
 
---
--- TOC entry 6603 (class 2606 OID 9465858)
--- Name: fk_oco_reg_cam_regra_campo; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
-
 ALTER TABLE ONLY consistenciacao.ocorrencia_regra_campo
     ADD CONSTRAINT fk_oco_reg_cam_regra_campo FOREIGN KEY (idreg) REFERENCES consistenciacao.regra_campo(idreg);
 
-
---
--- TOC entry 6604 (class 2606 OID 9465863)
--- Name: fk_tipo_incoerencia_campo_consis; Type: FK CONSTRAINT; Schema: consistenciacao; Owner: -
---
 
 ALTER TABLE ONLY consistenciacao.tipo_incoerencia
     ADD CONSTRAINT fk_tipo_incoerencia_campo_consis FOREIGN KEY (idcam) REFERENCES consistenciacao.campo_consistenciacao(idcam);
 
 
---
--- TOC entry 6605 (class 2606 OID 9465868)
--- Name: calendario_turma_calendario_dia_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.calendario_turma
     ADD CONSTRAINT calendario_turma_calendario_dia_fk FOREIGN KEY (calendario_ano_letivo_id, mes, dia) REFERENCES pmieducar.calendario_dia(ref_cod_calendario_ano_letivo, mes, dia) MATCH FULL ON DELETE CASCADE;
 
-
---
--- TOC entry 6607 (class 2606 OID 9465873)
--- Name: componente_curricular_ano_escolar_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.componente_curricular_ano_escolar
     ADD CONSTRAINT componente_curricular_ano_escolar_fk FOREIGN KEY (componente_curricular_id) REFERENCES modules.componente_curricular(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6606 (class 2606 OID 9465878)
--- Name: componente_curricular_area_conhecimento_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.componente_curricular
     ADD CONSTRAINT componente_curricular_area_conhecimento_fk FOREIGN KEY (area_conhecimento_id, instituicao_id) REFERENCES modules.area_conhecimento(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6609 (class 2606 OID 9465883)
--- Name: componente_curricular_turma_componente_curricular_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.componente_curricular_turma
     ADD CONSTRAINT componente_curricular_turma_componente_curricular_fkey FOREIGN KEY (componente_curricular_id) REFERENCES modules.componente_curricular(id) ON DELETE RESTRICT;
 
 
---
--- TOC entry 6608 (class 2606 OID 9465888)
--- Name: componente_curricular_turma_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.componente_curricular_turma
     ADD CONSTRAINT componente_curricular_turma_fkey FOREIGN KEY (turma_id) REFERENCES pmieducar.turma(cod_turma) ON DELETE CASCADE;
 
-
---
--- TOC entry 6610 (class 2606 OID 9465893)
--- Name: docente_licenciatura_ies_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.docente_licenciatura
     ADD CONSTRAINT docente_licenciatura_ies_fk FOREIGN KEY (ies_id) REFERENCES modules.educacenso_ies(id) ON DELETE RESTRICT;
 
 
---
--- TOC entry 6611 (class 2606 OID 9465898)
--- Name: educacenso_cod_aluno_cod_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.educacenso_cod_aluno
     ADD CONSTRAINT educacenso_cod_aluno_cod_aluno_fk FOREIGN KEY (cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON DELETE CASCADE;
 
-
---
--- TOC entry 6612 (class 2606 OID 9465903)
--- Name: educacenso_cod_escola_cod_escola_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.educacenso_cod_escola
     ADD CONSTRAINT educacenso_cod_escola_cod_escola_fk FOREIGN KEY (cod_escola) REFERENCES pmieducar.escola(cod_escola) ON DELETE CASCADE;
 
 
---
--- TOC entry 6613 (class 2606 OID 9465908)
--- Name: educacenso_cod_turma_cod_turma_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.educacenso_cod_turma
     ADD CONSTRAINT educacenso_cod_turma_cod_turma_fk FOREIGN KEY (cod_turma) REFERENCES pmieducar.turma(cod_turma) ON DELETE CASCADE;
 
-
---
--- TOC entry 6615 (class 2606 OID 9465913)
--- Name: empresa_transporte_escolar_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.empresa_transporte_escolar
     ADD CONSTRAINT empresa_transporte_escolar_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.juridica(idpes);
 
 
---
--- TOC entry 6614 (class 2606 OID 9465918)
--- Name: empresa_transporte_escolar_ref_resp_idpes_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.empresa_transporte_escolar
     ADD CONSTRAINT empresa_transporte_escolar_ref_resp_idpes_fkey FOREIGN KEY (ref_resp_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6617 (class 2606 OID 9465923)
--- Name: etapas_curso_educacenso_curso_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.etapas_curso_educacenso
     ADD CONSTRAINT etapas_curso_educacenso_curso_fk FOREIGN KEY (curso_id) REFERENCES pmieducar.curso(cod_curso);
 
 
---
--- TOC entry 6616 (class 2606 OID 9465928)
--- Name: etapas_curso_educacenso_etapa_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.etapas_curso_educacenso
     ADD CONSTRAINT etapas_curso_educacenso_etapa_fk FOREIGN KEY (etapa_id) REFERENCES modules.etapas_educacenso(id);
 
-
---
--- TOC entry 6618 (class 2606 OID 9465933)
--- Name: falta_componente_curricular_falta_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.falta_componente_curricular
     ADD CONSTRAINT falta_componente_curricular_falta_aluno_fk FOREIGN KEY (falta_aluno_id) REFERENCES modules.falta_aluno(id) ON DELETE CASCADE;
 
 
---
--- TOC entry 6619 (class 2606 OID 9465938)
--- Name: falta_geral_falta_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.falta_geral
     ADD CONSTRAINT falta_geral_falta_aluno_fk FOREIGN KEY (falta_aluno_id) REFERENCES modules.falta_aluno(id) ON DELETE CASCADE;
 
-
---
--- TOC entry 6620 (class 2606 OID 9465943)
--- Name: ficha_medica_aluno_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.ficha_medica_aluno
     ADD CONSTRAINT ficha_medica_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6637 (class 2606 OID 9465948)
--- Name: fk_ponto_cep_log_bai; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.ponto_transporte_escolar
     ADD CONSTRAINT fk_ponto_cep_log_bai FOREIGN KEY (idbai, idlog, cep) REFERENCES urbano.cep_logradouro_bairro(idbai, idlog, cep);
 
-
---
--- TOC entry 6622 (class 2606 OID 9465953)
--- Name: itinerario_transporte_escolar_ref_cod_rota_transporte_escolar_f; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.itinerario_transporte_escolar
     ADD CONSTRAINT itinerario_transporte_escolar_ref_cod_rota_transporte_escolar_f FOREIGN KEY (ref_cod_rota_transporte_escolar) REFERENCES modules.rota_transporte_escolar(cod_rota_transporte_escolar);
 
 
---
--- TOC entry 6623 (class 2606 OID 9465958)
--- Name: media_geral_nota_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.media_geral
     ADD CONSTRAINT media_geral_nota_aluno_fk FOREIGN KEY (nota_aluno_id) REFERENCES modules.nota_aluno(id) ON DELETE CASCADE;
 
-
---
--- TOC entry 6624 (class 2606 OID 9465963)
--- Name: moradia_aluno_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.moradia_aluno
     ADD CONSTRAINT moradia_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6629 (class 2606 OID 9465968)
--- Name: moradia_aluno_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.nota_exame
     ADD CONSTRAINT moradia_aluno_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6626 (class 2606 OID 9465973)
--- Name: motorista_ref_cod_empresa_transporte_escolar_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.motorista
     ADD CONSTRAINT motorista_ref_cod_empresa_transporte_escolar_fkey FOREIGN KEY (ref_cod_empresa_transporte_escolar) REFERENCES modules.empresa_transporte_escolar(cod_empresa_transporte_escolar) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6625 (class 2606 OID 9465978)
--- Name: motorista_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.motorista
     ADD CONSTRAINT motorista_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6628 (class 2606 OID 9465983)
--- Name: nota_componente_curricular_media_nota_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.nota_componente_curricular_media
     ADD CONSTRAINT nota_componente_curricular_media_nota_aluno_fk FOREIGN KEY (nota_aluno_id) REFERENCES modules.nota_aluno(id) ON DELETE CASCADE;
 
 
---
--- TOC entry 6627 (class 2606 OID 9465988)
--- Name: nota_componente_curricular_nota_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.nota_componente_curricular
     ADD CONSTRAINT nota_componente_curricular_nota_aluno_fk FOREIGN KEY (nota_aluno_id) REFERENCES modules.nota_aluno(id) ON DELETE CASCADE;
 
-
---
--- TOC entry 6630 (class 2606 OID 9465993)
--- Name: nota_nota_geral_nota_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.nota_geral
     ADD CONSTRAINT nota_nota_geral_nota_aluno_fk FOREIGN KEY (nota_aluno_id) REFERENCES modules.nota_aluno(id) ON DELETE CASCADE;
 
 
---
--- TOC entry 6631 (class 2606 OID 9465998)
--- Name: parecer_componente_curricular_parecer_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.parecer_componente_curricular
     ADD CONSTRAINT parecer_componente_curricular_parecer_aluno_fk FOREIGN KEY (parecer_aluno_id) REFERENCES modules.parecer_aluno(id) ON DELETE CASCADE;
 
-
---
--- TOC entry 6632 (class 2606 OID 9466003)
--- Name: parecer_geral_parecer_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.parecer_geral
     ADD CONSTRAINT parecer_geral_parecer_aluno_fk FOREIGN KEY (parecer_aluno_id) REFERENCES modules.parecer_aluno(id) ON DELETE CASCADE;
 
 
---
--- TOC entry 6636 (class 2606 OID 9466008)
--- Name: pessoa_transporte_ref_cod_ponto_transporte_escolar_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.pessoa_transporte
     ADD CONSTRAINT pessoa_transporte_ref_cod_ponto_transporte_escolar_fkey FOREIGN KEY (ref_cod_ponto_transporte_escolar) REFERENCES modules.ponto_transporte_escolar(cod_ponto_transporte_escolar);
 
-
---
--- TOC entry 6635 (class 2606 OID 9466013)
--- Name: pessoa_transporte_ref_cod_rota_transporte_escolar_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.pessoa_transporte
     ADD CONSTRAINT pessoa_transporte_ref_cod_rota_transporte_escolar_fkey FOREIGN KEY (ref_cod_rota_transporte_escolar) REFERENCES modules.rota_transporte_escolar(cod_rota_transporte_escolar);
 
 
---
--- TOC entry 6634 (class 2606 OID 9466018)
--- Name: pessoa_transporte_ref_idpes_destino_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.pessoa_transporte
     ADD CONSTRAINT pessoa_transporte_ref_idpes_destino_fkey FOREIGN KEY (ref_idpes_destino) REFERENCES cadastro.juridica(idpes);
 
-
---
--- TOC entry 6633 (class 2606 OID 9466023)
--- Name: pessoa_transporte_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.pessoa_transporte
     ADD CONSTRAINT pessoa_transporte_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6621 (class 2606 OID 9466028)
--- Name: ponto_transporte_escolar_ref_cod_veiculo_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.itinerario_transporte_escolar
     ADD CONSTRAINT ponto_transporte_escolar_ref_cod_veiculo_fkey FOREIGN KEY (ref_cod_veiculo) REFERENCES modules.veiculo(cod_veiculo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6642 (class 2606 OID 9466033)
--- Name: professor_turma_disciplina_componente_curricular_id_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.professor_turma_disciplina
     ADD CONSTRAINT professor_turma_disciplina_componente_curricular_id_fk FOREIGN KEY (componente_curricular_id) REFERENCES modules.componente_curricular(id) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6641 (class 2606 OID 9466038)
--- Name: professor_turma_disciplina_professor_turma_id_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.professor_turma_disciplina
     ADD CONSTRAINT professor_turma_disciplina_professor_turma_id_fk FOREIGN KEY (professor_turma_id) REFERENCES modules.professor_turma(id) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6640 (class 2606 OID 9466043)
--- Name: professor_turma_servidor_id_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.professor_turma
     ADD CONSTRAINT professor_turma_servidor_id_fk FOREIGN KEY (servidor_id, instituicao_id) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6639 (class 2606 OID 9466048)
--- Name: professor_turma_turma_id_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.professor_turma
     ADD CONSTRAINT professor_turma_turma_id_fk FOREIGN KEY (turma_id) REFERENCES pmieducar.turma(cod_turma) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6638 (class 2606 OID 9474700)
--- Name: professor_turma_turma_turno_id_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.professor_turma
     ADD CONSTRAINT professor_turma_turma_turno_id_fk FOREIGN KEY (turno_id) REFERENCES pmieducar.turma_turno(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7206 (class 2606 OID 9469025)
--- Name: ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.config_movimento_geral
     ADD CONSTRAINT ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie) REFERENCES pmieducar.serie(cod_serie);
 
-
---
--- TOC entry 6646 (class 2606 OID 9466053)
--- Name: regra_avaliacao_formula_media_formula_media_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.regra_avaliacao
     ADD CONSTRAINT regra_avaliacao_formula_media_formula_media_fk FOREIGN KEY (formula_media_id, instituicao_id) REFERENCES modules.formula_media(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6645 (class 2606 OID 9466058)
--- Name: regra_avaliacao_formula_media_formula_recuperacao_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.regra_avaliacao
     ADD CONSTRAINT regra_avaliacao_formula_media_formula_recuperacao_fk FOREIGN KEY (formula_recuperacao_id, instituicao_id) REFERENCES modules.formula_media(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6647 (class 2606 OID 9466063)
--- Name: regra_avaliacao_regra_avaliacao_recuperacao_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.regra_avaliacao_recuperacao
     ADD CONSTRAINT regra_avaliacao_regra_avaliacao_recuperacao_fk FOREIGN KEY (regra_avaliacao_id) REFERENCES modules.regra_avaliacao(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7208 (class 2606 OID 9474585)
--- Name: regra_avaliacao_serie_ano_fk_regra_avaliacao_diferenciada_id; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.regra_avaliacao_serie_ano
     ADD CONSTRAINT regra_avaliacao_serie_ano_fk_regra_avaliacao_diferenciada_id FOREIGN KEY (regra_avaliacao_diferenciada_id) REFERENCES modules.regra_avaliacao(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7209 (class 2606 OID 9474580)
--- Name: regra_avaliacao_serie_ano_fk_regra_avaliacao_id; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.regra_avaliacao_serie_ano
     ADD CONSTRAINT regra_avaliacao_serie_ano_fk_regra_avaliacao_id FOREIGN KEY (regra_avaliacao_id) REFERENCES modules.regra_avaliacao(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7210 (class 2606 OID 9474575)
--- Name: regra_avaliacao_serie_ano_fk_serie_id; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.regra_avaliacao_serie_ano
     ADD CONSTRAINT regra_avaliacao_serie_ano_fk_serie_id FOREIGN KEY (serie_id) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6644 (class 2606 OID 9466068)
--- Name: regra_avaliacao_tabela_arredondamento_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.regra_avaliacao
     ADD CONSTRAINT regra_avaliacao_tabela_arredondamento_fk FOREIGN KEY (tabela_arredondamento_id, instituicao_id) REFERENCES modules.tabela_arredondamento(id, instituicao_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6643 (class 2606 OID 9469012)
--- Name: regra_diferenciada_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.regra_avaliacao
     ADD CONSTRAINT regra_diferenciada_fk FOREIGN KEY (regra_diferenciada_id) REFERENCES modules.regra_avaliacao(id);
 
-
---
--- TOC entry 6649 (class 2606 OID 9466073)
--- Name: rota_transporte_escolar_ref_cod_empresa_transporte_escolar_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.rota_transporte_escolar
     ADD CONSTRAINT rota_transporte_escolar_ref_cod_empresa_transporte_escolar_fkey FOREIGN KEY (ref_cod_empresa_transporte_escolar) REFERENCES modules.empresa_transporte_escolar(cod_empresa_transporte_escolar) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6648 (class 2606 OID 9466078)
--- Name: rota_transporte_escolar_ref_idpes_destino_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.rota_transporte_escolar
     ADD CONSTRAINT rota_transporte_escolar_ref_idpes_destino_fkey FOREIGN KEY (ref_idpes_destino) REFERENCES cadastro.juridica(idpes);
 
-
---
--- TOC entry 6650 (class 2606 OID 9466083)
--- Name: tabela_arredondamento_tabela_arredondamento_valor_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.tabela_arredondamento_valor
     ADD CONSTRAINT tabela_arredondamento_tabela_arredondamento_valor_fk FOREIGN KEY (tabela_arredondamento_id) REFERENCES modules.tabela_arredondamento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6651 (class 2606 OID 9466088)
--- Name: transporte_aluno_aluno_fk; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.transporte_aluno
     ADD CONSTRAINT transporte_aluno_aluno_fk FOREIGN KEY (aluno_id) REFERENCES pmieducar.aluno(cod_aluno) ON DELETE CASCADE;
 
-
---
--- TOC entry 6652 (class 2606 OID 9466093)
--- Name: uniforme_aluno_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.uniforme_aluno
     ADD CONSTRAINT uniforme_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6654 (class 2606 OID 9466098)
--- Name: veiculo_ref_cod_empresa_transporte_escolar_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
-
 ALTER TABLE ONLY modules.veiculo
     ADD CONSTRAINT veiculo_ref_cod_empresa_transporte_escolar_fkey FOREIGN KEY (ref_cod_empresa_transporte_escolar) REFERENCES modules.empresa_transporte_escolar(cod_empresa_transporte_escolar);
 
-
---
--- TOC entry 6653 (class 2606 OID 9466103)
--- Name: veiculo_ref_cod_tipo_veiculo_fkey; Type: FK CONSTRAINT; Schema: modules; Owner: -
---
 
 ALTER TABLE ONLY modules.veiculo
     ADD CONSTRAINT veiculo_ref_cod_tipo_veiculo_fkey FOREIGN KEY (ref_cod_tipo_veiculo) REFERENCES modules.tipo_veiculo(cod_tipo_veiculo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6658 (class 2606 OID 9466108)
--- Name: acao_governo_arquivo_ref_cod_acao_governo_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_arquivo
     ADD CONSTRAINT acao_governo_arquivo_ref_cod_acao_governo_fkey FOREIGN KEY (ref_cod_acao_governo) REFERENCES pmiacoes.acao_governo(cod_acao_governo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6657 (class 2606 OID 9466113)
--- Name: acao_governo_arquivo_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_arquivo
     ADD CONSTRAINT acao_governo_arquivo_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6660 (class 2606 OID 9466118)
--- Name: acao_governo_categoria_ref_cod_acao_governo_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_categoria
     ADD CONSTRAINT acao_governo_categoria_ref_cod_acao_governo_fkey FOREIGN KEY (ref_cod_acao_governo) REFERENCES pmiacoes.acao_governo(cod_acao_governo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6659 (class 2606 OID 9466123)
--- Name: acao_governo_categoria_ref_cod_categoria_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_categoria
     ADD CONSTRAINT acao_governo_categoria_ref_cod_categoria_fkey FOREIGN KEY (ref_cod_categoria) REFERENCES pmiacoes.categoria(cod_categoria) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6665 (class 2606 OID 9466128)
--- Name: acao_governo_foto_portal_ref_cod_acao_governo_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_foto_portal
     ADD CONSTRAINT acao_governo_foto_portal_ref_cod_acao_governo_fkey FOREIGN KEY (ref_cod_acao_governo) REFERENCES pmiacoes.acao_governo(cod_acao_governo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6664 (class 2606 OID 9466133)
--- Name: acao_governo_foto_portal_ref_cod_foto_portal_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_foto_portal
     ADD CONSTRAINT acao_governo_foto_portal_ref_cod_foto_portal_fkey FOREIGN KEY (ref_cod_foto_portal) REFERENCES portal.foto_portal(cod_foto_portal) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6663 (class 2606 OID 9466138)
--- Name: acao_governo_foto_portal_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_foto_portal
     ADD CONSTRAINT acao_governo_foto_portal_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6662 (class 2606 OID 9466143)
--- Name: acao_governo_foto_ref_cod_acao_governo_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_foto
     ADD CONSTRAINT acao_governo_foto_ref_cod_acao_governo_fkey FOREIGN KEY (ref_cod_acao_governo) REFERENCES pmiacoes.acao_governo(cod_acao_governo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6661 (class 2606 OID 9466148)
--- Name: acao_governo_foto_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_foto
     ADD CONSTRAINT acao_governo_foto_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6668 (class 2606 OID 9466153)
--- Name: acao_governo_noticia_ref_cod_acao_governo_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_noticia
     ADD CONSTRAINT acao_governo_noticia_ref_cod_acao_governo_fkey FOREIGN KEY (ref_cod_acao_governo) REFERENCES pmiacoes.acao_governo(cod_acao_governo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6667 (class 2606 OID 9466158)
--- Name: acao_governo_noticia_ref_cod_not_portal_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_noticia
     ADD CONSTRAINT acao_governo_noticia_ref_cod_not_portal_fkey FOREIGN KEY (ref_cod_not_portal) REFERENCES portal.not_portal(cod_not_portal) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6666 (class 2606 OID 9466163)
--- Name: acao_governo_noticia_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_noticia
     ADD CONSTRAINT acao_governo_noticia_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6656 (class 2606 OID 9466168)
--- Name: acao_governo_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo
     ADD CONSTRAINT acao_governo_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6655 (class 2606 OID 9466173)
--- Name: acao_governo_ref_funcionario_exc_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo
     ADD CONSTRAINT acao_governo_ref_funcionario_exc_fkey FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6671 (class 2606 OID 9466178)
--- Name: acao_governo_setor_ref_cod_acao_governo_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_setor
     ADD CONSTRAINT acao_governo_setor_ref_cod_acao_governo_fkey FOREIGN KEY (ref_cod_acao_governo) REFERENCES pmiacoes.acao_governo(cod_acao_governo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6670 (class 2606 OID 9466183)
--- Name: acao_governo_setor_ref_cod_setor_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.acao_governo_setor
     ADD CONSTRAINT acao_governo_setor_ref_cod_setor_fkey FOREIGN KEY (ref_cod_setor) REFERENCES pmidrh.setor(cod_setor) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6669 (class 2606 OID 9466188)
--- Name: acao_governo_setor_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.acao_governo_setor
     ADD CONSTRAINT acao_governo_setor_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6673 (class 2606 OID 9466193)
--- Name: categoria_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.categoria
     ADD CONSTRAINT categoria_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6672 (class 2606 OID 9466198)
--- Name: categoria_ref_funcionario_exc_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.categoria
     ADD CONSTRAINT categoria_ref_funcionario_exc_fkey FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6675 (class 2606 OID 9466203)
--- Name: secretaria_responsavel_ref_cod_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
 
 ALTER TABLE ONLY pmiacoes.secretaria_responsavel
     ADD CONSTRAINT secretaria_responsavel_ref_cod_funcionario_cad_fkey FOREIGN KEY (ref_cod_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6674 (class 2606 OID 9466208)
--- Name: secretaria_responsavel_ref_cod_setor_fkey; Type: FK CONSTRAINT; Schema: pmiacoes; Owner: -
---
-
 ALTER TABLE ONLY pmiacoes.secretaria_responsavel
     ADD CONSTRAINT secretaria_responsavel_ref_cod_setor_fkey FOREIGN KEY (ref_cod_setor) REFERENCES pmidrh.setor(cod_setor) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6678 (class 2606 OID 9466213)
--- Name: acontecimento_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.acontecimento
     ADD CONSTRAINT acontecimento_ref_funcionario_cad_fk FOREIGN KEY (ref_cod_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6702 (class 2606 OID 9466218)
--- Name: acontecimento_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.tipo_acontecimento
     ADD CONSTRAINT acontecimento_ref_funcionario_cad_fk FOREIGN KEY (ref_cod_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6677 (class 2606 OID 9466223)
--- Name: acontecimento_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.acontecimento
     ADD CONSTRAINT acontecimento_ref_funcionario_exc_fk FOREIGN KEY (ref_cod_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6701 (class 2606 OID 9466228)
--- Name: acontecimento_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.tipo_acontecimento
     ADD CONSTRAINT acontecimento_ref_funcionario_exc_fk FOREIGN KEY (ref_cod_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6687 (class 2606 OID 9466233)
--- Name: fk_to_imagem_ico; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.menu
     ADD CONSTRAINT fk_to_imagem_ico FOREIGN KEY (ref_cod_ico) REFERENCES portal.imagem(cod_imagem) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6686 (class 2606 OID 9466238)
--- Name: fk_to_tutor; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.menu
     ADD CONSTRAINT fk_to_tutor FOREIGN KEY (ref_cod_tutormenu) REFERENCES pmicontrolesis.tutormenu(cod_tutormenu);
 
-
---
--- TOC entry 6679 (class 2606 OID 9466243)
--- Name: foto_evento_ibfk_1; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.foto_evento
     ADD CONSTRAINT foto_evento_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6681 (class 2606 OID 9466248)
--- Name: foto_vinc_ref_cod_acontecimento_fkey; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.foto_vinc
     ADD CONSTRAINT foto_vinc_ref_cod_acontecimento_fkey FOREIGN KEY (ref_cod_acontecimento) REFERENCES pmicontrolesis.acontecimento(cod_acontecimento);
 
-
---
--- TOC entry 6680 (class 2606 OID 9466253)
--- Name: foto_vinc_ref_cod_foto_evento_fkey; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.foto_vinc
     ADD CONSTRAINT foto_vinc_ref_cod_foto_evento_fkey FOREIGN KEY (ref_cod_foto_evento) REFERENCES pmicontrolesis.foto_evento(cod_foto_evento);
 
 
---
--- TOC entry 6683 (class 2606 OID 9466258)
--- Name: itinerario_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.itinerario
     ADD CONSTRAINT itinerario_ref_funcionario_cad_fk FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6682 (class 2606 OID 9466263)
--- Name: itinerario_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.itinerario
     ADD CONSTRAINT itinerario_ref_funcionario_exc_fk FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6689 (class 2606 OID 9466268)
--- Name: menu_portal_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.menu_portal
     ADD CONSTRAINT menu_portal_ref_funcionario_cad_fk FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6688 (class 2606 OID 9466273)
--- Name: menu_portal_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.menu_portal
     ADD CONSTRAINT menu_portal_ref_funcionario_exc_fk FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6685 (class 2606 OID 9466278)
--- Name: menu_ref_cod_menu_pai_fkey; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.menu
     ADD CONSTRAINT menu_ref_cod_menu_pai_fkey FOREIGN KEY (ref_cod_menu_pai) REFERENCES pmicontrolesis.menu(cod_menu) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6684 (class 2606 OID 9466283)
--- Name: menu_ref_cod_menu_submenu_fkey; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.menu
     ADD CONSTRAINT menu_ref_cod_menu_submenu_fkey FOREIGN KEY (ref_cod_menu_submenu) REFERENCES portal.menu_submenu(cod_menu_submenu) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6691 (class 2606 OID 9466288)
--- Name: portais_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.portais
     ADD CONSTRAINT portais_ref_funcionario_cad_fk FOREIGN KEY (ref_cod_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6690 (class 2606 OID 9466293)
--- Name: portais_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.portais
     ADD CONSTRAINT portais_ref_funcionario_exc_fk FOREIGN KEY (ref_cod_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6693 (class 2606 OID 9466298)
--- Name: servicos_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.servicos
     ADD CONSTRAINT servicos_ref_funcionario_cad_fk FOREIGN KEY (ref_cod_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6692 (class 2606 OID 9466303)
--- Name: servicos_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.servicos
     ADD CONSTRAINT servicos_ref_funcionario_exc_fk FOREIGN KEY (ref_cod_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6695 (class 2606 OID 9466308)
--- Name: sistema_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.sistema
     ADD CONSTRAINT sistema_ref_funcionario_cad_fk FOREIGN KEY (ref_cod_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6694 (class 2606 OID 9466313)
--- Name: sistema_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.sistema
     ADD CONSTRAINT sistema_ref_funcionario_exc_fk FOREIGN KEY (ref_cod_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6698 (class 2606 OID 9466318)
--- Name: submenu_portal_ref_cod_menu_portal_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.submenu_portal
     ADD CONSTRAINT submenu_portal_ref_cod_menu_portal_fk FOREIGN KEY (ref_cod_menu_portal) REFERENCES pmicontrolesis.menu_portal(cod_menu_portal);
 
 
---
--- TOC entry 6697 (class 2606 OID 9466323)
--- Name: submenu_portal_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.submenu_portal
     ADD CONSTRAINT submenu_portal_ref_funcionario_cad_fk FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6705 (class 2606 OID 9466328)
--- Name: submenu_portal_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.topo_portal
     ADD CONSTRAINT submenu_portal_ref_funcionario_cad_fk FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6696 (class 2606 OID 9466333)
--- Name: submenu_portal_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.submenu_portal
     ADD CONSTRAINT submenu_portal_ref_funcionario_exc_fk FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6704 (class 2606 OID 9466338)
--- Name: submenu_portal_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.topo_portal
     ADD CONSTRAINT submenu_portal_ref_funcionario_exc_fk FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6700 (class 2606 OID 9466343)
--- Name: telefones_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.telefones
     ADD CONSTRAINT telefones_ref_funcionario_cad_fk FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
 
---
--- TOC entry 6699 (class 2606 OID 9466348)
--- Name: telefones_ref_funcionario_exc_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.telefones
     ADD CONSTRAINT telefones_ref_funcionario_exc_fk FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj);
 
-
---
--- TOC entry 6676 (class 2606 OID 9466353)
--- Name: tipo_acontecimento_ref_funcionario_cad_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
 
 ALTER TABLE ONLY pmicontrolesis.acontecimento
     ADD CONSTRAINT tipo_acontecimento_ref_funcionario_cad_fk FOREIGN KEY (ref_cod_tipo_acontecimento) REFERENCES pmicontrolesis.tipo_acontecimento(cod_tipo_acontecimento);
 
 
---
--- TOC entry 6703 (class 2606 OID 9466358)
--- Name: topo_portal_ref_cod_menu_portal_fk; Type: FK CONSTRAINT; Schema: pmicontrolesis; Owner: -
---
-
 ALTER TABLE ONLY pmicontrolesis.topo_portal
     ADD CONSTRAINT topo_portal_ref_cod_menu_portal_fk FOREIGN KEY (ref_cod_menu_portal) REFERENCES pmicontrolesis.menu_portal(cod_menu_portal);
 
-
---
--- TOC entry 6709 (class 2606 OID 9466363)
--- Name: diaria_ref_cod_diaria_grupo_fkey; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
 
 ALTER TABLE ONLY pmidrh.diaria
     ADD CONSTRAINT diaria_ref_cod_diaria_grupo_fkey FOREIGN KEY (ref_cod_diaria_grupo) REFERENCES pmidrh.diaria_grupo(cod_diaria_grupo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6708 (class 2606 OID 9466368)
--- Name: diaria_ref_cod_setor; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
-
 ALTER TABLE ONLY pmidrh.diaria
     ADD CONSTRAINT diaria_ref_cod_setor FOREIGN KEY (ref_cod_setor) REFERENCES pmidrh.setor(cod_setor);
 
-
---
--- TOC entry 6707 (class 2606 OID 9466373)
--- Name: diaria_ref_funcionario_cadastro_fkey; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
 
 ALTER TABLE ONLY pmidrh.diaria
     ADD CONSTRAINT diaria_ref_funcionario_cadastro_fkey FOREIGN KEY (ref_funcionario_cadastro) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6706 (class 2606 OID 9466378)
--- Name: diaria_ref_funcionario_fkey; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
-
 ALTER TABLE ONLY pmidrh.diaria
     ADD CONSTRAINT diaria_ref_funcionario_fkey FOREIGN KEY (ref_funcionario) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6711 (class 2606 OID 9466383)
--- Name: diaria_valores_ref_cod_diaria_grupo_fkey; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
 
 ALTER TABLE ONLY pmidrh.diaria_valores
     ADD CONSTRAINT diaria_valores_ref_cod_diaria_grupo_fkey FOREIGN KEY (ref_cod_diaria_grupo) REFERENCES pmidrh.diaria_grupo(cod_diaria_grupo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6710 (class 2606 OID 9466388)
--- Name: diaria_valores_ref_funcionario_cadastro_fkey; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
-
 ALTER TABLE ONLY pmidrh.diaria_valores
     ADD CONSTRAINT diaria_valores_ref_funcionario_cadastro_fkey FOREIGN KEY (ref_funcionario_cadastro) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6715 (class 2606 OID 9466393)
--- Name: fk_setor_pai; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
 
 ALTER TABLE ONLY pmidrh.setor
     ADD CONSTRAINT fk_setor_pai FOREIGN KEY (ref_cod_setor) REFERENCES pmidrh.setor(cod_setor) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6714 (class 2606 OID 9466398)
--- Name: fk_to_idpes_resp; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
-
 ALTER TABLE ONLY pmidrh.setor
     ADD CONSTRAINT fk_to_idpes_resp FOREIGN KEY (ref_idpes_resp) REFERENCES cadastro.fisica(idpes);
 
-
---
--- TOC entry 6713 (class 2606 OID 9466403)
--- Name: setor_ref_cod_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
 
 ALTER TABLE ONLY pmidrh.setor
     ADD CONSTRAINT setor_ref_cod_pessoa_cad_fkey FOREIGN KEY (ref_cod_pessoa_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6712 (class 2606 OID 9466408)
--- Name: setor_ref_cod_pessoa_exc_fkey; Type: FK CONSTRAINT; Schema: pmidrh; Owner: -
---
-
 ALTER TABLE ONLY pmidrh.setor
     ADD CONSTRAINT setor_ref_cod_pessoa_exc_fkey FOREIGN KEY (ref_cod_pessoa_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6728 (class 2606 OID 9466413)
--- Name: acervo_acervo_assunto_ref_cod_acervo_assunto_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_acervo_assunto
     ADD CONSTRAINT acervo_acervo_assunto_ref_cod_acervo_assunto_fkey FOREIGN KEY (ref_cod_acervo_assunto) REFERENCES pmieducar.acervo_assunto(cod_acervo_assunto) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6727 (class 2606 OID 9466418)
--- Name: acervo_acervo_assunto_ref_cod_acervo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_acervo_assunto
     ADD CONSTRAINT acervo_acervo_assunto_ref_cod_acervo_fkey FOREIGN KEY (ref_cod_acervo) REFERENCES pmieducar.acervo(cod_acervo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6730 (class 2606 OID 9466423)
--- Name: acervo_acervo_autor_ref_cod_acervo_autor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_acervo_autor
     ADD CONSTRAINT acervo_acervo_autor_ref_cod_acervo_autor_fkey FOREIGN KEY (ref_cod_acervo_autor) REFERENCES pmieducar.acervo_autor(cod_acervo_autor) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6729 (class 2606 OID 9466428)
--- Name: acervo_acervo_autor_ref_cod_acervo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_acervo_autor
     ADD CONSTRAINT acervo_acervo_autor_ref_cod_acervo_fkey FOREIGN KEY (ref_cod_acervo) REFERENCES pmieducar.acervo(cod_acervo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6733 (class 2606 OID 9466433)
--- Name: acervo_assunto_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_assunto
     ADD CONSTRAINT acervo_assunto_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6732 (class 2606 OID 9466438)
--- Name: acervo_assunto_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_assunto
     ADD CONSTRAINT acervo_assunto_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6731 (class 2606 OID 9466443)
--- Name: acervo_assunto_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_assunto
     ADD CONSTRAINT acervo_assunto_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6736 (class 2606 OID 9466448)
--- Name: acervo_autor_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_autor
     ADD CONSTRAINT acervo_autor_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6735 (class 2606 OID 9466453)
--- Name: acervo_autor_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_autor
     ADD CONSTRAINT acervo_autor_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6739 (class 2606 OID 9466458)
--- Name: acervo_colecao_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_colecao
     ADD CONSTRAINT acervo_colecao_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6738 (class 2606 OID 9466463)
--- Name: acervo_colecao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_colecao
     ADD CONSTRAINT acervo_colecao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6737 (class 2606 OID 9466468)
--- Name: acervo_colecao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_colecao
     ADD CONSTRAINT acervo_colecao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6744 (class 2606 OID 9466473)
--- Name: acervo_editora_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_editora
     ADD CONSTRAINT acervo_editora_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6743 (class 2606 OID 9466478)
--- Name: acervo_editora_ref_idtlog_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_editora
     ADD CONSTRAINT acervo_editora_ref_idtlog_fkey FOREIGN KEY (ref_idtlog) REFERENCES urbano.tipo_logradouro(idtlog) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6742 (class 2606 OID 9466483)
--- Name: acervo_editora_ref_sigla_uf_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_editora
     ADD CONSTRAINT acervo_editora_ref_sigla_uf_fkey FOREIGN KEY (ref_sigla_uf) REFERENCES public.uf(sigla_uf) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6741 (class 2606 OID 9466488)
--- Name: acervo_editora_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_editora
     ADD CONSTRAINT acervo_editora_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6740 (class 2606 OID 9466493)
--- Name: acervo_editora_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_editora
     ADD CONSTRAINT acervo_editora_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6747 (class 2606 OID 9466498)
--- Name: acervo_idioma_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_idioma
     ADD CONSTRAINT acervo_idioma_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6746 (class 2606 OID 9466503)
--- Name: acervo_idioma_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo_idioma
     ADD CONSTRAINT acervo_idioma_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6745 (class 2606 OID 9466508)
--- Name: acervo_idioma_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_idioma
     ADD CONSTRAINT acervo_idioma_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6726 (class 2606 OID 9466513)
--- Name: acervo_ref_cod_acervo_colecao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_cod_acervo_colecao_fkey FOREIGN KEY (ref_cod_acervo_colecao) REFERENCES pmieducar.acervo_colecao(cod_acervo_colecao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6725 (class 2606 OID 9466518)
--- Name: acervo_ref_cod_acervo_editora_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_cod_acervo_editora_fkey FOREIGN KEY (ref_cod_acervo_editora) REFERENCES pmieducar.acervo_editora(cod_acervo_editora) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6724 (class 2606 OID 9466523)
--- Name: acervo_ref_cod_acervo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_cod_acervo_fkey FOREIGN KEY (ref_cod_acervo) REFERENCES pmieducar.acervo(cod_acervo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6723 (class 2606 OID 9466528)
--- Name: acervo_ref_cod_acervo_idioma_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_cod_acervo_idioma_fkey FOREIGN KEY (ref_cod_acervo_idioma) REFERENCES pmieducar.acervo_idioma(cod_acervo_idioma) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6722 (class 2606 OID 9466533)
--- Name: acervo_ref_cod_biblioteca; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_cod_biblioteca FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6734 (class 2606 OID 9466538)
--- Name: acervo_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo_autor
     ADD CONSTRAINT acervo_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6721 (class 2606 OID 9466543)
--- Name: acervo_ref_cod_exemplar_tipo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_cod_exemplar_tipo_fkey FOREIGN KEY (ref_cod_exemplar_tipo) REFERENCES pmieducar.exemplar_tipo(cod_exemplar_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6720 (class 2606 OID 9466548)
--- Name: acervo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6719 (class 2606 OID 9466553)
--- Name: acervo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.acervo
     ADD CONSTRAINT acervo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6752 (class 2606 OID 9466558)
--- Name: aluno_aluno_beneficio_aluno_beneficio_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.aluno_aluno_beneficio
     ADD CONSTRAINT aluno_aluno_beneficio_aluno_beneficio_fk FOREIGN KEY (aluno_beneficio_id) REFERENCES pmieducar.aluno_beneficio(cod_aluno_beneficio);
 
-
---
--- TOC entry 6751 (class 2606 OID 9466563)
--- Name: aluno_aluno_beneficio_aluno_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.aluno_aluno_beneficio
     ADD CONSTRAINT aluno_aluno_beneficio_aluno_fk FOREIGN KEY (aluno_id) REFERENCES pmieducar.aluno(cod_aluno);
 
 
---
--- TOC entry 6754 (class 2606 OID 9466568)
--- Name: aluno_beneficio_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.aluno_beneficio
     ADD CONSTRAINT aluno_beneficio_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6753 (class 2606 OID 9466573)
--- Name: aluno_beneficio_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.aluno_beneficio
     ADD CONSTRAINT aluno_beneficio_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6755 (class 2606 OID 9466578)
--- Name: aluno_historico_altura_peso_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.aluno_historico_altura_peso
     ADD CONSTRAINT aluno_historico_altura_peso_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno);
 
-
---
--- TOC entry 6750 (class 2606 OID 9466583)
--- Name: aluno_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.aluno
     ADD CONSTRAINT aluno_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6749 (class 2606 OID 9466588)
--- Name: aluno_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.aluno
     ADD CONSTRAINT aluno_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6748 (class 2606 OID 9466593)
--- Name: aluno_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.aluno
     ADD CONSTRAINT aluno_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6757 (class 2606 OID 9466598)
--- Name: ano_letivo_modulo_ref_cod_modulo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.ano_letivo_modulo
     ADD CONSTRAINT ano_letivo_modulo_ref_cod_modulo_fkey FOREIGN KEY (ref_cod_modulo) REFERENCES pmieducar.modulo(cod_modulo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6756 (class 2606 OID 9466603)
--- Name: ano_letivo_modulo_ref_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.ano_letivo_modulo
     ADD CONSTRAINT ano_letivo_modulo_ref_ref_cod_escola_fkey FOREIGN KEY (ref_ref_cod_escola, ref_ano) REFERENCES pmieducar.escola_ano_letivo(ref_cod_escola, ano) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6759 (class 2606 OID 9466608)
--- Name: auditoria_falta_componente_di_ref_cod_componente_curricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.auditoria_falta_componente_dispensa
     ADD CONSTRAINT auditoria_falta_componente_di_ref_cod_componente_curricula_fkey FOREIGN KEY (ref_cod_componente_curricular) REFERENCES modules.componente_curricular(id);
 
-
---
--- TOC entry 6758 (class 2606 OID 9466613)
--- Name: auditoria_falta_componente_dispensa_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.auditoria_falta_componente_dispensa
     ADD CONSTRAINT auditoria_falta_componente_dispensa_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula);
 
 
---
--- TOC entry 6761 (class 2606 OID 9466618)
--- Name: auditoria_nota_dispensa_ref_cod_componente_curricular_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.auditoria_nota_dispensa
     ADD CONSTRAINT auditoria_nota_dispensa_ref_cod_componente_curricular_fkey FOREIGN KEY (ref_cod_componente_curricular) REFERENCES modules.componente_curricular(id);
 
-
---
--- TOC entry 6760 (class 2606 OID 9466623)
--- Name: auditoria_nota_dispensa_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.auditoria_nota_dispensa
     ADD CONSTRAINT auditoria_nota_dispensa_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula);
 
 
---
--- TOC entry 6764 (class 2606 OID 9466628)
--- Name: avaliacao_desempenho_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.avaliacao_desempenho
     ADD CONSTRAINT avaliacao_desempenho_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6763 (class 2606 OID 9466633)
--- Name: avaliacao_desempenho_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.avaliacao_desempenho
     ADD CONSTRAINT avaliacao_desempenho_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6762 (class 2606 OID 9466638)
--- Name: avaliacao_desempenho_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.avaliacao_desempenho
     ADD CONSTRAINT avaliacao_desempenho_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6767 (class 2606 OID 9466643)
--- Name: biblioteca_dia_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.biblioteca_dia
     ADD CONSTRAINT biblioteca_dia_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6768 (class 2606 OID 9466648)
--- Name: biblioteca_feriados_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.biblioteca_feriados
     ADD CONSTRAINT biblioteca_feriados_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6766 (class 2606 OID 9466653)
--- Name: biblioteca_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.biblioteca
     ADD CONSTRAINT biblioteca_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6765 (class 2606 OID 9466658)
--- Name: biblioteca_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.biblioteca
     ADD CONSTRAINT biblioteca_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6769 (class 2606 OID 9466663)
--- Name: biblioteca_usuario_ref_cod_biblioteca_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.biblioteca_usuario
     ADD CONSTRAINT biblioteca_usuario_ref_cod_biblioteca_fk FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6771 (class 2606 OID 9466668)
--- Name: bloqueio_lancamento_faltas_notas_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.bloqueio_lancamento_faltas_notas
     ADD CONSTRAINT bloqueio_lancamento_faltas_notas_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6774 (class 2606 OID 9466673)
--- Name: calendario_ano_letivo_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_ano_letivo
     ADD CONSTRAINT calendario_ano_letivo_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6773 (class 2606 OID 9466678)
--- Name: calendario_ano_letivo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_ano_letivo
     ADD CONSTRAINT calendario_ano_letivo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6772 (class 2606 OID 9466683)
--- Name: calendario_ano_letivo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_ano_letivo
     ADD CONSTRAINT calendario_ano_letivo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6776 (class 2606 OID 9466688)
--- Name: calendario_anotacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_anotacao
     ADD CONSTRAINT calendario_anotacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6775 (class 2606 OID 9466693)
--- Name: calendario_anotacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_anotacao
     ADD CONSTRAINT calendario_anotacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6782 (class 2606 OID 9466698)
--- Name: calendario_dia_anotacao_ref_cod_calendario_anotacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_dia_anotacao
     ADD CONSTRAINT calendario_dia_anotacao_ref_cod_calendario_anotacao_fkey FOREIGN KEY (ref_cod_calendario_anotacao) REFERENCES pmieducar.calendario_anotacao(cod_calendario_anotacao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6781 (class 2606 OID 9466703)
--- Name: calendario_dia_anotacao_ref_ref_cod_calendario_ano_letivo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_dia_anotacao
     ADD CONSTRAINT calendario_dia_anotacao_ref_ref_cod_calendario_ano_letivo_fkey FOREIGN KEY (ref_ref_cod_calendario_ano_letivo, ref_mes, ref_dia) REFERENCES pmieducar.calendario_dia(ref_cod_calendario_ano_letivo, mes, dia) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6785 (class 2606 OID 9466708)
--- Name: calendario_dia_motivo_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_dia_motivo
     ADD CONSTRAINT calendario_dia_motivo_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6784 (class 2606 OID 9466713)
--- Name: calendario_dia_motivo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_dia_motivo
     ADD CONSTRAINT calendario_dia_motivo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6783 (class 2606 OID 9466718)
--- Name: calendario_dia_motivo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_dia_motivo
     ADD CONSTRAINT calendario_dia_motivo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6780 (class 2606 OID 9466723)
--- Name: calendario_dia_ref_cod_calendario_ano_letivo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_dia
     ADD CONSTRAINT calendario_dia_ref_cod_calendario_ano_letivo_fkey FOREIGN KEY (ref_cod_calendario_ano_letivo) REFERENCES pmieducar.calendario_ano_letivo(cod_calendario_ano_letivo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6779 (class 2606 OID 9466728)
--- Name: calendario_dia_ref_cod_calendario_dia_motivo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_dia
     ADD CONSTRAINT calendario_dia_ref_cod_calendario_dia_motivo_fkey FOREIGN KEY (ref_cod_calendario_dia_motivo) REFERENCES pmieducar.calendario_dia_motivo(cod_calendario_dia_motivo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6778 (class 2606 OID 9466733)
--- Name: calendario_dia_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.calendario_dia
     ADD CONSTRAINT calendario_dia_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6777 (class 2606 OID 9466738)
--- Name: calendario_dia_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.calendario_dia
     ADD CONSTRAINT calendario_dia_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6790 (class 2606 OID 9466743)
--- Name: candidato_reserva_vaga_ref_cod_escola; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
     ADD CONSTRAINT candidato_reserva_vaga_ref_cod_escola FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola);
 
 
---
--- TOC entry 6792 (class 2606 OID 9466748)
--- Name: categoria_nivel_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.categoria_nivel
     ADD CONSTRAINT categoria_nivel_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6791 (class 2606 OID 9466753)
--- Name: categoria_nivel_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.categoria_nivel
     ADD CONSTRAINT categoria_nivel_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6795 (class 2606 OID 9466758)
--- Name: cliente_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente
     ADD CONSTRAINT cliente_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6794 (class 2606 OID 9466763)
--- Name: cliente_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente
     ADD CONSTRAINT cliente_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6793 (class 2606 OID 9466768)
--- Name: cliente_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente
     ADD CONSTRAINT cliente_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6799 (class 2606 OID 9466773)
--- Name: cliente_suspensao_ref_cod_cliente_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_suspensao
     ADD CONSTRAINT cliente_suspensao_ref_cod_cliente_fkey FOREIGN KEY (ref_cod_cliente) REFERENCES pmieducar.cliente(cod_cliente) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6798 (class 2606 OID 9466778)
--- Name: cliente_suspensao_ref_cod_motivo_suspensao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente_suspensao
     ADD CONSTRAINT cliente_suspensao_ref_cod_motivo_suspensao_fkey FOREIGN KEY (ref_cod_motivo_suspensao) REFERENCES pmieducar.motivo_suspensao(cod_motivo_suspensao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6797 (class 2606 OID 9466783)
--- Name: cliente_suspensao_ref_usuario_libera_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_suspensao
     ADD CONSTRAINT cliente_suspensao_ref_usuario_libera_fkey FOREIGN KEY (ref_usuario_libera) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6796 (class 2606 OID 9466788)
--- Name: cliente_suspensao_ref_usuario_suspende_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente_suspensao
     ADD CONSTRAINT cliente_suspensao_ref_usuario_suspende_fkey FOREIGN KEY (ref_usuario_suspende) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6805 (class 2606 OID 9466793)
--- Name: cliente_tipo_cliente_ibfk1; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_tipo_cliente
     ADD CONSTRAINT cliente_tipo_cliente_ibfk1 FOREIGN KEY (ref_cod_cliente) REFERENCES pmieducar.cliente(cod_cliente) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6804 (class 2606 OID 9466798)
--- Name: cliente_tipo_cliente_ibfk2; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente_tipo_cliente
     ADD CONSTRAINT cliente_tipo_cliente_ibfk2 FOREIGN KEY (ref_cod_cliente_tipo) REFERENCES pmieducar.cliente_tipo(cod_cliente_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6807 (class 2606 OID 9466803)
--- Name: cliente_tipo_exemplar_tipo_ref_cod_cliente_tipo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_tipo_exemplar_tipo
     ADD CONSTRAINT cliente_tipo_exemplar_tipo_ref_cod_cliente_tipo_fkey FOREIGN KEY (ref_cod_cliente_tipo) REFERENCES pmieducar.cliente_tipo(cod_cliente_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6806 (class 2606 OID 9466808)
--- Name: cliente_tipo_exemplar_tipo_ref_cod_exemplar_tipo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente_tipo_exemplar_tipo
     ADD CONSTRAINT cliente_tipo_exemplar_tipo_ref_cod_exemplar_tipo_fkey FOREIGN KEY (ref_cod_exemplar_tipo) REFERENCES pmieducar.exemplar_tipo(cod_exemplar_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6802 (class 2606 OID 9466813)
--- Name: cliente_tipo_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_tipo
     ADD CONSTRAINT cliente_tipo_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6801 (class 2606 OID 9466818)
--- Name: cliente_tipo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.cliente_tipo
     ADD CONSTRAINT cliente_tipo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6800 (class 2606 OID 9466823)
--- Name: cliente_tipo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_tipo
     ADD CONSTRAINT cliente_tipo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7026 (class 2606 OID 9469036)
--- Name: codigo_curso_superior_1_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT codigo_curso_superior_1_fk FOREIGN KEY (codigo_curso_superior_1) REFERENCES modules.educacenso_curso_superior(id) ON DELETE SET NULL;
 
-
---
--- TOC entry 7027 (class 2606 OID 9469041)
--- Name: codigo_curso_superior_2_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT codigo_curso_superior_2_fk FOREIGN KEY (codigo_curso_superior_2) REFERENCES modules.educacenso_curso_superior(id) ON DELETE SET NULL;
 
 
---
--- TOC entry 7028 (class 2606 OID 9469046)
--- Name: codigo_curso_superior_3_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT codigo_curso_superior_3_fk FOREIGN KEY (codigo_curso_superior_3) REFERENCES modules.educacenso_curso_superior(id) ON DELETE SET NULL;
 
-
---
--- TOC entry 6809 (class 2606 OID 9466843)
--- Name: coffebreak_tipo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.coffebreak_tipo
     ADD CONSTRAINT coffebreak_tipo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6808 (class 2606 OID 9466848)
--- Name: coffebreak_tipo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.coffebreak_tipo
     ADD CONSTRAINT coffebreak_tipo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6815 (class 2606 OID 9466853)
--- Name: curso_ref_cod_instituicao_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.curso
     ADD CONSTRAINT curso_ref_cod_instituicao_fk FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6814 (class 2606 OID 9466858)
--- Name: curso_ref_cod_nivel_ensino_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.curso
     ADD CONSTRAINT curso_ref_cod_nivel_ensino_fkey FOREIGN KEY (ref_cod_nivel_ensino) REFERENCES pmieducar.nivel_ensino(cod_nivel_ensino) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6813 (class 2606 OID 9466863)
--- Name: curso_ref_cod_tipo_ensino_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.curso
     ADD CONSTRAINT curso_ref_cod_tipo_ensino_fkey FOREIGN KEY (ref_cod_tipo_ensino) REFERENCES pmieducar.tipo_ensino(cod_tipo_ensino) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6812 (class 2606 OID 9466868)
--- Name: curso_ref_cod_tipo_regime_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.curso
     ADD CONSTRAINT curso_ref_cod_tipo_regime_fkey FOREIGN KEY (ref_cod_tipo_regime) REFERENCES pmieducar.tipo_regime(cod_tipo_regime) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6811 (class 2606 OID 9466873)
--- Name: curso_ref_cod_usuario_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.curso
     ADD CONSTRAINT curso_ref_cod_usuario_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6810 (class 2606 OID 9466878)
--- Name: curso_ref_usuario_exc_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.curso
     ADD CONSTRAINT curso_ref_usuario_exc_fk FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6820 (class 2606 OID 9466883)
--- Name: disciplina_dependencia_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.disciplina_dependencia
     ADD CONSTRAINT disciplina_dependencia_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6819 (class 2606 OID 9466888)
--- Name: disciplina_dependencia_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.disciplina_dependencia
     ADD CONSTRAINT disciplina_dependencia_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie, ref_cod_escola, ref_cod_disciplina) REFERENCES pmieducar.escola_serie_disciplina(ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6818 (class 2606 OID 9466893)
--- Name: disciplina_ref_cod_curso; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.disciplina
     ADD CONSTRAINT disciplina_ref_cod_curso FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6817 (class 2606 OID 9466898)
--- Name: disciplina_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.disciplina
     ADD CONSTRAINT disciplina_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6816 (class 2606 OID 9466903)
--- Name: disciplina_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.disciplina
     ADD CONSTRAINT disciplina_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6822 (class 2606 OID 9466908)
--- Name: disciplina_serie_ref_cod_disciplina_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.disciplina_serie
     ADD CONSTRAINT disciplina_serie_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_disciplina) REFERENCES pmieducar.disciplina(cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6821 (class 2606 OID 9466913)
--- Name: disciplina_serie_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.disciplina_serie
     ADD CONSTRAINT disciplina_serie_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6824 (class 2606 OID 9466918)
--- Name: disciplina_topico_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.disciplina_topico
     ADD CONSTRAINT disciplina_topico_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6823 (class 2606 OID 9466923)
--- Name: disciplina_topico_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.disciplina_topico
     ADD CONSTRAINT disciplina_topico_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6828 (class 2606 OID 9466928)
--- Name: dispensa_disciplina_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.dispensa_disciplina
     ADD CONSTRAINT dispensa_disciplina_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6827 (class 2606 OID 9466938)
--- Name: dispensa_disciplina_ref_cod_tipo_dispensa_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.dispensa_disciplina
     ADD CONSTRAINT dispensa_disciplina_ref_cod_tipo_dispensa_fkey FOREIGN KEY (ref_cod_tipo_dispensa) REFERENCES pmieducar.tipo_dispensa(cod_tipo_dispensa) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6826 (class 2606 OID 9466943)
--- Name: dispensa_disciplina_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.dispensa_disciplina
     ADD CONSTRAINT dispensa_disciplina_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6825 (class 2606 OID 9466948)
--- Name: dispensa_disciplina_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.dispensa_disciplina
     ADD CONSTRAINT dispensa_disciplina_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6831 (class 2606 OID 9466953)
--- Name: distribuicao_uniforme_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.distribuicao_uniforme
     ADD CONSTRAINT distribuicao_uniforme_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6842 (class 2606 OID 9466958)
--- Name: escola_ano_letivo_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_ano_letivo
     ADD CONSTRAINT escola_ano_letivo_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6841 (class 2606 OID 9466963)
--- Name: escola_ano_letivo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_ano_letivo
     ADD CONSTRAINT escola_ano_letivo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6840 (class 2606 OID 9466968)
--- Name: escola_ano_letivo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_ano_letivo
     ADD CONSTRAINT escola_ano_letivo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6832 (class 2606 OID 9466973)
--- Name: escola_codigo_indigena_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_codigo_indigena_fk FOREIGN KEY (codigo_lingua_indigena) REFERENCES modules.lingua_indigena_educacenso(id);
 
-
---
--- TOC entry 6844 (class 2606 OID 9466978)
--- Name: escola_complemento_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_complemento
     ADD CONSTRAINT escola_complemento_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6843 (class 2606 OID 9466983)
--- Name: escola_complemento_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_complemento
     ADD CONSTRAINT escola_complemento_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6848 (class 2606 OID 9466988)
--- Name: escola_curso_ref_cod_curso_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_curso
     ADD CONSTRAINT escola_curso_ref_cod_curso_fkey FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6847 (class 2606 OID 9466993)
--- Name: escola_curso_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_curso
     ADD CONSTRAINT escola_curso_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6846 (class 2606 OID 9466998)
--- Name: escola_curso_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_curso
     ADD CONSTRAINT escola_curso_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6845 (class 2606 OID 9467003)
--- Name: escola_curso_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_curso
     ADD CONSTRAINT escola_curso_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6851 (class 2606 OID 9467008)
--- Name: escola_localizacao_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_localizacao
     ADD CONSTRAINT escola_localizacao_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6850 (class 2606 OID 9467013)
--- Name: escola_localizacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_localizacao
     ADD CONSTRAINT escola_localizacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6849 (class 2606 OID 9467018)
--- Name: escola_localizacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_localizacao
     ADD CONSTRAINT escola_localizacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6853 (class 2606 OID 9467023)
--- Name: escola_rede_ensino_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_rede_ensino
     ADD CONSTRAINT escola_rede_ensino_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6852 (class 2606 OID 9467028)
--- Name: escola_rede_ensino_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_rede_ensino
     ADD CONSTRAINT escola_rede_ensino_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6833 (class 2606 OID 9467038)
--- Name: escola_ref_cod_escola_rede_ensino_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_ref_cod_escola_rede_ensino_fkey FOREIGN KEY (ref_cod_escola_rede_ensino) REFERENCES pmieducar.escola_rede_ensino(cod_escola_rede_ensino) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6834 (class 2606 OID 9467043)
--- Name: escola_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6835 (class 2606 OID 9467048)
--- Name: escola_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.juridica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6836 (class 2606 OID 9467053)
--- Name: escola_ref_idpes_gestor_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_ref_idpes_gestor_fk FOREIGN KEY (ref_idpes_gestor) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6837 (class 2606 OID 9467058)
--- Name: escola_ref_idpes_secretario_escolar_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_ref_idpes_secretario_escolar_fkey FOREIGN KEY (ref_idpes_secretario_escolar) REFERENCES cadastro.pessoa(idpes);
 
-
---
--- TOC entry 6838 (class 2606 OID 9467063)
--- Name: escola_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6839 (class 2606 OID 9467068)
--- Name: escola_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola
     ADD CONSTRAINT escola_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6859 (class 2606 OID 9467073)
--- Name: escola_serie_disciplina_ref_cod_disciplina_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_serie_disciplina
     ADD CONSTRAINT escola_serie_disciplina_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_disciplina) REFERENCES modules.componente_curricular(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6858 (class 2606 OID 9467078)
--- Name: escola_serie_disciplina_ref_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_serie_disciplina
     ADD CONSTRAINT escola_serie_disciplina_ref_ref_cod_escola_fkey FOREIGN KEY (ref_ref_cod_escola, ref_ref_cod_serie) REFERENCES pmieducar.escola_serie(ref_cod_escola, ref_cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6857 (class 2606 OID 9467083)
--- Name: escola_serie_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_serie
     ADD CONSTRAINT escola_serie_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6856 (class 2606 OID 9467088)
--- Name: escola_serie_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_serie
     ADD CONSTRAINT escola_serie_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6855 (class 2606 OID 9467093)
--- Name: escola_serie_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_serie
     ADD CONSTRAINT escola_serie_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6854 (class 2606 OID 9467098)
--- Name: escola_serie_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_serie
     ADD CONSTRAINT escola_serie_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6861 (class 2606 OID 9467103)
--- Name: escola_usuario_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.escola_usuario
     ADD CONSTRAINT escola_usuario_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola);
 
 
---
--- TOC entry 6860 (class 2606 OID 9467108)
--- Name: escola_usuario_ref_cod_usuario_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.escola_usuario
     ADD CONSTRAINT escola_usuario_ref_cod_usuario_fkey FOREIGN KEY (ref_cod_usuario) REFERENCES pmieducar.usuario(cod_usuario);
 
-
---
--- TOC entry 6871 (class 2606 OID 9467113)
--- Name: exemplar_emprestimo_ref_cod_cliente_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar_emprestimo
     ADD CONSTRAINT exemplar_emprestimo_ref_cod_cliente_fkey FOREIGN KEY (ref_cod_cliente) REFERENCES pmieducar.cliente(cod_cliente) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6870 (class 2606 OID 9467118)
--- Name: exemplar_emprestimo_ref_cod_exemplar_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.exemplar_emprestimo
     ADD CONSTRAINT exemplar_emprestimo_ref_cod_exemplar_fkey FOREIGN KEY (ref_cod_exemplar) REFERENCES pmieducar.exemplar(cod_exemplar) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6869 (class 2606 OID 9467123)
--- Name: exemplar_emprestimo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar_emprestimo
     ADD CONSTRAINT exemplar_emprestimo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6868 (class 2606 OID 9467128)
--- Name: exemplar_emprestimo_ref_usuario_devolucao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.exemplar_emprestimo
     ADD CONSTRAINT exemplar_emprestimo_ref_usuario_devolucao_fkey FOREIGN KEY (ref_usuario_devolucao) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6867 (class 2606 OID 9467133)
--- Name: exemplar_ref_cod_acervo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar
     ADD CONSTRAINT exemplar_ref_cod_acervo_fkey FOREIGN KEY (ref_cod_acervo) REFERENCES pmieducar.acervo(cod_acervo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6866 (class 2606 OID 9467138)
--- Name: exemplar_ref_cod_fonte_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.exemplar
     ADD CONSTRAINT exemplar_ref_cod_fonte_fkey FOREIGN KEY (ref_cod_fonte) REFERENCES pmieducar.fonte(cod_fonte) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6865 (class 2606 OID 9467143)
--- Name: exemplar_ref_cod_motivo_baixa_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar
     ADD CONSTRAINT exemplar_ref_cod_motivo_baixa_fkey FOREIGN KEY (ref_cod_motivo_baixa) REFERENCES pmieducar.motivo_baixa(cod_motivo_baixa) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6864 (class 2606 OID 9467148)
--- Name: exemplar_ref_cod_situacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.exemplar
     ADD CONSTRAINT exemplar_ref_cod_situacao_fkey FOREIGN KEY (ref_cod_situacao) REFERENCES pmieducar.situacao(cod_situacao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6863 (class 2606 OID 9467153)
--- Name: exemplar_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar
     ADD CONSTRAINT exemplar_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6862 (class 2606 OID 9467158)
--- Name: exemplar_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.exemplar
     ADD CONSTRAINT exemplar_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6874 (class 2606 OID 9467163)
--- Name: exemplar_tipo_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar_tipo
     ADD CONSTRAINT exemplar_tipo_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6873 (class 2606 OID 9467168)
--- Name: exemplar_tipo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.exemplar_tipo
     ADD CONSTRAINT exemplar_tipo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6872 (class 2606 OID 9467173)
--- Name: exemplar_tipo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.exemplar_tipo
     ADD CONSTRAINT exemplar_tipo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6878 (class 2606 OID 9467178)
--- Name: falta_aluno_ref_cod_curso_disciplina; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_aluno
     ADD CONSTRAINT falta_aluno_ref_cod_curso_disciplina FOREIGN KEY (ref_cod_curso_disciplina) REFERENCES pmieducar.disciplina(cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6877 (class 2606 OID 9467183)
--- Name: falta_aluno_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.falta_aluno
     ADD CONSTRAINT falta_aluno_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie, ref_cod_escola, ref_cod_disciplina) REFERENCES pmieducar.escola_serie_disciplina(ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6876 (class 2606 OID 9467188)
--- Name: falta_aluno_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_aluno
     ADD CONSTRAINT falta_aluno_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6875 (class 2606 OID 9467193)
--- Name: falta_aluno_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.falta_aluno
     ADD CONSTRAINT falta_aluno_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6886 (class 2606 OID 9467198)
--- Name: falta_atraso_compensado_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_atraso_compensado
     ADD CONSTRAINT falta_atraso_compensado_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6885 (class 2606 OID 9467203)
--- Name: falta_atraso_compensado_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.falta_atraso_compensado
     ADD CONSTRAINT falta_atraso_compensado_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6884 (class 2606 OID 9467208)
--- Name: falta_atraso_compensado_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_atraso_compensado
     ADD CONSTRAINT falta_atraso_compensado_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6883 (class 2606 OID 9467213)
--- Name: falta_atraso_compensado_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.falta_atraso_compensado
     ADD CONSTRAINT falta_atraso_compensado_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6882 (class 2606 OID 9467218)
--- Name: falta_atraso_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_atraso
     ADD CONSTRAINT falta_atraso_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6881 (class 2606 OID 9467223)
--- Name: falta_atraso_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.falta_atraso
     ADD CONSTRAINT falta_atraso_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6880 (class 2606 OID 9467228)
--- Name: falta_atraso_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.falta_atraso
     ADD CONSTRAINT falta_atraso_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6879 (class 2606 OID 9467233)
--- Name: falta_atraso_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.falta_atraso
     ADD CONSTRAINT falta_atraso_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6888 (class 2606 OID 9467238)
--- Name: faltas_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.faltas
     ADD CONSTRAINT faltas_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6887 (class 2606 OID 9467243)
--- Name: faltas_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.faltas
     ADD CONSTRAINT faltas_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6718 (class 2606 OID 9467248)
--- Name: fk_abandono_tipo_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.abandono_tipo
     ADD CONSTRAINT fk_abandono_tipo_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao);
 
-
---
--- TOC entry 6717 (class 2606 OID 9467253)
--- Name: fk_abandono_tipo_usuario_cad; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.abandono_tipo
     ADD CONSTRAINT fk_abandono_tipo_usuario_cad FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario);
 
 
---
--- TOC entry 6716 (class 2606 OID 9467258)
--- Name: fk_abandono_tipo_usuario_exc; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.abandono_tipo
     ADD CONSTRAINT fk_abandono_tipo_usuario_exc FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario);
 
-
---
--- TOC entry 6830 (class 2606 OID 9467263)
--- Name: fk_distribuicao_uniforme_escola; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.distribuicao_uniforme
     ADD CONSTRAINT fk_distribuicao_uniforme_escola FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola);
 
 
---
--- TOC entry 6935 (class 2606 OID 9467268)
--- Name: fk_matricula_abandono_tipo; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT fk_matricula_abandono_tipo FOREIGN KEY (ref_cod_abandono_tipo) REFERENCES pmieducar.abandono_tipo(cod_abandono_tipo);
 
-
---
--- TOC entry 6803 (class 2606 OID 9467273)
--- Name: fk_ref_cod_biblioteca_cliente; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.cliente_tipo_cliente
     ADD CONSTRAINT fk_ref_cod_biblioteca_cliente FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7002 (class 2606 OID 9467278)
--- Name: fk_ref_cod_exemplar; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.reservas
     ADD CONSTRAINT fk_ref_cod_exemplar FOREIGN KEY (ref_cod_exemplar) REFERENCES pmieducar.exemplar(cod_exemplar) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7019 (class 2606 OID 9467283)
--- Name: fk_servidor_pessoa; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT fk_servidor_pessoa FOREIGN KEY (cod_servidor) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 7081 (class 2606 OID 9467288)
--- Name: fk_turma_disciplina_dispensada; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT fk_turma_disciplina_dispensada FOREIGN KEY (ref_cod_disciplina_dispensada) REFERENCES modules.componente_curricular(id);
 
-
---
--- TOC entry 6891 (class 2606 OID 9467293)
--- Name: fonte_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.fonte
     ADD CONSTRAINT fonte_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6890 (class 2606 OID 9467298)
--- Name: fonte_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.fonte
     ADD CONSTRAINT fonte_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6889 (class 2606 OID 9467303)
--- Name: fonte_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.fonte
     ADD CONSTRAINT fonte_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6894 (class 2606 OID 9467308)
--- Name: funca_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.funcao
     ADD CONSTRAINT funca_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6893 (class 2606 OID 9467313)
--- Name: funcao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.funcao
     ADD CONSTRAINT funcao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6892 (class 2606 OID 9467318)
--- Name: funcao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.funcao
     ADD CONSTRAINT funcao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6899 (class 2606 OID 9467323)
--- Name: habilitacao_curso_ref_cod_curso_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.habilitacao_curso
     ADD CONSTRAINT habilitacao_curso_ref_cod_curso_fkey FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6898 (class 2606 OID 9467328)
--- Name: habilitacao_curso_ref_cod_habilitacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.habilitacao_curso
     ADD CONSTRAINT habilitacao_curso_ref_cod_habilitacao_fkey FOREIGN KEY (ref_cod_habilitacao) REFERENCES pmieducar.habilitacao(cod_habilitacao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6897 (class 2606 OID 9467333)
--- Name: habilitacao_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.habilitacao
     ADD CONSTRAINT habilitacao_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6896 (class 2606 OID 9467338)
--- Name: habilitacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.habilitacao
     ADD CONSTRAINT habilitacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6895 (class 2606 OID 9467343)
--- Name: habilitacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.habilitacao
     ADD CONSTRAINT habilitacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6900 (class 2606 OID 9467348)
--- Name: historico_disciplinas_ref_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.historico_disciplinas
     ADD CONSTRAINT historico_disciplinas_ref_ref_cod_aluno_fkey FOREIGN KEY (ref_ref_cod_aluno, ref_sequencial) REFERENCES pmieducar.historico_escolar(ref_cod_aluno, sequencial) ON UPDATE CASCADE ON DELETE CASCADE;
 
-
---
--- TOC entry 6906 (class 2606 OID 9467353)
--- Name: historico_escolar_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.historico_escolar
     ADD CONSTRAINT historico_escolar_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
---
--- TOC entry 6905 (class 2606 OID 9467358)
--- Name: historico_escolar_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.historico_escolar
     ADD CONSTRAINT historico_escolar_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola);
 
-
---
--- TOC entry 6904 (class 2606 OID 9467363)
--- Name: historico_escolar_ref_cod_escola_fkey1; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.historico_escolar
     ADD CONSTRAINT historico_escolar_ref_cod_escola_fkey1 FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola);
 
 
---
--- TOC entry 6903 (class 2606 OID 9467368)
--- Name: historico_escolar_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.historico_escolar
     ADD CONSTRAINT historico_escolar_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6902 (class 2606 OID 9467373)
--- Name: historico_escolar_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.historico_escolar
     ADD CONSTRAINT historico_escolar_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6901 (class 2606 OID 9467378)
--- Name: historico_grade_curso_id_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.historico_escolar
     ADD CONSTRAINT historico_grade_curso_id_fkey FOREIGN KEY (historico_grade_curso_id) REFERENCES pmieducar.historico_grade_curso(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6909 (class 2606 OID 9467383)
--- Name: infra_comodo_funcao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.infra_comodo_funcao
     ADD CONSTRAINT infra_comodo_funcao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6908 (class 2606 OID 9467388)
--- Name: infra_comodo_funcao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.infra_comodo_funcao
     ADD CONSTRAINT infra_comodo_funcao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6907 (class 2606 OID 9467393)
--- Name: infra_comodo_ref_cod_escola; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.infra_comodo_funcao
     ADD CONSTRAINT infra_comodo_ref_cod_escola FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6916 (class 2606 OID 9467398)
--- Name: infra_predio_comodo_ref_cod_infra_comodo_funcao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.infra_predio_comodo
     ADD CONSTRAINT infra_predio_comodo_ref_cod_infra_comodo_funcao_fkey FOREIGN KEY (ref_cod_infra_comodo_funcao) REFERENCES pmieducar.infra_comodo_funcao(cod_infra_comodo_funcao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6915 (class 2606 OID 9467403)
--- Name: infra_predio_comodo_ref_cod_infra_predio_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.infra_predio_comodo
     ADD CONSTRAINT infra_predio_comodo_ref_cod_infra_predio_fkey FOREIGN KEY (ref_cod_infra_predio) REFERENCES pmieducar.infra_predio(cod_infra_predio) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6914 (class 2606 OID 9467408)
--- Name: infra_predio_comodo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.infra_predio_comodo
     ADD CONSTRAINT infra_predio_comodo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6913 (class 2606 OID 9467413)
--- Name: infra_predio_comodo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.infra_predio_comodo
     ADD CONSTRAINT infra_predio_comodo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6912 (class 2606 OID 9467418)
--- Name: infra_predio_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.infra_predio
     ADD CONSTRAINT infra_predio_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6911 (class 2606 OID 9467423)
--- Name: infra_predio_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.infra_predio
     ADD CONSTRAINT infra_predio_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6910 (class 2606 OID 9467428)
--- Name: infra_predio_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.infra_predio
     ADD CONSTRAINT infra_predio_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7020 (class 2606 OID 9467433)
--- Name: instituicao_curso_superior_1_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT instituicao_curso_superior_1_fk FOREIGN KEY (instituicao_curso_superior_1) REFERENCES modules.educacenso_ies(id);
 
 
---
--- TOC entry 7021 (class 2606 OID 9467438)
--- Name: instituicao_curso_superior_2_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT instituicao_curso_superior_2_fk FOREIGN KEY (instituicao_curso_superior_2) REFERENCES modules.educacenso_ies(id);
 
-
---
--- TOC entry 7022 (class 2606 OID 9467443)
--- Name: instituicao_curso_superior_3_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT instituicao_curso_superior_3_fk FOREIGN KEY (instituicao_curso_superior_3) REFERENCES modules.educacenso_ies(id);
 
 
---
--- TOC entry 6920 (class 2606 OID 9467448)
--- Name: instituicao_id_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.instituicao_documentacao
     ADD CONSTRAINT instituicao_id_fkey FOREIGN KEY (instituicao_id) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6919 (class 2606 OID 9467453)
--- Name: instituicao_ref_idtlog_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.instituicao
     ADD CONSTRAINT instituicao_ref_idtlog_fkey FOREIGN KEY (ref_idtlog) REFERENCES urbano.tipo_logradouro(idtlog) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6918 (class 2606 OID 9467458)
--- Name: instituicao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.instituicao
     ADD CONSTRAINT instituicao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6917 (class 2606 OID 9467463)
--- Name: instituicao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.instituicao
     ADD CONSTRAINT instituicao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6924 (class 2606 OID 9467468)
--- Name: material_didatico_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.material_didatico
     ADD CONSTRAINT material_didatico_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6923 (class 2606 OID 9467473)
--- Name: material_didatico_ref_cod_material_tipo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.material_didatico
     ADD CONSTRAINT material_didatico_ref_cod_material_tipo_fkey FOREIGN KEY (ref_cod_material_tipo) REFERENCES pmieducar.material_tipo(cod_material_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6922 (class 2606 OID 9467478)
--- Name: material_didatico_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.material_didatico
     ADD CONSTRAINT material_didatico_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6921 (class 2606 OID 9467483)
--- Name: material_didatico_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.material_didatico
     ADD CONSTRAINT material_didatico_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6927 (class 2606 OID 9467488)
--- Name: material_tipo_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.material_tipo
     ADD CONSTRAINT material_tipo_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6926 (class 2606 OID 9467493)
--- Name: material_tipo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.material_tipo
     ADD CONSTRAINT material_tipo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6925 (class 2606 OID 9467498)
--- Name: material_tipo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.material_tipo
     ADD CONSTRAINT material_tipo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6937 (class 2606 OID 9467503)
--- Name: matricula_excessao_ref_cod_disciplina_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula_excessao
     ADD CONSTRAINT matricula_excessao_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_serie, ref_cod_escola, ref_cod_disciplina) REFERENCES pmieducar.escola_serie_disciplina(ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6936 (class 2606 OID 9467508)
--- Name: matricula_excessao_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula_excessao
     ADD CONSTRAINT matricula_excessao_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula, ref_cod_turma, ref_sequencial) REFERENCES pmieducar.matricula_turma(ref_cod_matricula, ref_cod_turma, sequencial) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6941 (class 2606 OID 9467513)
--- Name: matricula_ocorrencia_discipli_ref_cod_tipo_ocorrencia_disc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula_ocorrencia_disciplinar
     ADD CONSTRAINT matricula_ocorrencia_discipli_ref_cod_tipo_ocorrencia_disc_fkey FOREIGN KEY (ref_cod_tipo_ocorrencia_disciplinar) REFERENCES pmieducar.tipo_ocorrencia_disciplinar(cod_tipo_ocorrencia_disciplinar) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6940 (class 2606 OID 9467518)
--- Name: matricula_ocorrencia_disciplinar_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula_ocorrencia_disciplinar
     ADD CONSTRAINT matricula_ocorrencia_disciplinar_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6939 (class 2606 OID 9467523)
--- Name: matricula_ocorrencia_disciplinar_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula_ocorrencia_disciplinar
     ADD CONSTRAINT matricula_ocorrencia_disciplinar_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6938 (class 2606 OID 9467528)
--- Name: matricula_ocorrencia_disciplinar_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula_ocorrencia_disciplinar
     ADD CONSTRAINT matricula_ocorrencia_disciplinar_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6934 (class 2606 OID 9467533)
--- Name: matricula_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6933 (class 2606 OID 9467538)
--- Name: matricula_ref_cod_curso; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_ref_cod_curso FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6932 (class 2606 OID 9467543)
--- Name: matricula_ref_cod_reserva_vaga_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_ref_cod_reserva_vaga_fkey FOREIGN KEY (ref_cod_reserva_vaga) REFERENCES pmieducar.reserva_vaga(cod_reserva_vaga) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6931 (class 2606 OID 9467548)
--- Name: matricula_ref_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_ref_ref_cod_escola_fkey FOREIGN KEY (ref_ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6930 (class 2606 OID 9467553)
--- Name: matricula_ref_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_ref_ref_cod_serie_fkey FOREIGN KEY (ref_ref_cod_serie) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6929 (class 2606 OID 9467558)
--- Name: matricula_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6928 (class 2606 OID 9467563)
--- Name: matricula_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula
     ADD CONSTRAINT matricula_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6945 (class 2606 OID 9467568)
--- Name: matricula_turma_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula_turma
     ADD CONSTRAINT matricula_turma_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6944 (class 2606 OID 9467573)
--- Name: matricula_turma_ref_cod_turma_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula_turma
     ADD CONSTRAINT matricula_turma_ref_cod_turma_fkey FOREIGN KEY (ref_cod_turma) REFERENCES pmieducar.turma(cod_turma) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6943 (class 2606 OID 9467578)
--- Name: matricula_turma_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.matricula_turma
     ADD CONSTRAINT matricula_turma_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6942 (class 2606 OID 9467583)
--- Name: matricula_turma_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.matricula_turma
     ADD CONSTRAINT matricula_turma_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6947 (class 2606 OID 9468963)
--- Name: menu_tipo_usuario_ref_cod_menu_submenu_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.menu_tipo_usuario
     ADD CONSTRAINT menu_tipo_usuario_ref_cod_menu_submenu_fkey FOREIGN KEY (ref_cod_menu_submenu) REFERENCES portal.menu_submenu(cod_menu_submenu) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6946 (class 2606 OID 9468968)
--- Name: menu_tipo_usuario_ref_cod_tipo_usuario_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.menu_tipo_usuario
     ADD CONSTRAINT menu_tipo_usuario_ref_cod_tipo_usuario_fkey FOREIGN KEY (ref_cod_tipo_usuario) REFERENCES pmieducar.tipo_usuario(cod_tipo_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6950 (class 2606 OID 9467588)
--- Name: modulo_ref_cod_instituicao_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.modulo
     ADD CONSTRAINT modulo_ref_cod_instituicao_fk FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6949 (class 2606 OID 9467593)
--- Name: modulo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.modulo
     ADD CONSTRAINT modulo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6948 (class 2606 OID 9467598)
--- Name: modulo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.modulo
     ADD CONSTRAINT modulo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6953 (class 2606 OID 9467603)
--- Name: motivo_afastamento_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.motivo_afastamento
     ADD CONSTRAINT motivo_afastamento_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6952 (class 2606 OID 9467608)
--- Name: motivo_afastamento_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.motivo_afastamento
     ADD CONSTRAINT motivo_afastamento_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6951 (class 2606 OID 9467613)
--- Name: motivo_afastamento_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.motivo_afastamento
     ADD CONSTRAINT motivo_afastamento_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6956 (class 2606 OID 9467618)
--- Name: motivo_baixa_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.motivo_baixa
     ADD CONSTRAINT motivo_baixa_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6955 (class 2606 OID 9467623)
--- Name: motivo_baixa_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.motivo_baixa
     ADD CONSTRAINT motivo_baixa_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6954 (class 2606 OID 9467628)
--- Name: motivo_baixa_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.motivo_baixa
     ADD CONSTRAINT motivo_baixa_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6959 (class 2606 OID 9467633)
--- Name: motivo_suspensao_ref_cod_biblioteca_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.motivo_suspensao
     ADD CONSTRAINT motivo_suspensao_ref_cod_biblioteca_fkey FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6958 (class 2606 OID 9467638)
--- Name: motivo_suspensao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.motivo_suspensao
     ADD CONSTRAINT motivo_suspensao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6957 (class 2606 OID 9467643)
--- Name: motivo_suspensao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.motivo_suspensao
     ADD CONSTRAINT motivo_suspensao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6966 (class 2606 OID 9467648)
--- Name: nivel_ensino_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nivel_ensino
     ADD CONSTRAINT nivel_ensino_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6965 (class 2606 OID 9467653)
--- Name: nivel_ensino_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.nivel_ensino
     ADD CONSTRAINT nivel_ensino_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6964 (class 2606 OID 9467658)
--- Name: nivel_ensino_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nivel_ensino
     ADD CONSTRAINT nivel_ensino_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6963 (class 2606 OID 9467663)
--- Name: nivel_ref_cod_categoria_nivel_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.nivel
     ADD CONSTRAINT nivel_ref_cod_categoria_nivel_fkey FOREIGN KEY (ref_cod_categoria_nivel) REFERENCES pmieducar.categoria_nivel(cod_categoria_nivel) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6962 (class 2606 OID 9467668)
--- Name: nivel_ref_cod_nivel_anterior_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nivel
     ADD CONSTRAINT nivel_ref_cod_nivel_anterior_fkey FOREIGN KEY (ref_cod_nivel_anterior) REFERENCES pmieducar.nivel(cod_nivel) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6961 (class 2606 OID 9467673)
--- Name: nivel_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.nivel
     ADD CONSTRAINT nivel_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6960 (class 2606 OID 9467678)
--- Name: nivel_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nivel
     ADD CONSTRAINT nivel_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6972 (class 2606 OID 9467683)
--- Name: nota_aluno_ref_cod_curso_disciplina; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.nota_aluno
     ADD CONSTRAINT nota_aluno_ref_cod_curso_disciplina FOREIGN KEY (ref_cod_curso_disciplina) REFERENCES pmieducar.disciplina(cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6971 (class 2606 OID 9467688)
--- Name: nota_aluno_ref_cod_matricula_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nota_aluno
     ADD CONSTRAINT nota_aluno_ref_cod_matricula_fkey FOREIGN KEY (ref_cod_matricula) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6970 (class 2606 OID 9467693)
--- Name: nota_aluno_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.nota_aluno
     ADD CONSTRAINT nota_aluno_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie, ref_cod_escola, ref_cod_disciplina) REFERENCES pmieducar.escola_serie_disciplina(ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6969 (class 2606 OID 9467698)
--- Name: nota_aluno_ref_ref_cod_tipo_avaliacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nota_aluno
     ADD CONSTRAINT nota_aluno_ref_ref_cod_tipo_avaliacao_fkey FOREIGN KEY (ref_ref_cod_tipo_avaliacao, ref_sequencial) REFERENCES pmieducar.tipo_avaliacao_valores(ref_cod_tipo_avaliacao, sequencial) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6968 (class 2606 OID 9467703)
--- Name: nota_aluno_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.nota_aluno
     ADD CONSTRAINT nota_aluno_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6967 (class 2606 OID 9467708)
--- Name: nota_aluno_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.nota_aluno
     ADD CONSTRAINT nota_aluno_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6974 (class 2606 OID 9467713)
--- Name: operador_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.operador
     ADD CONSTRAINT operador_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6973 (class 2606 OID 9467718)
--- Name: operador_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.operador
     ADD CONSTRAINT operador_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6977 (class 2606 OID 9467723)
--- Name: pagamento_divida_ref_cod_biblioteca; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.pagamento_multa
     ADD CONSTRAINT pagamento_divida_ref_cod_biblioteca FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6976 (class 2606 OID 9467728)
--- Name: pagamento_multa_ref_cod_cliente_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.pagamento_multa
     ADD CONSTRAINT pagamento_multa_ref_cod_cliente_fkey FOREIGN KEY (ref_cod_cliente) REFERENCES pmieducar.cliente(cod_cliente) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6975 (class 2606 OID 9467733)
--- Name: pagamento_multa_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.pagamento_multa
     ADD CONSTRAINT pagamento_multa_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6770 (class 2606 OID 9467738)
--- Name: pmieducar_bloqueio_ano_letivo_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.bloqueio_ano_letivo
     ADD CONSTRAINT pmieducar_bloqueio_ano_letivo_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao);
 
-
---
--- TOC entry 6981 (class 2606 OID 9467743)
--- Name: pmieducar_projeto_aluno_ref_cod_aluno; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.projeto_aluno
     ADD CONSTRAINT pmieducar_projeto_aluno_ref_cod_aluno FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno);
 
 
---
--- TOC entry 6980 (class 2606 OID 9467748)
--- Name: pmieducar_projeto_aluno_ref_cod_projeto; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.projeto_aluno
     ADD CONSTRAINT pmieducar_projeto_aluno_ref_cod_projeto FOREIGN KEY (ref_cod_projeto) REFERENCES pmieducar.projeto(cod_projeto);
 
-
---
--- TOC entry 6979 (class 2606 OID 9467753)
--- Name: pre_requisito_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.pre_requisito
     ADD CONSTRAINT pre_requisito_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6978 (class 2606 OID 9467758)
--- Name: pre_requisito_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.pre_requisito
     ADD CONSTRAINT pre_requisito_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6990 (class 2606 OID 9467763)
--- Name: quadro_horario_horarios_ref_cod_quadro_horario_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios_aux
     ADD CONSTRAINT quadro_horario_horarios_ref_cod_quadro_horario_fkey FOREIGN KEY (ref_cod_quadro_horario) REFERENCES pmieducar.quadro_horario(cod_quadro_horario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6987 (class 2606 OID 9467768)
--- Name: quadro_horario_horarios_ref_cod_quadro_horario_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios
     ADD CONSTRAINT quadro_horario_horarios_ref_cod_quadro_horario_fkey FOREIGN KEY (ref_cod_quadro_horario) REFERENCES pmieducar.quadro_horario(cod_quadro_horario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6989 (class 2606 OID 9467773)
--- Name: quadro_horario_horarios_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios_aux
     ADD CONSTRAINT quadro_horario_horarios_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie, ref_cod_escola, ref_cod_disciplina) REFERENCES pmieducar.escola_serie_disciplina(ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6988 (class 2606 OID 9467778)
--- Name: quadro_horario_horarios_ref_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios_aux
     ADD CONSTRAINT quadro_horario_horarios_ref_servidor_fkey FOREIGN KEY (ref_servidor, ref_cod_instituicao_servidor) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6986 (class 2606 OID 9467783)
--- Name: quadro_horario_horarios_ref_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios
     ADD CONSTRAINT quadro_horario_horarios_ref_servidor_fkey FOREIGN KEY (ref_servidor, ref_cod_instituicao_servidor) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6985 (class 2606 OID 9467788)
--- Name: quadro_horario_horarios_ref_servidor_substituto_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.quadro_horario_horarios
     ADD CONSTRAINT quadro_horario_horarios_ref_servidor_substituto_fkey FOREIGN KEY (ref_servidor_substituto, ref_cod_instituicao_substituto) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6984 (class 2606 OID 9467793)
--- Name: quadro_horario_ref_cod_turma_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.quadro_horario
     ADD CONSTRAINT quadro_horario_ref_cod_turma_fkey FOREIGN KEY (ref_cod_turma) REFERENCES pmieducar.turma(cod_turma) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6983 (class 2606 OID 9467798)
--- Name: quadro_horario_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.quadro_horario
     ADD CONSTRAINT quadro_horario_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6982 (class 2606 OID 9467803)
--- Name: quadro_horario_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.quadro_horario
     ADD CONSTRAINT quadro_horario_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6789 (class 2606 OID 9467808)
--- Name: ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
     ADD CONSTRAINT ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno);
 
 
---
--- TOC entry 6829 (class 2606 OID 9467813)
--- Name: ref_cod_disciplina; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.dispensa_etapa
     ADD CONSTRAINT ref_cod_disciplina FOREIGN KEY (ref_cod_dispensa) REFERENCES pmieducar.dispensa_disciplina(cod_dispensa);
 
-
---
--- TOC entry 6788 (class 2606 OID 9467818)
--- Name: ref_cod_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
     ADD CONSTRAINT ref_cod_pessoa_cad_fkey FOREIGN KEY (ref_cod_pessoa_cad) REFERENCES cadastro.pessoa(idpes);
 
 
---
--- TOC entry 6787 (class 2606 OID 9467823)
--- Name: ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
     ADD CONSTRAINT ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie) REFERENCES pmieducar.serie(cod_serie);
 
-
---
--- TOC entry 6786 (class 2606 OID 9467828)
--- Name: ref_cod_turno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
     ADD CONSTRAINT ref_cod_turno_fkey FOREIGN KEY (ref_cod_turno) REFERENCES pmieducar.turma_turno(id);
 
 
---
--- TOC entry 6992 (class 2606 OID 9467833)
--- Name: relacao_categoria_acervo_categoria_id_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.relacao_categoria_acervo
     ADD CONSTRAINT relacao_categoria_acervo_categoria_id_fkey FOREIGN KEY (categoria_id) REFERENCES pmieducar.categoria_obra(id);
 
-
---
--- TOC entry 6991 (class 2606 OID 9467838)
--- Name: relacao_categoria_acervo_ref_cod_acervo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.relacao_categoria_acervo
     ADD CONSTRAINT relacao_categoria_acervo_ref_cod_acervo_fkey FOREIGN KEY (ref_cod_acervo) REFERENCES pmieducar.acervo(cod_acervo);
 
 
---
--- TOC entry 6994 (class 2606 OID 9467843)
--- Name: religiao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.religiao
     ADD CONSTRAINT religiao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6993 (class 2606 OID 9467848)
--- Name: religiao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.religiao
     ADD CONSTRAINT religiao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6998 (class 2606 OID 9467853)
--- Name: reserva_vaga_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.reserva_vaga
     ADD CONSTRAINT reserva_vaga_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6997 (class 2606 OID 9467858)
--- Name: reserva_vaga_ref_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.reserva_vaga
     ADD CONSTRAINT reserva_vaga_ref_ref_cod_serie_fkey FOREIGN KEY (ref_ref_cod_serie, ref_ref_cod_escola) REFERENCES pmieducar.escola_serie(ref_cod_serie, ref_cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6996 (class 2606 OID 9467863)
--- Name: reserva_vaga_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.reserva_vaga
     ADD CONSTRAINT reserva_vaga_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6995 (class 2606 OID 9467868)
--- Name: reserva_vaga_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.reserva_vaga
     ADD CONSTRAINT reserva_vaga_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7001 (class 2606 OID 9467873)
--- Name: reservas_ref_cod_cliente_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.reservas
     ADD CONSTRAINT reservas_ref_cod_cliente_fkey FOREIGN KEY (ref_cod_cliente) REFERENCES pmieducar.cliente(cod_cliente) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7000 (class 2606 OID 9467878)
--- Name: reservas_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.reservas
     ADD CONSTRAINT reservas_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6999 (class 2606 OID 9467883)
--- Name: reservas_ref_usuario_libera_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.reservas
     ADD CONSTRAINT reservas_ref_usuario_libera_fkey FOREIGN KEY (ref_usuario_libera) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7006 (class 2606 OID 9467888)
--- Name: sequencia_serie_ref_serie_destino_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.sequencia_serie
     ADD CONSTRAINT sequencia_serie_ref_serie_destino_fkey FOREIGN KEY (ref_serie_destino) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7005 (class 2606 OID 9467893)
--- Name: sequencia_serie_ref_serie_origem_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.sequencia_serie
     ADD CONSTRAINT sequencia_serie_ref_serie_origem_fkey FOREIGN KEY (ref_serie_origem) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7004 (class 2606 OID 9467898)
--- Name: sequencia_serie_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.sequencia_serie
     ADD CONSTRAINT sequencia_serie_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7003 (class 2606 OID 9467903)
--- Name: sequencia_serie_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.sequencia_serie
     ADD CONSTRAINT sequencia_serie_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7014 (class 2606 OID 9467908)
--- Name: serie_pre_requisito_ref_cod_operador_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie_pre_requisito
     ADD CONSTRAINT serie_pre_requisito_ref_cod_operador_fkey FOREIGN KEY (ref_cod_operador) REFERENCES pmieducar.operador(cod_operador) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7013 (class 2606 OID 9467913)
--- Name: serie_pre_requisito_ref_cod_pre_requisito_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie_pre_requisito
     ADD CONSTRAINT serie_pre_requisito_ref_cod_pre_requisito_fkey FOREIGN KEY (ref_cod_pre_requisito) REFERENCES pmieducar.pre_requisito(cod_pre_requisito) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7012 (class 2606 OID 9467918)
--- Name: serie_pre_requisito_ref_cod_serie_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie_pre_requisito
     ADD CONSTRAINT serie_pre_requisito_ref_cod_serie_fkey FOREIGN KEY (ref_cod_serie) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7011 (class 2606 OID 9467923)
--- Name: serie_ref_cod_curso_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie
     ADD CONSTRAINT serie_ref_cod_curso_fkey FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7010 (class 2606 OID 9467928)
--- Name: serie_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie
     ADD CONSTRAINT serie_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7009 (class 2606 OID 9467933)
--- Name: serie_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie
     ADD CONSTRAINT serie_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7008 (class 2606 OID 9467938)
--- Name: serie_regra_avaliacao_diferenciada_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie
     ADD CONSTRAINT serie_regra_avaliacao_diferenciada_fk FOREIGN KEY (regra_avaliacao_diferenciada_id) REFERENCES modules.regra_avaliacao(id) ON DELETE RESTRICT;
 
 
---
--- TOC entry 7007 (class 2606 OID 9467943)
--- Name: serie_regra_avaliacao_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie
     ADD CONSTRAINT serie_regra_avaliacao_fk FOREIGN KEY (regra_avaliacao_id) REFERENCES modules.regra_avaliacao(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7018 (class 2606 OID 9467948)
--- Name: serie_vaga_ref_cod_curso_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie_vaga
     ADD CONSTRAINT serie_vaga_ref_cod_curso_fk FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7017 (class 2606 OID 9467953)
--- Name: serie_vaga_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie_vaga
     ADD CONSTRAINT serie_vaga_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7016 (class 2606 OID 9467958)
--- Name: serie_vaga_ref_cod_instituicao_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.serie_vaga
     ADD CONSTRAINT serie_vaga_ref_cod_instituicao_fk FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7015 (class 2606 OID 9467963)
--- Name: serie_vaga_ref_cod_serie_fk; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.serie_vaga
     ADD CONSTRAINT serie_vaga_ref_cod_serie_fk FOREIGN KEY (ref_cod_serie) REFERENCES pmieducar.serie(cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7032 (class 2606 OID 9467968)
--- Name: servidor_afastamento_ref_cod_motivo_afastamento_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_afastamento
     ADD CONSTRAINT servidor_afastamento_ref_cod_motivo_afastamento_fkey FOREIGN KEY (ref_cod_motivo_afastamento) REFERENCES pmieducar.motivo_afastamento(cod_motivo_afastamento) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7031 (class 2606 OID 9467973)
--- Name: servidor_afastamento_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_afastamento
     ADD CONSTRAINT servidor_afastamento_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7030 (class 2606 OID 9467978)
--- Name: servidor_afastamento_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_afastamento
     ADD CONSTRAINT servidor_afastamento_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7029 (class 2606 OID 9467983)
--- Name: servidor_afastamento_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_afastamento
     ADD CONSTRAINT servidor_afastamento_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7036 (class 2606 OID 9467988)
--- Name: servidor_alocacao_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_alocacao
     ADD CONSTRAINT servidor_alocacao_ref_cod_escola_fkey FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7035 (class 2606 OID 9467993)
--- Name: servidor_alocacao_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_alocacao
     ADD CONSTRAINT servidor_alocacao_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7034 (class 2606 OID 9467998)
--- Name: servidor_alocacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_alocacao
     ADD CONSTRAINT servidor_alocacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7033 (class 2606 OID 9468003)
--- Name: servidor_alocacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_alocacao
     ADD CONSTRAINT servidor_alocacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7037 (class 2606 OID 9468008)
--- Name: servidor_curso_ref_cod_formacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_curso
     ADD CONSTRAINT servidor_curso_ref_cod_formacao_fkey FOREIGN KEY (ref_cod_formacao) REFERENCES pmieducar.servidor_formacao(cod_formacao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7039 (class 2606 OID 9468013)
--- Name: servidor_cuso_ministra_ref_cod_curso_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_curso_ministra
     ADD CONSTRAINT servidor_cuso_ministra_ref_cod_curso_fkey FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7038 (class 2606 OID 9468018)
--- Name: servidor_cuso_ministra_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_curso_ministra
     ADD CONSTRAINT servidor_cuso_ministra_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7041 (class 2606 OID 9468023)
--- Name: servidor_disciplina_ref_cod_disciplina_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_disciplina
     ADD CONSTRAINT servidor_disciplina_ref_cod_disciplina_fkey FOREIGN KEY (ref_cod_disciplina) REFERENCES modules.componente_curricular(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7040 (class 2606 OID 9468028)
--- Name: servidor_disciplina_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_disciplina
     ADD CONSTRAINT servidor_disciplina_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7044 (class 2606 OID 9468033)
--- Name: servidor_formacao_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_formacao
     ADD CONSTRAINT servidor_formacao_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7043 (class 2606 OID 9468038)
--- Name: servidor_formacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_formacao
     ADD CONSTRAINT servidor_formacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7042 (class 2606 OID 9468043)
--- Name: servidor_formacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_formacao
     ADD CONSTRAINT servidor_formacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7046 (class 2606 OID 9468048)
--- Name: servidor_funcao_ref_cod_funcao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor_funcao
     ADD CONSTRAINT servidor_funcao_ref_cod_funcao_fkey FOREIGN KEY (ref_cod_funcao) REFERENCES pmieducar.funcao(cod_funcao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7045 (class 2606 OID 9468053)
--- Name: servidor_funcao_ref_cod_servidor_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_funcao
     ADD CONSTRAINT servidor_funcao_ref_cod_servidor_fkey FOREIGN KEY (ref_cod_servidor, ref_ref_cod_instituicao) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7023 (class 2606 OID 9468058)
--- Name: servidor_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT servidor_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7024 (class 2606 OID 9468063)
--- Name: servidor_ref_cod_subnivel_; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT servidor_ref_cod_subnivel_ FOREIGN KEY (ref_cod_subnivel) REFERENCES pmieducar.subnivel(cod_subnivel) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7025 (class 2606 OID 9468068)
--- Name: servidor_ref_idesco_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.servidor
     ADD CONSTRAINT servidor_ref_idesco_fkey FOREIGN KEY (ref_idesco) REFERENCES cadastro.escolaridade(idesco) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7047 (class 2606 OID 9468073)
--- Name: servidor_titulo_concurso_ref_cod_formacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.servidor_titulo_concurso
     ADD CONSTRAINT servidor_titulo_concurso_ref_cod_formacao_fkey FOREIGN KEY (ref_cod_formacao) REFERENCES pmieducar.servidor_formacao(cod_formacao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7050 (class 2606 OID 9468078)
--- Name: situacao_ref_cod_biblioteca; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.situacao
     ADD CONSTRAINT situacao_ref_cod_biblioteca FOREIGN KEY (ref_cod_biblioteca) REFERENCES pmieducar.biblioteca(cod_biblioteca) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7049 (class 2606 OID 9468083)
--- Name: situacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.situacao
     ADD CONSTRAINT situacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7048 (class 2606 OID 9468088)
--- Name: situacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.situacao
     ADD CONSTRAINT situacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7054 (class 2606 OID 9468093)
--- Name: subnivel_ref_cod_nivel_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.subnivel
     ADD CONSTRAINT subnivel_ref_cod_nivel_fkey FOREIGN KEY (ref_cod_nivel) REFERENCES pmieducar.nivel(cod_nivel) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7053 (class 2606 OID 9468098)
--- Name: subnivel_ref_cod_subnivel_anterior_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.subnivel
     ADD CONSTRAINT subnivel_ref_cod_subnivel_anterior_fkey FOREIGN KEY (ref_cod_subnivel_anterior) REFERENCES pmieducar.subnivel(cod_subnivel) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7052 (class 2606 OID 9468103)
--- Name: subnivel_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.subnivel
     ADD CONSTRAINT subnivel_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7051 (class 2606 OID 9468108)
--- Name: subnivel_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.subnivel
     ADD CONSTRAINT subnivel_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7057 (class 2606 OID 9468113)
--- Name: tipo_avaliacao_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_avaliacao
     ADD CONSTRAINT tipo_avaliacao_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7056 (class 2606 OID 9468118)
--- Name: tipo_avaliacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_avaliacao
     ADD CONSTRAINT tipo_avaliacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7055 (class 2606 OID 9468123)
--- Name: tipo_avaliacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_avaliacao
     ADD CONSTRAINT tipo_avaliacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7058 (class 2606 OID 9468128)
--- Name: tipo_avaliacao_valores_ref_cod_tipo_avaliacao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_avaliacao_valores
     ADD CONSTRAINT tipo_avaliacao_valores_ref_cod_tipo_avaliacao_fkey FOREIGN KEY (ref_cod_tipo_avaliacao) REFERENCES pmieducar.tipo_avaliacao(cod_tipo_avaliacao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7061 (class 2606 OID 9468133)
--- Name: tipo_dispensa_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_dispensa
     ADD CONSTRAINT tipo_dispensa_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7060 (class 2606 OID 9468138)
--- Name: tipo_dispensa_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_dispensa
     ADD CONSTRAINT tipo_dispensa_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7059 (class 2606 OID 9468143)
--- Name: tipo_dispensa_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_dispensa
     ADD CONSTRAINT tipo_dispensa_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7064 (class 2606 OID 9468148)
--- Name: tipo_ensino_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_ensino
     ADD CONSTRAINT tipo_ensino_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7063 (class 2606 OID 9468153)
--- Name: tipo_ensino_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_ensino
     ADD CONSTRAINT tipo_ensino_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7062 (class 2606 OID 9468158)
--- Name: tipo_ensino_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_ensino
     ADD CONSTRAINT tipo_ensino_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7067 (class 2606 OID 9468163)
--- Name: tipo_ocorrencia_disciplinar_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_ocorrencia_disciplinar
     ADD CONSTRAINT tipo_ocorrencia_disciplinar_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7066 (class 2606 OID 9468168)
--- Name: tipo_ocorrencia_disciplinar_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_ocorrencia_disciplinar
     ADD CONSTRAINT tipo_ocorrencia_disciplinar_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7065 (class 2606 OID 9468173)
--- Name: tipo_ocorrencia_disciplinar_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_ocorrencia_disciplinar
     ADD CONSTRAINT tipo_ocorrencia_disciplinar_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7070 (class 2606 OID 9468178)
--- Name: tipo_regime_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_regime
     ADD CONSTRAINT tipo_regime_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7069 (class 2606 OID 9468183)
--- Name: tipo_regime_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_regime
     ADD CONSTRAINT tipo_regime_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7068 (class 2606 OID 9468188)
--- Name: tipo_regime_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_regime
     ADD CONSTRAINT tipo_regime_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7072 (class 2606 OID 9468193)
--- Name: tipo_usuario_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.tipo_usuario
     ADD CONSTRAINT tipo_usuario_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7071 (class 2606 OID 9468198)
--- Name: tipo_usuario_ref_funcionario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.tipo_usuario
     ADD CONSTRAINT tipo_usuario_ref_funcionario_exc_fkey FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7077 (class 2606 OID 9468203)
--- Name: transferencia_solicitacao_ref_cod_matricula_entrada_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.transferencia_solicitacao
     ADD CONSTRAINT transferencia_solicitacao_ref_cod_matricula_entrada_fkey FOREIGN KEY (ref_cod_matricula_entrada) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7076 (class 2606 OID 9468208)
--- Name: transferencia_solicitacao_ref_cod_matricula_saida_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.transferencia_solicitacao
     ADD CONSTRAINT transferencia_solicitacao_ref_cod_matricula_saida_fkey FOREIGN KEY (ref_cod_matricula_saida) REFERENCES pmieducar.matricula(cod_matricula) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7075 (class 2606 OID 9468213)
--- Name: transferencia_solicitacao_ref_cod_transferencia_tipo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.transferencia_solicitacao
     ADD CONSTRAINT transferencia_solicitacao_ref_cod_transferencia_tipo_fkey FOREIGN KEY (ref_cod_transferencia_tipo) REFERENCES pmieducar.transferencia_tipo(cod_transferencia_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7074 (class 2606 OID 9468218)
--- Name: transferencia_solicitacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.transferencia_solicitacao
     ADD CONSTRAINT transferencia_solicitacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7073 (class 2606 OID 9468223)
--- Name: transferencia_solicitacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.transferencia_solicitacao
     ADD CONSTRAINT transferencia_solicitacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7080 (class 2606 OID 9468228)
--- Name: transferencia_tipo_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.transferencia_tipo
     ADD CONSTRAINT transferencia_tipo_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7079 (class 2606 OID 9468233)
--- Name: transferencia_tipo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.transferencia_tipo
     ADD CONSTRAINT transferencia_tipo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7078 (class 2606 OID 9468238)
--- Name: transferencia_tipo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.transferencia_tipo
     ADD CONSTRAINT transferencia_tipo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7082 (class 2606 OID 9468248)
--- Name: turma_escola_serie_muil; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_escola_serie_muil FOREIGN KEY (ref_ref_cod_serie_mult, ref_ref_cod_escola_mult) REFERENCES pmieducar.escola_serie(ref_cod_serie, ref_cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7093 (class 2606 OID 9468253)
--- Name: turma_modulo_ref_cod_modulo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma_modulo
     ADD CONSTRAINT turma_modulo_ref_cod_modulo_fkey FOREIGN KEY (ref_cod_modulo) REFERENCES pmieducar.modulo(cod_modulo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7092 (class 2606 OID 9468258)
--- Name: turma_modulo_ref_cod_turma_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma_modulo
     ADD CONSTRAINT turma_modulo_ref_cod_turma_fkey FOREIGN KEY (ref_cod_turma) REFERENCES pmieducar.turma(cod_turma) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7083 (class 2606 OID 9468263)
--- Name: turma_ref_cod_curso; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_ref_cod_curso FOREIGN KEY (ref_cod_curso) REFERENCES pmieducar.curso(cod_curso) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7084 (class 2606 OID 9468268)
--- Name: turma_ref_cod_infra_predio_comodo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_ref_cod_infra_predio_comodo_fkey FOREIGN KEY (ref_cod_infra_predio_comodo) REFERENCES pmieducar.infra_predio_comodo(cod_infra_predio_comodo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7085 (class 2606 OID 9468273)
--- Name: turma_ref_cod_instituicao; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_ref_cod_instituicao FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7086 (class 2606 OID 9468278)
--- Name: turma_ref_cod_regente; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_ref_cod_regente FOREIGN KEY (ref_cod_regente, ref_cod_instituicao_regente) REFERENCES pmieducar.servidor(cod_servidor, ref_cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7087 (class 2606 OID 9468283)
--- Name: turma_ref_ref_cod_escola_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_ref_ref_cod_escola_fkey FOREIGN KEY (ref_ref_cod_escola, ref_ref_cod_serie) REFERENCES pmieducar.escola_serie(ref_cod_escola, ref_cod_serie) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7088 (class 2606 OID 9468288)
--- Name: turma_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7089 (class 2606 OID 9468293)
--- Name: turma_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7095 (class 2606 OID 9468298)
--- Name: turma_tipo_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma_tipo
     ADD CONSTRAINT turma_tipo_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7094 (class 2606 OID 9468303)
--- Name: turma_tipo_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma_tipo
     ADD CONSTRAINT turma_tipo_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7090 (class 2606 OID 9468308)
--- Name: turma_turma_tipo_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_turma_tipo_fkey FOREIGN KEY (ref_cod_turma_tipo) REFERENCES pmieducar.turma_tipo(cod_turma_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7091 (class 2606 OID 9468313)
--- Name: turma_turno_id_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.turma
     ADD CONSTRAINT turma_turno_id_fkey FOREIGN KEY (turma_turno_id) REFERENCES pmieducar.turma_turno(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7100 (class 2606 OID 9468318)
--- Name: usuario_cod_usuario_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.usuario
     ADD CONSTRAINT usuario_cod_usuario_fkey FOREIGN KEY (cod_usuario) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7099 (class 2606 OID 9468323)
--- Name: usuario_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.usuario
     ADD CONSTRAINT usuario_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7098 (class 2606 OID 9468328)
--- Name: usuario_ref_cod_tipo_usuario_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.usuario
     ADD CONSTRAINT usuario_ref_cod_tipo_usuario_fkey FOREIGN KEY (ref_cod_tipo_usuario) REFERENCES pmieducar.tipo_usuario(cod_tipo_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7097 (class 2606 OID 9468333)
--- Name: usuario_ref_funcionario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
 
 ALTER TABLE ONLY pmieducar.usuario
     ADD CONSTRAINT usuario_ref_funcionario_cad_fkey FOREIGN KEY (ref_funcionario_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7096 (class 2606 OID 9468338)
--- Name: usuario_ref_funcionario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
---
-
 ALTER TABLE ONLY pmieducar.usuario
     ADD CONSTRAINT usuario_ref_funcionario_exc_fkey FOREIGN KEY (ref_funcionario_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7101 (class 2606 OID 9468343)
--- Name: funcionario_su_ref_ref_cod_pessoa_fj_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.funcionario_su
     ADD CONSTRAINT funcionario_su_ref_ref_cod_pessoa_fj_fkey FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
---
--- TOC entry 7105 (class 2606 OID 9468348)
--- Name: grupomoderador_ref_cod_grupos_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.grupomoderador
     ADD CONSTRAINT grupomoderador_ref_cod_grupos_fkey FOREIGN KEY (ref_cod_grupos) REFERENCES pmiotopic.grupos(cod_grupos) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7104 (class 2606 OID 9468353)
--- Name: grupomoderador_ref_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.grupomoderador
     ADD CONSTRAINT grupomoderador_ref_pessoa_cad_fkey FOREIGN KEY (ref_pessoa_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7103 (class 2606 OID 9468358)
--- Name: grupomoderador_ref_pessoa_exc_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.grupomoderador
     ADD CONSTRAINT grupomoderador_ref_pessoa_exc_fkey FOREIGN KEY (ref_pessoa_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7102 (class 2606 OID 9468363)
--- Name: grupomoderador_ref_ref_cod_pessoa_fj_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.grupomoderador
     ADD CONSTRAINT grupomoderador_ref_ref_cod_pessoa_fj_fkey FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7109 (class 2606 OID 9468368)
--- Name: grupopessoa_ref_cod_grupos_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.grupopessoa
     ADD CONSTRAINT grupopessoa_ref_cod_grupos_fkey FOREIGN KEY (ref_cod_grupos) REFERENCES pmiotopic.grupos(cod_grupos) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7108 (class 2606 OID 9468373)
--- Name: grupopessoa_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.grupopessoa
     ADD CONSTRAINT grupopessoa_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7107 (class 2606 OID 9468378)
--- Name: grupopessoa_ref_pessoa_cadatro_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.grupopessoa
     ADD CONSTRAINT grupopessoa_ref_pessoa_cadatro_fkey FOREIGN KEY (ref_pessoa_cad, ref_grupos_cad) REFERENCES pmiotopic.grupomoderador(ref_ref_cod_pessoa_fj, ref_cod_grupos) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7106 (class 2606 OID 9468383)
--- Name: grupopessoa_ref_pessoa_exclusao_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.grupopessoa
     ADD CONSTRAINT grupopessoa_ref_pessoa_exclusao_fkey FOREIGN KEY (ref_pessoa_exc, ref_grupos_exc) REFERENCES pmiotopic.grupomoderador(ref_ref_cod_pessoa_fj, ref_cod_grupos) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7111 (class 2606 OID 9468388)
--- Name: grupos_ref_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.grupos
     ADD CONSTRAINT grupos_ref_pessoa_cad_fkey FOREIGN KEY (ref_pessoa_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7110 (class 2606 OID 9468393)
--- Name: grupos_ref_pessoa_exc_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.grupos
     ADD CONSTRAINT grupos_ref_pessoa_exc_fkey FOREIGN KEY (ref_pessoa_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7114 (class 2606 OID 9468398)
--- Name: notas_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.notas
     ADD CONSTRAINT notas_ref_idpes_fkey FOREIGN KEY (ref_idpes) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7113 (class 2606 OID 9468403)
--- Name: notas_ref_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.notas
     ADD CONSTRAINT notas_ref_pessoa_cad_fkey FOREIGN KEY (ref_pessoa_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7112 (class 2606 OID 9468408)
--- Name: notas_ref_pessoa_exc_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.notas
     ADD CONSTRAINT notas_ref_pessoa_exc_fkey FOREIGN KEY (ref_pessoa_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7116 (class 2606 OID 9468413)
--- Name: participante_ref_cod_reuniao_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.participante
     ADD CONSTRAINT participante_ref_cod_reuniao_fkey FOREIGN KEY (ref_cod_reuniao) REFERENCES pmiotopic.reuniao(cod_reuniao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7115 (class 2606 OID 9468418)
--- Name: participante_ref_ref_idpes_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.participante
     ADD CONSTRAINT participante_ref_ref_idpes_fkey FOREIGN KEY (ref_ref_idpes, ref_ref_cod_grupos) REFERENCES pmiotopic.grupopessoa(ref_idpes, ref_cod_grupos) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7117 (class 2606 OID 9468423)
--- Name: reuniao_ref_moderador_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.reuniao
     ADD CONSTRAINT reuniao_ref_moderador_fkey FOREIGN KEY (ref_moderador, ref_grupos_moderador) REFERENCES pmiotopic.grupomoderador(ref_ref_cod_pessoa_fj, ref_cod_grupos) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7119 (class 2606 OID 9468428)
--- Name: topicoreuniao_ref_cod_reuniao_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
-
 ALTER TABLE ONLY pmiotopic.topicoreuniao
     ADD CONSTRAINT topicoreuniao_ref_cod_reuniao_fkey FOREIGN KEY (ref_cod_reuniao) REFERENCES pmiotopic.reuniao(cod_reuniao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7118 (class 2606 OID 9468433)
--- Name: topicoreuniao_ref_cod_topico_fkey; Type: FK CONSTRAINT; Schema: pmiotopic; Owner: -
---
 
 ALTER TABLE ONLY pmiotopic.topicoreuniao
     ADD CONSTRAINT topicoreuniao_ref_cod_topico_fkey FOREIGN KEY (ref_cod_topico) REFERENCES pmiotopic.topico(cod_topico) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7124 (class 2606 OID 9468438)
--- Name: agenda_compromisso_ref_cod_agenda_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.agenda_compromisso
     ADD CONSTRAINT agenda_compromisso_ref_cod_agenda_fkey FOREIGN KEY (ref_cod_agenda) REFERENCES portal.agenda(cod_agenda) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7123 (class 2606 OID 9468443)
--- Name: agenda_compromisso_ref_ref_cod_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.agenda_compromisso
     ADD CONSTRAINT agenda_compromisso_ref_ref_cod_pessoa_cad_fkey FOREIGN KEY (ref_ref_cod_pessoa_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7122 (class 2606 OID 9468448)
--- Name: agenda_ref_ref_cod_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.agenda
     ADD CONSTRAINT agenda_ref_ref_cod_pessoa_cad_fkey FOREIGN KEY (ref_ref_cod_pessoa_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7121 (class 2606 OID 9468453)
--- Name: agenda_ref_ref_cod_pessoa_exc_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.agenda
     ADD CONSTRAINT agenda_ref_ref_cod_pessoa_exc_fkey FOREIGN KEY (ref_ref_cod_pessoa_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7120 (class 2606 OID 9468458)
--- Name: agenda_ref_ref_cod_pessoa_own_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.agenda
     ADD CONSTRAINT agenda_ref_ref_cod_pessoa_own_fkey FOREIGN KEY (ref_ref_cod_pessoa_own) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7126 (class 2606 OID 9468463)
--- Name: agenda_responsavel_ref_cod_agenda_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.agenda_responsavel
     ADD CONSTRAINT agenda_responsavel_ref_cod_agenda_fkey FOREIGN KEY (ref_cod_agenda) REFERENCES portal.agenda(cod_agenda) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7125 (class 2606 OID 9468468)
--- Name: agenda_responsavel_ref_ref_cod_pessoa_fj_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.agenda_responsavel
     ADD CONSTRAINT agenda_responsavel_ref_ref_cod_pessoa_fj_fkey FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7130 (class 2606 OID 9468473)
--- Name: compras_editais_editais_empresas_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_editais_editais_empresas
     ADD CONSTRAINT compras_editais_editais_empresas_ibfk_1 FOREIGN KEY (ref_cod_compras_editais_editais) REFERENCES portal.compras_editais_editais(cod_compras_editais_editais) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7129 (class 2606 OID 9468478)
--- Name: compras_editais_editais_empresas_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_editais_editais_empresas
     ADD CONSTRAINT compras_editais_editais_empresas_ibfk_2 FOREIGN KEY (ref_cod_compras_editais_empresa) REFERENCES portal.compras_editais_empresa(cod_compras_editais_empresa) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7128 (class 2606 OID 9468483)
--- Name: compras_editais_editais_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_editais_editais
     ADD CONSTRAINT compras_editais_editais_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7127 (class 2606 OID 9468488)
--- Name: compras_editais_editais_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_editais_editais
     ADD CONSTRAINT compras_editais_editais_ibfk_2 FOREIGN KEY (ref_cod_compras_licitacoes) REFERENCES portal.compras_licitacoes(cod_compras_licitacoes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7131 (class 2606 OID 9468493)
--- Name: compras_editais_empresa_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_editais_empresa
     ADD CONSTRAINT compras_editais_empresa_ibfk_1 FOREIGN KEY (ref_sigla_uf) REFERENCES public.uf(sigla_uf) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7132 (class 2606 OID 9468498)
--- Name: compras_funcionarios_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_funcionarios
     ADD CONSTRAINT compras_funcionarios_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7134 (class 2606 OID 9468503)
--- Name: compras_licitacoes_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_licitacoes
     ADD CONSTRAINT compras_licitacoes_ibfk_1 FOREIGN KEY (ref_cod_compras_modalidade) REFERENCES portal.compras_modalidade(cod_compras_modalidade) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7133 (class 2606 OID 9468508)
--- Name: compras_licitacoes_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_licitacoes
     ADD CONSTRAINT compras_licitacoes_ibfk_2 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7140 (class 2606 OID 9468513)
--- Name: compras_pregao_execucao_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_pregao_execucao
     ADD CONSTRAINT compras_pregao_execucao_ibfk_1 FOREIGN KEY (ref_equipe3) REFERENCES portal.compras_funcionarios(ref_ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7139 (class 2606 OID 9468518)
--- Name: compras_pregao_execucao_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_pregao_execucao
     ADD CONSTRAINT compras_pregao_execucao_ibfk_2 FOREIGN KEY (ref_pregoeiro) REFERENCES portal.compras_funcionarios(ref_ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7138 (class 2606 OID 9468523)
--- Name: compras_pregao_execucao_ibfk_3; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_pregao_execucao
     ADD CONSTRAINT compras_pregao_execucao_ibfk_3 FOREIGN KEY (ref_equipe1) REFERENCES portal.compras_funcionarios(ref_ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7137 (class 2606 OID 9468528)
--- Name: compras_pregao_execucao_ibfk_4; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_pregao_execucao
     ADD CONSTRAINT compras_pregao_execucao_ibfk_4 FOREIGN KEY (ref_equipe2) REFERENCES portal.compras_funcionarios(ref_ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7136 (class 2606 OID 9468533)
--- Name: compras_pregao_execucao_ibfk_5; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.compras_pregao_execucao
     ADD CONSTRAINT compras_pregao_execucao_ibfk_5 FOREIGN KEY (ref_cod_compras_final_pregao) REFERENCES portal.compras_final_pregao(cod_compras_final_pregao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7135 (class 2606 OID 9468538)
--- Name: compras_pregao_execucao_ibfk_6; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.compras_pregao_execucao
     ADD CONSTRAINT compras_pregao_execucao_ibfk_6 FOREIGN KEY (ref_cod_compras_licitacoes) REFERENCES portal.compras_licitacoes(cod_compras_licitacoes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7145 (class 2606 OID 9468543)
--- Name: fk_to_setor_new; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.funcionario
     ADD CONSTRAINT fk_to_setor_new FOREIGN KEY (ref_cod_setor_new) REFERENCES pmidrh.setor(cod_setor) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7142 (class 2606 OID 9468548)
--- Name: foto_portal_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.foto_portal
     ADD CONSTRAINT foto_portal_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7141 (class 2606 OID 9468553)
--- Name: foto_portal_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.foto_portal
     ADD CONSTRAINT foto_portal_ibfk_2 FOREIGN KEY (ref_cod_credito) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7144 (class 2606 OID 9468558)
--- Name: funcionario_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.funcionario
     ADD CONSTRAINT funcionario_ibfk_1 FOREIGN KEY (ref_cod_pessoa_fj) REFERENCES cadastro.fisica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7143 (class 2606 OID 9468563)
--- Name: funcionario_ibfk_5; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.funcionario
     ADD CONSTRAINT funcionario_ibfk_5 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7148 (class 2606 OID 9468568)
--- Name: imagem_ref_cod_imagem_tipo_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.imagem
     ADD CONSTRAINT imagem_ref_cod_imagem_tipo_fkey FOREIGN KEY (ref_cod_imagem_tipo) REFERENCES portal.imagem_tipo(cod_imagem_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7147 (class 2606 OID 9468573)
--- Name: imagem_ref_cod_pessoa_cad_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.imagem
     ADD CONSTRAINT imagem_ref_cod_pessoa_cad_fkey FOREIGN KEY (ref_cod_pessoa_cad) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7146 (class 2606 OID 9468578)
--- Name: imagem_ref_cod_pessoa_exc_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.imagem
     ADD CONSTRAINT imagem_ref_cod_pessoa_exc_fkey FOREIGN KEY (ref_cod_pessoa_exc) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7149 (class 2606 OID 9468583)
--- Name: intranet_segur_permissao_negada_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.intranet_segur_permissao_negada
     ADD CONSTRAINT intranet_segur_permissao_negada_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7150 (class 2606 OID 9468588)
--- Name: jor_arquivo_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.jor_arquivo
     ADD CONSTRAINT jor_arquivo_ibfk_1 FOREIGN KEY (ref_cod_jor_edicao) REFERENCES portal.jor_edicao(cod_jor_edicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7151 (class 2606 OID 9468593)
--- Name: jor_edicao_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.jor_edicao
     ADD CONSTRAINT jor_edicao_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7152 (class 2606 OID 9468598)
--- Name: mailling_email_conteudo_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_email_conteudo
     ADD CONSTRAINT mailling_email_conteudo_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7155 (class 2606 OID 9468603)
--- Name: mailling_fila_envio_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.mailling_fila_envio
     ADD CONSTRAINT mailling_fila_envio_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7154 (class 2606 OID 9468608)
--- Name: mailling_fila_envio_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_fila_envio
     ADD CONSTRAINT mailling_fila_envio_ibfk_2 FOREIGN KEY (ref_cod_mailling_email) REFERENCES portal.mailling_email(cod_mailling_email);
 
-
---
--- TOC entry 7153 (class 2606 OID 9468613)
--- Name: mailling_fila_envio_ibfk_3; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.mailling_fila_envio
     ADD CONSTRAINT mailling_fila_envio_ibfk_3 FOREIGN KEY (ref_cod_mailling_email_conteudo) REFERENCES portal.mailling_email_conteudo(cod_mailling_email_conteudo);
 
 
---
--- TOC entry 7157 (class 2606 OID 9468618)
--- Name: mailling_grupo_email_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_grupo_email
     ADD CONSTRAINT mailling_grupo_email_ibfk_1 FOREIGN KEY (ref_cod_mailling_email) REFERENCES portal.mailling_email(cod_mailling_email) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7156 (class 2606 OID 9468623)
--- Name: mailling_grupo_email_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.mailling_grupo_email
     ADD CONSTRAINT mailling_grupo_email_ibfk_2 FOREIGN KEY (ref_cod_mailling_grupo) REFERENCES portal.mailling_grupo(cod_mailling_grupo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7160 (class 2606 OID 9468628)
--- Name: mailling_historico_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_historico
     ADD CONSTRAINT mailling_historico_ibfk_1 FOREIGN KEY (ref_cod_not_portal) REFERENCES portal.not_portal(cod_not_portal) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7159 (class 2606 OID 9468633)
--- Name: mailling_historico_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.mailling_historico
     ADD CONSTRAINT mailling_historico_ibfk_2 FOREIGN KEY (ref_cod_mailling_grupo) REFERENCES portal.mailling_grupo(cod_mailling_grupo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7158 (class 2606 OID 9468638)
--- Name: mailling_historico_ibfk_3; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.mailling_historico
     ADD CONSTRAINT mailling_historico_ibfk_3 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7161 (class 2606 OID 9468973)
--- Name: menu_funcionario_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.menu_funcionario
     ADD CONSTRAINT menu_funcionario_ibfk_1 FOREIGN KEY (ref_cod_menu_submenu) REFERENCES portal.menu_submenu(cod_menu_submenu) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7162 (class 2606 OID 9468643)
--- Name: menu_funcionario_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.menu_funcionario
     ADD CONSTRAINT menu_funcionario_ibfk_2 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7164 (class 2606 OID 9468648)
--- Name: menu_submenu_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.menu_submenu
     ADD CONSTRAINT menu_submenu_ibfk_1 FOREIGN KEY (ref_cod_menu_menu) REFERENCES portal.menu_menu(cod_menu_menu) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7165 (class 2606 OID 9468653)
--- Name: not_portal_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.not_portal
     ADD CONSTRAINT not_portal_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7167 (class 2606 OID 9468658)
--- Name: not_portal_tipo_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.not_portal_tipo
     ADD CONSTRAINT not_portal_tipo_ibfk_1 FOREIGN KEY (ref_cod_not_portal) REFERENCES portal.not_portal(cod_not_portal) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7166 (class 2606 OID 9468663)
--- Name: not_portal_tipo_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.not_portal_tipo
     ADD CONSTRAINT not_portal_tipo_ibfk_2 FOREIGN KEY (ref_cod_not_tipo) REFERENCES portal.not_tipo(cod_not_tipo) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7168 (class 2606 OID 9468668)
--- Name: not_vinc_portal_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.not_vinc_portal
     ADD CONSTRAINT not_vinc_portal_ibfk_1 FOREIGN KEY (ref_cod_not_portal) REFERENCES portal.not_portal(cod_not_portal) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7169 (class 2606 OID 9468673)
--- Name: notificacao_ref_cod_funcionario_fkey; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.notificacao
     ADD CONSTRAINT notificacao_ref_cod_funcionario_fkey FOREIGN KEY (ref_cod_funcionario) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7170 (class 2606 OID 9468678)
--- Name: pessoa_atividade_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.pessoa_atividade
     ADD CONSTRAINT pessoa_atividade_ibfk_1 FOREIGN KEY (ref_cod_ramo_atividade) REFERENCES portal.pessoa_ramo_atividade(cod_ramo_atividade) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7172 (class 2606 OID 9468683)
--- Name: pessoa_fj_pessoa_atividade_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.pessoa_fj_pessoa_atividade
     ADD CONSTRAINT pessoa_fj_pessoa_atividade_ibfk_1 FOREIGN KEY (ref_cod_pessoa_atividade) REFERENCES portal.pessoa_atividade(cod_pessoa_atividade) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7171 (class 2606 OID 9468688)
--- Name: pessoa_fj_pessoa_atividade_ibfk_2; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.pessoa_fj_pessoa_atividade
     ADD CONSTRAINT pessoa_fj_pessoa_atividade_ibfk_2 FOREIGN KEY (ref_cod_pessoa_fj) REFERENCES cadastro.juridica(idpes) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7173 (class 2606 OID 9468693)
--- Name: portal_concurso_ibfk_1; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
-
 ALTER TABLE ONLY portal.portal_concurso
     ADD CONSTRAINT portal_concurso_ibfk_1 FOREIGN KEY (ref_ref_cod_pessoa_fj) REFERENCES portal.funcionario(ref_cod_pessoa_fj) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7163 (class 2606 OID 9468698)
--- Name: ref_cod_menu_pai_fk; Type: FK CONSTRAINT; Schema: portal; Owner: -
---
 
 ALTER TABLE ONLY portal.menu_menu
     ADD CONSTRAINT ref_cod_menu_pai_fk FOREIGN KEY (ref_cod_menu_pai) REFERENCES portal.menu_menu(cod_menu_menu) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 6568 (class 2606 OID 9468703)
--- Name: bairro_idsetorbai_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT bairro_idsetorbai_fk FOREIGN KEY (idsetorbai) REFERENCES public.setor_bai(idsetorbai);
 
-
---
--- TOC entry 7175 (class 2606 OID 9468708)
--- Name: bairro_regiao_ref_cod_regiao_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.bairro_regiao
     ADD CONSTRAINT bairro_regiao_ref_cod_regiao_fkey FOREIGN KEY (ref_cod_regiao) REFERENCES public.regiao(cod_regiao) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7174 (class 2606 OID 9468713)
--- Name: bairro_regiao_ref_idbai_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.bairro_regiao
     ADD CONSTRAINT bairro_regiao_ref_idbai_fkey FOREIGN KEY (ref_idbai) REFERENCES public.bairro(idbai) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 6569 (class 2606 OID 9468718)
--- Name: fk_bairro_distrito; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT fk_bairro_distrito FOREIGN KEY (iddis) REFERENCES public.distrito(iddis);
 
 
---
--- TOC entry 6570 (class 2606 OID 9468723)
--- Name: fk_bairro_municipio; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT fk_bairro_municipio FOREIGN KEY (idmun) REFERENCES public.municipio(idmun);
 
-
---
--- TOC entry 6571 (class 2606 OID 9468728)
--- Name: fk_bairro_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT fk_bairro_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6572 (class 2606 OID 9468733)
--- Name: fk_bairro_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT fk_bairro_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6573 (class 2606 OID 9468738)
--- Name: fk_bairro_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT fk_bairro_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6574 (class 2606 OID 9468743)
--- Name: fk_bairro_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.bairro
     ADD CONSTRAINT fk_bairro_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 7180 (class 2606 OID 9468748)
--- Name: fk_distrito_municipio; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.distrito
     ADD CONSTRAINT fk_distrito_municipio FOREIGN KEY (idmun) REFERENCES public.municipio(idmun);
 
 
---
--- TOC entry 7179 (class 2606 OID 9468753)
--- Name: fk_distrito_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.distrito
     ADD CONSTRAINT fk_distrito_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 7178 (class 2606 OID 9468758)
--- Name: fk_distrito_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.distrito
     ADD CONSTRAINT fk_distrito_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 7177 (class 2606 OID 9468763)
--- Name: fk_distrito_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.distrito
     ADD CONSTRAINT fk_distrito_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 7176 (class 2606 OID 9468768)
--- Name: fk_distrito_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.distrito
     ADD CONSTRAINT fk_distrito_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 7181 (class 2606 OID 9468773)
--- Name: fk_logr_logr_fonetico; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.logradouro_fonetico
     ADD CONSTRAINT fk_logr_logr_fonetico FOREIGN KEY (idlog) REFERENCES public.logradouro(idlog);
 
-
---
--- TOC entry 6580 (class 2606 OID 9468778)
--- Name: fk_logradouro_municipio; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT fk_logradouro_municipio FOREIGN KEY (idmun) REFERENCES public.municipio(idmun);
 
 
---
--- TOC entry 6579 (class 2606 OID 9468783)
--- Name: fk_logradouro_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.logradouro
     ADD CONSTRAINT fk_logradouro_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6578 (class 2606 OID 9468788)
--- Name: fk_logradouro_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.logradouro
     ADD CONSTRAINT fk_logradouro_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6577 (class 2606 OID 9468793)
--- Name: fk_logradouro_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.logradouro
     ADD CONSTRAINT fk_logradouro_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6576 (class 2606 OID 9468798)
--- Name: fk_logradouro_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.logradouro
     ADD CONSTRAINT fk_logradouro_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6575 (class 2606 OID 9468803)
--- Name: fk_logradouro_tipo_log; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.logradouro
     ADD CONSTRAINT fk_logradouro_tipo_log FOREIGN KEY (idtlog) REFERENCES urbano.tipo_logradouro(idtlog);
 
-
---
--- TOC entry 6581 (class 2606 OID 9468808)
--- Name: fk_municipio_municipiopai; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT fk_municipio_municipiopai FOREIGN KEY (idmun_pai) REFERENCES public.municipio(idmun);
 
 
---
--- TOC entry 6582 (class 2606 OID 9468813)
--- Name: fk_municipio_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT fk_municipio_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 6583 (class 2606 OID 9468818)
--- Name: fk_municipio_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT fk_municipio_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 6584 (class 2606 OID 9468823)
--- Name: fk_municipio_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT fk_municipio_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 6585 (class 2606 OID 9468828)
--- Name: fk_municipio_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT fk_municipio_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 6586 (class 2606 OID 9468833)
--- Name: fk_municipio_uf; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.municipio
     ADD CONSTRAINT fk_municipio_uf FOREIGN KEY (sigla_uf) REFERENCES public.uf(sigla_uf);
 
-
---
--- TOC entry 7183 (class 2606 OID 9468838)
--- Name: fk_setor_idsetredir; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.setor
     ADD CONSTRAINT fk_setor_idsetredir FOREIGN KEY (idsetredir) REFERENCES public.setor(idset) ON DELETE RESTRICT;
 
 
---
--- TOC entry 7182 (class 2606 OID 9468843)
--- Name: fk_setor_idsetsub; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.setor
     ADD CONSTRAINT fk_setor_idsetsub FOREIGN KEY (idsetsub) REFERENCES public.setor(idset) ON DELETE CASCADE;
 
-
---
--- TOC entry 7184 (class 2606 OID 9468848)
--- Name: fk_uf_pais; Type: FK CONSTRAINT; Schema: public; Owner: -
---
 
 ALTER TABLE ONLY public.uf
     ADD CONSTRAINT fk_uf_pais FOREIGN KEY (idpais) REFERENCES public.pais(idpais);
 
 
---
--- TOC entry 7185 (class 2606 OID 9468853)
--- Name: fk_vila_municipio; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.vila
     ADD CONSTRAINT fk_vila_municipio FOREIGN KEY (idmun) REFERENCES public.municipio(idmun);
 
-
---
--- TOC entry 7186 (class 2606 OID 9468858)
--- Name: aluno_cod_aluno_cod_aluno_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.aluno_cod_aluno
     ADD CONSTRAINT aluno_cod_aluno_cod_aluno_fk FOREIGN KEY (cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7187 (class 2606 OID 9468863)
--- Name: aluno_uniforme_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.aluno_uniforme
     ADD CONSTRAINT aluno_uniforme_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7188 (class 2606 OID 9468868)
--- Name: escola_agua_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_agua
     ADD CONSTRAINT escola_agua_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7189 (class 2606 OID 9468873)
--- Name: escola_energia_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.escola_energia
     ADD CONSTRAINT escola_energia_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7190 (class 2606 OID 9468878)
--- Name: escola_lingua_indigena_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_lingua_indigena
     ADD CONSTRAINT escola_lingua_indigena_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7191 (class 2606 OID 9468883)
--- Name: escola_lixo_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.escola_lixo
     ADD CONSTRAINT escola_lixo_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7192 (class 2606 OID 9468888)
--- Name: escola_projeto_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_projeto
     ADD CONSTRAINT escola_projeto_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7193 (class 2606 OID 9468893)
--- Name: escola_regulamentacao_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
-
 ALTER TABLE ONLY serieciasc.escola_regulamentacao
     ADD CONSTRAINT escola_regulamentacao_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-
---
--- TOC entry 7194 (class 2606 OID 9468898)
--- Name: escola_sanitario_ref_cod_escola_fk; Type: FK CONSTRAINT; Schema: serieciasc; Owner: -
---
 
 ALTER TABLE ONLY serieciasc.escola_sanitario
     ADD CONSTRAINT escola_sanitario_ref_cod_escola_fk FOREIGN KEY (ref_cod_escola) REFERENCES pmieducar.escola(cod_escola) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
---
--- TOC entry 7205 (class 2606 OID 9468903)
--- Name: fk_cep_log_bairro_bai; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.cep_logradouro_bairro
     ADD CONSTRAINT fk_cep_log_bairro_bai FOREIGN KEY (idbai) REFERENCES public.bairro(idbai);
 
-
---
--- TOC entry 7204 (class 2606 OID 9468908)
--- Name: fk_cep_log_bairro_cep_log; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
 
 ALTER TABLE ONLY urbano.cep_logradouro_bairro
     ADD CONSTRAINT fk_cep_log_bairro_cep_log FOREIGN KEY (cep, idlog) REFERENCES urbano.cep_logradouro(cep, idlog) ON DELETE CASCADE;
 
 
---
--- TOC entry 7203 (class 2606 OID 9468913)
--- Name: fk_cep_logradouro_bairro_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.cep_logradouro_bairro
     ADD CONSTRAINT fk_cep_logradouro_bairro_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 7202 (class 2606 OID 9468918)
--- Name: fk_cep_logradouro_bairro_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
 
 ALTER TABLE ONLY urbano.cep_logradouro_bairro
     ADD CONSTRAINT fk_cep_logradouro_bairro_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 7201 (class 2606 OID 9468923)
--- Name: fk_cep_logradouro_bairro_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.cep_logradouro_bairro
     ADD CONSTRAINT fk_cep_logradouro_bairro_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
-
---
--- TOC entry 7200 (class 2606 OID 9468928)
--- Name: fk_cep_logradouro_bairro_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
 
 ALTER TABLE ONLY urbano.cep_logradouro_bairro
     ADD CONSTRAINT fk_cep_logradouro_bairro_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 7199 (class 2606 OID 9468933)
--- Name: fk_cep_logradouro_logradouro; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.cep_logradouro
     ADD CONSTRAINT fk_cep_logradouro_logradouro FOREIGN KEY (idlog) REFERENCES public.logradouro(idlog) ON DELETE CASCADE;
 
-
---
--- TOC entry 7198 (class 2606 OID 9468938)
--- Name: fk_cep_logradouro_sistema_idpes_cad; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
 
 ALTER TABLE ONLY urbano.cep_logradouro
     ADD CONSTRAINT fk_cep_logradouro_sistema_idpes_cad FOREIGN KEY (idpes_cad) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
 
---
--- TOC entry 7197 (class 2606 OID 9468943)
--- Name: fk_cep_logradouro_sistema_idpes_rev; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.cep_logradouro
     ADD CONSTRAINT fk_cep_logradouro_sistema_idpes_rev FOREIGN KEY (idpes_rev) REFERENCES cadastro.pessoa(idpes) ON DELETE SET NULL;
 
-
---
--- TOC entry 7196 (class 2606 OID 9468948)
--- Name: fk_cep_logradouro_sistema_idsis_cad; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
 
 ALTER TABLE ONLY urbano.cep_logradouro
     ADD CONSTRAINT fk_cep_logradouro_sistema_idsis_cad FOREIGN KEY (idsis_cad) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
 
 
---
--- TOC entry 7195 (class 2606 OID 9468953)
--- Name: fk_cep_logradouro_sistema_idsis_rev; Type: FK CONSTRAINT; Schema: urbano; Owner: -
---
-
 ALTER TABLE ONLY urbano.cep_logradouro
     ADD CONSTRAINT fk_cep_logradouro_sistema_idsis_rev FOREIGN KEY (idsis_rev) REFERENCES acesso.sistema(idsis) ON DELETE SET NULL;
-
-
--- Completed on 2018-11-19 15:03:40 -02
-
---
--- PostgreSQL database dump complete
---
-
