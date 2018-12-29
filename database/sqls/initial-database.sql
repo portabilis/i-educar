@@ -23534,17 +23534,6 @@ SELECT pg_catalog.setval('pmieducar.escola_cod_escola_seq', 1, true);
 --
 
 
-
---
--- TOC entry 7870 (class 0 OID 9444580)
--- Dependencies: 581
--- Data for Name: escola_localizacao; Type: TABLE DATA; Schema: pmieducar; Owner: -
---
-
-INSERT INTO pmieducar.escola_localizacao VALUES (1, NULL, 1, 'Urbana', '2010-12-22 17:08:47.218', NULL, 1, 1);
-INSERT INTO pmieducar.escola_localizacao VALUES (2, NULL, 1, 'Rural', '2010-12-22 17:08:50.812', NULL, 1, 1);
-
-
 --
 -- TOC entry 8311 (class 0 OID 0)
 -- Dependencies: 580
