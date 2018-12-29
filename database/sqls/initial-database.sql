@@ -24957,15 +24957,6 @@ SELECT pg_catalog.setval('portal.foto_secao_cod_foto_secao_seq', 1, false);
 
 
 --
--- TOC entry 8049 (class 0 OID 9445397)
--- Dependencies: 761
--- Data for Name: funcionario; Type: TABLE DATA; Schema: portal; Owner: -
---
-
-INSERT INTO portal.funcionario VALUES (1, 'admin', '25f9e794323b453885f5181f1b624d0b', 1, NULL, NULL, '1  ', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, 1, '172.17.0.1', '2018-04-04 14:50:46.587163', 'admin@ieducar.com.br', NULL, NULL, NULL, NULL);
-
-
---
 -- TOC entry 8051 (class 0 OID 9445409)
 -- Dependencies: 763
 -- Data for Name: funcionario_vinculo; Type: TABLE DATA; Schema: portal; Owner: -
