@@ -22107,16 +22107,6 @@ SELECT pg_catalog.setval('modules.professor_turma_id_seq', 1, false);
 
 
 --
--- TOC entry 7722 (class 0 OID 9443930)
--- Dependencies: 433
--- Data for Name: regra_avaliacao; Type: TABLE DATA; Schema: modules; Owner: -
---
-
-INSERT INTO modules.regra_avaliacao VALUES (1, 1, 1, 2, 1, 'Regra de avaliação quantitativa', 1, 2, 6.000, 75.000, 0, 2, 6.000, 0, NULL, 10, 10, 2, 0, 0, 0, 0, 0, 0, 0, NULL, NULL);
-INSERT INTO modules.regra_avaliacao VALUES (2, 1, 1, NULL, 2, 'Regra de avaliação qualitativa', 2, 1, 6.000, 80.000, 0, 2, 6.000, 0, NULL, 10, 10, 5, 0, 0, 0, 0, 0, 0, 0, NULL, NULL);
-
-
---
 -- TOC entry 8252 (class 0 OID 0)
 -- Dependencies: 434
 -- Name: regra_avaliacao_id_seq; Type: SEQUENCE SET; Schema: modules; Owner: -
