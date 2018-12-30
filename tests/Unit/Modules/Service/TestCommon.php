@@ -609,27 +609,27 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
           ->method('execPreparedQuery')
           ->will($this->returnValue(true));
 
-      $returnCallback = function($reset = false) use ($return) {
-          static $total = 0;
-          if($reset) {
-              $total = 0;
-              return false;
-          }
-          if($total == count($return)-1) {
-              return ++$total;
-          }
-          return false;
-      };
-      $returnCallback(true);
       Portabilis_Utils_Database::$_db->expects($this->any())
           ->method('ProximoRegistro')
-          ->will($this->returnCallback($returnCallback));
+          ->will($this->returnCallback(function() use (&$return) {
+                if (!isset($return[0]['return']) && isset($return[0])) {
+                    $tmp = $return[0];
+                    $return[0] = [
+                        'return' => [$tmp],
+                        'total'  => 0
+                    ];
+                }
+                if (isset($return[0]['return']) && $return[0]['total'] <= count($return[0]['return'])-1) {
+                    return ++$return[0]['total'];
+                }
+                array_shift($return);
+                return false;
+          }));
 
       Portabilis_Utils_Database::$_db->expects($this->any())
           ->method('Tupla')
-          ->will($this->returnCallback(function() use ($return) {
-              static $total = 0;
-              return $return[$total++];
+          ->will($this->returnCallback(function() use (&$return) {
+              return $return[0]['return'][$return[0]['total']-1];
           }));
   }
 
