@@ -7,6 +7,7 @@ use Tests\TestCase;
 
 class ApiTestCase extends TestCase
 {
+    private $tearDownFiles = [];
     /**
      * Return access key for API use.
      *
@@ -51,5 +52,16 @@ class ApiTestCase extends TestCase
         DB::unprepared('SET session_replication_role = replica;');
         DB::unprepared(file_get_contents(__DIR__ . '/../Unit/dumps/' . $filename));
         DB::unprepared('SET session_replication_role = DEFAULT;');
+        $this->tearDownFiles[] = $filename;
+    }
+
+    public function tearDown()
+    {
+        foreach ($this->tearDownFiles as $key => $filename) {
+            DB::unprepared('SET session_replication_role = replica;');
+            DB::unprepared(file_get_contents(__DIR__ . '/../Unit/dumps/down_' . $filename));
+            DB::unprepared('SET session_replication_role = DEFAULT;');
+            unset($this->tearDownFiles[$key]);
+        }
     }
 }
