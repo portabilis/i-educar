@@ -17,6 +17,13 @@ class CreateConsistenciacaoCampoMetadadoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.campo_metadado_id_campo_met_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.campo_metadado (
                     id_campo_met integer DEFAULT nextval(\'consistenciacao.campo_metadado_id_campo_met_seq\'::regclass) NOT NULL,
                     idmet integer NOT NULL,
@@ -30,6 +37,8 @@ class CreateConsistenciacaoCampoMetadadoTable extends Migration
                     CONSTRAINT ck_cam_met_campo_cred CHECK (((credibilidade >= (2)::numeric) AND (credibilidade <= (4)::numeric))),
                     CONSTRAINT ck_cam_met_data_atualizacao CHECK (((data_atualizacao = \'S\'::bpchar) OR (data_atualizacao = \'N\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.campo_metadado_id_campo_met_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreateAlimentosBaixaGuiaProdutoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.baixa_guia_produto_idbap_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.baixa_guia_produto (
                     idbap integer DEFAULT nextval(\'alimentos.baixa_guia_produto_idbap_seq\'::regclass) NOT NULL,
                     idgup integer NOT NULL,
@@ -26,6 +33,8 @@ class CreateAlimentosBaixaGuiaProdutoTable extends Migration
                     dt_operacao date NOT NULL,
                     login_baixa character varying(80) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.baixa_guia_produto_idbap_seq\', 1, false);
             '
         );
     }

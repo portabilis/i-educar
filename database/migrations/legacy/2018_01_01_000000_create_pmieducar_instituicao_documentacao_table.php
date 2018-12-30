@@ -17,6 +17,13 @@ class CreatePmieducarInstituicaoDocumentacaoTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.instituicao_documentacao_seq
+                    START WITH 2
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.instituicao_documentacao (
                     id integer DEFAULT nextval(\'pmieducar.instituicao_documentacao_seq\'::regclass) NOT NULL,
                     instituicao_id integer NOT NULL,
@@ -25,6 +32,8 @@ class CreatePmieducarInstituicaoDocumentacaoTable extends Migration
                     ref_usuario_cad integer DEFAULT 0 NOT NULL,
                     ref_cod_escola integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.instituicao_documentacao_seq\', 2, false);
             '
         );
     }

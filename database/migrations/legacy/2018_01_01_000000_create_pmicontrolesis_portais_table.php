@@ -17,6 +17,13 @@ class CreatePmicontrolesisPortaisTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.portais_cod_portais_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.portais (
                     cod_portais integer DEFAULT nextval(\'pmicontrolesis.portais_cod_portais_seq\'::regclass) NOT NULL,
                     ref_cod_funcionario_cad integer NOT NULL,
@@ -29,6 +36,8 @@ class CreatePmicontrolesisPortaisTable extends Migration
                     title character varying(255),
                     descricao text
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.portais_cod_portais_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarOperadorTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.operador_cod_operador_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.operador (
                     cod_operador integer DEFAULT nextval(\'pmieducar.operador_cod_operador_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarOperadorTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.operador_cod_operador_seq\', 1, false);
             '
         );
     }

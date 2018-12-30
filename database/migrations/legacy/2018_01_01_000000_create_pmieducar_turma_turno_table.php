@@ -17,11 +17,20 @@ class CreatePmieducarTurmaTurnoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.turma_turno_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.turma_turno (
                     id integer DEFAULT nextval(\'pmieducar.turma_turno_id_seq\'::regclass) NOT NULL,
                     nome character varying(15) NOT NULL,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.turma_turno_id_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarTipoEnsinoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.tipo_ensino_cod_tipo_ensino_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.tipo_ensino (
                     cod_tipo_ensino integer DEFAULT nextval(\'pmieducar.tipo_ensino_cod_tipo_ensino_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarTipoEnsinoTable extends Migration
                     ref_cod_instituicao integer NOT NULL,
                     atividade_complementar boolean DEFAULT false
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.tipo_ensino_cod_tipo_ensino_seq\', 1, true);
             '
         );
     }

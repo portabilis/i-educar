@@ -17,6 +17,13 @@ class CreateAlimentosFaixaCompostoQuimicoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.faixa_composto_quimico_idfcp_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.faixa_composto_quimico (
                     idfcp integer DEFAULT nextval(\'alimentos.faixa_composto_quimico_idfcp_seq\'::regclass) NOT NULL,
                     idcom integer NOT NULL,
@@ -25,6 +32,8 @@ class CreateAlimentosFaixaCompostoQuimicoTable extends Migration
                     qtde_max_min character(3) NOT NULL,
                     CONSTRAINT ck_qtde_max_min CHECK (((qtde_max_min = \'MAX\'::bpchar) OR (qtde_max_min = \'MIN\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.faixa_composto_quimico_idfcp_seq\', 1, false);
             '
         );
     }

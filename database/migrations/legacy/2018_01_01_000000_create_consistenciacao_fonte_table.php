@@ -17,12 +17,21 @@ class CreateConsistenciacaoFonteTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.fonte_idfon_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.fonte (
                     idfon integer DEFAULT nextval(\'consistenciacao.fonte_idfon_seq\'::regclass) NOT NULL,
                     nome character varying(60) NOT NULL,
                     situacao character(1) NOT NULL,
                     CONSTRAINT ck_fonte_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.fonte_idfon_seq\', 1, false);
             '
         );
     }

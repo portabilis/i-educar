@@ -17,6 +17,13 @@ class CreatePmicontrolesisTelefonesTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.telefones_cod_telefones_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.telefones (
                     cod_telefones integer DEFAULT nextval(\'pmicontrolesis.telefones_cod_telefones_seq\'::regclass) NOT NULL,
                     ref_funcionario_cad integer NOT NULL,
@@ -27,6 +34,8 @@ class CreatePmicontrolesisTelefonesTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.telefones_cod_telefones_seq\', 1, false);
             '
         );
     }

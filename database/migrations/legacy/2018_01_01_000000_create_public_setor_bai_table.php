@@ -17,10 +17,19 @@ class CreatePublicSetorBaiTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE public.seq_setor_bai
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE public.setor_bai (
                     idsetorbai numeric(6,0) DEFAULT nextval((\'public.seq_setor_bai\'::text)::regclass) NOT NULL,
                     nome character varying(80) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'public.seq_setor_bai\', 1, false);
             '
         );
     }

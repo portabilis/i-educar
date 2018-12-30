@@ -17,6 +17,13 @@ class CreatePmieducarTipoDispensaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.tipo_dispensa_cod_tipo_dispensa_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.tipo_dispensa (
                     cod_tipo_dispensa integer DEFAULT nextval(\'pmieducar.tipo_dispensa_cod_tipo_dispensa_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarTipoDispensaTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.tipo_dispensa_cod_tipo_dispensa_seq\', 1, false);
             '
         );
     }

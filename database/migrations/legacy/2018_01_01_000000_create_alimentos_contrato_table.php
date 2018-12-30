@@ -17,6 +17,13 @@ class CreateAlimentosContratoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.contrato_idcon_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.contrato (
                     idcon integer DEFAULT nextval(\'alimentos.contrato_idcon_seq\'::regclass) NOT NULL,
                     codigo character varying(20) NOT NULL,
@@ -38,6 +45,8 @@ class CreateAlimentosContratoTable extends Migration
                     CONSTRAINT ck_contrato_tipo CHECK (((tipo = \'C\'::bpchar) OR (tipo = \'A\'::bpchar))),
                     CONSTRAINT ck_contrato_ultimo_contrato CHECK (((ultimo_contrato = \'S\'::bpchar) OR (ultimo_contrato = \'N\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.contrato_idcon_seq\', 1, false);
             '
         );
     }

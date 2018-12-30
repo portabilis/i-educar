@@ -17,6 +17,13 @@ class CreateModulesRegraAvaliacaoRecuperacaoTable extends Migration
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.regra_avaliacao_recuperacao_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.regra_avaliacao_recuperacao (
                     id integer DEFAULT nextval(\'modules.regra_avaliacao_recuperacao_id_seq\'::regclass) NOT NULL,
                     regra_avaliacao_id integer NOT NULL,
@@ -26,6 +33,8 @@ class CreateModulesRegraAvaliacaoRecuperacaoTable extends Migration
                     media numeric(8,4) NOT NULL,
                     nota_maxima numeric(8,4) NOT NULL
                 );
+
+                SELECT pg_catalog.setval(\'modules.regra_avaliacao_recuperacao_id_seq\', 1, false);
             '
         );
     }

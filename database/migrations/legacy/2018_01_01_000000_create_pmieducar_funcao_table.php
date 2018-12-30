@@ -17,6 +17,13 @@ class CreatePmieducarFuncaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.funcao_cod_funcao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.funcao (
                     cod_funcao integer DEFAULT nextval(\'pmieducar.funcao_cod_funcao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -29,6 +36,8 @@ class CreatePmieducarFuncaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.funcao_cod_funcao_seq\', 1, false);
             '
         );
     }

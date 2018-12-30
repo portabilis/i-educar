@@ -17,6 +17,13 @@ class CreatePmieducarTurmaTipoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.turma_tipo_cod_turma_tipo_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.turma_tipo (
                     cod_turma_tipo integer DEFAULT nextval(\'pmieducar.turma_tipo_cod_turma_tipo_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarTurmaTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.turma_tipo_cod_turma_tipo_seq\', 1, true);
             '
         );
     }

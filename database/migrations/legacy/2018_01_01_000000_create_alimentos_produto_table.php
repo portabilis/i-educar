@@ -17,6 +17,13 @@ class CreateAlimentosProdutoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.produto_idpro_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.produto (
                     idpro integer DEFAULT nextval(\'alimentos.produto_idpro_seq\'::regclass) NOT NULL,
                     idcli character varying(10) NOT NULL,
@@ -39,6 +46,8 @@ class CreateAlimentosProdutoTable extends Migration
                     CONSTRAINT ck_produto_classe CHECK ((((classe)::text = \'P\'::text) OR ((classe)::text = \'N\'::text))),
                     CONSTRAINT ck_produto_referencia_ceasa CHECK ((((referencia_ceasa)::text = \'1\'::text) OR ((referencia_ceasa)::text = \'0\'::text)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.produto_idpro_seq\', 1, false);
             '
         );
     }

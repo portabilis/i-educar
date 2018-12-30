@@ -17,6 +17,13 @@ class CreateAcessoGrupoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE acesso.grupo_idgrp_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE acesso.grupo (
                     idgrp integer DEFAULT nextval(\'acesso.grupo_idgrp_seq\'::regclass) NOT NULL,
                     nome character varying(40) NOT NULL,
@@ -24,6 +31,8 @@ class CreateAcessoGrupoTable extends Migration
                     descricao character varying(250),
                     CONSTRAINT ck_grupo_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+
+                SELECT pg_catalog.setval(\'acesso.grupo_idgrp_seq\', 1, false);
             '
         );
     }

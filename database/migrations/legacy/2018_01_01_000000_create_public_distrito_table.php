@@ -17,6 +17,13 @@ class CreatePublicDistritoTable extends Migration
             '   
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE public.seq_distrito
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE public.distrito (
                     idmun numeric(6,0) NOT NULL,
                     geom character varying,
@@ -34,6 +41,8 @@ class CreatePublicDistritoTable extends Migration
                     CONSTRAINT ck_distrito_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_distrito_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'public.seq_distrito\', 10839, true);
             '
         );
     }

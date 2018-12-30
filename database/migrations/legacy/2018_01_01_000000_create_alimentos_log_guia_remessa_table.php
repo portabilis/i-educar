@@ -17,6 +17,13 @@ class CreateAlimentosLogGuiaRemessaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.log_guia_remessa_idlogguia_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.log_guia_remessa (
                     idlogguia integer DEFAULT nextval(\'alimentos.log_guia_remessa_idlogguia_seq\'::regclass) NOT NULL,
                     login character varying(80) NOT NULL,
@@ -29,6 +36,8 @@ class CreateAlimentosLogGuiaRemessaTable extends Migration
                     dt_geracao timestamp without time zone NOT NULL,
                     mensagem text NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.log_guia_remessa_idlogguia_seq\', 1, false);
             '
         );
     }

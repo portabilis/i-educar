@@ -17,6 +17,13 @@ class CreatePmieducarSubnivelTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.subnivel_cod_subnivel_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.subnivel (
                     cod_subnivel integer DEFAULT nextval(\'pmieducar.subnivel_cod_subnivel_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -29,6 +36,8 @@ class CreatePmieducarSubnivelTable extends Migration
                     ativo boolean DEFAULT true NOT NULL,
                     salario double precision NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.subnivel_cod_subnivel_seq\', 1, false);
             '
         );
     }

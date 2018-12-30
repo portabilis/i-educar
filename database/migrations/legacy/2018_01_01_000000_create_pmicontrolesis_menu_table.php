@@ -17,6 +17,13 @@ class CreatePmicontrolesisMenuTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.menu_cod_menu_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.menu (
                     cod_menu integer DEFAULT nextval(\'pmicontrolesis.menu_cod_menu_seq\'::regclass) NOT NULL,
                     ref_cod_menu_submenu integer,
@@ -30,6 +37,8 @@ class CreatePmicontrolesisMenuTable extends Migration
                     ref_cod_ico integer,
                     tipo_menu integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.menu_cod_menu_seq\', 20709, true);
             '
         );
     }

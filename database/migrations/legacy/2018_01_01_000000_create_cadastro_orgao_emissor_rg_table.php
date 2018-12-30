@@ -17,6 +17,13 @@ class CreateCadastroOrgaoEmissorRgTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE cadastro.orgao_emissor_rg_idorg_rg_seq
+                    START WITH 30
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE cadastro.orgao_emissor_rg (
                     idorg_rg integer DEFAULT nextval(\'cadastro.orgao_emissor_rg_idorg_rg_seq\'::regclass) NOT NULL,
                     sigla character varying(20) NOT NULL,
@@ -25,6 +32,8 @@ class CreateCadastroOrgaoEmissorRgTable extends Migration
                     codigo_educacenso integer,
                     CONSTRAINT ck_orgao_emissor_rg_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'cadastro.orgao_emissor_rg_idorg_rg_seq\', 31, true);
             '
         );
     }

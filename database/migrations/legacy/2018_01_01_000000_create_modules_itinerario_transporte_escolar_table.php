@@ -17,6 +17,13 @@ class CreateModulesItinerarioTransporteEscolarTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE modules.itinerario_transporte_escolar_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.itinerario_transporte_escolar (
                     cod_itinerario_transporte_escolar integer DEFAULT nextval(\'modules.itinerario_transporte_escolar_seq\'::regclass) NOT NULL,
                     ref_cod_rota_transporte_escolar integer NOT NULL,
@@ -26,6 +33,8 @@ class CreateModulesItinerarioTransporteEscolarTable extends Migration
                     hora time without time zone,
                     tipo character(1) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'modules.itinerario_transporte_escolar_seq\', 1, false);
             '
         );
     }

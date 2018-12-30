@@ -17,6 +17,13 @@ class CreatePortalPessoaFjTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.pessoa_fj_cod_pessoa_fj_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.pessoa_fj (
                     cod_pessoa_fj integer DEFAULT nextval(\'portal.pessoa_fj_cod_pessoa_fj_seq\'::regclass) NOT NULL,
                     nm_pessoa character varying(255) DEFAULT \'\'::character varying NOT NULL,
@@ -45,6 +52,8 @@ class CreatePortalPessoaFjTable extends Migration
                     data_nasc date,
                     ref_ref_cod_pessoa_fj integer
                 );
+                
+                SELECT pg_catalog.setval(\'portal.pessoa_fj_cod_pessoa_fj_seq\', 1, false);
             '
         );
     }

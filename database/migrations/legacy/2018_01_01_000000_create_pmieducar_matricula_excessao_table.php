@@ -17,6 +17,13 @@ class CreatePmieducarMatriculaExcessaoTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.matricula_excessao_cod_aluno_excessao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.matricula_excessao (
                     cod_aluno_excessao integer DEFAULT nextval(\'pmieducar.matricula_excessao_cod_aluno_excessao_seq\'::regclass) NOT NULL,
                     ref_cod_matricula integer NOT NULL,
@@ -29,6 +36,8 @@ class CreatePmieducarMatriculaExcessaoTable extends Migration
                     precisa_exame boolean NOT NULL,
                     permite_exame boolean
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.matricula_excessao_cod_aluno_excessao_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmicontrolesisSubmenuPortalTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.submenu_portal_cod_submenu_portal_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.submenu_portal (
                     cod_submenu_portal integer DEFAULT nextval(\'pmicontrolesis.submenu_portal_cod_submenu_portal_seq\'::regclass) NOT NULL,
                     ref_funcionario_cad integer NOT NULL,
@@ -31,6 +38,8 @@ class CreatePmicontrolesisSubmenuPortalTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.submenu_portal_cod_submenu_portal_seq\', 1, false);
             '
         );
     }

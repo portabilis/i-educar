@@ -17,6 +17,13 @@ class CreatePmiotopicReuniaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmiotopic.reuniao_cod_reuniao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmiotopic.reuniao (
                     cod_reuniao integer DEFAULT nextval(\'pmiotopic.reuniao_cod_reuniao_seq\'::regclass) NOT NULL,
                     ref_grupos_moderador integer NOT NULL,
@@ -29,6 +36,8 @@ class CreatePmiotopicReuniaoTable extends Migration
                     email_enviado timestamp without time zone,
                     publica smallint DEFAULT 0 NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmiotopic.reuniao_cod_reuniao_seq\', 1, false);
             '
         );
     }

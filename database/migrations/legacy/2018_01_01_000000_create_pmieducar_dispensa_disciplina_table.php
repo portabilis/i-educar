@@ -17,6 +17,13 @@ class CreatePmieducarDispensaDisciplinaTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.dispensa_disciplina_cod_dispensa_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.dispensa_disciplina (
                     ref_cod_matricula integer NOT NULL,
                     ref_cod_disciplina integer NOT NULL,
@@ -31,6 +38,8 @@ class CreatePmieducarDispensaDisciplinaTable extends Migration
                     observacao text,
                     cod_dispensa integer DEFAULT nextval(\'pmieducar.dispensa_disciplina_cod_dispensa_seq\'::regclass) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.dispensa_disciplina_cod_dispensa_seq\', 1, true);
             '
         );
     }

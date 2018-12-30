@@ -13,12 +13,17 @@ class CreateModulesFaltaGeralTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.falta_geral_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.falta_geral (
                     id integer NOT NULL,
                     falta_aluno_id integer NOT NULL,
@@ -26,7 +31,11 @@ class CreateModulesFaltaGeralTable extends Migration
                     etapa character varying(2) NOT NULL
                 );
 
-                -- ALTER SEQUENCE modules.falta_geral_id_seq OWNED BY modules.falta_geral.id;
+                ALTER SEQUENCE modules.falta_geral_id_seq OWNED BY modules.falta_geral.id;
+                
+                ALTER TABLE ONLY modules.falta_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_geral_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.falta_geral_id_seq\', 1, false);
             '
         );
     }

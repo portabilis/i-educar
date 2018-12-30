@@ -17,6 +17,13 @@ class CreatePmieducarPagamentoMultaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.pagamento_multa_cod_pagamento_multa_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.pagamento_multa (
                     cod_pagamento_multa integer DEFAULT nextval(\'pmieducar.pagamento_multa_cod_pagamento_multa_seq\'::regclass) NOT NULL,
                     ref_usuario_cad integer NOT NULL,
@@ -25,6 +32,8 @@ class CreatePmieducarPagamentoMultaTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL,
                     ref_cod_biblioteca integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.pagamento_multa_cod_pagamento_multa_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreateModulesVeiculoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE modules.veiculo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.veiculo (
                     cod_veiculo integer DEFAULT nextval(\'modules.veiculo_seq\'::regclass) NOT NULL,
                     descricao character varying(255) NOT NULL,
@@ -37,6 +44,8 @@ class CreateModulesVeiculoTable extends Migration
                     ref_cod_motorista integer,
                     observacao character varying(255)
                 );
+                
+                SELECT pg_catalog.setval(\'modules.veiculo_seq\', 1, false);
             '
         );
     }

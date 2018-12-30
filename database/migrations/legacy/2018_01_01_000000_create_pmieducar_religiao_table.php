@@ -17,6 +17,13 @@ class CreatePmieducarReligiaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.religiao_cod_religiao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.religiao (
                     cod_religiao integer DEFAULT nextval(\'pmieducar.religiao_cod_religiao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -26,6 +33,8 @@ class CreatePmieducarReligiaoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.religiao_cod_religiao_seq\', 1, false);
             '
         );
     }

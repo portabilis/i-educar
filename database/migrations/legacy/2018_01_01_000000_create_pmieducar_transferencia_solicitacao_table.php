@@ -17,6 +17,13 @@ class CreatePmieducarTransferenciaSolicitacaoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.transferencia_solicitacao (
                     cod_transferencia_solicitacao integer DEFAULT nextval(\'pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq\'::regclass) NOT NULL,
                     ref_cod_transferencia_tipo integer NOT NULL,
@@ -34,6 +41,8 @@ class CreatePmieducarTransferenciaSolicitacaoTable extends Migration
                     estado_escola_destino_externa character varying(60),
                     municipio_escola_destino_externa character varying(60)
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePublicBairroTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE public.seq_bairro
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE public.bairro (
                     idmun numeric(6,0) NOT NULL,
                     geom character varying,
@@ -36,6 +43,8 @@ class CreatePublicBairroTable extends Migration
                     CONSTRAINT ck_bairro_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_bairro_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'public.seq_bairro\', 1, false);
             '
         );
     }

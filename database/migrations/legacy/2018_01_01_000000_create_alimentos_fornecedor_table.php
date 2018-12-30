@@ -17,6 +17,13 @@ class CreateAlimentosFornecedorTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.fornecedor_idfor_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.fornecedor (
                     idfor integer DEFAULT nextval(\'alimentos.fornecedor_idfor_seq\'::regclass) NOT NULL,
                     idpes integer NOT NULL,
@@ -39,6 +46,8 @@ class CreateAlimentosFornecedorTable extends Migration
                     tipo character(1) NOT NULL,
                     CONSTRAINT ck_fornecedor CHECK (((tipo = \'F\'::bpchar) OR (tipo = \'J\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.fornecedor_idfor_seq\', 1, false);
             '
         );
     }

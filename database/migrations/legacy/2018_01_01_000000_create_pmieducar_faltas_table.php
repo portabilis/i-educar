@@ -17,6 +17,13 @@ class CreatePmieducarFaltasTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.faltas_sequencial_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.faltas (
                     ref_cod_matricula integer NOT NULL,
                     sequencial integer DEFAULT nextval(\'pmieducar.faltas_sequencial_seq\'::regclass) NOT NULL,
@@ -24,6 +31,8 @@ class CreatePmieducarFaltasTable extends Migration
                     falta integer NOT NULL,
                     data_cadastro timestamp without time zone NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.faltas_sequencial_seq\', 1, false);
             '
         );
     }

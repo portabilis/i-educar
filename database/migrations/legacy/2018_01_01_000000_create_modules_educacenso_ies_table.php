@@ -19,6 +19,13 @@ class CreateModulesEducacensoIesTable extends Migration
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.educacenso_ies_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.educacenso_ies (
                     id integer NOT NULL,
                     ies_id integer NOT NULL,
@@ -31,7 +38,11 @@ class CreateModulesEducacensoIesTable extends Migration
                     updated_at timestamp without time zone
                 );
 
-                -- ALTER SEQUENCE modules.educacenso_ies_id_seq OWNED BY modules.educacenso_ies.id;
+                ALTER SEQUENCE modules.educacenso_ies_id_seq OWNED BY modules.educacenso_ies.id;
+                
+                ALTER TABLE ONLY modules.educacenso_ies ALTER COLUMN id SET DEFAULT nextval(\'modules.educacenso_ies_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.educacenso_ies_id_seq\', 6179, true);
             '
         );
     }

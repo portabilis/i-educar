@@ -17,6 +17,13 @@ class CreateCadastroReligiaoTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE cadastro.religiao_cod_religiao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE cadastro.religiao (
                     cod_religiao integer DEFAULT nextval(\'cadastro.religiao_cod_religiao_seq\'::regclass) NOT NULL,
                     idpes_exc integer,
@@ -26,6 +33,8 @@ class CreateCadastroReligiaoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo boolean DEFAULT false
                 );
+                
+                SELECT pg_catalog.setval(\'cadastro.religiao_cod_religiao_seq\', 1, false);
             '
         );
     }

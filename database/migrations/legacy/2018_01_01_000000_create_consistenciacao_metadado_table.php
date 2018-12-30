@@ -17,6 +17,13 @@ class CreateConsistenciacaoMetadadoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.metadado_idmet_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.metadado (
                     idmet integer DEFAULT nextval(\'consistenciacao.metadado_idmet_seq\'::regclass) NOT NULL,
                     idfon integer NOT NULL,
@@ -25,6 +32,8 @@ class CreateConsistenciacaoMetadadoTable extends Migration
                     separador character(1),
                     CONSTRAINT ck_metadado_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.metadado_idmet_seq\', 1, false);
             '
         );
     }

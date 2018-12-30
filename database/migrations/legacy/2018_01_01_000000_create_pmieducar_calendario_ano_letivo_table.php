@@ -17,6 +17,13 @@ class CreatePmieducarCalendarioAnoLetivoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.calendario_ano_letivo (
                     cod_calendario_ano_letivo integer DEFAULT nextval(\'pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq\'::regclass) NOT NULL,
                     ref_cod_escola integer NOT NULL,
@@ -27,6 +34,8 @@ class CreatePmieducarCalendarioAnoLetivoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq\', 1, false);
             '
         );
     }

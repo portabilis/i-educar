@@ -17,6 +17,13 @@ class CreatePortalMenuMenuTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.menu_menu_cod_menu_menu_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.menu_menu (
                     cod_menu_menu integer DEFAULT nextval(\'portal.menu_menu_cod_menu_menu_seq\'::regclass) NOT NULL,
                     nm_menu character varying(255) DEFAULT \'\'::character varying NOT NULL,
@@ -26,7 +33,9 @@ class CreatePortalMenuMenuTable extends Migration
                     ord_menu integer DEFAULT 9999,
                     ativo boolean DEFAULT true,
                     icon_class character varying(20)
-                );   
+                );
+                
+                SELECT pg_catalog.setval(\'portal.menu_menu_cod_menu_menu_seq\', 68, true);
             '
         );
     }

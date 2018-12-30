@@ -17,6 +17,13 @@ class CreateConsistenciacaoConfrontacaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.confrontacao_idcon_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.confrontacao (
                     idcon integer DEFAULT nextval(\'consistenciacao.confrontacao_idcon_seq\'::regclass) NOT NULL,
                     idins integer NOT NULL,
@@ -27,6 +34,8 @@ class CreateConsistenciacaoConfrontacaoTable extends Migration
                     desconsiderar_reg_cred_maxima date,
                     data_hora timestamp without time zone NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.confrontacao_idcon_seq\', 1, false);
             '
         );
     }

@@ -13,12 +13,17 @@ class CreateModulesRegraAvaliacaoTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.regra_avaliacao_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.regra_avaliacao (
                     id integer NOT NULL,
                     instituicao_id integer NOT NULL,
@@ -49,7 +54,11 @@ class CreateModulesRegraAvaliacaoTable extends Migration
                     regra_diferenciada_id integer
                 );
 
-                -- ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
+                ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
+                
+                ALTER TABLE ONLY modules.regra_avaliacao ALTER COLUMN id SET DEFAULT nextval(\'modules.regra_avaliacao_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.regra_avaliacao_id_seq\', 2, true);
             '
         );
     }

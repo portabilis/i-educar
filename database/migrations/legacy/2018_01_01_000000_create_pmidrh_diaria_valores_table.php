@@ -17,6 +17,13 @@ class CreatePmidrhDiariaValoresTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmidrh.diaria_valores_cod_diaria_valores_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmidrh.diaria_valores (
                     cod_diaria_valores integer DEFAULT nextval(\'pmidrh.diaria_valores_cod_diaria_valores_seq\'::regclass) NOT NULL,
                     ref_funcionario_cadastro integer NOT NULL,
@@ -28,6 +35,8 @@ class CreatePmidrhDiariaValoresTable extends Migration
                     p25 double precision,
                     data_vigencia timestamp without time zone NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmidrh.diaria_valores_cod_diaria_valores_seq\', 1, false);
             '
         );
     }

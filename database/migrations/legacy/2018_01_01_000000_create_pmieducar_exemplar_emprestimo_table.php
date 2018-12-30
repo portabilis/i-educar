@@ -17,6 +17,13 @@ class CreatePmieducarExemplarEmprestimoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.exemplar_emprestimo_cod_emprestimo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.exemplar_emprestimo (
                     cod_emprestimo integer DEFAULT nextval(\'pmieducar.exemplar_emprestimo_cod_emprestimo_seq\'::regclass) NOT NULL,
                     ref_usuario_devolucao integer,
@@ -27,6 +34,8 @@ class CreatePmieducarExemplarEmprestimoTable extends Migration
                     data_devolucao timestamp without time zone,
                     valor_multa double precision
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.exemplar_emprestimo_cod_emprestimo_seq\', 1, false);
             '
         );
     }

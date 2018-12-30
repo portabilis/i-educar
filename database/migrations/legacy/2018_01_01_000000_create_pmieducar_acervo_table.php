@@ -17,6 +17,13 @@ class CreatePmieducarAcervoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.acervo_cod_acervo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.acervo (
                     cod_acervo integer DEFAULT nextval(\'pmieducar.acervo_cod_acervo_seq\'::regclass) NOT NULL,
                     ref_cod_exemplar_tipo integer NOT NULL,
@@ -48,6 +55,8 @@ class CreatePmieducarAcervoTable extends Migration
                     ref_cod_tipo_autor integer,
                     tipo_autor character varying(255)
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.acervo_cod_acervo_seq\', 1, false);
             '
         );
     }

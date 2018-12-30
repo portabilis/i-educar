@@ -17,11 +17,20 @@ class CreateAlimentosPessoaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.pessoa_idpes_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.pessoa (
                     idpes integer DEFAULT nextval(\'alimentos.pessoa_idpes_seq\'::regclass) NOT NULL,
                     tipo character varying(1) NOT NULL,
                     CONSTRAINT ck_pessoa CHECK ((((tipo)::text = \'C\'::text) OR ((tipo)::text = \'F\'::text) OR ((tipo)::text = \'U\'::text)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.pessoa_idpes_seq\', 1, false);
             '
         );
     }

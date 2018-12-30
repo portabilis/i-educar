@@ -17,6 +17,13 @@ class CreateAlimentosCardapioProdutoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.cardapio_produto_idcpr_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.cardapio_produto (
                     idcpr integer DEFAULT nextval(\'alimentos.cardapio_produto_idcpr_seq\'::regclass) NOT NULL,
                     idpro integer NOT NULL,
@@ -24,6 +31,8 @@ class CreateAlimentosCardapioProdutoTable extends Migration
                     quantidade numeric NOT NULL,
                     valor numeric NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.cardapio_produto_idcpr_seq\', 1, false);
             '
         );
     }

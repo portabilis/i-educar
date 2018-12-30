@@ -17,6 +17,13 @@ class CreatePmieducarAcervoAutorTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.acervo_autor_cod_acervo_autor_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.acervo_autor (
                     cod_acervo_autor integer DEFAULT nextval(\'pmieducar.acervo_autor_cod_acervo_autor_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarAcervoAutorTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_biblioteca integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.acervo_autor_cod_acervo_autor_seq\', 1, false);
             '
         );
     }

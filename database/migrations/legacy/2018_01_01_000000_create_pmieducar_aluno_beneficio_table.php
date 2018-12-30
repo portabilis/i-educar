@@ -17,6 +17,13 @@ class CreatePmieducarAlunoBeneficioTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.aluno_beneficio_cod_aluno_beneficio_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.aluno_beneficio (
                     cod_aluno_beneficio integer DEFAULT nextval(\'pmieducar.aluno_beneficio_cod_aluno_beneficio_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -27,6 +34,8 @@ class CreatePmieducarAlunoBeneficioTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.aluno_beneficio_cod_aluno_beneficio_seq\', 1, false);
             '
         );
     }

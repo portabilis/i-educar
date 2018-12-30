@@ -17,6 +17,13 @@ class CreatePmieducarBibliotecaFeriadosTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.biblioteca_feriados_cod_feriado_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.biblioteca_feriados (
                     cod_feriado integer DEFAULT nextval(\'pmieducar.biblioteca_feriados_cod_feriado_seq\'::regclass) NOT NULL,
                     ref_cod_biblioteca integer NOT NULL,
@@ -27,6 +34,8 @@ class CreatePmieducarBibliotecaFeriadosTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     data_feriado date NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.biblioteca_feriados_cod_feriado_seq\', 1, false);
             '
         );
     }

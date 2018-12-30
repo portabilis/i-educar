@@ -17,6 +17,13 @@ class CreatePmieducarFaltaAtrasoCompensadoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.falta_atraso_compensado_cod_compensado_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.falta_atraso_compensado (
                     cod_compensado integer DEFAULT nextval(\'pmieducar.falta_atraso_compensado_cod_compensado_seq\'::regclass) NOT NULL,
                     ref_cod_escola integer NOT NULL,
@@ -30,6 +37,8 @@ class CreatePmieducarFaltaAtrasoCompensadoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.falta_atraso_compensado_cod_compensado_seq\', 1, false);
             '
         );
     }

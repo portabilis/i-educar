@@ -17,6 +17,13 @@ class CreateCadastroPessoaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE cadastro.seq_pessoa
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE cadastro.pessoa (
                     idpes numeric(8,0) DEFAULT nextval((\'cadastro.seq_pessoa\'::text)::regclass) NOT NULL,
                     nome character varying(150) NOT NULL,
@@ -37,6 +44,8 @@ class CreateCadastroPessoaTable extends Migration
                     CONSTRAINT ck_pessoa_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar) OR (situacao = \'P\'::bpchar))),
                     CONSTRAINT ck_pessoa_tipo CHECK (((tipo = \'F\'::bpchar) OR (tipo = \'J\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'cadastro.seq_pessoa\', 3, true);
             '
         );
     }

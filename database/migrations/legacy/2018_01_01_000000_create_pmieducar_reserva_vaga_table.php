@@ -17,6 +17,13 @@ class CreatePmieducarReservaVagaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.reserva_vaga_cod_reserva_vaga_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.reserva_vaga (
                     cod_reserva_vaga integer DEFAULT nextval(\'pmieducar.reserva_vaga_cod_reserva_vaga_seq\'::regclass) NOT NULL,
                     ref_ref_cod_escola integer NOT NULL,
@@ -30,6 +37,8 @@ class CreatePmieducarReservaVagaTable extends Migration
                     nm_aluno character varying(255),
                     cpf_responsavel numeric(11,0)
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.reserva_vaga_cod_reserva_vaga_seq\', 1, false);
             '
         );
     }

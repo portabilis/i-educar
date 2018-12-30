@@ -17,6 +17,13 @@ class CreatePortalAcessoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE portal.acesso_cod_acesso_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.acesso (
                     cod_acesso integer DEFAULT nextval(\'portal.acesso_cod_acesso_seq\'::regclass) NOT NULL,
                     data_hora timestamp without time zone NOT NULL,
@@ -26,6 +33,8 @@ class CreatePortalAcessoTable extends Migration
                     obs text,
                     sucesso boolean DEFAULT true NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.acesso_cod_acesso_seq\', 19, true);
             '
         );
     }

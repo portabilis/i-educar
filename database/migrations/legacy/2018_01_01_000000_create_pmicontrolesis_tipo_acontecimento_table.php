@@ -17,6 +17,13 @@ class CreatePmicontrolesisTipoAcontecimentoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.tipo_acontecimento (
                     cod_tipo_acontecimento integer DEFAULT nextval(\'pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq\'::regclass) NOT NULL,
                     ref_cod_funcionario_cad integer NOT NULL,
@@ -27,6 +34,8 @@ class CreatePmicontrolesisTipoAcontecimentoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq\', 1, false);
             '
         );
     }

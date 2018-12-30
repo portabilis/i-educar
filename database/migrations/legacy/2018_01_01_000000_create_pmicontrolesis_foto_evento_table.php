@@ -17,6 +17,13 @@ class CreatePmicontrolesisFotoEventoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.foto_evento_cod_foto_evento_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.foto_evento (
                     cod_foto_evento integer DEFAULT nextval(\'pmicontrolesis.foto_evento_cod_foto_evento_seq\'::regclass) NOT NULL,
                     ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
@@ -28,6 +35,8 @@ class CreatePmicontrolesisFotoEventoTable extends Migration
                     largura integer,
                     nm_credito character varying(255)
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.foto_evento_cod_foto_evento_seq\', 1, false);
             '
         );
     }

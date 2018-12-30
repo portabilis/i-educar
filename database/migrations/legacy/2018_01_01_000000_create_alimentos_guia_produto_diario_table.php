@@ -17,6 +17,13 @@ class CreateAlimentosGuiaProdutoDiarioTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.guia_produto_diario_idguiaprodiario_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.guia_produto_diario (
                     idguiaprodiario integer DEFAULT nextval(\'alimentos.guia_produto_diario_idguiaprodiario_seq\'::regclass) NOT NULL,
                     idgui integer NOT NULL,
@@ -25,6 +32,8 @@ class CreateAlimentosGuiaProdutoDiarioTable extends Migration
                     dt_guia date NOT NULL,
                     qtde numeric NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.guia_produto_diario_idguiaprodiario_seq\', 1, false);
             '
         );
     }

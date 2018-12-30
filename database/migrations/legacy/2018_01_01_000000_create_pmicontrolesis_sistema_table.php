@@ -17,6 +17,13 @@ class CreatePmicontrolesisSistemaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.sistema_cod_sistema_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.sistema (
                     cod_sistema integer DEFAULT nextval(\'pmicontrolesis.sistema_cod_sistema_seq\'::regclass) NOT NULL,
                     nm_sistema character varying(255) NOT NULL,
@@ -26,6 +33,8 @@ class CreatePmicontrolesisSistemaTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.sistema_cod_sistema_seq\', 1, false);
             '
         );
     }

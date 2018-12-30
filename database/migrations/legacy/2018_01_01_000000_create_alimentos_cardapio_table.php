@@ -17,6 +17,13 @@ class CreateAlimentosCardapioTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.cardapio_idcar_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.cardapio (
                     idcar integer DEFAULT nextval(\'alimentos.cardapio_idcar_seq\'::regclass) NOT NULL,
                     login_inclusao character varying(80) NOT NULL,
@@ -30,6 +37,8 @@ class CreateAlimentosCardapioTable extends Migration
                     finalizado character(1) NOT NULL,
                     CONSTRAINT ck_cardapio_finalizado CHECK (((finalizado = \'S\'::bpchar) OR (finalizado = \'N\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.cardapio_idcar_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarCursoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.curso_cod_curso_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.curso (
                     cod_curso integer DEFAULT nextval(\'pmieducar.curso_cod_curso_seq\'::regclass) NOT NULL,
                     ref_usuario_cad integer NOT NULL,
@@ -40,6 +47,8 @@ class CreatePmieducarCursoTable extends Migration
                     multi_seriado integer,
                     modalidade_curso integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.curso_cod_curso_seq\', 1, true);
             '
         );
     }

@@ -13,18 +13,27 @@ class CreateModulesNotaAlunoTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.nota_aluno_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.nota_aluno (
                     id integer NOT NULL,
                     matricula_id integer NOT NULL
                 );
 
-                -- ALTER SEQUENCE modules.nota_aluno_id_seq OWNED BY modules.nota_aluno.id;
+                ALTER SEQUENCE modules.nota_aluno_id_seq OWNED BY modules.nota_aluno.id;
+                
+                ALTER TABLE ONLY modules.nota_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_aluno_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.nota_aluno_id_seq\', 2, true);
             '
         );
     }

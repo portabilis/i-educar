@@ -17,6 +17,13 @@ class CreatePortalComprasPregaoExecucaoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.compras_pregao_execucao (
                     cod_compras_pregao_execucao integer DEFAULT nextval(\'portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq\'::regclass) NOT NULL,
                     ref_cod_compras_licitacoes integer DEFAULT 0 NOT NULL,
@@ -33,6 +40,8 @@ class CreatePortalComprasPregaoExecucaoTable extends Migration
                     valor_real double precision,
                     ref_cod_compras_final_pregao integer
                 );
+                
+                SELECT pg_catalog.setval(\'portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq\', 1, false);
             '
         );
     }

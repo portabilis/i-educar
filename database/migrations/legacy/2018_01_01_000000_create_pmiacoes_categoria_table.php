@@ -17,6 +17,13 @@ class CreatePmiacoesCategoriaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmiacoes.categoria_cod_categoria_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmiacoes.categoria (
                     cod_categoria integer DEFAULT nextval(\'pmiacoes.categoria_cod_categoria_seq\'::regclass) NOT NULL,
                     ref_funcionario_exc integer,
@@ -26,6 +33,8 @@ class CreatePmiacoesCategoriaTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmiacoes.categoria_cod_categoria_seq\', 1, false);
             '
         );
     }

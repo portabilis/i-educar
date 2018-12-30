@@ -17,6 +17,13 @@ class CreatePmieducarServidorCursoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE pmieducar.servidor_curso_cod_servidor_curso_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.servidor_curso (
                     cod_servidor_curso integer DEFAULT nextval(\'pmieducar.servidor_curso_cod_servidor_curso_seq\'::regclass) NOT NULL,
                     ref_cod_formacao integer NOT NULL,
@@ -24,6 +31,8 @@ class CreatePmieducarServidorCursoTable extends Migration
                     data_registro timestamp without time zone,
                     diplomas_registros text
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.servidor_curso_cod_servidor_curso_seq\', 1, false);
             '
         );
     }

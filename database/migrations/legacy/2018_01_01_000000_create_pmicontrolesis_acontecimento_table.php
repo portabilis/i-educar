@@ -17,6 +17,13 @@ class CreatePmicontrolesisAcontecimentoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.acontecimento_cod_acontecimento_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.acontecimento (
                     cod_acontecimento integer DEFAULT nextval(\'pmicontrolesis.acontecimento_cod_acontecimento_seq\'::regclass) NOT NULL,
                     ref_cod_tipo_acontecimento integer NOT NULL,
@@ -35,6 +42,8 @@ class CreatePmicontrolesisAcontecimentoTable extends Migration
                     contato character varying,
                     link character varying
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.acontecimento_cod_acontecimento_seq\', 1, false);
             '
         );
     }

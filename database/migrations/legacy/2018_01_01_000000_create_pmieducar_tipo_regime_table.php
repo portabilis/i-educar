@@ -17,6 +17,13 @@ class CreatePmieducarTipoRegimeTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.tipo_regime_cod_tipo_regime_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.tipo_regime (
                     cod_tipo_regime integer DEFAULT nextval(\'pmieducar.tipo_regime_cod_tipo_regime_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -27,6 +34,8 @@ class CreatePmieducarTipoRegimeTable extends Migration
                     ativo smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.tipo_regime_cod_tipo_regime_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmidrhSetorTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmidrh.setor_cod_setor_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmidrh.setor (
                     cod_setor integer DEFAULT nextval(\'pmidrh.setor_cod_setor_seq\'::regclass) NOT NULL,
                     ref_cod_pessoa_exc integer,
@@ -33,6 +40,8 @@ class CreatePmidrhSetorTable extends Migration
                     tipo character(1),
                     ref_idpes_resp integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmidrh.setor_cod_setor_seq\', 1, false);
             '
         );
     }

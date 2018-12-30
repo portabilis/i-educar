@@ -17,11 +17,20 @@ class CreateAlimentosTipoRefeicaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.tipo_refeicao_idtre_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.tipo_refeicao (
                     idtre integer DEFAULT nextval(\'alimentos.tipo_refeicao_idtre_seq\'::regclass) NOT NULL,
                     idcli character varying(10) NOT NULL,
                     descricao character varying(30) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.tipo_refeicao_idtre_seq\', 1, false);
             '
         );
     }

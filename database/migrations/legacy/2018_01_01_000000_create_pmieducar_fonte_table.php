@@ -17,6 +17,13 @@ class CreatePmieducarFonteTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.fonte_cod_fonte_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.fonte (
                     cod_fonte integer DEFAULT nextval(\'pmieducar.fonte_cod_fonte_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarFonteTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_biblioteca integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.fonte_cod_fonte_seq\', 1, false);
             '
         );
     }

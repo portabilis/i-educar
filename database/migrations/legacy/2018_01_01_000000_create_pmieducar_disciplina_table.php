@@ -17,6 +17,13 @@ class CreatePmieducarDisciplinaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.disciplina_cod_disciplina_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.disciplina (
                     cod_disciplina integer DEFAULT nextval(\'pmieducar.disciplina_cod_disciplina_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -32,6 +39,8 @@ class CreatePmieducarDisciplinaTable extends Migration
                     nm_disciplina character varying(255) NOT NULL,
                     ref_cod_curso integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.disciplina_cod_disciplina_seq\', 1, false);
             '
         );
     }

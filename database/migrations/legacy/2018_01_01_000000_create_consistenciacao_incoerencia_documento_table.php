@@ -17,6 +17,13 @@ class CreateConsistenciacaoIncoerenciaDocumentoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.incoerencia_documento_id_inc_doc_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.incoerencia_documento (
                     id_inc_doc integer DEFAULT nextval(\'consistenciacao.incoerencia_documento_id_inc_doc_seq\'::regclass) NOT NULL,
                     idinc integer NOT NULL,
@@ -39,6 +46,8 @@ class CreateConsistenciacaoIncoerenciaDocumentoTable extends Migration
                     zona_tit_eleitor numeric(4,0),
                     secao_tit_eleitor numeric(4,0)
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.incoerencia_documento_id_inc_doc_seq\', 1, false);
             '
         );
     }

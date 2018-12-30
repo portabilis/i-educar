@@ -17,11 +17,20 @@ class CreatePmieducarProjetoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.projeto_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.projeto (
                     cod_projeto integer DEFAULT nextval(\'pmieducar.projeto_seq\'::regclass) NOT NULL,
                     nome character varying(50),
                     observacao character varying(255)
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.projeto_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarCoffebreakTipoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.coffebreak_tipo (
                     cod_coffebreak_tipo integer DEFAULT nextval(\'pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarCoffebreakTipoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq\', 1, false);
             '
         );
     }

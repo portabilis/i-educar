@@ -17,6 +17,13 @@ class CreatePmieducarInfraPredioComodoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.infra_predio_comodo_cod_infra_predio_comodo_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.infra_predio_comodo (
                     cod_infra_predio_comodo integer DEFAULT nextval(\'pmieducar.infra_predio_comodo_cod_infra_predio_comodo_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -30,6 +37,8 @@ class CreatePmieducarInfraPredioComodoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.infra_predio_comodo_cod_infra_predio_comodo_seq\', 1, true);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarInstituicaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.instituicao_cod_instituicao_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.instituicao (
                     cod_instituicao integer DEFAULT nextval(\'pmieducar.instituicao_cod_instituicao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -69,6 +76,8 @@ class CreatePmieducarInstituicaoTable extends Migration
                 );
 
                 COMMENT ON COLUMN pmieducar.instituicao.exibir_apenas_professores_alocados IS \'Para filtros de emissão de relatórios\';
+                
+                SELECT pg_catalog.setval(\'pmieducar.instituicao_cod_instituicao_seq\', 1, true);
             '
         );
     }

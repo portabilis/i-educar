@@ -19,6 +19,13 @@ class CreateModulesTabelaArredondamentoTable extends Migration
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.tabela_arredondamento_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.tabela_arredondamento (
                     id integer NOT NULL,
                     instituicao_id integer NOT NULL,
@@ -26,7 +33,11 @@ class CreateModulesTabelaArredondamentoTable extends Migration
                     tipo_nota smallint DEFAULT 1 NOT NULL
                 );
 
-                -- ALTER SEQUENCE modules.tabela_arredondamento_id_seq OWNED BY modules.tabela_arredondamento.id;
+                ALTER SEQUENCE modules.tabela_arredondamento_id_seq OWNED BY modules.tabela_arredondamento.id;
+                
+                ALTER TABLE ONLY modules.tabela_arredondamento ALTER COLUMN id SET DEFAULT nextval(\'modules.tabela_arredondamento_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.tabela_arredondamento_id_seq\', 2, true);
             '
         );
     }

@@ -17,12 +17,21 @@ class CreateCadastroDeficienciaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE cadastro.deficiencia_cod_deficiencia_seq
+                    START WITH 15
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE cadastro.deficiencia (
                     cod_deficiencia integer DEFAULT nextval(\'cadastro.deficiencia_cod_deficiencia_seq\'::regclass) NOT NULL,
                     nm_deficiencia character varying(70) NOT NULL,
                     deficiencia_educacenso smallint,
                     desconsidera_regra_diferenciada boolean DEFAULT false
                 );
+
+                SELECT pg_catalog.setval(\'cadastro.deficiencia_cod_deficiencia_seq\', 15, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePortalImagemTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.imagem_cod_imagem_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.imagem (
                     cod_imagem integer DEFAULT nextval(\'portal.imagem_cod_imagem_seq\'::regclass) NOT NULL,
                     ref_cod_imagem_tipo integer NOT NULL,
@@ -30,6 +37,8 @@ class CreatePortalImagemTable extends Migration
                     data_exclusao timestamp without time zone,
                     ref_cod_pessoa_exc integer
                 );
+                
+                SELECT pg_catalog.setval(\'portal.imagem_cod_imagem_seq\', 186, true);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarMatriculaOcorrenciaDisciplinarTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.ocorrencia_disciplinar_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.matricula_ocorrencia_disciplinar (
                     ref_cod_matricula integer NOT NULL,
                     ref_cod_tipo_ocorrencia_disciplinar integer NOT NULL,
@@ -30,6 +37,8 @@ class CreatePmieducarMatriculaOcorrenciaDisciplinarTable extends Migration
                     visivel_pais integer,
                     cod_ocorrencia_disciplinar integer DEFAULT nextval(\'pmieducar.ocorrencia_disciplinar_seq\'::regclass) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.ocorrencia_disciplinar_seq\', 1, false);
             '
         );
     }

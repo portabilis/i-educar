@@ -17,6 +17,13 @@ class CreateAlimentosProdutoMedidaCaseiraTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.produto_medida_caseira_idpmc_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.produto_medida_caseira (
                     idpmc integer DEFAULT nextval(\'alimentos.produto_medida_caseira_idpmc_seq\'::regclass) NOT NULL,
                     idcli character varying(10) NOT NULL,
@@ -24,6 +31,8 @@ class CreateAlimentosProdutoMedidaCaseiraTable extends Migration
                     idpro integer NOT NULL,
                     peso numeric NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.produto_medida_caseira_idpmc_seq\', 1, false);
             '
         );
     }

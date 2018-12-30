@@ -17,6 +17,13 @@ class CreateAcessoFuncaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE acesso.funcao_idfunc_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE acesso.funcao (
                     idfunc integer DEFAULT nextval(\'acesso.funcao_idfunc_seq\'::regclass) NOT NULL,
                     idsis integer NOT NULL,
@@ -28,6 +35,8 @@ class CreateAcessoFuncaoTable extends Migration
                     descricao character varying(250) NOT NULL,
                     CONSTRAINT ck_funcao_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'acesso.funcao_idfunc_seq\', 1, false);
             '
         );
     }

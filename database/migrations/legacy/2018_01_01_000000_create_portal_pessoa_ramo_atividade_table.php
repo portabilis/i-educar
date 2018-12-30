@@ -17,10 +17,19 @@ class CreatePortalPessoaRamoAtividadeTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.pessoa_ramo_atividade_cod_ramo_atividade_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.pessoa_ramo_atividade (
                     cod_ramo_atividade integer DEFAULT nextval(\'portal.pessoa_ramo_atividade_cod_ramo_atividade_seq\'::regclass) NOT NULL,
                     nm_ramo_atividade character varying(255)
                 );
+                
+                SELECT pg_catalog.setval(\'portal.pessoa_ramo_atividade_cod_ramo_atividade_seq\', 1, false);
             '
         );
     }

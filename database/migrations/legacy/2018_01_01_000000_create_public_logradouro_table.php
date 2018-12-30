@@ -17,6 +17,13 @@ class CreatePublicLogradouroTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE public.seq_logradouro
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE public.logradouro (
                     idlog numeric(6,0) DEFAULT nextval((\'public.seq_logradouro\'::text)::regclass) NOT NULL,
                     idtlog character varying(5) NOT NULL,
@@ -36,6 +43,8 @@ class CreatePublicLogradouroTable extends Migration
                     CONSTRAINT ck_logradouro_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_logradouro_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'public.seq_logradouro\', 1, false);
             '
         );
     }

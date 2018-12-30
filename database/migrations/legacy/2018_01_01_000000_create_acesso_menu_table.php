@@ -17,6 +17,13 @@ class CreateAcessoMenuTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE acesso.menu_idmen_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE acesso.menu (
                     idmen integer DEFAULT nextval(\'acesso.menu_idmen_seq\'::regclass) NOT NULL,
                     idsis integer NOT NULL,
@@ -28,6 +35,8 @@ class CreateAcessoMenuTable extends Migration
                     ordem numeric(2,0) NOT NULL,
                     CONSTRAINT ck_menu_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'acesso.menu_idmen_seq\', 1, false);
             '
         );
     }
