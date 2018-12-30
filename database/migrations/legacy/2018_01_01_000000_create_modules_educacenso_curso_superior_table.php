@@ -19,6 +19,13 @@ class CreateModulesEducacensoCursoSuperiorTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE modules.educacenso_curso_superior_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.educacenso_curso_superior (
                     id integer NOT NULL,
                     curso_id character varying(100) NOT NULL,
@@ -30,7 +37,11 @@ class CreateModulesEducacensoCursoSuperiorTable extends Migration
                     grau_academico smallint
                 );
 
-                -- ALTER SEQUENCE modules.educacenso_curso_superior_id_seq OWNED BY modules.educacenso_curso_superior.id;
+                ALTER SEQUENCE modules.educacenso_curso_superior_id_seq OWNED BY modules.educacenso_curso_superior.id;
+                
+                ALTER TABLE ONLY modules.educacenso_curso_superior ALTER COLUMN id SET DEFAULT nextval(\'modules.educacenso_curso_superior_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.educacenso_curso_superior_id_seq\', 338, true);
             '
         );
     }

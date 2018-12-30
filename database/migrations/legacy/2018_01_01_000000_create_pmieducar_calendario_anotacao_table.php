@@ -17,6 +17,13 @@ class CreatePmieducarCalendarioAnotacaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.calendario_anotacao_cod_calendario_anotacao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.calendario_anotacao (
                     cod_calendario_anotacao integer DEFAULT nextval(\'pmieducar.calendario_anotacao_cod_calendario_anotacao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -27,6 +34,8 @@ class CreatePmieducarCalendarioAnotacaoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.calendario_anotacao_cod_calendario_anotacao_seq\', 1, false);
             '
         );
     }

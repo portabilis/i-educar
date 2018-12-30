@@ -17,6 +17,13 @@ class CreatePmieducarAbandonoTipoTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.abandono_tipo_cod_abandono_tipo_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.abandono_tipo (
                     cod_abandono_tipo integer DEFAULT nextval(\'pmieducar.abandono_tipo_cod_abandono_tipo_seq\'::regclass) NOT NULL,
                     ref_cod_instituicao integer NOT NULL,
@@ -27,6 +34,8 @@ class CreatePmieducarAbandonoTipoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.abandono_tipo_cod_abandono_tipo_seq\', 2, true);
             '
         );
     }

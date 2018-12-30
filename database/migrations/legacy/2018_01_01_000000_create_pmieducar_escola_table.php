@@ -17,6 +17,13 @@ class CreatePmieducarEscolaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.escola_cod_escola_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.escola (
                     cod_escola integer DEFAULT nextval(\'pmieducar.escola_cod_escola_seq\'::regclass) NOT NULL,
                     ref_usuario_cad integer NOT NULL,
@@ -136,6 +143,8 @@ class CreatePmieducarEscolaTable extends Migration
                     codigo_inep_escola_compartilhada5 integer,
                     codigo_inep_escola_compartilhada6 integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.escola_cod_escola_seq\', 1, true);
             '
         );
     }

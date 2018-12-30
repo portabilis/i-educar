@@ -17,6 +17,13 @@ class CreatePortalNotPortalTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.not_portal_cod_not_portal_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.not_portal (
                     cod_not_portal integer DEFAULT nextval(\'portal.not_portal_cod_not_portal_seq\'::regclass) NOT NULL,
                     ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
@@ -24,6 +31,8 @@ class CreatePortalNotPortalTable extends Migration
                     descricao text,
                     data_noticia timestamp without time zone NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.not_portal_cod_not_portal_seq\', 1, false);
             '
         );
     }

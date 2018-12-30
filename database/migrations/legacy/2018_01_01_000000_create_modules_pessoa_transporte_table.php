@@ -17,6 +17,13 @@ class CreateModulesPessoaTransporteTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE modules.pessoa_transporte_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.pessoa_transporte (
                     cod_pessoa_transporte integer DEFAULT nextval(\'modules.pessoa_transporte_seq\'::regclass) NOT NULL,
                     ref_idpes integer NOT NULL,
@@ -26,6 +33,8 @@ class CreateModulesPessoaTransporteTable extends Migration
                     observacao character varying(255),
                     turno character varying(255)
                 );
+                
+                SELECT pg_catalog.setval(\'modules.pessoa_transporte_seq\', 1, false);
             '
         );
     }

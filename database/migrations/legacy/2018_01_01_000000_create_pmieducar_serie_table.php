@@ -17,6 +17,13 @@ class CreatePmieducarSerieTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.serie_cod_serie_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.serie (
                     cod_serie integer DEFAULT nextval(\'pmieducar.serie_cod_serie_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -41,6 +48,8 @@ class CreatePmieducarSerieTable extends Migration
                     idade_ideal integer,
                     exigir_inep boolean
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.serie_cod_serie_seq\', 2, true);
             '
         );
     }

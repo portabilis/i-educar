@@ -19,6 +19,13 @@ class CreateModulesParecerGeralTable extends Migration
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.parecer_geral_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.parecer_geral (
                     id integer NOT NULL,
                     parecer_aluno_id integer NOT NULL,
@@ -26,7 +33,11 @@ class CreateModulesParecerGeralTable extends Migration
                     etapa character varying(2) NOT NULL
                 );
 
-                -- ALTER SEQUENCE modules.parecer_geral_id_seq OWNED BY modules.parecer_geral.id;
+                ALTER SEQUENCE modules.parecer_geral_id_seq OWNED BY modules.parecer_geral.id;
+
+                ALTER TABLE ONLY modules.parecer_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_geral_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.parecer_geral_id_seq\', 1, false);
             '
         );
     }

@@ -13,11 +13,16 @@ class CreatePmieducarCategoriaObraTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
+
+                CREATE SEQUENCE pmieducar.categoria_obra_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
 
                 CREATE TABLE pmieducar.categoria_obra (
                     id integer NOT NULL,
@@ -25,7 +30,11 @@ class CreatePmieducarCategoriaObraTable extends Migration
                     observacoes character varying(300)
                 );
 
-                -- ALTER SEQUENCE pmieducar.categoria_obra_id_seq OWNED BY pmieducar.categoria_obra.id;
+                ALTER SEQUENCE pmieducar.categoria_obra_id_seq OWNED BY pmieducar.categoria_obra.id;
+                
+                ALTER TABLE ONLY pmieducar.categoria_obra ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.categoria_obra_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'pmieducar.categoria_obra_id_seq\', 1, false);
             '
         );
     }

@@ -17,12 +17,21 @@ class CreateConsistenciacaoRegraCampoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.regra_campo_idreg_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.regra_campo (
                     idreg integer DEFAULT nextval(\'consistenciacao.regra_campo_idreg_seq\'::regclass) NOT NULL,
                     nome character varying(60) NOT NULL,
                     tipo character(1) NOT NULL,
                     CONSTRAINT ck_regra_campo_tipo CHECK (((tipo = \'S\'::bpchar) OR (tipo = \'N\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.regra_campo_idreg_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreateAlimentosUnidadeAtendidaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.unidade_atendida_iduni_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.unidade_atendida (
                     iduni integer DEFAULT nextval(\'alimentos.unidade_atendida_iduni_seq\'::regclass) NOT NULL,
                     idcad integer NOT NULL,
@@ -34,6 +41,8 @@ class CreateAlimentosUnidadeAtendidaTable extends Migration
                     idpes integer NOT NULL,
                     diretor character varying(40) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.unidade_atendida_iduni_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarMaterialTipoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.material_tipo_cod_material_tipo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.material_tipo (
                     cod_material_tipo integer DEFAULT nextval(\'pmieducar.material_tipo_cod_material_tipo_seq\'::regclass) NOT NULL,
                     ref_usuario_cad integer NOT NULL,
@@ -28,6 +35,8 @@ class CreatePmieducarMaterialTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.material_tipo_cod_material_tipo_seq\', 1, false);
             '
         );
     }

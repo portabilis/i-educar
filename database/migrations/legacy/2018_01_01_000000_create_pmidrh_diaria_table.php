@@ -17,6 +17,13 @@ class CreatePmidrhDiariaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmidrh.diaria_cod_diaria_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmidrh.diaria (
                     cod_diaria integer DEFAULT nextval(\'pmidrh.diaria_cod_diaria_seq\'::regclass) NOT NULL,
                     ref_funcionario_cadastro integer NOT NULL,
@@ -41,6 +48,8 @@ class CreatePmidrhDiariaTable extends Migration
                     ref_cod_setor integer,
                     num_diaria numeric(6,0)
                 );
+                
+                SELECT pg_catalog.setval(\'pmidrh.diaria_cod_diaria_seq\', 1, false);
             '
         );
     }

@@ -13,11 +13,16 @@ class CreateModulesTabelaArredondamentoValorTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
+
+                CREATE SEQUENCE modules.tabela_arredondamento_valor_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
 
                 CREATE TABLE modules.tabela_arredondamento_valor (
                     id integer NOT NULL,
@@ -30,7 +35,11 @@ class CreateModulesTabelaArredondamentoValorTable extends Migration
                     acao smallint
                 );
 
-                -- ALTER SEQUENCE modules.tabela_arredondamento_valor_id_seq OWNED BY modules.tabela_arredondamento_valor.id;
+                ALTER SEQUENCE modules.tabela_arredondamento_valor_id_seq OWNED BY modules.tabela_arredondamento_valor.id;
+                
+                ALTER TABLE ONLY modules.tabela_arredondamento_valor ALTER COLUMN id SET DEFAULT nextval(\'modules.tabela_arredondamento_valor_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.tabela_arredondamento_valor_id_seq\', 26, true);
             '
         );
     }

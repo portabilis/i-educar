@@ -17,6 +17,13 @@ class CreatePmieducarExemplarTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.exemplar_cod_exemplar_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.exemplar (
                     cod_exemplar integer DEFAULT nextval(\'pmieducar.exemplar_cod_exemplar_seq\'::regclass) NOT NULL,
                     ref_cod_fonte integer NOT NULL,
@@ -35,6 +42,8 @@ class CreatePmieducarExemplarTable extends Migration
                     sequencial integer,
                     data_baixa_exemplar date
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.exemplar_cod_exemplar_seq\', 1, false);
             '
         );
     }

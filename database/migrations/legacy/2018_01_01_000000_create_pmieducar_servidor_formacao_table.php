@@ -17,6 +17,13 @@ class CreatePmieducarServidorFormacaoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE pmieducar.servidor_formacao_cod_formacao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.servidor_formacao (
                     cod_formacao integer DEFAULT nextval(\'pmieducar.servidor_formacao_cod_formacao_seq\'::regclass) NOT NULL,
                     ref_ref_cod_instituicao integer NOT NULL,
@@ -30,6 +37,8 @@ class CreatePmieducarServidorFormacaoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.servidor_formacao_cod_formacao_seq\', 1, false);
             '
         );
     }

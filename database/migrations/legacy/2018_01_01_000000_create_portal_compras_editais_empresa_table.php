@@ -17,6 +17,13 @@ class CreatePortalComprasEditaisEmpresaTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.compras_editais_empresa_cod_compras_editais_empresa_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.compras_editais_empresa (
                     cod_compras_editais_empresa integer DEFAULT nextval(\'portal.compras_editais_empresa_cod_compras_editais_empresa_seq\'::regclass) NOT NULL,
                     cnpj character varying(20) DEFAULT \'\'::character varying NOT NULL,
@@ -33,6 +40,8 @@ class CreatePortalComprasEditaisEmpresaTable extends Migration
                     nome_contato character varying(255),
                     senha character varying(32) DEFAULT \'\'::character varying NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.compras_editais_empresa_cod_compras_editais_empresa_seq\', 1, false);
             '
         );
     }

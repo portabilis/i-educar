@@ -17,6 +17,13 @@ class CreatePmieducarMotivoSuspensaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.motivo_suspensao_cod_motivo_suspensao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.motivo_suspensao (
                     cod_motivo_suspensao integer DEFAULT nextval(\'pmieducar.motivo_suspensao_cod_motivo_suspensao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarMotivoSuspensaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_biblioteca integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.motivo_suspensao_cod_motivo_suspensao_seq\', 1, false);
             '
         );
     }

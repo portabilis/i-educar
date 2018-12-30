@@ -17,10 +17,19 @@ class CreateModulesTipoVeiculoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE modules.tipo_veiculo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.tipo_veiculo (
                     cod_tipo_veiculo integer DEFAULT nextval(\'modules.tipo_veiculo_seq\'::regclass) NOT NULL,
                     descricao character varying(60)
                 );
+                
+                SELECT pg_catalog.setval(\'modules.tipo_veiculo_seq\', 1, false);
             '
         );
     }

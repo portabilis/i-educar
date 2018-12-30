@@ -13,11 +13,16 @@ class CreatePmieducarAuditoriaNotaDispensaTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
+
+                CREATE SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
 
                 CREATE TABLE pmieducar.auditoria_nota_dispensa (
                     id integer NOT NULL,
@@ -30,7 +35,11 @@ class CreatePmieducarAuditoriaNotaDispensaTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL
                 );
 
-                -- ALTER SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq OWNED BY pmieducar.auditoria_nota_dispensa.id;
+                ALTER SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq OWNED BY pmieducar.auditoria_nota_dispensa.id;
+                
+                ALTER TABLE ONLY pmieducar.auditoria_nota_dispensa ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.auditoria_nota_dispensa_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'pmieducar.auditoria_nota_dispensa_id_seq\', 1, false);
             '
         );
     }

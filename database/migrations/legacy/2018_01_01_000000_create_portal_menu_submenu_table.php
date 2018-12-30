@@ -17,6 +17,13 @@ class CreatePortalMenuSubmenuTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.menu_submenu_cod_menu_submenu_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.menu_submenu (
                     cod_menu_submenu integer DEFAULT nextval(\'portal.menu_submenu_cod_menu_submenu_seq\'::regclass) NOT NULL,
                     ref_cod_menu_menu integer,
@@ -26,6 +33,8 @@ class CreatePortalMenuSubmenuTable extends Migration
                     title text,
                     nivel smallint DEFAULT (3)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.menu_submenu_cod_menu_submenu_seq\', 944, true);
             '
         );
     }

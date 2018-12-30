@@ -17,6 +17,13 @@ class CreatePmieducarInfraComodoFuncaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.infra_comodo_funcao (
                     cod_infra_comodo_funcao integer DEFAULT nextval(\'pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarInfraComodoFuncaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_escola integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq\', 1, true);
             '
         );
     }

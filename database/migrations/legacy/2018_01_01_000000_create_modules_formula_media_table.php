@@ -13,12 +13,17 @@ class CreateModulesFormulaMediaTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.formula_media_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.formula_media (
                     id integer NOT NULL,
                     instituicao_id integer NOT NULL,
@@ -28,7 +33,11 @@ class CreateModulesFormulaMediaTable extends Migration
                     substitui_menor_nota_rc smallint DEFAULT 0 NOT NULL
                 );
 
-                -- ALTER SEQUENCE modules.formula_media_id_seq OWNED BY modules.formula_media.id;
+                ALTER SEQUENCE modules.formula_media_id_seq OWNED BY modules.formula_media.id;
+                
+                ALTER TABLE ONLY modules.formula_media ALTER COLUMN id SET DEFAULT nextval(\'modules.formula_media_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.formula_media_id_seq\', 2, true);
             '
         );
     }

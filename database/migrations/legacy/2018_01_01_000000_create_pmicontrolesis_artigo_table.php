@@ -17,6 +17,13 @@ class CreatePmicontrolesisArtigoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.artigo_cod_artigo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.artigo (
                     cod_artigo integer DEFAULT nextval(\'pmicontrolesis.artigo_cod_artigo_seq\'::regclass) NOT NULL,
                     texto text,
@@ -24,6 +31,8 @@ class CreatePmicontrolesisArtigoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.artigo_cod_artigo_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmieducarCandidatoReservaVagaTable extends Migration
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE pmieducar.candidato_reserva_vaga_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.candidato_reserva_vaga (
                     cod_candidato_reserva_vaga integer DEFAULT nextval(\'pmieducar.candidato_reserva_vaga_seq\'::regclass) NOT NULL,
                     ano_letivo integer NOT NULL,
@@ -37,6 +44,8 @@ class CreatePmieducarCandidatoReservaVagaTable extends Migration
                     membros_trabalham smallint,
                     hora_solicitacao time without time zone
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.candidato_reserva_vaga_seq\', 1, false);
             '
         );
     }

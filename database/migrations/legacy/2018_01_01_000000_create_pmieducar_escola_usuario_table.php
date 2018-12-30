@@ -19,6 +19,13 @@ class CreatePmieducarEscolaUsuarioTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.escola_usuario_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.escola_usuario (
                     id integer NOT NULL,
                     ref_cod_usuario integer NOT NULL,
@@ -26,7 +33,11 @@ class CreatePmieducarEscolaUsuarioTable extends Migration
                     escola_atual integer
                 );
 
-                -- ALTER SEQUENCE pmieducar.escola_usuario_id_seq OWNED BY pmieducar.escola_usuario.id;
+                ALTER SEQUENCE pmieducar.escola_usuario_id_seq OWNED BY pmieducar.escola_usuario.id;
+                
+                ALTER TABLE ONLY pmieducar.escola_usuario ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.escola_usuario_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'pmieducar.escola_usuario_id_seq\', 1, false);
             '
         );
     }

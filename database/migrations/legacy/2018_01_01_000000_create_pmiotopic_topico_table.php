@@ -17,6 +17,13 @@ class CreatePmiotopicTopicoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmiotopic.topico_cod_topico_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmiotopic.topico (
                     cod_topico integer DEFAULT nextval(\'pmiotopic.topico_cod_topico_seq\'::regclass) NOT NULL,
                     ref_idpes_cad integer NOT NULL,
@@ -28,6 +35,8 @@ class CreatePmiotopicTopicoTable extends Migration
                     ref_idpes_exc integer,
                     ref_cod_grupos_exc integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmiotopic.topico_cod_topico_seq\', 1, false);
             '
         );
     }

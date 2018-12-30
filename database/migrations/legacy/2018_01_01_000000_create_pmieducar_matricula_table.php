@@ -17,6 +17,13 @@ class CreatePmieducarMatriculaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.matricula_cod_matricula_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.matricula (
                     cod_matricula integer DEFAULT nextval(\'pmieducar.matricula_cod_matricula_seq\'::regclass) NOT NULL,
                     ref_cod_reserva_vaga integer,
@@ -49,6 +56,8 @@ class CreatePmieducarMatriculaTable extends Migration
                     data_saida_escola date,
                     turno_id integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.matricula_cod_matricula_seq\', 2, true);
             '
         );
     }

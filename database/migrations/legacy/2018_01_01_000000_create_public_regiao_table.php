@@ -17,10 +17,19 @@ class CreatePublicRegiaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE public.regiao_cod_regiao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE public.regiao (
                     cod_regiao integer DEFAULT nextval(\'public.regiao_cod_regiao_seq\'::regclass) NOT NULL,
                     nm_regiao character varying(100)
                 );
+                
+                SELECT pg_catalog.setval(\'public.regiao_cod_regiao_seq\', 1, false);
             '
         );
     }

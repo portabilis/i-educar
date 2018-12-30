@@ -17,6 +17,13 @@ class CreatePmieducarEscolaLocalizacaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.escola_localizacao_cod_escola_localizacao_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.escola_localizacao (
                     cod_escola_localizacao integer DEFAULT nextval(\'pmieducar.escola_localizacao_cod_escola_localizacao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -27,6 +34,8 @@ class CreatePmieducarEscolaLocalizacaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.escola_localizacao_cod_escola_localizacao_seq\', 1, true);
             '
         );
     }

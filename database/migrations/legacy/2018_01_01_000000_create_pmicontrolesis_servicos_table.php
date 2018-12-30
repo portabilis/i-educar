@@ -17,6 +17,13 @@ class CreatePmicontrolesisServicosTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.servicos_cod_servicos_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.servicos (
                     cod_servicos integer DEFAULT nextval(\'pmicontrolesis.servicos_cod_servicos_seq\'::regclass) NOT NULL,
                     ref_cod_funcionario_cad integer NOT NULL,
@@ -29,6 +36,8 @@ class CreatePmicontrolesisServicosTable extends Migration
                     title character varying(255),
                     descricao text
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.servicos_cod_servicos_seq\', 1, false);
             '
         );
     }

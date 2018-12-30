@@ -13,12 +13,17 @@ class CreateModulesNotaComponenteCurricularTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.nota_componente_curricular_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.nota_componente_curricular (
                     id integer NOT NULL,
                     nota_aluno_id integer NOT NULL,
@@ -31,7 +36,11 @@ class CreateModulesNotaComponenteCurricularTable extends Migration
                     nota_recuperacao_especifica character varying(10)
                 );
 
-                -- ALTER SEQUENCE modules.nota_componente_curricular_id_seq OWNED BY modules.nota_componente_curricular.id;
+                ALTER SEQUENCE modules.nota_componente_curricular_id_seq OWNED BY modules.nota_componente_curricular.id;
+                
+                ALTER TABLE ONLY modules.nota_componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_componente_curricular_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.nota_componente_curricular_id_seq\', 1, true);
             '
         );
     }

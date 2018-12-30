@@ -17,6 +17,13 @@ class CreateConsistenciacaoIncoerenciaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.incoerencia_idinc_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.incoerencia (
                     idinc integer DEFAULT nextval(\'consistenciacao.incoerencia_idinc_seq\'::regclass) NOT NULL,
                     idcon integer NOT NULL,
@@ -43,6 +50,8 @@ class CreateConsistenciacaoIncoerenciaTable extends Migration
                     data_obito character varying(20),
                     data_uniao character varying(20)
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.incoerencia_idinc_seq\', 1, false);
             '
         );
     }

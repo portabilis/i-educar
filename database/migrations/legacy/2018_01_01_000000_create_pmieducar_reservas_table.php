@@ -17,6 +17,13 @@ class CreatePmieducarReservasTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.reservas_cod_reserva_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.reservas (
                     cod_reserva integer DEFAULT nextval(\'pmieducar.reservas_cod_reserva_seq\'::regclass) NOT NULL,
                     ref_usuario_libera integer,
@@ -28,6 +35,8 @@ class CreatePmieducarReservasTable extends Migration
                     ref_cod_exemplar integer NOT NULL,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.reservas_cod_reserva_seq\', 1, false);
             '
         );
     }

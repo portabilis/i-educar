@@ -17,6 +17,13 @@ class CreatePmieducarExemplarTipoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE pmieducar.exemplar_tipo_cod_exemplar_tipo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.exemplar_tipo (
                     cod_exemplar_tipo integer DEFAULT nextval(\'pmieducar.exemplar_tipo_cod_exemplar_tipo_seq\'::regclass) NOT NULL,
                     ref_cod_biblioteca integer NOT NULL,
@@ -28,7 +35,8 @@ class CreatePmieducarExemplarTipoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-
+                
+                SELECT pg_catalog.setval(\'pmieducar.exemplar_tipo_cod_exemplar_tipo_seq\', 1, false);
             '
         );
     }

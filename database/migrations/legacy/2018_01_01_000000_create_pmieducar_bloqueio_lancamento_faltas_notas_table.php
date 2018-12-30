@@ -17,6 +17,13 @@ class CreatePmieducarBloqueioLancamentoFaltasNotasTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE public.bloqueio_lancamento_faltas_notas_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.bloqueio_lancamento_faltas_notas (
                     cod_bloqueio integer DEFAULT nextval(\'public.bloqueio_lancamento_faltas_notas_seq\'::regclass) NOT NULL,
                     ano integer NOT NULL,
@@ -25,6 +32,8 @@ class CreatePmieducarBloqueioLancamentoFaltasNotasTable extends Migration
                     data_inicio date NOT NULL,
                     data_fim date NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'public.bloqueio_lancamento_faltas_notas_seq\', 1, false);
             '
         );
     }

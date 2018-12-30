@@ -17,11 +17,20 @@ class CreatePortalFuncionarioVinculoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.funcionario_vinculo_cod_funcionario_vinculo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.funcionario_vinculo (
                     cod_funcionario_vinculo integer DEFAULT nextval(\'portal.funcionario_vinculo_cod_funcionario_vinculo_seq\'::regclass) NOT NULL,
                     nm_vinculo character varying(255) DEFAULT \'\'::character varying NOT NULL,
                     abreviatura character varying(16)
                 );
+                
+                SELECT pg_catalog.setval(\'portal.funcionario_vinculo_cod_funcionario_vinculo_seq\', 7, true);
             '
         );
     }

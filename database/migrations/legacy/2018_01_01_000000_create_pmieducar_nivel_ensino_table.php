@@ -17,6 +17,13 @@ class CreatePmieducarNivelEnsinoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.nivel_ensino_cod_nivel_ensino_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.nivel_ensino (
                     cod_nivel_ensino integer DEFAULT nextval(\'pmieducar.nivel_ensino_cod_nivel_ensino_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -28,6 +35,8 @@ class CreatePmieducarNivelEnsinoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.nivel_ensino_cod_nivel_ensino_seq\', 1, true);
             '
         );
     }

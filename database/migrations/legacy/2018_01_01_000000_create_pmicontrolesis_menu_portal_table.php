@@ -17,6 +17,13 @@ class CreatePmicontrolesisMenuPortalTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.menu_portal_cod_menu_portal_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.menu_portal (
                     cod_menu_portal integer DEFAULT nextval(\'pmicontrolesis.menu_portal_cod_menu_portal_seq\'::regclass) NOT NULL,
                     ref_funcionario_cad integer NOT NULL,
@@ -32,6 +39,8 @@ class CreatePmicontrolesisMenuPortalTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     expansivel smallint
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.menu_portal_cod_menu_portal_seq\', 1, false);
             '
         );
     }

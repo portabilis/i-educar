@@ -17,6 +17,13 @@ class CreatePmieducarClienteTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.cliente_cod_cliente_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.cliente (
                     cod_cliente integer DEFAULT nextval(\'pmieducar.cliente_cod_cliente_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -29,6 +36,8 @@ class CreatePmieducarClienteTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     observacoes text
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.cliente_cod_cliente_seq\', 1, false);
             '
         );
     }

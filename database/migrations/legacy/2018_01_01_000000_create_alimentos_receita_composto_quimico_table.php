@@ -17,12 +17,21 @@ class CreateAlimentosReceitaCompostoQuimicoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.receita_composto_quimico_idrcq_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.receita_composto_quimico (
                     idrcq integer DEFAULT nextval(\'alimentos.receita_composto_quimico_idrcq_seq\'::regclass) NOT NULL,
                     idcom integer NOT NULL,
                     idrec integer NOT NULL,
                     quantidade numeric NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.receita_composto_quimico_idrcq_seq\', 1, false);
             '
         );
     }

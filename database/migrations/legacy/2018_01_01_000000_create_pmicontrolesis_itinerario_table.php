@@ -17,6 +17,13 @@ class CreatePmicontrolesisItinerarioTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmicontrolesis.itinerario_cod_itinerario_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmicontrolesis.itinerario (
                     cod_itinerario integer DEFAULT nextval(\'pmicontrolesis.itinerario_cod_itinerario_seq\'::regclass) NOT NULL,
                     ref_funcionario_cad integer NOT NULL,
@@ -31,6 +38,8 @@ class CreatePmicontrolesisItinerarioTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     nome character varying(255) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmicontrolesis.itinerario_cod_itinerario_seq\', 1, false);
             '
         );
     }

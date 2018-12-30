@@ -29,6 +29,15 @@ class CreatePmicontrolesisTopoPortalTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                CREATE SEQUENCE pmicontrolesis.topo_portal_cod_topo_portal_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
+                SELECT pg_catalog.setval(\'pmicontrolesis.topo_portal_cod_topo_portal_seq\', 1, false);
             '
         );
     }

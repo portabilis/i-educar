@@ -17,6 +17,13 @@ class CreateAlimentosEventoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.evento_ideve_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.evento (
                     ideve integer DEFAULT nextval(\'alimentos.evento_ideve_seq\'::regclass) NOT NULL,
                     idcad integer NOT NULL,
@@ -26,6 +33,8 @@ class CreateAlimentosEventoTable extends Migration
                     descricao character varying(50) NOT NULL,
                     CONSTRAINT ck_evento_dia_util CHECK (((dia_util = \'S\'::bpchar) OR (dia_util = \'N\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.evento_ideve_seq\', 1, false);
             '
         );
     }

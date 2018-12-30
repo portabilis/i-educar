@@ -17,6 +17,13 @@ class CreatePortalMaillingFilaEnvioTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.mailling_fila_envio_cod_mailling_fila_envio_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+                    
                 CREATE TABLE portal.mailling_fila_envio (
                     cod_mailling_fila_envio integer DEFAULT nextval(\'portal.mailling_fila_envio_cod_mailling_fila_envio_seq\'::regclass) NOT NULL,
                     ref_cod_mailling_email_conteudo integer DEFAULT 0 NOT NULL,
@@ -25,6 +32,8 @@ class CreatePortalMaillingFilaEnvioTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL,
                     data_envio timestamp without time zone
                 );
+                
+                SELECT pg_catalog.setval(\'portal.mailling_fila_envio_cod_mailling_fila_envio_seq\', 1, false);
             '
         );
     }

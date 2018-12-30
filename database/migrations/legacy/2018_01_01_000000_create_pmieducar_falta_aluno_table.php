@@ -17,6 +17,13 @@ class CreatePmieducarFaltaAlunoTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.falta_aluno_cod_falta_aluno_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.falta_aluno (
                     cod_falta_aluno integer DEFAULT nextval(\'pmieducar.falta_aluno_cod_falta_aluno_seq\'::regclass) NOT NULL,
                     ref_cod_disciplina integer,
@@ -32,6 +39,8 @@ class CreatePmieducarFaltaAlunoTable extends Migration
                     modulo smallint NOT NULL,
                     ref_cod_curso_disciplina integer
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.falta_aluno_cod_falta_aluno_seq\', 1, false);
             '
         );
     }

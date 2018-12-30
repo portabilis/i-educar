@@ -17,6 +17,13 @@ class CreatePortalNotificacaoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.notificacao_cod_notificacao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.notificacao (
                     cod_notificacao integer DEFAULT nextval(\'portal.notificacao_cod_notificacao_seq\'::regclass) NOT NULL,
                     ref_cod_funcionario integer NOT NULL,
@@ -26,6 +33,8 @@ class CreatePortalNotificacaoTable extends Migration
                     url character varying,
                     visualizacoes smallint DEFAULT 0 NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.notificacao_cod_notificacao_seq\', 1, false);
             '
         );
     }

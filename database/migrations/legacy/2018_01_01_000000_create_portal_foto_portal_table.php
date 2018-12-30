@@ -17,6 +17,13 @@ class CreatePortalFotoPortalTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.foto_portal_cod_foto_portal_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.foto_portal (
                     cod_foto_portal integer DEFAULT nextval(\'portal.foto_portal_cod_foto_portal_seq\'::regclass) NOT NULL,
                     ref_cod_foto_secao integer,
@@ -31,6 +38,8 @@ class CreatePortalFotoPortalTable extends Migration
                     nm_credito character varying(255),
                     bkp_ref_secao bigint
                 );
+                
+                SELECT pg_catalog.setval(\'portal.foto_portal_cod_foto_portal_seq\', 1, false);
             '
         );
     }

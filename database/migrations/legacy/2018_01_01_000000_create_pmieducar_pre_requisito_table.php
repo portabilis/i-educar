@@ -17,6 +17,13 @@ class CreatePmieducarPreRequisitoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.pre_requisito_cod_pre_requisito_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.pre_requisito (
                     cod_pre_requisito integer DEFAULT nextval(\'pmieducar.pre_requisito_cod_pre_requisito_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -29,6 +36,8 @@ class CreatePmieducarPreRequisitoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.pre_requisito_cod_pre_requisito_seq\', 1, false);
             '
         );
     }

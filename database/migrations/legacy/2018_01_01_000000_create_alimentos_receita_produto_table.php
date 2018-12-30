@@ -17,6 +17,13 @@ class CreateAlimentosReceitaProdutoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.receita_produto_idrpr_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.receita_produto (
                     idrpr integer DEFAULT nextval(\'alimentos.receita_produto_idrpr_seq\'::regclass) NOT NULL,
                     idpro integer NOT NULL,
@@ -27,6 +34,8 @@ class CreateAlimentosReceitaProdutoTable extends Migration
                     qtdemedidacaseira integer NOT NULL,
                     valor_percapita numeric NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.receita_produto_idrpr_seq\', 1, false);
             '
         );
     }

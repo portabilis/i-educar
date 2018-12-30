@@ -17,6 +17,13 @@ class CreatePortalAgendaPrefTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.agenda_pref_cod_comp_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.agenda_pref (
                     cod_comp integer DEFAULT nextval(\'portal.agenda_pref_cod_comp_seq\'::regclass) NOT NULL,
                     data_comp date NOT NULL,
@@ -30,6 +37,8 @@ class CreatePortalAgendaPrefTable extends Migration
                     versao integer DEFAULT 1 NOT NULL,
                     ref_auto_cod integer
                 );
+                
+                SELECT pg_catalog.setval(\'portal.agenda_pref_cod_comp_seq\', 1, false);
             '
         );
     }

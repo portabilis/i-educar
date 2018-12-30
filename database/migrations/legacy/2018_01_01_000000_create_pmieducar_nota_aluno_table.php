@@ -17,6 +17,13 @@ class CreatePmieducarNotaAlunoTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.nota_aluno_cod_nota_aluno_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.nota_aluno (
                     cod_nota_aluno integer DEFAULT nextval(\'pmieducar.nota_aluno_cod_nota_aluno_seq\'::regclass) NOT NULL,
                     ref_cod_disciplina integer,
@@ -34,6 +41,8 @@ class CreatePmieducarNotaAlunoTable extends Migration
                     ref_cod_curso_disciplina integer,
                     nota double precision
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.nota_aluno_cod_nota_aluno_seq\', 1, false);
             '
         );
     }

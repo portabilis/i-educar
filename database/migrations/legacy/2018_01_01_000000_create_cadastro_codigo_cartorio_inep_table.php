@@ -13,11 +13,16 @@ class CreateCadastroCodigoCartorioInepTable extends Migration
      */
     public function up()
     {
-        # FIXME
-        
         DB::unprepared(
             '
                 SET default_with_oids = false;
+
+                CREATE SEQUENCE cadastro.codigo_cartorio_inep_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
 
                 CREATE TABLE cadastro.codigo_cartorio_inep (
                     id integer NOT NULL,
@@ -28,7 +33,11 @@ class CreateCadastroCodigoCartorioInepTable extends Migration
                     ref_sigla_uf character varying(3)
                 );
                 
-                -- ALTER SEQUENCE cadastro.codigo_cartorio_inep_id_seq OWNED BY cadastro.codigo_cartorio_inep.id;
+                ALTER SEQUENCE cadastro.codigo_cartorio_inep_id_seq OWNED BY cadastro.codigo_cartorio_inep.id;
+                
+                ALTER TABLE ONLY cadastro.codigo_cartorio_inep ALTER COLUMN id SET DEFAULT nextval(\'cadastro.codigo_cartorio_inep_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'cadastro.codigo_cartorio_inep_id_seq\', 14212, true);
             '
         );
     }

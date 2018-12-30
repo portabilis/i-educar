@@ -17,6 +17,13 @@ class CreateAcessoOperacaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE acesso.operacao_idope_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE acesso.operacao (
                     idope integer DEFAULT nextval(\'acesso.operacao_idope_seq\'::regclass) NOT NULL,
                     idsis integer,
@@ -25,6 +32,8 @@ class CreateAcessoOperacaoTable extends Migration
                     descricao character varying(250) NOT NULL,
                     CONSTRAINT ck_operacao_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'acesso.operacao_idope_seq\', 1, false);
             '
         );
     }

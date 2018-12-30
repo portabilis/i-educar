@@ -13,12 +13,17 @@ class CreateModulesParecerComponenteCurricularTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.parecer_componente_curricular_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.parecer_componente_curricular (
                     id integer NOT NULL,
                     parecer_aluno_id integer NOT NULL,
@@ -27,7 +32,11 @@ class CreateModulesParecerComponenteCurricularTable extends Migration
                     etapa character varying(2) NOT NULL
                 );
 
-                -- ALTER SEQUENCE modules.parecer_componente_curricular_id_seq OWNED BY modules.parecer_componente_curricular.id;
+                ALTER SEQUENCE modules.parecer_componente_curricular_id_seq OWNED BY modules.parecer_componente_curricular.id;
+
+                ALTER TABLE ONLY modules.parecer_componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_componente_curricular_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.parecer_componente_curricular_id_seq\', 1, false);
             '
         );
     }

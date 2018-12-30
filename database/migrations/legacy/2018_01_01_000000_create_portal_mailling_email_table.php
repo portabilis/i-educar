@@ -17,11 +17,20 @@ class CreatePortalMaillingEmailTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.mailling_email_cod_mailling_email_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.mailling_email (
                     cod_mailling_email integer DEFAULT nextval(\'portal.mailling_email_cod_mailling_email_seq\'::regclass) NOT NULL,
                     nm_pessoa character varying(255) DEFAULT \'\'::character varying NOT NULL,
                     email character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.mailling_email_cod_mailling_email_seq\', 1, false);
             '
         );
     }

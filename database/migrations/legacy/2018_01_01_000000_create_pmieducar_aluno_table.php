@@ -17,6 +17,13 @@ class CreatePmieducarAlunoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.aluno_cod_aluno_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.aluno (
                     cod_aluno integer DEFAULT nextval(\'pmieducar.aluno_cod_aluno_seq\'::regclass) NOT NULL,
                     ref_cod_religiao integer,
@@ -50,6 +57,8 @@ class CreatePmieducarAlunoTable extends Migration
                     recebe_escolarizacao_em_outro_espaco smallint DEFAULT 3 NOT NULL,
                     recursos_prova_inep integer[]
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.aluno_cod_aluno_seq\', 2, true);
             '
         );
     }

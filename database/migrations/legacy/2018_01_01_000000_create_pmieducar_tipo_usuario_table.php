@@ -17,6 +17,13 @@ class CreatePmieducarTipoUsuarioTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.tipo_usuario_cod_tipo_usuario_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.tipo_usuario (
                     cod_tipo_usuario integer DEFAULT nextval(\'pmieducar.tipo_usuario_cod_tipo_usuario_seq\'::regclass) NOT NULL,
                     ref_funcionario_cad integer NOT NULL,
@@ -28,6 +35,8 @@ class CreatePmieducarTipoUsuarioTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.tipo_usuario_cod_tipo_usuario_seq\', 3, true);
             '
         );
     }

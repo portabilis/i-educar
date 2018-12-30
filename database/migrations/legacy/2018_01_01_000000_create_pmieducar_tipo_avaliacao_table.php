@@ -17,6 +17,13 @@ class CreatePmieducarTipoAvaliacaoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.tipo_avaliacao (
                     cod_tipo_avaliacao integer DEFAULT nextval(\'pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -29,6 +36,7 @@ class CreatePmieducarTipoAvaliacaoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
 
+                SELECT pg_catalog.setval(\'pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq\', 1, false);
             '
         );
     }

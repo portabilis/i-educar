@@ -17,6 +17,13 @@ class CreatePortalPortalConcursoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.portal_concurso_cod_portal_concurso_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.portal_concurso (
                     cod_portal_concurso integer DEFAULT nextval(\'portal.portal_concurso_cod_portal_concurso_seq\'::regclass) NOT NULL,
                     ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
@@ -26,6 +33,8 @@ class CreatePortalPortalConcursoTable extends Migration
                     tipo_arquivo character(3) DEFAULT \'\'::bpchar NOT NULL,
                     data_hora timestamp without time zone
                 );
+                
+                SELECT pg_catalog.setval(\'portal.portal_concurso_cod_portal_concurso_seq\', 1, false);
             '
         );
     }

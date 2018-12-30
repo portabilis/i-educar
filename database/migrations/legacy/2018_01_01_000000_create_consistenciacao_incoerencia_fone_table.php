@@ -17,6 +17,13 @@ class CreateConsistenciacaoIncoerenciaFoneTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.incoerencia_fone_id_inc_fone_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.incoerencia_fone (
                     id_inc_fone integer DEFAULT nextval(\'consistenciacao.incoerencia_fone_id_inc_fone_seq\'::regclass) NOT NULL,
                     idinc integer NOT NULL,
@@ -25,6 +32,8 @@ class CreateConsistenciacaoIncoerenciaFoneTable extends Migration
                     fone numeric(8,0),
                     CONSTRAINT ck_incoerencia_fone_tipo CHECK ((((tipo)::text >= ((1)::numeric)::text) AND ((tipo)::text <= ((4)::numeric)::text)))
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.incoerencia_fone_id_inc_fone_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreatePmiacoesAcaoGovernoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmiacoes.acao_governo_cod_acao_governo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmiacoes.acao_governo (
                     cod_acao_governo integer DEFAULT nextval(\'pmiacoes.acao_governo_cod_acao_governo_seq\'::regclass) NOT NULL,
                     ref_funcionario_exc integer,
@@ -32,6 +39,8 @@ class CreatePmiacoesAcaoGovernoTable extends Migration
                     categoria smallint,
                     idbai bigint
                 );
+                
+                SELECT pg_catalog.setval(\'pmiacoes.acao_governo_cod_acao_governo_seq\', 1, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreateModulesProfessorTurmaTable extends Migration
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.professor_turma_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.professor_turma (
                     id integer DEFAULT nextval(\'modules.professor_turma_id_seq\'::regclass) NOT NULL,
                     ano smallint NOT NULL,
@@ -29,6 +36,8 @@ class CreateModulesProfessorTurmaTable extends Migration
                     updated_at timestamp without time zone,
                     turno_id integer
                 );
+                
+                SELECT pg_catalog.setval(\'modules.professor_turma_id_seq\', 1, false);
             '
         );
     }

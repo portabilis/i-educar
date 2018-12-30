@@ -17,6 +17,13 @@ class CreatePmieducarServidorFuncaoTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.servidor_funcao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.servidor_funcao (
                     ref_ref_cod_instituicao integer NOT NULL,
                     ref_cod_servidor integer NOT NULL,
@@ -24,6 +31,8 @@ class CreatePmieducarServidorFuncaoTable extends Migration
                     matricula character varying,
                     cod_servidor_funcao integer DEFAULT nextval(\'pmieducar.servidor_funcao_seq\'::regclass) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.servidor_funcao_seq\', 1, false);
             '
         );
     }

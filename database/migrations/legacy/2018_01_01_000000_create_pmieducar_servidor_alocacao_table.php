@@ -17,6 +17,13 @@ class CreatePmieducarServidorAlocacaoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.servidor_alocacao_cod_servidor_alocacao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.servidor_alocacao (
                     cod_servidor_alocacao integer DEFAULT nextval(\'pmieducar.servidor_alocacao_cod_servidor_alocacao_seq\'::regclass) NOT NULL,
                     ref_ref_cod_instituicao integer NOT NULL,
@@ -39,6 +46,8 @@ class CreatePmieducarServidorAlocacaoTable extends Migration
                     hora_atividade time without time zone,
                     horas_excedentes time without time zone
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.servidor_alocacao_cod_servidor_alocacao_seq\', 1, false);
             '
         );
     }

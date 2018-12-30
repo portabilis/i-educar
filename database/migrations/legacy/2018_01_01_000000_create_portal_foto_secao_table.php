@@ -17,10 +17,19 @@ class CreatePortalFotoSecaoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.foto_secao_cod_foto_secao_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.foto_secao (
                     cod_foto_secao integer DEFAULT nextval(\'portal.foto_secao_cod_foto_secao_seq\'::regclass) NOT NULL,
                     nm_secao character varying(255)
                 );
+                
+                SELECT pg_catalog.setval(\'portal.foto_secao_cod_foto_secao_seq\', 1, false);
             '
         );
     }

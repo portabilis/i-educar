@@ -17,6 +17,13 @@ class CreatePmieducarDistribuicaoUniformeTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.distribuicao_uniforme_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.distribuicao_uniforme (
                     cod_distribuicao_uniforme integer DEFAULT nextval(\'pmieducar.distribuicao_uniforme_seq\'::regclass) NOT NULL,
                     ref_cod_aluno integer NOT NULL,
@@ -41,6 +48,8 @@ class CreatePmieducarDistribuicaoUniformeTable extends Migration
                     camiseta_infantil_qtd smallint,
                     camiseta_infantil_tm character varying(20)
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.distribuicao_uniforme_seq\', 1, false);
             '
         );
     }

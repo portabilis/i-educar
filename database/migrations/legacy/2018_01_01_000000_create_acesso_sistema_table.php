@@ -17,6 +17,13 @@ class CreateAcessoSistemaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE acesso.sistema_idsis_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE acesso.sistema (
                     idsis integer DEFAULT nextval(\'acesso.sistema_idsis_seq\'::regclass) NOT NULL,
                     nome character varying(60) NOT NULL,
@@ -25,6 +32,8 @@ class CreateAcessoSistemaTable extends Migration
                     situacao character(1) NOT NULL,
                     CONSTRAINT ck_sistema_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'acesso.sistema_idsis_seq\', 17, true);
             '
         );
     }

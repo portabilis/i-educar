@@ -17,10 +17,19 @@ class CreatePortalMaillingGrupoTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.mailling_grupo_cod_mailling_grupo_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.mailling_grupo (
                     cod_mailling_grupo integer DEFAULT nextval(\'portal.mailling_grupo_cod_mailling_grupo_seq\'::regclass) NOT NULL,
                     nm_grupo character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.mailling_grupo_cod_mailling_grupo_seq\', 1, false);
             '
         );
     }

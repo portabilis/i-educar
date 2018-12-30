@@ -17,6 +17,13 @@ class CreatePortalComprasEditaisEditaisTable extends Migration
             '
                 SET default_with_oids = true;
 
+                CREATE SEQUENCE portal.compras_editais_editais_cod_compras_editais_editais_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE portal.compras_editais_editais (
                     cod_compras_editais_editais integer DEFAULT nextval(\'portal.compras_editais_editais_cod_compras_editais_editais_seq\'::regclass) NOT NULL,
                     ref_cod_compras_licitacoes integer DEFAULT 0 NOT NULL,
@@ -27,6 +34,8 @@ class CreatePortalComprasEditaisEditaisTable extends Migration
                     motivo_alteracao text,
                     visivel smallint DEFAULT 1 NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'portal.compras_editais_editais_cod_compras_editais_editais_seq\', 1, false);
             '
         );
     }

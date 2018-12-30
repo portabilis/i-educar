@@ -17,6 +17,13 @@ class CreatePmieducarTurmaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.turma_cod_turma_seq
+                    START WITH 0
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.turma (
                     cod_turma integer DEFAULT nextval(\'pmieducar.turma_cod_turma_seq\'::regclass) NOT NULL,
                     ref_usuario_exc integer,
@@ -79,6 +86,8 @@ class CreatePmieducarTurmaTable extends Migration
                     atividades_aee integer[],
                     tipo_boletim_diferenciado smallint
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.turma_cod_turma_seq\', 2, true);
             '
         );
     }

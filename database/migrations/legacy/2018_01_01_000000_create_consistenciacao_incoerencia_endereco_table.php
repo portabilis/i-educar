@@ -17,6 +17,13 @@ class CreateConsistenciacaoIncoerenciaEnderecoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE consistenciacao.incoerencia_endereco_id_inc_end_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE consistenciacao.incoerencia_endereco (
                     id_inc_end integer DEFAULT nextval(\'consistenciacao.incoerencia_endereco_id_inc_end_seq\'::regclass) NOT NULL,
                     idinc integer NOT NULL,
@@ -32,6 +39,8 @@ class CreateConsistenciacaoIncoerenciaEnderecoTable extends Migration
                     uf character varying(30),
                     CONSTRAINT ck_incoerencia_endereco_tipo CHECK ((((tipo)::text >= ((1)::numeric)::text) AND ((tipo)::text <= ((3)::numeric)::text)))
                 );
+                
+                SELECT pg_catalog.setval(\'consistenciacao.incoerencia_endereco_id_inc_end_seq\', 1, false);
             '
         );
     }

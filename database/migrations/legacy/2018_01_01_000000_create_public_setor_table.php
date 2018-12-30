@@ -17,6 +17,13 @@ class CreatePublicSetorTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE public.setor_idset_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE public.setor (
                     idset integer DEFAULT nextval(\'public.setor_idset_seq\'::regclass) NOT NULL,
                     nivel numeric(1,0) NOT NULL,
@@ -29,6 +36,8 @@ class CreatePublicSetorTable extends Migration
                     CONSTRAINT ck_setor_localizacao CHECK (((localizacao = \'E\'::bpchar) OR (localizacao = \'I\'::bpchar))),
                     CONSTRAINT ck_setor_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'public.setor_idset_seq\', 1, false);
             '
         );
     }

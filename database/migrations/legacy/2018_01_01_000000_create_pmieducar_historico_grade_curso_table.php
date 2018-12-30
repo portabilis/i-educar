@@ -17,6 +17,13 @@ class CreatePmieducarHistoricoGradeCursoTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE pmieducar.historico_grade_curso_seq
+                    START WITH 3
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.historico_grade_curso (
                     id integer DEFAULT nextval(\'pmieducar.historico_grade_curso_seq\'::regclass) NOT NULL,
                     descricao_etapa character varying(20) NOT NULL,
@@ -25,6 +32,8 @@ class CreatePmieducarHistoricoGradeCursoTable extends Migration
                     quantidade_etapas integer,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.historico_grade_curso_seq\', 3, false);
             '
         );
     }

@@ -17,6 +17,13 @@ class CreateAlimentosGuiaRemessaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE alimentos.guia_remessa_idgui_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE alimentos.guia_remessa (
                     idgui integer DEFAULT nextval(\'alimentos.guia_remessa_idgui_seq\'::regclass) NOT NULL,
                     idcon integer NOT NULL,
@@ -39,6 +46,8 @@ class CreateAlimentosGuiaRemessaTable extends Migration
                     CONSTRAINT ck_guia_remessa_classe_produto CHECK ((((classe_produto)::text = \'P\'::text) OR ((classe_produto)::text = \'N\'::text) OR ((classe_produto)::text = \'PN\'::text))),
                     CONSTRAINT ck_guia_remessa_situacao CHECK (((situacao = \'E\'::bpchar) OR (situacao = \'R\'::bpchar) OR (situacao = \'C\'::bpchar) OR (situacao = \'P\'::bpchar)))
                 );
+                
+                SELECT pg_catalog.setval(\'alimentos.guia_remessa_idgui_seq\', 1, false);
             '
         );
     }

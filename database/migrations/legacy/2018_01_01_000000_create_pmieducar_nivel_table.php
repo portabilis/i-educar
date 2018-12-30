@@ -17,6 +17,13 @@ class CreatePmieducarNivelTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE pmieducar.nivel_cod_nivel_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE pmieducar.nivel (
                     cod_nivel integer DEFAULT nextval(\'pmieducar.nivel_cod_nivel_seq\'::regclass) NOT NULL,
                     ref_cod_categoria_nivel integer NOT NULL,
@@ -29,6 +36,8 @@ class CreatePmieducarNivelTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo boolean DEFAULT true NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'pmieducar.nivel_cod_nivel_seq\', 1, false);
             '
         );
     }

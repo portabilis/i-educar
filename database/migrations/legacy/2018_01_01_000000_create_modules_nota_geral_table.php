@@ -17,6 +17,13 @@ class CreateModulesNotaGeralTable extends Migration
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE modules.nota_geral_id_seq
+                    START WITH 958638
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.nota_geral (
                     id integer DEFAULT nextval(\'modules.nota_geral_id_seq\'::regclass) NOT NULL,
                     nota_aluno_id integer NOT NULL,
@@ -24,6 +31,8 @@ class CreateModulesNotaGeralTable extends Migration
                     nota_arredondada character varying(10) DEFAULT 0,
                     etapa character varying(2) NOT NULL
                 );
+                
+                SELECT pg_catalog.setval(\'modules.nota_geral_id_seq\', 958638, false);
             '
         );
     }

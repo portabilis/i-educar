@@ -13,12 +13,17 @@ class CreatePublicPgheroQueryStatsTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
                 
+                CREATE SEQUENCE public.pghero_query_stats_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE public.pghero_query_stats (
                     id integer NOT NULL,
                     database text,
@@ -30,7 +35,11 @@ class CreatePublicPgheroQueryStatsTable extends Migration
                     captured_at timestamp without time zone
                 );
                 
-                -- ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
+                ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
+                
+                ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval(\'public.pghero_query_stats_id_seq\'::regclass);
+
+                SELECT pg_catalog.setval(\'public.pghero_query_stats_id_seq\', 1, false);
             '
         );
     }

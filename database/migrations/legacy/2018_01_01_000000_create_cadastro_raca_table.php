@@ -17,6 +17,13 @@ class CreateCadastroRacaTable extends Migration
             '
                 SET default_with_oids = true;
                 
+                CREATE SEQUENCE cadastro.raca_cod_raca_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    MINVALUE 0
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE cadastro.raca (
                     cod_raca integer DEFAULT nextval(\'cadastro.raca_cod_raca_seq\'::regclass) NOT NULL,
                     idpes_exc integer,
@@ -27,6 +34,8 @@ class CreateCadastroRacaTable extends Migration
                     ativo boolean DEFAULT false,
                     raca_educacenso smallint
                 );
+                
+                SELECT pg_catalog.setval(\'cadastro.raca_cod_raca_seq\', 1, false);
             '
         );
     }
