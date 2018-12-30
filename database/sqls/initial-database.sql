@@ -9330,165 +9330,6 @@ CREATE TABLE public.municipio (
 );
 
 
-CREATE VIEW cadastro.v_endereco AS
- SELECT e.idpes,
-    e.cep,
-    e.idlog,
-    e.numero,
-    e.letra,
-    e.complemento,
-    e.idbai,
-    e.bloco,
-    e.andar,
-    e.apartamento,
-    l.nome AS logradouro,
-    l.idtlog,
-    b.nome AS bairro,
-    m.nome AS cidade,
-    m.sigla_uf,
-    b.zona_localizacao
-   FROM cadastro.endereco_pessoa e,
-    public.logradouro l,
-    public.bairro b,
-    public.municipio m
-  WHERE ((e.idlog = l.idlog) AND (e.idbai = b.idbai) AND (b.idmun = m.idmun) AND (e.tipo = (1)::numeric))
-UNION
- SELECT e.idpes,
-    e.cep,
-    NULL::numeric AS idlog,
-    e.numero,
-    e.letra,
-    e.complemento,
-    NULL::numeric AS idbai,
-    e.bloco,
-    e.andar,
-    e.apartamento,
-    e.logradouro,
-    e.idtlog,
-    e.bairro,
-    e.cidade,
-    e.sigla_uf,
-    e.zona_localizacao
-   FROM cadastro.endereco_externo e
-  WHERE (e.tipo = (1)::numeric);
-
-
-CREATE VIEW cadastro.v_fone_pessoa AS
- SELECT DISTINCT t.idpes,
-    ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (1)::numeric) AND (t.idpes = t1.idpes))) AS ddd_1,
-    ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (1)::numeric) AND (t.idpes = t1.idpes))) AS fone_1,
-    ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (2)::numeric) AND (t.idpes = t1.idpes))) AS ddd_2,
-    ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (2)::numeric) AND (t.idpes = t1.idpes))) AS fone_2,
-    ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (3)::numeric) AND (t.idpes = t1.idpes))) AS ddd_mov,
-    ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (3)::numeric) AND (t.idpes = t1.idpes))) AS fone_mov,
-    ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (4)::numeric) AND (t.idpes = t1.idpes))) AS ddd_fax,
-    ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (4)::numeric) AND (t.idpes = t1.idpes))) AS fone_fax
-   FROM cadastro.fone_pessoa t
-  ORDER BY t.idpes, ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (1)::numeric) AND (t.idpes = t1.idpes))), ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (1)::numeric) AND (t.idpes = t1.idpes))), ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (2)::numeric) AND (t.idpes = t1.idpes))), ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (2)::numeric) AND (t.idpes = t1.idpes))), ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (3)::numeric) AND (t.idpes = t1.idpes))), ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (3)::numeric) AND (t.idpes = t1.idpes))), ( SELECT t1.ddd
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (4)::numeric) AND (t.idpes = t1.idpes))), ( SELECT t1.fone
-           FROM cadastro.fone_pessoa t1
-          WHERE ((t1.tipo = (4)::numeric) AND (t.idpes = t1.idpes)));
-
-
-CREATE OR REPLACE VIEW cadastro.v_pessoa_fisica AS
-SELECT
-    p.idpes,
-    p.nome,
-    p.url,
-    p.email,
-    p.situacao,
-    f.nome_social,
-    f.data_nasc,
-    f.sexo,
-    f.cpf,
-    f.ref_cod_sistema,
-    f.idesco,
-    f.ativo
-FROM cadastro.pessoa p
-INNER JOIN cadastro.fisica f ON TRUE
-AND f.idpes = p.idpes;
-
-
-CREATE VIEW cadastro.v_pessoa_fisica_simples AS
- SELECT p.idpes,
-    ( SELECT fisica_cpf.cpf
-           FROM cadastro.fisica_cpf
-          WHERE (fisica_cpf.idpes = p.idpes)) AS cpf,
-    f.ref_cod_sistema,
-    f.idesco
-   FROM cadastro.pessoa p,
-    cadastro.fisica f
-  WHERE (p.idpes = f.idpes);
-
-
-CREATE VIEW cadastro.v_pessoa_fj AS
- SELECT p.idpes,
-    p.nome,
-    ( SELECT fisica.ref_cod_sistema
-           FROM cadastro.fisica
-          WHERE (fisica.idpes = p.idpes)) AS ref_cod_sistema,
-    ( SELECT juridica.fantasia
-           FROM cadastro.juridica
-          WHERE (juridica.idpes = p.idpes)) AS fantasia,
-    p.tipo,
-    COALESCE(( SELECT fisica.cpf
-           FROM cadastro.fisica
-          WHERE (fisica.idpes = p.idpes)), ( SELECT juridica.cnpj
-           FROM cadastro.juridica
-          WHERE (juridica.idpes = p.idpes))) AS id_federal
-   FROM cadastro.pessoa p;
-
-
-CREATE VIEW cadastro.v_pessoa_juridica AS
- SELECT j.idpes,
-    j.fantasia,
-    j.cnpj,
-    j.insc_estadual,
-    j.capital_social,
-    ( SELECT pessoa.nome
-           FROM cadastro.pessoa
-          WHERE (pessoa.idpes = j.idpes)) AS nome
-   FROM cadastro.juridica j;
-
-
-CREATE VIEW cadastro.v_pessoafj_count AS
- SELECT fisica.ref_cod_sistema,
-    fisica.cpf AS id_federal
-   FROM cadastro.fisica
-UNION ALL
- SELECT NULL::integer AS ref_cod_sistema,
-    juridica.cnpj AS id_federal
-   FROM cadastro.juridica;
-
 
 CREATE TABLE consistenciacao.campo_consistenciacao (
     idcam numeric(3,0) NOT NULL,
@@ -13508,30 +13349,6 @@ CREATE TABLE pmieducar.usuario (
 );
 
 
-CREATE VIEW pmieducar.v_matricula_matricula_turma AS
- SELECT ma.cod_matricula,
-    ma.ref_ref_cod_escola AS ref_cod_escola,
-    ma.ref_ref_cod_serie AS ref_cod_serie,
-    ma.ref_cod_aluno,
-    ma.ref_cod_curso,
-    mt.ref_cod_turma,
-    ma.ano,
-    ma.aprovado,
-    ma.ultima_matricula,
-    ma.modulo,
-    mt.sequencial,
-    ma.ativo,
-    ( SELECT count(0) AS count
-           FROM pmieducar.dispensa_disciplina dd
-          WHERE (dd.ref_cod_matricula = ma.cod_matricula)) AS qtd_dispensa_disciplina,
-    ( SELECT COALESCE((max(n.modulo))::integer, 0) AS "coalesce"
-           FROM pmieducar.nota_aluno n
-          WHERE ((n.ref_cod_matricula = ma.cod_matricula) AND (n.ativo = 1))) AS maior_modulo_com_nota
-   FROM pmieducar.matricula ma,
-    pmieducar.matricula_turma mt
-  WHERE ((mt.ref_cod_matricula = ma.cod_matricula) AND (mt.ativo = ma.ativo));
-
-
 CREATE TABLE pmiotopic.funcionario_su (
     ref_ref_cod_pessoa_fj integer NOT NULL
 );
@@ -14160,31 +13977,6 @@ CREATE TABLE portal.sistema (
 );
 
 
-CREATE VIEW portal.v_funcionario AS
- SELECT f.ref_cod_pessoa_fj,
-    f.matricula,
-    f.matricula_interna,
-    f.senha,
-    f.ativo,
-    f.ramal,
-    f.sequencial,
-    f.opcao_menu,
-    f.ref_cod_setor,
-    f.ref_cod_funcionario_vinculo,
-    f.tempo_expira_senha,
-    f.tempo_expira_conta,
-    f.data_troca_senha,
-    f.data_reativa_conta,
-    f.ref_ref_cod_pessoa_fj,
-    f.proibido,
-    f.ref_cod_setor_new,
-    f.email,
-    ( SELECT pessoa.nome
-           FROM cadastro.pessoa
-          WHERE (pessoa.idpes = (f.ref_cod_pessoa_fj)::numeric)) AS nome
-   FROM portal.funcionario f;
-
-
 CREATE TABLE public.bairro_regiao (
     ref_cod_regiao integer NOT NULL,
     ref_idbai integer NOT NULL
@@ -14336,39 +14128,6 @@ CREATE TABLE public.vila (
     nome character varying(50) NOT NULL,
     geom character varying
 );
-
-
-CREATE VIEW relatorio.view_componente_curricular AS
-( SELECT escola_serie_disciplina.ref_cod_disciplina AS id,
-    turma.cod_turma,
-    componente_curricular.nome,
-    componente_curricular.abreviatura,
-    componente_curricular.ordenamento,
-    componente_curricular.area_conhecimento_id,
-    escola_serie_disciplina.etapas_especificas,
-    escola_serie_disciplina.etapas_utilizadas,
-    escola_serie_disciplina.carga_horaria
-   FROM (((pmieducar.turma
-     JOIN pmieducar.escola_serie_disciplina ON (((escola_serie_disciplina.ref_ref_cod_serie = turma.ref_ref_cod_serie) AND (escola_serie_disciplina.ref_ref_cod_escola = turma.ref_ref_cod_escola) AND (escola_serie_disciplina.ativo = 1) AND (turma.ano = ANY (escola_serie_disciplina.anos_letivos)))))
-     JOIN modules.componente_curricular ON (((componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina) AND (( SELECT count(cct.componente_curricular_id) AS count
-           FROM modules.componente_curricular_turma cct
-          WHERE (cct.turma_id = turma.cod_turma)) = 0))))
-     JOIN modules.area_conhecimento ON ((area_conhecimento.id = componente_curricular.area_conhecimento_id)))
-  ORDER BY area_conhecimento.ordenamento_ac, area_conhecimento.nome, componente_curricular.ordenamento, componente_curricular.nome)
-UNION ALL
-( SELECT componente_curricular_turma.componente_curricular_id AS id,
-    componente_curricular_turma.turma_id AS cod_turma,
-    componente_curricular.nome,
-    componente_curricular.abreviatura,
-    componente_curricular.ordenamento,
-    componente_curricular.area_conhecimento_id,
-    componente_curricular_turma.etapas_especificas,
-    componente_curricular_turma.etapas_utilizadas,
-    componente_curricular_turma.carga_horaria
-   FROM ((modules.componente_curricular_turma
-     JOIN modules.componente_curricular ON ((componente_curricular.id = componente_curricular_turma.componente_curricular_id)))
-     JOIN modules.area_conhecimento ON ((area_conhecimento.id = componente_curricular.area_conhecimento_id)))
-  ORDER BY area_conhecimento.ordenamento_ac, area_conhecimento.nome, componente_curricular.ordenamento, componente_curricular.nome);
 
 
 SET default_with_oids = false;
