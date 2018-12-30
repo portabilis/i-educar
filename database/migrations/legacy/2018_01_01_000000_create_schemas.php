@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
 
-class Schemas extends Migration
+class CreateSchemas extends Migration
 {
     /**
      * Run the migrations.
