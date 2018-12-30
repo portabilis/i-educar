@@ -8197,12 +8197,6 @@ CREATE AGGREGATE public.textcat_all(text) (
 );
 
 
-CREATE SEQUENCE acesso.funcao_idfunc_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_tablespace = '';
@@ -8222,12 +8216,6 @@ CREATE TABLE acesso.funcao (
 );
 
 
-CREATE SEQUENCE acesso.grupo_idgrp_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE acesso.grupo (
@@ -8276,12 +8264,6 @@ CREATE TABLE acesso.historico_senha (
 );
 
 
-CREATE SEQUENCE acesso.instituicao_idins_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE acesso.instituicao (
@@ -8314,12 +8296,6 @@ CREATE TABLE acesso.log_erro (
 );
 
 
-CREATE SEQUENCE acesso.menu_idmen_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE acesso.menu (
@@ -8335,12 +8311,6 @@ CREATE TABLE acesso.menu (
 );
 
 
-CREATE SEQUENCE acesso.operacao_idope_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE acesso.operacao (
@@ -8367,12 +8337,6 @@ CREATE TABLE acesso.pessoa_instituicao (
 );
 
 
-CREATE SEQUENCE acesso.sistema_idsis_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE acesso.sistema (
@@ -8413,12 +8377,6 @@ CREATE TABLE acesso.usuario_grupo (
 );
 
 
-CREATE SEQUENCE alimentos.baixa_guia_produto_idbap_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.baixa_guia_produto (
@@ -8432,12 +8390,6 @@ CREATE TABLE alimentos.baixa_guia_produto (
 );
 
 
-CREATE SEQUENCE alimentos.baixa_guia_remessa_idbai_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.baixa_guia_remessa (
@@ -8451,12 +8403,6 @@ CREATE TABLE alimentos.baixa_guia_remessa (
 );
 
 
-CREATE SEQUENCE alimentos.calendario_idcad_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.calendario (
@@ -8467,12 +8413,6 @@ CREATE TABLE alimentos.calendario (
 );
 
 
-CREATE SEQUENCE alimentos.cardapio_idcar_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.cardapio (
@@ -8496,12 +8436,6 @@ CREATE TABLE alimentos.cardapio_faixa_unidade (
 );
 
 
-CREATE SEQUENCE alimentos.cardapio_produto_idcpr_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.cardapio_produto (
@@ -8543,12 +8477,6 @@ CREATE TABLE alimentos.cliente (
 );
 
 
-CREATE SEQUENCE alimentos.composto_quimico_idcom_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.composto_quimico (
@@ -8560,12 +8488,6 @@ CREATE TABLE alimentos.composto_quimico (
 );
 
 
-CREATE SEQUENCE alimentos.contrato_idcon_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.contrato (
@@ -8591,12 +8513,6 @@ CREATE TABLE alimentos.contrato (
 );
 
 
-CREATE SEQUENCE alimentos.contrato_produto_idcop_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.contrato_produto (
@@ -8615,12 +8531,6 @@ CREATE TABLE alimentos.contrato_produto (
 );
 
 
-CREATE SEQUENCE alimentos.evento_ideve_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.evento (
@@ -8634,12 +8544,6 @@ CREATE TABLE alimentos.evento (
 );
 
 
-CREATE SEQUENCE alimentos.faixa_composto_quimico_idfcp_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.faixa_composto_quimico (
@@ -8652,12 +8556,6 @@ CREATE TABLE alimentos.faixa_composto_quimico (
 );
 
 
-CREATE SEQUENCE alimentos.faixa_etaria_idfae_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.faixa_etaria (
@@ -8668,12 +8566,6 @@ CREATE TABLE alimentos.faixa_etaria (
 );
 
 
-CREATE SEQUENCE alimentos.fornecedor_idfor_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.fornecedor (
@@ -8706,12 +8598,6 @@ CREATE TABLE alimentos.fornecedor_unidade_atendida (
 );
 
 
-CREATE SEQUENCE alimentos.grupo_quimico_idgrpq_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.grupo_quimico (
@@ -8721,12 +8607,6 @@ CREATE TABLE alimentos.grupo_quimico (
 );
 
 
-CREATE SEQUENCE alimentos.guia_produto_diario_idguiaprodiario_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.guia_produto_diario (
@@ -8739,12 +8619,6 @@ CREATE TABLE alimentos.guia_produto_diario (
 );
 
 
-CREATE SEQUENCE alimentos.guia_remessa_idgui_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.guia_remessa (
@@ -8771,12 +8645,6 @@ CREATE TABLE alimentos.guia_remessa (
 );
 
 
-CREATE SEQUENCE alimentos.guia_remessa_produto_idgup_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.guia_remessa_produto (
@@ -8791,12 +8659,6 @@ CREATE TABLE alimentos.guia_remessa_produto (
 );
 
 
-CREATE SEQUENCE alimentos.log_guia_remessa_idlogguia_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.log_guia_remessa (
@@ -8820,12 +8682,6 @@ CREATE TABLE alimentos.medidas_caseiras (
 );
 
 
-CREATE SEQUENCE alimentos.pessoa_idpes_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.pessoa (
@@ -8835,12 +8691,6 @@ CREATE TABLE alimentos.pessoa (
 );
 
 
-CREATE SEQUENCE alimentos.produto_idpro_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.produto (
@@ -8867,12 +8717,6 @@ CREATE TABLE alimentos.produto (
 );
 
 
-CREATE SEQUENCE alimentos.produto_composto_quimico_idpcq_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.produto_composto_quimico (
@@ -8883,12 +8727,6 @@ CREATE TABLE alimentos.produto_composto_quimico (
 );
 
 
-CREATE SEQUENCE alimentos.produto_fornecedor_idprf_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.produto_fornecedor (
@@ -8899,12 +8737,6 @@ CREATE TABLE alimentos.produto_fornecedor (
 );
 
 
-CREATE SEQUENCE alimentos.produto_medida_caseira_idpmc_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.produto_medida_caseira (
@@ -8916,12 +8748,6 @@ CREATE TABLE alimentos.produto_medida_caseira (
 );
 
 
-CREATE SEQUENCE alimentos.receita_idrec_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.receita (
@@ -8935,12 +8761,6 @@ CREATE TABLE alimentos.receita (
 );
 
 
-CREATE SEQUENCE alimentos.receita_composto_quimico_idrcq_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.receita_composto_quimico (
@@ -8951,12 +8771,6 @@ CREATE TABLE alimentos.receita_composto_quimico (
 );
 
 
-CREATE SEQUENCE alimentos.receita_produto_idrpr_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.receita_produto (
@@ -8971,12 +8785,6 @@ CREATE TABLE alimentos.receita_produto (
 );
 
 
-CREATE SEQUENCE alimentos.tipo_produto_idtip_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.tipo_produto (
@@ -8986,12 +8794,6 @@ CREATE TABLE alimentos.tipo_produto (
 );
 
 
-CREATE SEQUENCE alimentos.tipo_refeicao_idtre_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.tipo_refeicao (
@@ -9001,12 +8803,6 @@ CREATE TABLE alimentos.tipo_refeicao (
 );
 
 
-CREATE SEQUENCE alimentos.tipo_unidade_idtip_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.tipo_unidade (
@@ -9016,12 +8812,6 @@ CREATE TABLE alimentos.tipo_unidade (
 );
 
 
-CREATE SEQUENCE alimentos.unidade_atendida_iduni_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.unidade_atendida (
@@ -9043,12 +8833,6 @@ CREATE TABLE alimentos.unidade_atendida (
 );
 
 
-CREATE SEQUENCE alimentos.unidade_faixa_etaria_idfeu_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE alimentos.unidade_faixa_etaria (
@@ -9087,23 +8871,11 @@ CREATE TABLE cadastro.codigo_cartorio_inep (
 );
 
 
-CREATE SEQUENCE cadastro.codigo_cartorio_inep_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE cadastro.codigo_cartorio_inep_id_seq OWNED BY cadastro.codigo_cartorio_inep.id;
 
 
-CREATE SEQUENCE cadastro.deficiencia_cod_deficiencia_seq
-    START WITH 15
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -9402,12 +9174,6 @@ CREATE TABLE cadastro.ocupacao (
 );
 
 
-CREATE SEQUENCE cadastro.orgao_emissor_rg_idorg_rg_seq
-    START WITH 30
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE cadastro.orgao_emissor_rg (
@@ -9448,12 +9214,6 @@ CREATE TABLE cadastro.pessoa_fonetico (
 );
 
 
-CREATE SEQUENCE cadastro.raca_cod_raca_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE cadastro.raca (
@@ -9468,12 +9228,6 @@ CREATE TABLE cadastro.raca (
 );
 
 
-CREATE SEQUENCE cadastro.religiao_cod_religiao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -9489,12 +9243,6 @@ CREATE TABLE cadastro.religiao (
 );
 
 
-CREATE SEQUENCE cadastro.seq_pessoa
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -9751,12 +9499,6 @@ CREATE TABLE consistenciacao.campo_consistenciacao (
 );
 
 
-CREATE SEQUENCE consistenciacao.campo_metadado_id_campo_met_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.campo_metadado (
@@ -9774,12 +9516,6 @@ CREATE TABLE consistenciacao.campo_metadado (
 );
 
 
-CREATE SEQUENCE consistenciacao.confrontacao_idcon_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.confrontacao (
@@ -9794,12 +9530,6 @@ CREATE TABLE consistenciacao.confrontacao (
 );
 
 
-CREATE SEQUENCE consistenciacao.fonte_idfon_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.fonte (
@@ -9819,12 +9549,6 @@ CREATE TABLE consistenciacao.historico_campo (
 );
 
 
-CREATE SEQUENCE consistenciacao.incoerencia_idinc_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.incoerencia (
@@ -9855,12 +9579,6 @@ CREATE TABLE consistenciacao.incoerencia (
 );
 
 
-CREATE SEQUENCE consistenciacao.incoerencia_documento_id_inc_doc_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.incoerencia_documento (
@@ -9887,12 +9605,6 @@ CREATE TABLE consistenciacao.incoerencia_documento (
 );
 
 
-CREATE SEQUENCE consistenciacao.incoerencia_endereco_id_inc_end_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.incoerencia_endereco (
@@ -9912,12 +9624,6 @@ CREATE TABLE consistenciacao.incoerencia_endereco (
 );
 
 
-CREATE SEQUENCE consistenciacao.incoerencia_fone_id_inc_fone_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.incoerencia_fone (
@@ -9942,12 +9648,6 @@ CREATE TABLE consistenciacao.incoerencia_tipo_incoerencia (
 );
 
 
-CREATE SEQUENCE consistenciacao.metadado_idmet_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.metadado (
@@ -9967,12 +9667,6 @@ CREATE TABLE consistenciacao.ocorrencia_regra_campo (
 );
 
 
-CREATE SEQUENCE consistenciacao.regra_campo_idreg_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE consistenciacao.regra_campo (
@@ -10375,12 +10069,6 @@ CREATE TABLE modules.area_conhecimento (
 );
 
 
-CREATE SEQUENCE modules.area_conhecimento_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.area_conhecimento_id_seq OWNED BY modules.area_conhecimento.id;
@@ -10409,12 +10097,6 @@ CREATE TABLE modules.auditoria_geral (
 );
 
 
-CREATE SEQUENCE modules.auditoria_geral_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.auditoria_geral_id_seq OWNED BY modules.auditoria_geral.id;
@@ -10450,12 +10132,6 @@ CREATE TABLE modules.componente_curricular_ano_escolar (
 );
 
 
-CREATE SEQUENCE modules.componente_curricular_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.componente_curricular_id_seq OWNED BY modules.componente_curricular.id;
@@ -10481,12 +10157,6 @@ CREATE TABLE modules.config_movimento_geral (
 );
 
 
-CREATE SEQUENCE modules.config_movimento_geral_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.config_movimento_geral_id_seq OWNED BY modules.config_movimento_geral.id;
@@ -10505,12 +10175,6 @@ CREATE TABLE modules.docente_licenciatura (
 );
 
 
-CREATE SEQUENCE modules.docente_licenciatura_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.docente_licenciatura_id_seq OWNED BY modules.docente_licenciatura.id;
@@ -10568,12 +10232,6 @@ CREATE TABLE modules.educacenso_curso_superior (
 );
 
 
-CREATE SEQUENCE modules.educacenso_curso_superior_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.educacenso_curso_superior_id_seq OWNED BY modules.educacenso_curso_superior.id;
@@ -10592,12 +10250,6 @@ CREATE TABLE modules.educacenso_ies (
 );
 
 
-CREATE SEQUENCE modules.educacenso_ies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.educacenso_ies_id_seq OWNED BY modules.educacenso_ies.id;
@@ -10609,12 +10261,6 @@ CREATE TABLE modules.educacenso_orgao_regional (
 );
 
 
-CREATE SEQUENCE modules.empresa_transporte_escolar_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -10648,12 +10294,6 @@ CREATE TABLE modules.falta_aluno (
 );
 
 
-CREATE SEQUENCE modules.falta_aluno_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.falta_aluno_id_seq OWNED BY modules.falta_aluno.id;
@@ -10668,12 +10308,6 @@ CREATE TABLE modules.falta_componente_curricular (
 );
 
 
-CREATE SEQUENCE modules.falta_componente_curricular_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.falta_componente_curricular_id_seq OWNED BY modules.falta_componente_curricular.id;
@@ -10687,12 +10321,6 @@ CREATE TABLE modules.falta_geral (
 );
 
 
-CREATE SEQUENCE modules.falta_geral_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.falta_geral_id_seq OWNED BY modules.falta_geral.id;
@@ -10762,23 +10390,11 @@ CREATE TABLE modules.formula_media (
 );
 
 
-CREATE SEQUENCE modules.formula_media_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.formula_media_id_seq OWNED BY modules.formula_media.id;
 
 
-CREATE SEQUENCE modules.itinerario_transporte_escolar_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -10846,12 +10462,6 @@ CREATE TABLE modules.moradia_aluno (
 );
 
 
-CREATE SEQUENCE modules.motorista_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE modules.motorista (
@@ -10874,12 +10484,6 @@ CREATE TABLE modules.nota_aluno (
 );
 
 
-CREATE SEQUENCE modules.nota_aluno_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.nota_aluno_id_seq OWNED BY modules.nota_aluno.id;
@@ -10898,12 +10502,6 @@ CREATE TABLE modules.nota_componente_curricular (
 );
 
 
-CREATE SEQUENCE modules.nota_componente_curricular_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.nota_componente_curricular_id_seq OWNED BY modules.nota_componente_curricular.id;
@@ -10928,12 +10526,6 @@ CREATE TABLE modules.nota_exame (
 );
 
 
-CREATE SEQUENCE modules.nota_geral_id_seq
-    START WITH 958638
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -10954,12 +10546,6 @@ CREATE TABLE modules.parecer_aluno (
 );
 
 
-CREATE SEQUENCE modules.parecer_aluno_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.parecer_aluno_id_seq OWNED BY modules.parecer_aluno.id;
@@ -10974,12 +10560,6 @@ CREATE TABLE modules.parecer_componente_curricular (
 );
 
 
-CREATE SEQUENCE modules.parecer_componente_curricular_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.parecer_componente_curricular_id_seq OWNED BY modules.parecer_componente_curricular.id;
@@ -10993,23 +10573,11 @@ CREATE TABLE modules.parecer_geral (
 );
 
 
-CREATE SEQUENCE modules.parecer_geral_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.parecer_geral_id_seq OWNED BY modules.parecer_geral.id;
 
 
-CREATE SEQUENCE modules.pessoa_transporte_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -11025,12 +10593,6 @@ CREATE TABLE modules.pessoa_transporte (
 );
 
 
-CREATE SEQUENCE modules.ponto_transporte_escolar_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE modules.ponto_transporte_escolar (
@@ -11046,12 +10608,6 @@ CREATE TABLE modules.ponto_transporte_escolar (
 );
 
 
-CREATE SEQUENCE modules.professor_turma_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -11107,23 +10663,11 @@ CREATE TABLE modules.regra_avaliacao (
 );
 
 
-CREATE SEQUENCE modules.regra_avaliacao_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
 
 
-CREATE SEQUENCE modules.regra_avaliacao_recuperacao_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE modules.regra_avaliacao_recuperacao (
@@ -11145,12 +10689,6 @@ CREATE TABLE modules.regra_avaliacao_serie_ano (
 );
 
 
-CREATE SEQUENCE modules.rota_transporte_escolar_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -11178,12 +10716,6 @@ CREATE TABLE modules.tabela_arredondamento (
 );
 
 
-CREATE SEQUENCE modules.tabela_arredondamento_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.tabela_arredondamento_id_seq OWNED BY modules.tabela_arredondamento.id;
@@ -11201,23 +10733,11 @@ CREATE TABLE modules.tabela_arredondamento_valor (
 );
 
 
-CREATE SEQUENCE modules.tabela_arredondamento_valor_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE modules.tabela_arredondamento_valor_id_seq OWNED BY modules.tabela_arredondamento_valor.id;
 
 
-CREATE SEQUENCE modules.tipo_veiculo_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -11261,12 +10781,6 @@ CREATE TABLE modules.uniforme_aluno (
 );
 
 
-CREATE SEQUENCE modules.veiculo_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE modules.veiculo (
@@ -11291,12 +10805,6 @@ CREATE TABLE modules.veiculo (
 );
 
 
-CREATE SEQUENCE pmiacoes.acao_governo_cod_acao_governo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmiacoes.acao_governo (
@@ -11316,12 +10824,6 @@ CREATE TABLE pmiacoes.acao_governo (
 );
 
 
-CREATE SEQUENCE pmiacoes.acao_governo_arquivo_cod_acao_governo_arquivo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmiacoes.acao_governo_arquivo (
@@ -11340,12 +10842,6 @@ CREATE TABLE pmiacoes.acao_governo_categoria (
 );
 
 
-CREATE SEQUENCE pmiacoes.acao_governo_foto_cod_acao_governo_foto_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmiacoes.acao_governo_foto (
@@ -11383,12 +10879,6 @@ CREATE TABLE pmiacoes.acao_governo_setor (
 );
 
 
-CREATE SEQUENCE pmiacoes.categoria_cod_categoria_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmiacoes.categoria (
@@ -11409,12 +10899,6 @@ CREATE TABLE pmiacoes.secretaria_responsavel (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.acontecimento_cod_acontecimento_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.acontecimento (
@@ -11437,12 +10921,6 @@ CREATE TABLE pmicontrolesis.acontecimento (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.artigo_cod_artigo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.artigo (
@@ -11454,12 +10932,6 @@ CREATE TABLE pmicontrolesis.artigo (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.foto_evento_cod_foto_evento_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.foto_evento (
@@ -11475,12 +10947,6 @@ CREATE TABLE pmicontrolesis.foto_evento (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.foto_vinc_cod_foto_vinc_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -11492,12 +10958,6 @@ CREATE TABLE pmicontrolesis.foto_vinc (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.itinerario_cod_itinerario_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -11518,12 +10978,6 @@ CREATE TABLE pmicontrolesis.itinerario (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.menu_cod_menu_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.menu (
@@ -11541,12 +10995,6 @@ CREATE TABLE pmicontrolesis.menu (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.menu_portal_cod_menu_portal_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.menu_portal (
@@ -11566,12 +11014,6 @@ CREATE TABLE pmicontrolesis.menu_portal (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.portais_cod_portais_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.portais (
@@ -11588,12 +11030,6 @@ CREATE TABLE pmicontrolesis.portais (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.servicos_cod_servicos_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.servicos (
@@ -11610,12 +11046,6 @@ CREATE TABLE pmicontrolesis.servicos (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.sistema_cod_sistema_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.sistema (
@@ -11629,12 +11059,6 @@ CREATE TABLE pmicontrolesis.sistema (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.submenu_portal_cod_submenu_portal_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.submenu_portal (
@@ -11653,12 +11077,6 @@ CREATE TABLE pmicontrolesis.submenu_portal (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.telefones_cod_telefones_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.telefones (
@@ -11673,12 +11091,6 @@ CREATE TABLE pmicontrolesis.telefones (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.tipo_acontecimento (
@@ -11693,12 +11105,6 @@ CREATE TABLE pmicontrolesis.tipo_acontecimento (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.topo_portal_cod_topo_portal_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.topo_portal (
@@ -11715,12 +11121,6 @@ CREATE TABLE pmicontrolesis.topo_portal (
 );
 
 
-CREATE SEQUENCE pmicontrolesis.tutormenu_cod_tutormenu_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmicontrolesis.tutormenu (
@@ -11729,12 +11129,6 @@ CREATE TABLE pmicontrolesis.tutormenu (
 );
 
 
-CREATE SEQUENCE pmidrh.diaria_cod_diaria_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmidrh.diaria (
@@ -11763,12 +11157,6 @@ CREATE TABLE pmidrh.diaria (
 );
 
 
-CREATE SEQUENCE pmidrh.diaria_grupo_cod_diaria_grupo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmidrh.diaria_grupo (
@@ -11777,12 +11165,6 @@ CREATE TABLE pmidrh.diaria_grupo (
 );
 
 
-CREATE SEQUENCE pmidrh.diaria_valores_cod_diaria_valores_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmidrh.diaria_valores (
@@ -11798,12 +11180,6 @@ CREATE TABLE pmidrh.diaria_valores (
 );
 
 
-CREATE SEQUENCE pmidrh.setor_cod_setor_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmidrh.setor (
@@ -11824,12 +11200,6 @@ CREATE TABLE pmidrh.setor (
 );
 
 
-CREATE SEQUENCE pmieducar.abandono_tipo_cod_abandono_tipo_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -11846,12 +11216,6 @@ CREATE TABLE pmieducar.abandono_tipo (
 );
 
 
-CREATE SEQUENCE pmieducar.acervo_cod_acervo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -11902,12 +11266,6 @@ CREATE TABLE pmieducar.acervo_acervo_autor (
 );
 
 
-CREATE SEQUENCE pmieducar.acervo_assunto_cod_acervo_assunto_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.acervo_assunto (
@@ -11923,12 +11281,6 @@ CREATE TABLE pmieducar.acervo_assunto (
 );
 
 
-CREATE SEQUENCE pmieducar.acervo_autor_cod_acervo_autor_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.acervo_autor (
@@ -11944,12 +11296,6 @@ CREATE TABLE pmieducar.acervo_autor (
 );
 
 
-CREATE SEQUENCE pmieducar.acervo_colecao_cod_acervo_colecao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.acervo_colecao (
@@ -11965,12 +11311,6 @@ CREATE TABLE pmieducar.acervo_colecao (
 );
 
 
-CREATE SEQUENCE pmieducar.acervo_editora_cod_acervo_editora_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.acervo_editora (
@@ -11994,12 +11334,6 @@ CREATE TABLE pmieducar.acervo_editora (
 );
 
 
-CREATE SEQUENCE pmieducar.acervo_idioma_cod_acervo_idioma_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.acervo_idioma (
@@ -12014,12 +11348,6 @@ CREATE TABLE pmieducar.acervo_idioma (
 );
 
 
-CREATE SEQUENCE pmieducar.aluno_cod_aluno_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.aluno (
@@ -12065,12 +11393,6 @@ CREATE TABLE pmieducar.aluno_aluno_beneficio (
 );
 
 
-CREATE SEQUENCE pmieducar.aluno_beneficio_cod_aluno_beneficio_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -12122,12 +11444,6 @@ CREATE TABLE pmieducar.auditoria_falta_componente_dispensa (
 );
 
 
-CREATE SEQUENCE pmieducar.auditoria_falta_componente_dispensa_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE pmieducar.auditoria_falta_componente_dispensa_id_seq OWNED BY pmieducar.auditoria_falta_componente_dispensa.id;
@@ -12145,12 +11461,6 @@ CREATE TABLE pmieducar.auditoria_nota_dispensa (
 );
 
 
-CREATE SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq OWNED BY pmieducar.auditoria_nota_dispensa.id;
@@ -12181,23 +11491,11 @@ CREATE TABLE pmieducar.backup (
 );
 
 
-CREATE SEQUENCE pmieducar.backup_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE pmieducar.backup_id_seq OWNED BY pmieducar.backup.id;
 
 
-CREATE SEQUENCE pmieducar.biblioteca_cod_biblioteca_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -12226,12 +11524,6 @@ CREATE TABLE pmieducar.biblioteca_dia (
 );
 
 
-CREATE SEQUENCE pmieducar.biblioteca_feriados_cod_feriado_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.biblioteca_feriados (
@@ -12260,12 +11552,6 @@ CREATE TABLE pmieducar.bloqueio_ano_letivo (
 );
 
 
-CREATE SEQUENCE public.bloqueio_lancamento_faltas_notas_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -12280,12 +11566,6 @@ CREATE TABLE pmieducar.bloqueio_lancamento_faltas_notas (
 );
 
 
-CREATE SEQUENCE pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -12302,12 +11582,6 @@ CREATE TABLE pmieducar.calendario_ano_letivo (
 );
 
 
-CREATE SEQUENCE pmieducar.calendario_anotacao_cod_calendario_anotacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.calendario_anotacao (
@@ -12344,12 +11618,6 @@ CREATE TABLE pmieducar.calendario_dia_anotacao (
 );
 
 
-CREATE SEQUENCE pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.calendario_dia_motivo (
@@ -12367,12 +11635,6 @@ CREATE TABLE pmieducar.calendario_dia_motivo (
 );
 
 
-CREATE SEQUENCE pmieducar.candidato_reserva_vaga_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -12399,12 +11661,6 @@ CREATE TABLE pmieducar.candidato_reserva_vaga (
 );
 
 
-CREATE SEQUENCE pmieducar.categoria_nivel_cod_categoria_nivel_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.categoria_nivel (
@@ -12425,23 +11681,11 @@ CREATE TABLE pmieducar.categoria_obra (
 );
 
 
-CREATE SEQUENCE pmieducar.categoria_obra_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE pmieducar.categoria_obra_id_seq OWNED BY pmieducar.categoria_obra.id;
 
 
-CREATE SEQUENCE pmieducar.cliente_cod_cliente_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -12472,12 +11716,6 @@ CREATE TABLE pmieducar.cliente_suspensao (
 );
 
 
-CREATE SEQUENCE pmieducar.cliente_tipo_cod_cliente_tipo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.cliente_tipo (
@@ -12516,12 +11754,6 @@ CREATE TABLE pmieducar.cliente_tipo_exemplar_tipo (
 );
 
 
-CREATE SEQUENCE pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.coffebreak_tipo (
@@ -12580,12 +11812,6 @@ COMMENT ON COLUMN pmieducar.configuracoes_gerais.custom_labels IS 'Guarda custom
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.url_cadastro_usuario IS 'URL da ferramenta externa de cadastro de usuários';
 
 
-CREATE SEQUENCE pmieducar.curso_cod_curso_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -12615,12 +11841,6 @@ CREATE TABLE pmieducar.curso (
 );
 
 
-CREATE SEQUENCE pmieducar.disciplina_cod_disciplina_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.disciplina (
@@ -12659,12 +11879,6 @@ CREATE TABLE pmieducar.disciplina_serie (
 );
 
 
-CREATE SEQUENCE pmieducar.disciplina_topico_cod_disciplina_topico_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -12681,12 +11895,6 @@ CREATE TABLE pmieducar.disciplina_topico (
 );
 
 
-CREATE SEQUENCE pmieducar.dispensa_disciplina_cod_dispensa_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -12713,12 +11921,6 @@ CREATE TABLE pmieducar.dispensa_etapa (
 );
 
 
-CREATE SEQUENCE pmieducar.distribuicao_uniforme_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -12749,12 +11951,6 @@ CREATE TABLE pmieducar.distribuicao_uniforme (
 );
 
 
-CREATE SEQUENCE pmieducar.escola_cod_escola_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.escola (
@@ -12926,12 +12122,6 @@ CREATE TABLE pmieducar.escola_curso (
 );
 
 
-CREATE SEQUENCE pmieducar.escola_localizacao_cod_escola_localizacao_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.escola_localizacao (
@@ -12946,12 +12136,6 @@ CREATE TABLE pmieducar.escola_localizacao (
 );
 
 
-CREATE SEQUENCE pmieducar.escola_rede_ensino_cod_escola_rede_ensino_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.escola_rede_ensino (
@@ -13007,23 +12191,11 @@ CREATE TABLE pmieducar.escola_usuario (
 );
 
 
-CREATE SEQUENCE pmieducar.escola_usuario_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE pmieducar.escola_usuario_id_seq OWNED BY pmieducar.escola_usuario.id;
 
 
-CREATE SEQUENCE pmieducar.exemplar_cod_exemplar_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -13048,12 +12220,6 @@ CREATE TABLE pmieducar.exemplar (
 );
 
 
-CREATE SEQUENCE pmieducar.exemplar_emprestimo_cod_emprestimo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.exemplar_emprestimo (
@@ -13068,12 +12234,6 @@ CREATE TABLE pmieducar.exemplar_emprestimo (
 );
 
 
-CREATE SEQUENCE pmieducar.exemplar_tipo_cod_exemplar_tipo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.exemplar_tipo (
@@ -13089,12 +12249,6 @@ CREATE TABLE pmieducar.exemplar_tipo (
 );
 
 
-CREATE SEQUENCE pmieducar.falta_aluno_cod_falta_aluno_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -13116,12 +12270,6 @@ CREATE TABLE pmieducar.falta_aluno (
 );
 
 
-CREATE SEQUENCE pmieducar.falta_atraso_cod_falta_atraso_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -13144,12 +12292,6 @@ CREATE TABLE pmieducar.falta_atraso (
 );
 
 
-CREATE SEQUENCE pmieducar.falta_atraso_compensado_cod_compensado_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.falta_atraso_compensado (
@@ -13167,12 +12309,6 @@ CREATE TABLE pmieducar.falta_atraso_compensado (
 );
 
 
-CREATE SEQUENCE pmieducar.faltas_sequencial_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -13186,12 +12322,6 @@ CREATE TABLE pmieducar.faltas (
 );
 
 
-CREATE SEQUENCE pmieducar.fonte_cod_fonte_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -13209,12 +12339,6 @@ CREATE TABLE pmieducar.fonte (
 );
 
 
-CREATE SEQUENCE pmieducar.funcao_cod_funcao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.funcao (
@@ -13231,12 +12355,6 @@ CREATE TABLE pmieducar.funcao (
 );
 
 
-CREATE SEQUENCE pmieducar.habilitacao_cod_habilitacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.habilitacao (
@@ -13320,12 +12438,6 @@ CREATE TABLE pmieducar.historico_escolar (
 );
 
 
-CREATE SEQUENCE pmieducar.historico_grade_curso_seq
-    START WITH 3
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.historico_grade_curso (
@@ -13338,12 +12450,6 @@ CREATE TABLE pmieducar.historico_grade_curso (
 );
 
 
-CREATE SEQUENCE pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.infra_comodo_funcao (
@@ -13359,12 +12465,6 @@ CREATE TABLE pmieducar.infra_comodo_funcao (
 );
 
 
-CREATE SEQUENCE pmieducar.infra_predio_cod_infra_predio_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.infra_predio (
@@ -13381,12 +12481,6 @@ CREATE TABLE pmieducar.infra_predio (
 );
 
 
-CREATE SEQUENCE pmieducar.infra_predio_comodo_cod_infra_predio_comodo_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.infra_predio_comodo (
@@ -13404,12 +12498,6 @@ CREATE TABLE pmieducar.infra_predio_comodo (
 );
 
 
-CREATE SEQUENCE pmieducar.instituicao_cod_instituicao_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.instituicao (
@@ -13467,12 +12555,6 @@ CREATE TABLE pmieducar.instituicao (
 COMMENT ON COLUMN pmieducar.instituicao.exibir_apenas_professores_alocados IS 'Para filtros de emissão de relatórios';
 
 
-CREATE SEQUENCE pmieducar.instituicao_documentacao_seq
-    START WITH 2
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -13487,12 +12569,6 @@ CREATE TABLE pmieducar.instituicao_documentacao (
 );
 
 
-CREATE SEQUENCE pmieducar.material_didatico_cod_material_didatico_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -13512,12 +12588,6 @@ CREATE TABLE pmieducar.material_didatico (
 );
 
 
-CREATE SEQUENCE pmieducar.material_tipo_cod_material_tipo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.material_tipo (
@@ -13533,12 +12603,6 @@ CREATE TABLE pmieducar.material_tipo (
 );
 
 
-CREATE SEQUENCE pmieducar.matricula_cod_matricula_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.matricula (
@@ -13575,12 +12639,6 @@ CREATE TABLE pmieducar.matricula (
 );
 
 
-CREATE SEQUENCE pmieducar.matricula_excessao_cod_aluno_excessao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -13599,12 +12657,6 @@ CREATE TABLE pmieducar.matricula_excessao (
 );
 
 
-CREATE SEQUENCE pmieducar.ocorrencia_disciplinar_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -13655,12 +12707,6 @@ CREATE TABLE pmieducar.menu_tipo_usuario (
 );
 
 
-CREATE SEQUENCE pmieducar.modulo_cod_modulo_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.modulo (
@@ -13679,12 +12725,6 @@ CREATE TABLE pmieducar.modulo (
 );
 
 
-CREATE SEQUENCE pmieducar.motivo_afastamento_cod_motivo_afastamento_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.motivo_afastamento (
@@ -13700,12 +12740,6 @@ CREATE TABLE pmieducar.motivo_afastamento (
 );
 
 
-CREATE SEQUENCE pmieducar.motivo_baixa_cod_motivo_baixa_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.motivo_baixa (
@@ -13721,12 +12755,6 @@ CREATE TABLE pmieducar.motivo_baixa (
 );
 
 
-CREATE SEQUENCE pmieducar.motivo_suspensao_cod_motivo_suspensao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.motivo_suspensao (
@@ -13742,12 +12770,6 @@ CREATE TABLE pmieducar.motivo_suspensao (
 );
 
 
-CREATE SEQUENCE pmieducar.nivel_cod_nivel_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -13766,12 +12788,6 @@ CREATE TABLE pmieducar.nivel (
 );
 
 
-CREATE SEQUENCE pmieducar.nivel_ensino_cod_nivel_ensino_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -13789,12 +12805,6 @@ CREATE TABLE pmieducar.nivel_ensino (
 );
 
 
-CREATE SEQUENCE pmieducar.nota_aluno_cod_nota_aluno_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -13818,12 +12828,6 @@ CREATE TABLE pmieducar.nota_aluno (
 );
 
 
-CREATE SEQUENCE pmieducar.operador_cod_operador_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -13841,12 +12845,6 @@ CREATE TABLE pmieducar.operador (
 );
 
 
-CREATE SEQUENCE pmieducar.pagamento_multa_cod_pagamento_multa_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.pagamento_multa (
@@ -13859,12 +12857,6 @@ CREATE TABLE pmieducar.pagamento_multa (
 );
 
 
-CREATE SEQUENCE pmieducar.pre_requisito_cod_pre_requisito_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.pre_requisito (
@@ -13881,12 +12873,6 @@ CREATE TABLE pmieducar.pre_requisito (
 );
 
 
-CREATE SEQUENCE pmieducar.projeto_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.projeto (
@@ -13905,12 +12891,6 @@ CREATE TABLE pmieducar.projeto_aluno (
 );
 
 
-CREATE SEQUENCE pmieducar.quadro_horario_cod_quadro_horario_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.quadro_horario (
@@ -13979,12 +12959,6 @@ CREATE TABLE pmieducar.relacao_categoria_acervo (
 );
 
 
-CREATE SEQUENCE pmieducar.religiao_cod_religiao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -14000,12 +12974,6 @@ CREATE TABLE pmieducar.religiao (
 );
 
 
-CREATE SEQUENCE pmieducar.reserva_vaga_cod_reserva_vaga_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.reserva_vaga (
@@ -14023,12 +12991,6 @@ CREATE TABLE pmieducar.reserva_vaga (
 );
 
 
-CREATE SEQUENCE pmieducar.reservas_cod_reserva_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.reservas (
@@ -14055,12 +13017,6 @@ CREATE TABLE pmieducar.sequencia_serie (
 );
 
 
-CREATE SEQUENCE pmieducar.serie_cod_serie_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.serie (
@@ -14161,12 +13117,6 @@ CREATE TABLE pmieducar.servidor_afastamento (
 );
 
 
-CREATE SEQUENCE pmieducar.servidor_alocacao_cod_servidor_alocacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.servidor_alocacao (
@@ -14193,12 +13143,6 @@ CREATE TABLE pmieducar.servidor_alocacao (
 );
 
 
-CREATE SEQUENCE pmieducar.servidor_curso_cod_servidor_curso_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.servidor_curso (
@@ -14227,12 +13171,6 @@ CREATE TABLE pmieducar.servidor_disciplina (
 );
 
 
-CREATE SEQUENCE pmieducar.servidor_formacao_cod_formacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -14252,12 +13190,6 @@ CREATE TABLE pmieducar.servidor_formacao (
 );
 
 
-CREATE SEQUENCE pmieducar.servidor_funcao_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -14271,12 +13203,6 @@ CREATE TABLE pmieducar.servidor_funcao (
 );
 
 
-CREATE SEQUENCE pmieducar.servidor_titulo_concurso_cod_servidor_titulo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -14289,12 +13215,6 @@ CREATE TABLE pmieducar.servidor_titulo_concurso (
 );
 
 
-CREATE SEQUENCE pmieducar.situacao_cod_situacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.situacao (
@@ -14313,12 +13233,6 @@ CREATE TABLE pmieducar.situacao (
 );
 
 
-CREATE SEQUENCE pmieducar.subnivel_cod_subnivel_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = false;
@@ -14343,12 +13257,6 @@ CREATE TABLE pmieducar.tipo_autor (
 );
 
 
-CREATE SEQUENCE pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -14377,12 +13285,6 @@ CREATE TABLE pmieducar.tipo_avaliacao_valores (
 );
 
 
-CREATE SEQUENCE pmieducar.tipo_dispensa_cod_tipo_dispensa_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.tipo_dispensa (
@@ -14398,12 +13300,6 @@ CREATE TABLE pmieducar.tipo_dispensa (
 );
 
 
-CREATE SEQUENCE pmieducar.tipo_ensino_cod_tipo_ensino_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.tipo_ensino (
@@ -14419,12 +13315,6 @@ CREATE TABLE pmieducar.tipo_ensino (
 );
 
 
-CREATE SEQUENCE pmieducar.tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.tipo_ocorrencia_disciplinar (
@@ -14441,12 +13331,6 @@ CREATE TABLE pmieducar.tipo_ocorrencia_disciplinar (
 );
 
 
-CREATE SEQUENCE pmieducar.tipo_regime_cod_tipo_regime_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.tipo_regime (
@@ -14461,12 +13345,6 @@ CREATE TABLE pmieducar.tipo_regime (
 );
 
 
-CREATE SEQUENCE pmieducar.tipo_usuario_cod_tipo_usuario_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.tipo_usuario (
@@ -14482,12 +13360,6 @@ CREATE TABLE pmieducar.tipo_usuario (
 );
 
 
-CREATE SEQUENCE pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.transferencia_solicitacao (
@@ -14509,12 +13381,6 @@ CREATE TABLE pmieducar.transferencia_solicitacao (
 );
 
 
-CREATE SEQUENCE pmieducar.transferencia_tipo_cod_transferencia_tipo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.transferencia_tipo (
@@ -14530,12 +13396,6 @@ CREATE TABLE pmieducar.transferencia_tipo (
 );
 
 
-CREATE SEQUENCE pmieducar.turma_cod_turma_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.turma (
@@ -14612,12 +13472,6 @@ CREATE TABLE pmieducar.turma_modulo (
 );
 
 
-CREATE SEQUENCE pmieducar.turma_tipo_cod_turma_tipo_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.turma_tipo (
@@ -14633,12 +13487,6 @@ CREATE TABLE pmieducar.turma_tipo (
 );
 
 
-CREATE SEQUENCE pmieducar.turma_turno_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmieducar.turma_turno (
@@ -14715,12 +13563,6 @@ CREATE TABLE pmiotopic.grupopessoa (
 );
 
 
-CREATE SEQUENCE pmiotopic.grupos_cod_grupos_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmiotopic.grupos (
@@ -14757,12 +13599,6 @@ CREATE TABLE pmiotopic.participante (
 );
 
 
-CREATE SEQUENCE pmiotopic.reuniao_cod_reuniao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmiotopic.reuniao (
@@ -14779,12 +13615,6 @@ CREATE TABLE pmiotopic.reuniao (
 );
 
 
-CREATE SEQUENCE pmiotopic.topico_cod_topico_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE pmiotopic.topico (
@@ -14809,12 +13639,6 @@ CREATE TABLE pmiotopic.topicoreuniao (
 );
 
 
-CREATE SEQUENCE portal.acesso_cod_acesso_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.acesso (
@@ -14828,12 +13652,6 @@ CREATE TABLE portal.acesso (
 );
 
 
-CREATE SEQUENCE portal.agenda_cod_agenda_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.agenda (
@@ -14865,12 +13683,6 @@ CREATE TABLE portal.agenda_compromisso (
 );
 
 
-CREATE SEQUENCE portal.agenda_pref_cod_comp_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.agenda_pref (
@@ -14895,12 +13707,6 @@ CREATE TABLE portal.agenda_responsavel (
 );
 
 
-CREATE SEQUENCE portal.compras_editais_editais_cod_compras_editais_editais_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.compras_editais_editais (
@@ -14922,12 +13728,6 @@ CREATE TABLE portal.compras_editais_editais_empresas (
 );
 
 
-CREATE SEQUENCE portal.compras_editais_empresa_cod_compras_editais_empresa_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.compras_editais_empresa (
@@ -14948,12 +13748,6 @@ CREATE TABLE portal.compras_editais_empresa (
 );
 
 
-CREATE SEQUENCE portal.compras_final_pregao_cod_compras_final_pregao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.compras_final_pregao (
@@ -14967,12 +13761,6 @@ CREATE TABLE portal.compras_funcionarios (
 );
 
 
-CREATE SEQUENCE portal.compras_licitacoes_cod_compras_licitacoes_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.compras_licitacoes (
@@ -14987,12 +13775,6 @@ CREATE TABLE portal.compras_licitacoes (
 );
 
 
-CREATE SEQUENCE portal.compras_modalidade_cod_compras_modalidade_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.compras_modalidade (
@@ -15001,12 +13783,6 @@ CREATE TABLE portal.compras_modalidade (
 );
 
 
-CREATE SEQUENCE portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.compras_pregao_execucao (
@@ -15027,12 +13803,6 @@ CREATE TABLE portal.compras_pregao_execucao (
 );
 
 
-CREATE SEQUENCE portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.compras_prestacao_contas (
@@ -15043,12 +13813,6 @@ CREATE TABLE portal.compras_prestacao_contas (
 );
 
 
-CREATE SEQUENCE portal.foto_portal_cod_foto_portal_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.foto_portal (
@@ -15067,12 +13831,6 @@ CREATE TABLE portal.foto_portal (
 );
 
 
-CREATE SEQUENCE portal.foto_secao_cod_foto_secao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.foto_secao (
@@ -15112,12 +13870,6 @@ CREATE TABLE portal.funcionario (
 );
 
 
-CREATE SEQUENCE portal.funcionario_vinculo_cod_funcionario_vinculo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.funcionario_vinculo (
@@ -15127,12 +13879,6 @@ CREATE TABLE portal.funcionario_vinculo (
 );
 
 
-CREATE SEQUENCE portal.imagem_cod_imagem_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.imagem (
@@ -15150,12 +13896,6 @@ CREATE TABLE portal.imagem (
 );
 
 
-CREATE SEQUENCE portal.imagem_tipo_cod_imagem_tipo_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.imagem_tipo (
@@ -15164,12 +13904,6 @@ CREATE TABLE portal.imagem_tipo (
 );
 
 
-CREATE SEQUENCE portal.intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.intranet_segur_permissao_negada (
@@ -15190,12 +13924,6 @@ CREATE TABLE portal.jor_arquivo (
 );
 
 
-CREATE SEQUENCE portal.jor_edicao_cod_jor_edicao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.jor_edicao (
@@ -15209,12 +13937,6 @@ CREATE TABLE portal.jor_edicao (
 );
 
 
-CREATE SEQUENCE portal.mailling_email_cod_mailling_email_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.mailling_email (
@@ -15224,12 +13946,6 @@ CREATE TABLE portal.mailling_email (
 );
 
 
-CREATE SEQUENCE portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.mailling_email_conteudo (
@@ -15242,12 +13958,6 @@ CREATE TABLE portal.mailling_email_conteudo (
 );
 
 
-CREATE SEQUENCE portal.mailling_fila_envio_cod_mailling_fila_envio_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.mailling_fila_envio (
@@ -15260,12 +13970,6 @@ CREATE TABLE portal.mailling_fila_envio (
 );
 
 
-CREATE SEQUENCE portal.mailling_grupo_cod_mailling_grupo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.mailling_grupo (
@@ -15280,12 +13984,6 @@ CREATE TABLE portal.mailling_grupo_email (
 );
 
 
-CREATE SEQUENCE portal.mailling_historico_cod_mailling_historico_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.mailling_historico (
@@ -15305,12 +14003,6 @@ CREATE TABLE portal.menu_funcionario (
 );
 
 
-CREATE SEQUENCE portal.menu_menu_cod_menu_menu_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.menu_menu (
@@ -15325,12 +14017,6 @@ CREATE TABLE portal.menu_menu (
 );
 
 
-CREATE SEQUENCE portal.menu_submenu_cod_menu_submenu_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.menu_submenu (
@@ -15344,12 +14030,6 @@ CREATE TABLE portal.menu_submenu (
 );
 
 
-CREATE SEQUENCE portal.not_portal_cod_not_portal_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.not_portal (
@@ -15367,12 +14047,6 @@ CREATE TABLE portal.not_portal_tipo (
 );
 
 
-CREATE SEQUENCE portal.not_tipo_cod_not_tipo_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.not_tipo (
@@ -15391,12 +14065,6 @@ CREATE TABLE portal.not_vinc_portal (
 );
 
 
-CREATE SEQUENCE portal.notificacao_cod_notificacao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.notificacao (
@@ -15410,12 +14078,6 @@ CREATE TABLE portal.notificacao (
 );
 
 
-CREATE SEQUENCE portal.pessoa_atividade_cod_pessoa_atividade_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.pessoa_atividade (
@@ -15425,12 +14087,6 @@ CREATE TABLE portal.pessoa_atividade (
 );
 
 
-CREATE SEQUENCE portal.pessoa_fj_cod_pessoa_fj_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.pessoa_fj (
@@ -15469,12 +14125,6 @@ CREATE TABLE portal.pessoa_fj_pessoa_atividade (
 );
 
 
-CREATE SEQUENCE portal.pessoa_ramo_atividade_cod_ramo_atividade_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.pessoa_ramo_atividade (
@@ -15483,20 +14133,8 @@ CREATE TABLE portal.pessoa_ramo_atividade (
 );
 
 
-CREATE SEQUENCE portal.portal_banner_cod_portal_banner_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
-CREATE SEQUENCE portal.portal_concurso_cod_portal_concurso_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.portal_concurso (
@@ -15510,12 +14148,6 @@ CREATE TABLE portal.portal_concurso (
 );
 
 
-CREATE SEQUENCE portal.sistema_cod_sistema_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE portal.sistema (
@@ -15620,12 +14252,6 @@ CREATE TABLE public.pghero_query_stats (
 );
 
 
-CREATE SEQUENCE public.pghero_query_stats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
@@ -15640,12 +14266,6 @@ CREATE TABLE public.phinxlog (
 );
 
 
-CREATE SEQUENCE public.portal_banner_cod_portal_banner_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE public.portal_banner (
@@ -15659,12 +14279,6 @@ CREATE TABLE public.portal_banner (
 );
 
 
-CREATE SEQUENCE public.regiao_cod_regiao_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 SET default_with_oids = true;
@@ -15675,52 +14289,16 @@ CREATE TABLE public.regiao (
 );
 
 
-CREATE SEQUENCE public.seq_bairro
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
-CREATE SEQUENCE public.seq_distrito
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
-CREATE SEQUENCE public.seq_logradouro
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
-CREATE SEQUENCE public.seq_municipio
-    START WITH 5565
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
-CREATE SEQUENCE public.seq_setor_bai
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
-CREATE SEQUENCE public.setor_idset_seq
-    START WITH 1
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
 
 
 CREATE TABLE public.setor (
