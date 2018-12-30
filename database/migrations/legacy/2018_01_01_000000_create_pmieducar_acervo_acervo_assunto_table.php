@@ -21,6 +21,9 @@ class CreatePmieducarAcervoAcervoAssuntoTable extends Migration
                     ref_cod_acervo integer NOT NULL,
                     ref_cod_acervo_assunto integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.acervo_acervo_assunto
+                    ADD CONSTRAINT acervo_acervo_assunto_pkey PRIMARY KEY (ref_cod_acervo, ref_cod_acervo_assunto);
             '
         );
     }

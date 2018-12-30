@@ -34,6 +34,9 @@ class CreateAlimentosBaixaGuiaProdutoTable extends Migration
                     login_baixa character varying(80) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.baixa_guia_produto
+                    ADD CONSTRAINT pk_baixa_guia_produto PRIMARY KEY (idbap);
+
                 SELECT pg_catalog.setval(\'alimentos.baixa_guia_produto_idbap_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreateAlimentosBaixaGuiaProdutoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.baixa_guia_produto');
+
+        DB::unprepared('DROP SEQUENCE alimentos.baixa_guia_produto_idbap_seq;');
     }
 }

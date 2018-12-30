@@ -34,6 +34,9 @@ class CreateModulesPessoaTransporteTable extends Migration
                     turno character varying(255)
                 );
                 
+                ALTER TABLE ONLY modules.pessoa_transporte
+                    ADD CONSTRAINT pessoa_transporte_cod_pessoa_transporte_pkey PRIMARY KEY (cod_pessoa_transporte);
+
                 SELECT pg_catalog.setval(\'modules.pessoa_transporte_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreateModulesPessoaTransporteTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.pessoa_transporte');
+
+        DB::unprepared('DROP SEQUENCE modules.pessoa_transporte_seq;');
     }
 }

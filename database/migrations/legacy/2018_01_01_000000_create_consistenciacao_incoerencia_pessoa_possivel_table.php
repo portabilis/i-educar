@@ -21,6 +21,9 @@ class CreateConsistenciacaoIncoerenciaPessoaPossivelTable extends Migration
                     idinc integer NOT NULL,
                     idpes numeric(8,0) NOT NULL
                 );
+                
+                ALTER TABLE ONLY consistenciacao.incoerencia_pessoa_possivel
+                    ADD CONSTRAINT pk_inc_pessoa_possivel PRIMARY KEY (idinc, idpes);
             '
         );
     }

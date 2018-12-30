@@ -35,6 +35,9 @@ class CreateConsistenciacaoConfrontacaoTable extends Migration
                     data_hora timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY consistenciacao.confrontacao
+                    ADD CONSTRAINT pk_confrontacao PRIMARY KEY (idcon);
+
                 SELECT pg_catalog.setval(\'consistenciacao.confrontacao_idcon_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreateConsistenciacaoConfrontacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.confrontacao');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.confrontacao_idcon_seq;');
     }
 }

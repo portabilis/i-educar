@@ -39,6 +39,9 @@ class CreatePmicontrolesisItinerarioTable extends Migration
                     nome character varying(255) NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.itinerario
+                    ADD CONSTRAINT itinerario_pkey PRIMARY KEY (cod_itinerario);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.itinerario_cod_itinerario_seq\', 1, false);
             '
         );
@@ -52,5 +55,7 @@ class CreatePmicontrolesisItinerarioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.itinerario');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.itinerario_cod_itinerario_seq;');
     }
 }

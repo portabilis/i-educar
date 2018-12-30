@@ -47,5 +47,7 @@ class CreatePortalNotificacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.notificacao');
+
+        DB::unprepared('DROP SEQUENCE portal.notificacao_cod_notificacao_seq;');
     }
 }

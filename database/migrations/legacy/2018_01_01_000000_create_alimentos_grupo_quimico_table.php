@@ -30,6 +30,9 @@ class CreateAlimentosGrupoQuimicoTable extends Migration
                     descricao character varying(50) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.grupo_quimico
+                    ADD CONSTRAINT pk_grp_quimico PRIMARY KEY (idgrpq);
+
                 SELECT pg_catalog.setval(\'alimentos.grupo_quimico_idgrpq_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreateAlimentosGrupoQuimicoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.grupo_quimico');
+
+        DB::unprepared('DROP SEQUENCE alimentos.grupo_quimico_idgrpq_seq;');
     }
 }

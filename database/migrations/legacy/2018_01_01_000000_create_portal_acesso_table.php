@@ -34,6 +34,9 @@ class CreatePortalAcessoTable extends Migration
                     sucesso boolean DEFAULT true NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.acesso
+                    ADD CONSTRAINT acesso_pk PRIMARY KEY (cod_acesso);
+
                 SELECT pg_catalog.setval(\'portal.acesso_cod_acesso_seq\', 19, true);
             '
         );
@@ -47,5 +50,7 @@ class CreatePortalAcessoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.acesso');
+
+        DB::unprepared('DROP SEQUENCE portal.acesso_cod_acesso_seq;');
     }
 }

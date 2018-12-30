@@ -37,6 +37,9 @@ class CreateModulesProfessorTurmaTable extends Migration
                     turno_id integer
                 );
                 
+                ALTER TABLE ONLY modules.professor_turma
+                    ADD CONSTRAINT professor_turma_id_pk PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'modules.professor_turma_id_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreateModulesProfessorTurmaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.professor_turma');
+
+        DB::unprepared('DROP SEQUENCE modules.professor_turma_id_seq;');
     }
 }

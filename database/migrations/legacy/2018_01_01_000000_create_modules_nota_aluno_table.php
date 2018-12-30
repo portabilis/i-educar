@@ -31,6 +31,9 @@ class CreateModulesNotaAlunoTable extends Migration
 
                 ALTER SEQUENCE modules.nota_aluno_id_seq OWNED BY modules.nota_aluno.id;
                 
+                ALTER TABLE ONLY modules.nota_aluno
+                    ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (id);
+
                 ALTER TABLE ONLY modules.nota_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_aluno_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.nota_aluno_id_seq\', 2, true);

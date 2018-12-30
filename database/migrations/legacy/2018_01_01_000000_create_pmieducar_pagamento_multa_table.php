@@ -33,6 +33,9 @@ class CreatePmieducarPagamentoMultaTable extends Migration
                     ref_cod_biblioteca integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.pagamento_multa
+                    ADD CONSTRAINT pagamento_multa_pkey PRIMARY KEY (cod_pagamento_multa);
+
                 SELECT pg_catalog.setval(\'pmieducar.pagamento_multa_cod_pagamento_multa_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreatePmieducarPagamentoMultaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.pagamento_multa');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.pagamento_multa_cod_pagamento_multa_seq;');
     }
 }

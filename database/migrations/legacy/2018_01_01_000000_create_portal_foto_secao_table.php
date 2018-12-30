@@ -29,6 +29,9 @@ class CreatePortalFotoSecaoTable extends Migration
                     nm_secao character varying(255)
                 );
                 
+                ALTER TABLE ONLY portal.foto_secao
+                    ADD CONSTRAINT foto_secao_pk PRIMARY KEY (cod_foto_secao);
+
                 SELECT pg_catalog.setval(\'portal.foto_secao_cod_foto_secao_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePortalFotoSecaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.foto_secao');
+
+        DB::unprepared('DROP SEQUENCE portal.foto_secao_cod_foto_secao_seq;');
     }
 }

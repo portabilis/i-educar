@@ -44,6 +44,9 @@ class CreatePublicLogradouroTable extends Migration
                     CONSTRAINT ck_logradouro_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY public.logradouro
+                    ADD CONSTRAINT pk_logradouro PRIMARY KEY (idlog);
+
                 SELECT pg_catalog.setval(\'public.seq_logradouro\', 1, false);
             '
         );
@@ -57,5 +60,7 @@ class CreatePublicLogradouroTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.logradouro');
+
+        DB::unprepared('DROP SEQUENCE public.seq_logradouro;');
     }
 }

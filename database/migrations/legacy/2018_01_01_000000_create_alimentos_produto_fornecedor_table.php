@@ -31,6 +31,9 @@ class CreateAlimentosProdutoFornecedorTable extends Migration
                     codigo_ean character varying(18) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.produto_fornecedor
+                    ADD CONSTRAINT pk_produto_fornecedor PRIMARY KEY (idprf);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_fornecedor_idprf_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateAlimentosProdutoFornecedorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.produto_fornecedor');
+
+        DB::unprepared('DROP SEQUENCE alimentos.produto_fornecedor_idprf_seq;');
     }
 }

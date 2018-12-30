@@ -39,6 +39,9 @@ class CreatePmieducarModuloTable extends Migration
                     num_etapas numeric(2,0) DEFAULT 0 NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.modulo
+                    ADD CONSTRAINT modulo_pkey PRIMARY KEY (cod_modulo);
+
                 SELECT pg_catalog.setval(\'pmieducar.modulo_cod_modulo_seq\', 1, true);
             '
         );
@@ -52,5 +55,7 @@ class CreatePmieducarModuloTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.modulo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.modulo_cod_modulo_seq;');
     }
 }

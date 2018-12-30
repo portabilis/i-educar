@@ -43,6 +43,9 @@ class CreateCadastroEnderecoPessoaTable extends Migration
                     CONSTRAINT ck_endereco_pessoa_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
                     CONSTRAINT ck_endereco_pessoa_tipo CHECK (((tipo >= (1)::numeric) AND (tipo <= (3)::numeric)))
                 );
+                
+                ALTER TABLE ONLY cadastro.endereco_pessoa
+                    ADD CONSTRAINT pk_endereco_pessoa PRIMARY KEY (idpes, tipo);
             '
         );
     }

@@ -41,6 +41,9 @@ class CreatePortalComprasPregaoExecucaoTable extends Migration
                     ref_cod_compras_final_pregao integer
                 );
                 
+                ALTER TABLE ONLY portal.compras_pregao_execucao
+                    ADD CONSTRAINT compras_pregao_execucao_pk PRIMARY KEY (cod_compras_pregao_execucao);
+
                 SELECT pg_catalog.setval(\'portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq\', 1, false);
             '
         );
@@ -54,5 +57,7 @@ class CreatePortalComprasPregaoExecucaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.compras_pregao_execucao');
+
+        DB::unprepared('DROP SEQUENCE portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq;');
     }
 }

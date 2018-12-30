@@ -35,6 +35,9 @@ class CreatePmieducarAbandonoTipoTable extends Migration
                     ativo integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.abandono_tipo
+                    ADD CONSTRAINT pk_cod_abandono_tipo PRIMARY KEY (cod_abandono_tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.abandono_tipo_cod_abandono_tipo_seq\', 2, true);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarAbandonoTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.abandono_tipo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.abandono_tipo_cod_abandono_tipo_seq;');
     }
 }

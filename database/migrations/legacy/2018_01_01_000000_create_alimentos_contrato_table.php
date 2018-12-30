@@ -46,6 +46,9 @@ class CreateAlimentosContratoTable extends Migration
                     CONSTRAINT ck_contrato_ultimo_contrato CHECK (((ultimo_contrato = \'S\'::bpchar) OR (ultimo_contrato = \'N\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY alimentos.contrato
+                    ADD CONSTRAINT pk_contrato PRIMARY KEY (idcon);
+
                 SELECT pg_catalog.setval(\'alimentos.contrato_idcon_seq\', 1, false);
             '
         );
@@ -59,5 +62,7 @@ class CreateAlimentosContratoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.contrato');
+
+        DB::unprepared('DROP SEQUENCE alimentos.contrato_idcon_seq;');
     }
 }

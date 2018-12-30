@@ -23,6 +23,9 @@ class CreatePortalMenuFuncionarioTable extends Migration
                     exclui smallint DEFAULT (0)::smallint NOT NULL,
                     ref_cod_menu_submenu integer DEFAULT 0 NOT NULL
                 );
+                
+                ALTER TABLE ONLY portal.menu_funcionario
+                    ADD CONSTRAINT menu_funcionario_pk PRIMARY KEY (ref_ref_cod_pessoa_fj, ref_cod_menu_submenu);
             '
         );
     }

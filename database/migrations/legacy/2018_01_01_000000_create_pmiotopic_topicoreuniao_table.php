@@ -24,6 +24,9 @@ class CreatePmiotopicTopicoreuniaoTable extends Migration
                     finalizado smallint,
                     data_parecer timestamp without time zone
                 );
+                
+                ALTER TABLE ONLY pmiotopic.topicoreuniao
+                    ADD CONSTRAINT topicoreuniao_pkey PRIMARY KEY (ref_cod_topico, ref_cod_reuniao);
             '
         );
     }

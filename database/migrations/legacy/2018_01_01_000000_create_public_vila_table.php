@@ -23,6 +23,9 @@ class CreatePublicVilaTable extends Migration
                     nome character varying(50) NOT NULL,
                     geom character varying
                 );
+                
+                ALTER TABLE ONLY public.vila
+                    ADD CONSTRAINT pk_vila PRIMARY KEY (idvil);
             '
         );
     }

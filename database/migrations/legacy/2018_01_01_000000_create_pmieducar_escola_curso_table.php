@@ -28,6 +28,9 @@ class CreatePmieducarEscolaCursoTable extends Migration
                     autorizacao character varying(255),
                     anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.escola_curso
+                    ADD CONSTRAINT escola_curso_pkey PRIMARY KEY (ref_cod_escola, ref_cod_curso);
             '
         );
     }

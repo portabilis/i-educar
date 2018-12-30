@@ -13,18 +13,9 @@ class CreateModulesComponenteCurricularAnoEscolarTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
-
-                CREATE SEQUENCE modules.componente_curricular_id_seq
-                    START WITH 1
-                    INCREMENT BY 1
-                    NO MINVALUE
-                    NO MAXVALUE
-                    CACHE 1;
 
                 CREATE TABLE modules.componente_curricular_ano_escolar (
                     componente_curricular_id integer NOT NULL,
@@ -34,11 +25,8 @@ class CreateModulesComponenteCurricularAnoEscolarTable extends Migration
                     anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL
                 );
 
-                ALTER SEQUENCE modules.componente_curricular_id_seq OWNED BY modules.componente_curricular.id;
-                
-                ALTER TABLE ONLY modules.componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.componente_curricular_id_seq\'::regclass);
-                
-                SELECT pg_catalog.setval(\'modules.componente_curricular_id_seq\', 2, true);
+                ALTER TABLE ONLY modules.componente_curricular_ano_escolar
+                    ADD CONSTRAINT componente_curricular_ano_escolar_pkey PRIMARY KEY (componente_curricular_id, ano_escolar_id);
             '
         );
     }

@@ -23,6 +23,9 @@ class CreatePublicPaisTable extends Migration
                     geom character varying,
                     cod_ibge integer
                 );
+                
+                ALTER TABLE ONLY public.pais
+                    ADD CONSTRAINT pk_pais PRIMARY KEY (idpais);
             '
         );
     }

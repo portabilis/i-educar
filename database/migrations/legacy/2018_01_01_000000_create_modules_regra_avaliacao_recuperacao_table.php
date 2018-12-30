@@ -34,6 +34,9 @@ class CreateModulesRegraAvaliacaoRecuperacaoTable extends Migration
                     nota_maxima numeric(8,4) NOT NULL
                 );
 
+                ALTER TABLE ONLY modules.regra_avaliacao_recuperacao
+                    ADD CONSTRAINT regra_avaliacao_recuperacao_pkey PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'modules.regra_avaliacao_recuperacao_id_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreateModulesRegraAvaliacaoRecuperacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.regra_avaliacao_recuperacao');
+
+        DB::unprepared('DROP SEQUENCE modules.regra_avaliacao_recuperacao_id_seq;');
     }
 }

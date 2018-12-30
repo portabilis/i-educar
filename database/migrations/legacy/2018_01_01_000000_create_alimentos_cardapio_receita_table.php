@@ -21,6 +21,9 @@ class CreateAlimentosCardapioReceitaTable extends Migration
                     idcar integer NOT NULL,
                     idrec integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY alimentos.cardapio_receita
+                    ADD CONSTRAINT pk_cardapio_receita PRIMARY KEY (idcar, idrec);
             '
         );
     }

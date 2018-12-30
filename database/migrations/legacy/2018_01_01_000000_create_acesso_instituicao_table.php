@@ -31,6 +31,9 @@ class CreateAcessoInstituicaoTable extends Migration
                     CONSTRAINT ck_instituicao_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY acesso.instituicao
+                    ADD CONSTRAINT pk_instituicao PRIMARY KEY (idins);
+
                 SELECT pg_catalog.setval(\'acesso.instituicao_idins_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateAcessoInstituicaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('acesso.instituicao');
+
+        DB::unprepared('DROP SEQUENCE acesso.instituicao_idins_seq');
     }
 }

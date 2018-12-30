@@ -28,6 +28,9 @@ class CreatePmieducarEscolaAnoLetivoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     turmas_por_ano smallint
                 );
+                
+                ALTER TABLE ONLY pmieducar.escola_ano_letivo
+                    ADD CONSTRAINT escola_ano_letivo_pkey PRIMARY KEY (ref_cod_escola, ano);
             '
         );
     }

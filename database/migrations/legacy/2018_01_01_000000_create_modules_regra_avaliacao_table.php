@@ -56,6 +56,9 @@ class CreateModulesRegraAvaliacaoTable extends Migration
 
                 ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
                 
+                ALTER TABLE ONLY modules.regra_avaliacao
+                    ADD CONSTRAINT regra_avaliacao_pkey PRIMARY KEY (id, instituicao_id);
+
                 ALTER TABLE ONLY modules.regra_avaliacao ALTER COLUMN id SET DEFAULT nextval(\'modules.regra_avaliacao_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.regra_avaliacao_id_seq\', 2, true);

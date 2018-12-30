@@ -36,6 +36,9 @@ class CreateAcessoFuncaoTable extends Migration
                     CONSTRAINT ck_funcao_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY acesso.funcao
+                    ADD CONSTRAINT pk_funcao PRIMARY KEY (idfunc, idsis, idmen);
+
                 SELECT pg_catalog.setval(\'acesso.funcao_idfunc_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreateAcessoFuncaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('acesso.funcao');
+
+        DB::unprepared('DROP SEQUENCE acesso.funcao_idfunc_seq');
     }
 }

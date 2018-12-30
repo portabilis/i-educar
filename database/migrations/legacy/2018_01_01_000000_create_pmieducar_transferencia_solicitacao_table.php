@@ -42,6 +42,9 @@ class CreatePmieducarTransferenciaSolicitacaoTable extends Migration
                     municipio_escola_destino_externa character varying(60)
                 );
                 
+                ALTER TABLE ONLY pmieducar.transferencia_solicitacao
+                    ADD CONSTRAINT transferencia_solicitacao_pkey PRIMARY KEY (cod_transferencia_solicitacao);
+
                 SELECT pg_catalog.setval(\'pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq\', 1, false);
             '
         );
@@ -55,5 +58,7 @@ class CreatePmieducarTransferenciaSolicitacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.transferencia_solicitacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.transferencia_solicitacao_cod_transferencia_solicitacao_seq;');
     }
 }

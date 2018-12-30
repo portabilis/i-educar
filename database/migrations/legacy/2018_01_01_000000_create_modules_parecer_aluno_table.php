@@ -32,6 +32,9 @@ class CreateModulesParecerAlunoTable extends Migration
 
                 ALTER SEQUENCE modules.parecer_aluno_id_seq OWNED BY modules.parecer_aluno.id;
                 
+                ALTER TABLE ONLY modules.parecer_aluno
+                    ADD CONSTRAINT parecer_aluno_pkey PRIMARY KEY (id);
+
                 ALTER TABLE ONLY modules.parecer_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_aluno_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.parecer_aluno_id_seq\', 1, false);

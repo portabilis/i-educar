@@ -34,6 +34,9 @@ class CreateModulesItinerarioTransporteEscolarTable extends Migration
                     tipo character(1) NOT NULL
                 );
                 
+                ALTER TABLE ONLY modules.itinerario_transporte_escolar
+                    ADD CONSTRAINT itinerario_transporte_escolar_cod_itinerario_transporte_escolar PRIMARY KEY (cod_itinerario_transporte_escolar);
+
                 SELECT pg_catalog.setval(\'modules.itinerario_transporte_escolar_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreateModulesItinerarioTransporteEscolarTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.itinerario_transporte_escolar');
+
+        DB::unprepared('DROP SEQUENCE modules.itinerario_transporte_escolar_seq;');
     }
 }

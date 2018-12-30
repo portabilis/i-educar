@@ -29,6 +29,9 @@ class CreatePublicRegiaoTable extends Migration
                     nm_regiao character varying(100)
                 );
                 
+                ALTER TABLE ONLY public.regiao
+                    ADD CONSTRAINT regiao_pkey PRIMARY KEY (cod_regiao);
+
                 SELECT pg_catalog.setval(\'public.regiao_cod_regiao_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePublicRegiaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.regiao');
+
+        DB::unprepared('DROP SEQUENCE public.regiao_cod_regiao_seq;');
     }
 }

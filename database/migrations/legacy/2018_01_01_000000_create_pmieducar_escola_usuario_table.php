@@ -37,6 +37,9 @@ class CreatePmieducarEscolaUsuarioTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.escola_usuario ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.escola_usuario_id_seq\'::regclass);
                 
+                ALTER TABLE ONLY pmieducar.escola_usuario
+                    ADD CONSTRAINT escola_usuario_pkey PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'pmieducar.escola_usuario_id_seq\', 1, false);
             '
         );

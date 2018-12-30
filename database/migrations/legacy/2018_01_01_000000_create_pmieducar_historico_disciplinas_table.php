@@ -29,6 +29,9 @@ class CreatePmieducarHistoricoDisciplinasTable extends Migration
                     carga_horaria_disciplina integer,
                     dependencia boolean DEFAULT false
                 );
+                
+                ALTER TABLE ONLY pmieducar.historico_disciplinas
+                    ADD CONSTRAINT historico_disciplinas_pkey PRIMARY KEY (sequencial, ref_ref_cod_aluno, ref_sequencial);
             '
         );
     }

@@ -31,6 +31,9 @@ class CreateModulesEmpresaTransporteEscolarTable extends Migration
                     observacao character varying(255)
                 );
                 
+                ALTER TABLE ONLY modules.empresa_transporte_escolar
+                    ADD CONSTRAINT empresa_transporte_escolar_cod_empresa_transporte_escolar_pkey PRIMARY KEY (cod_empresa_transporte_escolar);
+
                 SELECT pg_catalog.setval(\'modules.empresa_transporte_escolar_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateModulesEmpresaTransporteEscolarTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.empresa_transporte_escolar');
+
+        DB::unprepared('DROP SEQUENCE modules.empresa_transporte_escolar_seq;');
     }
 }

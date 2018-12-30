@@ -47,6 +47,9 @@ class CreateAlimentosGuiaRemessaTable extends Migration
                     CONSTRAINT ck_guia_remessa_situacao CHECK (((situacao = \'E\'::bpchar) OR (situacao = \'R\'::bpchar) OR (situacao = \'C\'::bpchar) OR (situacao = \'P\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY alimentos.guia_remessa
+                    ADD CONSTRAINT pk_guia_remessa PRIMARY KEY (idgui);
+
                 SELECT pg_catalog.setval(\'alimentos.guia_remessa_idgui_seq\', 1, false);
             '
         );
@@ -60,5 +63,7 @@ class CreateAlimentosGuiaRemessaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.guia_remessa');
+
+        DB::unprepared('DROP SEQUENCE alimentos.guia_remessa_idgui_seq;');
     }
 }

@@ -38,6 +38,9 @@ class CreateModulesNotaComponenteCurricularTable extends Migration
 
                 ALTER SEQUENCE modules.nota_componente_curricular_id_seq OWNED BY modules.nota_componente_curricular.id;
                 
+                ALTER TABLE ONLY modules.nota_componente_curricular
+                    ADD CONSTRAINT nota_componente_curricular_pkey PRIMARY KEY (nota_aluno_id, componente_curricular_id, etapa);
+
                 ALTER TABLE ONLY modules.nota_componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_componente_curricular_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.nota_componente_curricular_id_seq\', 1, true);

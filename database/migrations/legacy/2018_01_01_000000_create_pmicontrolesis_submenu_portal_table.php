@@ -39,6 +39,9 @@ class CreatePmicontrolesisSubmenuPortalTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.submenu_portal
+                    ADD CONSTRAINT submenu_portal_pkey PRIMARY KEY (cod_submenu_portal);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.submenu_portal_cod_submenu_portal_seq\', 1, false);
             '
         );
@@ -52,5 +55,7 @@ class CreatePmicontrolesisSubmenuPortalTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.submenu_portal');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.submenu_portal_cod_submenu_portal_seq;');
     }
 }

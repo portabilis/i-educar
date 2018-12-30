@@ -65,6 +65,9 @@ class CreateModulesFichaMedicaAlunoTable extends Migration
                     responsavel_parentesco_celular character varying(20),
                     observacao character varying(255)
                 );
+                
+                ALTER TABLE ONLY modules.ficha_medica_aluno
+                    ADD CONSTRAINT ficha_medica_cod_aluno_pkey PRIMARY KEY (ref_cod_aluno);
             '
         );
     }

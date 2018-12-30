@@ -35,6 +35,9 @@ class CreatePmiotopicGruposTable extends Migration
                     atendimento smallint DEFAULT 0 NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmiotopic.grupos
+                    ADD CONSTRAINT grupos_pkey PRIMARY KEY (cod_grupos);
+
                 SELECT pg_catalog.setval(\'pmiotopic.grupos_cod_grupos_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmiotopicGruposTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmiotopic.grupos');
+
+        DB::unprepared('DROP SEQUENCE pmiotopic.grupos_cod_grupos_seq;');
     }
 }

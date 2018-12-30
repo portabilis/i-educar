@@ -35,6 +35,9 @@ class CreateAlimentosGuiaRemessaProdutoTable extends Migration
                     peso_total numeric NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.guia_remessa_produto
+                    ADD CONSTRAINT pk_guia_remessa_produto PRIMARY KEY (idgup);
+
                 SELECT pg_catalog.setval(\'alimentos.guia_remessa_produto_idgup_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreateAlimentosGuiaRemessaProdutoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.guia_remessa_produto');
+
+        DB::unprepared('DROP SEQUENCE alimentos.guia_remessa_produto_idgup_seq;');
     }
 }

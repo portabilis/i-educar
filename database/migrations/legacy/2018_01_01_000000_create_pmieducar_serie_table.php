@@ -49,6 +49,9 @@ class CreatePmieducarSerieTable extends Migration
                     exigir_inep boolean
                 );
                 
+                ALTER TABLE ONLY pmieducar.serie
+                    ADD CONSTRAINT serie_pkey PRIMARY KEY (cod_serie);
+
                 SELECT pg_catalog.setval(\'pmieducar.serie_cod_serie_seq\', 2, true);
             '
         );
@@ -62,5 +65,7 @@ class CreatePmieducarSerieTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.serie');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.serie_cod_serie_seq;');
     }
 }

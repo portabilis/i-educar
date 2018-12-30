@@ -48,6 +48,9 @@ class CreatePublicMunicipioTable extends Migration
                     CONSTRAINT ck_municipio_tipo CHECK (((tipo = \'D\'::bpchar) OR (tipo = \'M\'::bpchar) OR (tipo = \'P\'::bpchar) OR (tipo = \'R\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY public.municipio
+                    ADD CONSTRAINT pk_municipio PRIMARY KEY (idmun);
+
                 SELECT pg_catalog.setval(\'public.seq_municipio\', 5565, false);
             '
         );
@@ -61,5 +64,7 @@ class CreatePublicMunicipioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.municipio');
+
+        DB::unprepared('DROP SEQUENCE public.seq_municipio;');
     }
 }

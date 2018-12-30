@@ -37,6 +37,9 @@ class CreatePmieducarSubnivelTable extends Migration
                     salario double precision NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.subnivel
+                    ADD CONSTRAINT subnivel_pkey PRIMARY KEY (cod_subnivel);
+
                 SELECT pg_catalog.setval(\'pmieducar.subnivel_cod_subnivel_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmieducarSubnivelTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.subnivel');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.subnivel_cod_subnivel_seq;');
     }
 }

@@ -44,6 +44,9 @@ class CreatePublicBairroTable extends Migration
                     CONSTRAINT ck_bairro_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY public.bairro
+                    ADD CONSTRAINT pk_bairro PRIMARY KEY (idbai);
+
                 SELECT pg_catalog.setval(\'public.seq_bairro\', 1, false);
             '
         );
@@ -57,5 +60,7 @@ class CreatePublicBairroTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.bairro');
+
+        DB::unprepared('DROP SEQUENCE public.seq_bairro;');
     }
 }

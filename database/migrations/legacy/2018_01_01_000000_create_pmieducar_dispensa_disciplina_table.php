@@ -39,6 +39,9 @@ class CreatePmieducarDispensaDisciplinaTable extends Migration
                     cod_dispensa integer DEFAULT nextval(\'pmieducar.dispensa_disciplina_cod_dispensa_seq\'::regclass) NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.dispensa_disciplina
+                    ADD CONSTRAINT cod_dispensa_pkey PRIMARY KEY (cod_dispensa);
+                    
                 SELECT pg_catalog.setval(\'pmieducar.dispensa_disciplina_cod_dispensa_seq\', 1, true);
             '
         );
@@ -52,5 +55,7 @@ class CreatePmieducarDispensaDisciplinaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.dispensa_disciplina');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.dispensa_disciplina_cod_dispensa_seq;');
     }
 }

@@ -22,6 +22,9 @@ class CreateCadastroAvisoNomeTable extends Migration
                     aviso numeric(1,0) NOT NULL,
                     CONSTRAINT ck_aviso_nome_aviso CHECK (((aviso >= (1)::numeric) AND (aviso <= (4)::numeric)))
                 );
+                
+                ALTER TABLE ONLY cadastro.aviso_nome
+                    ADD CONSTRAINT pk_aviso_nome PRIMARY KEY (idpes, aviso);
             '
         );
     }

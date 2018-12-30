@@ -32,6 +32,9 @@ class CreatePortalMaillingHistoricoTable extends Migration
                     data_hora timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.mailling_historico
+                    ADD CONSTRAINT mailling_historico_pk PRIMARY KEY (cod_mailling_historico);
+
                 SELECT pg_catalog.setval(\'portal.mailling_historico_cod_mailling_historico_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreatePortalMaillingHistoricoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.mailling_historico');
+
+        DB::unprepared('DROP SEQUENCE portal.mailling_historico_cod_mailling_historico_seq;');
     }
 }

@@ -29,6 +29,9 @@ class CreatePortalPessoaRamoAtividadeTable extends Migration
                     nm_ramo_atividade character varying(255)
                 );
                 
+                ALTER TABLE ONLY portal.pessoa_ramo_atividade
+                    ADD CONSTRAINT pessoa_ramo_atividade_pk PRIMARY KEY (cod_ramo_atividade);
+
                 SELECT pg_catalog.setval(\'portal.pessoa_ramo_atividade_cod_ramo_atividade_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePortalPessoaRamoAtividadeTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.pessoa_ramo_atividade');
+
+        DB::unprepared('DROP SEQUENCE portal.pessoa_ramo_atividade_cod_ramo_atividade_seq;');
     }
 }

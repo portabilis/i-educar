@@ -43,6 +43,9 @@ class CreatePmieducarExemplarTable extends Migration
                     data_baixa_exemplar date
                 );
                 
+                ALTER TABLE ONLY pmieducar.exemplar
+                    ADD CONSTRAINT exemplar_pkey PRIMARY KEY (cod_exemplar);
+
                 SELECT pg_catalog.setval(\'pmieducar.exemplar_cod_exemplar_seq\', 1, false);
             '
         );
@@ -56,5 +59,7 @@ class CreatePmieducarExemplarTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.exemplar');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.exemplar_cod_exemplar_seq;');
     }
 }

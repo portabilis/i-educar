@@ -28,6 +28,9 @@ class CreatePmieducarEscolaSerieDisciplinaTable extends Migration
                     updated_at timestamp without time zone DEFAULT now() NOT NULL,
                     anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.escola_serie_disciplina
+                    ADD CONSTRAINT escola_serie_disciplina_pkey PRIMARY KEY (ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina);
             '
         );
     }

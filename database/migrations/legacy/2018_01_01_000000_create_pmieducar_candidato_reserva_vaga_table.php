@@ -45,6 +45,9 @@ class CreatePmieducarCandidatoReservaVagaTable extends Migration
                     hora_solicitacao time without time zone
                 );
                 
+                ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
+                    ADD CONSTRAINT cod_candidato_reserva_vaga_pkey PRIMARY KEY (cod_candidato_reserva_vaga);
+
                 SELECT pg_catalog.setval(\'pmieducar.candidato_reserva_vaga_seq\', 1, false);
             '
         );
@@ -58,5 +61,7 @@ class CreatePmieducarCandidatoReservaVagaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.candidato_reserva_vaga');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.candidato_reserva_vaga_seq;');
     }
 }

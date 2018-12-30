@@ -31,6 +31,9 @@ class CreatePmieducarServidorTituloConcursoTable extends Migration
                     data_publicacao timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.servidor_titulo_concurso
+                    ADD CONSTRAINT servidor_titulo_concurso_pkey PRIMARY KEY (cod_servidor_titulo);
+
                 SELECT pg_catalog.setval(\'pmieducar.servidor_titulo_concurso_cod_servidor_titulo_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreatePmieducarServidorTituloConcursoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.servidor_titulo_concurso');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.servidor_titulo_concurso_cod_servidor_titulo_seq;');
     }
 }

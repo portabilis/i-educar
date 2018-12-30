@@ -31,6 +31,9 @@ class CreateConsistenciacaoFonteTable extends Migration
                     CONSTRAINT ck_fonte_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY consistenciacao.fonte
+                    ADD CONSTRAINT pk_fonte PRIMARY KEY (idfon);
+
                 SELECT pg_catalog.setval(\'consistenciacao.fonte_idfon_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateConsistenciacaoFonteTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.fonte');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.fonte_idfon_seq;');
     }
 }

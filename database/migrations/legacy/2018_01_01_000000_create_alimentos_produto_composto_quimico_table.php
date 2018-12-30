@@ -31,6 +31,9 @@ class CreateAlimentosProdutoCompostoQuimicoTable extends Migration
                     quantidade numeric NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.produto_composto_quimico
+                    ADD CONSTRAINT pk_prod_cp_quimico PRIMARY KEY (idpcq);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_composto_quimico_idpcq_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateAlimentosProdutoCompostoQuimicoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.produto_composto_quimico');
+
+        DB::unprepared('DROP SEQUENCE alimentos.produto_composto_quimico_idpcq_seq;');
     }
 }

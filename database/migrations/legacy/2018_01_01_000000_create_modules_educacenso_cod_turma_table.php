@@ -25,6 +25,9 @@ class CreateModulesEducacensoCodTurmaTable extends Migration
                     created_at timestamp without time zone NOT NULL,
                     updated_at timestamp without time zone
                 );
+                
+                ALTER TABLE ONLY modules.educacenso_cod_turma
+                    ADD CONSTRAINT educacenso_cod_turma_pk PRIMARY KEY (cod_turma, cod_turma_inep);
             '
         );
     }

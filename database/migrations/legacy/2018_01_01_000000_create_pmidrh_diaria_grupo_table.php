@@ -29,6 +29,9 @@ class CreatePmidrhDiariaGrupoTable extends Migration
                     desc_grupo character varying(255) NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmidrh.diaria_grupo
+                    ADD CONSTRAINT diaria_grupo_pkey PRIMARY KEY (cod_diaria_grupo);
+
                 SELECT pg_catalog.setval(\'pmidrh.diaria_grupo_cod_diaria_grupo_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePmidrhDiariaGrupoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmidrh.diaria_grupo');
+
+        DB::unprepared('DROP SEQUENCE pmidrh.diaria_grupo_cod_diaria_grupo_seq;');
     }
 }

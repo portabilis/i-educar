@@ -57,6 +57,9 @@ class CreatePmieducarMatriculaTable extends Migration
                     turno_id integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.matricula
+                    ADD CONSTRAINT matricula_pkey PRIMARY KEY (cod_matricula);
+
                 SELECT pg_catalog.setval(\'pmieducar.matricula_cod_matricula_seq\', 2, true);
             '
         );
@@ -70,5 +73,7 @@ class CreatePmieducarMatriculaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.matricula');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.matricula_cod_matricula_seq;');
     }
 }

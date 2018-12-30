@@ -29,6 +29,9 @@ class CreatePortalComprasModalidadeTable extends Migration
                     nm_modalidade character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.compras_modalidade
+                    ADD CONSTRAINT compras_modalidade_pk PRIMARY KEY (cod_compras_modalidade);
+
                 SELECT pg_catalog.setval(\'portal.compras_modalidade_cod_compras_modalidade_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePortalComprasModalidadeTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.compras_modalidade');
+
+        DB::unprepared('DROP SEQUENCE portal.compras_modalidade_cod_compras_modalidade_seq;');
     }
 }

@@ -36,6 +36,9 @@ class CreatePmieducarTransferenciaTipoTable extends Migration
                     ref_cod_instituicao integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.transferencia_tipo
+                    ADD CONSTRAINT transferencia_tipo_pkey PRIMARY KEY (cod_transferencia_tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.transferencia_tipo_cod_transferencia_tipo_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarTransferenciaTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.transferencia_tipo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.transferencia_tipo_cod_transferencia_tipo_seq;');
     }
 }

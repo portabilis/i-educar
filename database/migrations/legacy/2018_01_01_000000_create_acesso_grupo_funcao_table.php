@@ -23,6 +23,9 @@ class CreateAcessoGrupoFuncaoTable extends Migration
                     idgrp integer NOT NULL,
                     idfunc integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY acesso.grupo_funcao
+                    ADD CONSTRAINT pk_grupo_funcao PRIMARY KEY (idmen, idsis, idgrp, idfunc);
             '
         );
     }

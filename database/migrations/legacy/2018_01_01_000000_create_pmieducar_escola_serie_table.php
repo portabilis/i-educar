@@ -33,6 +33,9 @@ class CreatePmieducarEscolaSerieTable extends Migration
                     bloquear_cadastro_turma_para_serie_com_vagas integer,
                     anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.escola_serie
+                    ADD CONSTRAINT escola_serie_pkey PRIMARY KEY (ref_cod_escola, ref_cod_serie);
             '
         );
     }

@@ -47,6 +47,9 @@ class CreateConsistenciacaoIncoerenciaDocumentoTable extends Migration
                     secao_tit_eleitor numeric(4,0)
                 );
                 
+                ALTER TABLE ONLY consistenciacao.incoerencia_documento
+                    ADD CONSTRAINT pk_incoerencia_documento PRIMARY KEY (id_inc_doc);
+
                 SELECT pg_catalog.setval(\'consistenciacao.incoerencia_documento_id_inc_doc_seq\', 1, false);
             '
         );
@@ -60,5 +63,7 @@ class CreateConsistenciacaoIncoerenciaDocumentoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.incoerencia_documento');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.incoerencia_documento_id_inc_doc_seq;');
     }
 }

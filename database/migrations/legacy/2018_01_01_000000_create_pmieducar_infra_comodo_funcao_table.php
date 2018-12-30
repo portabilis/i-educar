@@ -36,6 +36,9 @@ class CreatePmieducarInfraComodoFuncaoTable extends Migration
                     ref_cod_escola integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.infra_comodo_funcao
+                    ADD CONSTRAINT infra_comodo_funcao_pkey PRIMARY KEY (cod_infra_comodo_funcao);
+
                 SELECT pg_catalog.setval(\'pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq\', 1, true);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarInfraComodoFuncaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.infra_comodo_funcao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq;');
     }
 }

@@ -36,6 +36,9 @@ class CreatePmieducarExemplarTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.exemplar_tipo
+                    ADD CONSTRAINT exemplar_tipo_pkey PRIMARY KEY (cod_exemplar_tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.exemplar_tipo_cod_exemplar_tipo_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarExemplarTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.exemplar_tipo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.exemplar_tipo_cod_exemplar_tipo_seq;');
     }
 }

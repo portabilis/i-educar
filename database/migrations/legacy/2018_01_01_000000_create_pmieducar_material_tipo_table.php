@@ -36,6 +36,9 @@ class CreatePmieducarMaterialTipoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.material_tipo
+                    ADD CONSTRAINT material_tipo_pkey PRIMARY KEY (cod_material_tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.material_tipo_cod_material_tipo_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarMaterialTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.material_tipo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.material_tipo_cod_material_tipo_seq;');
     }
 }

@@ -24,6 +24,9 @@ class CreatePmieducarProjetoAlunoTable extends Migration
                     data_desligamento date,
                     turno integer
                 );
+                
+                ALTER TABLE ONLY pmieducar.projeto_aluno
+                    ADD CONSTRAINT pmieducar_projeto_aluno_pk PRIMARY KEY (ref_cod_projeto, ref_cod_aluno);
             '
         );
     }

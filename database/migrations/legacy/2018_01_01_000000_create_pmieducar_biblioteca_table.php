@@ -41,6 +41,9 @@ class CreatePmieducarBibliotecaTable extends Migration
                     bloqueia_emprestimo_em_atraso boolean
                 );
                 
+                ALTER TABLE ONLY pmieducar.biblioteca
+                    ADD CONSTRAINT biblioteca_pkey PRIMARY KEY (cod_biblioteca);
+
                 SELECT pg_catalog.setval(\'pmieducar.biblioteca_cod_biblioteca_seq\', 1, false);
             '
         );
@@ -54,5 +57,7 @@ class CreatePmieducarBibliotecaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.biblioteca');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.biblioteca_cod_biblioteca_seq;');
     }
 }

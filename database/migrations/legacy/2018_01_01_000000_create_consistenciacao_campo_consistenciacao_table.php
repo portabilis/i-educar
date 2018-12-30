@@ -24,6 +24,9 @@ class CreateConsistenciacaoCampoConsistenciacaoTable extends Migration
                     tamanho_maximo numeric(4,0),
                     CONSTRAINT ck_campo_consistenciacao_permite_regra CHECK (((permite_regra_cadastrada = \'S\'::bpchar) OR (permite_regra_cadastrada = \'N\'::bpchar)))
                 );
+                
+                ALTER TABLE ONLY consistenciacao.campo_consistenciacao
+                    ADD CONSTRAINT pk_campo_consistenciacao PRIMARY KEY (idcam);
             '
         );
     }

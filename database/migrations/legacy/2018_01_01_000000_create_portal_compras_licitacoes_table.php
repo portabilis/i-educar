@@ -35,6 +35,9 @@ class CreatePortalComprasLicitacoesTable extends Migration
                     oculto boolean DEFAULT false
                 );
                 
+                ALTER TABLE ONLY portal.compras_licitacoes
+                    ADD CONSTRAINT compras_licitacoes_pk PRIMARY KEY (cod_compras_licitacoes);
+
                 SELECT pg_catalog.setval(\'portal.compras_licitacoes_cod_compras_licitacoes_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePortalComprasLicitacoesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.compras_licitacoes');
+
+        DB::unprepared('DROP SEQUENCE portal.compras_licitacoes_cod_compras_licitacoes_seq;');
     }
 }

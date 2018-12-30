@@ -30,6 +30,9 @@ class CreatePmieducarTurmaTurnoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.turma_turno
+                    ADD CONSTRAINT turma_turno_pkey PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'pmieducar.turma_turno_id_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreatePmieducarTurmaTurnoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.turma_turno');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.turma_turno_id_seq;');
     }
 }

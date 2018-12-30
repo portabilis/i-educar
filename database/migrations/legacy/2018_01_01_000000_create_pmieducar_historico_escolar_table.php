@@ -51,6 +51,9 @@ class CreatePmieducarHistoricoEscolarTable extends Migration
                     dependencia boolean,
                     posicao integer
                 );
+                
+                ALTER TABLE ONLY pmieducar.historico_escolar
+                    ADD CONSTRAINT historico_escolar_pkey PRIMARY KEY (ref_cod_aluno, sequencial);
             '
         );
     }

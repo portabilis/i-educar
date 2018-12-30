@@ -32,6 +32,9 @@ class CreateAlimentosCompostoQuimicoTable extends Migration
                     unidade character varying(5) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.composto_quimico
+                    ADD CONSTRAINT pk_cp_quimico PRIMARY KEY (idcom);
+
                 SELECT pg_catalog.setval(\'alimentos.composto_quimico_idcom_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreateAlimentosCompostoQuimicoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.composto_quimico');
+
+        DB::unprepared('DROP SEQUENCE alimentos.composto_quimico_idcom_seq;');
     }
 }

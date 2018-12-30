@@ -45,6 +45,9 @@ class CreateCadastroPessoaTable extends Migration
                     CONSTRAINT ck_pessoa_tipo CHECK (((tipo = \'F\'::bpchar) OR (tipo = \'J\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY cadastro.pessoa
+                    ADD CONSTRAINT pk_pessoa PRIMARY KEY (idpes);
+
                 SELECT pg_catalog.setval(\'cadastro.seq_pessoa\', 3, true);
             '
         );
@@ -58,5 +61,7 @@ class CreateCadastroPessoaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('cadastro.pessoa');
+
+        DB::unprepared('DROP SEQUENCE cadastro.seq_pessoa;');
     }
 }

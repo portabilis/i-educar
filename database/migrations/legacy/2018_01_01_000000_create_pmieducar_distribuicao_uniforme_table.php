@@ -49,6 +49,9 @@ class CreatePmieducarDistribuicaoUniformeTable extends Migration
                     camiseta_infantil_tm character varying(20)
                 );
                 
+                ALTER TABLE ONLY pmieducar.distribuicao_uniforme
+                    ADD CONSTRAINT distribuicao_uniforme_cod_distribuicao_uniforme_pkey PRIMARY KEY (cod_distribuicao_uniforme);
+
                 SELECT pg_catalog.setval(\'pmieducar.distribuicao_uniforme_seq\', 1, false);
             '
         );
@@ -62,5 +65,7 @@ class CreatePmieducarDistribuicaoUniformeTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.distribuicao_uniforme');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.distribuicao_uniforme_seq;');
     }
 }

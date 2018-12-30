@@ -21,6 +21,9 @@ class CreatePmiacoesAcaoGovernoCategoriaTable extends Migration
                     ref_cod_categoria integer NOT NULL,
                     ref_cod_acao_governo integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmiacoes.acao_governo_categoria
+                    ADD CONSTRAINT acao_governo_categoria_pkey PRIMARY KEY (ref_cod_categoria, ref_cod_acao_governo);
             '
         );
     }

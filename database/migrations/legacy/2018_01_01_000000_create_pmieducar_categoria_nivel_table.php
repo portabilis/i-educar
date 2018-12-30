@@ -34,6 +34,9 @@ class CreatePmieducarCategoriaNivelTable extends Migration
                     ativo boolean DEFAULT true NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.categoria_nivel
+                    ADD CONSTRAINT categoria_nivel_pkey PRIMARY KEY (cod_categoria_nivel);
+
                 SELECT pg_catalog.setval(\'pmieducar.categoria_nivel_cod_categoria_nivel_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePmieducarCategoriaNivelTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.categoria_nivel');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.categoria_nivel_cod_categoria_nivel_seq;');
     }
 }

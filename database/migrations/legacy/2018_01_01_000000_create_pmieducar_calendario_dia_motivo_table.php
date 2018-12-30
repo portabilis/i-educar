@@ -38,6 +38,9 @@ class CreatePmieducarCalendarioDiaMotivoTable extends Migration
                     nm_motivo character varying(255) NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.calendario_dia_motivo
+                    ADD CONSTRAINT calendario_dia_motivo_pkey PRIMARY KEY (cod_calendario_dia_motivo);
+
                 SELECT pg_catalog.setval(\'pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreatePmieducarCalendarioDiaMotivoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.calendario_dia_motivo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq;');
     }
 }

@@ -41,6 +41,9 @@ class CreatePortalComprasEditaisEmpresaTable extends Migration
                     senha character varying(32) DEFAULT \'\'::character varying NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.compras_editais_empresa
+                    ADD CONSTRAINT compras_editais_empresa_pk PRIMARY KEY (cod_compras_editais_empresa);
+
                 SELECT pg_catalog.setval(\'portal.compras_editais_empresa_cod_compras_editais_empresa_seq\', 1, false);
             '
         );
@@ -54,5 +57,7 @@ class CreatePortalComprasEditaisEmpresaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.compras_editais_empresa');
+
+        DB::unprepared('DROP SEQUENCE portal.compras_editais_empresa_cod_compras_editais_empresa_seq;');
     }
 }

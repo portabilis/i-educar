@@ -24,6 +24,9 @@ class CreateSerieciascAlunoCodAlunoTable extends Migration
                     created_at timestamp without time zone NOT NULL,
                     updated_at timestamp without time zone
                 );
+                
+                ALTER TABLE ONLY serieciasc.aluno_cod_aluno
+                    ADD CONSTRAINT cod_aluno_serie_ref_cod_aluno_pk PRIMARY KEY (cod_aluno, cod_ciasc);
             '
         );
     }

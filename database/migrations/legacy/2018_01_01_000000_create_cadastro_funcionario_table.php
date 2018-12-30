@@ -35,6 +35,9 @@ class CreateCadastroFuncionarioTable extends Migration
                     CONSTRAINT ck_funcionario_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
                     CONSTRAINT ck_funcionario_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                ALTER TABLE ONLY cadastro.funcionario
+                    ADD CONSTRAINT pk_funcionario PRIMARY KEY (matricula, idins);
             '
         );
     }

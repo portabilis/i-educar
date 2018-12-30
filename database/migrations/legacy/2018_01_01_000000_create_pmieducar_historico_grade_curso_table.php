@@ -33,6 +33,9 @@ class CreatePmieducarHistoricoGradeCursoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.historico_grade_curso
+                    ADD CONSTRAINT historico_grade_curso_pk PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'pmieducar.historico_grade_curso_seq\', 3, false);
             '
         );
@@ -46,5 +49,7 @@ class CreatePmieducarHistoricoGradeCursoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.historico_grade_curso');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.historico_grade_curso_seq;');
     }
 }

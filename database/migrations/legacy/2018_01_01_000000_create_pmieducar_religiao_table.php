@@ -34,6 +34,9 @@ class CreatePmieducarReligiaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.religiao
+                    ADD CONSTRAINT religiao_pkey PRIMARY KEY (cod_religiao);
+
                 SELECT pg_catalog.setval(\'pmieducar.religiao_cod_religiao_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePmieducarReligiaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.religiao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.religiao_cod_religiao_seq;');
     }
 }

@@ -34,6 +34,9 @@ class CreateModulesParecerComponenteCurricularTable extends Migration
 
                 ALTER SEQUENCE modules.parecer_componente_curricular_id_seq OWNED BY modules.parecer_componente_curricular.id;
 
+                ALTER TABLE ONLY modules.parecer_componente_curricular
+                    ADD CONSTRAINT parecer_componente_curricular_pkey PRIMARY KEY (parecer_aluno_id, componente_curricular_id, etapa);
+
                 ALTER TABLE ONLY modules.parecer_componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_componente_curricular_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.parecer_componente_curricular_id_seq\', 1, false);

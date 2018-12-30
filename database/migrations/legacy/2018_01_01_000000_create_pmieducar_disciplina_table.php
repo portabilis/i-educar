@@ -40,6 +40,9 @@ class CreatePmieducarDisciplinaTable extends Migration
                     ref_cod_curso integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.disciplina
+                    ADD CONSTRAINT disciplina_pkey PRIMARY KEY (cod_disciplina);
+
                 SELECT pg_catalog.setval(\'pmieducar.disciplina_cod_disciplina_seq\', 1, false);
             '
         );
@@ -53,5 +56,7 @@ class CreatePmieducarDisciplinaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.disciplina');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.disciplina_cod_disciplina_seq;');
     }
 }

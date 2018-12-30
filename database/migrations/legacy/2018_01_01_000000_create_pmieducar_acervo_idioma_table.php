@@ -35,6 +35,9 @@ class CreatePmieducarAcervoIdiomaTable extends Migration
                     ref_cod_biblioteca integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.acervo_idioma
+                    ADD CONSTRAINT acervo_idioma_pkey PRIMARY KEY (cod_acervo_idioma);
+
                 SELECT pg_catalog.setval(\'pmieducar.acervo_idioma_cod_acervo_idioma_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarAcervoIdiomaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.acervo_idioma');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.acervo_idioma_cod_acervo_idioma_seq;');
     }
 }

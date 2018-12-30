@@ -21,6 +21,9 @@ class CreateCadastroFisicaFotoTable extends Migration
                     idpes integer NOT NULL,
                     caminho character varying(255)
                 );
+                
+                ALTER TABLE ONLY cadastro.fisica_foto
+                    ADD CONSTRAINT fisica_foto_pkey PRIMARY KEY (idpes);
             '
         );
     }

@@ -33,6 +33,9 @@ class CreateAlimentosGuiaProdutoDiarioTable extends Migration
                     qtde numeric NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.guia_produto_diario
+                    ADD CONSTRAINT pk_guia_produto_diario PRIMARY KEY (idguiaprodiario);
+
                 SELECT pg_catalog.setval(\'alimentos.guia_produto_diario_idguiaprodiario_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreateAlimentosGuiaProdutoDiarioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.guia_produto_diario');
+
+        DB::unprepared('DROP SEQUENCE alimentos.guia_produto_diario_idguiaprodiario_seq;');
     }
 }

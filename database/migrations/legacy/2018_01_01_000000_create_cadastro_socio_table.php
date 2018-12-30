@@ -31,6 +31,9 @@ class CreateCadastroSocioTable extends Migration
                     CONSTRAINT ck_socio_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_socio_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
+                
+                ALTER TABLE ONLY cadastro.socio
+                    ADD CONSTRAINT pk_socio PRIMARY KEY (idpes_juridica, idpes_fisica);
             '
         );
     }

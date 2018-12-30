@@ -36,6 +36,9 @@ class CreateAcessoMenuTable extends Migration
                     CONSTRAINT ck_menu_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY acesso.menu
+                    ADD CONSTRAINT pk_menu PRIMARY KEY (idsis, idmen);
+
                 SELECT pg_catalog.setval(\'acesso.menu_idmen_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreateAcessoMenuTable extends Migration
     public function down()
     {
         Schema::dropIfExists('acesso.menu');
+
+        DB::unprepared('DROP SEQUENCE acesso.menu_idmen_seq;');
     }
 }

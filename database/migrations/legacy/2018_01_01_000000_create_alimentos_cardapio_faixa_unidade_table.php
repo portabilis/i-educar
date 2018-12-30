@@ -21,6 +21,9 @@ class CreateAlimentosCardapioFaixaUnidadeTable extends Migration
                     idfeu integer NOT NULL,
                     idcar integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY alimentos.cardapio_faixa_unidade
+                    ADD CONSTRAINT pk_cardapio_faixa_unidade PRIMARY KEY (idfeu, idcar);
             '
         );
     }

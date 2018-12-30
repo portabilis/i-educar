@@ -35,6 +35,9 @@ class CreateAlimentosReceitaProdutoTable extends Migration
                     valor_percapita numeric NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.receita_produto
+                    ADD CONSTRAINT pk_rec_prod PRIMARY KEY (idrpr);
+
                 SELECT pg_catalog.setval(\'alimentos.receita_produto_idrpr_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreateAlimentosReceitaProdutoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.receita_produto');
+
+        DB::unprepared('DROP SEQUENCE alimentos.receita_produto_idrpr_seq;');
     }
 }

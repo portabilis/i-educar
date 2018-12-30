@@ -25,6 +25,9 @@ class CreatePortalNotVincPortalTable extends Migration
                     caminho character varying(255),
                     nome_arquivo character varying(255)
                 );
+                
+                ALTER TABLE ONLY portal.not_vinc_portal
+                    ADD CONSTRAINT not_vinc_portal_pk PRIMARY KEY (ref_cod_not_portal, vic_num);
             '
         );
     }

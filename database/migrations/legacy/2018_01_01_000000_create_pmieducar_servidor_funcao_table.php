@@ -32,6 +32,9 @@ class CreatePmieducarServidorFuncaoTable extends Migration
                     cod_servidor_funcao integer DEFAULT nextval(\'pmieducar.servidor_funcao_seq\'::regclass) NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.servidor_funcao
+                    ADD CONSTRAINT cod_servidor_funcao_pkey PRIMARY KEY (cod_servidor_funcao);
+
                 SELECT pg_catalog.setval(\'pmieducar.servidor_funcao_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreatePmieducarServidorFuncaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.servidor_funcao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.servidor_funcao_seq;');
     }
 }

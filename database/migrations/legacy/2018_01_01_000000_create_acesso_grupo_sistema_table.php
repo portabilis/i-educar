@@ -21,6 +21,9 @@ class CreateAcessoGrupoSistemaTable extends Migration
                     idsis integer NOT NULL,
                     idgrp integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY acesso.grupo_sistema
+                    ADD CONSTRAINT pk_grupo_sistema PRIMARY KEY (idsis, idgrp);
             '
         );
     }

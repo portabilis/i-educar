@@ -34,6 +34,9 @@ class CreatePmiacoesCategoriaTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmiacoes.categoria
+                    ADD CONSTRAINT categoria_pkey PRIMARY KEY (cod_categoria);
+
                 SELECT pg_catalog.setval(\'pmiacoes.categoria_cod_categoria_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePmiacoesCategoriaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmiacoes.categoria');
+
+        DB::unprepared('DROP SEQUENCE pmiacoes.categoria_cod_categoria_seq;');
     }
 }

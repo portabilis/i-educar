@@ -31,6 +31,9 @@ class CreateSerieciascEscolaProjetoTable extends Migration
                     created_at timestamp without time zone NOT NULL,
                     updated_at timestamp without time zone
                 );
+                
+                ALTER TABLE ONLY serieciasc.escola_projeto
+                    ADD CONSTRAINT escola_projeto_ref_cod_escola_pk PRIMARY KEY (ref_cod_escola);
             '
         );
     }

@@ -45,6 +45,9 @@ class CreateModulesVeiculoTable extends Migration
                     observacao character varying(255)
                 );
                 
+                ALTER TABLE ONLY modules.veiculo
+                    ADD CONSTRAINT veiculo_pkey PRIMARY KEY (cod_veiculo);
+
                 SELECT pg_catalog.setval(\'modules.veiculo_seq\', 1, false);
             '
         );
@@ -58,5 +61,7 @@ class CreateModulesVeiculoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.veiculo');
+
+        DB::unprepared('DROP SEQUENCE modules.veiculo_seq;');
     }
 }

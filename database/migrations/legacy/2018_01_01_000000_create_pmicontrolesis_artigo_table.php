@@ -32,6 +32,9 @@ class CreatePmicontrolesisArtigoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.artigo
+                    ADD CONSTRAINT artigo_pkey PRIMARY KEY (cod_artigo);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.artigo_cod_artigo_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreatePmicontrolesisArtigoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.artigo');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.artigo_cod_artigo_seq;');
     }
 }

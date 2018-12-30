@@ -19,7 +19,10 @@ class CreatePortalComprasFuncionariosTable extends Migration
 
                 CREATE TABLE portal.compras_funcionarios (
                     ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
-                );   
+                );
+                
+                ALTER TABLE ONLY portal.compras_funcionarios
+                    ADD CONSTRAINT compras_funcionarios_pk PRIMARY KEY (ref_ref_cod_pessoa_fj);
             '
         );
     }

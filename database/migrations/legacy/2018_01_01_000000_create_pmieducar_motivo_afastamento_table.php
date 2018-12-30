@@ -36,6 +36,9 @@ class CreatePmieducarMotivoAfastamentoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.motivo_afastamento
+                    ADD CONSTRAINT motivo_afastamento_pkey PRIMARY KEY (cod_motivo_afastamento);
+
                 SELECT pg_catalog.setval(\'pmieducar.motivo_afastamento_cod_motivo_afastamento_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarMotivoAfastamentoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.motivo_afastamento');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.motivo_afastamento_cod_motivo_afastamento_seq;');
     }
 }

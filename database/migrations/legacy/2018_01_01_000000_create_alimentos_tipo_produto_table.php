@@ -30,6 +30,9 @@ class CreateAlimentosTipoProdutoTable extends Migration
                     descricao character varying(50) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.tipo_produto
+                    ADD CONSTRAINT pk_tp_produto PRIMARY KEY (idtip);
+
                 SELECT pg_catalog.setval(\'alimentos.tipo_produto_idtip_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreateAlimentosTipoProdutoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.tipo_produto');
+
+        DB::unprepared('DROP SEQUENCE alimentos.tipo_produto_idtip_seq;');
     }
 }

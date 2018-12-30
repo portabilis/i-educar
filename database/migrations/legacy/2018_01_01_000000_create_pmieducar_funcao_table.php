@@ -37,6 +37,9 @@ class CreatePmieducarFuncaoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.funcao
+                    ADD CONSTRAINT funcao_pkey PRIMARY KEY (cod_funcao);
+
                 SELECT pg_catalog.setval(\'pmieducar.funcao_cod_funcao_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmieducarFuncaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.funcao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.funcao_cod_funcao_seq;');
     }
 }

@@ -21,6 +21,9 @@ class CreatePublicBairroRegiaoTable extends Migration
                     ref_cod_regiao integer NOT NULL,
                     ref_idbai integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY public.bairro_regiao
+                    ADD CONSTRAINT bairro_regiao_pkey PRIMARY KEY (ref_cod_regiao, ref_idbai);
             '
         );
     }

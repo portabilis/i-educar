@@ -33,6 +33,9 @@ class CreateConsistenciacaoIncoerenciaFoneTable extends Migration
                     CONSTRAINT ck_incoerencia_fone_tipo CHECK ((((tipo)::text >= ((1)::numeric)::text) AND ((tipo)::text <= ((4)::numeric)::text)))
                 );
                 
+                ALTER TABLE ONLY consistenciacao.incoerencia_fone
+                    ADD CONSTRAINT pk_incoerencia_fone PRIMARY KEY (id_inc_fone);
+
                 SELECT pg_catalog.setval(\'consistenciacao.incoerencia_fone_id_inc_fone_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreateConsistenciacaoIncoerenciaFoneTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.incoerencia_fone');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.incoerencia_fone_id_inc_fone_seq;');
     }
 }

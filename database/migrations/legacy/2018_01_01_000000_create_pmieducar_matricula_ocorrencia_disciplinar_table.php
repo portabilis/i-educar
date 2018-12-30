@@ -38,6 +38,9 @@ class CreatePmieducarMatriculaOcorrenciaDisciplinarTable extends Migration
                     cod_ocorrencia_disciplinar integer DEFAULT nextval(\'pmieducar.ocorrencia_disciplinar_seq\'::regclass) NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.matricula_ocorrencia_disciplinar
+                    ADD CONSTRAINT matricula_ocorrencia_disciplinar_pkey PRIMARY KEY (ref_cod_matricula, ref_cod_tipo_ocorrencia_disciplinar, sequencial);
+
                 SELECT pg_catalog.setval(\'pmieducar.ocorrencia_disciplinar_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreatePmieducarMatriculaOcorrenciaDisciplinarTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.matricula_ocorrencia_disciplinar');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.ocorrencia_disciplinar_seq;');
     }
 }

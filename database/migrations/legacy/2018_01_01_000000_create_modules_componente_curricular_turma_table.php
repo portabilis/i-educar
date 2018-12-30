@@ -28,6 +28,9 @@ class CreateModulesComponenteCurricularTurmaTable extends Migration
                     etapas_utilizadas character varying,
                     updated_at timestamp without time zone DEFAULT now() NOT NULL
                 );
+                
+                ALTER TABLE ONLY modules.componente_curricular_turma
+                    ADD CONSTRAINT componente_curricular_turma_pkey PRIMARY KEY (componente_curricular_id, turma_id);
             '
         );
     }

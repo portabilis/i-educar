@@ -21,6 +21,9 @@ class CreatePortalPessoaFjPessoaAtividadeTable extends Migration
                     ref_cod_pessoa_atividade integer DEFAULT 0 NOT NULL,
                     ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
                 );
+                
+                ALTER TABLE ONLY portal.pessoa_fj_pessoa_atividade
+                    ADD CONSTRAINT pessoa_fj_pessoa_atividade_pk PRIMARY KEY (ref_cod_pessoa_atividade, ref_cod_pessoa_fj);
             '
         );
     }

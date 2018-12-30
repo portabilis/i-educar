@@ -47,6 +47,9 @@ class CreateAlimentosFornecedorTable extends Migration
                     CONSTRAINT ck_fornecedor CHECK (((tipo = \'F\'::bpchar) OR (tipo = \'J\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY alimentos.fornecedor
+                    ADD CONSTRAINT pk_fornecedor PRIMARY KEY (idfor);
+
                 SELECT pg_catalog.setval(\'alimentos.fornecedor_idfor_seq\', 1, false);
             '
         );
@@ -60,5 +63,7 @@ class CreateAlimentosFornecedorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.fornecedor');
+
+        DB::unprepared('DROP SEQUENCE alimentos.fornecedor_idfor_seq;');
     }
 }

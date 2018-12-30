@@ -34,6 +34,9 @@ class CreateModulesAreaConhecimentoTable extends Migration
                 
                 ALTER SEQUENCE modules.area_conhecimento_id_seq OWNED BY modules.area_conhecimento.id;
                 
+                ALTER TABLE ONLY modules.area_conhecimento
+                    ADD CONSTRAINT area_conhecimento_pkey PRIMARY KEY (id, instituicao_id);
+
                 ALTER TABLE ONLY modules.area_conhecimento ALTER COLUMN id SET DEFAULT nextval(\'modules.area_conhecimento_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.area_conhecimento_id_seq\', 2, true);

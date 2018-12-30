@@ -24,6 +24,9 @@ class CreatePublicUfTable extends Migration
                     idpais numeric(3,0),
                     cod_ibge numeric(6,0)
                 );
+                
+                ALTER TABLE ONLY public.uf
+                    ADD CONSTRAINT pk_uf PRIMARY KEY (sigla_uf);
             '
         );
     }

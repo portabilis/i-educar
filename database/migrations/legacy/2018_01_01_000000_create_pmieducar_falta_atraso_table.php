@@ -41,6 +41,9 @@ class CreatePmieducarFaltaAtrasoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.falta_atraso
+                    ADD CONSTRAINT falta_atraso_pkey PRIMARY KEY (cod_falta_atraso);
+
                 SELECT pg_catalog.setval(\'pmieducar.falta_atraso_cod_falta_atraso_seq\', 1, false);
             '
         );
@@ -54,5 +57,7 @@ class CreatePmieducarFaltaAtrasoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.falta_atraso');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.falta_atraso_cod_falta_atraso_seq;');
     }
 }

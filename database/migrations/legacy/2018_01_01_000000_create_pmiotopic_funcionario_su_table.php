@@ -20,6 +20,9 @@ class CreatePmiotopicFuncionarioSuTable extends Migration
                 CREATE TABLE pmiotopic.funcionario_su (
                     ref_ref_cod_pessoa_fj integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmiotopic.funcionario_su
+                    ADD CONSTRAINT funcionario_su_pkey PRIMARY KEY (ref_ref_cod_pessoa_fj);
             '
         );
     }

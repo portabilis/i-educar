@@ -32,6 +32,9 @@ class CreateAlimentosUnidadeFaixaEtariaTable extends Migration
                     num_matriculados integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.unidade_faixa_etaria
+                    ADD CONSTRAINT pk_uni_faixa_etaria PRIMARY KEY (idfeu);
+
                 SELECT pg_catalog.setval(\'alimentos.unidade_faixa_etaria_idfeu_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreateAlimentosUnidadeFaixaEtariaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.unidade_faixa_etaria');
+
+        DB::unprepared('DROP SEQUENCE alimentos.unidade_faixa_etaria_idfeu_seq;');
     }
 }

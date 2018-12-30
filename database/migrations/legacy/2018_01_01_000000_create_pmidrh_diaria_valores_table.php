@@ -36,6 +36,9 @@ class CreatePmidrhDiariaValoresTable extends Migration
                     data_vigencia timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmidrh.diaria_valores
+                    ADD CONSTRAINT diaria_valores_pkey PRIMARY KEY (cod_diaria_valores);
+
                 SELECT pg_catalog.setval(\'pmidrh.diaria_valores_cod_diaria_valores_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmidrhDiariaValoresTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmidrh.diaria_valores');
+
+        DB::unprepared('DROP SEQUENCE pmidrh.diaria_valores_cod_diaria_valores_seq;');
     }
 }

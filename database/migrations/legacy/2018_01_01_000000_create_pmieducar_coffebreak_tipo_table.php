@@ -36,6 +36,9 @@ class CreatePmieducarCoffebreakTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.coffebreak_tipo
+                    ADD CONSTRAINT coffebreak_tipo_pkey PRIMARY KEY (cod_coffebreak_tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarCoffebreakTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.coffebreak_tipo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq;');
     }
 }

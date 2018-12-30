@@ -36,6 +36,9 @@ class CreatePmieducarMotivoBaixaTable extends Migration
                     ref_cod_biblioteca integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.motivo_baixa
+                    ADD CONSTRAINT motivo_baixa_pkey PRIMARY KEY (cod_motivo_baixa);
+
                 SELECT pg_catalog.setval(\'pmieducar.motivo_baixa_cod_motivo_baixa_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarMotivoBaixaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.motivo_baixa');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.motivo_baixa_cod_motivo_baixa_seq;');
     }
 }

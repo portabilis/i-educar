@@ -25,6 +25,9 @@ class CreatePmiotopicParticipanteTable extends Migration
                     data_chegada timestamp without time zone NOT NULL,
                     data_saida timestamp without time zone
                 );
+                
+                ALTER TABLE ONLY pmiotopic.participante
+                    ADD CONSTRAINT participante_pkey PRIMARY KEY (sequencial, ref_ref_cod_grupos, ref_ref_idpes, ref_cod_reuniao);
             '
         );
     }

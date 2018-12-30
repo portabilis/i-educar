@@ -47,5 +47,7 @@ class CreatePublicPortalBannerTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.portal_banner');
+
+        DB::unprepared('DROP SEQUENCE public.portal_banner_cod_portal_banner_seq;');
     }
 }

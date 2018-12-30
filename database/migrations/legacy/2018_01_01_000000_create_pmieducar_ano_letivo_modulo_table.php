@@ -26,6 +26,9 @@ class CreatePmieducarAnoLetivoModuloTable extends Migration
                     data_fim date NOT NULL,
                     dias_letivos numeric(5,0)
                 );
+                
+                ALTER TABLE ONLY pmieducar.ano_letivo_modulo
+                    ADD CONSTRAINT ano_letivo_modulo_pkey PRIMARY KEY (ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo);
             '
         );
     }

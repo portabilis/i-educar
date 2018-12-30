@@ -30,6 +30,9 @@ class CreatePmieducarProjetoTable extends Migration
                     observacao character varying(255)
                 );
                 
+                ALTER TABLE ONLY pmieducar.projeto
+                    ADD CONSTRAINT pmieducar_projeto_cod_projeto PRIMARY KEY (cod_projeto);
+
                 SELECT pg_catalog.setval(\'pmieducar.projeto_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreatePmieducarProjetoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.projeto');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.projeto_seq;');
     }
 }

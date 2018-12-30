@@ -22,6 +22,9 @@ class CreatePortalJorArquivoTable extends Migration
                     jor_arquivo smallint DEFAULT (0)::smallint NOT NULL,
                     jor_caminho character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
+                
+                ALTER TABLE ONLY portal.jor_arquivo
+                    ADD CONSTRAINT jor_arquivo_pk PRIMARY KEY (ref_cod_jor_edicao, jor_arquivo);
             '
         );
     }

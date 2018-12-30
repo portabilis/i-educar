@@ -36,6 +36,9 @@ class CreatePmicontrolesisFotoEventoTable extends Migration
                     nm_credito character varying(255)
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.foto_evento
+                    ADD CONSTRAINT foto_evento_pk PRIMARY KEY (cod_foto_evento);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.foto_evento_cod_foto_evento_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmicontrolesisFotoEventoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.foto_evento');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.foto_evento_cod_foto_evento_seq;');
     }
 }

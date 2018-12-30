@@ -22,6 +22,9 @@ class CreateAcessoGrupoMenuTable extends Migration
                     idsis integer NOT NULL,
                     idmen integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY acesso.grupo_menu
+                    ADD CONSTRAINT pk_grupo_menu PRIMARY KEY (idgrp, idsis, idmen);
             '
         );
     }

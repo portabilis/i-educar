@@ -40,6 +40,9 @@ class CreatePmicontrolesisMenuPortalTable extends Migration
                     expansivel smallint
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.menu_portal
+                    ADD CONSTRAINT menu_portal_pkey PRIMARY KEY (cod_menu_portal);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.menu_portal_cod_menu_portal_seq\', 1, false);
             '
         );
@@ -53,5 +56,7 @@ class CreatePmicontrolesisMenuPortalTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.menu_portal');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.menu_portal_cod_menu_portal_seq;');
     }
 }

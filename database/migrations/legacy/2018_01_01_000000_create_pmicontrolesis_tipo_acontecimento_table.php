@@ -35,6 +35,9 @@ class CreatePmicontrolesisTipoAcontecimentoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.tipo_acontecimento
+                    ADD CONSTRAINT tipo_acontecimento_pkey PRIMARY KEY (cod_tipo_acontecimento);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmicontrolesisTipoAcontecimentoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.tipo_acontecimento');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.tipo_acontecimento_cod_tipo_acontecimento_seq;');
     }
 }

@@ -36,6 +36,9 @@ class CreatePmieducarFonteTable extends Migration
                     ref_cod_biblioteca integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.fonte
+                    ADD CONSTRAINT fonte_pkey PRIMARY KEY (cod_fonte);
+
                 SELECT pg_catalog.setval(\'pmieducar.fonte_cod_fonte_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarFonteTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.fonte');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.fonte_cod_fonte_seq;');
     }
 }

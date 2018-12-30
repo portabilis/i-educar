@@ -35,6 +35,9 @@ class CreatePmieducarAuditoriaFaltaComponenteDispensaTable extends Migration
 
                 ALTER SEQUENCE pmieducar.auditoria_falta_componente_dispensa_id_seq OWNED BY pmieducar.auditoria_falta_componente_dispensa.id;
                 
+                ALTER TABLE ONLY pmieducar.auditoria_falta_componente_dispensa
+                    ADD CONSTRAINT auditoria_falta_componente_dispensa_pkey PRIMARY KEY (id);
+
                 ALTER TABLE ONLY pmieducar.auditoria_falta_componente_dispensa ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.auditoria_falta_componente_dispensa_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'pmieducar.auditoria_falta_componente_dispensa_id_seq\', 1, false);

@@ -27,6 +27,9 @@ class CreatePmiotopicNotasTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmiotopic.notas
+                    ADD CONSTRAINT notas_pkey PRIMARY KEY (sequencial, ref_idpes);
             '
         );
     }

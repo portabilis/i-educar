@@ -36,6 +36,9 @@ class CreatePmieducarOperadorTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.operador
+                    ADD CONSTRAINT operador_pkey PRIMARY KEY (cod_operador);
+
                 SELECT pg_catalog.setval(\'pmieducar.operador_cod_operador_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarOperadorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.operador');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.operador_cod_operador_seq;');
     }
 }

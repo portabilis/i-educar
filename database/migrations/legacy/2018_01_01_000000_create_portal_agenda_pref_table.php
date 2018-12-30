@@ -38,6 +38,9 @@ class CreatePortalAgendaPrefTable extends Migration
                     ref_auto_cod integer
                 );
                 
+                ALTER TABLE ONLY portal.agenda_pref
+                    ADD CONSTRAINT agenda_pref_pk PRIMARY KEY (cod_comp);
+
                 SELECT pg_catalog.setval(\'portal.agenda_pref_cod_comp_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreatePortalAgendaPrefTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.agenda_pref');
+
+        DB::unprepared('DROP SEQUENCE portal.agenda_pref_cod_comp_seq;');
     }
 }

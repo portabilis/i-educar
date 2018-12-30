@@ -30,6 +30,9 @@ class CreatePortalPessoaAtividadeTable extends Migration
                     nm_atividade character varying(255)
                 );
                 
+                ALTER TABLE ONLY portal.pessoa_atividade
+                    ADD CONSTRAINT pessoa_atividade_pk PRIMARY KEY (cod_pessoa_atividade);
+
                 SELECT pg_catalog.setval(\'portal.pessoa_atividade_cod_pessoa_atividade_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreatePortalPessoaAtividadeTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.pessoa_atividade');
+
+        DB::unprepared('DROP SEQUENCE portal.pessoa_atividade_cod_pessoa_atividade_seq;');
     }
 }

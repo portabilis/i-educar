@@ -35,6 +35,9 @@ class CreatePmicontrolesisTelefonesTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.telefones
+                    ADD CONSTRAINT telefones_pkey PRIMARY KEY (cod_telefones);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.telefones_cod_telefones_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmicontrolesisTelefonesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.telefones');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.telefones_cod_telefones_seq;');
     }
 }

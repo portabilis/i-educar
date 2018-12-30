@@ -34,6 +34,9 @@ class CreatePortalMenuSubmenuTable extends Migration
                     nivel smallint DEFAULT (3)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.menu_submenu
+                    ADD CONSTRAINT menu_submenu_pk PRIMARY KEY (cod_menu_submenu);
+
                 SELECT pg_catalog.setval(\'portal.menu_submenu_cod_menu_submenu_seq\', 944, true);
             '
         );
@@ -47,5 +50,7 @@ class CreatePortalMenuSubmenuTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.menu_submenu');
+
+        DB::unprepared('DROP SEQUENCE portal.menu_submenu_cod_menu_submenu_seq;');
     }
 }

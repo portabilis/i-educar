@@ -37,6 +37,9 @@ class CreatePmieducarMatriculaTurmaTable extends Migration
                     etapa_educacenso smallint,
                     turma_unificada smallint
                 );
+                
+                ALTER TABLE ONLY pmieducar.matricula_turma
+                    ADD CONSTRAINT matricula_turma_pkey PRIMARY KEY (ref_cod_matricula, ref_cod_turma, sequencial);
             '
         );
     }

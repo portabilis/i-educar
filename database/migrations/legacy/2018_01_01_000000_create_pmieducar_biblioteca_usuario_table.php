@@ -21,6 +21,9 @@ class CreatePmieducarBibliotecaUsuarioTable extends Migration
                     ref_cod_biblioteca integer NOT NULL,
                     ref_cod_usuario integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.biblioteca_usuario
+                    ADD CONSTRAINT biblioteca_usuario_pkey PRIMARY KEY (ref_cod_biblioteca, ref_cod_usuario);
             '
         );
     }

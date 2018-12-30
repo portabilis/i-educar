@@ -48,6 +48,9 @@ class CreatePmieducarServidorTable extends Migration
                     pos_graduacao integer[],
                     curso_formacao_continuada integer[]
                 );
+                
+                ALTER TABLE ONLY pmieducar.servidor
+                    ADD CONSTRAINT servidor_pkey PRIMARY KEY (cod_servidor, ref_cod_instituicao);
             '
         );
     }

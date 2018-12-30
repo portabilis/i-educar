@@ -34,6 +34,9 @@ class CreatePmicontrolesisSistemaTable extends Migration
                     ativo smallint DEFAULT (1)::smallint
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.sistema
+                    ADD CONSTRAINT sistema_pkey PRIMARY KEY (cod_sistema);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.sistema_cod_sistema_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePmicontrolesisSistemaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.sistema');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.sistema_cod_sistema_seq;');
     }
 }

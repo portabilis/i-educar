@@ -24,6 +24,9 @@ class CreateModulesCalendarioTurmaTable extends Migration
                     dia integer NOT NULL,
                     turma_id integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY modules.calendario_turma
+                    ADD CONSTRAINT calendario_turma_pk PRIMARY KEY (calendario_ano_letivo_id, ano, mes, dia, turma_id);
             '
         );
     }

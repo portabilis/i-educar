@@ -36,6 +36,9 @@ class CreatePmieducarTipoDispensaTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.tipo_dispensa
+                    ADD CONSTRAINT tipo_dispensa_pkey PRIMARY KEY (cod_tipo_dispensa);
+
                 SELECT pg_catalog.setval(\'pmieducar.tipo_dispensa_cod_tipo_dispensa_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarTipoDispensaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.tipo_dispensa');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.tipo_dispensa_cod_tipo_dispensa_seq;');
     }
 }

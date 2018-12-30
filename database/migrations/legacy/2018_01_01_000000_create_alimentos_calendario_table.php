@@ -31,6 +31,9 @@ class CreateAlimentosCalendarioTable extends Migration
                     descricao character varying(40) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.calendario
+                    ADD CONSTRAINT pk_calendario PRIMARY KEY (idcad);
+
                 SELECT pg_catalog.setval(\'alimentos.calendario_idcad_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateAlimentosCalendarioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.calendario');
+
+        DB::unprepared('DROP SEQUENCE alimentos.calendario_idcad_seq;');
     }
 }

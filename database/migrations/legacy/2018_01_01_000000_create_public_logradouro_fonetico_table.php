@@ -21,6 +21,9 @@ class CreatePublicLogradouroFoneticoTable extends Migration
                     fonema character varying(30) NOT NULL,
                     idlog numeric(8,0) NOT NULL
                 );
+                
+                ALTER TABLE ONLY public.logradouro_fonetico
+                    ADD CONSTRAINT pk_logradouro_fonetico PRIMARY KEY (fonema, idlog);
             '
         );
     }

@@ -35,6 +35,9 @@ class CreatePortalMenuMenuTable extends Migration
                     icon_class character varying(20)
                 );
                 
+                ALTER TABLE ONLY portal.menu_menu
+                    ADD CONSTRAINT menu_menu_pk PRIMARY KEY (cod_menu_menu);
+
                 SELECT pg_catalog.setval(\'portal.menu_menu_cod_menu_menu_seq\', 68, true);
             '
         );
@@ -48,5 +51,7 @@ class CreatePortalMenuMenuTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.menu_menu');
+
+        DB::unprepared('DROP SEQUENCE portal.menu_menu_cod_menu_menu_seq;');
     }
 }

@@ -26,6 +26,9 @@ class CreatePmieducarTipoAvaliacaoValoresTable extends Migration
                     valor_max double precision NOT NULL,
                     ativo boolean DEFAULT true
                 );
+                
+                ALTER TABLE ONLY pmieducar.tipo_avaliacao_valores
+                    ADD CONSTRAINT tipo_avaliacao_valores_pkey PRIMARY KEY (ref_cod_tipo_avaliacao, sequencial);
             '
         );
     }
