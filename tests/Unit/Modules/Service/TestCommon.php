@@ -601,38 +601,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     return $this;
   }
 
-  public function mockDbPreparedQuery($return)
-  {
-      Portabilis_Utils_Database::$_db = $this->getDbMock();
-
-      Portabilis_Utils_Database::$_db->expects($this->any())
-          ->method('execPreparedQuery')
-          ->will($this->returnValue(true));
-
-      Portabilis_Utils_Database::$_db->expects($this->any())
-          ->method('ProximoRegistro')
-          ->will($this->returnCallback(function() use (&$return) {
-                if (!isset($return[0]['return']) && isset($return[0])) {
-                    $tmp = $return[0];
-                    $return[0] = [
-                        'return' => [$tmp],
-                        'total'  => 0
-                    ];
-                }
-                if (isset($return[0]['return']) && $return[0]['total'] <= count($return[0]['return'])-1) {
-                    return ++$return[0]['total'];
-                }
-                array_shift($return);
-                return false;
-          }));
-
-      Portabilis_Utils_Database::$_db->expects($this->any())
-          ->method('Tupla')
-          ->will($this->returnCallback(function() use (&$return) {
-              return $return[0]['return'][$return[0]['total']-1];
-          }));
-  }
-
   /**
    * @return clsPmieducarMatriculaTurma
    */
