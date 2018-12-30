@@ -1,4 +1,3 @@
-
 ALTER TABLE ONLY acesso.funcao
     ADD CONSTRAINT pk_funcao PRIMARY KEY (idfunc, idsis, idmen);
 
