@@ -22,6 +22,9 @@ class CreateConsistenciacaoTipoIncoerenciaTable extends Migration
                     idcam numeric(3,0) NOT NULL,
                     descricao character varying(250) NOT NULL
                 );
+                
+                ALTER TABLE ONLY consistenciacao.tipo_incoerencia
+                    ADD CONSTRAINT pk_tipo_incoerencia PRIMARY KEY (id_tipo_inc);
             '
         );
     }

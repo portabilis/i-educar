@@ -33,6 +33,9 @@ class CreatePmieducarInstituicaoDocumentacaoTable extends Migration
                     ref_cod_escola integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.instituicao_documentacao
+                    ADD CONSTRAINT instituicao_documentacao_pkey PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'pmieducar.instituicao_documentacao_seq\', 2, false);
             '
         );
@@ -46,5 +49,7 @@ class CreatePmieducarInstituicaoDocumentacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.instituicao_documentacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.instituicao_documentacao_seq;');
     }
 }

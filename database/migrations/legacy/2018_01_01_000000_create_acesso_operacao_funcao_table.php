@@ -23,6 +23,9 @@ class CreateAcessoOperacaoFuncaoTable extends Migration
                     idfunc integer NOT NULL,
                     idope integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY acesso.operacao_funcao
+                    ADD CONSTRAINT pk_operacao_funcao PRIMARY KEY (idmen, idsis, idfunc, idope);
             '
         );
     }

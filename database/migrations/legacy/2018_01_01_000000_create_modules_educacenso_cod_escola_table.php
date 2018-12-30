@@ -24,7 +24,11 @@ class CreateModulesEducacensoCodEscolaTable extends Migration
                     fonte character varying(255),
                     created_at timestamp without time zone NOT NULL,
                     updated_at timestamp without time zone
-                )
+                );
+                
+                ALTER TABLE ONLY modules.educacenso_cod_escola
+                    ADD CONSTRAINT educacenso_cod_escola_pk PRIMARY KEY (cod_escola, cod_escola_inep);
+
             '
         );
     }

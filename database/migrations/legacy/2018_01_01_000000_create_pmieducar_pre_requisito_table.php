@@ -37,6 +37,9 @@ class CreatePmieducarPreRequisitoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.pre_requisito
+                    ADD CONSTRAINT pre_requisito_pkey PRIMARY KEY (cod_pre_requisito);
+
                 SELECT pg_catalog.setval(\'pmieducar.pre_requisito_cod_pre_requisito_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmieducarPreRequisitoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.pre_requisito');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.pre_requisito_cod_pre_requisito_seq;');
     }
 }

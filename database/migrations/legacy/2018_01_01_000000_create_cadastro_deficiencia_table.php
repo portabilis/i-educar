@@ -31,6 +31,9 @@ class CreateCadastroDeficienciaTable extends Migration
                     desconsidera_regra_diferenciada boolean DEFAULT false
                 );
 
+                ALTER TABLE ONLY cadastro.deficiencia
+                    ADD CONSTRAINT pk_cadastro_escolaridade PRIMARY KEY (cod_deficiencia);
+
                 SELECT pg_catalog.setval(\'cadastro.deficiencia_cod_deficiencia_seq\', 15, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateCadastroDeficienciaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('cadastro.deficiencia');
+
+        DB::unprepared('DROP SEQUENCE cadastro.deficiencia_cod_deficiencia_seq;');
     }
 }

@@ -51,6 +51,9 @@ class CreateConsistenciacaoIncoerenciaTable extends Migration
                     data_uniao character varying(20)
                 );
                 
+                ALTER TABLE ONLY consistenciacao.incoerencia
+                    ADD CONSTRAINT pk_incoerencia PRIMARY KEY (idinc);
+
                 SELECT pg_catalog.setval(\'consistenciacao.incoerencia_idinc_seq\', 1, false);
             '
         );
@@ -64,5 +67,7 @@ class CreateConsistenciacaoIncoerenciaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.incoerencia');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.incoerencia_idinc_seq;');
     }
 }

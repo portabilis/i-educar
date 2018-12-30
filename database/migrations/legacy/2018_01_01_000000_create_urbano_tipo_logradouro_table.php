@@ -21,6 +21,9 @@ class CreateUrbanoTipoLogradouroTable extends Migration
                     idtlog character varying(5) NOT NULL,
                     descricao character varying(40) NOT NULL
                 );
+                
+                ALTER TABLE ONLY urbano.tipo_logradouro
+                    ADD CONSTRAINT pk_tipo_logradouro PRIMARY KEY (idtlog);
             '
         );
     }

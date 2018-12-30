@@ -30,6 +30,9 @@ class CreateAlimentosTipoUnidadeTable extends Migration
                     descricao character varying(50) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.tipo_unidade
+                    ADD CONSTRAINT pk_tipo_unidade PRIMARY KEY (idtip);
+
                 SELECT pg_catalog.setval(\'alimentos.tipo_unidade_idtip_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreateAlimentosTipoUnidadeTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.tipo_unidade');
+
+        DB::unprepared('DROP SEQUENCE alimentos.tipo_unidade_idtip_seq;');
     }
 }

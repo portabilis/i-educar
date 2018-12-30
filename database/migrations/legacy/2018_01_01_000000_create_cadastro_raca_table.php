@@ -35,6 +35,9 @@ class CreateCadastroRacaTable extends Migration
                     raca_educacenso smallint
                 );
                 
+                ALTER TABLE ONLY cadastro.raca
+                    ADD CONSTRAINT raca_pkey PRIMARY KEY (cod_raca);
+
                 SELECT pg_catalog.setval(\'cadastro.raca_cod_raca_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreateCadastroRacaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('cadastro.raca');
+
+        DB::unprepared('DROP SEQUENCE cadastro.raca_cod_raca_seq;');
     }
 }

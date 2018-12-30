@@ -25,6 +25,9 @@ class CreatePmieducarDisciplinaDependenciaTable extends Migration
                     observacao text,
                     cod_disciplina_dependencia integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.disciplina_dependencia
+                    ADD CONSTRAINT cod_disciplina_dependencia_pkey PRIMARY KEY (cod_disciplina_dependencia);
             '
         );
     }

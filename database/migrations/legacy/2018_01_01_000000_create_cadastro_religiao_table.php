@@ -34,6 +34,9 @@ class CreateCadastroReligiaoTable extends Migration
                     ativo boolean DEFAULT false
                 );
                 
+                ALTER TABLE ONLY cadastro.religiao
+                    ADD CONSTRAINT religiao_pkey PRIMARY KEY (cod_religiao);
+
                 SELECT pg_catalog.setval(\'cadastro.religiao_cod_religiao_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreateCadastroReligiaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('cadastro.religiao');
+
+        DB::unprepared('DROP SEQUENCE cadastro.religiao_cod_religiao_seq;');
     }
 }

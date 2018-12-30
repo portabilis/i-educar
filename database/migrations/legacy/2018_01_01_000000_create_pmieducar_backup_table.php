@@ -13,8 +13,6 @@ class CreatePmieducarBackupTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
@@ -36,6 +34,9 @@ class CreatePmieducarBackupTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.backup ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.backup_id_seq\'::regclass);
                 
+                ALTER TABLE ONLY pmieducar.backup
+                    ADD CONSTRAINT backup_pkey PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'pmieducar.backup_id_seq\', 1, true);
             '
         );

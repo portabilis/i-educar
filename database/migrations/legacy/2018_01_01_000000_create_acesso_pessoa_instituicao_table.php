@@ -21,6 +21,9 @@ class CreateAcessoPessoaInstituicaoTable extends Migration
                     idins integer NOT NULL,
                     idpes numeric(8,0) NOT NULL
                 );
+                
+                ALTER TABLE ONLY acesso.pessoa_instituicao
+                    ADD CONSTRAINT pk_pessoa_instituicao PRIMARY KEY (idins, idpes);
             '
         );
     }

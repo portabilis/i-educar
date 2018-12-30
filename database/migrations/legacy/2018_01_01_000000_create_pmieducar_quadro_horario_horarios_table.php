@@ -34,6 +34,9 @@ class CreatePmieducarQuadroHorarioHorariosTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.quadro_horario_horarios
+                    ADD CONSTRAINT quadro_horario_horarios_pkey PRIMARY KEY (ref_cod_quadro_horario, sequencial);
             '
         );
     }

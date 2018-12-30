@@ -38,6 +38,9 @@ class CreateConsistenciacaoCampoMetadadoTable extends Migration
                     CONSTRAINT ck_cam_met_data_atualizacao CHECK (((data_atualizacao = \'S\'::bpchar) OR (data_atualizacao = \'N\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY consistenciacao.campo_metadado
+                    ADD CONSTRAINT pk_campo_metadado PRIMARY KEY (id_campo_met);
+
                 SELECT pg_catalog.setval(\'consistenciacao.campo_metadado_id_campo_met_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreateConsistenciacaoCampoMetadadoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.campo_metadado');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.campo_metadado_id_campo_met_seq;');
     }
 }

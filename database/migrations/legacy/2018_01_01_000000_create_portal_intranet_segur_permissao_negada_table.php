@@ -34,6 +34,9 @@ class CreatePortalIntranetSegurPermissaoNegadaTable extends Migration
                     variaveis text
                 );
                 
+                ALTER TABLE ONLY portal.intranet_segur_permissao_negada
+                    ADD CONSTRAINT intranet_segur_permissao_negada_pk PRIMARY KEY (cod_intranet_segur_permissao_negada);
+
                 SELECT pg_catalog.setval(\'portal.intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePortalIntranetSegurPermissaoNegadaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.intranet_segur_permissao_negada');
+
+        DB::unprepared('DROP SEQUENCE portal.intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq;');
     }
 }

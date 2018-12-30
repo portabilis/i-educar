@@ -32,6 +32,9 @@ class CreateAlimentosCardapioProdutoTable extends Migration
                     valor numeric NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.cardapio_produto
+                    ADD CONSTRAINT pk_cardapio_produto PRIMARY KEY (idcpr);
+
                 SELECT pg_catalog.setval(\'alimentos.cardapio_produto_idcpr_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreateAlimentosCardapioProdutoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.cardapio_produto');
+
+        DB::unprepared('DROP SEQUENCE alimentos.cardapio_produto_idcpr_seq;');
     }
 }

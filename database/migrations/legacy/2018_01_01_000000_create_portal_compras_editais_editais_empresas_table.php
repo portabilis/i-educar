@@ -22,6 +22,9 @@ class CreatePortalComprasEditaisEditaisEmpresasTable extends Migration
                     ref_cod_compras_editais_empresa integer DEFAULT 0 NOT NULL,
                     data_hora timestamp without time zone NOT NULL
                 );
+                
+                ALTER TABLE ONLY portal.compras_editais_editais_empresas
+                    ADD CONSTRAINT compras_editais_editais_empresas_pk PRIMARY KEY (ref_cod_compras_editais_editais, ref_cod_compras_editais_empresa, data_hora);
             '
         );
     }

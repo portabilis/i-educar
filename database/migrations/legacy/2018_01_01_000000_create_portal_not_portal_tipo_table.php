@@ -21,6 +21,9 @@ class CreatePortalNotPortalTipoTable extends Migration
                     ref_cod_not_portal integer DEFAULT 0 NOT NULL,
                     ref_cod_not_tipo integer DEFAULT 0 NOT NULL
                 );
+                
+                ALTER TABLE ONLY portal.not_portal_tipo
+                    ADD CONSTRAINT not_portal_tipo_pk PRIMARY KEY (ref_cod_not_portal, ref_cod_not_tipo);
             '
         );
     }

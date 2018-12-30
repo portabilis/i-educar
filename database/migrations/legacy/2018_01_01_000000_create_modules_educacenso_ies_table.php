@@ -13,8 +13,6 @@ class CreateModulesEducacensoIesTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
@@ -40,6 +38,9 @@ class CreateModulesEducacensoIesTable extends Migration
 
                 ALTER SEQUENCE modules.educacenso_ies_id_seq OWNED BY modules.educacenso_ies.id;
                 
+                ALTER TABLE ONLY modules.educacenso_ies
+                    ADD CONSTRAINT educacenso_ies_pk PRIMARY KEY (id);
+
                 ALTER TABLE ONLY modules.educacenso_ies ALTER COLUMN id SET DEFAULT nextval(\'modules.educacenso_ies_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.educacenso_ies_id_seq\', 6179, true);

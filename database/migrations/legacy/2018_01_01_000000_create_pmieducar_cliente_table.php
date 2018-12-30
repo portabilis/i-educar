@@ -37,6 +37,12 @@ class CreatePmieducarClienteTable extends Migration
                     observacoes text
                 );
                 
+                ALTER TABLE ONLY pmieducar.cliente
+                    ADD CONSTRAINT cliente_login_ukey UNIQUE (login);
+
+                ALTER TABLE ONLY pmieducar.cliente
+                    ADD CONSTRAINT cliente_pkey PRIMARY KEY (cod_cliente);
+
                 SELECT pg_catalog.setval(\'pmieducar.cliente_cod_cliente_seq\', 1, false);
             '
         );
@@ -50,5 +56,7 @@ class CreatePmieducarClienteTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.cliente');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.cliente_cod_cliente_seq;');
     }
 }

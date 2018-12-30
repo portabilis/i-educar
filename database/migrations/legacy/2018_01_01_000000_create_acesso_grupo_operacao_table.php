@@ -24,6 +24,9 @@ class CreateAcessoGrupoOperacaoTable extends Migration
                     idmen integer NOT NULL,
                     idope integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY acesso.grupo_operacao
+                    ADD CONSTRAINT pk_grupo_operacao PRIMARY KEY (idfunc, idgrp, idsis, idmen, idope);
             '
         );
     }

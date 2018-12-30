@@ -36,6 +36,9 @@ class CreatePmieducarMotivoSuspensaoTable extends Migration
                     ref_cod_biblioteca integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.motivo_suspensao
+                    ADD CONSTRAINT motivo_suspensao_pkey PRIMARY KEY (cod_motivo_suspensao);
+
                 SELECT pg_catalog.setval(\'pmieducar.motivo_suspensao_cod_motivo_suspensao_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarMotivoSuspensaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.motivo_suspensao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.motivo_suspensao_cod_motivo_suspensao_seq;');
     }
 }

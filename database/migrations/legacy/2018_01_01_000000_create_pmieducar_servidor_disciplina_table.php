@@ -23,6 +23,9 @@ class CreatePmieducarServidorDisciplinaTable extends Migration
                     ref_cod_servidor integer NOT NULL,
                     ref_cod_curso integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.servidor_disciplina
+                    ADD CONSTRAINT servidor_disciplina_pkey PRIMARY KEY (ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso);
             '
         );
     }

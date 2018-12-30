@@ -22,6 +22,9 @@ class CreateAlimentosMedidasCaseirasTable extends Migration
                     idcli character varying(10) NOT NULL,
                     descricao character varying(50) NOT NULL
                 );
+                
+                ALTER TABLE ONLY alimentos.medidas_caseiras
+                    ADD CONSTRAINT pk_medidas_caseiras PRIMARY KEY (idmedcas, idcli);
             '
         );
     }

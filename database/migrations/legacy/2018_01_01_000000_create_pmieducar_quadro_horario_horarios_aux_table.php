@@ -31,6 +31,9 @@ class CreatePmieducarQuadroHorarioHorariosAuxTable extends Migration
                     identificador character varying(30),
                     data_cadastro timestamp without time zone NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.quadro_horario_horarios_aux
+                    ADD CONSTRAINT quadro_horario_horarios_aux_pkey PRIMARY KEY (ref_cod_quadro_horario, sequencial);
             '
         );
     }

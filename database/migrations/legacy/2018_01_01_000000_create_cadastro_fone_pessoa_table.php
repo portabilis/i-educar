@@ -34,6 +34,9 @@ class CreateCadastroFonePessoaTable extends Migration
                     CONSTRAINT ck_fone_pessoa_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
                     CONSTRAINT ck_fone_pessoa_tipo CHECK (((tipo >= (1)::numeric) AND (tipo <= (4)::numeric)))
                 );
+                
+                ALTER TABLE ONLY cadastro.fone_pessoa
+                    ADD CONSTRAINT pk_fone_pessoa PRIMARY KEY (idpes, tipo);
             '
         );
     }

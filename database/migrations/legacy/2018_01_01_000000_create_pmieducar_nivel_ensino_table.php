@@ -36,6 +36,9 @@ class CreatePmieducarNivelEnsinoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.nivel_ensino
+                    ADD CONSTRAINT nivel_ensino_pkey PRIMARY KEY (cod_nivel_ensino);
+
                 SELECT pg_catalog.setval(\'pmieducar.nivel_ensino_cod_nivel_ensino_seq\', 1, true);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarNivelEnsinoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.nivel_ensino');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.nivel_ensino_cod_nivel_ensino_seq;');
     }
 }

@@ -37,6 +37,9 @@ class CreatePmieducarEscolaComplementoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.escola_complemento
+                    ADD CONSTRAINT escola_complemento_pkey PRIMARY KEY (ref_cod_escola);
             '
         );
     }

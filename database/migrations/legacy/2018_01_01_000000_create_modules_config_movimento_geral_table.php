@@ -13,8 +13,6 @@ class CreateModulesConfigMovimentoGeralTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
@@ -34,6 +32,9 @@ class CreateModulesConfigMovimentoGeralTable extends Migration
 
                 ALTER SEQUENCE modules.config_movimento_geral_id_seq OWNED BY modules.config_movimento_geral.id;
                 
+                ALTER TABLE ONLY modules.config_movimento_geral
+                    ADD CONSTRAINT cod_config_movimento_geral_pkey PRIMARY KEY (id);
+
                 ALTER TABLE ONLY modules.config_movimento_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.config_movimento_geral_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.config_movimento_geral_id_seq\', 1, false);

@@ -29,6 +29,9 @@ class CreatePmicontrolesisTutorMenuTable extends Migration
                     nm_tutormenu character varying(200) NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.tutormenu
+                    ADD CONSTRAINT tutormenu_pkey PRIMARY KEY (cod_tutormenu);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.tutormenu_cod_tutormenu_seq\', 16, true);
             '
         );
@@ -42,5 +45,7 @@ class CreatePmicontrolesisTutorMenuTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.tutormenu');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.tutormenu_cod_tutormenu_seq;');
     }
 }

@@ -39,6 +39,9 @@ class CreateAlimentosClienteTable extends Migration
                     tab_produtos character(1),
                     CONSTRAINT ck_tab_produtos CHECK (((tab_produtos = \'1\'::bpchar) OR (tab_produtos = \'2\'::bpchar)))
                 );
+                
+                ALTER TABLE ONLY alimentos.cliente
+                    ADD CONSTRAINT pk_cliente PRIMARY KEY (idcli);
             '
         );
     }

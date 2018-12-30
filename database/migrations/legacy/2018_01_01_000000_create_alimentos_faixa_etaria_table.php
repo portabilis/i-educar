@@ -31,6 +31,9 @@ class CreateAlimentosFaixaEtariaTable extends Migration
                     vlr_base_refeicao numeric NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.faixa_etaria
+                    ADD CONSTRAINT pk_faixa_etaria PRIMARY KEY (idfae);
+
                 SELECT pg_catalog.setval(\'alimentos.faixa_etaria_idfae_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateAlimentosFaixaEtariaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.faixa_etaria');
+
+        DB::unprepared('DROP SEQUENCE alimentos.faixa_etaria_idfae_seq;');
     }
 }

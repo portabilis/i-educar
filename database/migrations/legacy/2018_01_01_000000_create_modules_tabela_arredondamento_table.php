@@ -13,8 +13,6 @@ class CreateModulesTabelaArredondamentoTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
@@ -35,6 +33,9 @@ class CreateModulesTabelaArredondamentoTable extends Migration
 
                 ALTER SEQUENCE modules.tabela_arredondamento_id_seq OWNED BY modules.tabela_arredondamento.id;
                 
+                ALTER TABLE ONLY modules.tabela_arredondamento
+                    ADD CONSTRAINT tabela_arredondamento_pkey PRIMARY KEY (id, instituicao_id);
+
                 ALTER TABLE ONLY modules.tabela_arredondamento ALTER COLUMN id SET DEFAULT nextval(\'modules.tabela_arredondamento_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.tabela_arredondamento_id_seq\', 2, true);

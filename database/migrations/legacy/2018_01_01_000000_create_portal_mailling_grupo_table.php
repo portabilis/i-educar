@@ -29,6 +29,9 @@ class CreatePortalMaillingGrupoTable extends Migration
                     nm_grupo character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.mailling_grupo
+                    ADD CONSTRAINT mailling_grupo_pk PRIMARY KEY (cod_mailling_grupo);
+
                 SELECT pg_catalog.setval(\'portal.mailling_grupo_cod_mailling_grupo_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePortalMaillingGrupoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.mailling_grupo');
+
+        DB::unprepared('DROP SEQUENCE portal.mailling_grupo_cod_mailling_grupo_seq;');
     }
 }

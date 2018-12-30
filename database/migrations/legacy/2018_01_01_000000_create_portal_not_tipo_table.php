@@ -29,6 +29,9 @@ class CreatePortalNotTipoTable extends Migration
                     nm_tipo character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.not_tipo
+                    ADD CONSTRAINT not_tipo_pk PRIMARY KEY (cod_not_tipo);
+
                 SELECT pg_catalog.setval(\'portal.not_tipo_cod_not_tipo_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePortalNotTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.not_tipo');
+
+        DB::unprepared('DROP SEQUENCE portal.not_tipo_cod_not_tipo_seq;');
     }
 }

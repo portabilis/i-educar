@@ -39,6 +39,9 @@ class CreateAlimentosContratoProdutoTable extends Migration
                     CONSTRAINT ck_contrato_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar) OR (operacao = \'N\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY alimentos.contrato_produto
+                    ADD CONSTRAINT pk_contrato_produto PRIMARY KEY (idcop);
+
                 SELECT pg_catalog.setval(\'alimentos.contrato_produto_idcop_seq\', 1, false);
             '
         );
@@ -52,5 +55,7 @@ class CreateAlimentosContratoProdutoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.contrato_produto');
+
+        DB::unprepared('DROP SEQUENCE alimentos.contrato_produto_idcop_seq;');
     }
 }

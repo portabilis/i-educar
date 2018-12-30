@@ -46,5 +46,7 @@ class CreatePortalSistemaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.sistema');
+
+        DB::unprepared('DROP SEQUENCE portal.sistema_cod_sistema_seq;');
     }
 }

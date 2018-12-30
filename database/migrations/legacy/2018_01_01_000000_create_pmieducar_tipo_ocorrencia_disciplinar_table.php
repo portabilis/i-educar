@@ -37,6 +37,9 @@ class CreatePmieducarTipoOcorrenciaDisciplinarTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.tipo_ocorrencia_disciplinar
+                    ADD CONSTRAINT tipo_ocorrencia_disciplinar_pkey PRIMARY KEY (cod_tipo_ocorrencia_disciplinar);
+
                 SELECT pg_catalog.setval(\'pmieducar.tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmieducarTipoOcorrenciaDisciplinarTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.tipo_ocorrencia_disciplinar');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq;');
     }
 }

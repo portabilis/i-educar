@@ -27,6 +27,12 @@ class CreatePmieducarSerieVagaTable extends Migration
                     vagas smallint NOT NULL,
                     turno smallint DEFAULT 1 NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.serie_vaga
+                    ADD CONSTRAINT cod_serie_vaga_pkey PRIMARY KEY (cod_serie_vaga);
+
+                ALTER TABLE ONLY pmieducar.serie_vaga
+                    ADD CONSTRAINT cod_serie_vaga_unique UNIQUE (ano, ref_cod_instituicao, ref_cod_escola, ref_cod_curso, ref_cod_serie, turno);
             '
         );
     }

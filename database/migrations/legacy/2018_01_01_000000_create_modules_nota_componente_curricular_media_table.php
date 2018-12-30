@@ -25,6 +25,9 @@ class CreateModulesNotaComponenteCurricularMediaTable extends Migration
                     etapa character varying(2) NOT NULL,
                     situacao integer
                 );
+                
+                ALTER TABLE ONLY modules.nota_componente_curricular_media
+                    ADD CONSTRAINT nota_componente_curricular_media_pkey PRIMARY KEY (nota_aluno_id, componente_curricular_id);
             '
         );
     }

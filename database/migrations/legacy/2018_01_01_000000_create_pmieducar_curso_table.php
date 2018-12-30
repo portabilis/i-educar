@@ -48,6 +48,9 @@ class CreatePmieducarCursoTable extends Migration
                     modalidade_curso integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.curso
+                    ADD CONSTRAINT curso_pkey PRIMARY KEY (cod_curso);
+
                 SELECT pg_catalog.setval(\'pmieducar.curso_cod_curso_seq\', 1, true);
             '
         );
@@ -61,5 +64,7 @@ class CreatePmieducarCursoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.curso');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.curso_cod_curso_seq;');
     }
 }

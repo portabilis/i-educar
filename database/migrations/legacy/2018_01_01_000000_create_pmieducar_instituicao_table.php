@@ -77,6 +77,9 @@ class CreatePmieducarInstituicaoTable extends Migration
 
                 COMMENT ON COLUMN pmieducar.instituicao.exibir_apenas_professores_alocados IS \'Para filtros de emissão de relatórios\';
                 
+                ALTER TABLE ONLY pmieducar.instituicao
+                    ADD CONSTRAINT instituicao_pkey PRIMARY KEY (cod_instituicao);
+
                 SELECT pg_catalog.setval(\'pmieducar.instituicao_cod_instituicao_seq\', 1, true);
             '
         );
@@ -90,5 +93,7 @@ class CreatePmieducarInstituicaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.instituicao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.instituicao_cod_instituicao_seq;');
     }
 }

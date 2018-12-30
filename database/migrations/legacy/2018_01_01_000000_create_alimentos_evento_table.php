@@ -34,6 +34,9 @@ class CreateAlimentosEventoTable extends Migration
                     CONSTRAINT ck_evento_dia_util CHECK (((dia_util = \'S\'::bpchar) OR (dia_util = \'N\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY alimentos.evento
+                    ADD CONSTRAINT pk_evento PRIMARY KEY (ideve);
+
                 SELECT pg_catalog.setval(\'alimentos.evento_ideve_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreateAlimentosEventoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.evento');
+
+        DB::unprepared('DROP SEQUENCE alimentos.evento_ideve_seq;');
     }
 }

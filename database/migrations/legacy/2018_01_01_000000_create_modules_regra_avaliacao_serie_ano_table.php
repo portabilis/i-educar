@@ -23,6 +23,9 @@ class CreateModulesRegraAvaliacaoSerieAnoTable extends Migration
                     regra_avaliacao_diferenciada_id integer,
                     ano_letivo smallint NOT NULL
                 );
+                
+                ALTER TABLE ONLY modules.regra_avaliacao_serie_ano
+                    ADD CONSTRAINT regra_avaliacao_serie_ano_pkey PRIMARY KEY (serie_id, ano_letivo);
             '
         );
     }

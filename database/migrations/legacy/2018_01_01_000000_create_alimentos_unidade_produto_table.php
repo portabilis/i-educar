@@ -23,6 +23,9 @@ class CreateAlimentosUnidadeProdutoTable extends Migration
                     descricao character varying(50) NOT NULL,
                     peso numeric NOT NULL
                 );
+                
+                ALTER TABLE ONLY alimentos.unidade_produto
+                    ADD CONSTRAINT pk_uni_produto PRIMARY KEY (idunp, idcli);
             '
         );
     }

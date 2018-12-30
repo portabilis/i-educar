@@ -30,6 +30,9 @@ class CreateAlimentosTipoRefeicaoTable extends Migration
                     descricao character varying(30) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.tipo_refeicao
+                    ADD CONSTRAINT pk_tp_refeicao PRIMARY KEY (idtre);
+
                 SELECT pg_catalog.setval(\'alimentos.tipo_refeicao_idtre_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreateAlimentosTipoRefeicaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.tipo_refeicao');
+
+        DB::unprepared('DROP SEQUENCE alimentos.tipo_refeicao_idtre_seq;');
     }
 }

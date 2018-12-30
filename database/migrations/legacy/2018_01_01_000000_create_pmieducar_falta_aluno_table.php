@@ -40,6 +40,9 @@ class CreatePmieducarFaltaAlunoTable extends Migration
                     ref_cod_curso_disciplina integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.falta_aluno
+                    ADD CONSTRAINT falta_aluno_pkey PRIMARY KEY (cod_falta_aluno);
+
                 SELECT pg_catalog.setval(\'pmieducar.falta_aluno_cod_falta_aluno_seq\', 1, false);
             '
         );
@@ -53,5 +56,7 @@ class CreatePmieducarFaltaAlunoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.falta_aluno');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.falta_aluno_cod_falta_aluno_seq;');
     }
 }

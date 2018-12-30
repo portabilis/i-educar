@@ -21,6 +21,9 @@ class CreatePmieducarAlunoAlunoBeneficioTable extends Migration
                     aluno_id integer NOT NULL,
                     aluno_beneficio_id integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.aluno_aluno_beneficio
+                    ADD CONSTRAINT aluno_aluno_beneficio_pk PRIMARY KEY (aluno_id, aluno_beneficio_id);
             '
         );
     }

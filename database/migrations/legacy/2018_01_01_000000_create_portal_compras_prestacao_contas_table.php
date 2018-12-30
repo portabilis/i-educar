@@ -31,6 +31,9 @@ class CreatePortalComprasPrestacaoContasTable extends Migration
                     ano integer DEFAULT 0 NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.compras_prestacao_contas
+                    ADD CONSTRAINT compras_prestacao_contas_pk PRIMARY KEY (cod_compras_prestacao_contas);
+
                 SELECT pg_catalog.setval(\'portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreatePortalComprasPrestacaoContasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.compras_prestacao_contas');
+
+        DB::unprepared('DROP SEQUENCE portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq;');
     }
 }

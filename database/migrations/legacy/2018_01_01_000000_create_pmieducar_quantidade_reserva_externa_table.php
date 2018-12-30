@@ -26,6 +26,9 @@ class CreatePmieducarQuantidadeReservaExternaTable extends Migration
                     ano integer NOT NULL,
                     qtd_alunos integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.quantidade_reserva_externa
+                    ADD CONSTRAINT quantidade_reserva_externa_pkey PRIMARY KEY (ref_cod_instituicao, ref_cod_escola, ref_cod_curso, ref_cod_serie, ref_turma_turno_id, ano);
             '
         );
     }

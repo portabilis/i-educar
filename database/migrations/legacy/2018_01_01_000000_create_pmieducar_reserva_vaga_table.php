@@ -38,6 +38,9 @@ class CreatePmieducarReservaVagaTable extends Migration
                     cpf_responsavel numeric(11,0)
                 );
                 
+                ALTER TABLE ONLY pmieducar.reserva_vaga
+                    ADD CONSTRAINT reserva_vaga_pkey PRIMARY KEY (cod_reserva_vaga);
+
                 SELECT pg_catalog.setval(\'pmieducar.reserva_vaga_cod_reserva_vaga_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreatePmieducarReservaVagaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.reserva_vaga');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.reserva_vaga_cod_reserva_vaga_seq;');
     }
 }

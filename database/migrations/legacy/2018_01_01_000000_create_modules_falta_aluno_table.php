@@ -13,8 +13,6 @@ class CreateModulesFaltaAlunoTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
@@ -34,6 +32,9 @@ class CreateModulesFaltaAlunoTable extends Migration
 
                 ALTER SEQUENCE modules.falta_aluno_id_seq OWNED BY modules.falta_aluno.id;
                 
+                ALTER TABLE ONLY modules.falta_aluno
+                    ADD CONSTRAINT falta_aluno_pkey PRIMARY KEY (id);
+
                 ALTER TABLE ONLY modules.falta_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_aluno_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.falta_aluno_id_seq\', 2, true);

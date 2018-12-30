@@ -35,6 +35,9 @@ class CreateModulesUniformeAlunoTable extends Migration
                     quantidade_meia integer,
                     tamanho_meia character(2)
                 );
+                
+                ALTER TABLE ONLY modules.uniforme_aluno
+                    ADD CONSTRAINT uniforme_aluno_pkey PRIMARY KEY (ref_cod_aluno);
             '
         );
     }

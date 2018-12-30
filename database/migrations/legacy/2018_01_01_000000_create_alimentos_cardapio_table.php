@@ -38,6 +38,9 @@ class CreateAlimentosCardapioTable extends Migration
                     CONSTRAINT ck_cardapio_finalizado CHECK (((finalizado = \'S\'::bpchar) OR (finalizado = \'N\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY alimentos.cardapio
+                    ADD CONSTRAINT pk_cardapio PRIMARY KEY (idcar);
+
                 SELECT pg_catalog.setval(\'alimentos.cardapio_idcar_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreateAlimentosCardapioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.cardapio');
+
+        DB::unprepared('DROP SEQUENCE alimentos.cardapio_idcar_seq;');
     }
 }

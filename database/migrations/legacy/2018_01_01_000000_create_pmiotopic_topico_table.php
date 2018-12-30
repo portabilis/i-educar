@@ -36,6 +36,9 @@ class CreatePmiotopicTopicoTable extends Migration
                     ref_cod_grupos_exc integer
                 );
                 
+                ALTER TABLE ONLY pmiotopic.topico
+                    ADD CONSTRAINT topico_pkey PRIMARY KEY (cod_topico);
+
                 SELECT pg_catalog.setval(\'pmiotopic.topico_cod_topico_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmiotopicTopicoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmiotopic.topico');
+
+        DB::unprepared('DROP SEQUENCE pmiotopic.topico_cod_topico_seq;');
     }
 }

@@ -24,6 +24,9 @@ class CreatePublicPhinxlogTable extends Migration
                     end_time timestamp without time zone,
                     breakpoint boolean DEFAULT false NOT NULL
                 );
+                
+                ALTER TABLE ONLY public.phinxlog
+                    ADD CONSTRAINT phinxlog_pkey PRIMARY KEY (version);
             '
         );
     }

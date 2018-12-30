@@ -35,6 +35,9 @@ class CreateSerieciascAlunoUniformeTable extends Migration
                     created_at timestamp without time zone NOT NULL,
                     updated_at timestamp without time zone
                 );
+                
+                ALTER TABLE ONLY serieciasc.aluno_uniforme
+                    ADD CONSTRAINT aluno_uniforme_ref_cod_aluno_pk PRIMARY KEY (ref_cod_aluno, data_recebimento);
             '
         );
     }

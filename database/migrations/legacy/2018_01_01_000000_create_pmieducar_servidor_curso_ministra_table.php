@@ -22,6 +22,9 @@ class CreatePmieducarServidorCursoMinistraTable extends Migration
                     ref_ref_cod_instituicao integer NOT NULL,
                     ref_cod_servidor integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.servidor_curso_ministra
+                    ADD CONSTRAINT servidor_cuso_ministra_pkey PRIMARY KEY (ref_cod_curso, ref_ref_cod_instituicao, ref_cod_servidor);
             '
         );
     }

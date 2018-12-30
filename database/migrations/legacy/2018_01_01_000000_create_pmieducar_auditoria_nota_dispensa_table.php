@@ -37,6 +37,9 @@ class CreatePmieducarAuditoriaNotaDispensaTable extends Migration
 
                 ALTER SEQUENCE pmieducar.auditoria_nota_dispensa_id_seq OWNED BY pmieducar.auditoria_nota_dispensa.id;
                 
+                ALTER TABLE ONLY pmieducar.auditoria_nota_dispensa
+                    ADD CONSTRAINT auditoria_nota_dispensa_pkey PRIMARY KEY (id);
+
                 ALTER TABLE ONLY pmieducar.auditoria_nota_dispensa ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.auditoria_nota_dispensa_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'pmieducar.auditoria_nota_dispensa_id_seq\', 1, false);

@@ -35,6 +35,9 @@ class CreatePmieducarExemplarEmprestimoTable extends Migration
                     valor_multa double precision
                 );
                 
+                ALTER TABLE ONLY pmieducar.exemplar_emprestimo
+                    ADD CONSTRAINT exemplar_emprestimo_pkey PRIMARY KEY (cod_emprestimo);
+
                 SELECT pg_catalog.setval(\'pmieducar.exemplar_emprestimo_cod_emprestimo_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarExemplarEmprestimoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.exemplar_emprestimo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.exemplar_emprestimo_cod_emprestimo_seq;');
     }
 }

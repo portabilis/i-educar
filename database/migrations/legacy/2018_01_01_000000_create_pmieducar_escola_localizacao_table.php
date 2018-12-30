@@ -35,6 +35,9 @@ class CreatePmieducarEscolaLocalizacaoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.escola_localizacao
+                    ADD CONSTRAINT escola_localizacao_pkey PRIMARY KEY (cod_escola_localizacao);
+
                 SELECT pg_catalog.setval(\'pmieducar.escola_localizacao_cod_escola_localizacao_seq\', 1, true);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarEscolaLocalizacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.escola_localizacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.escola_localizacao_cod_escola_localizacao_seq;');
     }
 }

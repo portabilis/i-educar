@@ -21,6 +21,9 @@ class CreateConsistenciacaoIncoerenciaTipoIncoerenciaTable extends Migration
                     id_tipo_inc numeric(3,0) NOT NULL,
                     idinc integer NOT NULL
                 );
+                
+                ALTER TABLE ONLY consistenciacao.incoerencia_tipo_incoerencia
+                    ADD CONSTRAINT pk_incoerencia_tipo_incoerencia PRIMARY KEY (id_tipo_inc, idinc);
             '
         );
     }

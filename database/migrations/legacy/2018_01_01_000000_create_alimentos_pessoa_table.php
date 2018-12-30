@@ -30,6 +30,9 @@ class CreateAlimentosPessoaTable extends Migration
                     CONSTRAINT ck_pessoa CHECK ((((tipo)::text = \'C\'::text) OR ((tipo)::text = \'F\'::text) OR ((tipo)::text = \'U\'::text)))
                 );
                 
+                ALTER TABLE ONLY alimentos.pessoa
+                    ADD CONSTRAINT pk_pessoa PRIMARY KEY (idpes);
+
                 SELECT pg_catalog.setval(\'alimentos.pessoa_idpes_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreateAlimentosPessoaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.pessoa');
+
+        DB::unprepared('DROP SEQUENCE alimentos.pessoa_idpes_seq;');
     }
 }

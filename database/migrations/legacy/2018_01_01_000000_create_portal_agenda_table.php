@@ -36,6 +36,9 @@ class CreatePortalAgendaTable extends Migration
                     ref_ref_cod_pessoa_own integer
                 );
                 
+                ALTER TABLE ONLY portal.agenda
+                    ADD CONSTRAINT agenda_pkey PRIMARY KEY (cod_agenda);
+
                 SELECT pg_catalog.setval(\'portal.agenda_cod_agenda_seq\', 1, true);
             '
         );
@@ -49,5 +52,7 @@ class CreatePortalAgendaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.agenda');
+
+        DB::unprepared('DROP SEQUENCE portal.agenda_cod_agenda_seq;');
     }
 }

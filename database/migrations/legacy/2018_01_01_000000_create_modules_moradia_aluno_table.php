@@ -49,6 +49,9 @@ class CreateModulesMoradiaAlunoTable extends Migration
                     fossa character(1),
                     lixo character(1)
                 );
+                
+                ALTER TABLE ONLY modules.moradia_aluno
+                    ADD CONSTRAINT moradia_aluno_pkei PRIMARY KEY (ref_cod_aluno);
             '
         );
     }

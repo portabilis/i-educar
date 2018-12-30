@@ -30,6 +30,9 @@ class CreatePmiotopicGrupopessoaTable extends Migration
                     ref_cod_auxiliar_cad integer,
                     ref_ref_cod_atendimento_cad integer
                 );
+                
+                ALTER TABLE ONLY pmiotopic.grupopessoa
+                    ADD CONSTRAINT grupopessoa_pkey PRIMARY KEY (ref_idpes, ref_cod_grupos);
             '
         );
     }

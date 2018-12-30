@@ -53,6 +53,9 @@ class CreatePortalPessoaFjTable extends Migration
                     ref_ref_cod_pessoa_fj integer
                 );
                 
+                ALTER TABLE ONLY portal.pessoa_fj
+                    ADD CONSTRAINT pessoa_fj_pk PRIMARY KEY (cod_pessoa_fj);
+
                 SELECT pg_catalog.setval(\'portal.pessoa_fj_cod_pessoa_fj_seq\', 1, false);
             '
         );
@@ -66,5 +69,7 @@ class CreatePortalPessoaFjTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.pessoa_fj');
+
+        DB::unprepared('DROP SEQUENCE portal.pessoa_fj_cod_pessoa_fj_seq;');
     }
 }

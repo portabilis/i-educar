@@ -33,6 +33,9 @@ class CreatePortalMaillingFilaEnvioTable extends Migration
                     data_envio timestamp without time zone
                 );
                 
+                ALTER TABLE ONLY portal.mailling_fila_envio
+                    ADD CONSTRAINT mailling_fila_envio_pk PRIMARY KEY (cod_mailling_fila_envio);
+
                 SELECT pg_catalog.setval(\'portal.mailling_fila_envio_cod_mailling_fila_envio_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreatePortalMaillingFilaEnvioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.mailling_fila_envio');
+
+        DB::unprepared('DROP SEQUENCE portal.mailling_fila_envio_cod_mailling_fila_envio_seq;');
     }
 }

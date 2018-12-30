@@ -34,6 +34,9 @@ class CreateAlimentosBaixaGuiaRemessaTable extends Migration
                     dt_operacao date NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.baixa_guia_remessa
+                    ADD CONSTRAINT pk_baixa_guia_remessa PRIMARY KEY (idbai);
+
                 SELECT pg_catalog.setval(\'alimentos.baixa_guia_remessa_idbai_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreateAlimentosBaixaGuiaRemessaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.baixa_guia_remessa');
+
+        DB::unprepared('DROP SEQUENCE alimentos.baixa_guia_remessa_idbai_seq;');
     }
 }

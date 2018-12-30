@@ -25,6 +25,9 @@ class CreatePmieducarTurmaModuloTable extends Migration
                     data_fim date NOT NULL,
                     dias_letivos integer
                 );
+                
+                ALTER TABLE ONLY pmieducar.turma_modulo
+                    ADD CONSTRAINT turma_modulo_pkey PRIMARY KEY (ref_cod_turma, ref_cod_modulo, sequencial);
             '
         );
     }

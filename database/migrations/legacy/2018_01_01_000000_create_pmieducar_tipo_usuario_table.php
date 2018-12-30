@@ -36,6 +36,9 @@ class CreatePmieducarTipoUsuarioTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.tipo_usuario
+                    ADD CONSTRAINT tipo_usuario_pkey PRIMARY KEY (cod_tipo_usuario);
+
                 SELECT pg_catalog.setval(\'pmieducar.tipo_usuario_cod_tipo_usuario_seq\', 3, true);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarTipoUsuarioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.tipo_usuario');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.tipo_usuario_cod_tipo_usuario_seq;');
     }
 }

@@ -37,6 +37,9 @@ class CreatePmieducarInfraPredioTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.infra_predio
+                    ADD CONSTRAINT infra_predio_pkey PRIMARY KEY (cod_infra_predio);
+
                 SELECT pg_catalog.setval(\'pmieducar.infra_predio_cod_infra_predio_seq\', 1, true);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmieducarInfraPredioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.infra_predio');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.infra_predio_cod_infra_predio_seq;');
     }
 }

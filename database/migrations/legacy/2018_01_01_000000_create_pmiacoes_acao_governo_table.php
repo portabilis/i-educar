@@ -40,6 +40,9 @@ class CreatePmiacoesAcaoGovernoTable extends Migration
                     idbai bigint
                 );
                 
+                ALTER TABLE ONLY pmiacoes.acao_governo
+                    ADD CONSTRAINT acao_governo_pkey PRIMARY KEY (cod_acao_governo);
+
                 SELECT pg_catalog.setval(\'pmiacoes.acao_governo_cod_acao_governo_seq\', 1, false);
             '
         );
@@ -53,5 +56,7 @@ class CreatePmiacoesAcaoGovernoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmiacoes.acao_governo');
+
+        DB::unprepared('DROP SEQUENCE pmiacoes.acao_governo_cod_acao_governo_seq;');
     }
 }

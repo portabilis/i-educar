@@ -30,6 +30,9 @@ class CreatePortalFuncionarioVinculoTable extends Migration
                     abreviatura character varying(16)
                 );
                 
+                ALTER TABLE ONLY portal.funcionario_vinculo
+                    ADD CONSTRAINT funcionario_vinculo_pk PRIMARY KEY (cod_funcionario_vinculo);
+
                 SELECT pg_catalog.setval(\'portal.funcionario_vinculo_cod_funcionario_vinculo_seq\', 7, true);
             '
         );
@@ -43,5 +46,7 @@ class CreatePortalFuncionarioVinculoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.funcionario_vinculo');
+
+        DB::unprepared('DROP SEQUENCE portal.funcionario_vinculo_cod_funcionario_vinculo_seq;');
     }
 }

@@ -38,6 +38,9 @@ class CreatePmieducarFaltaAtrasoCompensadoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.falta_atraso_compensado
+                    ADD CONSTRAINT falta_atraso_compensado_pkey PRIMARY KEY (cod_compensado);
+
                 SELECT pg_catalog.setval(\'pmieducar.falta_atraso_compensado_cod_compensado_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreatePmieducarFaltaAtrasoCompensadoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.falta_atraso_compensado');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.falta_atraso_compensado_cod_compensado_seq;');
     }
 }

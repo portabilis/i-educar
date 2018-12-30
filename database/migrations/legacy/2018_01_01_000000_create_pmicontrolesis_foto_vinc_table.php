@@ -30,6 +30,9 @@ class CreatePmicontrolesisFotoVincTable extends Migration
                     ref_cod_foto_evento integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.foto_vinc
+                    ADD CONSTRAINT foto_vinc_pkey PRIMARY KEY (cod_foto_vinc);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.foto_vinc_cod_foto_vinc_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreatePmicontrolesisFotoVincTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.foto_vinc');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.foto_vinc_cod_foto_vinc_seq;');
     }
 }

@@ -32,6 +32,9 @@ class CreateAlimentosProdutoMedidaCaseiraTable extends Migration
                     peso numeric NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.produto_medida_caseira
+                    ADD CONSTRAINT pk_produto_medida_caseira PRIMARY KEY (idpmc);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_medida_caseira_idpmc_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreateAlimentosProdutoMedidaCaseiraTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.produto_medida_caseira');
+
+        DB::unprepared('DROP SEQUENCE alimentos.produto_medida_caseira_idpmc_seq;');
     }
 }

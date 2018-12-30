@@ -33,6 +33,9 @@ class CreatePmieducarBloqueioLancamentoFaltasNotasTable extends Migration
                     data_fim date NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.bloqueio_lancamento_faltas_notas
+                    ADD CONSTRAINT fk_bloqueio_lancamento_faltas_notas PRIMARY KEY (cod_bloqueio);
+
                 SELECT pg_catalog.setval(\'public.bloqueio_lancamento_faltas_notas_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreatePmieducarBloqueioLancamentoFaltasNotasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.bloqueio_lancamento_faltas_notas');
+
+        DB::unprepared('DROP SEQUENCE public.bloqueio_lancamento_faltas_notas_seq;');
     }
 }

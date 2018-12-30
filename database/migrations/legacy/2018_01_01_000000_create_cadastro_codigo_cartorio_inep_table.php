@@ -35,6 +35,9 @@ class CreateCadastroCodigoCartorioInepTable extends Migration
                 
                 ALTER SEQUENCE cadastro.codigo_cartorio_inep_id_seq OWNED BY cadastro.codigo_cartorio_inep.id;
                 
+                ALTER TABLE ONLY cadastro.codigo_cartorio_inep
+                    ADD CONSTRAINT pk_id PRIMARY KEY (id);
+
                 ALTER TABLE ONLY cadastro.codigo_cartorio_inep ALTER COLUMN id SET DEFAULT nextval(\'cadastro.codigo_cartorio_inep_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'cadastro.codigo_cartorio_inep_id_seq\', 14212, true);

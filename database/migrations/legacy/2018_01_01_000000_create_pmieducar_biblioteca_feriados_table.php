@@ -35,6 +35,9 @@ class CreatePmieducarBibliotecaFeriadosTable extends Migration
                     data_feriado date NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.biblioteca_feriados
+                    ADD CONSTRAINT biblioteca_feriados_pkey PRIMARY KEY (cod_feriado);
+
                 SELECT pg_catalog.setval(\'pmieducar.biblioteca_feriados_cod_feriado_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarBibliotecaFeriadosTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.biblioteca_feriados');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.biblioteca_feriados_cod_feriado_seq;');
     }
 }

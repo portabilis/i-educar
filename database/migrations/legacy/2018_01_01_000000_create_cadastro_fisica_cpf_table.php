@@ -31,6 +31,9 @@ class CreateCadastroFisicaCpfTable extends Migration
                     CONSTRAINT ck_fisica_cpf_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_fisica_cpf_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
+                
+                ALTER TABLE ONLY cadastro.fisica_cpf
+                    ADD CONSTRAINT pk_fisica_cpf PRIMARY KEY (idpes);
             '
         );
     }

@@ -34,6 +34,9 @@ class CreateModulesFaltaComponenteCurricularTable extends Migration
 
                 ALTER SEQUENCE modules.falta_componente_curricular_id_seq OWNED BY modules.falta_componente_curricular.id;
                 
+                ALTER TABLE ONLY modules.falta_componente_curricular
+                    ADD CONSTRAINT falta_componente_curricular_pkey PRIMARY KEY (falta_aluno_id, componente_curricular_id, etapa);
+
                 ALTER TABLE ONLY modules.falta_componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_componente_curricular_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.falta_componente_curricular_id_seq\', 1, true);

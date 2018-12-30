@@ -30,6 +30,9 @@ class CreateConsistenciacaoTempCadastroUnificacaoSiamTable extends Migration
                     fone character varying(14),
                     data_cadastro character varying(10)
                 );
+                
+                ALTER TABLE ONLY consistenciacao.temp_cadastro_unificacao_siam
+                    ADD CONSTRAINT pk_temp_cadastro_unificacao_siam PRIMARY KEY (idpes);
             '
         );
     }

@@ -39,6 +39,9 @@ class CreatePortalFotoPortalTable extends Migration
                     bkp_ref_secao bigint
                 );
                 
+                ALTER TABLE ONLY portal.foto_portal
+                    ADD CONSTRAINT foto_portal_pk PRIMARY KEY (cod_foto_portal);
+
                 SELECT pg_catalog.setval(\'portal.foto_portal_cod_foto_portal_seq\', 1, false);
             '
         );
@@ -52,5 +55,7 @@ class CreatePortalFotoPortalTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.foto_portal');
+
+        DB::unprepared('DROP SEQUENCE portal.foto_portal_cod_foto_portal_seq;');
     }
 }

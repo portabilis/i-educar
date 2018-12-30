@@ -31,7 +31,10 @@ class CreateAcessoGrupoTable extends Migration
                     descricao character varying(250),
                     CONSTRAINT ck_grupo_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
-
+                
+                ALTER TABLE ONLY acesso.grupo
+                    ADD CONSTRAINT pk_grupo PRIMARY KEY (idgrp);
+                    
                 SELECT pg_catalog.setval(\'acesso.grupo_idgrp_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreateAcessoGrupoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('acesso.grupo');
+
+        DB::unprepared('DROP SEQUENCE acesso.grupo_idgrp_seq');
     }
 }

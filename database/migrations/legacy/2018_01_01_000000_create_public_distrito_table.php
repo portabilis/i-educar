@@ -42,6 +42,9 @@ class CreatePublicDistritoTable extends Migration
                     CONSTRAINT ck_distrito_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY public.distrito
+                    ADD CONSTRAINT pk_distrito PRIMARY KEY (iddis);
+
                 SELECT pg_catalog.setval(\'public.seq_distrito\', 10839, true);
             '
         );
@@ -55,5 +58,7 @@ class CreatePublicDistritoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.distrito');
+
+        DB::unprepared('DROP SEQUENCE public.seq_distrito;');
     }
 }

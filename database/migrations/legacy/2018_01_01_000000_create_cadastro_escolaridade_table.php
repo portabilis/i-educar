@@ -22,6 +22,9 @@ class CreateCadastroEscolaridadeTable extends Migration
                     descricao character varying(60) NOT NULL,
                     escolaridade smallint
                 );
+                
+                ALTER TABLE ONLY cadastro.escolaridade
+                    ADD CONSTRAINT pk_escolaridade PRIMARY KEY (idesco);
             '
         );
     }

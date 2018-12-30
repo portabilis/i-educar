@@ -29,6 +29,9 @@ class CreatePmieducarAvaliacaoDesempenhoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     titulo_avaliacao character varying(255) NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmieducar.avaliacao_desempenho
+                    ADD CONSTRAINT avaliacao_desempenho_pkey PRIMARY KEY (sequencial, ref_cod_servidor, ref_ref_cod_instituicao);
             '
         );
     }

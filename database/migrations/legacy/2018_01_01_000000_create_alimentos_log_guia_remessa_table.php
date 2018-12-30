@@ -37,6 +37,9 @@ class CreateAlimentosLogGuiaRemessaTable extends Migration
                     mensagem text NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.log_guia_remessa
+                    ADD CONSTRAINT pk_log_guia_remessa PRIMARY KEY (idlogguia);
+
                 SELECT pg_catalog.setval(\'alimentos.log_guia_remessa_idlogguia_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreateAlimentosLogGuiaRemessaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.log_guia_remessa');
+
+        DB::unprepared('DROP SEQUENCE alimentos.log_guia_remessa_idlogguia_seq;');
     }
 }

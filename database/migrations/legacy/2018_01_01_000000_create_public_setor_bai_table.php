@@ -29,6 +29,9 @@ class CreatePublicSetorBaiTable extends Migration
                     nome character varying(80) NOT NULL
                 );
                 
+                ALTER TABLE ONLY public.setor_bai
+                    ADD CONSTRAINT pk_setorbai PRIMARY KEY (idsetorbai);
+
                 SELECT pg_catalog.setval(\'public.seq_setor_bai\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePublicSetorBaiTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.setor_bai');
+
+        DB::unprepared('DROP SEQUENCE public.seq_setor_bai;');
     }
 }

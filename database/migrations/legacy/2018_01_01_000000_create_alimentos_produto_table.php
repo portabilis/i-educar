@@ -47,6 +47,9 @@ class CreateAlimentosProdutoTable extends Migration
                     CONSTRAINT ck_produto_referencia_ceasa CHECK ((((referencia_ceasa)::text = \'1\'::text) OR ((referencia_ceasa)::text = \'0\'::text)))
                 );
                 
+                ALTER TABLE ONLY alimentos.produto
+                    ADD CONSTRAINT pk_produto PRIMARY KEY (idpro);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_idpro_seq\', 1, false);
             '
         );
@@ -60,5 +63,7 @@ class CreateAlimentosProdutoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.produto');
+
+        DB::unprepared('DROP SEQUENCE alimentos.produto_idpro_seq;');
     }
 }

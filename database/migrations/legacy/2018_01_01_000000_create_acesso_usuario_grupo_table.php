@@ -21,6 +21,9 @@ class CreateAcessoUsuarioGrupoTable extends Migration
                     idgrp integer NOT NULL,
                     login character varying(16) NOT NULL
                 );
+                
+                ALTER TABLE ONLY acesso.usuario_grupo
+                    ADD CONSTRAINT pk_usuario_grupo PRIMARY KEY (idgrp, login);
             '
         );
     }

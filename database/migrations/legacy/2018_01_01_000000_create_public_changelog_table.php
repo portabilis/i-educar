@@ -25,6 +25,9 @@ class CreatePublicChangelogTable extends Migration
                     applied_by character varying(100) NOT NULL,
                     description character varying(500) NOT NULL
                 );
+                
+                ALTER TABLE ONLY public.changelog
+                    ADD CONSTRAINT pkchangelog PRIMARY KEY (change_number, delta_set);
             '
         );
     }

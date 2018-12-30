@@ -36,6 +36,9 @@ class CreatePmieducarAcervoAssuntoTable extends Migration
                     ref_cod_biblioteca integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.acervo_assunto
+                    ADD CONSTRAINT acervo_assunto_pkey PRIMARY KEY (cod_acervo_assunto);
+
                 SELECT pg_catalog.setval(\'pmieducar.acervo_assunto_cod_acervo_assunto_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarAcervoAssuntoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.acervo_assunto');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.acervo_assunto_cod_acervo_assunto_seq;');
     }
 }

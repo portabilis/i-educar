@@ -35,6 +35,9 @@ class CreateModulesMotoristaTable extends Migration
                     observacao character varying(255)
                 );
                 
+                ALTER TABLE ONLY modules.motorista
+                    ADD CONSTRAINT motorista_pkey PRIMARY KEY (cod_motorista);
+
                 SELECT pg_catalog.setval(\'modules.motorista_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreateModulesMotoristaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.motorista');
+
+        DB::unprepared('DROP SEQUENCE modules.motorista_seq;');
     }
 }

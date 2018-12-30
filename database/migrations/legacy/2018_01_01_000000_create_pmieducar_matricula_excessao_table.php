@@ -37,6 +37,9 @@ class CreatePmieducarMatriculaExcessaoTable extends Migration
                     permite_exame boolean
                 );
                 
+                ALTER TABLE ONLY pmieducar.matricula_excessao
+                    ADD CONSTRAINT matricula_excessao_pk PRIMARY KEY (cod_aluno_excessao);
+
                 SELECT pg_catalog.setval(\'pmieducar.matricula_excessao_cod_aluno_excessao_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmieducarMatriculaExcessaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.matricula_excessao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.matricula_excessao_cod_aluno_excessao_seq;');
     }
 }

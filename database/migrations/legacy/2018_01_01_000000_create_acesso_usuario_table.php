@@ -37,6 +37,9 @@ class CreateAcessoUsuarioTable extends Migration
                     CONSTRAINT ck_usuario_mudar_senha CHECK (((mudar_senha = \'S\'::bpchar) OR (mudar_senha = \'N\'::bpchar))),
                     CONSTRAINT ck_usuario_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
+                
+                ALTER TABLE ONLY acesso.usuario
+                    ADD CONSTRAINT pk_usuario PRIMARY KEY (login);
             '
         );
     }

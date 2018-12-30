@@ -34,6 +34,9 @@ class CreatePortalPortalConcursoTable extends Migration
                     data_hora timestamp without time zone
                 );
                 
+                ALTER TABLE ONLY portal.portal_concurso
+                    ADD CONSTRAINT portal_concurso_pk PRIMARY KEY (cod_portal_concurso);
+
                 SELECT pg_catalog.setval(\'portal.portal_concurso_cod_portal_concurso_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePortalPortalConcursoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.portal_concurso');
+
+        DB::unprepared('DROP SEQUENCE portal.portal_concurso_cod_portal_concurso_seq;');
     }
 }

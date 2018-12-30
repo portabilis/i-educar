@@ -38,6 +38,9 @@ class CreatePortalImagemTable extends Migration
                     ref_cod_pessoa_exc integer
                 );
                 
+                ALTER TABLE ONLY portal.imagem
+                    ADD CONSTRAINT imagem_pkey PRIMARY KEY (cod_imagem);
+
                 SELECT pg_catalog.setval(\'portal.imagem_cod_imagem_seq\', 186, true);
             '
         );
@@ -51,5 +54,7 @@ class CreatePortalImagemTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.imagem');
+
+        DB::unprepared('DROP SEQUENCE portal.imagem_cod_imagem_seq;');
     }
 }

@@ -26,6 +26,9 @@ class CreatePmiotopicGrupomoderadorTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmiotopic.grupomoderador
+                    ADD CONSTRAINT grupomoderador_pkey PRIMARY KEY (ref_ref_cod_pessoa_fj, ref_cod_grupos);
             '
         );
     }

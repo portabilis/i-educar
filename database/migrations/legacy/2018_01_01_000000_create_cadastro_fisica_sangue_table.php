@@ -22,6 +22,9 @@ class CreateCadastroFisicaSangueTable extends Migration
                     grupo character(2) NOT NULL,
                     rh smallint NOT NULL
                 );
+                
+                ALTER TABLE ONLY cadastro.fisica_sangue
+                    ADD CONSTRAINT fisica_sangue_pkey PRIMARY KEY (idpes);
             '
         );
     }

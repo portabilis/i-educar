@@ -22,6 +22,9 @@ class CreatePmiacoesSecretariaResponsavelTable extends Migration
                     ref_cod_funcionario_cad integer NOT NULL,
                     data_cadastro timestamp without time zone NOT NULL
                 );
+                
+                ALTER TABLE ONLY pmiacoes.secretaria_responsavel
+                    ADD CONSTRAINT secretaria_responsavel_pkey PRIMARY KEY (ref_cod_setor);
             '
         );
     }

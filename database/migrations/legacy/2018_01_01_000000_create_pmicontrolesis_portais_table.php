@@ -37,6 +37,9 @@ class CreatePmicontrolesisPortaisTable extends Migration
                     descricao text
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.portais
+                    ADD CONSTRAINT portais_pkey PRIMARY KEY (cod_portais);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.portais_cod_portais_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmicontrolesisPortaisTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.portais');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.portais_cod_portais_seq;');
     }
 }

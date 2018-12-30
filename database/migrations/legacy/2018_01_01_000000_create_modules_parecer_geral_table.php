@@ -13,8 +13,6 @@ class CreateModulesParecerGeralTable extends Migration
      */
     public function up()
     {
-        # FIXME
-
         DB::unprepared(
             '
                 SET default_with_oids = false;
@@ -34,6 +32,9 @@ class CreateModulesParecerGeralTable extends Migration
                 );
 
                 ALTER SEQUENCE modules.parecer_geral_id_seq OWNED BY modules.parecer_geral.id;
+
+                ALTER TABLE ONLY modules.parecer_geral
+                    ADD CONSTRAINT parecer_geral_pkey PRIMARY KEY (parecer_aluno_id, etapa);
 
                 ALTER TABLE ONLY modules.parecer_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_geral_id_seq\'::regclass);
                 

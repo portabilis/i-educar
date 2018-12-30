@@ -37,6 +37,9 @@ class CreatePublicSetorTable extends Migration
                     CONSTRAINT ck_setor_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY public.setor
+                    ADD CONSTRAINT pk_setor PRIMARY KEY (idset);
+
                 SELECT pg_catalog.setval(\'public.setor_idset_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePublicSetorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('public.setor');
+
+        DB::unprepared('DROP SEQUENCE public.setor_idset_seq;');
     }
 }

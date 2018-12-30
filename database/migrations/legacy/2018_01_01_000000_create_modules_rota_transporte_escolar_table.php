@@ -36,6 +36,9 @@ class CreateModulesRotaTransporteEscolarTable extends Migration
                     tercerizado character(1) NOT NULL
                 );
 
+                ALTER TABLE ONLY modules.rota_transporte_escolar
+                    ADD CONSTRAINT rota_transporte_escolar_cod_rota_transporte_escolar_pkey PRIMARY KEY (cod_rota_transporte_escolar);
+
                 SELECT pg_catalog.setval(\'modules.rota_transporte_escolar_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreateModulesRotaTransporteEscolarTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.rota_transporte_escolar');
+
+        DB::unprepared('DROP SEQUENCE modules.rota_transporte_escolar_seq;');
     }
 }

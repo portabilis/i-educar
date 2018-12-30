@@ -32,6 +32,9 @@ class CreateModulesNotaGeralTable extends Migration
                     etapa character varying(2) NOT NULL
                 );
                 
+                ALTER TABLE ONLY modules.nota_geral
+                    ADD CONSTRAINT nota_geral_pkey PRIMARY KEY (id);
+
                 SELECT pg_catalog.setval(\'modules.nota_geral_id_seq\', 958638, false);
             '
         );
@@ -45,5 +48,7 @@ class CreateModulesNotaGeralTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.nota_geral');
+
+        DB::unprepared('DROP SEQUENCE modules.nota_geral_id_seq;');
     }
 }

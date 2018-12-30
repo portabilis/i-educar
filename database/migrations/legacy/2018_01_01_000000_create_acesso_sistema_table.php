@@ -33,6 +33,9 @@ class CreateAcessoSistemaTable extends Migration
                     CONSTRAINT ck_sistema_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY acesso.sistema
+                    ADD CONSTRAINT pk_sistema PRIMARY KEY (idsis);
+
                 SELECT pg_catalog.setval(\'acesso.sistema_idsis_seq\', 17, true);
             '
         );
@@ -46,5 +49,7 @@ class CreateAcessoSistemaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('acesso.sistema');
+
+        DB::unprepared('DROP SEQUENCE acesso.sistema_idsis_seq;');
     }
 }

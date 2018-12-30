@@ -36,6 +36,9 @@ class CreateModulesPontoTransporteEscolarTable extends Migration
                     longitude character varying(20)
                 );
                 
+                ALTER TABLE ONLY modules.ponto_transporte_escolar
+                    ADD CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar);
+
                 SELECT pg_catalog.setval(\'modules.ponto_transporte_escolar_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreateModulesPontoTransporteEscolarTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.ponto_transporte_escolar');
+
+        DB::unprepared('DROP SEQUENCE modules.ponto_transporte_escolar_seq;');
     }
 }

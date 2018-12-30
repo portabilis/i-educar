@@ -38,6 +38,9 @@ class CreatePmieducarMaterialDidaticoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.material_didatico
+                    ADD CONSTRAINT material_didatico_pkey PRIMARY KEY (cod_material_didatico);
+
                 SELECT pg_catalog.setval(\'pmieducar.material_didatico_cod_material_didatico_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreatePmieducarMaterialDidaticoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.material_didatico');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.material_didatico_cod_material_didatico_seq;');
     }
 }

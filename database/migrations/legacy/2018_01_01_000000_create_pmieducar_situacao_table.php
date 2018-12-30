@@ -39,6 +39,9 @@ class CreatePmieducarSituacaoTable extends Migration
                     ref_cod_biblioteca integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.situacao
+                    ADD CONSTRAINT situacao_pkey PRIMARY KEY (cod_situacao);
+
                 SELECT pg_catalog.setval(\'pmieducar.situacao_cod_situacao_seq\', 1, false);
             '
         );
@@ -52,5 +55,7 @@ class CreatePmieducarSituacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.situacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.situacao_cod_situacao_seq;');
     }
 }

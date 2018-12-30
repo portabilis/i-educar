@@ -24,6 +24,9 @@ class CreateConsistenciacaoHistoricoCampoTable extends Migration
                     data_hora timestamp without time zone NOT NULL,
                     CONSTRAINT ck_historico_campo_cred CHECK (((credibilidade >= (1)::numeric) AND (credibilidade <= (5)::numeric)))
                 );
+                
+                ALTER TABLE ONLY consistenciacao.historico_campo
+                    ADD CONSTRAINT pk_historico_campo PRIMARY KEY (idpes, idcam);
             '
         );
     }

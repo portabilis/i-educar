@@ -33,6 +33,9 @@ class CreateModulesFaltaGeralTable extends Migration
 
                 ALTER SEQUENCE modules.falta_geral_id_seq OWNED BY modules.falta_geral.id;
                 
+                ALTER TABLE ONLY modules.falta_geral
+                    ADD CONSTRAINT falta_geral_pkey PRIMARY KEY (falta_aluno_id, etapa);
+
                 ALTER TABLE ONLY modules.falta_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_geral_id_seq\'::regclass);
                 
                 SELECT pg_catalog.setval(\'modules.falta_geral_id_seq\', 1, false);

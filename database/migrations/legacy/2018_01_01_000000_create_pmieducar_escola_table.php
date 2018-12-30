@@ -144,6 +144,9 @@ class CreatePmieducarEscolaTable extends Migration
                     codigo_inep_escola_compartilhada6 integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.escola
+                    ADD CONSTRAINT escola_pkey PRIMARY KEY (cod_escola);
+
                 SELECT pg_catalog.setval(\'pmieducar.escola_cod_escola_seq\', 1, true);
             '
         );
@@ -157,5 +160,7 @@ class CreatePmieducarEscolaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.escola');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.escola_cod_escola_seq;');
     }
 }

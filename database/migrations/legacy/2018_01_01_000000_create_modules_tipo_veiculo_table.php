@@ -29,6 +29,9 @@ class CreateModulesTipoVeiculoTable extends Migration
                     descricao character varying(60)
                 );
                 
+                ALTER TABLE ONLY modules.tipo_veiculo
+                    ADD CONSTRAINT tipo_veiculo_pkey PRIMARY KEY (cod_tipo_veiculo);
+
                 SELECT pg_catalog.setval(\'modules.tipo_veiculo_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreateModulesTipoVeiculoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('modules.tipo_veiculo');
+
+        DB::unprepared('DROP SEQUENCE modules.tipo_veiculo_seq;');
     }
 }

@@ -29,6 +29,9 @@ class CreatePortalImagemTipoTable extends Migration
                     nm_tipo character varying(100) NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.imagem_tipo
+                    ADD CONSTRAINT imagem_tipo_pkey PRIMARY KEY (cod_imagem_tipo);
+
                 SELECT pg_catalog.setval(\'portal.imagem_tipo_cod_imagem_tipo_seq\', 6, true);
             '
         );
@@ -42,5 +45,7 @@ class CreatePortalImagemTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.imagem_tipo');
+
+        DB::unprepared('DROP SEQUENCE portal.imagem_tipo_cod_imagem_tipo_seq;');
     }
 }

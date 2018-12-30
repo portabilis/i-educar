@@ -21,6 +21,9 @@ class CreateCadastroEstadoCivilTable extends Migration
                     ideciv numeric(1,0) NOT NULL,
                     descricao character varying(15) NOT NULL
                 );
+                
+                ALTER TABLE ONLY cadastro.estado_civil
+                    ADD CONSTRAINT pk_estado_civil PRIMARY KEY (ideciv);
             '
         );
     }

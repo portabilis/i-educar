@@ -35,6 +35,9 @@ class CreatePmieducarCalendarioAnotacaoTable extends Migration
                     ativo smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.calendario_anotacao
+                    ADD CONSTRAINT calendario_anotacao_pkey PRIMARY KEY (cod_calendario_anotacao);
+
                 SELECT pg_catalog.setval(\'pmieducar.calendario_anotacao_cod_calendario_anotacao_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarCalendarioAnotacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.calendario_anotacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.calendario_anotacao_cod_calendario_anotacao_seq;');
     }
 }

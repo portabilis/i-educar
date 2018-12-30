@@ -30,6 +30,9 @@ class CreatePortalMaillingEmailTable extends Migration
                     email character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.mailling_email
+                    ADD CONSTRAINT mailling_email_pk PRIMARY KEY (cod_mailling_email);
+
                 SELECT pg_catalog.setval(\'portal.mailling_email_cod_mailling_email_seq\', 1, false);
             '
         );
@@ -43,5 +46,7 @@ class CreatePortalMaillingEmailTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.mailling_email');
+
+        DB::unprepared('DROP SEQUENCE portal.mailling_email_cod_mailling_email_seq;');
     }
 }

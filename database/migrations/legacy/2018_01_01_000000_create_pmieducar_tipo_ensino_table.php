@@ -36,6 +36,9 @@ class CreatePmieducarTipoEnsinoTable extends Migration
                     atividade_complementar boolean DEFAULT false
                 );
                 
+                ALTER TABLE ONLY pmieducar.tipo_ensino
+                    ADD CONSTRAINT tipo_ensino_pkey PRIMARY KEY (cod_tipo_ensino);
+
                 SELECT pg_catalog.setval(\'pmieducar.tipo_ensino_cod_tipo_ensino_seq\', 1, true);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarTipoEnsinoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.tipo_ensino');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.tipo_ensino_cod_tipo_ensino_seq;');
     }
 }

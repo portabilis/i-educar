@@ -35,6 +35,9 @@ class CreatePmieducarTipoRegimeTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.tipo_regime
+                    ADD CONSTRAINT tipo_regime_pkey PRIMARY KEY (cod_tipo_regime);
+
                 SELECT pg_catalog.setval(\'pmieducar.tipo_regime_cod_tipo_regime_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarTipoRegimeTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.tipo_regime');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.tipo_regime_cod_tipo_regime_seq;');
     }
 }

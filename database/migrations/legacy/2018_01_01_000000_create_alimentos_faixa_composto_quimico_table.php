@@ -33,6 +33,9 @@ class CreateAlimentosFaixaCompostoQuimicoTable extends Migration
                     CONSTRAINT ck_qtde_max_min CHECK (((qtde_max_min = \'MAX\'::bpchar) OR (qtde_max_min = \'MIN\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY alimentos.faixa_composto_quimico
+                    ADD CONSTRAINT pk_faixa_composto_quimico PRIMARY KEY (idfcp);
+
                 SELECT pg_catalog.setval(\'alimentos.faixa_composto_quimico_idfcp_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreateAlimentosFaixaCompostoQuimicoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.faixa_composto_quimico');
+
+        DB::unprepared('DROP SEQUENCE alimentos.faixa_composto_quimico_idfcp_seq;');
     }
 }

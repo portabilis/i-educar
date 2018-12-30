@@ -21,6 +21,9 @@ class CreateCadastroPessoaFoneticoTable extends Migration
                     idpes numeric(8,0) NOT NULL,
                     fonema character varying(30) NOT NULL
                 );
+                
+                ALTER TABLE ONLY cadastro.pessoa_fonetico
+                    ADD CONSTRAINT pk_pessoa_fonetico PRIMARY KEY (fonema, idpes);
             '
         );
     }

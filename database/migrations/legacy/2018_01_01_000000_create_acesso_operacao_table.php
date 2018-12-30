@@ -33,6 +33,9 @@ class CreateAcessoOperacaoTable extends Migration
                     CONSTRAINT ck_operacao_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY acesso.operacao
+                    ADD CONSTRAINT pk_operacao PRIMARY KEY (idope);
+
                 SELECT pg_catalog.setval(\'acesso.operacao_idope_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreateAcessoOperacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('acesso.operacao');
+
+        DB::unprepared('DROP SEQUENCE acesso.operacao_idope_seq;');
     }
 }

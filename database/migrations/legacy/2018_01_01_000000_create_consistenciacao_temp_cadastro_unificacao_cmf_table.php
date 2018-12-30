@@ -41,6 +41,9 @@ class CreateConsistenciacaoTempCadastroUnificacaoCmfTable extends Migration
                     nome_fantasia character varying(50),
                     inscr_estadual character varying(10)
                 );
+                
+                ALTER TABLE ONLY consistenciacao.temp_cadastro_unificacao_cmf
+                    ADD CONSTRAINT pk_temp_cadastro_unificacao_cmf PRIMARY KEY (idpes);
             '
         );
     }

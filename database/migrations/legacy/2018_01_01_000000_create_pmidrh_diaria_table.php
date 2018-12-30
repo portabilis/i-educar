@@ -49,6 +49,9 @@ class CreatePmidrhDiariaTable extends Migration
                     num_diaria numeric(6,0)
                 );
                 
+                ALTER TABLE ONLY pmidrh.diaria
+                    ADD CONSTRAINT diaria_pkey PRIMARY KEY (cod_diaria);
+
                 SELECT pg_catalog.setval(\'pmidrh.diaria_cod_diaria_seq\', 1, false);
             '
         );
@@ -62,5 +65,7 @@ class CreatePmidrhDiariaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmidrh.diaria');
+
+        DB::unprepared('DROP SEQUENCE pmidrh.diaria_cod_diaria_seq;');
     }
 }

@@ -33,6 +33,9 @@ class CreatePmiacoesAcaoGovernoArquivoTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmiacoes.acao_governo_arquivo
+                    ADD CONSTRAINT acao_governo_arquivo_pkey PRIMARY KEY (cod_acao_governo_arquivo);
+
                 SELECT pg_catalog.setval(\'pmiacoes.acao_governo_arquivo_cod_acao_governo_arquivo_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreatePmiacoesAcaoGovernoArquivoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmiacoes.acao_governo_arquivo');
+
+        DB::unprepared('DROP SEQUENCE pmiacoes.acao_governo_arquivo_cod_acao_governo_arquivo_seq;');
     }
 }

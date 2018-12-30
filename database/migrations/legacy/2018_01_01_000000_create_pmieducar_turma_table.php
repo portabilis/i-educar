@@ -87,6 +87,9 @@ class CreatePmieducarTurmaTable extends Migration
                     tipo_boletim_diferenciado smallint
                 );
                 
+                ALTER TABLE ONLY pmieducar.turma
+                    ADD CONSTRAINT turma_pkey PRIMARY KEY (cod_turma);
+
                 SELECT pg_catalog.setval(\'pmieducar.turma_cod_turma_seq\', 2, true);
             '
         );
@@ -100,5 +103,7 @@ class CreatePmieducarTurmaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.turma');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.turma_cod_turma_seq;');
     }
 }

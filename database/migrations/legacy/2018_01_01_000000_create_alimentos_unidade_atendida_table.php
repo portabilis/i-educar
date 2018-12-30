@@ -42,6 +42,9 @@ class CreateAlimentosUnidadeAtendidaTable extends Migration
                     diretor character varying(40) NOT NULL
                 );
                 
+                ALTER TABLE ONLY alimentos.unidade_atendida
+                    ADD CONSTRAINT pk_unidade_atendida PRIMARY KEY (iduni);
+
                 SELECT pg_catalog.setval(\'alimentos.unidade_atendida_iduni_seq\', 1, false);
             '
         );
@@ -55,5 +58,7 @@ class CreateAlimentosUnidadeAtendidaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('alimentos.unidade_atendida');
+
+        DB::unprepared('DROP SEQUENCE alimentos.unidade_atendida_iduni_seq;');
     }
 }

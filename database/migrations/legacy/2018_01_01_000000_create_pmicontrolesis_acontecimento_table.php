@@ -43,6 +43,9 @@ class CreatePmicontrolesisAcontecimentoTable extends Migration
                     link character varying
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.acontecimento
+                    ADD CONSTRAINT acontecimento_pkey PRIMARY KEY (cod_acontecimento);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.acontecimento_cod_acontecimento_seq\', 1, false);
             '
         );
@@ -56,5 +59,7 @@ class CreatePmicontrolesisAcontecimentoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.acontecimento');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.acontecimento_cod_acontecimento_seq;');
     }
 }

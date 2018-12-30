@@ -58,6 +58,12 @@ class CreatePmieducarAlunoTable extends Migration
                     recursos_prova_inep integer[]
                 );
                 
+                ALTER TABLE ONLY pmieducar.aluno
+                    ADD CONSTRAINT aluno_pkey PRIMARY KEY (cod_aluno);
+
+                ALTER TABLE ONLY pmieducar.aluno
+                    ADD CONSTRAINT aluno_ref_idpes_un UNIQUE (ref_idpes);
+
                 SELECT pg_catalog.setval(\'pmieducar.aluno_cod_aluno_seq\', 2, true);
             '
         );
@@ -71,5 +77,7 @@ class CreatePmieducarAlunoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.aluno');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.aluno_cod_aluno_seq;');
     }
 }

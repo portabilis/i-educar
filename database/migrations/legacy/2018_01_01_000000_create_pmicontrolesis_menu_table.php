@@ -38,6 +38,9 @@ class CreatePmicontrolesisMenuTable extends Migration
                     tipo_menu integer
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.menu
+                    ADD CONSTRAINT menu_pkey PRIMARY KEY (cod_menu);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.menu_cod_menu_seq\', 20709, true);
             '
         );
@@ -51,5 +54,7 @@ class CreatePmicontrolesisMenuTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.menu');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.menu_cod_menu_seq;');
     }
 }

@@ -33,6 +33,9 @@ class CreateConsistenciacaoMetadadoTable extends Migration
                     CONSTRAINT ck_metadado_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY consistenciacao.metadado
+                    ADD CONSTRAINT pk_metadado PRIMARY KEY (idmet);
+
                 SELECT pg_catalog.setval(\'consistenciacao.metadado_idmet_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreateConsistenciacaoMetadadoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.metadado');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.metadado_idmet_seq;');
     }
 }

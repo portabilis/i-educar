@@ -37,6 +37,9 @@ class CreatePmicontrolesisServicosTable extends Migration
                     descricao text
                 );
                 
+                ALTER TABLE ONLY pmicontrolesis.servicos
+                    ADD CONSTRAINT servicos_pkey PRIMARY KEY (cod_servicos);
+
                 SELECT pg_catalog.setval(\'pmicontrolesis.servicos_cod_servicos_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmicontrolesisServicosTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmicontrolesis.servicos');
+
+        DB::unprepared('DROP SEQUENCE pmicontrolesis.servicos_cod_servicos_seq;');
     }
 }

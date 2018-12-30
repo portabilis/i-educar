@@ -21,6 +21,9 @@ class CreateModulesEducacensoOrgaoRegionalTable extends Migration
                     sigla_uf character varying(2) NOT NULL,
                     codigo character varying(5) NOT NULL
                 );
+                
+                ALTER TABLE ONLY modules.educacenso_orgao_regional
+                    ADD CONSTRAINT pk_educacenso_orgao_regional PRIMARY KEY (sigla_uf, codigo);
             '
         );
     }

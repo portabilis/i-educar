@@ -37,6 +37,9 @@ class CreatePmiotopicReuniaoTable extends Migration
                     publica smallint DEFAULT 0 NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmiotopic.reuniao
+                    ADD CONSTRAINT reuniao_pkey PRIMARY KEY (cod_reuniao);
+
                 SELECT pg_catalog.setval(\'pmiotopic.reuniao_cod_reuniao_seq\', 1, false);
             '
         );
@@ -50,5 +53,7 @@ class CreatePmiotopicReuniaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmiotopic.reuniao');
+
+        DB::unprepared('DROP SEQUENCE pmiotopic.reuniao_cod_reuniao_seq;');
     }
 }

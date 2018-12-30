@@ -17,6 +17,13 @@ class CreateModulesComponenteCurricularTable extends Migration
             '
                 SET default_with_oids = false;
 
+                CREATE SEQUENCE modules.componente_curricular_id_seq
+                    START WITH 1
+                    INCREMENT BY 1
+                    NO MINVALUE
+                    NO MAXVALUE
+                    CACHE 1;
+
                 CREATE TABLE modules.componente_curricular (
                     id integer NOT NULL,
                     instituicao_id integer NOT NULL,
@@ -27,6 +34,15 @@ class CreateModulesComponenteCurricularTable extends Migration
                     codigo_educacenso smallint,
                     ordenamento integer DEFAULT 99999
                 );
+                
+                ALTER TABLE ONLY modules.componente_curricular
+                    ADD CONSTRAINT componente_curricular_pkey PRIMARY KEY (id, instituicao_id);
+                    
+                ALTER SEQUENCE modules.componente_curricular_id_seq OWNED BY modules.componente_curricular.id;
+                
+                ALTER TABLE ONLY modules.componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.componente_curricular_id_seq\'::regclass);
+                
+                SELECT pg_catalog.setval(\'modules.componente_curricular_id_seq\', 2, true);
             '
         );
     }

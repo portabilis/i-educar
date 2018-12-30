@@ -37,6 +37,9 @@ class CreatePublicPgheroQueryStatsTable extends Migration
                 
                 ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
                 
+                ALTER TABLE ONLY public.pghero_query_stats
+                    ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
+
                 ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval(\'public.pghero_query_stats_id_seq\'::regclass);
 
                 SELECT pg_catalog.setval(\'public.pghero_query_stats_id_seq\', 1, false);

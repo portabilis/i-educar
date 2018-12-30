@@ -35,6 +35,9 @@ class CreatePmieducarDisciplinaTopicoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.disciplina_topico
+                    ADD CONSTRAINT disciplina_topico_pkey PRIMARY KEY (cod_disciplina_topico);
+
                 SELECT pg_catalog.setval(\'pmieducar.disciplina_topico_cod_disciplina_topico_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarDisciplinaTopicoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.disciplina_topico');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.disciplina_topico_cod_disciplina_topico_seq;');
     }
 }

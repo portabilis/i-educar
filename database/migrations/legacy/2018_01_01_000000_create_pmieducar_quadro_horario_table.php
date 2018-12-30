@@ -35,6 +35,9 @@ class CreatePmieducarQuadroHorarioTable extends Migration
                     ano integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.quadro_horario
+                    ADD CONSTRAINT quadro_horario_pkey PRIMARY KEY (cod_quadro_horario);
+
                 SELECT pg_catalog.setval(\'pmieducar.quadro_horario_cod_quadro_horario_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarQuadroHorarioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.quadro_horario');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.quadro_horario_cod_quadro_horario_seq;');
     }
 }

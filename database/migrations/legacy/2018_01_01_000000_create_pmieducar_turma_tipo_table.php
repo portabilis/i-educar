@@ -36,6 +36,9 @@ class CreatePmieducarTurmaTipoTable extends Migration
                     ref_cod_instituicao integer
                 );
                 
+                ALTER TABLE ONLY pmieducar.turma_tipo
+                    ADD CONSTRAINT turma_tipo_pkey PRIMARY KEY (cod_turma_tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.turma_tipo_cod_turma_tipo_seq\', 1, true);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarTurmaTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.turma_tipo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.turma_tipo_cod_turma_tipo_seq;');
     }
 }

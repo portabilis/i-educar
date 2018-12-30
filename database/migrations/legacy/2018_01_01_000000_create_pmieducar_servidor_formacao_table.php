@@ -38,6 +38,9 @@ class CreatePmieducarServidorFormacaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.servidor_formacao
+                    ADD CONSTRAINT servidor_formacao_pkey PRIMARY KEY (cod_formacao);
+
                 SELECT pg_catalog.setval(\'pmieducar.servidor_formacao_cod_formacao_seq\', 1, false);
             '
         );
@@ -51,5 +54,7 @@ class CreatePmieducarServidorFormacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.servidor_formacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.servidor_formacao_cod_formacao_seq;');
     }
 }

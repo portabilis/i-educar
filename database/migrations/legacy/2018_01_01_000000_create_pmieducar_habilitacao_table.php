@@ -36,6 +36,9 @@ class CreatePmieducarHabilitacaoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.habilitacao
+                    ADD CONSTRAINT habilitacao_pkey PRIMARY KEY (cod_habilitacao);
+
                 SELECT pg_catalog.setval(\'pmieducar.habilitacao_cod_habilitacao_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarHabilitacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.habilitacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.habilitacao_cod_habilitacao_seq;');
     }
 }

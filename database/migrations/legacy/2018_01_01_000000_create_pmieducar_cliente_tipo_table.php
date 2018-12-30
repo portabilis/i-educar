@@ -36,6 +36,9 @@ class CreatePmieducarClienteTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.cliente_tipo
+                    ADD CONSTRAINT cliente_tipo_pkey PRIMARY KEY (cod_cliente_tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.cliente_tipo_cod_cliente_tipo_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarClienteTipoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.cliente_tipo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.cliente_tipo_cod_cliente_tipo_seq;');
     }
 }

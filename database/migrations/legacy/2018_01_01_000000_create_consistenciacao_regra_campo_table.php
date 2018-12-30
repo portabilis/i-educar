@@ -31,6 +31,9 @@ class CreateConsistenciacaoRegraCampoTable extends Migration
                     CONSTRAINT ck_regra_campo_tipo CHECK (((tipo = \'S\'::bpchar) OR (tipo = \'N\'::bpchar)))
                 );
                 
+                ALTER TABLE ONLY consistenciacao.regra_campo
+                    ADD CONSTRAINT pk_regra_campo PRIMARY KEY (idreg);
+
                 SELECT pg_catalog.setval(\'consistenciacao.regra_campo_idreg_seq\', 1, false);
             '
         );
@@ -44,5 +47,7 @@ class CreateConsistenciacaoRegraCampoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.regra_campo');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.regra_campo_idreg_seq;');
     }
 }

@@ -34,6 +34,9 @@ class CreatePmiacoesAcaoGovernoFotoTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmiacoes.acao_governo_foto
+                    ADD CONSTRAINT acao_governo_foto_pkey PRIMARY KEY (cod_acao_governo_foto);
+
                 SELECT pg_catalog.setval(\'pmiacoes.acao_governo_foto_cod_acao_governo_foto_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePmiacoesAcaoGovernoFotoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmiacoes.acao_governo_foto');
+
+        DB::unprepared('DROP SEQUENCE pmiacoes.acao_governo_foto_cod_acao_governo_foto_seq;');
     }
 }

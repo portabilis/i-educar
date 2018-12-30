@@ -32,6 +32,9 @@ class CreatePmieducarServidorCursoTable extends Migration
                     diplomas_registros text
                 );
                 
+                ALTER TABLE ONLY pmieducar.servidor_curso
+                    ADD CONSTRAINT servidor_curso_pkey PRIMARY KEY (cod_servidor_curso);
+
                 SELECT pg_catalog.setval(\'pmieducar.servidor_curso_cod_servidor_curso_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreatePmieducarServidorCursoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.servidor_curso');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.servidor_curso_cod_servidor_curso_seq;');
     }
 }

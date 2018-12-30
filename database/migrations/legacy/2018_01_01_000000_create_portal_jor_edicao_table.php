@@ -34,6 +34,9 @@ class CreatePortalJorEdicaoTable extends Migration
                     jor_extra smallint DEFAULT (0)::smallint
                 );
                 
+                ALTER TABLE ONLY portal.jor_edicao
+                    ADD CONSTRAINT jor_edicao_pk PRIMARY KEY (cod_jor_edicao);
+
                 SELECT pg_catalog.setval(\'portal.jor_edicao_cod_jor_edicao_seq\', 1, false);
             '
         );
@@ -47,5 +50,7 @@ class CreatePortalJorEdicaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.jor_edicao');
+
+        DB::unprepared('DROP SEQUENCE portal.jor_edicao_cod_jor_edicao_seq;');
     }
 }

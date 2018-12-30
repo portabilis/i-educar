@@ -34,6 +34,9 @@ class CreateCadastroJuridicaTable extends Migration
                     CONSTRAINT ck_juridica_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_juridica_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
+                
+                ALTER TABLE ONLY cadastro.juridica
+                    ADD CONSTRAINT pk_juridica PRIMARY KEY (idpes);
             '
         );
     }

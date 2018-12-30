@@ -22,6 +22,9 @@ class CreateConsistenciacaoOcorrenciaRegraCampoTable extends Migration
                     conteudo_padrao character varying(60) NOT NULL,
                     ocorrencias text NOT NULL
                 );
+                
+                ALTER TABLE ONLY consistenciacao.ocorrencia_regra_campo
+                    ADD CONSTRAINT pk_ocorrencia_regra_campo PRIMARY KEY (idreg, conteudo_padrao);
             '
         );
     }

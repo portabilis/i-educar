@@ -33,6 +33,9 @@ class CreatePortalMaillingEmailConteudoTable extends Migration
                     assunto character varying(255)
                 );
                 
+                ALTER TABLE ONLY portal.mailling_email_conteudo
+                    ADD CONSTRAINT mailling_email_conteudo_pk PRIMARY KEY (cod_mailling_email_conteudo);
+
                 SELECT pg_catalog.setval(\'portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq\', 1, false);
             '
         );
@@ -46,5 +49,7 @@ class CreatePortalMaillingEmailConteudoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.mailling_email_conteudo');
+
+        DB::unprepared('DROP SEQUENCE portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq;');
     }
 }

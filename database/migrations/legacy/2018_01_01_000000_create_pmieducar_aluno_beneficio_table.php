@@ -35,6 +35,9 @@ class CreatePmieducarAlunoBeneficioTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.aluno_beneficio
+                    ADD CONSTRAINT aluno_beneficio_pkey PRIMARY KEY (cod_aluno_beneficio);
+
                 SELECT pg_catalog.setval(\'pmieducar.aluno_beneficio_cod_aluno_beneficio_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarAlunoBeneficioTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.aluno_beneficio');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.aluno_beneficio_cod_aluno_beneficio_seq;');
     }
 }

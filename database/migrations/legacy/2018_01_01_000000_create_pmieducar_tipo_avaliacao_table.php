@@ -36,6 +36,9 @@ class CreatePmieducarTipoAvaliacaoTable extends Migration
                     ref_cod_instituicao integer NOT NULL
                 );
 
+                ALTER TABLE ONLY pmieducar.tipo_avaliacao
+                    ADD CONSTRAINT tipo_avaliacao_pkey PRIMARY KEY (cod_tipo_avaliacao);
+
                 SELECT pg_catalog.setval(\'pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarTipoAvaliacaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.tipo_avaliacao');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq;');
     }
 }

@@ -29,6 +29,9 @@ class CreatePortalComprasFinalPregaoTable extends Migration
                     nm_final character varying(255) DEFAULT \'\'::character varying NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.compras_final_pregao
+                    ADD CONSTRAINT compras_final_pregao_pk PRIMARY KEY (cod_compras_final_pregao);
+
                 SELECT pg_catalog.setval(\'portal.compras_final_pregao_cod_compras_final_pregao_seq\', 1, false);
             '
         );
@@ -42,5 +45,7 @@ class CreatePortalComprasFinalPregaoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.compras_final_pregao');
+
+        DB::unprepared('DROP SEQUENCE portal.compras_final_pregao_cod_compras_final_pregao_seq;');
     }
 }

@@ -40,6 +40,9 @@ class CreateConsistenciacaoIncoerenciaEnderecoTable extends Migration
                     CONSTRAINT ck_incoerencia_endereco_tipo CHECK ((((tipo)::text >= ((1)::numeric)::text) AND ((tipo)::text <= ((3)::numeric)::text)))
                 );
                 
+                ALTER TABLE ONLY consistenciacao.incoerencia_endereco
+                    ADD CONSTRAINT pk_incoerencia_endereco PRIMARY KEY (id_inc_end);
+
                 SELECT pg_catalog.setval(\'consistenciacao.incoerencia_endereco_id_inc_end_seq\', 1, false);
             '
         );
@@ -53,5 +56,7 @@ class CreateConsistenciacaoIncoerenciaEnderecoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('consistenciacao.incoerencia_endereco');
+
+        DB::unprepared('DROP SEQUENCE consistenciacao.incoerencia_endereco_id_inc_end_seq;');
     }
 }

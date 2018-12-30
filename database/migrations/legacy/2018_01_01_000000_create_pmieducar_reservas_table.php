@@ -36,6 +36,9 @@ class CreatePmieducarReservasTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.reservas
+                    ADD CONSTRAINT reservas_pkey PRIMARY KEY (cod_reserva);
+
                 SELECT pg_catalog.setval(\'pmieducar.reservas_cod_reserva_seq\', 1, false);
             '
         );
@@ -49,5 +52,7 @@ class CreatePmieducarReservasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.reservas');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.reservas_cod_reserva_seq;');
     }
 }

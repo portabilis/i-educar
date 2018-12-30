@@ -35,6 +35,9 @@ class CreatePmieducarCalendarioAnoLetivoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.calendario_ano_letivo
+                    ADD CONSTRAINT calendario_ano_letivo_pkey PRIMARY KEY (cod_calendario_ano_letivo);
+
                 SELECT pg_catalog.setval(\'pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq\', 1, false);
             '
         );
@@ -48,5 +51,7 @@ class CreatePmieducarCalendarioAnoLetivoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.calendario_ano_letivo');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq;');
     }
 }

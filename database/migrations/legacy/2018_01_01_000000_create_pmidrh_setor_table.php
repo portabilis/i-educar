@@ -41,6 +41,9 @@ class CreatePmidrhSetorTable extends Migration
                     ref_idpes_resp integer
                 );
                 
+                ALTER TABLE ONLY pmidrh.setor
+                    ADD CONSTRAINT setor_pkey PRIMARY KEY (cod_setor);
+
                 SELECT pg_catalog.setval(\'pmidrh.setor_cod_setor_seq\', 1, false);
             '
         );
@@ -54,5 +57,7 @@ class CreatePmidrhSetorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmidrh.setor');
+
+        DB::unprepared('DROP SEQUENCE pmidrh.setor_cod_setor_seq;');
     }
 }

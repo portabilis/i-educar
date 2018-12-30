@@ -42,6 +42,9 @@ class CreatePmieducarNotaAlunoTable extends Migration
                     nota double precision
                 );
                 
+                ALTER TABLE ONLY pmieducar.nota_aluno
+                    ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (cod_nota_aluno);
+
                 SELECT pg_catalog.setval(\'pmieducar.nota_aluno_cod_nota_aluno_seq\', 1, false);
             '
         );
@@ -55,5 +58,7 @@ class CreatePmieducarNotaAlunoTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.nota_aluno');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.nota_aluno_cod_nota_aluno_seq;');
     }
 }

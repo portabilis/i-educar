@@ -32,6 +32,9 @@ class CreatePmieducarFaltasTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY pmieducar.faltas
+                    ADD CONSTRAINT faltas_pkey PRIMARY KEY (ref_cod_matricula, sequencial);
+
                 SELECT pg_catalog.setval(\'pmieducar.faltas_sequencial_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreatePmieducarFaltasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pmieducar.faltas');
+
+        DB::unprepared('DROP SEQUENCE pmieducar.faltas_sequencial_seq;');
     }
 }

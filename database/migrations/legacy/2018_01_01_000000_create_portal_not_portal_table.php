@@ -32,6 +32,9 @@ class CreatePortalNotPortalTable extends Migration
                     data_noticia timestamp without time zone NOT NULL
                 );
                 
+                ALTER TABLE ONLY portal.not_portal
+                    ADD CONSTRAINT not_portal_pk PRIMARY KEY (cod_not_portal);
+
                 SELECT pg_catalog.setval(\'portal.not_portal_cod_not_portal_seq\', 1, false);
             '
         );
@@ -45,5 +48,7 @@ class CreatePortalNotPortalTable extends Migration
     public function down()
     {
         Schema::dropIfExists('portal.not_portal');
+
+        DB::unprepared('DROP SEQUENCE portal.not_portal_cod_not_portal_seq;');
     }
 }
