@@ -66,509 +66,417 @@ CREATE TABLE public.municipio (
     CONSTRAINT ck_municipio_tipo CHECK (((tipo = 'D'::bpchar) OR (tipo = 'M'::bpchar) OR (tipo = 'P'::bpchar) OR (tipo = 'R'::bpchar)))
 );
 
-CREATE TABLE pmiotopic.funcionario_su (
-    ref_ref_cod_pessoa_fj integer NOT NULL
-);
+                CREATE TABLE portal.acesso (
+                    cod_acesso integer DEFAULT nextval('portal.acesso_cod_acesso_seq'::regclass) NOT NULL,
+                    data_hora timestamp without time zone NOT NULL,
+                    ip_externo character varying(50) DEFAULT ''::character varying NOT NULL,
+                    ip_interno character varying(255) DEFAULT ''::character varying NOT NULL,
+                    cod_pessoa integer DEFAULT 0 NOT NULL,
+                    obs text,
+                    sucesso boolean DEFAULT true NOT NULL
+                );
 
-CREATE TABLE pmiotopic.grupomoderador (
-    ref_ref_cod_pessoa_fj integer NOT NULL,
-    ref_cod_grupos integer NOT NULL,
-    ref_pessoa_exc integer,
-    ref_pessoa_cad integer NOT NULL,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_exclusao timestamp without time zone,
-    ativo smallint DEFAULT (1)::smallint NOT NULL
-);
+                CREATE TABLE portal.agenda (
+                    cod_agenda integer DEFAULT nextval('portal.agenda_cod_agenda_seq'::regclass) NOT NULL,
+                    ref_ref_cod_pessoa_exc integer,
+                    ref_ref_cod_pessoa_cad integer NOT NULL,
+                    nm_agenda character varying NOT NULL,
+                    publica smallint DEFAULT 0 NOT NULL,
+                    envia_alerta smallint DEFAULT 0 NOT NULL,
+                    data_cad timestamp without time zone NOT NULL,
+                    data_edicao timestamp without time zone,
+                    ref_ref_cod_pessoa_own integer
+                );
 
-CREATE TABLE pmiotopic.grupopessoa (
-    ref_idpes integer NOT NULL,
-    ref_cod_grupos integer NOT NULL,
-    ref_grupos_exc integer,
-    ref_pessoa_exc integer,
-    ref_grupos_cad integer,
-    ref_pessoa_cad integer,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_exclusao timestamp without time zone,
-    ativo smallint DEFAULT (1)::smallint NOT NULL,
-    ref_cod_auxiliar_cad integer,
-    ref_ref_cod_atendimento_cad integer
-);
+                CREATE TABLE portal.agenda_compromisso (
+                    cod_agenda_compromisso integer NOT NULL,
+                    versao integer NOT NULL,
+                    ref_cod_agenda integer NOT NULL,
+                    ref_ref_cod_pessoa_cad integer NOT NULL,
+                    ativo smallint DEFAULT 1,
+                    data_inicio timestamp without time zone,
+                    titulo character varying,
+                    descricao text,
+                    importante smallint DEFAULT 0 NOT NULL,
+                    publico smallint DEFAULT 0 NOT NULL,
+                    data_cadastro timestamp without time zone NOT NULL,
+                    data_fim timestamp without time zone
+                );
 
-CREATE TABLE pmiotopic.grupos (
-    cod_grupos integer DEFAULT nextval('pmiotopic.grupos_cod_grupos_seq'::regclass) NOT NULL,
-    ref_pessoa_exc integer,
-    ref_pessoa_cad integer NOT NULL,
-    nm_grupo character varying(255) NOT NULL,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_exclusao timestamp without time zone,
-    ativo smallint DEFAULT (1)::smallint NOT NULL,
-    atendimento smallint DEFAULT 0 NOT NULL
-);
+                CREATE TABLE portal.agenda_pref (
+                    cod_comp integer DEFAULT nextval('portal.agenda_pref_cod_comp_seq'::regclass) NOT NULL,
+                    data_comp date NOT NULL,
+                    hora_comp time without time zone NOT NULL,
+                    hora_f_comp time without time zone NOT NULL,
+                    comp_comp text NOT NULL,
+                    local_comp character(1) DEFAULT 'I'::bpchar NOT NULL,
+                    publico_comp character(1) DEFAULT 'S'::bpchar NOT NULL,
+                    agenda_de character(1) DEFAULT 'P'::bpchar,
+                    ref_cad integer,
+                    versao integer DEFAULT 1 NOT NULL,
+                    ref_auto_cod integer
+                );
 
-CREATE TABLE pmiotopic.notas (
-    sequencial integer NOT NULL,
-    ref_idpes integer NOT NULL,
-    ref_pessoa_exc integer,
-    ref_pessoa_cad integer NOT NULL,
-    nota text NOT NULL,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_exclusao timestamp without time zone,
-    ativo smallint DEFAULT (1)::smallint NOT NULL
-);
+                CREATE TABLE portal.agenda_responsavel (
+                    ref_cod_agenda integer NOT NULL,
+                    ref_ref_cod_pessoa_fj integer NOT NULL,
+                    principal smallint
+                );
 
-CREATE TABLE pmiotopic.participante (
-    sequencial integer NOT NULL,
-    ref_ref_cod_grupos integer NOT NULL,
-    ref_ref_idpes integer NOT NULL,
-    ref_cod_reuniao integer NOT NULL,
-    data_chegada timestamp without time zone NOT NULL,
-    data_saida timestamp without time zone
-);
+                CREATE TABLE portal.compras_editais_editais (
+                    cod_compras_editais_editais integer DEFAULT nextval('portal.compras_editais_editais_cod_compras_editais_editais_seq'::regclass) NOT NULL,
+                    ref_cod_compras_licitacoes integer DEFAULT 0 NOT NULL,
+                    versao integer DEFAULT 0 NOT NULL,
+                    data_hora timestamp without time zone NOT NULL,
+                    arquivo character varying(255) DEFAULT ''::character varying NOT NULL,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    motivo_alteracao text,
+                    visivel smallint DEFAULT 1 NOT NULL
+                );
 
-CREATE TABLE pmiotopic.reuniao (
-    cod_reuniao integer DEFAULT nextval('pmiotopic.reuniao_cod_reuniao_seq'::regclass) NOT NULL,
-    ref_grupos_moderador integer NOT NULL,
-    ref_moderador integer NOT NULL,
-    data_inicio_marcado timestamp without time zone NOT NULL,
-    data_fim_marcado timestamp without time zone NOT NULL,
-    data_inicio_real timestamp without time zone,
-    data_fim_real timestamp without time zone,
-    descricao text NOT NULL,
-    email_enviado timestamp without time zone,
-    publica smallint DEFAULT 0 NOT NULL
-);
+                CREATE TABLE portal.compras_editais_editais_empresas (
+                    ref_cod_compras_editais_editais integer DEFAULT 0 NOT NULL,
+                    ref_cod_compras_editais_empresa integer DEFAULT 0 NOT NULL,
+                    data_hora timestamp without time zone NOT NULL
+                );
 
-CREATE TABLE pmiotopic.topico (
-    cod_topico integer DEFAULT nextval('pmiotopic.topico_cod_topico_seq'::regclass) NOT NULL,
-    ref_idpes_cad integer NOT NULL,
-    ref_cod_grupos_cad integer NOT NULL,
-    assunto character varying(255) NOT NULL,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_exclusao timestamp without time zone,
-    ativo smallint DEFAULT (1)::smallint NOT NULL,
-    ref_idpes_exc integer,
-    ref_cod_grupos_exc integer
-);
+                CREATE TABLE portal.compras_editais_empresa (
+                    cod_compras_editais_empresa integer DEFAULT nextval('portal.compras_editais_empresa_cod_compras_editais_empresa_seq'::regclass) NOT NULL,
+                    cnpj character varying(20) DEFAULT ''::character varying NOT NULL,
+                    nm_empresa character varying(255) DEFAULT ''::character varying NOT NULL,
+                    email character varying(255) DEFAULT ''::character varying NOT NULL,
+                    data_hora timestamp without time zone NOT NULL,
+                    endereco text,
+                    ref_sigla_uf character(2),
+                    cidade character varying(255),
+                    bairro character varying(255),
+                    telefone bigint,
+                    fax bigint,
+                    cep bigint,
+                    nome_contato character varying(255),
+                    senha character varying(32) DEFAULT ''::character varying NOT NULL
+                );
 
-CREATE TABLE pmiotopic.topicoreuniao (
-    ref_cod_topico integer NOT NULL,
-    ref_cod_reuniao integer NOT NULL,
-    parecer text,
-    finalizado smallint,
-    data_parecer timestamp without time zone
-);
+                CREATE TABLE portal.compras_final_pregao (
+                    cod_compras_final_pregao integer DEFAULT nextval('portal.compras_final_pregao_cod_compras_final_pregao_seq'::regclass) NOT NULL,
+                    nm_final character varying(255) DEFAULT ''::character varying NOT NULL
+                );
 
-CREATE TABLE portal.acesso (
-    cod_acesso integer DEFAULT nextval('portal.acesso_cod_acesso_seq'::regclass) NOT NULL,
-    data_hora timestamp without time zone NOT NULL,
-    ip_externo character varying(50) DEFAULT ''::character varying NOT NULL,
-    ip_interno character varying(255) DEFAULT ''::character varying NOT NULL,
-    cod_pessoa integer DEFAULT 0 NOT NULL,
-    obs text,
-    sucesso boolean DEFAULT true NOT NULL
-);
+                CREATE TABLE portal.compras_funcionarios (
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
+                );
 
-CREATE TABLE portal.agenda (
-    cod_agenda integer DEFAULT nextval('portal.agenda_cod_agenda_seq'::regclass) NOT NULL,
-    ref_ref_cod_pessoa_exc integer,
-    ref_ref_cod_pessoa_cad integer NOT NULL,
-    nm_agenda character varying NOT NULL,
-    publica smallint DEFAULT 0 NOT NULL,
-    envia_alerta smallint DEFAULT 0 NOT NULL,
-    data_cad timestamp without time zone NOT NULL,
-    data_edicao timestamp without time zone,
-    ref_ref_cod_pessoa_own integer
-);
+                CREATE TABLE portal.compras_licitacoes (
+                    cod_compras_licitacoes integer DEFAULT nextval('portal.compras_licitacoes_cod_compras_licitacoes_seq'::regclass) NOT NULL,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    ref_cod_compras_modalidade integer DEFAULT 0 NOT NULL,
+                    numero character varying(30) DEFAULT ''::character varying NOT NULL,
+                    objeto text NOT NULL,
+                    data_hora timestamp without time zone NOT NULL,
+                    cod_licitacao_semasa integer,
+                    oculto boolean DEFAULT false
+                );
 
-CREATE TABLE portal.agenda_compromisso (
-    cod_agenda_compromisso integer NOT NULL,
-    versao integer NOT NULL,
-    ref_cod_agenda integer NOT NULL,
-    ref_ref_cod_pessoa_cad integer NOT NULL,
-    ativo smallint DEFAULT 1,
-    data_inicio timestamp without time zone,
-    titulo character varying,
-    descricao text,
-    importante smallint DEFAULT 0 NOT NULL,
-    publico smallint DEFAULT 0 NOT NULL,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_fim timestamp without time zone
-);
+                CREATE TABLE portal.compras_modalidade (
+                    cod_compras_modalidade integer DEFAULT nextval('portal.compras_modalidade_cod_compras_modalidade_seq'::regclass) NOT NULL,
+                    nm_modalidade character varying(255) DEFAULT ''::character varying NOT NULL
+                );
 
-CREATE TABLE portal.agenda_pref (
-    cod_comp integer DEFAULT nextval('portal.agenda_pref_cod_comp_seq'::regclass) NOT NULL,
-    data_comp date NOT NULL,
-    hora_comp time without time zone NOT NULL,
-    hora_f_comp time without time zone NOT NULL,
-    comp_comp text NOT NULL,
-    local_comp character(1) DEFAULT 'I'::bpchar NOT NULL,
-    publico_comp character(1) DEFAULT 'S'::bpchar NOT NULL,
-    agenda_de character(1) DEFAULT 'P'::bpchar,
-    ref_cad integer,
-    versao integer DEFAULT 1 NOT NULL,
-    ref_auto_cod integer
-);
+                CREATE TABLE portal.compras_pregao_execucao (
+                    cod_compras_pregao_execucao integer DEFAULT nextval('portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq'::regclass) NOT NULL,
+                    ref_cod_compras_licitacoes integer DEFAULT 0 NOT NULL,
+                    ref_pregoeiro integer DEFAULT 0 NOT NULL,
+                    ref_equipe1 integer DEFAULT 0 NOT NULL,
+                    ref_equipe2 integer DEFAULT 0 NOT NULL,
+                    ref_equipe3 integer DEFAULT 0 NOT NULL,
+                    ano_processo integer,
+                    mes_processo integer,
+                    seq_processo integer,
+                    seq_portaria integer,
+                    ano_portaria integer,
+                    valor_referencia double precision,
+                    valor_real double precision,
+                    ref_cod_compras_final_pregao integer
+                );
 
-CREATE TABLE portal.agenda_responsavel (
-    ref_cod_agenda integer NOT NULL,
-    ref_ref_cod_pessoa_fj integer NOT NULL,
-    principal smallint
-);
+                CREATE TABLE portal.compras_prestacao_contas (
+                    cod_compras_prestacao_contas integer DEFAULT nextval('portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq'::regclass) NOT NULL,
+                    caminho character varying(255) DEFAULT ''::character varying NOT NULL,
+                    mes integer DEFAULT 0 NOT NULL,
+                    ano integer DEFAULT 0 NOT NULL
+                );
 
-CREATE TABLE portal.compras_editais_editais (
-    cod_compras_editais_editais integer DEFAULT nextval('portal.compras_editais_editais_cod_compras_editais_editais_seq'::regclass) NOT NULL,
-    ref_cod_compras_licitacoes integer DEFAULT 0 NOT NULL,
-    versao integer DEFAULT 0 NOT NULL,
-    data_hora timestamp without time zone NOT NULL,
-    arquivo character varying(255) DEFAULT ''::character varying NOT NULL,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    motivo_alteracao text,
-    visivel smallint DEFAULT 1 NOT NULL
-);
+                CREATE TABLE portal.foto_portal (
+                    cod_foto_portal integer DEFAULT nextval('portal.foto_portal_cod_foto_portal_seq'::regclass) NOT NULL,
+                    ref_cod_foto_secao integer,
+                    ref_cod_credito integer,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    data_foto timestamp without time zone,
+                    titulo character varying(255),
+                    descricao text,
+                    caminho character varying(255),
+                    altura integer,
+                    largura integer,
+                    nm_credito character varying(255),
+                    bkp_ref_secao bigint
+                );
 
-CREATE TABLE portal.compras_editais_editais_empresas (
-    ref_cod_compras_editais_editais integer DEFAULT 0 NOT NULL,
-    ref_cod_compras_editais_empresa integer DEFAULT 0 NOT NULL,
-    data_hora timestamp without time zone NOT NULL
-);
+                CREATE TABLE portal.foto_secao (
+                    cod_foto_secao integer DEFAULT nextval('portal.foto_secao_cod_foto_secao_seq'::regclass) NOT NULL,
+                    nm_secao character varying(255)
+                );
 
-CREATE TABLE portal.compras_editais_empresa (
-    cod_compras_editais_empresa integer DEFAULT nextval('portal.compras_editais_empresa_cod_compras_editais_empresa_seq'::regclass) NOT NULL,
-    cnpj character varying(20) DEFAULT ''::character varying NOT NULL,
-    nm_empresa character varying(255) DEFAULT ''::character varying NOT NULL,
-    email character varying(255) DEFAULT ''::character varying NOT NULL,
-    data_hora timestamp without time zone NOT NULL,
-    endereco text,
-    ref_sigla_uf character(2),
-    cidade character varying(255),
-    bairro character varying(255),
-    telefone bigint,
-    fax bigint,
-    cep bigint,
-    nome_contato character varying(255),
-    senha character varying(32) DEFAULT ''::character varying NOT NULL
-);
+                CREATE TABLE portal.funcionario (
+                    ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    matricula character varying(12),
+                    senha character varying(32),
+                    ativo smallint,
+                    ref_sec integer,
+                    ramal character varying(10),
+                    sequencial character(3),
+                    opcao_menu text,
+                    ref_cod_setor integer,
+                    ref_cod_funcionario_vinculo integer,
+                    tempo_expira_senha integer,
+                    tempo_expira_conta integer,
+                    data_troca_senha date,
+                    data_reativa_conta date,
+                    ref_ref_cod_pessoa_fj integer,
+                    proibido integer DEFAULT 0 NOT NULL,
+                    ref_cod_setor_new integer,
+                    matricula_new bigint,
+                    matricula_permanente smallint DEFAULT 0,
+                    tipo_menu smallint DEFAULT 0 NOT NULL,
+                    ip_logado character varying(50),
+                    data_login timestamp without time zone,
+                    email character varying(50),
+                    status_token character varying(50),
+                    matricula_interna character varying(30),
+                    receber_novidades smallint,
+                    atualizou_cadastro smallint
+                );
 
-CREATE TABLE portal.compras_final_pregao (
-    cod_compras_final_pregao integer DEFAULT nextval('portal.compras_final_pregao_cod_compras_final_pregao_seq'::regclass) NOT NULL,
-    nm_final character varying(255) DEFAULT ''::character varying NOT NULL
-);
+                CREATE TABLE portal.funcionario_vinculo (
+                    cod_funcionario_vinculo integer DEFAULT nextval('portal.funcionario_vinculo_cod_funcionario_vinculo_seq'::regclass) NOT NULL,
+                    nm_vinculo character varying(255) DEFAULT ''::character varying NOT NULL,
+                    abreviatura character varying(16)
+                );
 
-CREATE TABLE portal.compras_funcionarios (
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
-);
+                CREATE TABLE portal.imagem (
+                    cod_imagem integer DEFAULT nextval('portal.imagem_cod_imagem_seq'::regclass) NOT NULL,
+                    ref_cod_imagem_tipo integer NOT NULL,
+                    caminho character varying(255) NOT NULL,
+                    nm_imagem character varying(100),
+                    extensao character(3) NOT NULL,
+                    altura integer,
+                    largura integer,
+                    data_cadastro timestamp without time zone NOT NULL,
+                    ref_cod_pessoa_cad integer NOT NULL,
+                    data_exclusao timestamp without time zone,
+                    ref_cod_pessoa_exc integer
+                );
 
-CREATE TABLE portal.compras_licitacoes (
-    cod_compras_licitacoes integer DEFAULT nextval('portal.compras_licitacoes_cod_compras_licitacoes_seq'::regclass) NOT NULL,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    ref_cod_compras_modalidade integer DEFAULT 0 NOT NULL,
-    numero character varying(30) DEFAULT ''::character varying NOT NULL,
-    objeto text NOT NULL,
-    data_hora timestamp without time zone NOT NULL,
-    cod_licitacao_semasa integer,
-    oculto boolean DEFAULT false
-);
+                CREATE TABLE portal.imagem_tipo (
+                    cod_imagem_tipo integer DEFAULT nextval('portal.imagem_tipo_cod_imagem_tipo_seq'::regclass) NOT NULL,
+                    nm_tipo character varying(100) NOT NULL
+                );
 
-CREATE TABLE portal.compras_modalidade (
-    cod_compras_modalidade integer DEFAULT nextval('portal.compras_modalidade_cod_compras_modalidade_seq'::regclass) NOT NULL,
-    nm_modalidade character varying(255) DEFAULT ''::character varying NOT NULL
-);
+                CREATE TABLE portal.intranet_segur_permissao_negada (
+                    cod_intranet_segur_permissao_negada integer DEFAULT nextval('portal.intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq'::regclass) NOT NULL,
+                    ref_ref_cod_pessoa_fj integer,
+                    ip_externo character varying(15) DEFAULT ''::character varying NOT NULL,
+                    ip_interno character varying(255),
+                    data_hora timestamp without time zone NOT NULL,
+                    pagina character varying(255),
+                    variaveis text
+                );
 
-CREATE TABLE portal.compras_pregao_execucao (
-    cod_compras_pregao_execucao integer DEFAULT nextval('portal.compras_pregao_execucao_cod_compras_pregao_execucao_seq'::regclass) NOT NULL,
-    ref_cod_compras_licitacoes integer DEFAULT 0 NOT NULL,
-    ref_pregoeiro integer DEFAULT 0 NOT NULL,
-    ref_equipe1 integer DEFAULT 0 NOT NULL,
-    ref_equipe2 integer DEFAULT 0 NOT NULL,
-    ref_equipe3 integer DEFAULT 0 NOT NULL,
-    ano_processo integer,
-    mes_processo integer,
-    seq_processo integer,
-    seq_portaria integer,
-    ano_portaria integer,
-    valor_referencia double precision,
-    valor_real double precision,
-    ref_cod_compras_final_pregao integer
-);
+                CREATE TABLE portal.jor_arquivo (
+                    ref_cod_jor_edicao integer DEFAULT 0 NOT NULL,
+                    jor_arquivo smallint DEFAULT (0)::smallint NOT NULL,
+                    jor_caminho character varying(255) DEFAULT ''::character varying NOT NULL
+                );
 
-CREATE TABLE portal.compras_prestacao_contas (
-    cod_compras_prestacao_contas integer DEFAULT nextval('portal.compras_prestacao_contas_cod_compras_prestacao_contas_seq'::regclass) NOT NULL,
-    caminho character varying(255) DEFAULT ''::character varying NOT NULL,
-    mes integer DEFAULT 0 NOT NULL,
-    ano integer DEFAULT 0 NOT NULL
-);
+                CREATE TABLE portal.jor_edicao (
+                    cod_jor_edicao integer DEFAULT nextval('portal.jor_edicao_cod_jor_edicao_seq'::regclass) NOT NULL,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    jor_ano_edicao character varying(5) DEFAULT ''::character varying NOT NULL,
+                    jor_edicao integer DEFAULT 0 NOT NULL,
+                    jor_dt_inicial date NOT NULL,
+                    jor_dt_final date,
+                    jor_extra smallint DEFAULT (0)::smallint
+                );
 
-CREATE TABLE portal.foto_portal (
-    cod_foto_portal integer DEFAULT nextval('portal.foto_portal_cod_foto_portal_seq'::regclass) NOT NULL,
-    ref_cod_foto_secao integer,
-    ref_cod_credito integer,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    data_foto timestamp without time zone,
-    titulo character varying(255),
-    descricao text,
-    caminho character varying(255),
-    altura integer,
-    largura integer,
-    nm_credito character varying(255),
-    bkp_ref_secao bigint
-);
+                CREATE TABLE portal.mailling_email (
+                    cod_mailling_email integer DEFAULT nextval('portal.mailling_email_cod_mailling_email_seq'::regclass) NOT NULL,
+                    nm_pessoa character varying(255) DEFAULT ''::character varying NOT NULL,
+                    email character varying(255) DEFAULT ''::character varying NOT NULL
+                );
 
-CREATE TABLE portal.foto_secao (
-    cod_foto_secao integer DEFAULT nextval('portal.foto_secao_cod_foto_secao_seq'::regclass) NOT NULL,
-    nm_secao character varying(255)
-);
+                CREATE TABLE portal.mailling_email_conteudo (
+                    cod_mailling_email_conteudo integer DEFAULT nextval('portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq'::regclass) NOT NULL,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    conteudo text NOT NULL,
+                    nm_remetente character varying(255),
+                    email_remetente character varying(255),
+                    assunto character varying(255)
+                );
 
-CREATE TABLE portal.funcionario (
-    ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    matricula character varying(12),
-    senha character varying(32),
-    ativo smallint,
-    ref_sec integer,
-    ramal character varying(10),
-    sequencial character(3),
-    opcao_menu text,
-    ref_cod_setor integer,
-    ref_cod_funcionario_vinculo integer,
-    tempo_expira_senha integer,
-    tempo_expira_conta integer,
-    data_troca_senha date,
-    data_reativa_conta date,
-    ref_ref_cod_pessoa_fj integer,
-    proibido integer DEFAULT 0 NOT NULL,
-    ref_cod_setor_new integer,
-    matricula_new bigint,
-    matricula_permanente smallint DEFAULT 0,
-    tipo_menu smallint DEFAULT 0 NOT NULL,
-    ip_logado character varying(50),
-    data_login timestamp without time zone,
-    email character varying(50),
-    status_token character varying(50),
-    matricula_interna character varying(30),
-    receber_novidades smallint,
-    atualizou_cadastro smallint
-);
+                CREATE TABLE portal.mailling_fila_envio (
+                    cod_mailling_fila_envio integer DEFAULT nextval('portal.mailling_fila_envio_cod_mailling_fila_envio_seq'::regclass) NOT NULL,
+                    ref_cod_mailling_email_conteudo integer DEFAULT 0 NOT NULL,
+                    ref_cod_mailling_email integer,
+                    ref_ref_cod_pessoa_fj integer,
+                    data_cadastro timestamp without time zone NOT NULL,
+                    data_envio timestamp without time zone
+                );
 
-CREATE TABLE portal.funcionario_vinculo (
-    cod_funcionario_vinculo integer DEFAULT nextval('portal.funcionario_vinculo_cod_funcionario_vinculo_seq'::regclass) NOT NULL,
-    nm_vinculo character varying(255) DEFAULT ''::character varying NOT NULL,
-    abreviatura character varying(16)
-);
+                CREATE TABLE portal.mailling_grupo (
+                    cod_mailling_grupo integer DEFAULT nextval('portal.mailling_grupo_cod_mailling_grupo_seq'::regclass) NOT NULL,
+                    nm_grupo character varying(255) DEFAULT ''::character varying NOT NULL
+                );
 
-CREATE TABLE portal.imagem (
-    cod_imagem integer DEFAULT nextval('portal.imagem_cod_imagem_seq'::regclass) NOT NULL,
-    ref_cod_imagem_tipo integer NOT NULL,
-    caminho character varying(255) NOT NULL,
-    nm_imagem character varying(100),
-    extensao character(3) NOT NULL,
-    altura integer,
-    largura integer,
-    data_cadastro timestamp without time zone NOT NULL,
-    ref_cod_pessoa_cad integer NOT NULL,
-    data_exclusao timestamp without time zone,
-    ref_cod_pessoa_exc integer
-);
+                CREATE TABLE portal.mailling_grupo_email (
+                    ref_cod_mailling_email integer DEFAULT 0 NOT NULL,
+                    ref_cod_mailling_grupo integer DEFAULT 0 NOT NULL
+                );
 
-CREATE TABLE portal.imagem_tipo (
-    cod_imagem_tipo integer DEFAULT nextval('portal.imagem_tipo_cod_imagem_tipo_seq'::regclass) NOT NULL,
-    nm_tipo character varying(100) NOT NULL
-);
+                CREATE TABLE portal.mailling_historico (
+                    cod_mailling_historico integer DEFAULT nextval('portal.mailling_historico_cod_mailling_historico_seq'::regclass) NOT NULL,
+                    ref_cod_not_portal integer DEFAULT 0 NOT NULL,
+                    ref_cod_mailling_grupo integer DEFAULT 0 NOT NULL,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    data_hora timestamp without time zone NOT NULL
+                );
 
-CREATE TABLE portal.intranet_segur_permissao_negada (
-    cod_intranet_segur_permissao_negada integer DEFAULT nextval('portal.intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq'::regclass) NOT NULL,
-    ref_ref_cod_pessoa_fj integer,
-    ip_externo character varying(15) DEFAULT ''::character varying NOT NULL,
-    ip_interno character varying(255),
-    data_hora timestamp without time zone NOT NULL,
-    pagina character varying(255),
-    variaveis text
-);
+                CREATE TABLE portal.menu_funcionario (
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    cadastra smallint DEFAULT (0)::smallint NOT NULL,
+                    exclui smallint DEFAULT (0)::smallint NOT NULL,
+                    ref_cod_menu_submenu integer DEFAULT 0 NOT NULL
+                );
 
-CREATE TABLE portal.jor_arquivo (
-    ref_cod_jor_edicao integer DEFAULT 0 NOT NULL,
-    jor_arquivo smallint DEFAULT (0)::smallint NOT NULL,
-    jor_caminho character varying(255) DEFAULT ''::character varying NOT NULL
-);
+                CREATE TABLE portal.menu_menu (
+                    cod_menu_menu integer DEFAULT nextval('portal.menu_menu_cod_menu_menu_seq'::regclass) NOT NULL,
+                    nm_menu character varying(255) DEFAULT ''::character varying NOT NULL,
+                    title character varying(255),
+                    ref_cod_menu_pai integer,
+                    caminho character varying(255) DEFAULT '#'::character varying,
+                    ord_menu integer DEFAULT 9999,
+                    ativo boolean DEFAULT true,
+                    icon_class character varying(20)
+                );
 
-CREATE TABLE portal.jor_edicao (
-    cod_jor_edicao integer DEFAULT nextval('portal.jor_edicao_cod_jor_edicao_seq'::regclass) NOT NULL,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    jor_ano_edicao character varying(5) DEFAULT ''::character varying NOT NULL,
-    jor_edicao integer DEFAULT 0 NOT NULL,
-    jor_dt_inicial date NOT NULL,
-    jor_dt_final date,
-    jor_extra smallint DEFAULT (0)::smallint
-);
+                CREATE TABLE portal.menu_submenu (
+                    cod_menu_submenu integer DEFAULT nextval('portal.menu_submenu_cod_menu_submenu_seq'::regclass) NOT NULL,
+                    ref_cod_menu_menu integer,
+                    cod_sistema integer,
+                    nm_submenu character varying(255) DEFAULT ''::character varying NOT NULL,
+                    arquivo character varying(255) DEFAULT ''::character varying NOT NULL,
+                    title text,
+                    nivel smallint DEFAULT (3)::smallint NOT NULL
+                );
 
-CREATE TABLE portal.mailling_email (
-    cod_mailling_email integer DEFAULT nextval('portal.mailling_email_cod_mailling_email_seq'::regclass) NOT NULL,
-    nm_pessoa character varying(255) DEFAULT ''::character varying NOT NULL,
-    email character varying(255) DEFAULT ''::character varying NOT NULL
-);
+                CREATE TABLE portal.not_portal (
+                    cod_not_portal integer DEFAULT nextval('portal.not_portal_cod_not_portal_seq'::regclass) NOT NULL,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    titulo character varying(255),
+                    descricao text,
+                    data_noticia timestamp without time zone NOT NULL
+                );
 
-CREATE TABLE portal.mailling_email_conteudo (
-    cod_mailling_email_conteudo integer DEFAULT nextval('portal.mailling_email_conteudo_cod_mailling_email_conteudo_seq'::regclass) NOT NULL,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    conteudo text NOT NULL,
-    nm_remetente character varying(255),
-    email_remetente character varying(255),
-    assunto character varying(255)
-);
+                CREATE TABLE portal.not_portal_tipo (
+                    ref_cod_not_portal integer DEFAULT 0 NOT NULL,
+                    ref_cod_not_tipo integer DEFAULT 0 NOT NULL
+                );
 
-CREATE TABLE portal.mailling_fila_envio (
-    cod_mailling_fila_envio integer DEFAULT nextval('portal.mailling_fila_envio_cod_mailling_fila_envio_seq'::regclass) NOT NULL,
-    ref_cod_mailling_email_conteudo integer DEFAULT 0 NOT NULL,
-    ref_cod_mailling_email integer,
-    ref_ref_cod_pessoa_fj integer,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_envio timestamp without time zone
-);
+                CREATE TABLE portal.not_tipo (
+                    cod_not_tipo integer DEFAULT nextval('portal.not_tipo_cod_not_tipo_seq'::regclass) NOT NULL,
+                    nm_tipo character varying(255) DEFAULT ''::character varying NOT NULL
+                );
 
-CREATE TABLE portal.mailling_grupo (
-    cod_mailling_grupo integer DEFAULT nextval('portal.mailling_grupo_cod_mailling_grupo_seq'::regclass) NOT NULL,
-    nm_grupo character varying(255) DEFAULT ''::character varying NOT NULL
-);
+                CREATE TABLE portal.not_vinc_portal (
+                    ref_cod_not_portal integer DEFAULT 0 NOT NULL,
+                    vic_num integer DEFAULT 0 NOT NULL,
+                    tipo character(1) DEFAULT 'F'::bpchar NOT NULL,
+                    cod_vinc integer,
+                    caminho character varying(255),
+                    nome_arquivo character varying(255)
+                );
 
-CREATE TABLE portal.mailling_grupo_email (
-    ref_cod_mailling_email integer DEFAULT 0 NOT NULL,
-    ref_cod_mailling_grupo integer DEFAULT 0 NOT NULL
-);
+                CREATE TABLE portal.notificacao (
+                    cod_notificacao integer DEFAULT nextval('portal.notificacao_cod_notificacao_seq'::regclass) NOT NULL,
+                    ref_cod_funcionario integer NOT NULL,
+                    titulo character varying,
+                    conteudo text,
+                    data_hora_ativa timestamp without time zone,
+                    url character varying,
+                    visualizacoes smallint DEFAULT 0 NOT NULL
+                );
 
-CREATE TABLE portal.mailling_historico (
-    cod_mailling_historico integer DEFAULT nextval('portal.mailling_historico_cod_mailling_historico_seq'::regclass) NOT NULL,
-    ref_cod_not_portal integer DEFAULT 0 NOT NULL,
-    ref_cod_mailling_grupo integer DEFAULT 0 NOT NULL,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    data_hora timestamp without time zone NOT NULL
-);
+                CREATE TABLE portal.pessoa_atividade (
+                    cod_pessoa_atividade integer DEFAULT nextval('portal.pessoa_atividade_cod_pessoa_atividade_seq'::regclass) NOT NULL,
+                    ref_cod_ramo_atividade integer DEFAULT 0 NOT NULL,
+                    nm_atividade character varying(255)
+                );
 
-CREATE TABLE portal.menu_funcionario (
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    cadastra smallint DEFAULT (0)::smallint NOT NULL,
-    exclui smallint DEFAULT (0)::smallint NOT NULL,
-    ref_cod_menu_submenu integer DEFAULT 0 NOT NULL
-);
+                CREATE TABLE portal.pessoa_fj (
+                    cod_pessoa_fj integer DEFAULT nextval('portal.pessoa_fj_cod_pessoa_fj_seq'::regclass) NOT NULL,
+                    nm_pessoa character varying(255) DEFAULT ''::character varying NOT NULL,
+                    id_federal character varying(30),
+                    endereco text,
+                    cep character varying(9),
+                    ref_bairro integer,
+                    ddd_telefone_1 integer,
+                    telefone_1 character varying(15),
+                    ddd_telefone_2 integer,
+                    telefone_2 character varying(15),
+                    ddd_telefone_mov integer,
+                    telefone_mov character varying(15),
+                    ddd_telefone_fax integer,
+                    telefone_fax character varying(15),
+                    email character varying(255),
+                    http character varying(255),
+                    tipo_pessoa character(1) DEFAULT 'F'::bpchar NOT NULL,
+                    sexo smallint,
+                    razao_social character varying(255),
+                    ins_est character varying(30),
+                    ins_mun character varying(30),
+                    rg character varying(30),
+                    ref_cod_pessoa_pai integer,
+                    ref_cod_pessoa_mae integer,
+                    data_nasc date,
+                    ref_ref_cod_pessoa_fj integer
+                );
 
-CREATE TABLE portal.menu_menu (
-    cod_menu_menu integer DEFAULT nextval('portal.menu_menu_cod_menu_menu_seq'::regclass) NOT NULL,
-    nm_menu character varying(255) DEFAULT ''::character varying NOT NULL,
-    title character varying(255),
-    ref_cod_menu_pai integer,
-    caminho character varying(255) DEFAULT '#'::character varying,
-    ord_menu integer DEFAULT 9999,
-    ativo boolean DEFAULT true,
-    icon_class character varying(20)
-);
+                CREATE TABLE portal.pessoa_fj_pessoa_atividade (
+                    ref_cod_pessoa_atividade integer DEFAULT 0 NOT NULL,
+                    ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
+                );
 
-CREATE TABLE portal.menu_submenu (
-    cod_menu_submenu integer DEFAULT nextval('portal.menu_submenu_cod_menu_submenu_seq'::regclass) NOT NULL,
-    ref_cod_menu_menu integer,
-    cod_sistema integer,
-    nm_submenu character varying(255) DEFAULT ''::character varying NOT NULL,
-    arquivo character varying(255) DEFAULT ''::character varying NOT NULL,
-    title text,
-    nivel smallint DEFAULT (3)::smallint NOT NULL
-);
+                CREATE TABLE portal.pessoa_ramo_atividade (
+                    cod_ramo_atividade integer DEFAULT nextval('portal.pessoa_ramo_atividade_cod_ramo_atividade_seq'::regclass) NOT NULL,
+                    nm_ramo_atividade character varying(255)
+                );
 
-CREATE TABLE portal.not_portal (
-    cod_not_portal integer DEFAULT nextval('portal.not_portal_cod_not_portal_seq'::regclass) NOT NULL,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    titulo character varying(255),
-    descricao text,
-    data_noticia timestamp without time zone NOT NULL
-);
+                CREATE TABLE portal.portal_concurso (
+                    cod_portal_concurso integer DEFAULT nextval('portal.portal_concurso_cod_portal_concurso_seq'::regclass) NOT NULL,
+                    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
+                    nm_concurso character varying(255) DEFAULT ''::character varying NOT NULL,
+                    descricao text,
+                    caminho character varying(255) DEFAULT ''::character varying NOT NULL,
+                    tipo_arquivo character(3) DEFAULT ''::bpchar NOT NULL,
+                    data_hora timestamp without time zone
+                );
 
-CREATE TABLE portal.not_portal_tipo (
-    ref_cod_not_portal integer DEFAULT 0 NOT NULL,
-    ref_cod_not_tipo integer DEFAULT 0 NOT NULL
-);
-
-CREATE TABLE portal.not_tipo (
-    cod_not_tipo integer DEFAULT nextval('portal.not_tipo_cod_not_tipo_seq'::regclass) NOT NULL,
-    nm_tipo character varying(255) DEFAULT ''::character varying NOT NULL
-);
-
-CREATE TABLE portal.not_vinc_portal (
-    ref_cod_not_portal integer DEFAULT 0 NOT NULL,
-    vic_num integer DEFAULT 0 NOT NULL,
-    tipo character(1) DEFAULT 'F'::bpchar NOT NULL,
-    cod_vinc integer,
-    caminho character varying(255),
-    nome_arquivo character varying(255)
-);
-
-CREATE TABLE portal.notificacao (
-    cod_notificacao integer DEFAULT nextval('portal.notificacao_cod_notificacao_seq'::regclass) NOT NULL,
-    ref_cod_funcionario integer NOT NULL,
-    titulo character varying,
-    conteudo text,
-    data_hora_ativa timestamp without time zone,
-    url character varying,
-    visualizacoes smallint DEFAULT 0 NOT NULL
-);
-
-CREATE TABLE portal.pessoa_atividade (
-    cod_pessoa_atividade integer DEFAULT nextval('portal.pessoa_atividade_cod_pessoa_atividade_seq'::regclass) NOT NULL,
-    ref_cod_ramo_atividade integer DEFAULT 0 NOT NULL,
-    nm_atividade character varying(255)
-);
-
-CREATE TABLE portal.pessoa_fj (
-    cod_pessoa_fj integer DEFAULT nextval('portal.pessoa_fj_cod_pessoa_fj_seq'::regclass) NOT NULL,
-    nm_pessoa character varying(255) DEFAULT ''::character varying NOT NULL,
-    id_federal character varying(30),
-    endereco text,
-    cep character varying(9),
-    ref_bairro integer,
-    ddd_telefone_1 integer,
-    telefone_1 character varying(15),
-    ddd_telefone_2 integer,
-    telefone_2 character varying(15),
-    ddd_telefone_mov integer,
-    telefone_mov character varying(15),
-    ddd_telefone_fax integer,
-    telefone_fax character varying(15),
-    email character varying(255),
-    http character varying(255),
-    tipo_pessoa character(1) DEFAULT 'F'::bpchar NOT NULL,
-    sexo smallint,
-    razao_social character varying(255),
-    ins_est character varying(30),
-    ins_mun character varying(30),
-    rg character varying(30),
-    ref_cod_pessoa_pai integer,
-    ref_cod_pessoa_mae integer,
-    data_nasc date,
-    ref_ref_cod_pessoa_fj integer
-);
-
-CREATE TABLE portal.pessoa_fj_pessoa_atividade (
-    ref_cod_pessoa_atividade integer DEFAULT 0 NOT NULL,
-    ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL
-);
-
-CREATE TABLE portal.pessoa_ramo_atividade (
-    cod_ramo_atividade integer DEFAULT nextval('portal.pessoa_ramo_atividade_cod_ramo_atividade_seq'::regclass) NOT NULL,
-    nm_ramo_atividade character varying(255)
-);
-
-CREATE TABLE portal.portal_concurso (
-    cod_portal_concurso integer DEFAULT nextval('portal.portal_concurso_cod_portal_concurso_seq'::regclass) NOT NULL,
-    ref_ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
-    nm_concurso character varying(255) DEFAULT ''::character varying NOT NULL,
-    descricao text,
-    caminho character varying(255) DEFAULT ''::character varying NOT NULL,
-    tipo_arquivo character(3) DEFAULT ''::bpchar NOT NULL,
-    data_hora timestamp without time zone
-);
-
-CREATE TABLE portal.sistema (
-    cod_sistema integer DEFAULT nextval('portal.sistema_cod_sistema_seq'::regclass) NOT NULL,
-    nome character varying(255),
-    versao smallint NOT NULL,
-    release smallint NOT NULL,
-    patch smallint NOT NULL,
-    tipo character varying(255)
-);
+                CREATE TABLE portal.sistema (
+                    cod_sistema integer DEFAULT nextval('portal.sistema_cod_sistema_seq'::regclass) NOT NULL,
+                    nome character varying(255),
+                    versao smallint NOT NULL,
+                    release smallint NOT NULL,
+                    patch smallint NOT NULL,
+                    tipo character varying(255)
+                );
 
 CREATE TABLE public.bairro_regiao (
     ref_cod_regiao integer NOT NULL,
