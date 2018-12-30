@@ -66,67 +66,6 @@ CREATE TABLE public.municipio (
     CONSTRAINT ck_municipio_tipo CHECK (((tipo = 'D'::bpchar) OR (tipo = 'M'::bpchar) OR (tipo = 'P'::bpchar) OR (tipo = 'R'::bpchar)))
 );
 
-                SET default_with_oids = true;
-
-CREATE TABLE pmidrh.diaria (
-    cod_diaria integer DEFAULT nextval('pmidrh.diaria_cod_diaria_seq'::regclass) NOT NULL,
-    ref_funcionario_cadastro integer NOT NULL,
-    ref_cod_diaria_grupo integer NOT NULL,
-    ref_funcionario integer NOT NULL,
-    conta_corrente integer,
-    agencia integer,
-    banco integer,
-    dotacao_orcamentaria character varying(50),
-    objetivo text,
-    data_partida timestamp without time zone,
-    data_chegada timestamp without time zone,
-    estadual smallint,
-    destino character varying(100),
-    data_pedido timestamp without time zone,
-    vl100 double precision,
-    vl75 double precision,
-    vl50 double precision,
-    vl25 double precision,
-    roteiro integer,
-    ativo boolean DEFAULT true,
-    ref_cod_setor integer,
-    num_diaria numeric(6,0)
-);
-
-CREATE TABLE pmidrh.diaria_grupo (
-    cod_diaria_grupo integer DEFAULT nextval('pmidrh.diaria_grupo_cod_diaria_grupo_seq'::regclass) NOT NULL,
-    desc_grupo character varying(255) NOT NULL
-);
-
-CREATE TABLE pmidrh.diaria_valores (
-    cod_diaria_valores integer DEFAULT nextval('pmidrh.diaria_valores_cod_diaria_valores_seq'::regclass) NOT NULL,
-    ref_funcionario_cadastro integer NOT NULL,
-    ref_cod_diaria_grupo integer NOT NULL,
-    estadual smallint NOT NULL,
-    p100 double precision,
-    p75 double precision,
-    p50 double precision,
-    p25 double precision,
-    data_vigencia timestamp without time zone NOT NULL
-);
-
-CREATE TABLE pmidrh.setor (
-    cod_setor integer DEFAULT nextval('pmidrh.setor_cod_setor_seq'::regclass) NOT NULL,
-    ref_cod_pessoa_exc integer,
-    ref_cod_pessoa_cad integer NOT NULL,
-    ref_cod_setor integer,
-    nm_setor character varying(255) NOT NULL,
-    sgl_setor character varying(15) NOT NULL,
-    data_cadastro timestamp without time zone NOT NULL,
-    data_exclusao timestamp without time zone,
-    ativo smallint DEFAULT (1)::smallint NOT NULL,
-    nivel smallint DEFAULT (1)::smallint NOT NULL,
-    no_paco smallint DEFAULT 1,
-    endereco text,
-    tipo character(1),
-    ref_idpes_resp integer
-);
-
 SET default_with_oids = false;
 
 CREATE TABLE pmieducar.abandono_tipo (
