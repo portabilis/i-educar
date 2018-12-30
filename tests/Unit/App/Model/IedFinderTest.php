@@ -322,6 +322,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
   {
     $this->expectException('App_Model_Exception');
     $this->expectExceptionMessage('Aluno não enturmado.');
+    $this->mockDbPreparedQuery([[]]);
     App_Model_IedFinder::getMatricula(1);
   }
 
