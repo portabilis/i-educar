@@ -12,7 +12,7 @@ class QueryFactoryTest extends TestCase
     protected function setUp() :void
     {
         if (!self::$pdo) {
-            self::$pdo = self::getPdoConection();
+            self::$pdo = $this->getConnection()->getConnection();
             self::tearDownAfterClass();
         }
     }

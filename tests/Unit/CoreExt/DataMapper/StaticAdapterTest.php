@@ -59,11 +59,6 @@ class CoreExt_DataMapper_StaticAdapterTest extends IntegrationBaseTest
     CoreExt_DataMapper::resetDefaultDbAdapter();
   }
 
-  public function getSetUpOperation()
-  {
-    return PHPUnit_Extensions_Database_Operation_Factory::NONE();
-  }
-
   /**
    * Esse método precisa ser sobrescrito mas a utilidade dele nesse teste é
    * irrelevante.

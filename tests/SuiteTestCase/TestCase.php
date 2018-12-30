@@ -5,7 +5,6 @@ namespace Tests\SuiteTestCase;
 use clsBanco;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
-use PHPUnit\DbUnit\Operation\Composite;
 use PHPUnit\DbUnit\TestCaseTrait;
 use \Tests\TestCase as AbstractTestCase;
 
@@ -46,30 +45,5 @@ class TestCase extends AbstractTestCase
     public function getYamlDataSet()
     {
         return new DefaultDataSet();
-    }
-
-    protected function getSetUpOperation()
-    {
-        return new Composite(
-            [
-                new ForeignKeysCheckDisable(),
-                new InsertTriggerEnable()
-            ]
-        );
-    }
-
-    public function getTearDownOperation()
-    {
-        return new ForeignKeysCheckDisable();
-    }
-
-    public function getHtmlCodeFromFile($fileName)
-    {
-        return  file_get_contents(__DIR__ . '/../Unit/assets/' . $fileName);
-    }
-
-    public function getPdoConection()
-    {
-        return $this->getConnection()->getConnection();
     }
 }

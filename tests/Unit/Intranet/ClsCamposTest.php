@@ -13,8 +13,11 @@ class ClsCamposTest extends TestCase
 
         $clsCampos->campoArquivo('file', 'Foto', '/caminho/foto', 40, '<b>Foto do aluno</b>');
 
+        $expected =
+            file_get_contents(__DIR__ . '/../assets/form_scripts.html') .
+            file_get_contents(__DIR__ . '/../assets/file_field.html');
         $this->assertEquals(
-            $this->getHtmlCodeFromFile('form_scripts.html') . $this->getHtmlCodeFromFile('file_field.html'),
+            $expected,
             $clsCampos->makeCampos()
         );
     }
