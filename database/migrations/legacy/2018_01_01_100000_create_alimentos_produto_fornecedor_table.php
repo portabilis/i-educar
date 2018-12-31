@@ -34,6 +34,8 @@ class CreateAlimentosProdutoFornecedorTable extends Migration
                 ALTER TABLE ONLY alimentos.produto_fornecedor
                     ADD CONSTRAINT pk_produto_fornecedor PRIMARY KEY (idprf);
 
+                CREATE UNIQUE INDEX un_produto_fornecedor ON alimentos.produto_fornecedor USING btree (idfor, idpro);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_fornecedor_idprf_seq\', 1, false);
             '
         );

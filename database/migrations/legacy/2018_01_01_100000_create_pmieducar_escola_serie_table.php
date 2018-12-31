@@ -36,6 +36,14 @@ class CreatePmieducarEscolaSerieTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.escola_serie
                     ADD CONSTRAINT escola_serie_pkey PRIMARY KEY (ref_cod_escola, ref_cod_serie);
+                    
+                CREATE INDEX i_escola_serie_ensino_ativo ON pmieducar.escola_serie USING btree (ativo);
+
+                CREATE INDEX i_escola_serie_hora_final ON pmieducar.escola_serie USING btree (hora_final);
+
+                CREATE INDEX i_escola_serie_hora_inicial ON pmieducar.escola_serie USING btree (hora_inicial);
+
+                CREATE INDEX i_escola_serie_ref_usuario_cad ON pmieducar.escola_serie USING btree (ref_usuario_cad);
             '
         );
     }

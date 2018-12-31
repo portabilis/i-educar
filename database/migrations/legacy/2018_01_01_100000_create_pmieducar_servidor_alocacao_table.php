@@ -50,6 +50,8 @@ class CreatePmieducarServidorAlocacaoTable extends Migration
                 ALTER TABLE ONLY pmieducar.servidor_alocacao
                     ADD CONSTRAINT servidor_alocacao_pkey PRIMARY KEY (cod_servidor_alocacao);
 
+                CREATE INDEX servidor_alocacao_busca_horarios_idx ON pmieducar.servidor_alocacao USING btree (ref_ref_cod_instituicao, ref_cod_escola, ativo, periodo, carga_horaria);
+
                 SELECT pg_catalog.setval(\'pmieducar.servidor_alocacao_cod_servidor_alocacao_seq\', 1, false);
             '
         );

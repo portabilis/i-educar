@@ -45,6 +45,8 @@ class CreatePmieducarNotaAlunoTable extends Migration
                 ALTER TABLE ONLY pmieducar.nota_aluno
                     ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (cod_nota_aluno);
 
+                CREATE INDEX i_nota_aluno_ref_cod_matricula ON pmieducar.nota_aluno USING btree (ref_cod_matricula);
+
                 SELECT pg_catalog.setval(\'pmieducar.nota_aluno_cod_nota_aluno_seq\', 1, false);
             '
         );

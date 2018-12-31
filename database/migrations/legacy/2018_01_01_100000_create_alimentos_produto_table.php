@@ -50,6 +50,8 @@ class CreateAlimentosProdutoTable extends Migration
                 ALTER TABLE ONLY alimentos.produto
                     ADD CONSTRAINT pk_produto PRIMARY KEY (idpro);
 
+                CREATE UNIQUE INDEX un_produto ON alimentos.produto USING btree (idcli, nome_compra);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_idpro_seq\', 1, false);
             '
         );

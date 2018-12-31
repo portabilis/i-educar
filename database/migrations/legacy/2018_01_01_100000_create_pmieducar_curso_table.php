@@ -51,6 +51,28 @@ class CreatePmieducarCursoTable extends Migration
                 ALTER TABLE ONLY pmieducar.curso
                     ADD CONSTRAINT curso_pkey PRIMARY KEY (cod_curso);
 
+                CREATE INDEX i_curso_ativo ON pmieducar.curso USING btree (ativo);
+
+                CREATE INDEX i_curso_ato_poder_publico ON pmieducar.curso USING btree (ato_poder_publico);
+
+                CREATE INDEX i_curso_carga_horaria ON pmieducar.curso USING btree (carga_horaria);
+
+                CREATE INDEX i_curso_nm_curso ON pmieducar.curso USING btree (nm_curso);
+
+                CREATE INDEX i_curso_objetivo_curso ON pmieducar.curso USING btree (objetivo_curso);
+
+                CREATE INDEX i_curso_qtd_etapas ON pmieducar.curso USING btree (qtd_etapas);
+
+                CREATE INDEX i_curso_ref_cod_nivel_ensino ON pmieducar.curso USING btree (ref_cod_nivel_ensino);
+
+                CREATE INDEX i_curso_ref_cod_tipo_ensino ON pmieducar.curso USING btree (ref_cod_tipo_ensino);
+
+                CREATE INDEX i_curso_ref_cod_tipo_regime ON pmieducar.curso USING btree (ref_cod_tipo_regime);
+
+                CREATE INDEX i_curso_ref_usuario_cad ON pmieducar.curso USING btree (ref_usuario_cad);
+
+                CREATE INDEX i_curso_sgl_curso ON pmieducar.curso USING btree (sgl_curso);
+
                 SELECT pg_catalog.setval(\'pmieducar.curso_cod_curso_seq\', 1, true);
             '
         );

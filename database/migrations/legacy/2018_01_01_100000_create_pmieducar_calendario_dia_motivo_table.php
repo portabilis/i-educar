@@ -41,6 +41,16 @@ class CreatePmieducarCalendarioDiaMotivoTable extends Migration
                 ALTER TABLE ONLY pmieducar.calendario_dia_motivo
                     ADD CONSTRAINT calendario_dia_motivo_pkey PRIMARY KEY (cod_calendario_dia_motivo);
 
+                CREATE INDEX i_calendario_dia_motivo_ativo ON pmieducar.calendario_dia_motivo USING btree (ativo);
+
+                CREATE INDEX i_calendario_dia_motivo_ref_cod_escola ON pmieducar.calendario_dia_motivo USING btree (ref_cod_escola);
+
+                CREATE INDEX i_calendario_dia_motivo_ref_usuario_cad ON pmieducar.calendario_dia_motivo USING btree (ref_usuario_cad);
+
+                CREATE INDEX i_calendario_dia_motivo_sigla ON pmieducar.calendario_dia_motivo USING btree (sigla);
+
+                CREATE INDEX i_calendario_dia_motivo_tipo ON pmieducar.calendario_dia_motivo USING btree (tipo);
+
                 SELECT pg_catalog.setval(\'pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq\', 1, false);
             '
         );

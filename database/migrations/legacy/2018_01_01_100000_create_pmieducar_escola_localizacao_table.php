@@ -38,6 +38,12 @@ class CreatePmieducarEscolaLocalizacaoTable extends Migration
                 ALTER TABLE ONLY pmieducar.escola_localizacao
                     ADD CONSTRAINT escola_localizacao_pkey PRIMARY KEY (cod_escola_localizacao);
 
+                CREATE INDEX i_escola_localizacao_ativo ON pmieducar.escola_localizacao USING btree (ativo);
+
+                CREATE INDEX i_escola_localizacao_nm_localizacao ON pmieducar.escola_localizacao USING btree (nm_localizacao);
+
+                CREATE INDEX i_escola_localizacao_ref_usuario_cad ON pmieducar.escola_localizacao USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.escola_localizacao_cod_escola_localizacao_seq\', 1, true);
             '
         );

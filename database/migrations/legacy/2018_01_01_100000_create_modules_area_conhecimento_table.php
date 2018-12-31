@@ -39,6 +39,8 @@ class CreateModulesAreaConhecimentoTable extends Migration
 
                 ALTER TABLE ONLY modules.area_conhecimento ALTER COLUMN id SET DEFAULT nextval(\'modules.area_conhecimento_id_seq\'::regclass);
                 
+                CREATE INDEX area_conhecimento_nome_key ON modules.area_conhecimento USING btree (nome);
+
                 SELECT pg_catalog.setval(\'modules.area_conhecimento_id_seq\', 2, true);
             '
         );

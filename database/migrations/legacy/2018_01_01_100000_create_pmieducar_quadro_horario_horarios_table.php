@@ -37,6 +37,9 @@ class CreatePmieducarQuadroHorarioHorariosTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.quadro_horario_horarios
                     ADD CONSTRAINT quadro_horario_horarios_pkey PRIMARY KEY (ref_cod_quadro_horario, sequencial);
+                    
+                CREATE INDEX quadro_horario_horarios_busca_horarios_idx ON pmieducar.quadro_horario_horarios USING btree (ref_servidor, ref_cod_instituicao_servidor, dia_semana, hora_inicial, hora_final, ativo);
+                COMMENT ON INDEX pmieducar.quadro_horario_horarios_busca_horarios_idx IS \'Índice para otimizar a busca por professores na criação de quadro de horários.\';
             '
         );
     }

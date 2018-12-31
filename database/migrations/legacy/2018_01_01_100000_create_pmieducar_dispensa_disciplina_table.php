@@ -42,6 +42,8 @@ class CreatePmieducarDispensaDisciplinaTable extends Migration
                 ALTER TABLE ONLY pmieducar.dispensa_disciplina
                     ADD CONSTRAINT cod_dispensa_pkey PRIMARY KEY (cod_dispensa);
                     
+                CREATE INDEX i_dispensa_disciplina_ref_cod_matricula ON pmieducar.dispensa_disciplina USING btree (ref_cod_matricula);
+
                 SELECT pg_catalog.setval(\'pmieducar.dispensa_disciplina_cod_dispensa_seq\', 1, true);
             '
         );

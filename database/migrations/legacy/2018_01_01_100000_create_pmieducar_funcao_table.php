@@ -40,6 +40,16 @@ class CreatePmieducarFuncaoTable extends Migration
                 ALTER TABLE ONLY pmieducar.funcao
                     ADD CONSTRAINT funcao_pkey PRIMARY KEY (cod_funcao);
 
+                CREATE INDEX i_funcao_abreviatura ON pmieducar.funcao USING btree (abreviatura);
+
+                CREATE INDEX i_funcao_ativo ON pmieducar.funcao USING btree (ativo);
+
+                CREATE INDEX i_funcao_nm_funcao ON pmieducar.funcao USING btree (nm_funcao);
+
+                CREATE INDEX i_funcao_professor ON pmieducar.funcao USING btree (professor);
+
+                CREATE INDEX i_funcao_ref_usuario_cad ON pmieducar.funcao USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.funcao_cod_funcao_seq\', 1, false);
             '
         );

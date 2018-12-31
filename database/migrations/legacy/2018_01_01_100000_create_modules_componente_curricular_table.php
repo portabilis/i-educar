@@ -42,6 +42,10 @@ class CreateModulesComponenteCurricularTable extends Migration
                 
                 ALTER TABLE ONLY modules.componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.componente_curricular_id_seq\'::regclass);
                 
+                CREATE INDEX componente_curricular_area_conhecimento_key ON modules.componente_curricular USING btree (area_conhecimento_id);
+
+                CREATE UNIQUE INDEX componente_curricular_id_key ON modules.componente_curricular USING btree (id);
+
                 SELECT pg_catalog.setval(\'modules.componente_curricular_id_seq\', 2, true);
             '
         );

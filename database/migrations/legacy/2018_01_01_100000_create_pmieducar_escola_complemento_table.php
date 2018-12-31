@@ -40,6 +40,26 @@ class CreatePmieducarEscolaComplementoTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.escola_complemento
                     ADD CONSTRAINT escola_complemento_pkey PRIMARY KEY (ref_cod_escola);
+                    
+                CREATE INDEX i_escola_complemento_ativo ON pmieducar.escola_complemento USING btree (ativo);
+
+                CREATE INDEX i_escola_complemento_bairro ON pmieducar.escola_complemento USING btree (bairro);
+
+                CREATE INDEX i_escola_complemento_cep ON pmieducar.escola_complemento USING btree (cep);
+
+                CREATE INDEX i_escola_complemento_complemento ON pmieducar.escola_complemento USING btree (complemento);
+
+                CREATE INDEX i_escola_complemento_email ON pmieducar.escola_complemento USING btree (email);
+
+                CREATE INDEX i_escola_complemento_logradouro ON pmieducar.escola_complemento USING btree (logradouro);
+
+                CREATE INDEX i_escola_complemento_municipio ON pmieducar.escola_complemento USING btree (municipio);
+
+                CREATE INDEX i_escola_complemento_nm_escola ON pmieducar.escola_complemento USING btree (nm_escola);
+
+                CREATE INDEX i_escola_complemento_numero ON pmieducar.escola_complemento USING btree (numero);
+
+                CREATE INDEX i_escola_complemento_ref_usuario_cad ON pmieducar.escola_complemento USING btree (ref_usuario_cad);
             '
         );
     }

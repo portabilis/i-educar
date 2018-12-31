@@ -37,6 +37,8 @@ class CreateModulesParecerAlunoTable extends Migration
 
                 ALTER TABLE ONLY modules.parecer_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_aluno_id_seq\'::regclass);
                 
+                CREATE INDEX idx_parecer_aluno_matricula_id ON modules.parecer_aluno USING btree (matricula_id);
+
                 SELECT pg_catalog.setval(\'modules.parecer_aluno_id_seq\', 1, false);
             '
         );

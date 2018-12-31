@@ -42,6 +42,8 @@ class CreateModulesTabelaArredondamentoValorTable extends Migration
 
                 ALTER TABLE ONLY modules.tabela_arredondamento_valor ALTER COLUMN id SET DEFAULT nextval(\'modules.tabela_arredondamento_valor_id_seq\'::regclass);
                 
+                CREATE INDEX idx_tabela_arredondamento_valor_tabela_id ON modules.tabela_arredondamento_valor USING btree (tabela_arredondamento_id);
+
                 SELECT pg_catalog.setval(\'modules.tabela_arredondamento_valor_id_seq\', 26, true);
             '
         );

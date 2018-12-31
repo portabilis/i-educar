@@ -35,6 +35,8 @@ class CreateAlimentosUnidadeFaixaEtariaTable extends Migration
                 ALTER TABLE ONLY alimentos.unidade_faixa_etaria
                     ADD CONSTRAINT pk_uni_faixa_etaria PRIMARY KEY (idfeu);
 
+                CREATE UNIQUE INDEX un_uni_faixa_etaria ON alimentos.unidade_faixa_etaria USING btree (iduni, idfae);
+
                 SELECT pg_catalog.setval(\'alimentos.unidade_faixa_etaria_idfeu_seq\', 1, false);
             '
         );

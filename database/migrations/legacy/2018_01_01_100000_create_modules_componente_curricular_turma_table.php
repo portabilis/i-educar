@@ -31,6 +31,8 @@ class CreateModulesComponenteCurricularTurmaTable extends Migration
                 
                 ALTER TABLE ONLY modules.componente_curricular_turma
                     ADD CONSTRAINT componente_curricular_turma_pkey PRIMARY KEY (componente_curricular_id, turma_id);
+                    
+                CREATE INDEX componente_curricular_turma_turma_idx ON modules.componente_curricular_turma USING btree (turma_id);
             '
         );
     }

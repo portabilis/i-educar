@@ -36,6 +36,14 @@ class CreatePortalMaillingFilaEnvioTable extends Migration
                 ALTER TABLE ONLY portal.mailling_fila_envio
                     ADD CONSTRAINT mailling_fila_envio_pk PRIMARY KEY (cod_mailling_fila_envio);
 
+                CREATE INDEX mailling_fila_envio_data_envio_idx ON portal.mailling_fila_envio USING btree (data_envio);
+
+                CREATE INDEX mailling_fila_envio_ref_cod_mailling_email ON portal.mailling_fila_envio USING btree (ref_cod_mailling_email);
+
+                CREATE INDEX mailling_fila_envio_ref_cod_mailling_email_conteudo ON portal.mailling_fila_envio USING btree (ref_cod_mailling_email_conteudo);
+
+                CREATE INDEX mailling_fila_envio_ref_cod_mailling_fila_envio ON portal.mailling_fila_envio USING btree (cod_mailling_fila_envio);
+
                 SELECT pg_catalog.setval(\'portal.mailling_fila_envio_cod_mailling_fila_envio_seq\', 1, false);
             '
         );

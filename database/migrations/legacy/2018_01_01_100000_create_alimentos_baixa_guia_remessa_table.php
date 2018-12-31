@@ -37,6 +37,8 @@ class CreateAlimentosBaixaGuiaRemessaTable extends Migration
                 ALTER TABLE ONLY alimentos.baixa_guia_remessa
                     ADD CONSTRAINT pk_baixa_guia_remessa PRIMARY KEY (idbai);
 
+                CREATE UNIQUE INDEX un_baixa_guia_remessa ON alimentos.baixa_guia_remessa USING btree (idgui, dt_recebimento);
+
                 SELECT pg_catalog.setval(\'alimentos.baixa_guia_remessa_idbai_seq\', 1, false);
             '
         );

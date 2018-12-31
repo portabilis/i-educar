@@ -38,6 +38,12 @@ class CreatePmieducarEscolaRedeEnsinoTable extends Migration
                 ALTER TABLE ONLY pmieducar.escola_rede_ensino
                     ADD CONSTRAINT escola_rede_ensino_pkey PRIMARY KEY (cod_escola_rede_ensino);
 
+                CREATE INDEX i_escola_rede_ensino_ativo ON pmieducar.escola_rede_ensino USING btree (ativo);
+
+                CREATE INDEX i_escola_rede_ensino_nm_rede ON pmieducar.escola_rede_ensino USING btree (nm_rede);
+
+                CREATE INDEX i_escola_rede_ensino_ref_usuario_cad ON pmieducar.escola_rede_ensino USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.escola_rede_ensino_cod_escola_rede_ensino_seq\', 1, true);
             '
         );

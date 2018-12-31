@@ -54,6 +54,20 @@ class CreatePmieducarHistoricoEscolarTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.historico_escolar
                     ADD CONSTRAINT historico_escolar_pkey PRIMARY KEY (ref_cod_aluno, sequencial);
+                    
+                CREATE INDEX historico_escolar_ano_idx ON pmieducar.historico_escolar USING btree (ano);
+
+                CREATE INDEX historico_escolar_ativo_idx ON pmieducar.historico_escolar USING btree (ativo);
+
+                CREATE INDEX historico_escolar_nm_serie_idx ON pmieducar.historico_escolar USING btree (nm_serie);
+                
+                CREATE INDEX idx_historico_escolar_aluno_ativo ON pmieducar.historico_escolar USING btree (ref_cod_aluno, ativo);
+
+                CREATE INDEX idx_historico_escolar_id1 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, sequencial);
+
+                CREATE INDEX idx_historico_escolar_id2 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, sequencial, ano);
+
+                CREATE INDEX idx_historico_escolar_id3 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, ano);
             '
         );
     }

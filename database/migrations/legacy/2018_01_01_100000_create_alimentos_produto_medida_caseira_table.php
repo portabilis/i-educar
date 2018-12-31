@@ -35,6 +35,8 @@ class CreateAlimentosProdutoMedidaCaseiraTable extends Migration
                 ALTER TABLE ONLY alimentos.produto_medida_caseira
                     ADD CONSTRAINT pk_produto_medida_caseira PRIMARY KEY (idpmc);
 
+                CREATE UNIQUE INDEX un_produto_medida_caseira ON alimentos.produto_medida_caseira USING btree (idmedcas, idcli, idpro);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_medida_caseira_idpmc_seq\', 1, false);
             '
         );

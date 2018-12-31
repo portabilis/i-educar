@@ -64,6 +64,14 @@ class CreatePmieducarAlunoTable extends Migration
                 ALTER TABLE ONLY pmieducar.aluno
                     ADD CONSTRAINT aluno_ref_idpes_un UNIQUE (ref_idpes);
 
+                CREATE INDEX i_aluno_ativo ON pmieducar.aluno USING btree (ativo);
+
+                CREATE INDEX i_aluno_ref_cod_religiao ON pmieducar.aluno USING btree (ref_cod_religiao);
+
+                CREATE INDEX i_aluno_ref_idpes ON pmieducar.aluno USING btree (ref_idpes);
+
+                CREATE INDEX i_aluno_ref_usuario_cad ON pmieducar.aluno USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.aluno_cod_aluno_seq\', 2, true);
             '
         );

@@ -40,6 +40,8 @@ class CreatePmieducarMatriculaTurmaTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.matricula_turma
                     ADD CONSTRAINT matricula_turma_pkey PRIMARY KEY (ref_cod_matricula, ref_cod_turma, sequencial);
+                    
+                CREATE INDEX i_matricula_turma_ref_cod_turma ON pmieducar.matricula_turma USING btree (ref_cod_turma);
             '
         );
     }

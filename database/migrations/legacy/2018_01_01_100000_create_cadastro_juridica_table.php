@@ -37,6 +37,8 @@ class CreateCadastroJuridicaTable extends Migration
                 
                 ALTER TABLE ONLY cadastro.juridica
                     ADD CONSTRAINT pk_juridica PRIMARY KEY (idpes);
+                    
+                CREATE UNIQUE INDEX un_juridica_cnpj ON cadastro.juridica USING btree (cnpj);
             '
         );
     }

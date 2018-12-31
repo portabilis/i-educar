@@ -39,6 +39,14 @@ class CreatePmieducarCoffebreakTipoTable extends Migration
                 ALTER TABLE ONLY pmieducar.coffebreak_tipo
                     ADD CONSTRAINT coffebreak_tipo_pkey PRIMARY KEY (cod_coffebreak_tipo);
 
+                CREATE INDEX i_coffebreak_tipo_ativo ON pmieducar.coffebreak_tipo USING btree (ativo);
+
+                CREATE INDEX i_coffebreak_tipo_custo_unitario ON pmieducar.coffebreak_tipo USING btree (custo_unitario);
+
+                CREATE INDEX i_coffebreak_tipo_nm_tipo ON pmieducar.coffebreak_tipo USING btree (nm_tipo);
+
+                CREATE INDEX i_coffebreak_tipo_ref_usuario_cad ON pmieducar.coffebreak_tipo USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.coffebreak_tipo_cod_coffebreak_tipo_seq\', 1, false);
             '
         );

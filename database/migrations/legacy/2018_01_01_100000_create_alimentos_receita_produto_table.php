@@ -38,6 +38,8 @@ class CreateAlimentosReceitaProdutoTable extends Migration
                 ALTER TABLE ONLY alimentos.receita_produto
                     ADD CONSTRAINT pk_rec_prod PRIMARY KEY (idrpr);
 
+                CREATE UNIQUE INDEX un_rec_prod ON alimentos.receita_produto USING btree (idpro, idrec);
+
                 SELECT pg_catalog.setval(\'alimentos.receita_produto_idrpr_seq\', 1, false);
             '
         );

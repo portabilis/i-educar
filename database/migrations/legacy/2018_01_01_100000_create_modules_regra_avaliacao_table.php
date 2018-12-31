@@ -61,6 +61,8 @@ class CreateModulesRegraAvaliacaoTable extends Migration
 
                 ALTER TABLE ONLY modules.regra_avaliacao ALTER COLUMN id SET DEFAULT nextval(\'modules.regra_avaliacao_id_seq\'::regclass);
                 
+                CREATE UNIQUE INDEX regra_avaliacao_id_key ON modules.regra_avaliacao USING btree (id);
+
                 SELECT pg_catalog.setval(\'modules.regra_avaliacao_id_seq\', 2, true);
             '
         );

@@ -39,6 +39,8 @@ class CreateModulesFaltaComponenteCurricularTable extends Migration
 
                 ALTER TABLE ONLY modules.falta_componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_componente_curricular_id_seq\'::regclass);
                 
+                CREATE INDEX idx_falta_componente_curricular_id1 ON modules.falta_componente_curricular USING btree (falta_aluno_id, componente_curricular_id, etapa);
+
                 SELECT pg_catalog.setval(\'modules.falta_componente_curricular_id_seq\', 1, true);
             '
         );

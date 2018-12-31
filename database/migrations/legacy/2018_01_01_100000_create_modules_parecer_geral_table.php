@@ -38,6 +38,8 @@ class CreateModulesParecerGeralTable extends Migration
 
                 ALTER TABLE ONLY modules.parecer_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_geral_id_seq\'::regclass);
                 
+                CREATE INDEX idx_parecer_geral_parecer_aluno_etp ON modules.parecer_geral USING btree (parecer_aluno_id, etapa);
+
                 SELECT pg_catalog.setval(\'modules.parecer_geral_id_seq\', 1, false);
             '
         );

@@ -39,6 +39,12 @@ class CreatePmieducarHabilitacaoTable extends Migration
                 ALTER TABLE ONLY pmieducar.habilitacao
                     ADD CONSTRAINT habilitacao_pkey PRIMARY KEY (cod_habilitacao);
 
+                CREATE INDEX i_habilitacao_ativo ON pmieducar.habilitacao USING btree (ativo);
+
+                CREATE INDEX i_habilitacao_nm_tipo ON pmieducar.habilitacao USING btree (nm_tipo);
+
+                CREATE INDEX i_habilitacao_ref_usuario_cad ON pmieducar.habilitacao USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.habilitacao_cod_habilitacao_seq\', 1, false);
             '
         );

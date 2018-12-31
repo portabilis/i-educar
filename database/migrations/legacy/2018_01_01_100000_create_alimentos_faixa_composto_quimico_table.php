@@ -36,6 +36,8 @@ class CreateAlimentosFaixaCompostoQuimicoTable extends Migration
                 ALTER TABLE ONLY alimentos.faixa_composto_quimico
                     ADD CONSTRAINT pk_faixa_composto_quimico PRIMARY KEY (idfcp);
 
+                CREATE UNIQUE INDEX un_faixa_cp_quimico ON alimentos.faixa_composto_quimico USING btree (idcom, idfae);
+
                 SELECT pg_catalog.setval(\'alimentos.faixa_composto_quimico_idfcp_seq\', 1, false);
             '
         );

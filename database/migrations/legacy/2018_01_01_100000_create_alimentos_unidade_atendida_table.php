@@ -45,6 +45,8 @@ class CreateAlimentosUnidadeAtendidaTable extends Migration
                 ALTER TABLE ONLY alimentos.unidade_atendida
                     ADD CONSTRAINT pk_unidade_atendida PRIMARY KEY (iduni);
 
+                CREATE UNIQUE INDEX un_unidade_atendida ON alimentos.unidade_atendida USING btree (idcli, codigo);
+
                 SELECT pg_catalog.setval(\'alimentos.unidade_atendida_iduni_seq\', 1, false);
             '
         );

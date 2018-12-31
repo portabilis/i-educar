@@ -34,6 +34,8 @@ class CreateAlimentosReceitaCompostoQuimicoTable extends Migration
                 ALTER TABLE ONLY alimentos.receita_composto_quimico
                     ADD CONSTRAINT pk_rec_cp_quimico PRIMARY KEY (idrcq);
 
+                CREATE UNIQUE INDEX un_rec_cp_quimico ON alimentos.receita_composto_quimico USING btree (idcom, idrec);
+
                 SELECT pg_catalog.setval(\'alimentos.receita_composto_quimico_idrcq_seq\', 1, false);
             '
         );

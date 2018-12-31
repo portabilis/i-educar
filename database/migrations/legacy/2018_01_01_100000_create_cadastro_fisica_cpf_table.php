@@ -34,6 +34,8 @@ class CreateCadastroFisicaCpfTable extends Migration
                 
                 ALTER TABLE ONLY cadastro.fisica_cpf
                     ADD CONSTRAINT pk_fisica_cpf PRIMARY KEY (idpes);
+                    
+                CREATE UNIQUE INDEX un_fisica_cpf ON cadastro.fisica_cpf USING btree (cpf);
             '
         );
     }

@@ -50,6 +50,8 @@ class CreateAlimentosGuiaRemessaTable extends Migration
                 ALTER TABLE ONLY alimentos.guia_remessa
                     ADD CONSTRAINT pk_guia_remessa PRIMARY KEY (idgui);
 
+                CREATE UNIQUE INDEX un_guia_remessa ON alimentos.guia_remessa USING btree (idcli, ano, sequencial);
+
                 SELECT pg_catalog.setval(\'alimentos.guia_remessa_idgui_seq\', 1, false);
             '
         );

@@ -38,6 +38,8 @@ class CreateModulesTabelaArredondamentoTable extends Migration
 
                 ALTER TABLE ONLY modules.tabela_arredondamento ALTER COLUMN id SET DEFAULT nextval(\'modules.tabela_arredondamento_id_seq\'::regclass);
                 
+                CREATE UNIQUE INDEX tabela_arredondamento_id_key ON modules.tabela_arredondamento USING btree (id);
+
                 SELECT pg_catalog.setval(\'modules.tabela_arredondamento_id_seq\', 2, true);
             '
         );

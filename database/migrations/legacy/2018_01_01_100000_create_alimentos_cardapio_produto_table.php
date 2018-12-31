@@ -35,6 +35,8 @@ class CreateAlimentosCardapioProdutoTable extends Migration
                 ALTER TABLE ONLY alimentos.cardapio_produto
                     ADD CONSTRAINT pk_cardapio_produto PRIMARY KEY (idcpr);
 
+                CREATE UNIQUE INDEX un_cardapio_produto ON alimentos.cardapio_produto USING btree (idcar, idpro);
+
                 SELECT pg_catalog.setval(\'alimentos.cardapio_produto_idcpr_seq\', 1, false);
             '
         );

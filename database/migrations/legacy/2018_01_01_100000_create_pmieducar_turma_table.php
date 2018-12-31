@@ -90,6 +90,8 @@ class CreatePmieducarTurmaTable extends Migration
                 ALTER TABLE ONLY pmieducar.turma
                     ADD CONSTRAINT turma_pkey PRIMARY KEY (cod_turma);
 
+                CREATE INDEX i_turma_nm_turma ON pmieducar.turma USING btree (nm_turma);
+
                 SELECT pg_catalog.setval(\'pmieducar.turma_cod_turma_seq\', 2, true);
             '
         );

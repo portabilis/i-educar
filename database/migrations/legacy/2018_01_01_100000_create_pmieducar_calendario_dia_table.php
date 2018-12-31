@@ -32,6 +32,16 @@ class CreatePmieducarCalendarioDiaTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.calendario_dia
                     ADD CONSTRAINT calendario_dia_pkey PRIMARY KEY (ref_cod_calendario_ano_letivo, mes, dia);
+                    
+                CREATE INDEX i_calendario_dia_ativo ON pmieducar.calendario_dia USING btree (ativo);
+
+                CREATE INDEX i_calendario_dia_dia ON pmieducar.calendario_dia USING btree (dia);
+
+                CREATE INDEX i_calendario_dia_mes ON pmieducar.calendario_dia USING btree (mes);
+
+                CREATE INDEX i_calendario_dia_ref_cod_calendario_dia_motivo ON pmieducar.calendario_dia USING btree (ref_cod_calendario_dia_motivo);
+
+                CREATE INDEX i_calendario_dia_ref_usuario_cad ON pmieducar.calendario_dia USING btree (ref_usuario_cad);
             '
         );
     }

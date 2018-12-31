@@ -51,6 +51,13 @@ class CreatePmieducarServidorTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.servidor
                     ADD CONSTRAINT servidor_pkey PRIMARY KEY (cod_servidor, ref_cod_instituicao);
+                    
+                CREATE INDEX fki_servidor_ref_cod_subnivel ON pmieducar.servidor USING btree (ref_cod_subnivel);
+
+                CREATE INDEX fki_servidor_ref_cod_subnivel_ ON pmieducar.servidor USING btree (ref_cod_subnivel);
+                
+                CREATE INDEX servidor_idx ON pmieducar.servidor USING btree (cod_servidor, ref_cod_instituicao, ativo);
+                COMMENT ON INDEX pmieducar.servidor_idx IS \'Índice para otimização de acesso aos campos mais usados para queries na tabela.\';
             '
         );
     }
