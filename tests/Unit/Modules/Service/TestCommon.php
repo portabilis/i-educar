@@ -202,7 +202,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   protected $_parecerDescritivoAbstractDataMapperMock = NULL;
 
-  protected function setUp()
+  protected function setUp() :void
   {
     // Armazena valores de configuração para serem usados nas diferentes
     // instâncias de objetos legados e novos
@@ -227,6 +227,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         ->_setRegraOption('formulaRecuperacao', $this->_setUpFormulaRecuperacao())
         ->_setRegraOption('tabelaArredondamento', $this->_setUpTabelaArredondamento())
         ->_setRegraOption('tabelaArredondamentoConceitual', $this->_setUpTabelaArredondamentoConceitual());
+    parent::setUp();
   }
 
   protected function _getServiceInstance()
