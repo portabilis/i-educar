@@ -24,6 +24,8 @@ class CreatePmieducarBibliotecaUsuarioTable extends Migration
                 
                 ALTER TABLE ONLY pmieducar.biblioteca_usuario
                     ADD CONSTRAINT biblioteca_usuario_pkey PRIMARY KEY (ref_cod_biblioteca, ref_cod_usuario);
+                    
+                CREATE INDEX fki_biblioteca_usuario_ref_cod_biblioteca_fk ON pmieducar.biblioteca_usuario USING btree (ref_cod_biblioteca);
             '
         );
     }

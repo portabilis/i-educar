@@ -21,6 +21,8 @@ class CreateAlimentosFornecedorUnidadeAtendidaTable extends Migration
                     iduni integer NOT NULL,
                     idfor integer NOT NULL
                 );
+                
+                CREATE UNIQUE INDEX un_fornecedor_unidade_atend ON alimentos.fornecedor_unidade_atendida USING btree (iduni, idfor);
             '
         );
     }

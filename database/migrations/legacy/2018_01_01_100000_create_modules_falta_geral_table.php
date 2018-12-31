@@ -38,6 +38,8 @@ class CreateModulesFaltaGeralTable extends Migration
 
                 ALTER TABLE ONLY modules.falta_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_geral_id_seq\'::regclass);
                 
+                CREATE INDEX idx_falta_geral_falta_aluno_id ON modules.falta_geral USING btree (falta_aluno_id);
+
                 SELECT pg_catalog.setval(\'modules.falta_geral_id_seq\', 1, false);
             '
         );

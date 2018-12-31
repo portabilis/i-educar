@@ -38,6 +38,12 @@ class CreatePmieducarDisciplinaTopicoTable extends Migration
                 ALTER TABLE ONLY pmieducar.disciplina_topico
                     ADD CONSTRAINT disciplina_topico_pkey PRIMARY KEY (cod_disciplina_topico);
 
+                CREATE INDEX i_disciplina_topico_ativo ON pmieducar.disciplina_topico USING btree (ativo);
+
+                CREATE INDEX i_disciplina_topico_nm_topico ON pmieducar.disciplina_topico USING btree (nm_topico);
+
+                CREATE INDEX i_disciplina_topico_ref_usuario_cad ON pmieducar.disciplina_topico USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.disciplina_topico_cod_disciplina_topico_seq\', 1, false);
             '
         );

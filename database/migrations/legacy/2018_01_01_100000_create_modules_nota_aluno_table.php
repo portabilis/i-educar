@@ -36,6 +36,10 @@ class CreateModulesNotaAlunoTable extends Migration
 
                 ALTER TABLE ONLY modules.nota_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_aluno_id_seq\'::regclass);
                 
+                CREATE INDEX idx_nota_aluno_matricula ON modules.nota_aluno USING btree (matricula_id);
+
+                CREATE INDEX idx_nota_aluno_matricula_id ON modules.nota_aluno USING btree (id, matricula_id);
+
                 SELECT pg_catalog.setval(\'modules.nota_aluno_id_seq\', 2, true);
             '
         );

@@ -42,6 +42,8 @@ class CreateAlimentosClienteTable extends Migration
                 
                 ALTER TABLE ONLY alimentos.cliente
                     ADD CONSTRAINT pk_cliente PRIMARY KEY (idcli);
+                    
+                CREATE UNIQUE INDEX un_cliente ON alimentos.cliente USING btree (idcli, identificacao);
             '
         );
     }

@@ -34,6 +34,8 @@ class CreateAlimentosProdutoCompostoQuimicoTable extends Migration
                 ALTER TABLE ONLY alimentos.produto_composto_quimico
                     ADD CONSTRAINT pk_prod_cp_quimico PRIMARY KEY (idpcq);
 
+                CREATE UNIQUE INDEX un_prod_cp_quimico ON alimentos.produto_composto_quimico USING btree (idpro, idcom);
+
                 SELECT pg_catalog.setval(\'alimentos.produto_composto_quimico_idpcq_seq\', 1, false);
             '
         );

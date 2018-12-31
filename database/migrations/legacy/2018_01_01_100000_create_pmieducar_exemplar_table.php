@@ -46,6 +46,8 @@ class CreatePmieducarExemplarTable extends Migration
                 ALTER TABLE ONLY pmieducar.exemplar
                     ADD CONSTRAINT exemplar_pkey PRIMARY KEY (cod_exemplar);
 
+                CREATE INDEX exemplar_tombo_idx ON pmieducar.exemplar USING btree (tombo);
+
                 SELECT pg_catalog.setval(\'pmieducar.exemplar_cod_exemplar_seq\', 1, false);
             '
         );

@@ -40,6 +40,8 @@ class CreateAcessoUsuarioTable extends Migration
                 
                 ALTER TABLE ONLY acesso.usuario
                     ADD CONSTRAINT pk_usuario PRIMARY KEY (login);
+                    
+                CREATE UNIQUE INDEX un_usuario_idpes ON acesso.usuario USING btree (idpes);
             '
         );
     }

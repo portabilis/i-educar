@@ -42,6 +42,8 @@ class CreatePublicPgheroQueryStatsTable extends Migration
 
                 ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval(\'public.pghero_query_stats_id_seq\'::regclass);
 
+                CREATE INDEX pghero_query_stats_database_captured_at_idx ON public.pghero_query_stats USING btree (database, captured_at);
+
                 SELECT pg_catalog.setval(\'public.pghero_query_stats_id_seq\', 1, false);
             '
         );

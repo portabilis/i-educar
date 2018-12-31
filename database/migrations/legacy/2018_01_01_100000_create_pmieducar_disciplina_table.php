@@ -43,6 +43,18 @@ class CreatePmieducarDisciplinaTable extends Migration
                 ALTER TABLE ONLY pmieducar.disciplina
                     ADD CONSTRAINT disciplina_pkey PRIMARY KEY (cod_disciplina);
 
+                CREATE INDEX i_disciplina_abreviatura ON pmieducar.disciplina USING btree (abreviatura);
+
+                CREATE INDEX i_disciplina_apura_falta ON pmieducar.disciplina USING btree (apura_falta);
+
+                CREATE INDEX i_disciplina_ativo ON pmieducar.disciplina USING btree (ativo);
+
+                CREATE INDEX i_disciplina_carga_horaria ON pmieducar.disciplina USING btree (carga_horaria);
+
+                CREATE INDEX i_disciplina_nm_disciplina ON pmieducar.disciplina USING btree (nm_disciplina);
+
+                CREATE INDEX i_disciplina_ref_usuario_cad ON pmieducar.disciplina USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.disciplina_cod_disciplina_seq\', 1, false);
             '
         );

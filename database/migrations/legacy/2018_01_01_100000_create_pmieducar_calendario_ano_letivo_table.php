@@ -38,6 +38,14 @@ class CreatePmieducarCalendarioAnoLetivoTable extends Migration
                 ALTER TABLE ONLY pmieducar.calendario_ano_letivo
                     ADD CONSTRAINT calendario_ano_letivo_pkey PRIMARY KEY (cod_calendario_ano_letivo);
 
+                CREATE INDEX i_calendario_ano_letivo_ano ON pmieducar.calendario_ano_letivo USING btree (ano);
+
+                CREATE INDEX i_calendario_ano_letivo_ativo ON pmieducar.calendario_ano_letivo USING btree (ativo);
+
+                CREATE INDEX i_calendario_ano_letivo_ref_cod_escola ON pmieducar.calendario_ano_letivo USING btree (ref_cod_escola);
+
+                CREATE INDEX i_calendario_ano_letivo_ref_usuario_cad ON pmieducar.calendario_ano_letivo USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.calendario_ano_letivo_cod_calendario_ano_letivo_seq\', 1, false);
             '
         );

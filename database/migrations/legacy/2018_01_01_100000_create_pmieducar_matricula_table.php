@@ -60,6 +60,12 @@ class CreatePmieducarMatriculaTable extends Migration
                 ALTER TABLE ONLY pmieducar.matricula
                     ADD CONSTRAINT matricula_pkey PRIMARY KEY (cod_matricula);
 
+                CREATE INDEX idx_matricula_cod_escola_aluno ON pmieducar.matricula USING btree (ref_ref_cod_escola, ref_cod_aluno);
+
+                CREATE INDEX matricula_ano_idx ON pmieducar.matricula USING btree (ano);
+
+                CREATE INDEX matricula_ativo_idx ON pmieducar.matricula USING btree (ativo);
+
                 SELECT pg_catalog.setval(\'pmieducar.matricula_cod_matricula_seq\', 2, true);
             '
         );

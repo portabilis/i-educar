@@ -37,6 +37,8 @@ class CreateAlimentosEventoTable extends Migration
                 ALTER TABLE ONLY alimentos.evento
                     ADD CONSTRAINT pk_evento PRIMARY KEY (ideve);
 
+                CREATE UNIQUE INDEX un_evento ON alimentos.evento USING btree (idcad, mes, dia);
+
                 SELECT pg_catalog.setval(\'alimentos.evento_ideve_seq\', 1, false);
             '
         );

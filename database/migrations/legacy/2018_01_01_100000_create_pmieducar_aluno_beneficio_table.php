@@ -38,6 +38,12 @@ class CreatePmieducarAlunoBeneficioTable extends Migration
                 ALTER TABLE ONLY pmieducar.aluno_beneficio
                     ADD CONSTRAINT aluno_beneficio_pkey PRIMARY KEY (cod_aluno_beneficio);
 
+                CREATE INDEX i_aluno_beneficio_ativo ON pmieducar.aluno_beneficio USING btree (ativo);
+
+                CREATE INDEX i_aluno_beneficio_nm_beneficio ON pmieducar.aluno_beneficio USING btree (nm_beneficio);
+
+                CREATE INDEX i_aluno_beneficio_ref_usuario_cad ON pmieducar.aluno_beneficio USING btree (ref_usuario_cad);
+
                 SELECT pg_catalog.setval(\'pmieducar.aluno_beneficio_cod_aluno_beneficio_seq\', 1, false);
             '
         );

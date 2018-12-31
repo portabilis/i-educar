@@ -147,6 +147,18 @@ class CreatePmieducarEscolaTable extends Migration
                 ALTER TABLE ONLY pmieducar.escola
                     ADD CONSTRAINT escola_pkey PRIMARY KEY (cod_escola);
 
+                CREATE INDEX i_escola_ativo ON pmieducar.escola USING btree (ativo);
+
+                CREATE INDEX i_escola_ref_cod_escola_rede_ensino ON pmieducar.escola USING btree (ref_cod_escola_rede_ensino);
+
+                CREATE INDEX i_escola_ref_cod_instituicao ON pmieducar.escola USING btree (ref_cod_instituicao);
+
+                CREATE INDEX i_escola_ref_idpes ON pmieducar.escola USING btree (ref_idpes);
+
+                CREATE INDEX i_escola_ref_usuario_cad ON pmieducar.escola USING btree (ref_usuario_cad);
+
+                CREATE INDEX i_escola_sigla ON pmieducar.escola USING btree (sigla);
+
                 SELECT pg_catalog.setval(\'pmieducar.escola_cod_escola_seq\', 1, true);
             '
         );

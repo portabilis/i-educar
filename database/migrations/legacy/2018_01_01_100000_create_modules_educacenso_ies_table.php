@@ -43,6 +43,8 @@ class CreateModulesEducacensoIesTable extends Migration
 
                 ALTER TABLE ONLY modules.educacenso_ies ALTER COLUMN id SET DEFAULT nextval(\'modules.educacenso_ies_id_seq\'::regclass);
                 
+                CREATE INDEX idx_educacenso_ies_ies_id ON modules.educacenso_ies USING btree (ies_id);
+
                 SELECT pg_catalog.setval(\'modules.educacenso_ies_id_seq\', 6179, true);
             '
         );

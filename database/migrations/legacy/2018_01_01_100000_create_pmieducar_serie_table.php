@@ -52,6 +52,10 @@ class CreatePmieducarSerieTable extends Migration
                 ALTER TABLE ONLY pmieducar.serie
                     ADD CONSTRAINT serie_pkey PRIMARY KEY (cod_serie);
 
+                CREATE INDEX idx_serie_cod_regra_avaliacao_id ON pmieducar.serie USING btree (cod_serie, regra_avaliacao_id);
+
+                CREATE INDEX idx_serie_regra_avaliacao_id ON pmieducar.serie USING btree (regra_avaliacao_id);
+
                 SELECT pg_catalog.setval(\'pmieducar.serie_cod_serie_seq\', 2, true);
             '
         );

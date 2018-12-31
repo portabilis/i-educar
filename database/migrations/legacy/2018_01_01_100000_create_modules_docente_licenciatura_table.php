@@ -46,6 +46,8 @@ class CreateModulesDocenteLicenciaturaTable extends Migration
 
                 ALTER TABLE ONLY modules.docente_licenciatura ALTER COLUMN id SET DEFAULT nextval(\'modules.docente_licenciatura_id_seq\'::regclass);
                 
+                CREATE INDEX docente_licenciatura_ies_idx ON modules.docente_licenciatura USING btree (ies_id);
+
                 SELECT pg_catalog.setval(\'modules.docente_licenciatura_id_seq\', 1, false);
             '
         );

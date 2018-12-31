@@ -37,6 +37,10 @@ class CreateModulesFaltaAlunoTable extends Migration
 
                 ALTER TABLE ONLY modules.falta_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_aluno_id_seq\'::regclass);
                 
+                CREATE INDEX idx_falta_aluno_matricula_id ON modules.falta_aluno USING btree (matricula_id);
+
+                CREATE INDEX idx_falta_aluno_matricula_id_tipo ON modules.falta_aluno USING btree (matricula_id, tipo_falta);
+
                 SELECT pg_catalog.setval(\'modules.falta_aluno_id_seq\', 2, true);
             '
         );
