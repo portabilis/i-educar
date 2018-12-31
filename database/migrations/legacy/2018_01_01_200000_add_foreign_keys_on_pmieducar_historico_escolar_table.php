@@ -36,10 +36,6 @@ class AddForeignKeysOnPmieducarHistoricoEscolarTable extends Migration
                ->references('cod_escola')
                ->on('pmieducar.escola');
 
-            $table->foreign('ref_cod_escola')
-               ->references('cod_escola')
-               ->on('pmieducar.escola');
-
             $table->foreign('ref_cod_aluno')
                ->references('cod_aluno')
                ->on('pmieducar.aluno')
@@ -59,7 +55,6 @@ class AddForeignKeysOnPmieducarHistoricoEscolarTable extends Migration
             $table->dropForeign(['historico_grade_curso_id']);
             $table->dropForeign(['ref_usuario_exc']);
             $table->dropForeign(['ref_usuario_cad']);
-            $table->dropForeign(['ref_cod_escola']);
             $table->dropForeign(['ref_cod_escola']);
             $table->dropForeign(['ref_cod_aluno']);
         });
