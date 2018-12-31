@@ -14,13 +14,13 @@ class AddForeignKeysOnPortalComprasEditaisEditaisEmpresasTable extends Migration
     public function up()
     {
         Schema::table('portal.compras_editais_editais_empresas', function (Blueprint $table) {
-            $table->foreign('ref_cod_compras_editais_empresa')
+            $table->foreign('ref_cod_compras_editais_empresa', 'compras_editais_editais_empresas_ibfk_1')
                ->references('cod_compras_editais_empresa')
                ->on('portal.compras_editais_empresa')
                ->onUpdate('restrict')
                ->onDelete('restrict');
 
-            $table->foreign('ref_cod_compras_editais_editais')
+            $table->foreign('ref_cod_compras_editais_editais', 'compras_editais_editais_empresas_ibfk_2')
                ->references('cod_compras_editais_editais')
                ->on('portal.compras_editais_editais')
                ->onUpdate('restrict')
@@ -36,8 +36,8 @@ class AddForeignKeysOnPortalComprasEditaisEditaisEmpresasTable extends Migration
     public function down()
     {
         Schema::table('portal.compras_editais_editais_empresas', function (Blueprint $table) {
-            $table->dropForeign(['ref_cod_compras_editais_empresa']);
-            $table->dropForeign(['ref_cod_compras_editais_editais']);
+            $table->dropForeign('compras_editais_editais_empresas_ibfk_1');
+            $table->dropForeign('compras_editais_editais_empresas_ibfk_2');
         });
     }
 }
