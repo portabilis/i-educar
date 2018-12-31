@@ -15,6 +15,11 @@ class TestCase extends AbstractTestCase
      * @var Connection
      */
     private static $connection;
+    protected function setUp() :void
+    {
+        $_GET['etapa'] = 'Rc';
+        parent::setUp();
+    }
 
     /**
      * Returns the test database connection.

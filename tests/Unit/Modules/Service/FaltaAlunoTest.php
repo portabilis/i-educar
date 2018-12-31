@@ -70,7 +70,6 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 
     $this->_setFaltaAlunoDataMapperMock($mock);
 
-    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
   }
 }
