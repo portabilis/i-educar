@@ -13,7 +13,7 @@ class AddTriggers extends Migration
     public function up()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/add-triggers.sql')
+            file_get_contents(__DIR__ . '/../../sqls/triggers/add-triggers.sql')
         );
     }
 
@@ -25,7 +25,7 @@ class AddTriggers extends Migration
     public function down()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/remove-triggers.sql')
+            file_get_contents(__DIR__ . '/../../sqls/triggers/remove-triggers.sql')
         );
     }
 }
