@@ -247,6 +247,6 @@ DECLARE
      END IF;
     END LOOP;
     dest := NULL;
-    RETURN;
+    RETURN NULL;
    END;
   $_$;
