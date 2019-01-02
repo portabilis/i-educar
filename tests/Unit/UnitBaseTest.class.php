@@ -1,6 +1,7 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Tests\SuiteTestCase\TestCase;
+use Illuminate\Support\Facades\DB;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -172,35 +173,40 @@ abstract class UnitBaseTest extends TestCase
       return $contents;
     }
   }
-  public function mockDbPreparedQuery($return)
+  public function mockDbPreparedQuery($return, $args = [])
   {
-      Portabilis_Utils_Database::$_db = $this->getDbMock();
-
-      Portabilis_Utils_Database::$_db->expects($this->any())
-          ->method('execPreparedQuery')
-          ->will($this->returnValue(true));
-
-      Portabilis_Utils_Database::$_db->expects($this->any())
-          ->method('ProximoRegistro')
-          ->will($this->returnCallback(function() use (&$return) {
-              if (!isset($return[0]['return']) && isset($return[0])) {
-                  $tmp = $return[0];
-                  $return[0] = [
+      DB::shouldReceive('setFetchMode');
+      $run = DB::shouldReceive('publicRun');
+      if ($args) {
+          $run->withArgs(function($query, $params) use($args) {
+              if (strpos($query, $args[0]) !== false) {
+                  if(!isset($args[1]) || $args[1] ==  $params) {
+                      return true;
+                  }
+              }
+              return false;
+          });
+      }
+      $run->andReturn(new class($return, $this) {
+          private $data = [];
+          public function __construct($data) {
+              $this->data = $data;
+          }
+          public function fetch() {
+              if (!isset($this->data[0]['return']) && isset($this->data[0])) {
+                  $tmp = $this->data[0];
+                  $this->data[0] = [
                       'return' => [$tmp],
                       'total'  => 0
                   ];
               }
-              if (isset($return[0]['return']) && $return[0]['total'] <= count($return[0]['return'])-1) {
-                  return ++$return[0]['total'];
+              if (isset($this->data[0]['return']) && $this->data[0]['total'] <= count($this->data[0]['return'])-1) {
+                  return $this->data[0]['return'][$this->data[0]['total']++];
               }
-              array_shift($return);
+              $this->data[0]['total'] = 0;
               return false;
-          }));
-
-      Portabilis_Utils_Database::$_db->expects($this->any())
-          ->method('Tupla')
-          ->will($this->returnCallback(function() use (&$return) {
-              return $return[0]['return'][$return[0]['total']-1];
-          }));
+          }
+      });
+      return $run;
   }
 }
