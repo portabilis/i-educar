@@ -112,28 +112,23 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
     $tabela->setDataMapper($tabelaDataMapper);
 
     $this->_setRegraOption('tabelaArredondamentoConceitual', $tabela);
-
     $this->_setRegraOption('tipoNota', RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL);
     $service = $this->_getServiceInstance();
-    $nota = new Avaliacao_Model_NotaComponente([
-        'nota' => 5.49
-    ]);
+    $this->mockDbPreparedQuery(
+        [['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]],
+        ['FROM modules.componente_curricular_ano_escolar', ['a' => 1, 'b' => 2]]
+    );
+
+    $nota = new Avaliacao_Model_NotaComponente(['nota' => 5.49]);
     $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
-    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
     $this->assertEquals('I', $service->arredondaNota($nota));
 
-    $nota = new Avaliacao_Model_NotaComponente([
-        'nota' => 6.50
-    ]);
+    $nota = new Avaliacao_Model_NotaComponente(['nota' => 6.50]);
     $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
-    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
     $this->assertEquals('S', $service->arredondaNota($nota));
 
-    $nota = new Avaliacao_Model_NotaComponente([
-        'nota' => 9.15
-    ]);
+    $nota = new Avaliacao_Model_NotaComponente(['nota' => 9.15]);
     $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
-    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
     $this->assertEquals('O', $service->arredondaNota($nota));
   }
 
@@ -176,6 +171,11 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
     $this->_setNotaComponenteDataMapperMock($mock);
 
     $service = $this->_getServiceInstance();
+
+    $this->mockDbPreparedQuery(
+        [['E' => 1]],
+        ['FROM modules.regra_avaliacao_recuperacao']
+    );
 
     $ret = $service->preverNotaRecuperacao(1);
     $this->assertEquals(4.0, $ret);
