@@ -239,6 +239,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     parent::setUp();
   }
 
+  /**
+   * @return Avaliacao_Service_Boletim
+   */
   protected function _getServiceInstance()
   {
     // Configura mappers das dependências de Avalilacao_Service_Boletim
