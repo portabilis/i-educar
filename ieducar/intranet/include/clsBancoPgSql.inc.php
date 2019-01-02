@@ -29,6 +29,8 @@
  */
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Events\StatementPrepared;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -433,9 +435,7 @@ abstract class clsBancoSQL_
 
     $start = microtime(true);
 
-    $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
-    $this->strErro = pg_result_error($this->bConsulta_ID);
-    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+    $this->run($this->strStringSQL);
     $this->iLinha   = 0;
 
     $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
@@ -448,14 +448,11 @@ abstract class clsBancoSQL_
         $message .= PHP_EOL . $this->strStringSQL;
 
         throw new Exception($message);
-      }
-      else
-      {
+      } else {
         $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
         throw new Exception("Erro ao executar uma ação no banco de dados: $erroMsg");
       }
     }
-
 
     $cronometro->marca('fim');
 
@@ -651,30 +648,20 @@ abstract class clsBancoSQL_
           return false;
       }
 
-    // Fetch do resultado
-    if ($this->getFetchMode() == self::FETCH_ARRAY) {
-      $this->arrayStrRegistro = @pg_fetch_array($this->bConsulta_ID);
-    }
-    elseif ($this->getFetchMode() == self::FETCH_ASSOC) {
-      $this->arrayStrRegistro = @pg_fetch_assoc($this->bConsulta_ID);
-    }
+    $this->arrayStrRegistro = $this->bConsulta_ID->fetch();
 
-    // Verifica se houve erros
-    $this->strErro = @pg_result_error($this->bConsulta_ID);
-    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
-
-    // Testa se está vazio e verifica se Auto_Limpa é TRUE
-    $stat = is_array($this->arrayStrRegistro);
-    if ($this->bDepurar && $stat) {
-      printf("<br>Depurar: Registro : %s <br>\n", implode($this->arrayStrRegistro));
+    if ($this->arrayStrRegistro) {
+        $this->arrayStrRegistro = (array)$this->arrayStrRegistro;
+        if ($this->bDepurar) {
+          printf("<br>Depurar: Registro : %s <br>\n", implode($this->arrayStrRegistro));
+        }
+        return $this->arrayStrRegistro;
+    }
+    if ($this->bAuto_Limpa) {
+        $this->Libera();
     }
 
-    if (!$stat && $this->bAuto_Limpa)
-    {
-      $this->Libera();
-    }
-
-    return $stat;
+    return false;
   }
 
   /**
@@ -700,7 +687,6 @@ abstract class clsBancoSQL_
    */
   function Libera()
   {
-    pg_free_result($this->bConsulta_ID);
     $this->bConsulta_ID = 0;
     $this->strStringSQL = '';
   }
@@ -767,7 +753,8 @@ abstract class clsBancoSQL_
   {
     $this->Consulta($consulta);
     if ($this->ProximoRegistro()) {
-      list ($campo) = $this->Tupla();
+      $campo = $this->Tupla();
+      $campo = array_shift($campo);
       $this->Libera();
       return $campo;
     }
@@ -852,17 +839,13 @@ abstract class clsBancoSQL_
   public function execPreparedQuery($query, $params = array()) {
     try {
       $errorMsgs = '';
-      $this->Conecta();
-      $dbConn = $this->bLink_ID;
 
       if (! is_array($params))
         $params = array($params);
 
       $start = microtime(true);
 
-      $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
-      $resultError = @pg_result_error($this->bConsulta_ID);
-      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($dbConn);
+      $this->run($query, $params);
 
       $this->logQuery($query, $params, $this->getElapsedTime($start));
 
@@ -871,10 +854,27 @@ abstract class clsBancoSQL_
         $errorMsgs .= "Exception: " . $e->getMessage();
       }
 
-      if ($this->bConsulta_ID == false || trim($errorMsgs) != '')
+      if (!$this->bConsulta_ID || trim($errorMsgs) != '')
         throw new Exception("Erro ao preparar consulta ($query) no banco de dados: $errorMsgs");
 
       return $this->bConsulta_ID;
+  }
+
+  private function run($query, $params = [])
+  {
+      if(is_numeric(key($params))) {
+          $params =  array_combine(range('a', chr(96+count($params))), $params);
+          $query = preg_replace_callback('/(\$\d{1,})/', function ($matches) {
+              return ':'.chr(substr($matches[0], 1)+96);
+          }, $query);
+      }
+
+      if($this->getFetchMode() == self::FETCH_ARRAY) {
+          DB::setFetchMode(PDO::FETCH_BOTH);
+      } else {
+          DB::setFetchMode($this->getFetchMode());
+      }
+      $this->bConsulta_ID = DB::publicRun($query, $params);
   }
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+use Tests\SuiteTestCase\TestCase;
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -43,7 +45,7 @@ require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
  * @todo        Subclassificar classe como IntegrationBaseTest
  * @version     @@package_version@@
  */
-class ClsBancoTest extends PHPUnit\Framework\TestCase
+class ClsBancoTest extends TestCase
 {
   public function testDoCountFromObj()
   {
