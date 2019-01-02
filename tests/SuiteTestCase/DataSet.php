@@ -2,7 +2,6 @@
 
 namespace Tests\SuiteTestCase;
 
-use Exception;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
@@ -31,7 +30,9 @@ class DataSet
     private function extractSuiteName($string)
     {
         $parts = explode('\\', $string);
-        return $parts[1];
+        if(count($parts) > 1) {
+            return $parts[1];
+        }
     }
 
     private function objectValid($object)
