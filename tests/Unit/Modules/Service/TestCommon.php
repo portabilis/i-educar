@@ -51,9 +51,12 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
+require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
 require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/NotaComponenteMediaDataMapper.php';
+
+require_once 'Avaliacao/Model/MediaGeralDataMapper.php';
 
 require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
 require_once 'Avaliacao/Model/FaltaGeralDataMapper.php';
@@ -179,7 +182,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     'formulaRecuperacao'   => NULL,
     'porcentagemPresenca'  => 75.0,
     'notaMaximaExameFinal' => 10,
-    'mediaRecuperacao'     => 4.0
+    'mediaRecuperacao'     => 4.0,
+    'notaGeralPorEtapa'    => 1
   );
 
   protected $_componenteCurricularMapperMock = NULL;
@@ -188,11 +192,15 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   protected $_componenteTurmaDataMapperMock = NULL;
 
+  protected $_notaGeralDataMapperMock = NULL;
+
   protected $_notaAlunoDataMapperMock = NULL;
 
   protected $_notaComponenteDataMapperMock = NULL;
 
   protected $_notaComponenteMediaDataMapperMock = NULL;
+
+  protected $_mediaGeralDataMapperMock = NULL;
 
   protected $_faltaAlunoDataMapperMock = NULL;
 
@@ -220,6 +228,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
          ->_setConfigOptions('componenteCurricular', $this->_getComponenteCurricular())
          ->_setConfigOptions('notaAluno', $this->_getNotaAluno())
          ->_setConfigOptions('faltaAluno', $this->_getFaltaAluno())
+         ->_setConfigOptions('notaGeral', $this->_getNotaGeral())
          ->_setConfigOptions('parecerDescritivoAluno', $this->_getParecerDescritivoAluno());
 
     // Configura atributos de RegraAvaliacao_Model_Regra
@@ -237,9 +246,11 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'RegraDataMapper'                     => $this->_getRegraDataMapperMock(),
       'ComponenteDataMapper'                => $this->_getComponenteDataMapperMock(),
       'ComponenteTurmaDataMapper'           => $this->_getComponenteTurmaDataMapperMock(),
+      'NotaGeralDataMapper'                 => $this->_getNotaGeralDataMapperMock(),
       'NotaAlunoDataMapper'                 => $this->_getNotaAlunoDataMapperMock(),
       'NotaComponenteDataMapper'            => $this->_getNotaComponenteDataMapperMock(),
       'NotaComponenteMediaDataMapper'       => $this->_getNotaComponenteMediaDataMapperMock(),
+      'MediaGeralDataMapper'                => $this->_getMediaGeralDataMapperMock(),
       'FaltaAlunoDataMapper'                => $this->_getFaltaAlunoDataMapperMock(),
       'FaltaAbstractDataMapper'             => $this->_getFaltaAbstractDataMapperMock(),
       'ParecerDescritivoAlunoDataMapper'    => $this->_getParecerDescritivoAlunoDataMapperMock(),
@@ -275,9 +286,11 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'RegraDataMapper'                     => $this->_getConfigOption('mappers', 'RegraDataMapper'),
       'ComponenteDataMapper'                => $this->_getConfigOption('mappers', 'ComponenteDataMapper'),
       'ComponenteTurmaDataMapper'           => $this->_getConfigOption('mappers', 'ComponenteTurmaDataMapper'),
+      'NotaGeralDataMapper'                 => $this->_getConfigOption('mappers', 'NotaGeralDataMapper'),
       'NotaAlunoDataMapper'                 => $this->_getConfigOption('mappers', 'NotaAlunoDataMapper'),
       'NotaComponenteDataMapper'            => $this->_getConfigOption('mappers', 'NotaComponenteDataMapper'),
       'NotaComponenteMediaDataMapper'       => $this->_getConfigOption('mappers', 'NotaComponenteMediaDataMapper'),
+      'MediaGeralDataMapper'                => $this->_getConfigOption('mappers', 'MediaGeralDataMapper'),
       'FaltaAlunoDataMapper'                => $this->_getConfigOption('mappers', 'FaltaAlunoDataMapper'),
       'FaltaAbstractDataMapper'             => $this->_getConfigOption('mappers', 'FaltaAbstractDataMapper'),
       'ParecerDescritivoAlunoDataMapper'    => $this->_getConfigOption('mappers', 'ParecerDescritivoAlunoDataMapper'),
@@ -536,6 +549,15 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'id'        => 1,
       'matricula' => $matricula
     )));
+  }
+
+  protected function _getNotaGeral()
+  {
+      return array('instance' => new Avaliacao_Model_NotaGeral(array(
+          'notaAluno'               => 10,
+          'nota'                    => 10,
+          'notaArredondada'         => 10
+      )));
   }
 
   /**
@@ -959,6 +981,27 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     return $this->_componenteTurmaDataMapperMock;
   }
 
+  protected function _setNotaGeralDataMapperMock(Avaliacao_Model_NotaGeralDataMapper $mapper = NULL)
+  {
+      $this->_notaGeralDataMapperMock = $mapper;
+      return $this;
+  }
+
+  protected function _getNotaGeralDataMapperMock()
+  {
+      if (is_null($this->_notaGeralDataMapperMock)) {
+          $notaGeral = $this->_getConfigOption('notaGeral', 'instance');
+          $mock = $this->getCleanMock('Avaliacao_Model_NotaGeralDataMapper');
+          $mock->expects($this->at(0))
+              ->method('findAll')
+              ->will($this->returnValue($notaGeral));
+
+          $this->_setNotaGeralDataMapperMock($mock);
+      }
+
+      return $this->_notaGeralDataMapperMock;
+  }
+
   protected function _setNotaAlunoDataMapperMock(Avaliacao_Model_NotaAlunoDataMapper $mapper = NULL)
   {
     $this->_notaAlunoDataMapperMock = $mapper;
@@ -1024,6 +1067,29 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     return $this->_notaComponenteMediaDataMapperMock;
+  }
+
+  protected function _setMediaGeralDataMapperMock(Avaliacao_Model_MediaGeralDataMapper $mapper)
+  {
+      $this->_mediaGeralDataMapperMock = $mapper;
+      return $this;
+  }
+
+  protected function _getMediaGeralDataMapperMock()
+  {
+      if (is_null($this->_mediaGeralDataMapperMock)) {
+          $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+
+          $mock = $this->getCleanMock('Avaliacao_Model_MediaGeralDataMapper');
+          $mock->expects($this->any())
+              ->method('findAll')
+              ->with(array(), array('notaAluno' => $notaAluno->id))
+              ->will($this->returnValue([json_decode('{"mediaArredondada":5,"media":5,"etapa":4}')]));
+
+              $this->_setMediaGeralDataMapperMock($mock);
+      }
+
+      return $this->_mediaGeralDataMapperMock;
   }
 
   protected function _setFaltaAlunoDataMapperMock(Avaliacao_Model_FaltaAlunoDataMapper $mapper = NULL)
