@@ -789,6 +789,11 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
          ->with(1)
          ->will($this->returnValue($regraAvaliacao));
 
+     $mock->expects($this->any())
+         ->method('findRegraRecuperacao')
+         ->will($this->returnValue([]));
+    $regraAvaliacao->setDataMapper($mock);
+
     return $mock;
   }
 
