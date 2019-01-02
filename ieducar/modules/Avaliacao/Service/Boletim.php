@@ -1827,7 +1827,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacaoNotas = $this->getSituacaoNotas();
     $situacaoFaltas = $this->getSituacaofaltas();
 
-    //foreach($situacaoNotas->componentesCurriculares as $ccId => $situacaoNotaCc) {
     foreach ($componentes as $ccId => $componente) {
       // seta tipos nota, falta
       $tipoNotaNenhum = $this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
