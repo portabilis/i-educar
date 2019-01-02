@@ -148,11 +148,13 @@ modules.error.tracker_name = EMAIL
 modules.error.honeybadger_key =
 modules.error.email_recipient =
 
-[development : production]
+[testing : production]
 
-[testing : development]
+[development : testing]
 
 [localhost : development]
+
+[local : localhost]
 
 ; Use seções especificas para adicionar configs que distinguem entre tenants,
 ; Ex.: para o host https://tenant.ieducar.com.br/, pode-se usar esta seção
