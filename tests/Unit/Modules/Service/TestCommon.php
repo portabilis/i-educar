@@ -263,6 +263,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     $this->_setConfigOptions('mappers', $mappers);
 
     // Cria os mocks das classes legadas
+    $this->mockDbPreparedQuery([[1]], ['FROM cadastro.fisica_deficiencia fd', ['a' => 1]]);
+    $this->mockDbPreparedQuery([[1]], ['FROM pmieducar.turma', ['a' => 1]]);
     $this->_setUpMatriculaMock()
          ->_setUpMatriculaTurmaMock()
          ->_setUpCursoMock()
@@ -622,7 +624,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         'curso_carga_horaria'=> 7200,
         'serie_dias_letivos' => 960,
         'cod_matricula'      => 1,
-    ]]);
+    ]], ['FROM pmieducar.matricula m', ['a' => 1]]);
 
     return $this;
   }
