@@ -86,6 +86,7 @@
         "update-install": [
             "@composer install",
             "@set-permissions",
+            "@php artisan update --ansi",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
