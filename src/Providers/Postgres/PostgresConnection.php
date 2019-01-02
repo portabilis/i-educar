@@ -22,7 +22,7 @@ class PostgresConnection extends ParentPostgresConnection
             return $statement;
         });
     }
-    
+
     public function setFetchMode($fetchMode)
     {
         $this->fetchMode = $fetchMode;
