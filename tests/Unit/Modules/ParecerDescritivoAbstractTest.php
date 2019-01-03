@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/_stub/ParecerDescritivoAbstract.php';
-
 /**
  * ParecerDescritivoAbstractTest class.
  *
@@ -48,7 +46,7 @@ class ParecerDescritivoAbstractTest extends UnitBaseTest
 
   protected function setUp()
   {
-    $this->_entity = new Avaliacao_Model_ParecerDescritivoAbstractStub();
+    $this->_entity = $this->getMockForAbstractClass('Avaliacao_Model_ParecerDescritivoAbstract');
   }
 
   public function testEntityValidators()
