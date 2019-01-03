@@ -21,7 +21,6 @@
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "prettus/l5-repository": "^2.6",
-        "robmorgan/phinx": "^0.10.6",
         "swiftmailer/swiftmailer": "^6.1",
         "tooleks/laravel-asset-version": "^1.0"
     },
