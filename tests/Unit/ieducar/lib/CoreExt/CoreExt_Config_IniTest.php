@@ -44,13 +44,13 @@ class CoreExt_Config_IniTest extends PHPUnit\Framework\TestCase
 {
   public function testParsedIni()
   {
-    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../tests/fixtures/configuration/ieducar.ini');
+    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../../fixtures/configuration/ieducar.ini');
     $this->assertNotNull($ini->app);
   }
 
   public function testChangeEnviroment()
   {
-    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../tests/fixtures/configuration/ieducar.ini');
+    $ini = new CoreExt_Config_Ini(__DIR__ . '/../../../../fixtures/configuration/ieducar.ini');
     $this->assertEquals(FALSE, (bool) $ini->php->display_errors);
 
     $ini->changeEnviroment('development');
