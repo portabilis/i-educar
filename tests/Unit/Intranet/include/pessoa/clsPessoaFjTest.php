@@ -4,7 +4,7 @@ namespace Tests\Unit\Model;
 
 use Tests\SuiteTestCase\TestCase;
 
-class PessoaFjTest extends TestCase
+class clsPessoaFjTest extends TestCase
 {
     public function testGetById()
     {
