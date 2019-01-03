@@ -40,7 +40,7 @@
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class FormulaTest extends UnitBaseTest
+class FormulaMedia_Validate_FormulaTest extends UnitBaseTest
 {
   public function testFormulaValida()
   {
