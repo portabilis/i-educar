@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/NotaComponente.php';
-
 /**
  * NotaComponenteTest class.
  *
