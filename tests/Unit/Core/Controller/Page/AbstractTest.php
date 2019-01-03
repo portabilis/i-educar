@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/../_stub/Page/Abstract.php';
 require_once __DIR__.'/../../../CoreExt/_stub/EntityDataMapper.php';
 
 /**
@@ -48,7 +47,12 @@ class Core_Controller_Page_AbstractTest extends PHPUnit\Framework\TestCase
 
   protected function setUp()
   {
-    $this->_pageController = new Core_Controller_Page_AbstractStub();
+      $this->_pageController =  new class () extends Core_Controller_Page_Abstract
+      {
+          public $_dataMapper = NULL;
+          public $_processoAp = NULL;
+          public $_titulo = NULL;
+      };
   }
 
   /**

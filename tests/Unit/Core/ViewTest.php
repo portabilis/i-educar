@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -30,8 +30,7 @@ use PHPUnit\Framework\TestCase;
  * @version   $Id$
  */
 
-require_once __DIR__.'/_stub/View.php';
-require_once __DIR__.'/Controller/_stub/Page/Abstract.php';
+require_once 'Core/View.php';
 
 /**
  * Core_ViewTest class.
@@ -43,7 +42,7 @@ require_once __DIR__.'/Controller/_stub/Page/Abstract.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Core_ViewTest extends PHPUnit\Framework\TestCase
+class Core_ViewTest extends TestCase
 {
   protected $_pageController = NULL;
   protected $_view = NULL;
@@ -51,13 +50,25 @@ class Core_ViewTest extends PHPUnit\Framework\TestCase
   public function __construct($name = null, array $data = [], $dataName = '')
   {
       parent::__construct($name, $data, $dataName);
-    $this->_pageController = new Core_Controller_Page_AbstractStub();
+      $this->_pageController = new class () extends Core_Controller_Page_Abstract
+      {
+          public $_dataMapper = NULL;
+          public $_processoAp = NULL;
+          public $_titulo = NULL;
+      };
     $this->_pageController->setOptions(array('processoAp' => 1, 'titulo' => 'foo'));
   }
 
   protected function setUp()
   {
-    $this->_view = new Core_ViewStub($this->_pageController);
+    $this->_view = new class ($this->_pageController) extends Core_View
+    {
+        public function MakeAll()
+        {
+            $this->Formular();
+            return true;
+        }
+    };
   }
 
   public function testTituloConfiguradoComValorDeConfiguracaoGlobal()
