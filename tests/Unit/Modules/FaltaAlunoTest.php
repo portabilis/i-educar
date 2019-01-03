@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/FaltaAluno.php';
-
 /**
  * FaltaAlunoTest class.
  *
@@ -42,7 +40,7 @@ require_once 'Avaliacao/Model/FaltaAluno.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class FaltaAlunoTest extends UnitBaseTest
+class Avaliacao_Model_FaltaAlunoTest extends UnitBaseTest
 {
   protected $_entity = NULL;
 
