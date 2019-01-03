@@ -46,7 +46,7 @@ class Avaliacao_Model_FaltaAbstractTest extends UnitBaseTest
 
   protected function setUp()
   {
-    $this->_entity = $this->getMockForAbstractClass('Avaliacao_Model_FaltaAbstractStub');
+    $this->_entity = $this->getMockForAbstractClass('Avaliacao_Model_FaltaAbstract');
   }
 
   public function testEntityValidators()
