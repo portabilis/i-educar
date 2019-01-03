@@ -42,7 +42,7 @@ require_once 'Avaliacao/Model/ParecerDescritivoAluno.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class ParecerDescritivoAlunoTest extends UnitBaseTest
+class Avaliacao_Model_ParecerDescritivoAlunoTest extends UnitBaseTest
 {
   protected $_entity = NULL;
 
