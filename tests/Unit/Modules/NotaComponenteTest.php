@@ -40,7 +40,7 @@
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class NotaComponenteTest extends UnitBaseTest
+class Avaliacao_Model_NotaComponenteTest extends UnitBaseTest
 {
   protected $_entity = NULL;
 
