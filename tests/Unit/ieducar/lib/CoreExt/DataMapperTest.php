@@ -291,9 +291,9 @@ class CoreExt_DataMapperTest extends UnitBaseTest
     $entity->markOld();
 
     $_SESSION['id_pessoa'] = 1;
-
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
+    unset($_SESSION['id_pessoa']);
   }
 
   public function testInsereNovoRegistroComChaveComposta()
@@ -313,7 +313,9 @@ class CoreExt_DataMapperTest extends UnitBaseTest
     $entity->markOld();
 
     $mapper = new CoreExt_EntityCompoundDataMapperStub($this->_db);
+    $_SESSION['id_pessoa'] = 1;
     $this->assertTrue($mapper->save($entity));
+    unset($_SESSION['id_pessoa']);
   }
 
   public function testInsereNovoRegistroComChaveCompostaComUmaNulaLancaExcecao()
