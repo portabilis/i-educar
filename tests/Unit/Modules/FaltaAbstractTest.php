@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/_stub/FaltaAbstract.php';
-
 /**
  * FaltaAbstractTest class.
  *
@@ -42,13 +40,13 @@ require_once __DIR__.'/_stub/FaltaAbstract.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class FaltaAbstractTest extends UnitBaseTest
+class Avaliacao_Model_FaltaAbstractTest extends UnitBaseTest
 {
   protected $_entity = NULL;
 
   protected function setUp()
   {
-    $this->_entity = new Avaliacao_Model_FaltaAbstractStub();
+    $this->_entity = $this->getMockForAbstractClass('Avaliacao_Model_FaltaAbstractStub');
   }
 
   public function testEntityValidators()
