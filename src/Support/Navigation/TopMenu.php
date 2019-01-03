@@ -56,7 +56,7 @@ class TopMenu
 
     public function current($currentSubmenuId, $currentUri)
     {
-        $submenu = $this->submenuRepository->find($currentSubmenuId);
+        $submenu = $this->submenuRepository->model()::find($currentSubmenuId);
         $this->currentUri = $currentUri;
         $this->currentMenu = $submenu->menu;
     }

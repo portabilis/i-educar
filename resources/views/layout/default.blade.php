@@ -173,37 +173,7 @@
             <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                 <tr>
                     <td id="menu_lateral" class="r3c1" width='170'>
-                        <table summary='' cellspacing='0' class='nvp_tabelaMenu'>
-                            <tr>
-                                <td>
-                                    <link rel=stylesheet type='text/css'
-                                          href='{{ Asset::get('/intranet/styles/buscaMenu.css') }}'/>
-                                    <link rel=stylesheet type='text/css'
-                                          href='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}'/>
-                                    <script type='text/javascript'
-                                            src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
-                                    <script type='text/javascript'
-                                            src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
-                                    <script type='text/javascript'
-                                            src='{{ Asset::get('/intranet/scripts/buscaMenu.js') }}'></script>
-                                    <script type='text/javascript'
-                                            src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
-                                    <div title='Busca rápida' class='title-busca-rapida'>
-                                        <table width='168' class='title active-section-title'
-                                               style='-moz-user-select: none;'>
-                                            <tbody style='-moz-user-select: none;'>
-                                            <tr style='-moz-user-select: none;'>
-                                                <td style='-moz-user-select: none;'><a
-                                                            style='outline:none;text-decoration:none;'>Busca rápida</a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    @include('layout.menu')
-                                </td>
-                            </tr>
-                        </table>
+                        @include('layout.menu')
                     </td>
                     <td valign=top>
                         <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
@@ -347,21 +317,7 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <link type="text/css" rel="stylesheet" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}"/>
-<script type="text/javascript">
-    array_menu = [];
-    array_id = [];
-    @foreach ($topmenu->getTopMenuArray(\App\Models\User::find(session('id_pessoa'))) as $item)
-        array_menu[array_menu.length] = ['{{$item['tt_menu']}} ', {{$item['cod_menu']}},'{{$item['ref_cod_menu_pai']}}','', 'null', '{{$item['caminho']}}', '{{$item['alvo']}}'];
-
-        @if(!$item['ref_cod_menu_pai'])
-            array_id[array_id.length] = {{$item['cod_menu']}};
-        @endif
-    @endforeach
-</script>
-<script type="text/javascript">
-    setTimeout("setXY();", 150);
-    MontaMenu();
-</script>
+@include('layout.topmenu')
 <script type="text/javascript">
 
 </script>

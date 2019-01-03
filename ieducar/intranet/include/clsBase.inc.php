@@ -30,6 +30,8 @@
  */
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
+use iEducar\Support\Navigation\TopMenu;
+use Illuminate\Support\Facades\View;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -324,142 +326,6 @@ class clsBase extends clsConfig
         }
     }
 
-    function MakeMenu()
-    {
-        $menu = $this->openTpl("htmlmenu");
-        $menuObj = new clsMenu();
-        $saida = $this->buscaRapida();
-        $saida .= $menuObj->MakeMenu(null, $this->openTpl("htmllinhamenusubtitulo"));
-        $saida = str_replace("<!-- #&LINHAS&# -->", $saida, $menu);
-        return $saida;
-    }
-
-    /**
-     * Cria o menu suspenso dos subsistemas Escola e Biblioteca.
-     *
-     * @todo Refatorar lógica do primeiro par if/else, duplicação
-     * @return bool|string Retorna FALSE em caso de erro
-     */
-    function makeMenuSuspenso()
-    {
-        // Usa helper de Url para pegar o path da requisição
-        require_once 'CoreExt/View/Helper/UrlHelper.php';
-
-        $uri = explode('/', CoreExt_View_Helper_UrlHelper::url($_SERVER['REQUEST_URI'],
-            array(
-                'components' => CoreExt_View_Helper_UrlHelper::URL_PATH
-            )
-        ));
-
-        @session_start();
-        $idpes = $_SESSION['id_pessoa'];
-        @session_write_close();
-
-        $submenu = array();
-        $menu_tutor = '';
-
-        if ($this->processoAp) {
-            $menu_atual = $this->db()->UnicoCampo("SELECT ref_cod_menu_menu FROM menu_submenu WHERE cod_menu_submenu = '{$this->processoAp}'");
-
-            if ($menu_atual) {
-                $this->db()->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$menu_atual}'");
-                while ($this->db()->ProximoRegistro()) {
-                    $tupla = $this->db()->Tupla();
-                    $submenu[] = $tupla['cod_menu_submenu'];
-                }
-                $where = implode(" OR ref_cod_menu_submenu = ", $submenu);
-                $where = "ref_cod_menu_submenu = $where";
-                $menu_tutor = $this->db()->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
-            } else {
-                $this->prog_alert .= "O menu pai do processo AP {$this->processoAp} está voltando vazio (cod_menu inexistente?).<br>";
-            }
-        } elseif (isset($_SESSION['menu_atual'])) {
-            $this->db()->Consulta("SELECT cod_menu_submenu FROM menu_submenu WHERE ref_cod_menu_menu = '{$_SESSION['menu_atual']}'");
-
-            while ($this->db()->ProximoRegistro()) {
-                $tupla = $this->db()->Tupla();
-                $submenu[] = $tupla['cod_menu_submenu'];
-            }
-
-            $where = implode(" OR ref_cod_menu_submenu = ", $submenu);
-            $where = "ref_cod_menu_submenu = $where";
-            $menu_tutor = $this->db()->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
-        }
-
-        if ($menu_tutor) {
-            $obj_menu_suspenso = new clsMenuSuspenso();
-            $lista_menu = $obj_menu_suspenso->listaNivel($menu_tutor, $idpes);
-            $lista_menu_suspenso = $lista_menu;
-
-            if ($lista_menu_suspenso) {
-                for ($i = 0, $loop = count($lista_menu_suspenso); $i < $loop; $i++) {
-                    $achou = FALSE;
-
-                    if (!$lista_menu_suspenso[$i]['ref_cod_menu_submenu']) {
-                        foreach ($lista_menu as $id => $menu) {
-                            if ($menu['ref_cod_menu_pai'] == $lista_menu_suspenso[$i]['cod_menu']) {
-                                $achou = TRUE;
-                            }
-                        }
-                        if (!$achou) {
-                            unset($lista_menu[$i]);
-                        }
-                    }
-                }
-
-                $saida = '<script type="text/javascript">';
-                $saida .= 'array_menu = new Array(); array_id = new Array();';
-
-                foreach ($lista_menu as $menu_suspenso) {
-                    $ico_menu = '';
-
-                    if (is_numeric($menu_suspenso['ref_cod_ico'])) {
-                        $this->db()->Consulta("SELECT caminho FROM portal.imagem WHERE cod_imagem = {$menu_suspenso['ref_cod_ico']} ");
-                        if ($this->db()->ProximoRegistro()) {
-                            list($ico_menu) = $this->db()->Tupla();
-                            $ico_menu = "imagens/banco_imagens/$ico_menu";
-                        }
-                    }
-
-                    $alvo = $menu_suspenso['alvo'] ? $menu_suspenso['alvo'] : '_self';
-
-                    // Corrige o path usando caminhos relativos para permitir a inclusão
-                    // de itens no menu que apontem para um módulo
-                    if ($uri[1] == 'module') {
-                        if (0 === strpos($menu_suspenso['caminho'], 'module')) {
-                            $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
-                        } else {
-                            $menu_suspenso['caminho'] = '../../intranet/' . $menu_suspenso['caminho'];
-                        }
-                    } elseif ($uri[2] == 'filaunica' || $uri[2] == 'reservavaga') {
-                        if (0 === strpos($menu_suspenso['caminho'], 'module')) {
-                            $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
-                        } else {
-                            $menu_suspenso['caminho'] = '../' . $menu_suspenso['caminho'];
-                        }
-                    } elseif (0 === strpos($menu_suspenso['caminho'], 'module')) {
-                        $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
-                    }
-
-                    $saida .= "array_menu[array_menu.length] = new Array(\"{$menu_suspenso['tt_menu']} \",{$menu_suspenso['cod_menu']},'{$menu_suspenso['ref_cod_menu_pai']}','', '$ico_menu', '{$menu_suspenso['caminho']}', '{$alvo}');";
-                    if (!$menu_suspenso['ref_cod_menu_pai']) {
-                        $saida .= "array_id[array_id.length] = {$menu_suspenso['cod_menu']};";
-                    }
-                }
-
-                $saida .= "</script>";
-            }
-
-            $saida .= "<script type=\"text/javascript\">
-          setTimeout(\"setXY();\",150);
-          MontaMenu();
-        </script>";
-            return $saida;
-        }
-
-        return FALSE;
-    }
-
     function DataAtual()
     {
         $retorno = "";
@@ -565,7 +431,7 @@ class clsBase extends clsConfig
         $menu = '';
 
         if ($this->renderMenu) {
-            $menu = $this->MakeMenu();
+            $menu = View::make('layout.menu')->render();
         }
         $data = $this->DataAtual();
 
@@ -800,9 +666,15 @@ class clsBase extends clsConfig
                 $suspenso = $_GET['suspenso'] ?? $_SESSION['suspenso'] ?? null;
                 $tipoMenu = $_SESSION["tipo_menu"] ?? null;
 
+                app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
+
                 if ($suspenso == 1 || $tipoMenu == 1) {
                     if ($this->renderMenuSuspenso) {
-                        $saida_geral = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_geral);
+                        $saida_geral = str_replace(
+                            "<!-- #&MENUSUSPENSO&# -->",
+                            View::make('layout.topmenu')->render(),
+                            $saida_geral
+                        );
                     }
 
                     if ($suspenso == 1) {
