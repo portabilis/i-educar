@@ -114,22 +114,30 @@ class indice extends clsCadastro
     $this->enviaLocalizacao($localizacao->montar());
 
     //nova lógica
+    $retorno = false;
     if (is_numeric($this->ref_cod_matricula)) {
-
       if ($this->ref_cod_turma_origem == 'remover-enturmacao-destino') {
-        $this->removerEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
+        $retorno = $this->removerEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
       } elseif (! is_numeric($this->ref_cod_turma_origem)) {
-        $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
+        $retorno = $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
       } else {
-        $this->transferirEnturmacao(
+        $retorno = $this->transferirEnturmacao(
           $this->ref_cod_matricula,
           $this->ref_cod_turma_origem,
           $this->ref_cod_turma_destino
         );
       }
-
-      header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
-      die();
+      if (!$retorno) {
+          $alert = sprintf('
+                <script type="text/javascript">
+                    window.alert("%s");
+                    window.location.href= "./educar_matricula_det.php?cod_matricula=%u";
+                </script>',$this->mensagem,$this->ref_cod_matricula);
+          echo $alert;
+      } else {
+        header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
+        die();
+      }
     }
     else {
       header('Location: /intranet/educar_aluno_lst.php');
@@ -184,12 +192,15 @@ class indice extends clsCadastro
         : null;
 
     if ($dataObj > $dataAnoLetivoFim) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação maior que data do fim do ano letivo.';
         return false;
     }
 
     if ($dataSaidaDaTurma !== null && $dataObj < $dataSaidaDaTurma) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data de saída da última enturmação.';
         return false;
     } elseif ($dataObj < $dataAnoLetivoInicio) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data do início do ano letivo.';
         return false;
     }
 
