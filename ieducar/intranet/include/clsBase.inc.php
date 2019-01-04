@@ -41,7 +41,6 @@ require_once __DIR__ . '/../../includes/bootstrap.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/clsMenu.inc.php';
 require_once 'include/clsControlador.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
 require_once 'include/Geral.inc.php';

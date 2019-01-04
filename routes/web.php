@@ -34,17 +34,3 @@ Route::any('/modules/{uri}', 'LegacyController@modules')
 Route::any('/intranet/{uri}', 'LegacyController@intranet')
     ->middleware(['ieducar.navigation', 'ieducar.menu', 'ieducar.footer'])
     ->where('uri', '.*');
-
-Route::group([
-    'middleware' => [
-        'ieducar.authenticatesession',
-        'ieducar.setlayoutvariables',
-        'ieducar.navigation',
-        'ieducar.menu',
-        'ieducar.footer',
-    ]
-], function () {
-    Route::namespace('Enrollment')->prefix('enrollment')->group(function () {
-        Route::get('update-enrollments-status', 'UpdateEnrollmentsStatus@index');
-    });
-});
