@@ -306,8 +306,8 @@ class clsPmieducarConfiguracoesGerais
     }
 
     if (isset($this->bloquear_cadastro_aluno)) {
-        $flag = $this->bloquear_cadastro_aluno ? 't' : 'f';
-        $set[] = "bloquear_cadastro_aluno = '{$flag}'";
+        $flag = $this->bloquear_cadastro_aluno ? 'true' : 'false';
+        $set[] = "bloquear_cadastro_aluno = {$flag}";
     }
 
     if (!empty($set)) {
