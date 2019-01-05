@@ -29,7 +29,7 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/Falta/FaltaCommon.php';
+require_once __DIR__.'/../FaltaCommon.php';
 
 /**
  * Avaliacao_Service_FaltaComponenteTest class.
