@@ -74,8 +74,14 @@ class clsModulesAuditoriaGeral
     $this->codigo = $codigo;
     $this->id = $id;
 
-    // Seta usuário admin quando não houver usuário pois pode ser API/Novo educação
-    if (!$this->usuario_id) $this->usuario_id = 1;
+    if (!$this->usuario_id) {
+        if(!empty($_SESSION['id_pessoa']) && is_numeric($_SESSION['id_pessoa'])) {
+            $this->usuario_id = $_SESSION['id_pessoa'];
+        } else {
+            // Seta usuário admin quando não houver usuário pois pode ser API/Novo educação
+            $this->usuario_id = 1;
+        }
+    }
   }
 
   function removeKeyNaoNumerica($dados) {

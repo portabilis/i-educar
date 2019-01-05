@@ -620,10 +620,6 @@ abstract class CoreExt_DataMapper
             }
         }
 
-        @session_start();
-        $pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         if ($instance->isNew()) {
             $returning = ' RETURNING ' . implode(',', array_values($this->_primaryKey));
             $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance) . $returning);
@@ -633,7 +629,7 @@ abstract class CoreExt_DataMapper
             if ($id) {
                 $tmpEntry = $this->find($id);
                 $info = $tmpEntry->toDataArray();
-                $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $id);
+                $auditoria = new clsModulesAuditoriaGeral($this->_tableName, null, $id);
                 $auditoria->inclusao($info);
             }
         } elseif (!$instance->isNew()) {
@@ -648,7 +644,7 @@ abstract class CoreExt_DataMapper
             $newInfo = $tmpEntry->toDataArray();
 
             $keys = array_keys($this->_primaryKey);
-            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift($keys)));
+            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, null, $instance->get(array_shift($keys)));
             $auditoria->alteracao($oldInfo, $newInfo);
         }
 
@@ -695,11 +691,7 @@ abstract class CoreExt_DataMapper
         $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($pkToDelete));
 
         if (count($info)) {
-            @session_start();
-            $pessoa_logada = $_SESSION['id_pessoa'];
-            @session_write_close();
-
-            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, array_shift(array_values($instance)));
+            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, null, array_shift(array_values($instance)));
             $auditoria->exclusao($info);
         }
 
