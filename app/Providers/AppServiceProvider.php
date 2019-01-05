@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Services\CacheManager;
 use iEducar\Support\Navigation\Breadcrumb;
 use iEducar\Support\Navigation\TopMenu;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -101,5 +103,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
+
+        Cache::swap(new CacheManager(app()));
     }
 }
