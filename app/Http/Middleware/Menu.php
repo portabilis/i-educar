@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Services\CacheManager;
 use App\Services\MenuService;
 use Closure;
 use Illuminate\Support\Facades\Cache;
@@ -26,17 +27,23 @@ class Menu
 
     private function getCachedMenu()
     {
-        // TODO: Criar classe de cache manager baseada na PSR-6
-        $cacheKey =  'menu_' . md5( request()->getHttpHost() . session('id_pessoa'));
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
+        $cache = Cache::tags(['menu', config('app.name')]);
+
+        $cacheKey =  'menu_' . md5(session('id_pessoa'));
+
+        if ($cache->has($cacheKey)) {
+            return $cache->get($cacheKey);
+        }
+
+        if (empty(User::find(session('id_pessoa')))) {
+            return [];
         }
 
         /** @var MenuService $menuService */
         $menuService = app(MenuService::class);
         $menuArray = $menuService->getByUser(User::find(session('id_pessoa')));
 
-        Cache::add($cacheKey, $menuArray, 60);
+        $cache->add($cacheKey, $menuArray, 60);
 
         return $menuArray;
     }

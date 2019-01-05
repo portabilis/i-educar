@@ -12,8 +12,8 @@ class Footer
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -25,16 +25,17 @@ class Footer
 
     private function getCachedFooter()
     {
-        // TODO: Criar classe de cache manager baseada na PSR-6
-        $cacheKey =  'configurations_' . md5(request()->getHttpHost() . session('id_pessoa'));
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey)->ieducar_internal_footer;
+        $cache = Cache::tags(['configurations', config('app.name')]);
+
+        $cacheKey = 'configurations_' . md5(session('id_pessoa'));
+        if ($cache->has($cacheKey)) {
+            return $cache->get($cacheKey)->ieducar_internal_footer;
         }
 
         $configurationRepository = app(ConfigurationRepository::class);
         $configurations = $configurationRepository->getConfiguration();
 
-        Cache::add($cacheKey, $configurations, 60);
+        $cache->add($cacheKey, $configurations, 60);
 
         return $configurations->ieducar_internal_footer;
     }

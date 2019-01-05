@@ -65,8 +65,10 @@ class TopMenu
     {
         $cacheKey = $this->getCacheKey();
 
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
+        $cache = Cache::tags(['topmenu', config('app.name')]);
+
+        if ($cache->has($cacheKey)) {
+            return $cache->get($cacheKey);
         }
         
         if (!$this->currentMenu) {
@@ -88,7 +90,7 @@ class TopMenu
         $menuArray = $this->filter($menuArray);
         $menuArray = $this->getPath($menuArray);
 
-        Cache::add($cacheKey, $menuArray, 60);
+        $cache->add($cacheKey, $menuArray, 60);
 
         return $menuArray->all();
     }
@@ -188,6 +190,6 @@ class TopMenu
 
     private function getCacheKey()
     {
-        return md5($this->currentUri . config('app.name') . session('id_pessoa'));
+        return 'topmenu_' . md5($this->currentUri . session('id_pessoa'));
     }
 }
