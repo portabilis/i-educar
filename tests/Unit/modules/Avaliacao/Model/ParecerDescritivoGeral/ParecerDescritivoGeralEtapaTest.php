@@ -29,10 +29,10 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/ParecerDescritivoCommon.php';
+require_once __DIR__.'/../ParecerDescritivoCommon.php';
 
 /**
- * Avaliacao_Service_ParecerDescritivoGeralAnualTest class.
+ * Avaliacao_Service_ParecerDescritivoGeralEtapaTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
@@ -42,7 +42,7 @@ require_once __DIR__.'/ParecerDescritivoCommon.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Service_ParecerDescritivoCommon
+class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Service_ParecerDescritivoCommon
 {
   protected function setUp()
   {
@@ -64,22 +64,16 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
     ));
   }
 
-  protected function _getTestSalvarPareceresNoBoletimInstanciasDePareceres()
-  {
-    return array(
-      new Avaliacao_Model_ParecerDescritivoGeral(array(
-        'parecer' => 'N/D.',
-        'etapa'   => 'An'
-      ))
-    );
-  }
-
   protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstancias()
   {
     return array(
       new Avaliacao_Model_ParecerDescritivoGeral(array(
         'parecer' => 'N/D.',
-        'etapa'   => 'An'
+        'etapa'   => 2
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'parecer' => 'N/D.',
+        'etapa'   => 3
       ))
     );
   }
@@ -90,7 +84,34 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
       new Avaliacao_Model_ParecerDescritivoGeral(array(
         'id'      => 1,
         'parecer' => 'N/D.',
-        'etapa'   => 'An'
+        'etapa'   => 1
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'id'      => 1,
+        'parecer' => 'N/D.',
+        'etapa'   => 2
+      ))
+    );
+  }
+
+  protected function _getTestSalvarPareceresNoBoletimInstanciasDePareceres()
+  {
+    return array(
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'etapa'   => 1,
+        'parecer' => 'N/D.'
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'etapa'   => 2,
+        'parecer' => 'N/D.'
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'etapa'   => 3,
+        'parecer' => 'N/D.'
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'etapa'   => 4,
+        'parecer' => 'N/D.'
       ))
     );
   }
@@ -99,7 +120,11 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
   {
     return array(
       new Avaliacao_Model_ParecerDescritivoGeral(array(
-        'parecer' => 'N/D.'
+        'parecer' => 'N/D.',
+        'etapa'   => 4
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'parecer' => 'N/D.',
       ))
     );
   }
@@ -110,14 +135,28 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
       new Avaliacao_Model_ParecerDescritivoGeral(array(
         'id'      => 1,
         'parecer' => 'N/D.',
-        'etapa'   => 'An'
-      ))
+        'etapa'   => 2
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'id'      => 2,
+        'parecer' => 'N/D.',
+        'etapa'   => 2
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'id'      => 3,
+        'parecer' => 'N/D.',
+        'etapa'   => 3
+      )),
+      new Avaliacao_Model_ParecerDescritivoGeral(array(
+        'id'      => 4,
+        'parecer' => 'N/D.',
+        'etapa'   => 4
+      )),
     );
   }
 
   protected function _testAdicionaParecerNoBoletimVerificaValidadores(Avaliacao_Model_ParecerDescritivoAbstract $parecer)
   {
-      $this->markTestSkipped();
     $this->assertEquals(1, $parecer->etapa);
     $this->assertEquals('N/D.', $parecer->parecer);
 
@@ -125,9 +164,5 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
 
     $this->assertEquals($this->_getEtapasPossiveisParecer(), $validators['etapa']->getOption('choices'));
     $this->assertFalse(isset($validators['componenteCurricular']));
-  }
-  public function testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
-  {
-      $this->markTestSkipped();
   }
 }
