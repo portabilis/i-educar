@@ -62,7 +62,9 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $expected->porcentagemPresenca = 100;
     $expected->diasLetivos         = 960;
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $actual = $service->getSituacaoFaltas();
 
     $this->assertEquals($expected, $actual);
@@ -103,7 +105,9 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
     $expected->diasLetivos         = 960;
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $actual = $service->getSituacaoFaltas();
 
     $this->assertEquals($expected, $actual);
@@ -149,7 +153,9 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
     $expected->diasLetivos         = 960;
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $this->assertEquals($expected, $service->getSituacaoFaltas());
   }

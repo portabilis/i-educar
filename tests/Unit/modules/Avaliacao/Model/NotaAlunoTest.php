@@ -70,6 +70,8 @@ class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
 
     $this->_setNotaAlunoDataMapperMock($mock);
 
-    $service = $this->_getServiceInstance();
+    $_GET['etapa'] = 'Rc';
+    $this->_getServiceInstance();
+    unset($_GET['etapa']);
   }
 }

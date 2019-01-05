@@ -29,7 +29,7 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/../TestCommon.php';
+require_once __DIR__.'/../../TestCommon.php';
 
 /**
  * Avaliacao_Service_FaltaCommon abstract class.
@@ -65,7 +65,9 @@ abstract class Avaliacao_Service_FaltaCommon extends Avaliacao_Service_TestCommo
    */
   public function testInstanciaDeFaltaERegistradaApenasUmaVezNoBoletim()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $falta = $this->_getFaltaTestInstanciaDeFaltaERegistradaApenasUmaVezNoBoletim();
 
@@ -88,7 +90,9 @@ abstract class Avaliacao_Service_FaltaCommon extends Avaliacao_Service_TestCommo
    */
   public function testAdicionaFaltaNoBoletim()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $falta = $this->_getFaltaTestAdicionaFaltaNoBoletim();
 

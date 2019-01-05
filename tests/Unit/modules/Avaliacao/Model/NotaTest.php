@@ -47,7 +47,9 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
 {
   public function testInstanciaDeNotaComponenteERegistradaApenasUmaVezNoBoletiom()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $nota = new Avaliacao_Model_NotaComponente(array(
       'componenteCurricular' => 1,

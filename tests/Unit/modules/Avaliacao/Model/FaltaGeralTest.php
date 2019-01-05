@@ -29,7 +29,7 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/FaltaCommon.php';
+require_once __DIR__.'/Falta/FaltaCommon.php';
 
 /**
  * Avaliacao_Service_FaltaGeralTest class.
@@ -139,7 +139,9 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
 
     $this->_setFaltaAbstractDataMapperMock($mock);
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $service->addFaltas($faltas);
     $service->saveFaltas();
   }
@@ -198,7 +200,9 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
 
     $this->_setFaltaAbstractDataMapperMock($mock);
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $service->addFaltas($faltas);
     $service->saveFaltas();
   }
@@ -253,7 +257,9 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
 
     $this->_setFaltaAbstractDataMapperMock($mock);
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $service->addFaltas($faltas);
     $service->saveFaltas();
 

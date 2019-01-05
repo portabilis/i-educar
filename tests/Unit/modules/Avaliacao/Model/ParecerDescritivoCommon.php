@@ -141,7 +141,9 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
    */
   public function testInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $parecer = $this->_getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim();
 
@@ -162,7 +164,9 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
    */
   public function testAdicionaParecerNoBoletim()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $parecer = $this->_getTestAdicionaParecerNoBoletim();
 
@@ -201,7 +205,9 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
     $this->_setParecerDescritivoAbstractDataMapperMock($mock);
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $service->addPareceres($pareceres);
     $service->savePareceres();
   }
@@ -233,7 +239,9 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
     $this->_setParecerDescritivoAbstractDataMapperMock($mock);
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $service->addPareceres($pareceres);
     $service->savePareceres();
   }
@@ -265,7 +273,9 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
     $this->_setParecerDescritivoAbstractDataMapperMock($mock);
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $service->addPareceres($pareceres);
     $service->savePareceres();
   }

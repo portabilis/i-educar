@@ -72,5 +72,6 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
 
     $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
   }
 }

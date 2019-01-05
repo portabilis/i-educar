@@ -62,7 +62,9 @@ class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
 
   public function testDadosDeMatriculaInicializados()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $options = $service->getOptions();
 
     $this->assertEquals($this->_getConfigOption('usuario', 'cod_usuario'),
@@ -94,7 +96,9 @@ class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
 
   public function testInstanciaRegraDeAvaliacaoAtravesDeUmNumeroDeMatricula()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $this->assertInstanceOf('RegraAvaliacao_Model_Regra', $service->getRegra());
 
     // TabelaArredondamento_Model_Tabela é recuperada através da instância de

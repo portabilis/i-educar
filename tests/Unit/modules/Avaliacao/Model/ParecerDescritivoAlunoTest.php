@@ -76,6 +76,8 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
 
     $this->_setParecerDescritivoAlunoDataMapperMock($mock);
 
-    $service = $this->_getServiceInstance();
+    $_GET['etapa'] = 'Rc';
+    $this->_getServiceInstance();
+    unset($_GET['etapa']);
   }
 }

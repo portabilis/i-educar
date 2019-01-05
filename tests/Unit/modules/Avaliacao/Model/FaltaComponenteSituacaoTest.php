@@ -29,7 +29,7 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/FaltaSituacaoCommon.php';
+require_once __DIR__.'/Falta/FaltaSituacaoCommon.php';
 
 /**
  * Avaliacao_Service_FaltaComponenteSituacaoTest class.
@@ -65,7 +65,9 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->porcentagemFalta = 0.0;
     $expected->diasLetivos = 960;
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $actual = $service->getSituacaoFaltas();
 
     $this->assertEquals($expected, $actual);
@@ -133,7 +135,9 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->componentesCurriculares[2]->porcentagemPresenca = $componentePorcentagemPresenca;
     $expected->componentesCurriculares[2]->total               = 20;
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $actual = $service->getSituacaoFaltas();
 
     $this->assertEquals($expected, $actual);
@@ -286,7 +290,9 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->componentesCurriculares[4]->porcentagemPresenca = $componentePorcentagemPresenca;
     $expected->componentesCurriculares[4]->total               = 20.0;
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $actual = $service->getSituacaoFaltas();
 
     $this->assertEquals($expected, $actual);
@@ -443,7 +449,9 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $expected->componentesCurriculares[4]->porcentagemPresenca = $componentePorcentagemPresenca;
     $expected->componentesCurriculares[4]->total               = 110.0;
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $actual = $service->getSituacaoFaltas();
 
     $this->assertEquals($expected, $actual);

@@ -46,7 +46,9 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 {
   public function testArredondaNotaLancaExcecaoSeParametroNaoForNumerico()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
         $this->expectException('CoreExt_Exception_InvalidArgumentException');
         $this->expectExceptionMessage('O parâmetro $nota ("") não é um valor numérico.');
@@ -55,7 +57,9 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 
   public function testArredondaNotaNumerica()
   {
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $nota = new Avaliacao_Model_NotaComponente([
         'nota' => 5.85
@@ -114,7 +118,9 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
     $this->_setRegraOption('tabelaArredondamentoConceitual', $tabela);
 
     $this->_setRegraOption('tipoNota', RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL);
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
     $nota = new Avaliacao_Model_NotaComponente([
         'nota' => 5.49
     ]);
@@ -175,7 +181,9 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 
     $this->_setNotaComponenteDataMapperMock($mock);
 
+    $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
+    unset($_GET['etapa']);
 
     $ret = $service->preverNotaRecuperacao(1);
     $this->assertEquals(4.0, $ret);
