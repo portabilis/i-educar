@@ -513,10 +513,8 @@ class clsBase extends clsConfig
         $saida = str_replace("<!-- #&ANUNCIO&# -->", $menu_dinamico, $saida);
         $saida = str_replace("<!-- #&FOTO&# -->", $foto, $saida);
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
-        $configuracoes = $configuracoes->detalhe();
 
-        $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $configuracoes["ieducar_internal_footer"], $saida);
+        $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", View::make('layout.footer')->render(),$saida);
 
         // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
         // caso o host esteja atrás de um proxy)
