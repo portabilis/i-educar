@@ -29,7 +29,7 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/ParecerDescritivoCommon.php';
+require_once __DIR__.'/../ParecerDescritivoCommon.php';
 
 /**
  * Avaliacao_Service_ParecerDescritivoComponenteEtapaTest class.
