@@ -132,7 +132,7 @@ class clsPmieducarConfiguracoesGerais
         tamanho_min_rede_estadual, modelo_boletim_professor, custom_labels, url_cadastro_usuario,
         active_on_ieducar, ieducar_image, ieducar_entity_name, ieducar_login_footer,
         ieducar_external_footer, ieducar_internal_footer, facebook_url, twitter_url, linkedin_url,
-        ieducar_suspension_message ';
+        ieducar_suspension_message, bloquear_cadastro_aluno';
 
     if (!empty($campos['ref_cod_instituicao']) && is_numeric($campos['ref_cod_instituicao'])) {
       $this->ref_cod_instituicao = $campos['ref_cod_instituicao'];
@@ -208,6 +208,10 @@ class clsPmieducarConfiguracoesGerais
 
     if (!empty($campos['ieducar_suspension_message'])) {
         $this->ieducar_suspension_message = $campos['ieducar_suspension_message'];
+    }
+
+    if (isset($campos['bloquear_cadastro_aluno'])) {
+        $this->bloquear_cadastro_aluno = boolval($campos['bloquear_cadastro_aluno']);
     }
   }
 
@@ -299,6 +303,11 @@ class clsPmieducarConfiguracoesGerais
 
     if (!empty($this->ieducar_suspension_message)) {
         $set[] = "ieducar_suspension_message = '{$this->ieducar_suspension_message}'";
+    }
+
+    if (isset($this->bloquear_cadastro_aluno)) {
+        $flag = $this->bloquear_cadastro_aluno ? 'true' : 'false';
+        $set[] = "bloquear_cadastro_aluno = {$flag}";
     }
 
     if (!empty($set)) {
