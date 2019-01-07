@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheManager extends LaravelCacheManager
 {
+
     /**
      * Invalida todas as entradas de cache de acordo com as tags passadas
      *
      * @param $tags
+     * @return \Illuminate\Contracts\Cache\Repository
      */
     public static function invalidateByTags($tags)
     {
@@ -19,19 +21,6 @@ class CacheManager extends LaravelCacheManager
         }
 
         Cache::tags($tags)->flush();
-    }
-
-    private static function supportsTags()
-    {
-        $doNotSupportTags = [
-            'file', 'database'
-        ];
-
-        if (in_array(config('cache.default'), $doNotSupportTags)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -48,10 +37,36 @@ class CacheManager extends LaravelCacheManager
             return $this->store();
         }
 
-        if (self::supportsTags()) {
+        if (self::supportsPrefix()) {
             $this->store()->setPrefix(config('app.name'));
         }
 
         return $this->store()->$method(...$parameters);
+    }
+
+    private static function supportsTags()
+    {
+        $doNotSupportTags = [
+            'file', 'database'
+        ];
+
+        if (in_array(config('cache.default'), $doNotSupportTags)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function supportsPrefix()
+    {
+        $supportPrefix = [
+            'redis'
+        ];
+
+        if (in_array(config('cache.default'), $supportPrefix)) {
+            return true;
+        }
+
+        return false;
     }
 }
