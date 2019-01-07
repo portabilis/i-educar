@@ -16,7 +16,8 @@ class CacheManager extends LaravelCacheManager
      */
     public static function invalidateByTags($tags)
     {
-        if (!self::supportsTags()) {
+
+        if (!self::supportsTags(Cache::store()->getStore())) {
             return Cache::store();
         }
 
@@ -33,37 +34,38 @@ class CacheManager extends LaravelCacheManager
      */
     public function __call($method, $parameters)
     {
-        if ($method == 'tags' && !self::supportsTags()) {
+        if ($method == 'tags' && !self::supportsTags($this->store()->getStore())) {
             return $this->store();
         }
 
-        if (self::supportsPrefix()) {
+        if (self::supportsPrefix($this->store()->getStore())) {
             $this->store()->setPrefix(config('app.name'));
         }
 
         return $this->store()->$method(...$parameters);
     }
 
-    private static function supportsTags()
+    private static function supportsTags($store)
     {
         $doNotSupportTags = [
-            'file', 'database'
+            'Illuminate\Cache\DatabaseStore',
+            'Illuminate\Cache\FileStore',
         ];
 
-        if (in_array(config('cache.default'), $doNotSupportTags)) {
+        if (in_array(get_class($store), $doNotSupportTags)) {
             return false;
         }
 
         return true;
     }
 
-    private static function supportsPrefix()
+    private static function supportsPrefix($store)
     {
         $supportPrefix = [
-            'redis'
+            'Illuminate\Cache\RedisStore',
         ];
 
-        if (in_array(config('cache.default'), $supportPrefix)) {
+        if (in_array(get_class($store), $supportPrefix)) {
             return true;
         }
 

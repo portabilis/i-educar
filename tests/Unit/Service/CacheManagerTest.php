@@ -19,6 +19,7 @@ class CacheManagerTest extends TestCase
     {
         parent::setUp();
         Cache::swap(new CacheManager(app()));
+        Cache::flush();
     }
 
     public function testFlushedTagsShouldReturnsEmpty()
@@ -33,10 +34,21 @@ class CacheManagerTest extends TestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function testDriverNotSupportTagsDoesNotThrowExxception()
+    public function testDriverNotSupportTagsDoesNotThrowException()
     {
-        Cache::store('file')->put('test-key', 'Test value', 10);
+        Cache::setDefaultDriver('file');
+
+        Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
+
         Cache::invalidateByTags(['testTag']);
     }
 
+    public function testDriverSupportsPrefixDoesNotThrowException()
+    {
+        Cache::setDefaultDriver('redis');
+
+        $this->assertFalse(Cache::has('test-key'));
+
+        Cache::invalidateByTags(['testTag']);
+    }
 }
