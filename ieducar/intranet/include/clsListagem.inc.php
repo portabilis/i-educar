@@ -29,6 +29,7 @@
  */
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\View;
 
 require_once 'include/clsCampos.inc.php';
 
@@ -267,6 +268,8 @@ class clsListagem extends clsCampos
   {
     $this->_preRender();
     $this->Gerar();
+
+    View::share('title', $this->titulo);
 
     $retorno = '';
 

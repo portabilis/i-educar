@@ -29,6 +29,7 @@
  */
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\View;
 
 require_once 'include/clsCampos.inc.php';
 
@@ -308,6 +309,7 @@ class clsCadastro extends clsCampos
     $applicationTitle = $this->titulo_aplication ?? '';
     $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
+    View::share('title', $this->titulo);
     /**
      * Adiciona os botoes de help para a pagina atual
      */

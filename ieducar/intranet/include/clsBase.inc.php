@@ -370,10 +370,6 @@ class clsBase extends clsConfig
         $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
         $this->db()->Consulta($sql);
 
-        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/select2.full.min.js\"></script>";
-        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/pt-BR.js\"></script>";
-        $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"/intranet/scripts/select2/select2.min.css\" />";
-
         return $saida;
     }
 
@@ -430,6 +426,7 @@ class clsBase extends clsConfig
                 $saida_geral = '';
 
                 app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
+                View::share('title', $this->titulo);
 
                 if ($this->renderMenu) {
                     $saida_geral .= $this->MakeBody();
@@ -438,9 +435,6 @@ class clsBase extends clsConfig
                         $saida_geral .= $form->RenderHTML();
                     }
                 }
-
-                $suspenso = $_GET['suspenso'] ?? $_SESSION['suspenso'] ?? null;
-                $tipoMenu = $_SESSION["tipo_menu"] ?? null;
 
             } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
                 $force = !empty($_GET['force']) ? true : false;
