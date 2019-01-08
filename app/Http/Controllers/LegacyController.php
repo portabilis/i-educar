@@ -186,6 +186,13 @@ class LegacyController extends Controller
 
         ob_end_clean();
 
+        return $content;
+    }
+
+    private function getResponseFromLegacyFile($filename)
+    {
+        $content = $this->requireFileFromLegacy($filename);
+
         return new Response(
             $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
         );
@@ -214,7 +221,7 @@ class LegacyController extends Controller
      */
     public function intranet($uri)
     {
-        return $this->requireFileFromLegacy('intranet/' . $uri);
+        return view('legacy.body', ['body' => $this->requireFileFromLegacy('intranet/' . $uri)]);
     }
 
     /**
@@ -224,7 +231,7 @@ class LegacyController extends Controller
      */
     public function module()
     {
-        return $this->requireFileFromLegacy('module/index.php');
+        return view('legacy.body', ['body' => $this->requireFileFromLegacy('module/index.php')]);
     }
 
     /**
@@ -236,6 +243,6 @@ class LegacyController extends Controller
      */
     public function modules($uri)
     {
-        return $this->requireFileFromLegacy('modules/' . $uri);
+        return view('legacy.body', ['body' => $this->requireFileFromLegacy('modules/' . $uri)]);
     }
 }
