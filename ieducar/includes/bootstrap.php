@@ -20,7 +20,7 @@ if (!file_exists($configFile)) {
 }
 
 $locale = CoreExt_Locale::getInstance();
-$locale->setCulture('pt_BR')->setLocale();
+//$locale->setCulture('pt_BR')->setLocale();
 
 global $coreExt;
 
