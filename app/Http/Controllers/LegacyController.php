@@ -186,16 +186,15 @@ class LegacyController extends Controller
 
         ob_end_clean();
 
-        return $content;
-    }
+        $headers = $this->getHttpHeaders();
 
-    private function getResponseFromLegacyFile($filename)
-    {
-        $content = $this->requireFileFromLegacy($filename);
+        if ($this->isJsonResponse($headers)) {
+            return new Response(
+                $content, $this->getHttpStatusCode(), $headers
+            );
+        }
 
-        return new Response(
-            $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
-        );
+        return view('legacy.body', ['body' => $content]);
     }
 
     /**
@@ -221,7 +220,7 @@ class LegacyController extends Controller
      */
     public function intranet($uri)
     {
-        return view('legacy.body', ['body' => $this->requireFileFromLegacy('intranet/' . $uri)]);
+        return $this->requireFileFromLegacy('intranet/' . $uri);
     }
 
     /**
@@ -231,7 +230,7 @@ class LegacyController extends Controller
      */
     public function module()
     {
-        return view('legacy.body', ['body' => $this->requireFileFromLegacy('module/index.php')]);
+        return $this->requireFileFromLegacy('module/index.php');
     }
 
     /**
@@ -243,6 +242,16 @@ class LegacyController extends Controller
      */
     public function modules($uri)
     {
-        return view('legacy.body', ['body' => $this->requireFileFromLegacy('modules/' . $uri)]);
+        return $this->requireFileFromLegacy('modules/' . $uri);
+    }
+
+    private function isJsonResponse(array $headers)
+    {
+
+        if ($headers['Content-type'] == 'application/json; charset=UTF-8') {
+            return true;
+        }
+
+        return false;
     }
 }
