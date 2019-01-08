@@ -16,8 +16,6 @@
         <span class="pagina_atual">{{ $breadcrumb->currentPage() }}</span>
 
     </div>
-@endif
-
-@if ($breadcrumb->getLegacy())
+@elseif ($breadcrumb->getLegacy())
     {!! $breadcrumb->getLegacy() !!}
 @endif

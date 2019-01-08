@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use iEducar\Support\Navigation\Breadcrumb;
+
 require_once 'include/clsCampos.inc.php';
 
 if (class_exists('clsPmiajudaPagina')) {
@@ -299,15 +301,7 @@ class clsCadastro extends clsCampos
     }
 
     if ($this->locale){
-
-      $retorno .=  "
-        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
-
-      $retorno .=  "<tr height='10px'>
-                      <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
-                    </tr>";
-
-      $retorno .= "</table>";
+        app(Breadcrumb::class)->setLegacy($this->locale);
     }
 
     $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
