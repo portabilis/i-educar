@@ -3236,6 +3236,10 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
           for ($i = 1; $i <= $qtdeEtapas; $i++) {
               $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
+
+              if (in_array($i, $verificaDispensa)) {
+                  $consideraEtapas['E' . $i] = 0;
+              }
           }
 
           if ($verificaDispensa) {

@@ -701,8 +701,18 @@ class indice extends clsDetalhe
             $this->addDetalhe(['NIS', $registro['nis_pis_pasep']]);
         }
 
+        // Verifica se o usuário tem permissão para cadastrar um aluno.
+        // O sistema irá validar o cadastro de permissões e o parâmetro
+        // "bloquear_cadastro_aluno" da instituição.
+
         if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-            $this->url_novo = '/module/Cadastro/aluno';
+
+            $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
+
+            if ($bloquearCadastroAluno == false) {
+                $this->url_novo = '/module/Cadastro/aluno';
+            }
+
             $this->url_editar = '/module/Cadastro/aluno?id=' . $registro['cod_aluno'];
 
             $this->array_botao = ['Nova matrícula', 'Atualizar histórico', 'Distribuição de uniforme'];

@@ -236,12 +236,19 @@ class indice extends clsListagem
 
         $this->addPaginador2('educar_aluno_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        //** Verificacao de permissao para cadastro
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+        $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
+        $usuarioTemPermissaoCadastro = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
+        $usuarioPodeCadastrar = $usuarioTemPermissaoCadastro && $bloquearCadastroAluno == false;
+
+        // Verifica se o usuário tem permissão para cadastrar um aluno.
+        // O sistema irá validar o cadastro de permissões e o parâmetro
+        // "bloquear_cadastro_aluno" da instituição.
+
+        if ($usuarioPodeCadastrar) {
             $this->acao = 'go("/module/Cadastro/aluno")';
             $this->nome_acao = 'Novo';
         }
-        //**
+
         $this->largura = '100%';
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
