@@ -1,44 +1,11 @@
 <?php
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Include
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
- */
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\View;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-
-// Inclui arquivo de bootstrapping
 require_once __DIR__ . '/../../includes/bootstrap.php';
-
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -47,11 +14,9 @@ require_once 'include/clsLogAcesso.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/pmicontrolesis/geral.inc.php';
 require_once 'include/funcoes.inc.php';
-
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
-
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
@@ -501,8 +466,6 @@ class clsBase extends clsConfig
         elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
             header("Location: /module/Usuario/AlterarSenha");
     }
-
-    // wrappers for Portabilis_*Utils*
 
     protected function db()
     {
