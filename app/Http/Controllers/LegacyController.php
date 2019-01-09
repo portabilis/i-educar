@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use http\Header;
+use Illuminate\Support\Str;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Response;
@@ -245,10 +247,15 @@ class LegacyController extends Controller
         return $this->requireFileFromLegacy('modules/' . $uri);
     }
 
+    /**
+     * Checks if the content type has been set to json
+     *
+     * @param array $headers
+     * @return bool
+     */
     private function isJsonResponse(array $headers)
     {
-
-        if ($headers['Content-type'] == 'application/json; charset=UTF-8') {
+        if (Str::contains($headers['Content-type'], 'application/json')) {
             return true;
         }
 
