@@ -538,9 +538,6 @@ document.getElementById('ref_cod_instituicao').onchange = function()
     var xml_curso = new ajax( getCurso );
     xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
 
-    $('img_serie_origem').style.display = 'none;';
-    $('img_serie_destino').style.display = 'none;';
-
 };
 
 document.getElementById('ref_curso_origem').onchange = function()
