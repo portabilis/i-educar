@@ -32,6 +32,11 @@ class ConfigurationRepositoryEloquent extends BaseRepository implements Configur
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
+    /**
+     * Get default configuration
+     *
+     * @return mixed
+     */
     public function getConfiguration()
     {
         return $this->all()->first();

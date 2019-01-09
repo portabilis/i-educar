@@ -200,7 +200,7 @@ class LegacyController extends Controller
     {
         try {
             session_start();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
         }
     }

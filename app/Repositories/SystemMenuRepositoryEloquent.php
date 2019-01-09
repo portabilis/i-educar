@@ -33,6 +33,13 @@ class SystemMenuRepositoryEloquent extends BaseRepository implements SystemMenuR
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
+    /**
+     * @param array $submenuIdArray
+     * @param $tutorMenuId
+     * @param $level
+     * @return \Illuminate\Database\Eloquent\Collection
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
+     */
     public function getNoParentBySubMenusAndTutorMenu(array $submenuIdArray, $tutorMenuId, $level)
     {
         $model = $this->makeModel();
@@ -52,6 +59,14 @@ class SystemMenuRepositoryEloquent extends BaseRepository implements SystemMenuR
         return $query->get();
     }
 
+    /**
+     * @param array $parents
+     * @param array $submenuIdArray
+     * @param int $tutorMenuId
+     * @param int $level
+     * @return \Illuminate\Database\Eloquent\Collection
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
+     */
     public function getByParentsAndSubMenusAndTutorMenu($parents, array $submenuIdArray, $tutorMenuId, $level)
     {
         $model = $this->makeModel();

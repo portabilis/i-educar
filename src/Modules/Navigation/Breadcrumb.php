@@ -2,16 +2,18 @@
 
 namespace iEducar\Modules\Navigation;
 
+use iEducar\Support\Navigation\Breadcrumb as SupportBreadcrumb;
+
 class Breadcrumb
 {
     public function makeBreadcrumb($currentPage, $breadcrumbs)
     {
-        app(\iEducar\Support\Navigation\Breadcrumb::class)->current($currentPage, $breadcrumbs);
+        app(SupportBreadcrumb::class)->current($currentPage, $breadcrumbs);
 
         return view(
             'layout.breadcrumb',
             [
-                'breadcrumb' => app(\iEducar\Support\Navigation\Breadcrumb::class),
+                'breadcrumb' => app(SupportBreadcrumb::class),
             ]
         )->render();
     }

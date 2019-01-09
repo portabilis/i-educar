@@ -25,8 +25,6 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         return User::class;
     }
 
-    
-
     /**
      * Boot up the repository, pushing criteria
      */
@@ -34,5 +32,4 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
 }

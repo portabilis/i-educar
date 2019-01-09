@@ -26,6 +26,11 @@ class MenuService
      */
     private $submenuRepository;
 
+    /**
+     * @param UserRepository $userRepository
+     * @param MenuRepository $menuRepository
+     * @param SubmenuRepository $submenuRepository
+     */
     public function __construct(UserRepository $userRepository, MenuRepository $menuRepository, SubmenuRepository $submenuRepository)
     {
         $this->userRepository = $userRepository;
@@ -73,6 +78,10 @@ class MenuService
         })->get();
     }
 
+    /**
+     * @param $submenus
+     * @return bool
+     */
     private function isSuperUser($submenus)
     {
         $arraySubmenuId = $submenus->pluck('cod_menu_submenu')->all();

@@ -8,7 +8,6 @@ use Iterator;
 
 class CoreConfig implements Countable, Iterator
 {
-
     /**
      * Array de sobre sobrecarga
      * @var array
@@ -43,8 +42,7 @@ class CoreConfig implements Countable, Iterator
         foreach ($array as $key => $val) {
             if (is_array($val)) {
                 $this->config[$key] = new self($val);
-            }
-            else {
+            } else {
                 $this->config[$key] = $val;
             }
         }
@@ -108,7 +106,8 @@ class CoreConfig implements Countable, Iterator
      * @param $key
      * @return unknown_type
      */
-    public function __get($key) {
+    public function __get($key)
+    {
         return $this->getFrom($key);
     }
 
@@ -128,14 +127,16 @@ class CoreConfig implements Countable, Iterator
     /**
      * Implementação do método count() da interface Countable.
      */
-    public function count() {
+    public function count()
+    {
         return $this->_count;
     }
 
     /**
      * Implementação do método next() da interface Iterator.
      */
-    public function next() {
+    public function next()
+    {
         next($this->config);
         ++$this->_index;
     }
@@ -143,7 +144,8 @@ class CoreConfig implements Countable, Iterator
     /**
      * Implementação do método next() da interface Iterator.
      */
-    public function rewind() {
+    public function rewind()
+    {
         reset($this->config);
         $this->_index = 0;
     }
@@ -151,21 +153,24 @@ class CoreConfig implements Countable, Iterator
     /**
      * Implementação do método current() da interface Iterator.
      */
-    public function current() {
+    public function current()
+    {
         return current($this->config);
     }
 
     /**
      * Implementação do método key() da interface Iterator.
      */
-    public function key() {
+    public function key()
+    {
         return key($this->config);
     }
 
     /**
      * Implementação do método valid() da interface Iterator.
      */
-    public function valid() {
+    public function valid()
+    {
         return $this->_index < $this->_count && $this->_index > -1;
     }
 
@@ -179,8 +184,8 @@ class CoreConfig implements Countable, Iterator
      *
      * @author  Daniel Smedegaard Buus <daniel@danielsmedegaardbuus.dk>
      * @link    http://www.php.net/manual/pt_BR/function.array-merge-recursive.php#89684  Código fonte original
-     * @param   array  $arr1
-     * @param   array  $arr2
+     * @param   array $arr1
+     * @param   array $arr2
      * @return  array
      */
     protected function &arrayMergeRecursiveDistinct(&$arr1, &$arr2)
@@ -192,8 +197,7 @@ class CoreConfig implements Countable, Iterator
                 if (is_array($arr2[$key])) {
                     $merged[$key] = isset($merged[$key]) && is_array($merged[$key]) ?
                         $this->arrayMergeRecursiveDistinct($merged[$key], $arr2[$key]) : $arr2[$key];
-                }
-                else {
+                } else {
                     $merged[$key] = $val;
                 }
             }
@@ -212,7 +216,8 @@ class CoreConfig implements Countable, Iterator
      * @param  $errno
      * @param  $errstr
      */
-    protected function configErrorHandler($errno, $errstr) {
+    protected function configErrorHandler($errno, $errstr)
+    {
         $this->errors[] = array($errno => $errstr);
     }
 

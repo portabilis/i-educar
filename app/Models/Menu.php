@@ -36,6 +36,9 @@ class Menu extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [];
 
+    /**
+     * @return Submenu[]
+     */
     public function submenus()
     {
         return $this->hasMany(Submenu::class, 'ref_cod_menu_menu', 'cod_menu_menu');

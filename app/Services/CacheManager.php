@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheManager extends LaravelCacheManager
 {
-
     /**
      * Invalida todas as entradas de cache de acordo com as tags passadas
      *
@@ -16,12 +15,11 @@ class CacheManager extends LaravelCacheManager
      */
     public static function invalidateByTags($tags)
     {
-
-        if (!self::supportsTags(Cache::store()->getStore())) {
-            return Cache::store();
+        if (self::supportsTags(Cache::store()->getStore())) {
+            Cache::tags($tags)->flush();
         }
 
-        Cache::tags($tags)->flush();
+        return Cache::store();
     }
 
     /**
@@ -45,6 +43,12 @@ class CacheManager extends LaravelCacheManager
         return $this->store()->$method(...$parameters);
     }
 
+    /**
+     * Checks if cache driver supports tags use
+     *
+     * @param $store
+     * @return bool
+     */
     private static function supportsTags($store)
     {
         $doNotSupportTags = [
@@ -59,6 +63,12 @@ class CacheManager extends LaravelCacheManager
         return true;
     }
 
+    /**
+     * Checks if cache driver supports prefix use
+     *
+     * @param $store
+     * @return bool
+     */
     private static function supportsPrefix($store)
     {
         $supportPrefix = [

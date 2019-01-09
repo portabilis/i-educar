@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class EloquentBaseModel extends Model implements BaseModel
 {
+    /**
+     * Get primary key
+     *
+     * @return string
+     */
     public function id()
     {
         return $this->{$this->primaryKey};
