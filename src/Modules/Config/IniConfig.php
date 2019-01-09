@@ -6,7 +6,6 @@ use Exception;
 
 class IniConfig extends CoreConfig
 {
-
     /**
      * Caractere de herança das seções do arquivo ini.
      */

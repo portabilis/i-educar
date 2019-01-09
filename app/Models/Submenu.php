@@ -38,11 +38,17 @@ class Submenu extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [];
 
+    /**
+     * @return Menu
+     */
     public function menu()
     {
         return $this->belongsTo(Menu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
     }
 
+    /**
+     * @return UserType[]
+     */
     public function typeUsers()
     {
         return $this->belongsToMany(

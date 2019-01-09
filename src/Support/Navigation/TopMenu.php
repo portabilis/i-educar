@@ -42,6 +42,12 @@ class TopMenu
      */
     private $currentUri;
 
+    /**
+     * @param SubmenuRepository $submenuRepository
+     * @param MenuRepository $menuRepository
+     * @param SystemMenuRepository $systemMenuRepository
+     * @param MenuService $menuService
+     */
     public function __construct(
         SubmenuRepository $submenuRepository,
         MenuRepository $menuRepository,
@@ -54,6 +60,10 @@ class TopMenu
         $this->menuService = $menuService;
     }
 
+    /**
+     * @param $currentSubmenuId
+     * @param $currentUri
+     */
     public function current($currentSubmenuId, $currentUri)
     {
         $submenu = $this->submenuRepository->model()::find($currentSubmenuId);
@@ -61,6 +71,9 @@ class TopMenu
         $this->currentMenu = $submenu->menu;
     }
 
+    /**
+     * @param User $user
+     */
     public function getTopMenuArray(User $user)
     {
         $cacheKey = $this->getCacheKey();
@@ -95,18 +108,30 @@ class TopMenu
         return $menuArray->all();
     }
 
+    /**
+     * @return array
+     */
     private function getSubmenuArray()
     {
         return $this->submenuRepository->findWhere(['ref_cod_menu_menu' => $this->currentMenu->id()],
             ['cod_menu_submenu']);
     }
 
+    /**
+     * @param $submenuArray
+     * @return integer
+     */
     private function getTutorMenuId($submenuArray)
     {
         return $this->systemMenuRepository->findWhereIn('ref_cod_menu_submenu',
             $submenuArray)->first()->ref_cod_tutormenu;
     }
 
+    /**
+     * @param array $submenuIdArray
+     * @param $tutorMenuId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     private function getItemsAndLevels(array $submenuIdArray, $tutorMenuId)
     {
         /** todo Implementar recursividade para pegar níveis dinamicamente  */
@@ -136,6 +161,10 @@ class TopMenu
         return $menuArray;
     }
 
+    /**
+     * @param $menuArray
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     private function filter($menuArray)
     {
         return $menuArray->filter(function ($item) use ($menuArray) {
@@ -188,6 +217,9 @@ class TopMenu
         return $menuArray;
     }
 
+    /**
+     * @return string
+     */
     private function getCacheKey()
     {
         return 'topmenu_' . md5($this->currentUri . session('id_pessoa'));

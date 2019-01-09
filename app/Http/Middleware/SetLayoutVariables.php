@@ -23,6 +23,9 @@ class SetLayoutVariables
         return $next($request);
     }
 
+    /**
+     * Set view ariable with logged user date
+     */
     private function setLoggedUser()
     {
         $personId = session('id_pessoa');
@@ -31,6 +34,7 @@ class SetLayoutVariables
             return;
         }
 
+        // todo: mover consulta para algum repository
         $person = DB::selectOne('SELECT nome, email FROM cadastro.pessoa WHERE idpes = :personId', ['personId' => $personId]);
 
         $loggedUser = new \stdClass();
@@ -41,6 +45,9 @@ class SetLayoutVariables
         View::share('loggedUser', $loggedUser);
     }
 
+    /**
+     * Set view variable with legacy configs
+     */
     private function setLegacyConfig()
     {
         View::share('config', config('legacy'));

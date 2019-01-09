@@ -4,6 +4,9 @@ namespace iEducar\Modules\Auth;
 
 class VerifyAuthenticateSession
 {
+    /**
+     * @return bool
+     */
     public static function isAuthenticated()
     {
         @session_start();

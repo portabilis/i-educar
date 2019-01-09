@@ -1,8 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html lang="pt" class="no-js">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-    <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8" /-->
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="-1"/>
 
@@ -165,7 +164,6 @@
                     <a href="/intranet/logof.php">Sair</a>
                 </div>
             </div>
-            <!--a href="http://www.google.com.br/" target="_blank"><img src="imagens/nvp_bot_internet.jpg" width="62" height="21" border="0" alt="Acessar Internet" title="Acessar a Web"></a-->
         </td>
     </tr>
     <tr>

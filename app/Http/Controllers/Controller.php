@@ -13,14 +13,26 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * Set the breadcrumbs of the action
+     *
+     * @param $currentPage
+     * @param array $pages
+     */
     public function breadcrumb($currentPage, $pages = [])
     {
         app(Breadcrumb::class)->current($currentPage, $pages);
     }
 
+    /**
+     * Set the top menu of the action
+     *
+     * @param $currentSubmenuId
+     * @param null $currentUri
+     */
     public function topMenu($currentSubmenuId, $currentUri = null)
     {
-        if (!$currentUri) {
+        if (empty($currentUri)) {
             $currentUri = request()->getRequestUri();
         }
 
