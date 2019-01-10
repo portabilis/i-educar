@@ -67,11 +67,11 @@ class clsModulesAuditoriaNota {
         $this->notaNova = $notaNova;
 
         if(!is_null($this->notaAntiga)){
-            $this->stringNotaAntiga = json_encode($this->montaArrayInformacoes($this->notaAntiga));
+            $this->stringNotaAntiga = $this->montaStringInformacoes($this->montaArrayInformacoes($this->notaAntiga));
         }
 
         if(!is_null($this->notaNova)){
-            $this->stringNotaNova = json_encode($this->montaArrayInformacoes($this->notaNova));
+            $this->stringNotaNova = $this->montaStringInformacoes($this->montaArrayInformacoes($this->notaNova));
         }
 
         $this->dataHora = date('Y-m-d H:i:s');
@@ -109,14 +109,16 @@ class clsModulesAuditoriaNota {
         $separador = ", ";
 
         if(is_string($this->stringNotaAntiga)){
+            $this->stringNotaAntiga = str_replace( "'", "\'", $this->stringNotaAntiga);
             $campos .= "{$separador}valor_antigo";
-            $valores .= "{$separador} '{$this->stringNotaAntiga}'";
+            $valores .= "{$separador}E'{$this->stringNotaAntiga}'";
             $separador = ", ";
         }
 
         if(is_string($this->stringNotaNova)){
+            $this->stringNotaNova = str_replace("'", "\'", $this->stringNotaNova);
             $campos .= "{$separador}valor_novo";
-            $valores .= "{$separador} '{$this->stringNotaNova}'";
+            $valores .= "{$separador}E'{$this->stringNotaNova}'";
             $separador = ", ";
         }
 
@@ -126,6 +128,33 @@ class clsModulesAuditoriaNota {
 
         $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 
+    }
+
+
+    private function montaStringInformacoes($arrayInformacoes){
+        if(empty($arrayInformacoes)){return null;}
+
+        $stringDados = "";
+        $separadorDados = ",";
+        $separadorInformacoes = ":";
+        $inicioString = "{";
+        $fimString = "}";
+
+        $stringDados .= $inicioString;
+
+        foreach($arrayInformacoes as $campo => $valor){
+            $stringDados .= $campo;
+            $stringDados .= $separadorInformacoes;
+            $stringDados .= $valor;
+            $stringDados .= $separadorDados;
+        }
+
+        //remove o último valor, qual seria uma vírgula
+        $stringDados = substr($stringDados, 0, -1);
+
+        $stringDados .= $fimString;
+
+        return $stringDados;
     }
 
     private function montaArrayInformacoes($nota){
