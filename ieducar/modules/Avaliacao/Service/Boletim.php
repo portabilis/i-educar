@@ -1280,17 +1280,27 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       case App_Model_MatriculaSituacao::REPROVADO:
         $situacao->retidoFalta = TRUE;
         $andamento = FALSE;
-        if ($this->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+
+        // Permite o lançamento de nota de exame final, mesmo que o aluno
+        // esteja retido por falta, apenas quando a regra de avaliação possuir
+        // uma média para recuperação (exame final).
+
+        if ($this->getRegra()->get('mediaRecuperacao')) {
+
+          if ($this->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
             // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
             $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
             $andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
+          }
+
+          if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
+            $andamento = TRUE;
+          }
         }
 
-        if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
-            $andamento = TRUE;
-        }
         $situacao->andamento = $andamento;
         break;
+
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
         break;
@@ -3061,7 +3071,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA || RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL:
 
-        if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia)
+        if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia && !$situacaoBoletim->retidoFalta)
           $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
         elseif ($situacaoBoletim->retidoFalta)
           if (!$situacaoBoletim->aprovado){

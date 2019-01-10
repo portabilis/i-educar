@@ -28,6 +28,8 @@ if (!file_exists($configFile)) {
     $configFile = PROJECT_ROOT . '/configuration/ieducar.ini';
 }
 
+global $coreExt;
+
 $coreExt = [];
 $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
 
