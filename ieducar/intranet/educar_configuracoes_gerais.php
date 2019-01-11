@@ -1,33 +1,4 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
 
 use Illuminate\Support\Facades\Cache;
 
@@ -35,14 +6,6 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
-/**
- * @author    Caroline Salib <caroline@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     ?
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
   function Formular()
@@ -75,6 +38,7 @@ class indice extends clsCadastro
   var $twitter_url;
   var $linkedin_url;
   var $ieducar_suspension_message;
+  var $bloquear_cadastro_aluno;
 
   function Inicializar()
   {
@@ -118,6 +82,7 @@ class indice extends clsCadastro
     $configuracoes = $configuracoes->detalhe();
 
     $this->permite_relacionamento_posvendas = $configuracoes['permite_relacionamento_posvendas'];
+    $this->bloquear_cadastro_aluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
     $this->url_novo_educacao = $configuracoes['url_novo_educacao'];
     $this->mostrar_codigo_inep_aluno = $configuracoes['mostrar_codigo_inep_aluno'];
     $this->justificativa_falta_documentacao_obrigatorio = $configuracoes['justificativa_falta_documentacao_obrigatorio'];
@@ -138,6 +103,11 @@ class indice extends clsCadastro
     $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array(
         'label' => 'Permite relacionamento direto no pós-venda?',
         'value' => $this->permite_relacionamento_posvendas
+    ));
+
+    $this->inputsHelper()->checkbox('bloquear_cadastro_aluno', array(
+        'label' => 'Bloquear o cadastro de novos alunos',
+        'value' => $this->bloquear_cadastro_aluno
     ));
 
     $this->inputsHelper()->text('url_novo_educacao', array(
@@ -304,9 +274,11 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
     $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
+    $bloquearCadastroAluno = $this->bloquear_cadastro_aluno == 'on' ? 1 : 0;
 
     $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, array(
         'permite_relacionamento_posvendas' => $permiteRelacionamentoPosvendas,
+        'bloquear_cadastro_aluno' => $bloquearCadastroAluno,
         'url_novo_educacao' => $this->url_novo_educacao,
         'mostrar_codigo_inep_aluno' => $this->mostrar_codigo_inep_aluno,
         'justificativa_falta_documentacao_obrigatorio' => $this->justificativa_falta_documentacao_obrigatorio,

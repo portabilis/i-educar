@@ -6,5 +6,6 @@
   "historico.cadastro.curso_detalhe": "",
   "historico.cadastro.serie": "S&eacute;rie",
   "turma.detalhe.sigla": "Sigla",
-  "report.termo_assinatura_secretario" : "Secretário(a)"
+  "report.termo_assinatura_secretario" : "Secretário(a)",
+  "report.termo_assinatura_diretor": "Gestor(a) da unidade escolar"
 }

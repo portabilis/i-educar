@@ -10,11 +10,12 @@
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": "^7.2.10",
+        "php": "^7.1.3",
         "ext-pgsql": "*",
         "cocur/slugify": "^3.1",
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
+        "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "google/recaptcha": "^1.2",
         "honeybadger-io/honeybadger-laravel": "^1.4",

@@ -88,6 +88,7 @@ ajudar a alcançar nossos objetivos.
 - [Primeiro acesso](#primeiro-acesso)
 - [Personalizando a instalação](#personalizando-a-instalação)
 - [Instalação em servidor](#instalação-em-servidor)
+- [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
 - [Upgrade da versão 2.0 para a 2.1](#upgrade-para-21)
 
 ### Depêndencias
@@ -184,7 +185,7 @@ no seu servidor. O instalador está disponível desde a versão `2.1.0`.
 
 Para executar o i-Educar em um servidor você precisa dos seguintes programas:
 
-- [PHP](http://php.net/) versão 7.2.10 ou maior
+- [PHP](http://php.net/) versão 7.1.3 ou maior
 - [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
 - [Nginx](https://www.nginx.com/)
 
@@ -253,6 +254,14 @@ Em caso de erros no processo de instalação verifique os logs do sistema que se
 encontram em `storage/logs` para determinar suas causas. Não hesite em
 [entrar em contato](#comunicação) caso enfrente dificuldades!
 
+### Instalação do pacote de relatórios
+
+O i-Educar possui um pacote de mais de 40 relatórios.
+
+Para instalar o pacote de relatórios visite o repositório do projeto 
+[https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
+e siga as instruções de instalação.
+
 ### Upgrade para 2.1
 
 Para fazer o upgrade da versão 2.0 para a 2.1 do i-Educar, você precisará
@@ -292,8 +301,8 @@ Sua instalação estará atualizada e você poderá realizar seu
 
 ## Perguntas frequentes (FAQ)
 
-Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](https://github.com/portabilis/i-educar-website/blob/master/docs/faq.md)
+Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](https://github.com/portabilis/i-educar-website/blob/master/docs/faq.md).
 
 ---
 
-Powered by [Portabilis Tecnologia](http://www.portabilis.com.br/)
+Powered by [Portabilis Tecnologia](http://www.portabilis.com.br/).

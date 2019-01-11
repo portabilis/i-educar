@@ -36,9 +36,13 @@ class Installer
         'password' => 'admin:password',
     ];
 
+    public $composerData;
+
     public function __construct(string $rootDir)
     {
         $this->rootDir = $rootDir;
+        $composerJson = file_get_contents($this->rootDir . '/composer.json');
+        $this->composerData = json_decode($composerJson);
     }
 
     public function checkExtensions(): bool
@@ -192,14 +196,6 @@ class Installer
         );
 
         return new \PDO($dsn);
-    }
-
-    public function getCurrentVersion(): string
-    {
-        $composerJson = file_get_contents($this->rootDir . '/composer.json');
-        $composerData = json_decode($composerJson);
-
-        return $composerData->version;
     }
 
     public function getLatestRelease(): array

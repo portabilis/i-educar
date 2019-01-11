@@ -182,7 +182,7 @@ class clsModulesComponenteCurricularAnoEscolar
                 SELECT array_to_json(anos_letivos) as anos_letivos
                   FROM {$this->_tabela}
                  WHERE ano_escolar_id = {$this->ano_escolar_id}
-                   AND componente_curricular_id = {$componenteCurricularId} 
+                   AND componente_curricular_id = {$componenteCurricularId}
 SQL;
         $db = new clsBanco();
         $db->Consulta($sql);
@@ -213,6 +213,8 @@ SQL;
         if(is_numeric($componente_curricular_id) && is_numeric($carga_horaria)){
 
             $db = new clsBanco();
+            $tipo_nota = (int) $tipo_nota;
+            $tipo_nota = $tipo_nota === 0 ? 'NULL' : $tipo_nota;
 
             $sql = "INSERT INTO {$this->_tabela} VALUES( $componente_curricular_id,
                                                          $this->ano_escolar_id,
@@ -244,8 +246,11 @@ SQL;
                 $gruda = ", ";
             }
 
-            if( is_numeric( $tipo_nota ) )
+            if( is_numeric( $tipo_nota ))
             {
+                $tipo_nota = (int) $tipo_nota;
+                $tipo_nota = $tipo_nota === 0 ? 'NULL' : $tipo_nota;
+
                 $set .= "{$gruda}tipo_nota = {$tipo_nota}";
                 $gruda = ", ";
             }
@@ -315,7 +320,7 @@ SQL;
                 $gruda = ", ";
             }
 
-            if (is_numeric($this->tipo_nota)) {
+            if (is_numeric($this->tipo_nota) && (int)$tipo_nota !== 0) {
                 $campos .= "{$gruda}tipo_nota";
                 $valores .= "{$gruda}'{$this->tipo_nota}'";
                 $gruda = ", ";
@@ -473,4 +478,3 @@ SQL;
     }
 
 }
-?>
