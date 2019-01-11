@@ -3317,21 +3317,6 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
   public function deleteNota($etapa, $ComponenteCurricularId)
   {
-    if ($etapa != 'Rc') {
-        try {
-            $nota = new Avaliacao_Model_NotaComponente(array(
-                'componenteCurricular' => $ComponenteCurricularId,
-                'nota' => 0,
-                'etapa' => $etapa
-            ));
-            $this->addNota($nota);
-            $this->save();
-        }
-        catch (Exception $e) {
-            error_log("Excessao ignorada ao zerar nota a ser removida: " . $e->getMessage());
-        }
-    }
-
     $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
     $this->getNotaComponenteDataMapper()->delete($nota);
 
