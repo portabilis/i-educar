@@ -13,7 +13,7 @@ class ReportsInstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'reports:install';
+    protected $signature = 'reports:install {--no-compile}';
 
     /**
      * The console command description.
@@ -58,7 +58,9 @@ class ReportsInstallCommand extends Command
             $filesystem->get($file)
         );
 
-        $this->call('reports:compile');
+        if (false === $this->option('no-compile')) {
+            $this->call('reports:compile');
+        }
 
         $this->call('migrate', [
             '--force' => true
