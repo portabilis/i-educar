@@ -63,7 +63,8 @@ class ReportsInstallCommand extends Command
         }
 
         $this->call('migrate', [
-            '--force' => true
+            '--force' => true,
+            '--path' => 'ieducar/modules/Reports/database/migrations',
         ]);
     }
 }
