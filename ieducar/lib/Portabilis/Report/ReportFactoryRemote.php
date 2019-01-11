@@ -25,7 +25,7 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
      * Renderiza o relatório.
      *
      * @param Portabilis_Report_ReportCore $report
-     * @param array $options
+     * @param array                        $options
      *
      * @return mixed
      *

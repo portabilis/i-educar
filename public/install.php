@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 set_time_limit(0);
 ini_set('memory_limit','-1');
 
@@ -49,13 +52,13 @@ function boolIcon(bool $bool): string
 }
 
 $isInstalled = false;
-$currIeducarVersion = $installer->getCurrentVersion();
+$currIeducarVersion = $installer->composerData->version;
 $latestIeducarVersion = $installer->getLatestRelease();
 $isOld = Comparator::greaterThan(
     $latestIeducarVersion['version'],
     $currIeducarVersion
 );
-$minPhpVersion = '7.2.10';
+$minPhpVersion = $installer->composerData->require->php;
 $phpVersionCheck = version_compare(PHP_VERSION, $minPhpVersion) >= 0;
 $extensionsCheck = $installer->checkExtensions();
 $extensionsReport = $installer->getExtensionsReport();

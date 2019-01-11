@@ -61,6 +61,7 @@ class clsPmieducarMatriculaTurma
   var $reabrirMatricula;
   var $etapa_educacenso;
   var $turma_unificada;
+  var $remanejado;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -119,7 +120,7 @@ class clsPmieducarMatriculaTurma
     $ref_cod_turma = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $ref_cod_turma_transf = NULL,$sequencial = NULL, $data_enturmacao = NULL,
-    $removerSequencial = FALSE, $reabrirMatricula = FALSE
+    $removerSequencial = FALSE, $reabrirMatricula = FALSE, $remanejado = FALSE
   ) {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
@@ -227,6 +228,10 @@ class clsPmieducarMatriculaTurma
     if (is_numeric($ativo)) {
       $this->ativo = $ativo;
     }
+
+      if ($remanejado) {
+          $this->remanejado = $remanejado;
+      }
 
     if (is_numeric($ref_cod_turma_transf)) {
       if (class_exists("clsPmieducarTurma")) {
@@ -338,8 +343,6 @@ class clsPmieducarMatriculaTurma
       $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
       $auditoria->inclusao($detalhe);
 
-      $this->limpaComponentesCurriculares();
-
       return TRUE;
     }
 
@@ -401,6 +404,13 @@ class clsPmieducarMatriculaTurma
         }
       }
 
+      if (! $this->ativo) {
+          if ($this->remanejado) {
+              $set .= "{$gruda}remanejado = true";
+              $gruda = ", ";
+          }
+      }
+
       if (is_numeric($this->ref_cod_turma_transf)) {
         $set .= "{$gruda}ref_cod_turma= '{$this->ref_cod_turma_transf}'";
         $gruda = ", ";
@@ -434,7 +444,7 @@ class clsPmieducarMatriculaTurma
 
         $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
         $auditoria->alteracao($detalheAntigo, $this->detalhe());
-        $this->limpaComponentesCurriculares();
+        
         return TRUE;
       }
     }
@@ -1665,11 +1675,6 @@ class clsPmieducarMatriculaTurma
     return FALSE;
   }
 
-  function limpaComponentesCurriculares(){
-    $ano = $this->getAnoMatricula();
-    CleanComponentesCurriculares::destroyOldResources($ano, $this->ref_cod_matricula);
-  }
-
   function getAnoMatricula(){
     if (is_numeric($this->ref_cod_matricula)){
       $db = new clsBanco();
@@ -1700,6 +1705,33 @@ class clsPmieducarMatriculaTurma
       $db->Consulta($sql);
       $db->ProximoRegistro();
       return $db->Tupla();
+  }
+
+  function getMaxSequencialEnturmacao($matriculaId)
+  {
+      $db = new clsBanco();
+      $sql = 'select max(sequencial) from pmieducar.matricula_turma where ref_cod_matricula = $1';
+
+      if ($db->execPreparedQuery($sql, $matriculaId) != false) {
+        $db->ProximoRegistro();
+        $sequencial = $db->Tupla();
+        return $sequencial[0];
+      }
+      return 0;
+  }
+
+  function getUltimaTurmaEnturmacao($matriculaId)
+  {
+      $sequencial = $this->getMaxSequencialEnturmacao($matriculaId);
+      $db = new clsBanco();
+      $sql = 'select ref_cod_turma from pmieducar.matricula_turma where ref_cod_matricula = $1 and sequencial = $2';
+
+      if ($db->execPreparedQuery($sql, [$matriculaId, $sequencial]) != false) {
+          $db->ProximoRegistro();
+          $ultima_turma = $db->Tupla();
+          return $ultima_turma[0];
+      }
+      return NULL;
   }
 
 }

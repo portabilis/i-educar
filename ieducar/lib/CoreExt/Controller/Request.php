@@ -31,7 +31,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
     public function setOptions(array $options = [])
     {
         $defaultOptions = array_keys($this->getOptions());
-        $passedOptions  = array_keys($options);
+        $passedOptions = array_keys($options);
 
         if (0 < count(array_diff($passedOptions, $defaultOptions))) {
             throw new InvalidArgumentException(
@@ -101,14 +101,19 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
         switch (true) {
             case isset($this->_data[$key]):
                 return $this->_data[$key];
+
             case isset($_GET[$key]):
                 return $_GET[$key];
+
             case isset($_POST[$key]):
                 return $_POST[$key];
+
             case isset($_COOKIE[$key]):
                 return $_COOKIE[$key];
+
             case isset($_SERVER[$key]):
                 return $_SERVER[$key];
+
             default:
                 break;
         }

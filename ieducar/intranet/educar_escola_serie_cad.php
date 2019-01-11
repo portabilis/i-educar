@@ -561,15 +561,6 @@ class indice extends clsCadastro
                         }
                     }
                 }
-
-                //Verifica/limpa disciplinas não alteradas quando a escola/série for editada e tiver disciplinas marcadas
-                //não padrão do ano letivo.
-                $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
-                $existe_ano_andamento = $obj_ano_letivo->lista($this->ref_cod_escola, null, null, null, 1, null, null, null, null, 1);
-
-                foreach ($existe_ano_andamento as $reg) {
-                    CleanComponentesCurriculares::destroyOldResources($reg['ano']);
-                }
             }
 
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';

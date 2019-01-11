@@ -6,7 +6,7 @@ class Mimetype
     {
         $filename = basename($filename);
         $filename = explode('.', $filename);
-        $filename = $filename[count($filename)-1];
+        $filename = $filename[count($filename) - 1];
 
         return $this->privFindType($filename);
     }
