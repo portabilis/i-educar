@@ -13,7 +13,7 @@ class ReportsInstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'reports:install';
+    protected $signature = 'reports:install {--no-compile}';
 
     /**
      * The console command description.
@@ -45,6 +45,7 @@ class ReportsInstallCommand extends Command
     public function handle(Filesystem $filesystem, Connection $connection)
     {
         $file = $this->getInitialReportsDatabaseFile();
+        $compile = $this->option('no-compile') === false;
 
         if (!$filesystem->exists($file)) {
             $this->error('Initial reports database file not found.');
@@ -58,10 +59,13 @@ class ReportsInstallCommand extends Command
             $filesystem->get($file)
         );
 
-        $this->call('reports:compile');
+        if ($compile) {
+            $this->call('reports:compile');
+        }
 
         $this->call('migrate', [
-            '--force' => true
+            '--force' => true,
+            '--path' => 'ieducar/modules/Reports/database/migrations',
         ]);
     }
 }
