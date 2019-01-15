@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use http\Header;
 use Illuminate\Support\Str;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
