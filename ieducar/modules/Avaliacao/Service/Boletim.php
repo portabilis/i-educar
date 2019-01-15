@@ -31,6 +31,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected $_regra = NULL;
 
+  protected $_mediaGeralDataMapper = NULL;
+
+  protected $_notaGeralDataMapper = NULL;
+
   /**
    * @var ComponenteCurricular_Model_ComponenteDataMapper
    */
@@ -119,6 +123,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * @var array
    */
   protected $_componentes = NULL;
+
+  protected $_componenteCurricularId = NULL;
 
   /**
    * Notas do aluno nos componentes cursados.
@@ -1234,6 +1240,27 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return count(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(),null,null,null, $matriculaData, false ));
   }
 
+  /**
+   * Indica se a regra de avaliação tem fórmula para calcular a média da
+   * recuperação.
+   *
+   * @return bool
+   */
+  public function hasMediaRecuperacaoRegraAvaliacao()
+  {
+      return boolval($this->getRegra()->get('mediaRecuperacao'));
+  }
+
+  /**
+   * Retorna o tipo de nota da regra de avaliação.
+   *
+   * @return RegraAvaliacao_Model_Nota_TipoValor
+   */
+  public function getTipoNotaRegraAvaliacao()
+  {
+      return $this->getRegra()->get('tipoNota');
+  }
+
   function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
   {
     $situacao                          = new stdClass();
@@ -1279,9 +1306,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // esteja retido por falta, apenas quando a regra de avaliação possuir
         // uma média para recuperação (exame final).
 
-        if ($this->getRegra()->get('mediaRecuperacao')) {
+        if ($this->hasMediaRecuperacaoRegraAvaliacao()) {
 
-          if ($this->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+          if ($this->getTipoNotaRegraAvaliacao() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
             // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
             $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
             $andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
@@ -2684,7 +2711,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function componenteUsaNotaConceitual($componenteId)
   {
-      $serieId = $this->_options['matriculaData'][ref_ref_cod_serie];
+      $serieId = $this->_options['matriculaData']['ref_ref_cod_serie'];
       $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
 
       if ($tipoNota == ComponenteSerie_Model_TipoNota::CONCEITUAL) {
@@ -2732,7 +2759,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * escolar.
    *
    * @param  int $id
-   * @return TabelaArredondamento_Model_TabelaValor|NULL
+   * @return int|NULL
    * @see    TabelaArredondamento_Model_Tabela#predictValue()
    */
   public function preverNotaRecuperacao($id)

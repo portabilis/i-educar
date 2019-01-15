@@ -79,9 +79,16 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
     // Opções dos validadores
 
     // Componentes curriculares existentes para o aluno
+    $expected = $this->_getConfigOptions('componenteCurricular');
+    $dispensas = $this->_getDispensaDisciplina();
+    foreach($dispensas as $dispensa) {
+        unset($expected[$dispensa['ref_cod_disciplina']]);
+    }
+
+    $actual = $validators['componenteCurricular']->getOption('choices');
     $this->assertEquals(
-      array_keys($this->_getConfigOptions('componenteCurricular')),
-      array_values($validators['componenteCurricular']->getOption('choices'))
+      array_keys($expected),
+      array_values($actual)
     );
 
     // Etapas possíveis para o lançamento de nota
@@ -97,7 +104,6 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
    */
   public function testSalvarFaltasDeUmComponenteCurricularNoBoletim()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(
@@ -165,7 +171,6 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
    */
   public function testSalvasFaltasDeUmComponenteComEtapasLancadas()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(
@@ -225,7 +230,6 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
 
   public function testSalvasFaltasDeUmComponenteEAtualizadaEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
   {
-      $this->markTestSkipped('must be revisited.');
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(

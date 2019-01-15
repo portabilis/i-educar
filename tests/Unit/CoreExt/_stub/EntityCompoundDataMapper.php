@@ -58,7 +58,8 @@ class CoreExt_EntityCompoundDataMapperStub extends CoreExt_DataMapper
   );
 
   protected $_primaryKey = array(
-    'pessoa', 'curso'
+    'pessoa' => 'pessoa',
+    'curso' => 'curso'
   );
 
   /**

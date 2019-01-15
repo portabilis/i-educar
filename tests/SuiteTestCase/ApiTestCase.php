@@ -2,64 +2,54 @@
 
 namespace Tests\SuiteTestCase;
 
-use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
 
 class ApiTestCase extends TestCase
 {
     /**
-     * @var Client
+     * Return access key for API use.
+     *
+     * @return string
      */
-    private $http;
-
-    public function setUp(): void
+    protected function getApiKey()
     {
-        parent::setUp();
-        $this->http = new Client();
+        return env('API_ACCESS_KEY');
     }
 
-    public function doAuthenticatedRequest($resource, $params, $method = 'GET')
+    /**
+     * Return secret key for API use.
+     *
+     * @return string
+     */
+    protected function getApiSecret()
     {
-        $params['access_key'] = $this->getApiKey();
-        $params['secret_key'] = $this->getApiSecret();
-
-        return $this->doRequest($resource, $params, $method);
+        return env('API_SECRET_KEY');
     }
 
-    public function doRequest($resource, $params, $method = 'GET')
+    /**
+     * Return JSON filename.
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    public function getJsonFile($filename)
     {
-        if (!in_array($method, ['GET', 'POST'])) {
-            throw new \Exception('Método não implementado');
-        }
-
-        $params['resource'] = $resource;
-        $params['oper'] = 'get';
-
-        $response = $this->http->request(
-            'GET',
-            $this->getApiUri(),
-            [\GuzzleHttp\RequestOptions::QUERY => $params]
-        );
-
-        return $response->getBody()->getContents();
+        return __DIR__ . '/../Unit/assets/' . $filename;
     }
 
-    private function getApiUri()
+    /**
+     * Load a SQL dump file.
+     *
+     * @param string $filename
+     *
+     * @return void
+     */
+    public function loadDump($filename)
     {
-        return getenv('API_URI');
-    }
-
-    private function getApiKey()
-    {
-        return getenv('API_ACCESS_KEY');
-    }
-
-    private function getApiSecret()
-    {
-        return getenv('API_SECRET_KEY');
-    }
-
-    public function getJsonFile($fileName)
-    {
-        return __DIR__ . '/../Unit/assets/' . $fileName;
+        DB::unprepared('SET session_replication_role = replica;');
+        DB::unprepared(file_get_contents(__DIR__ . '/../Unit/dumps/' . $filename));
+        DB::unprepared('SET session_replication_role = DEFAULT;');
     }
 }

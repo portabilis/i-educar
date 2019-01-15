@@ -102,7 +102,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
             $scale = pow(10, $this->_precision);
 
             // Escala o valor para se tornar comparável
-            $value = $this->getFloat($value) * $scale;
+            $value = floatval($value) * $scale;
 
             $return = 0;
 

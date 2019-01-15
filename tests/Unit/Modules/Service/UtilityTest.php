@@ -44,30 +44,23 @@ require_once __DIR__.'/TestCommon.php';
  */
 class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 {
-  public function testArredondaNotaLancaExcecaoSeParametroNaoForInstanciaDeAvaliacaomodelnotacomponenteOuNumerico()
+  public function testArredondaNotaLancaExcecaoSeParametroNaoForNumerico()
   {
     $service = $this->_getServiceInstance();
 
-    try {
-      $service->arredondaNota(new Avaliacao_Model_NotaComponente());
-      $this->fail('O valor "instância Avaliacao_Model_NotaComponente()" deveria '
-                  . 'ter causado um exceção pois o atributo "nota" é NULL por padrão.');
-    }
-    catch (CoreExt_Exception_InvalidArgumentException $e) {
-    }
-
-    try {
-      $service->arredondaNota('abc 7.5');
-      $this->fail('O valor "abc 7.5" deveria ter causado um exceção.');
-    }
-    catch (CoreExt_Exception_InvalidArgumentException $e) {
-    }
+        $this->expectException('CoreExt_Exception_InvalidArgumentException');
+        $this->expectExceptionMessage('O parâmetro $nota ("") não é um valor numérico.');
+        $service->arredondaNota(new Avaliacao_Model_NotaComponente());
   }
 
   public function testArredondaNotaNumerica()
   {
     $service = $this->_getServiceInstance();
-    $this->assertEquals(5, $service->arredondaNota(5.5));
+
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 5.85
+    ]);
+    $this->assertEquals(5.8, $service->arredondaNota($nota));
   }
 
   public function testArredondaNotaConceitual()
@@ -112,15 +105,36 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
     $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
     $tabelaDataMapper->setTabelaValorDataMapper($mock);
 
-    $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Conceituais'));
+    $tabela = new TabelaArredondamento_Model_Tabela(array(
+        'nome' => 'Conceituais',
+        'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL
+    ));
     $tabela->setDataMapper($tabelaDataMapper);
 
-    $this->_setRegraOption('tabelaArredondamento', $tabela);
+    $this->_setRegraOption('tabelaArredondamentoConceitual', $tabela);
 
+    $this->_setRegraOption('tipoNota', RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL);
     $service = $this->_getServiceInstance();
-    $this->assertEquals('I', $service->arredondaNota(5.49));
-    $this->assertEquals('S', $service->arredondaNota(6.50));
-    $this->assertEquals('O', $service->arredondaNota(9.15));
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 5.49
+    ]);
+    $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
+    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
+    $this->assertEquals('I', $service->arredondaNota($nota));
+
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 6.50
+    ]);
+    $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
+    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
+    $this->assertEquals('S', $service->arredondaNota($nota));
+
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 9.15
+    ]);
+    $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
+    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
+    $this->assertEquals('O', $service->arredondaNota($nota));
   }
 
   public function testPreverNotaParaRecuperacao()
@@ -163,14 +177,7 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 
     $service = $this->_getServiceInstance();
 
-    $expected = new TabelaArredondamento_Model_TabelaValor(array(
-      'nome'        => 10,
-      'valorMinimo' => 9,
-      'valorMaximo' => 10
-    ));
-
     $ret = $service->preverNotaRecuperacao(1);
-    $this->assertEquals(array($expected->nome, $expected->valorMinimo, $expected->valorMaximo),
-                        array($ret->nome, $ret->valorMinimo, $ret->valorMaximo));
+    $this->assertEquals(4.0, $ret);
   }
 }

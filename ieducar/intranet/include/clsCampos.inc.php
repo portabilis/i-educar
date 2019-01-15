@@ -1764,8 +1764,8 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         $retorno .= "<tr><td colspan='2' class='$classe'><span class='form'><b>$componente[3]</b></span>{$explicacao}</td></tr>\n";
                     } else {
-                        if (isset($componente[10]) && ($componente[0] == 'textoDuploInv'
-                                || $componente[0] == 'textoInv')) {
+                        if (!empty($componente[10]) && !empty($componente[0])
+                            && ($componente[0] == 'textoDuploInv' || $componente[0] == 'textoInv')) {
                             $name = " name='tr_{$componente[10]}'  ";
                         } else {
                             $name = '';
@@ -1774,14 +1774,14 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $style = (isset($componente['tr_invisivel']) && $componente['tr_invisivel']) ?
                             'style=\'visibility:collapse\'' : '';
 
-                        $explicacao = ($componente[6]) ?
+                        $explicacao = !empty($componente[6]) ?
                             "<br><sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
 
                         $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><span class='form'>$campo</span>{$obrigatorio}{$explicacao}</td><td class='$classe' valign='top'><span class='form'>\n";
                     }
                 } elseif ($tipo) {
-                    if ($componente[10] == true) {
-                        $explicacao = ($componente[6]) ?
+                    if (!empty($componente[10]) && $componente[10] == true) {
+                        $explicacao = !empty($componente[6]) ?
                             "<br><sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
 
                         $retorno .= "<span class='form'>$campo</span>{$explicacao}\n";

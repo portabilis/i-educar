@@ -40,7 +40,7 @@ Acreditamos que o sucesso do projeto depende diretamente da interação clara e
 objetiva entre os membros da Comunidade. Por isso, estamos definindo algumas
 políticas para que estas interações nos ajudem a crescer juntos! Você pode
 consultar algumas destas boas práticas em nosso [código de
-conduta](https://github.com/portabilis/i-educar/blob/master/CODE_OF_CONDUCT.md).
+conduta](https://github.com/portabilis/i-educar/blob/master/code-of-conduct.md).
 
 Além disso, gostamos de meios de comunicação assíncrona, onde não há necessidade de
 respostas em tempo real. Isso facilita a produtividade individual dos
@@ -78,7 +78,7 @@ para ler mais a respeito.
 ## Como contribuir
 
 Contribuições são **super bem vindas**! Se você tem vontade de construir o
-i-Educar junto conosco, veja o nosso [guia de contribuição](./CONTRIBUTING.md)
+i-Educar junto conosco, veja o nosso [guia de contribuição](./contributing.md)
 onde explicamos detalhadamente como trabalhamos e de que formas você pode nos
 ajudar a alcançar nossos objetivos.
 
@@ -258,7 +258,7 @@ encontram em `storage/logs` para determinar suas causas. Não hesite em
 
 O i-Educar possui um pacote de mais de 40 relatórios.
 
-Para instalar o pacote de relatórios visite o repositório do projeto 
+Para instalar o pacote de relatórios visite o repositório do projeto
 [https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
 e siga as instruções de instalação.
 
