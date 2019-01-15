@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::redirect('/', 'intranet/index.php');
-Route::any('/module/{uri}', 'LegacyController@module')->where('uri', '.*');
-Route::any('/modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
-Route::any('/intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
+Route::redirect('intranet', 'index.php');
+
+Route::any('module/{module}/{path}/{resource}', 'LegacyModuleRewriteController@rewrite')
+    ->where('module', '.*')
+    ->where('path', 'imagens|scripts|styles')
+    ->where('resource', '.*');
+
+Route::any('module/{uri}', 'LegacyController@module')->where('uri', '.*');
+Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
+Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
