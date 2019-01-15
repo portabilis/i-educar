@@ -7,6 +7,7 @@ use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -205,9 +206,15 @@ class LegacyController extends Controller
 
         ob_end_clean();
 
-        return new Response(
-            $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
-        );
+        $headers = $this->getHttpHeaders();
+
+        if ($this->isJsonResponse($headers)) {
+            return new Response(
+                $content, $this->getHttpStatusCode(), $headers
+            );
+        }
+
+        return view('legacy.body', ['body' => $content]);
     }
 
     /**
@@ -277,5 +284,16 @@ class LegacyController extends Controller
     public function modules($uri)
     {
         return $this->requireFileFromLegacy('modules/' . $uri);
+    }
+
+    /**
+     * Checks if the content type has been set to json
+     *
+     * @param array $headers
+     * @return bool
+     */
+    private function isJsonResponse(array $headers)
+    {
+        return Str::contains($headers['Content-type'], 'application/json');
     }
 }

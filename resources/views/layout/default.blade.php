@@ -191,14 +191,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <table class='tablelistagem' width='100%' border='0' cellpadding='2'
-                                           cellspacing='1'>
-                                        <tr>
-                                            <td class='formdktd' colspan='2' height='24'>
-                                                @yield('content')
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    @yield('content')
                                 </td>
                             </tr>
                         </table>
