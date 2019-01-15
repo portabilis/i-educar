@@ -25,7 +25,6 @@ use PHPUnit\Framework\TestCase;
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     CoreExt_Locale
  * @subpackage  UnitTests
  * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
@@ -112,9 +111,6 @@ class CoreExt_SessionTest extends TestCase
     $this->assertEquals(1, count($this->_session));
   }
 
-  /**
-   * @backupGlobals enabled
-   */
   public function testOverload()
   {
     $this->assertNull($this->_session->foo, '->foo is not null');
