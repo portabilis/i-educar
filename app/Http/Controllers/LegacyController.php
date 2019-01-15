@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Str;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -294,10 +294,6 @@ class LegacyController extends Controller
      */
     private function isJsonResponse(array $headers)
     {
-        if (Str::contains($headers['Content-type'], 'application/json')) {
-            return true;
-        }
-
-        return false;
+        return Str::contains($headers['Content-type'], 'application/json');
     }
 }
