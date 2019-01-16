@@ -33,6 +33,7 @@ global $coreExt;
 $coreExt = [];
 $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
 
+setlocale(LC_ALL, 'en_US.UTF-8');
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 
 $tenantEnv = $_SERVER['HTTP_HOST'] ?? null;
