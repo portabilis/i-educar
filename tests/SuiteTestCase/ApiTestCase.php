@@ -7,6 +7,11 @@ use Tests\TestCase;
 
 class ApiTestCase extends TestCase
 {
+    /**
+     * SQL files to rollback.
+     *
+     * @var array
+     */
     private $tearDownFiles = [];
     /**
      * Return access key for API use.
@@ -55,6 +60,9 @@ class ApiTestCase extends TestCase
         $this->tearDownFiles[] = $filename;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function tearDown()
     {
         foreach ($this->tearDownFiles as $key => $filename) {

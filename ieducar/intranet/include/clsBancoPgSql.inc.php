@@ -30,7 +30,6 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Events\StatementPrepared;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -860,7 +859,13 @@ abstract class clsBancoSQL_
       return $this->bConsulta_ID;
   }
 
-  private function run($query, $params = [])
+  /**
+   * Método mockavel para execução de query
+   *
+   * @param string $query
+   * @param array $params
+   */
+  private function run(string $query, $params = [])
   {
       if(is_numeric(key($params))) {
           $params =  array_combine(range('a', chr(96+count($params))), $params);
