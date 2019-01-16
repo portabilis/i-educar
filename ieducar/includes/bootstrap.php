@@ -35,11 +35,12 @@ $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_
 
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 
-$tenantEnv = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
+$tenantEnv = $_SERVER['HTTP_HOST'] ?? null;
+$devEnv = ['development', 'local'];
 
 if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
     $coreExt['Config']->changeEnviroment($tenantEnv);
-} else if (!$coreExt['Config']->hasEnviromentSection($tenantEnv) && CORE_EXT_CONFIGURATION_ENV !== "development"){
+} else if (!in_array(CORE_EXT_CONFIGURATION_ENV, $devEnv)){
     $coreExt['Config']->app->ambiente_inexistente = true;
 }
 

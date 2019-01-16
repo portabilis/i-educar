@@ -24,12 +24,13 @@ class LegacyLinkCommand extends Command
      * Create a symbol link for $path and show a info message.
      *
      * @param string $path
+     * @param string $target
      *
      * @return void
      */
-    private function createSymbolLink($path)
+    private function createSymbolLink($path, $target = '../')
     {
-        $legacy = '../' . config('legacy.path') . '/' . $path;
+        $legacy = $target . config('legacy.path') . '/' . $path;
         $public = public_path($path);
 
         if (is_link($public)) {
@@ -48,10 +49,26 @@ class LegacyLinkCommand extends Command
      */
     public function handle()
     {
-        $paths = ['intranet', 'module', 'modules'];
+        $links = [
+            '../../' => [
+                'intranet/arquivos',
+                'intranet/downloads',
+                'intranet/fonts',
+                'intranet/fotos',
+                'intranet/imagens',
+                'intranet/scripts',
+                'intranet/static',
+                'intranet/styles',
+            ],
+            '../' => [
+                'modules',
+            ],
+        ];
 
-        foreach ($paths as $path) {
-            $this->createSymbolLink($path);
+        foreach ($links as $target => $paths) {
+            foreach ($paths as $path) {
+                $this->createSymbolLink($path, $target);
+            }
         }
     }
 }
