@@ -172,7 +172,7 @@ return [
         App\Providers\EventServiceProvider::class,
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        iEducar\Providers\Postgres\DatabaseServiceProvider::class,
+        App\Providers\Postgres\DatabaseServiceProvider::class,
 
     ],
 

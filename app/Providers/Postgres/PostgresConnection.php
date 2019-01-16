@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\Providers\Postgres;
+namespace App\Providers\Postgres;
 
 use Illuminate\Database\PostgresConnection as ParentPostgresConnection;
 
