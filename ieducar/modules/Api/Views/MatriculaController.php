@@ -266,7 +266,7 @@ class MatriculaController extends ApiCoreController
                                             matricula_turma.transferido AND
                                             matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
                                        WHEN matricula.aprovado = 3 AND
-                                            matricula_turma.remanejado
+                                            matricula_turma.remanejado AND
                                             matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
                                        ELSE FALSE
                                    END AS apresentar_fora_da_data
