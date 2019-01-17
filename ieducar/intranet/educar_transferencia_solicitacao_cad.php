@@ -70,6 +70,11 @@ class indice extends clsCadastro
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
         $cancela = $_GET['cancela'];
+        $ano = $_GET['ano'];
+        $escolaId = $_GET['escola'];
+        $cursoId = $_GET['curso'];
+        $serieId = $_GET['serie'];
+        $turmaId = $_GET['turma'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
@@ -83,6 +88,26 @@ class indice extends clsCadastro
             if ($_GET['reabrir_matricula']) {
                 $this->reabrirMatricula($this->ref_cod_matricula);
             }
+
+            $instituicaoId = (new clsBanco)->unicoCampo('select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;');
+
+            $fakeRequest = new CoreExt_Controller_Request(
+               ['data' => [
+                    'oper' => 'post',
+                    'resource' => 'promocao',
+                    'matricula_id' => $this->ref_cod_matricula,
+                    'instituicao_id' => $instituicaoId,
+                    'ano' => $ano,
+                    'escola' => $escolaId,
+                    'curso' => $cursoId,
+                    'serie' => $serieId,
+                    'turma' => $turmaId
+                ]
+            ]);
+
+            $promocaoApi = new PromocaoApiController();
+            $promocaoApi->setRequest($fakeRequest);
+            $promocaoApi->Gerar();
 
             $this->Excluir();
         }
@@ -124,19 +149,6 @@ class indice extends clsCadastro
         $detEnturmacao = $detEnturmacao['data_enturmacao'];
         $enturmacao->data_enturmacao = $detEnturmacao;
         $enturmacao->edita();
-
-        $instituicaoId = (new clsBanco)->unicoCampo('select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;');
-
-        $fakeRequest = new CoreExt_Controller_Request(['data' => [
-            'oper' => 'post',
-            'resource' => 'promocao',
-            'instituicao_id' => $instituicaoId,
-            'matricula_id' => $matriculaId
-        ]]);
-
-        $promocaoApi = new PromocaoApiController();
-        $promocaoApi->setRequest($fakeRequest);
-        $promocaoApi->Gerar();
     }
 
     public function Gerar()

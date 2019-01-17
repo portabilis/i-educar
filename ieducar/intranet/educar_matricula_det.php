@@ -125,11 +125,13 @@ class indice extends clsDetalhe
     // Curso
     $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
     $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
+    $curso_id = $registro['ref_cod_curso'];
     $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
     // Série
     $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
     $det_serie = $obj_serie->detalhe();
+    $serie_id = $registro['ref_ref_cod_serie'];
     $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
     // Nome da instituição
@@ -137,9 +139,10 @@ class indice extends clsDetalhe
     $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-    // Nome da escola
+    // Escola
     $obj_ref_cod_escola = new clsPmieducarEscola( $registro['ref_ref_cod_escola'] );
     $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+    $escola_id = $registro['ref_ref_cod_escola'];
     $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
     // Nome do aluno
@@ -189,6 +192,7 @@ class indice extends clsDetalhe
     foreach ($enturmacoes as $enturmacao) {
       $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
       $turma         = $turma->detalhe();
+      $turma_id = $enturmacao['ref_cod_turma'];
       $nomesTurmas[] = $turma['nm_turma'];
       $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
       if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
@@ -353,11 +357,11 @@ class indice extends clsDetalhe
       if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
         if (is_array($lst_transferencia) && isset($data_transferencia)) {
           $this->array_botao[]            = 'Cancelar solicitação transferência';
-          $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true\")";
+          $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
         }
         elseif ($registro['ref_ref_cod_serie']) {
             $this->array_botao[]            = _cl('matricula.detalhe.solicitar_transferencia');
-            $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+            $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
         }
 
         if ($registro['aprovado'] == 3 &&
@@ -379,13 +383,13 @@ class indice extends clsDetalhe
         $this->array_botao[] = 'Cancelar transferência';
 
         # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
-        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
+        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
       }
       elseif($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
         $this->array_botao[] = 'Cancelar transferência';
 
         # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
-        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
+        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
       }
 
       if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
