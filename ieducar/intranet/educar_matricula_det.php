@@ -139,7 +139,7 @@ class indice extends clsDetalhe
     $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-    // Eescola
+    // Escola
     $obj_ref_cod_escola = new clsPmieducarEscola( $registro['ref_ref_cod_escola'] );
     $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
     $escola_id = $registro['ref_ref_cod_escola'];
