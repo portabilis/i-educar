@@ -475,6 +475,11 @@ class EditController extends Core_Controller_Page_EditController
             }
         }
 
+        if (!$this->validatesRange($this->valor_minimo, $this->valor_maximo)) {
+            $this->mensagem = 'Erro no formulário. Números preenchidos fora do alcance.';
+            return false;
+        }
+
         // Se existir, chama _save() do parent
         if (!isset($entity)) {
             return parent::_save();
@@ -538,6 +543,27 @@ class EditController extends Core_Controller_Page_EditController
 
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    protected function validatesRange($minValues = [], $maxValues = []) {
+        $values = array_combine($minValues, $maxValues);
+        ksort($values);
+        $prevMax = -1;
+
+        foreach ($values as $minValue => $maxValue) {
+
+            if ($minValue > $maxValue) {
+                return false;
+            }
+
+            if ($minValue <= $prevMax) {
+                return false;
+            }
+
+            $prevMax = $maxValue;
         }
 
         return true;
