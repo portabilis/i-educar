@@ -19,6 +19,6 @@ class LoadLegacyConfig extends ServiceProvider
 
         $laravelLegacyConfig = config()->get('legacy');
 
-        config()->set(['legacy' => array_merge($configObject->getArrayConfig(), $laravelLegacyConfig)]);
+        config()->set(['legacy' => array_merge($laravelLegacyConfig, $configObject->getArrayConfig())]);
     }
 }

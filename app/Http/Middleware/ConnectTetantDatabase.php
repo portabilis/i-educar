@@ -26,7 +26,7 @@ class ConnectTetantDatabase
         }
 
         DB::purge('pgsql');
-        config('database.connections.pgsql.database', $legacyConfigDatabase);
+        config(['database.connections.pgsql.database' => $legacyConfigDatabase]);
         DB::reconnect('pgsql');
         Schema::connection('pgsql')->getConnection()->reconnect();
 
