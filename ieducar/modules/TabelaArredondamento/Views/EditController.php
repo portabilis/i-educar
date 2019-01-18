@@ -549,6 +549,12 @@ class EditController extends Core_Controller_Page_EditController
     }
 
     protected function validatesRange($minValues = [], $maxValues = []) {
+        $repeatedValues = count($minValues) !== count(array_unique($minValues));
+
+        if ($repeatedValues) {
+            return false;
+        }
+
         $values = array_combine($minValues, $maxValues);
         ksort($values);
         $prevMax = -1;
