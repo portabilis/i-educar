@@ -72,7 +72,8 @@
         "laravel": {
             "dont-discover": [
                 "laravel/dusk",
-                "laravel/telescope"
+                "laravel/telescope",
+                "barryvdh/laravel-debugbar"
             ]
         }
     },

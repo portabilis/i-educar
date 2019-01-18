@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\CacheManager;
+use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
 use iEducar\Support\Navigation\TopMenu;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
@@ -100,6 +101,7 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
+            $this->app->register(DebugbarServiceProvider::class);
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);

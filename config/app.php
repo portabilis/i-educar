@@ -175,7 +175,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\LoadLegacyConfig::class,
 
-        Barryvdh\Debugbar\ServiceProvider::class,
         Tooleks\LaravelAssetVersion\Providers\AssetServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
     ],
