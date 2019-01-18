@@ -74,8 +74,13 @@ class TopMenu
     /**
      * @param User $user
      */
-    public function getTopMenuArray(User $user)
+    public function getTopMenuArray($userId)
     {
+        $user = User::find($userId);
+        if (empty($user)) {
+            return;
+        }
+
         $cacheKey = $this->getCacheKey();
 
         $cache = Cache::tags(['topmenu', config('app.name')]);
