@@ -174,10 +174,15 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     'parecerDescritivo'    => RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM,
     'media'                => 6,
     'tabelaArredondamento' => NULL,
+    'tabelaArredondamentoConceitual' => NULL,
     'formulaMedia'         => NULL,
     'formulaRecuperacao'   => NULL,
-    'porcentagemPresenca'  => 75
+    'porcentagemPresenca'  => 75.0,
+    'notaMaximaExameFinal' => 10,
+    'mediaRecuperacao'     => 4.0
   );
+
+  protected $_componenteCurricularMapperMock = NULL;
 
   protected $_componenteDataMapperMock = NULL;
 
@@ -219,13 +224,13 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     // Configura atributos de RegraAvaliacao_Model_Regra
     $this->_setRegraOption('formulaMedia', $this->_setUpFormulaMedia())
-         ->_setRegraOption('formulaRecuperacao', $this->_setUpFormulaRecuperacao())
-         ->_setRegraOption('tabelaArredondamento', $this->_setUpTabelaArredondamento());
+        ->_setRegraOption('formulaRecuperacao', $this->_setUpFormulaRecuperacao())
+        ->_setRegraOption('tabelaArredondamento', $this->_setUpTabelaArredondamento())
+        ->_setRegraOption('tabelaArredondamentoConceitual', $this->_setUpTabelaArredondamentoConceitual());
   }
 
   protected function _getServiceInstance()
   {
-      $this->markTestSkipped('must be revisited.');
     // Configura mappers das dependências de Avalilacao_Service_Boletim
     $mappers = array(
       'RegraDataMapper'                     => $this->_getRegraDataMapperMock(),
@@ -451,7 +456,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   protected function _getEtapasPossiveis()
   {
     $etapas = count($this->_getConfigOptions('anoLetivoModulo'));
-    return array_merge(range(1, $etapas, 1), array('Rc'));
+    return array_merge(range(1, $etapas, 1), array('Rc', 'An'));
   }
 
   /**
@@ -459,7 +464,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
    */
   protected function _getComponentesTurma()
   {
-    return array();
+    return array([]);
   }
 
   /**
@@ -480,7 +485,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
    */
   protected function _getDispensaDisciplina()
   {
-    return array();
+    return array([
+        'ref_cod_disciplina' => 1,
+        'etapa'              => null
+    ]);
   }
 
   /**
@@ -572,7 +580,57 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       $mock, NULL, TRUE
     );
 
+    $this->mockDbPreparedQuery([[
+        'serie_regra_avaliacao_id' => 1,
+        'ref_ref_cod_escola' => 1,
+        'ref_cod_curso'      => 1,
+        'ref_cod_turma'      => 1,
+        'ref_cod_aluno'      => 1,
+        'ref_ref_cod_serie'  => 1,
+        'ano'                => 2009,
+        'serie_carga_horaria'=> 800,
+        'curso_hora_falta'   => 250 / 300,
+        'escola_utiliza_regra_diferenciada' => null,
+        'dependencia'        => null,
+        'aprovado'           => 1,
+        'curso_carga_horaria'=> 7200,
+        'serie_dias_letivos' => 960,
+        'cod_matricula'      => 1,
+    ]]);
+
     return $this;
+  }
+
+  public function mockDbPreparedQuery($return)
+  {
+      Portabilis_Utils_Database::$_db = $this->getDbMock();
+
+      Portabilis_Utils_Database::$_db->expects($this->any())
+          ->method('execPreparedQuery')
+          ->will($this->returnValue(true));
+
+      $returnCallback = function($reset = false) use ($return) {
+          static $total = 0;
+          if($reset) {
+              $total = 0;
+              return false;
+          }
+          if($total == count($return)-1) {
+              return ++$total;
+          }
+          return false;
+      };
+      $returnCallback(true);
+      Portabilis_Utils_Database::$_db->expects($this->any())
+          ->method('ProximoRegistro')
+          ->will($this->returnCallback($returnCallback));
+
+      Portabilis_Utils_Database::$_db->expects($this->any())
+          ->method('Tupla')
+          ->will($this->returnCallback(function() use ($return) {
+              static $total = 0;
+              return $return[$total++];
+          }));
   }
 
   /**
@@ -639,7 +697,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     $mock->expects($this->any())
          ->method('lista')
-         ->with(1, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1)
+         ->with(1, 2009, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1)
          ->will($this->returnValue($this->_getConfigOptions('escolaAnoLetivo')));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarEscolaAnoLetivo',
@@ -710,8 +768,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     $mock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
 
     $mock->expects($this->any())
-         ->method('lista')
-         ->will($this->returnValue($this->_getConfigOptions('dispensaDisciplina')));
+        ->method('disciplinaDispensadaEtapa')
+        ->will($this->returnValue($this->_getConfigOptions('dispensaDisciplina')));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarDispensaDisciplina',
       $mock, NULL, TRUE
@@ -798,6 +856,49 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
       'formulaMedia' => '(Se / Et * 0.6) + (Rc * 0.4)',
       'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO
     ));
+  }
+
+  /**
+   * @return TabelaArredondamento_Model_Tabela
+   */
+  protected function _setUpTabelaArredondamentoConceitual()
+  {
+      // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
+      $data = array(
+          'tabelaArredondamento' => 2,
+          'nome'                 => NULL,
+          'descricao'            => NULL,
+          'valorMinimo'          => -1,
+          'valorMaximo'          => 0
+      );
+
+      $tabelaValores = array();
+
+      for ($i = 0; $i <= 10; $i++) {
+          $data['nome'] = $i;
+          $data['valorMinimo'] += 1;
+          $data['valorMaximo'] += 1;
+
+          if ($i == 10) {
+              $data['valorMinimo'] = 9;
+              $data['valorMaximo'] = 10;
+          }
+
+          $tabelaValores[$i] = new TabelaArredondamento_Model_TabelaValor($data);
+      }
+
+      $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
+      $mock->expects($this->any())
+          ->method('findAll')
+          ->will($this->returnValue($tabelaValores));
+
+      $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
+      $tabelaDataMapper->setTabelaValorDataMapper($mock);
+
+      $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Numéricas'));
+      $tabela->setDataMapper($tabelaDataMapper);
+
+      return $tabela;
   }
 
   /**

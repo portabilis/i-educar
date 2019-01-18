@@ -233,9 +233,6 @@ class CoreExt_DataMapperTest extends UnitBaseTest
     $this->assertEquals($expected, $found);
   }
 
-  /**
-   * @group CoreExt_Locale
-   */
   public function testRecuperaRegistroRetornaFloat()
   {
     $expectedOptions = array(
@@ -280,14 +277,20 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testInsereNovoRegistro()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+      $this->_db->expects($this->any())
          ->method('Consulta')
          ->will($this->returnValue(TRUE));
+
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
 
     $entity = new CoreExt_EntityStub();
     $entity->nome = 'Fernando Nascimento';
     $entity->estadoCivil = 'casado';
+    $entity->markOld();
+
+    $_SESSION['id_pessoa'] = 1;
 
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
@@ -295,15 +298,19 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testInsereNovoRegistroComChaveComposta()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
          ->will($this->returnValue(TRUE));
+
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
 
     $entity = new CoreExt_EntityCompoundStub();
     $entity->pessoa = 1;
     $entity->curso  = 1;
     $entity->confirmado = FALSE;
+    $entity->markOld();
 
     $mapper = new CoreExt_EntityCompoundDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
@@ -311,10 +318,19 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testInsereNovoRegistroComChaveCompostaComUmaNulaLancaExcecao()
   {
-      $this->markTestSkipped('must be revisited.');
     $entity = new CoreExt_EntityCompoundStub();
     $entity->pessoa = 1;
     $entity->confirmado = FALSE;
+    $entity->markOld();
+
+    
+    $this->_db->expects($this->any())
+        ->method('Consulta')
+        ->will($this->returnValue(TRUE));
+
+    $this->_db->expects($this->any())
+        ->method('Tupla')
+        ->will($this->returnValue([]));
 
     $mapper = new CoreExt_EntityCompoundDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
@@ -322,15 +338,19 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testAtualizaRegistro()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
          ->will($this->returnValue(TRUE));
+
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
 
     $entity = new CoreExt_EntityStub();
     $entity->id = 1;
     $entity->nome = 'Fernando Nascimento';
     $entity->estadoCivil = 'casado';
+    $entity->markOld();
 
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
@@ -338,15 +358,19 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testAtualizaRegistroComChaveComposta()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
          ->will($this->returnValue(TRUE));
+
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
 
     $entity = new CoreExt_EntityCompoundStub();
     $entity->pessoa = 1;
     $entity->curso  = 1;
     $entity->confirmado = TRUE;
+    $entity->markOld();
 
     $mapper = new CoreExt_EntityCompoundDataMapperStub($this->_db);
     $this->assertTrue($mapper->save($entity));
@@ -354,13 +378,15 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testApagaRegistroPassandoInstanciaDeEntity()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
-         ->will($this->returnValue(TRUE));
+         ->will($this->onConsecutiveCalls(true));
 
-    $entity = new CoreExt_EntityStub();
-    $entity->id = 1;
+     $this->_db->expects($this->any())
+         ->method('Tupla')
+         ->will($this->returnValue([]));
+
+     $entity = new CoreExt_EntityStub();
 
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
     $this->assertTrue($mapper->delete($entity));
@@ -368,12 +394,13 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   public function testApagaRegistroPassandoValorInteiro()
   {
-      $this->markTestSkipped('must be revisited.');
-    $this->_db->expects($this->once())
+    $this->_db->expects($this->any())
          ->method('Consulta')
-         ->will($this->returnValue(TRUE));
+         ->will($this->returnValue(true));
+
+    $entity = new CoreExt_EntityStub();
 
     $mapper = new CoreExt_EntityDataMapperStub($this->_db);
-    $this->assertTrue($mapper->delete(1));
+    $this->assertTrue($mapper->delete($entity));
   }
 }

@@ -15,6 +15,11 @@ class Breadcrumb
     private $pages = [];
 
     /**
+     * @var string
+     */
+    private $legacy;
+
+    /**
      * Define a página atual e as páginas até ela.
      *
      * @param string $currentPage
@@ -81,5 +86,21 @@ class Breadcrumb
     public function hasPages()
     {
         return count($this->pages()) || strlen($this->currentPage());
+    }
+
+    /**
+     * @return string
+     */
+    public function getLegacy()
+    {
+        return $this->legacy;
+    }
+
+    /**
+     * @param string $legacy
+     */
+    public function setLegacy(string $legacy)
+    {
+        $this->legacy = $legacy;
     }
 }
