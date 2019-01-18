@@ -98,11 +98,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     protected static $_classStorage = [];
 
     /**
-     * @var CoreExt_Locale
-     */
-    protected $_locale = null;
-
-    /**
      * Construtor.
      *
      * @param array $options Array associativo para inicializar os valores dos
@@ -701,35 +696,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     }
 
     /**
-     * Setter.
-     *
-     * @param CoreExt_Locale $instance
-     *
-     * @return CoreExt_Entity
-     */
-    public function setLocale(CoreExt_Locale $instance)
-    {
-        $this->_locale = $instance;
-
-        return $this;
-    }
-
-    /**
-     * Getter.
-     *
-     * @return CoreExt_Locale
-     */
-    public function getLocale()
-    {
-        if (is_null($this->_locale)) {
-            require_once 'CoreExt/Locale.php';
-            $this->setLocale(CoreExt_Locale::getInstance());
-        }
-
-        return $this->_locale;
-    }
-
-    /**
      * Verifica se a propriedade informada por $key é válida, executando o
      * CoreExt_Validate_Interface relacionado.
      *
@@ -1119,7 +1085,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
                 break;
 
             case 'numeric':
-                $return = $this->getFloat($cmpVal);
+                $return = floatval($cmpVal);
                 break;
 
             case 'string':
@@ -1128,28 +1094,6 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         }
 
         return $return;
-    }
-
-    /**
-     * Retorna um número float, verificando o locale e substituindo o separador
-     * decimal pelo separador compatível com o separador padrão do PHP ("." ponto).
-     *
-     * @param string $value
-     *
-     * @return float
-     */
-    public function getFloat($value)
-    {
-        $locale = $this->getLocale();
-        $decimalPoint = $locale->getCultureInfo('decimal_point');
-
-        // Verifica se possui o ponto decimal do locale e substitui para o
-        // padrão do locale en_US (ponto ".")
-        if (false !== strstr($value, $decimalPoint)) {
-            $value = strtr($value, $decimalPoint, '.');
-        }
-
-        return floatval($value);
     }
 
     /**

@@ -60,10 +60,12 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     // Configura a expectativa
     $expected->situacao            = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     $expected->porcentagemPresenca = 100;
+    $expected->diasLetivos         = 960;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   public function testSituacaoFaltasAprovado()
@@ -71,11 +73,6 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(
-      new Avaliacao_Model_FaltaGeral(array(
-        'id'         => 1,
-        'quantidade' => 5,
-        'etapa'      => 1
-      )),
       new Avaliacao_Model_FaltaGeral(array(
         'id'         => 2,
         'quantidade' => 5,
@@ -104,10 +101,12 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos         = 960;
 
     $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    $this->assertEquals($expected, $service->getSituacaoFaltas());
+    $this->assertEquals($expected, $actual);
   }
 
   public function testSituacaoFaltasReprovado()
@@ -148,6 +147,7 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
     $expected->horasFaltas         = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
     $expected->porcentagemFalta    = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
     $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos         = 960;
 
     $service = $this->_getServiceInstance();
 

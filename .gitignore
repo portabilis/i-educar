@@ -1,9 +1,6 @@
 /database/backups
 /database/data
 /database/migrations/extras
-/legacy
-/public/intranet
-/public/module
 /public/modules
 /vendor
 /ieducar-*

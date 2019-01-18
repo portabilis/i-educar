@@ -371,11 +371,8 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
-        $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-
+        $this->carga_horaria = (int) $this->carga_horaria;
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
-
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
         $obj = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia), $this->posicao);
@@ -424,9 +421,7 @@ class indice extends clsCadastro
         $historicoEscolar = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial);
         $historicoEscolarDetalheAntes = $historicoEscolar->detalhe();
 
-        $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
-        $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-
+        $this->carga_horaria = (int) $this->carga_horaria;
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
 
         if ($this->cb_faltas_globalizadas != 'on') {

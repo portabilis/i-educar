@@ -544,25 +544,22 @@ class clsPmieducarSequenciaSerie
     }
 
     /**
-     * Exclui um registro
+     * Exclui uma sequência de série.
      *
      * @return bool
+     *
+     * @throws Exception
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->ref_usuario_exc ) )
-        {
+        if (is_numeric($this->ref_serie_origem) && is_numeric($this->ref_serie_destino)) {
 
-        /*
-            delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_serie_origem = '{$this->ref_serie_origem}' AND ref_serie_destino = '{$this->ref_serie_destino}'" );
-        return true;
-        */
+            $db = new clsBanco();
+            $result = $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_serie_origem = '{$this->ref_serie_origem}' AND ref_serie_destino = '{$this->ref_serie_destino}'" );
 
-        $this->ativo = 0;
-            return $this->edita();
+            return boolval($result);
         }
+
         return false;
     }
 
