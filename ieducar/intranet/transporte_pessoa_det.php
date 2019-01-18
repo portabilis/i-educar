@@ -101,17 +101,17 @@ class indice extends clsDetalhe
     $this->addDetalhe( array("Destino", (trim($registro['nome_destino'])=='' ? $registro['nome_destino2'] : $registro['nome_destino'])) );
     $this->addDetalhe( array("Ponto de embarque", $registro['nome_ponto'] ));
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']) );
-    if($registro['turno'] == 1){
-      $nm_turno = "Matutino";
-    }else if($registro['turno'] == 2){
-      $nm_turno = "Vespertino";
-    }else if($registro['turno'] == 3){
-      $nm_turno = "Noturno";
-    }else if($registro['turno'] == 4){
-      $nm_turno = "Integral";
-    }else if($registro['turno'] == 0){
-      $nm_turno = "";
-    }
+
+    $turnos = [
+      1 => 'Matutino',
+      2 => 'Vespertino',
+      3 => 'Noturno',
+      4 => 'Integral',
+      5 => 'Matutino e vespertino',
+      6 => 'Matutino e noturno',
+      7 => 'Vespertino e noturno'
+    ];
+    $nm_turno = $turnos[$registro['turno']] ?? '';
     $this->addDetalhe( array("Turno", $nm_turno) );
     $obj_permissao = new clsPermissoes();
 
