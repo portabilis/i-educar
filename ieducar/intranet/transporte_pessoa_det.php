@@ -111,7 +111,7 @@ class indice extends clsDetalhe
       6 => 'Matutino e noturno',
       7 => 'Vespertino e noturno'
     ];
-    $nm_turno = $turnos[$registro['turno']];
+    $nm_turno = $turnos[$registro['turno']] ?? '';
     $this->addDetalhe( array("Turno", $nm_turno) );
     $obj_permissao = new clsPermissoes();
 
