@@ -254,7 +254,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     public function generate(CoreExt_Controller_Page_Interface $instance)
     {
-        header('Content-type: application/json; charset=UTF-8');
+        header('Content-Type: application/json; charset=UTF-8');
 
         try {
             if ($this->canAcceptRequest()) {
