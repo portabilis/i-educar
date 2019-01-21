@@ -35,8 +35,9 @@ matrix:
 
       before_script:
         - composer new-install
-        - ./vendor/laravel/dusk/bin/chromedriver-linux &
-        - php artisan serve &
+        - vendor/laravel/dusk/bin/chromedriver-linux 2>&1 > /dev/null &
+        - php artisan serve 2>&1 > /dev/null &
 
       script:
+        - vendor/bin/phpunit
         - php artisan dusk
