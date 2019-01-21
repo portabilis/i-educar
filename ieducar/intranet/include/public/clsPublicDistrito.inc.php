@@ -302,7 +302,7 @@ class clsPublicDistrito
 
       if (is_string($this->nome)) {
         $campos  .= "{$gruda}nome";
-        $valores .= "{$gruda}'" . addslashes($this->nome) . "'";
+        $valores .= "{$gruda}'" . pg_escape_string($this->nome) . "'";
         $gruda    = ', ';
       }
 
