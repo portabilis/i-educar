@@ -178,7 +178,7 @@ class LegacyController extends Controller
      */
     private function getHttpStatusCode()
     {
-        return http_response_code();
+        return http_response_code() ?: Response::HTTP_OK;
     }
 
     /**
