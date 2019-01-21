@@ -36,7 +36,7 @@ $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 
 $tenantEnv = $_SERVER['HTTP_HOST'] ?? null;
-$devEnv = ['development', 'local'];
+$devEnv = ['development', 'local', 'testing', 'dusk'];
 
 if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
     $coreExt['Config']->changeEnviroment($tenantEnv);
