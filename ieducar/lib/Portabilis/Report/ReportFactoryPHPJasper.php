@@ -157,7 +157,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
-        header('Content-Type: application/pdf;');
+        header('Content-type: application/pdf;');
         header('Content-Disposition: inline;');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . filesize($file));
