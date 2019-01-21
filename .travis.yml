@@ -35,7 +35,6 @@ matrix:
 
       before_script:
         - composer new-install
-        - sh -e /etc/init.d/xvfb start
         - ./vendor/laravel/dusk/bin/chromedriver-linux &
         - php artisan serve &
 
