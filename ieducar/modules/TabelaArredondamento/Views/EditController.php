@@ -547,7 +547,8 @@ class EditController extends Core_Controller_Page_EditController
         return true;
     }
 
-    protected function validatesRange($minValues = [], $maxValues = []) {
+    protected function validatesRange($minValues = [], $maxValues = [])
+    {
         $repeatedValues = count($minValues) !== count(array_unique($minValues));
 
         if ($repeatedValues) {
@@ -558,7 +559,7 @@ class EditController extends Core_Controller_Page_EditController
         ksort($values);
         $prevMax = -1;
 
-        foreach ($values as $minValue => $maxValue) {
+        foreach ($values as $minValue => $maxValue){
 
             if ($minValue > $maxValue) {
                 $this->mensagem = 'Erro no formulário. Valor mínimo não pode ser maior que valor máximo dentro do mesmo conceito.';
