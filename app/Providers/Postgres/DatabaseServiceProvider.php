@@ -2,10 +2,10 @@
 
 namespace App\Providers\Postgres;
 
-use Illuminate\Database\DatabaseServiceProvider as ParentDatabaseServiceProvider;
 use Illuminate\Database\Connectors\PostgresConnector;
+use Illuminate\Support\ServiceProvider;
 
-class DatabaseServiceProvider extends ParentDatabaseServiceProvider
+class DatabaseServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -14,9 +14,7 @@ class DatabaseServiceProvider extends ParentDatabaseServiceProvider
      */
     public function register()
     {
-        parent::register();
-        $factory = $this->app['db'];
-        $factory->extend('pgsql', function($config) {
+        $this->app['db']->extend('pgsql', function($config) {
             $connector =  new PostgresConnector();
             $pdo = $connector->connect($config);
             return new PostgresConnection($pdo, $config['database'], $config['prefix']);
