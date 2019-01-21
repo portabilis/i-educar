@@ -1,12 +1,18 @@
 matrix:
+
   include:
+
     - language: php
+
       php:
         - 7.1
         - 7.2
+
       addons:
         postgresql: 9.5
+
       env:
+        - APP_URL=http://localhost:8000
         - APP_ENV=testing
         - DB_CONNECTION=pgsql
         - DB_HOST=localhost
@@ -16,9 +22,17 @@ matrix:
         - DB_PASSWORD=
         - API_ACCESS_KEY=ieducar-access-key
         - API_SECRET_KEY=ieducar-secret-key
+        - DISPLAY=:99.0
 
       cache:
         directories:
           - $HOME/.composer/cache
+
       before_script:
         - composer new-install
+        - sh -e /etc/init.d/xvfb start
+        - ./vendor/laravel/dusk/bin/chromedriver-linux &
+        - php artisan serve &
+
+      script:
+        - php artisan dusk
