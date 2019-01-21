@@ -27,7 +27,6 @@ matrix:
         - DB_PASSWORD=
         - API_ACCESS_KEY=ieducar-access-key
         - API_SECRET_KEY=ieducar-secret-key
-        - DISPLAY=:99.0
 
       cache:
         directories:
@@ -35,8 +34,8 @@ matrix:
 
       before_script:
         - composer new-install
-        - vendor/laravel/dusk/bin/chromedriver-linux 2>&1 > /dev/null &
-        - php artisan serve 2>&1 > /dev/null &
+        - vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+        - php artisan serve > /dev/null 2>&1 &
 
       script:
         - vendor/bin/phpunit
