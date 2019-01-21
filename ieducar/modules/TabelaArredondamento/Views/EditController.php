@@ -476,7 +476,6 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         if (!$this->validatesRange($this->valor_minimo, $this->valor_maximo)) {
-            $this->mensagem = 'Erro no formulário. Números preenchidos fora do alcance.';
             return false;
         }
 
@@ -562,10 +561,12 @@ class EditController extends Core_Controller_Page_EditController
         foreach ($values as $minValue => $maxValue) {
 
             if ($minValue > $maxValue) {
+                $this->mensagem = 'Erro no formulário. Valor mínimo não pode ser maior que valor máximo dentro do mesmo conceito.';
                 return false;
             }
 
             if ($minValue <= $prevMax) {
+                $this->mensagem = 'Erro no formulário. Números preenchidos fora do alcance.';
                 return false;
             }
 
