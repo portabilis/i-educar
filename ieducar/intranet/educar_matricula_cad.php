@@ -426,7 +426,7 @@ class indice extends clsCadastro
                         $nomeSerie = '';
                     }
 
-                    $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multi seriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+                    $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
                     return false;
                 }
