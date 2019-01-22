@@ -523,10 +523,11 @@ class clsPublicMunicipio
 
             $db = new clsBanco();
             $set = "";
+            $gruda = '';
 
             if( is_string( $this->nome ) )
             {
-                $set .= "{$gruda}nome = E'" . addslashes($this->nome) . "'";
+                $set .= "{$gruda}nome = E'" . pg_escape_string($this->nome) . "'";
                 $gruda = ", ";
             }
             if( is_string( $this->sigla_uf ) )
