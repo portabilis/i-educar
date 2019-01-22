@@ -105,6 +105,11 @@ class indice extends clsCadastro
     var $anos_letivos;
     var $componente_anos_letivos;
 
+    /**
+     * @var \App\Services\EscolaSerieService
+     */
+    private $escolaSerieService;
+
     function Inicializar()
     {
         $retorno = 'Novo';
@@ -115,6 +120,8 @@ class indice extends clsCadastro
 
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
+
+        $this->escolaSerieService = app(\App\Services\EscolaSerieService::class);
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7, 'educar_escola_serie_lst.php');
@@ -163,21 +170,21 @@ class indice extends clsCadastro
             }
         }
 
-        $serie = Serie::with('regrasAvaliacao')->find($this->ref_cod_serie);
+        $regrasAvaliacao = $this->escolaSerieService->getRegrasAvaliacaoSerie($this->ref_cod_serie);
         $anosLetivos = [];
-        foreach ($serie->regrasAvaliacao as $regraAvaliacao) {
+        foreach ($regrasAvaliacao as $regraAvaliacao) {
             $anosLetivos[$regraAvaliacao->pivot->ano_letivo] = $regraAvaliacao->pivot->ano_letivo;
         }
 
         arsort($anosLetivos);
-
         $anoLetivoSelected = max($anosLetivos);
 
         if (request('ano_letivo')) {
             $anoLetivoSelected = request('ano_letivo');
         }
 
-        $this->definirComponentePorEtapa = $this->checkPermitirDefinirComponentesEtapa($anoLetivoSelected);
+        $this->definirComponentePorEtapa = $this->escolaSerieService->seriePermiteDefinirComponentesPorEtapa(
+            $this->ref_cod_serie, $anoLetivoSelected);
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $instituicao_desabilitado = true;
@@ -403,7 +410,7 @@ class indice extends clsCadastro
                 false
             );
         }
-        
+
         $this->campoRotulo("disciplinas_", "Componentes curriculares", "<div id='disciplinas'>$disciplinas</div>");
         $this->campoQuebra();
     }
@@ -638,26 +645,6 @@ class indice extends clsCadastro
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao excluir clsPmieducarEscolaSerie\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_escola_ ) && is_numeric( $this->ref_cod_serie_ ) && is_numeric( $this->pessoa_logada ) )\n-->";
         return false;
-    }
-
-    private function checkPermitirDefinirComponentesEtapa($anoLetivo)
-    {
-        $serie = Serie::with('regrasAvaliacao')
-            ->whereCodSerie($this->ref_cod_serie)
-            ->get()
-            ->first();
-
-        if (empty($serie)) {
-            return false;
-        }
-
-        $regraAvaliacao = $serie->regrasAvaliacao()
-            ->wherePivot('ano_letivo', $anoLetivo)
-            ->get()
-            ->first();
-
-
-        return $regraAvaliacao->definir_componente_etapa == 1;
     }
 
     public function __construct()

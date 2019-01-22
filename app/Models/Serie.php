@@ -28,6 +28,9 @@ class Serie extends Model
      */
     protected $fillable = [];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function regrasAvaliacao()
     {
         return $this->belongsToMany(
