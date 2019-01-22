@@ -425,7 +425,7 @@ class clsPublicBairro
       }
 
       if (is_string($this->nome)) {
-        $set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
+        $set .= "{$gruda}nome = '" . pg_escape_string($this->nome) . "'";
         $gruda = ', ';
       }
 
