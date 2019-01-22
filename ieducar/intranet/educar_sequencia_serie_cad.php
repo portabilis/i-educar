@@ -110,13 +110,13 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}" : "educar_sequencia_serie_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} sequ&ecirc;ncia de enturma&ccedil;&atilde;o"             
+             ""        => "{$nomeMenu} sequ&ecirc;ncia de enturma&ccedil;&atilde;o"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
@@ -252,10 +252,10 @@ class indice extends clsCadastro
         }
         $this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true);
         $this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino);
-        
-        
+
+
         $this->campoOculto("nivel_usuario", $nivel_usuario);
-        
+
     }
 
     function Novo()
@@ -516,11 +516,11 @@ function getSerie( tipo )
 
     var xml_curso = new ajax( getCurso );
     xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
-    
+
     $('img_serie_origem').style.display = 'none;';
     $('img_serie_destino').style.display = 'none;';
 }*/
-<?php if ($nivel_usuario_fora == 1) { ?>
+
 document.getElementById('ref_cod_instituicao').onchange = function()
 {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -537,12 +537,8 @@ document.getElementById('ref_cod_instituicao').onchange = function()
 
     var xml_curso = new ajax( getCurso );
     xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
-    
-    $('img_serie_origem').style.display = 'none;';
-    $('img_serie_destino').style.display = 'none;';
-    
+
 };
-<?php } ?>
 
 document.getElementById('ref_curso_origem').onchange = function()
 {
@@ -555,7 +551,7 @@ document.getElementById('ref_curso_origem').onchange = function()
 
     var xml_serie = new ajax( getSerie );
     xml_serie.envia( "educar_serie_xml.php?cur="+campoCurso )
-    
+
 };
 
 document.getElementById('ref_curso_destino').onchange = function()
