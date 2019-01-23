@@ -291,10 +291,10 @@ class indice extends clsCadastro
 
             if ($notasAluno && count($notasAluno)) {
                 $notaAlunoId = $notasAluno[0]->get('id');
-            }
 
-            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+            }
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             header("Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
