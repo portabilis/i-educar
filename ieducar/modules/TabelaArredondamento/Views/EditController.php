@@ -552,6 +552,7 @@ class EditController extends Core_Controller_Page_EditController
         $repeatedValues = count($minValues) !== count(array_unique($minValues));
 
         if ($repeatedValues) {
+            $this->mensagem = 'Erro no formulário. Os valores devem ser diferentes entre os tipos de conceitos.';
             return false;
         }
 
