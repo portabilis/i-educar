@@ -28,7 +28,7 @@
  * @version   $Id$
  */
 
-use App\Models\Serie;
+use App\Services\EscolaSerieService;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -106,7 +106,7 @@ class indice extends clsCadastro
     var $componente_anos_letivos;
 
     /**
-     * @var \App\Services\EscolaSerieService
+     * @var EscolaSerieService
      */
     private $escolaSerieService;
 
@@ -121,7 +121,7 @@ class indice extends clsCadastro
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $this->escolaSerieService = app(\App\Services\EscolaSerieService::class);
+        $this->escolaSerieService = app(EscolaSerieService::class);
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7, 'educar_escola_serie_lst.php');

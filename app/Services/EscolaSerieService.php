@@ -16,6 +16,11 @@ class EscolaSerieService
     public function getRegrasAvaliacaoSerie($serieId)
     {
         $serie = Serie::with('regrasAvaliacao')->find($serieId);
+
+        if (empty($serie)) {
+            return [];
+        }
+
         return $serie->regrasAvaliacao;
     }
 
