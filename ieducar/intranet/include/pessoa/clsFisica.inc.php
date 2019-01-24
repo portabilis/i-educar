@@ -560,6 +560,9 @@ class clsFisica
             if ($this->sus) {
                 $set .= "$gruda sus = '{$this->sus}'";
                 $gruda = ', ';
+            } else {
+                $set .= "$gruda sus = NULL";
+                $gruda = ', ';
             }
 
             if ($this->nis_pis_pasep) {
@@ -676,7 +679,6 @@ class clsFisica
                 $detalheAntigo = $this->detalheSimples();
 
                 $detalheAntigo['cpf'] = str_pad((string)$detalheAntigo['cpf'], 11, '0', STR_PAD_LEFT);
-
                 $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'");
 
                 $detalheAtual = $this->detalheSimples();
