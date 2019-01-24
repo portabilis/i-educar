@@ -217,13 +217,13 @@ class indice extends clsCadastro
 
         if (is_null($det_matricula['data_matricula'])) {
             if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
+                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
 
                 return false;
             }
         } else {
             if (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
+                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
 
                 return false;
             }
