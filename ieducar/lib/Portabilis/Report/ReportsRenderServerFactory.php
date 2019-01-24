@@ -1,5 +1,8 @@
 <?php
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+
 require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_ReportFactory
@@ -26,6 +29,16 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
     private $token;
 
     /**
+     * @var string
+     */
+    private $logo;
+
+    /**
+     * @var array
+     */
+    private $connection;
+
+    /**
      * @inheritdoc
      */
     public function setSettings($config)
@@ -34,6 +47,13 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         $this->sourcePath = $config->report->source_path;
         $this->token = $config->report->remote_factory->token;
         $this->logo = $config->report->logo_file_name;
+        $this->connection = [
+            'host' => $config->app->database->hostname,
+            'port' => $config->app->database->port,
+            'database' => $config->app->database->dbname,
+            'username' => $config->app->database->username,
+            'password' => $config->app->database->password,
+        ];
     }
 
     /**
@@ -44,8 +64,8 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
      *
      * @return string
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
+     * @throws GuzzleException
+     * @throws Exception
      */
     public function dumps($report, $options = [])
     {
@@ -60,16 +80,27 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             $report->addArg('logo', $this->logo);
         }
 
-        $client = new \GuzzleHttp\Client([
+        $client = new Client([
             'http_errors' => false
         ]);
+
+        $params = $report->args;
+
+        if ($report->useJson()) {
+            $params['datasource'] = 'json';
+        } else {
+            $params['datasource'] = 'database';
+            $params['connection'] = 'postgresql';
+
+            $params += $this->connection;
+        }
 
         $response = $client->request('POST', $this->url, [
             'json' => [
                 'report' => $report->templateName(),
                 'url' => $this->sourcePath,
                 'data' => $report->getJsonData(),
-                'params' => $report->args,
+                'params' => $params,
             ],
             'headers' => [
                 'Accept' => 'application/json',
@@ -84,7 +115,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         }
 
         if ($json['success'] == false) {
-            throw new Exception($json['error']);
+            throw new Exception($json['error'] ?? $json['message']);
         }
 
         $report = base64_decode($json['data']['file']);
