@@ -481,7 +481,7 @@ class indice extends clsDetalhe
                 true,
                 $this->ano
             );
-        }  catch (App_Model_Exception $e) {
+        } catch (Throwable $e) {
             $this->mensagem = $e->getMessage();
             return;
         }
