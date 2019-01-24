@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -77,6 +79,7 @@ class indice extends clsCadastro
     public $andar;
     public $situacao_funcionamento;
     public $dependencia_administrativa;
+    public $orgao_vinculado_escola;
     public $latitude;
     public $longitude;
     public $regulamentacao;
@@ -393,6 +396,10 @@ class indice extends clsCadastro
 
         if (is_string($this->mantenedora_escola_privada)) {
             $this->mantenedora_escola_privada = explode(',', str_replace(array('{', "}"), '', $this->mantenedora_escola_privada));
+        }
+
+        if (is_string($this->orgao_vinculado_escola)) {
+            $this->orgao_vinculado_escola = explode(',', str_replace(array('{', "}"), '', $this->orgao_vinculado_escola));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -753,6 +760,19 @@ class indice extends clsCadastro
                 4 => 'Privada');
             $options = array('label' => 'Dependência administrativa', 'resources' => $resources, 'value' => $this->dependencia_administrativa);
             $this->inputsHelper()->select('dependencia_administrativa', $options);
+
+            $orgaos = OrgaoVinculadoEscola::getDescriptiveValues();
+            $helperOptions = ['objectName'  => 'orgao_vinculado_escola'];
+            $options = [
+                'label' => 'Órgão que a escola pública está vinculada',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->orgao_vinculado_escola,
+                    'all_values' => $orgaos
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $resources = array(0 => 'Não',
                 1 => 'Sim',
@@ -1333,6 +1353,7 @@ class indice extends clsCadastro
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
+        $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
@@ -1390,6 +1411,7 @@ class indice extends clsCadastro
                     $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
                     $obj->situacao_funcionamento = $this->situacao_funcionamento;
                     $obj->dependencia_administrativa = $this->dependencia_administrativa;
+                    $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
                     $obj->latitude = $this->latitude;
                     $obj->longitude = $this->longitude;
                     $obj->regulamentacao = $this->regulamentacao;
@@ -1563,6 +1585,7 @@ class indice extends clsCadastro
         } elseif ($this->sem_cnpj) {
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
+            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
@@ -1733,6 +1756,7 @@ class indice extends clsCadastro
             }
         }
 
+        $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
@@ -1762,6 +1786,7 @@ class indice extends clsCadastro
         if ($this->cod_escola) {
             $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
+            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
@@ -1870,6 +1895,7 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
+            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;

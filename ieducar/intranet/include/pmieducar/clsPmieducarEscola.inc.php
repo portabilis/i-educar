@@ -155,6 +155,7 @@ class clsPmieducarEscola
   var $conveniada_com_poder_publico;
   var $mantenedora_escola_privada;
   var $cnpj_mantenedora_principal;
+  var $orgao_vinculado_escola;
   var $codUsuario;
 
   /**
@@ -240,7 +241,7 @@ class clsPmieducarEscola
           e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
           e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
           e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
-          e.email_gestor
+          e.email_gestor, e.orgao_vinculado_escola
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -461,6 +462,13 @@ class clsPmieducarEscola
         $valores .= "{$gruda}'{$this->dependencia_administrativa}'";
         $gruda = ", ";
       }
+
+      if (is_string($this->orgao_vinculado_escola)) {
+        $campos .= "{$gruda}orgao_vinculado_escola";
+        $valores .= "{$gruda}'{{". $this->orgao_vinculado_escola . "}}'";
+        $gruda = ", ";
+      }
+
 
       if ($this->latitude) {
         $campos .= "{$gruda}latitude";
@@ -1123,6 +1131,14 @@ class clsPmieducarEscola
 
       if (is_numeric($this->dependencia_administrativa)) {
         $set .= "{$gruda}dependencia_administrativa = '{$this->dependencia_administrativa}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->orgao_vinculado_escola)) {
+        $set .= "{$gruda}orgao_vinculado_escola = '{{$this->orgao_vinculado_escola}}'";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}orgao_vinculado_escola = null";
         $gruda = ", ";
       }
 
