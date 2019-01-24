@@ -178,6 +178,18 @@ $j('#computadores').change(
   }
 ).trigger('change');
 
+
+
+function habilitaCampoOrgaoVinculadoEscola() {
+  if ($j('#dependencia_administrativa').val() != 4) {
+    $j("#orgao_vinculado_escola").prop('disabled', false);
+    $j("#orgao_vinculado_escola").trigger("chosen:updated");
+  } else {
+    $j("#orgao_vinculado_escola").prop('disabled', true);
+    $j("#orgao_vinculado_escola").trigger("chosen:updated");
+  }
+}
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
@@ -340,7 +352,15 @@ $j(document).ready(function() {
     }
   });
 
-  $j('#dependencia_administrativa').on('change', verificaCamposDepAdm);
+  $j('#dependencia_administrativa').change(
+    function (){
+      verificaCamposDepAdm();
+      habilitaCampoOrgaoVinculadoEscola();
+    }
+  );
+
+  habilitaCampoOrgaoVinculadoEscola();
+
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
   verificaCamposDepAdm();
 
