@@ -22,6 +22,7 @@ class EscolaSerieServiceTest extends TestCase
         parent::setUp();
         $this->service = app(EscolaSerieService::class);
         $this->disableForeignKeys();
+        Serie::query()->truncate();
     }
 
     public function tearDown()
