@@ -15,7 +15,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
         $this->processoAp = "561";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 
@@ -181,14 +180,11 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
-        $this->cod_escola = $_GET["cod_escola"];
+        $this->cod_escola = $this->getQueryString('cod_escola');
 
         $this->sem_cnpj = false;
 
@@ -400,14 +396,8 @@ class indice extends clsCadastro
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "{$nomeMenu} escola",
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
         $this->nome_url_cancelar = "Cancelar";
         return $retorno;
     }
@@ -1341,10 +1331,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
@@ -1719,10 +1705,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
@@ -2114,10 +2096,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
         $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
