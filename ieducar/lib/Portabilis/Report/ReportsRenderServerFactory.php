@@ -95,11 +95,15 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             $params += $this->connection;
         }
 
+        $templateName = $report->templateName();
+        $url = $this->sourcePath;
+        $data = $report->getJsonData();
+
         $response = $client->request('POST', $this->url, [
             'json' => [
-                'report' => $report->templateName(),
-                'url' => $this->sourcePath,
-                'data' => $report->getJsonData(),
+                'report' => $templateName,
+                'url' => $url,
+                'data' => $data,
                 'params' => $params,
             ],
             'headers' => [
