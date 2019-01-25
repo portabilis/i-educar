@@ -42,7 +42,7 @@ $devEnv = ['development', 'local'];
 if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
     $coreExt['Config']->changeEnviroment($tenantEnv);
 } else if (!in_array(CORE_EXT_CONFIGURATION_ENV, $devEnv)){
-    $coreExt['Config']->app->ambiente_inexistente = true;
+    $coreExt['Config']->changeEnviroment('production');
 }
 
 chdir(PROJECT_ROOT . DS . 'intranet');
