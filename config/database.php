@@ -1,6 +1,6 @@
 <?php
 
-return [
+$config = [
 
     /*
     |--------------------------------------------------------------------------
@@ -129,3 +129,24 @@ return [
     ],
 
 ];
+
+if ($databaseUrl = env('DATABASE_URL')) {
+    $database = parse_url($databaseUrl);
+
+    $default['connections']['heroku'] = [
+        'driver' => 'pgsql',
+        'host' => $database['host'],
+        'port' => $database['port'],
+        'database' => trim($database['path'], '/'),
+        'username' => $database['user'],
+        'password' => $database['pass'],
+        'charset' => 'utf8',
+        'prefix' => '',
+        'prefix_indexes' => true,
+        'schema' => 'public',
+        'sslmode' => 'prefer',
+    ];
+
+}
+
+return $database;
