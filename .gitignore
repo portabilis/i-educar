@@ -1,7 +1,6 @@
 /database/backups
 /database/data
 /database/migrations/extras
-/public/modules
 /vendor
 /ieducar-*
 ieducar-*.tar.gz
