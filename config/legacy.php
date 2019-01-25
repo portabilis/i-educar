@@ -50,5 +50,6 @@ return [
 
     'migrations' => [
         database_path('migrations/extras'),
+        database_path('migrations/legacy')
     ],
 ];
