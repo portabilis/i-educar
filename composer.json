@@ -91,7 +91,6 @@
             "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php -r \"file_exists('ieducar/configuration/ieducar.ini') || copy('ieducar/configuration/ieducar.ini.example', 'ieducar/configuration/ieducar.ini');\""
         ],
         "post-create-project-cmd": [
