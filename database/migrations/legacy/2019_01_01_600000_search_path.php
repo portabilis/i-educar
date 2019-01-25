@@ -12,9 +12,11 @@ class SearchPath extends Migration
      */
     public function up()
     {
+        $database = DB::selectOne('select current_database()')->current_database;
+
         DB::unprepared(
             '
-                ALTER DATABASE ' . env('DB_DATABASE') . ' 
+                ALTER DATABASE ' . $database . ' 
                 SET search_path = "$user", public, portal, cadastro, acesso, alimentos, consistenciacao,
                 historico, pmiacoes, pmicontrolesis, pmidrh, pmieducar, pmiotopic, urbano, modules;
             '
