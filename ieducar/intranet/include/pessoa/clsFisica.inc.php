@@ -322,7 +322,7 @@ class clsFisica
             if (is_numeric($this->ref_cod_religiao)) {
                 $campos .= ', ref_cod_religiao';
                 $valores .= ", $this->ref_cod_religiao";
-            } else {
+            } elseif ($this->ref_cod_religiao !== false) {
                 $campos .= ', ref_cod_religiao';
                 $valores .= ', NULL';
             }
@@ -578,7 +578,7 @@ class clsFisica
             if (is_numeric($this->ref_cod_religiao)) {
                 $set .= "$gruda ref_cod_religiao = {$this->ref_cod_religiao}";
                 $gruda = ', ';
-            } else {
+            } elseif ($this->ref_cod_religiao !== false) {
                 $set .= "$gruda ref_cod_religiao = NULL";
                 $gruda = ', ';
             }
