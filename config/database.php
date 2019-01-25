@@ -133,7 +133,7 @@ $config = [
 if ($databaseUrl = env('DATABASE_URL')) {
     $database = parse_url($databaseUrl);
 
-    $default['connections']['heroku'] = [
+    $config['connections']['heroku'] = [
         'driver' => 'pgsql',
         'host' => $database['host'],
         'port' => $database['port'],
@@ -149,4 +149,4 @@ if ($databaseUrl = env('DATABASE_URL')) {
 
 }
 
-return $database;
+return $config;
