@@ -33,6 +33,17 @@ global $coreExt;
 $coreExt = [];
 $coreExt['Config'] = new CoreExt_Config_Ini($configFile, CORE_EXT_CONFIGURATION_ENV);
 
+$defaultDatabase = config('database.default');
+$configDatabase = config('database.connections.' . $defaultDatabase);
+
+$coreExt['Config']->app->database->hostname = $configDatabase['host'];
+$coreExt['Config']->app->database->port = $configDatabase['port'];
+$coreExt['Config']->app->database->dbname = $configDatabase['database'];
+$coreExt['Config']->app->database->username = $configDatabase['username'];
+$coreExt['Config']->app->database->password = $configDatabase['password'];
+
+dd($coreExt['Config']->app->database);
+
 setlocale(LC_ALL, 'en_US.UTF-8');
 date_default_timezone_set($coreExt['Config']->app->locale->timezone);
 
