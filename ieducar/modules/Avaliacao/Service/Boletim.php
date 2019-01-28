@@ -1325,6 +1325,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
         break;
+      default:
+        $situacao->andamento = TRUE;
     }
 
       // seta situacao geral
