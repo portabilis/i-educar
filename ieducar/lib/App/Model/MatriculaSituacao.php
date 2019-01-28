@@ -46,4 +46,21 @@ class App_Model_MatriculaSituacao extends CoreExt_Enum
 
         return $instance[$id];
     }
+
+    /**
+     * Retorna todas as situação da matrícula consideradas "finais".
+     *
+     * @return array
+     */
+    public static function getSituacoesFinais()
+    {
+        return [
+            self::APROVADO,
+            self::REPROVADO,
+            self::APROVADO_APOS_EXAME,
+            self::APROVADO_COM_DEPENDENCIA,
+            self::APROVADO_PELO_CONSELHO,
+            self::REPROVADO_POR_FALTAS,
+        ];
+    }
 }

@@ -1310,8 +1310,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
           if ($this->getTipoNotaRegraAvaliacao() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
             // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
-            $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
-            $andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
+            $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
+            $andamento = in_array($flagSituacaoNota, $situacoesFinais) === false;
           }
 
           if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
