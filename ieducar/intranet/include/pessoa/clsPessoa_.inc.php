@@ -30,7 +30,7 @@ class clsPessoa_
         session_write_close();
 
         $this->idpes = $int_idpes;
-        $this->nome = $this->cleanUpName($str_nome);
+        $this->nome = $str_nome;
         $this->idpes_cad = $int_idpes_cad ? $int_idpes_cad : ($_SESSION['id_pessoa'] ?? null);
         $this->url = $str_url;
         $this->tipo = $int_tipo;
