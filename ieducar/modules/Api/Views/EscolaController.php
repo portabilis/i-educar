@@ -34,7 +34,7 @@ class EscolaController extends ApiCoreController
     protected function createUpdateOrDestroyEducacensoEscola($escolaId)
     {
         $dataMapper = $this->getDataMapperFor('educacenso', 'escola');
-        
+
         $result = $this->deleteEntityOf($dataMapper, $escolaId);
         if (!empty($this->getRequest()->escola_inep_id)) {
             $data = [
@@ -165,16 +165,17 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasAnoEscola($ano, $escola)
     {
-        $sql = 'SELECT data_inicio,
-                   data_fim
-              FROM pmieducar.ano_letivo_modulo
-             WHERE ref_ano = $1
-               AND ref_ref_cod_escola = $2
-          ORDER BY sequencial';
+        $sql = 'SELECT sequencial AS etapa,
+                       data_inicio,
+                       data_fim
+                  FROM pmieducar.ano_letivo_modulo
+                 WHERE ref_ano = $1
+                   AND ref_ref_cod_escola = $2
+              ORDER BY sequencial';
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql, [$ano, $escola]);
-        $attrs = ['data_inicio', 'data_fim'];
+        $attrs = ['etapa', 'data_inicio', 'data_fim'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs);
 
         return ['etapas' => $etapas];
@@ -203,16 +204,20 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasTurma($ano, $escola, $turma)
     {
-        $sql_etapas = 'SELECT tm.data_inicio,
-                   tm.data_fim
-              FROM pmieducar.turma_modulo tm
-              INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
-            WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and tm.ref_cod_turma = $3
-          ORDER BY tm.ref_cod_turma';
+        $sql_etapas = 'SELECT tm.sequencial AS etapa,
+                              tm.data_inicio,
+                              tm.data_fim
+                         FROM pmieducar.turma_modulo AS tm
+                   INNER JOIN pmieducar.turma AS t
+                           ON tm.ref_cod_turma = t.cod_turma
+                        WHERE t.ano = $1
+                          AND t.ref_ref_cod_escola = $2
+                          AND tm.ref_cod_turma = $3
+                     ORDER BY tm.ref_cod_turma, tm.sequencial';
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql_etapas, [$ano, $escola, $turma]);
-        $attrs_etapas= ['data_inicio', 'data_fim'];
+        $attrs_etapas= ['etapa', 'data_inicio', 'data_fim'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs_etapas);
 
         return ['etapas' => $etapas];
