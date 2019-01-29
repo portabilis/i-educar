@@ -107,7 +107,15 @@ class indice extends clsCadastro
 
             $promocaoApi = new PromocaoApiController();
             $promocaoApi->setRequest($fakeRequest);
-            $promocaoApi->Gerar();
+
+            try {
+                $promocaoApi->Gerar();
+            } catch (CoreExt_Exception $exception) {
+                // Quando o aluno não possuir enturmação na escola que está
+                // cancelando a matrícula, uma Exception era lançada ao
+                // instanciar o ServiceBoletim, este catch garante que não irá
+                // quebrar o processo.
+            }
 
             $this->Excluir();
         }
