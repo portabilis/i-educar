@@ -1,7 +1,7 @@
 <?php
 
-use iEducar\Modules\Api\Error;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
+use iEducar\Support\Exceptions\Error;
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Service/Boletim.php';
@@ -224,10 +224,20 @@ class DiarioController extends ApiCoreController
 
                     $regra = $serviceBoletim->getRegra();
 
-                    if ($valorNota > $regra->notaMaximaGeral) {
+                    if ($etapa == 'Rc' && $valorNota > $regra->notaMaximaExameFinal) {
+                        $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
+                        $this->appendResponse('error', [
+                            'code' => Error::EXAM_SCORE_LESSER_THAN_MIN_ALLOWED,
+                            'message' => "A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.",
+                        ]);
+
+                        return false;
+                    }
+
+                    if ($etapa != 'Rc' && $valorNota > $regra->notaMaximaGeral) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.", 'error');
                         $this->appendResponse('error', [
-                            'code' => Error::GRADE_GREATER_THAN_MAX_ALLOWED,
+                            'code' => Error::EXAM_SCORE_GREATER_THAN_MAX_ALLOWED,
                             'message' => "A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.",
                         ]);
 
@@ -237,7 +247,7 @@ class DiarioController extends ApiCoreController
                     if ($valorNota < $regra->notaMinimaGeral) {
                         $this->messenger->append("A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}.", 'error');
                         $this->appendResponse('error', [
-                            'code' => Error::GRADE_LESSER_THAN_MIN_ALLOWED,
+                            'code' => Error::SCORE_LESSER_THAN_MIN_ALLOWED,
                             'message' => "A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}.",
                         ]);
 
