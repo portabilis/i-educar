@@ -2,13 +2,14 @@
 
 namespace iEducar\Modules\Stages\Exceptions;
 
+use iEducar\Support\Exceptions\Error;
 use iEducar\Support\Exceptions\Exception;
 
 class MissingStagesException extends Exception
 {
-    const DEFAULT_ERROR = 1000;
-    const TEACHER_ERROR = 1001;
-    const COORDINATOR_ERROR = 1002;
+    const DEFAULT_ERROR = Error::MISSING_STAGE_DEFAULT_ERROR;
+    const TEACHER_ERROR = Error::MISSING_STAGE_TEACHER_ERROR;
+    const COORDINATOR_ERROR = Error::MISSING_STAGE_COORDINATOR_ERROR;
 
     /**
      * @var array
