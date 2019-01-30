@@ -227,7 +227,7 @@ class DiarioController extends ApiCoreController
                     if ($etapa == 'Rc' && $valorNota > $regra->notaMaximaExameFinal) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
                         $this->appendResponse('error', [
-                            'code' => Error::EXAM_SCORE_LESSER_THAN_MIN_ALLOWED,
+                            'code' => Error::EXAM_SCORE_GREATER_THAN_MAX_ALLOWED,
                             'message' => "A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.",
                         ]);
 
@@ -237,7 +237,7 @@ class DiarioController extends ApiCoreController
                     if ($etapa != 'Rc' && $valorNota > $regra->notaMaximaGeral) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.", 'error');
                         $this->appendResponse('error', [
-                            'code' => Error::EXAM_SCORE_GREATER_THAN_MAX_ALLOWED,
+                            'code' => Error::SCORE_GREATER_THAN_MAX_ALLOWED,
                             'message' => "A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.",
                         ]);
 
