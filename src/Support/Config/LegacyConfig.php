@@ -9,16 +9,31 @@ class LegacyConfig
 {
     private $config;
 
-    public function __construct($legacyConfigPath, $enviroment, $tenant = null)
+    /**
+     * @param $legacyConfigPath
+     * @param string $enviroment
+     * @param null $tenant
+     */
+    public function __construct($legacyConfigPath, $enviroment = 'development', $tenant = null)
     {
-        $this->config['legacy'] = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
+        $this->config = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
     }
 
+    /**
+     * @return array
+     */
     public function getArrayConfig()
     {
         return $this->config;
     }
 
+    /**
+     * @param $legacyConfigPath
+     * @param $enviroment
+     * @param $tenant
+     * @return array
+     * @throws \Exception
+     */
     private function loadConfig($legacyConfigPath, $enviroment, $tenant)
     {
         $configFile = $legacyConfigPath . $enviroment . '.ini';
@@ -28,8 +43,6 @@ class LegacyConfig
         }
 
         $configObject = new IniConfig($configFile, $enviroment);
-
-        date_default_timezone_set($configObject->app->locale->timezone);
 
         if ($configObject->hasEnviromentSection($tenant)) {
             $configObject->changeEnviroment($tenant);
@@ -44,6 +57,10 @@ class LegacyConfig
         return $this->handleConfigArray($configArray);
     }
 
+    /**
+     * @param $configArray
+     * @return array
+     */
     private function handleConfigArray($configArray)
     {
         $configResult = [];
