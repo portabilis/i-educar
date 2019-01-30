@@ -14,7 +14,7 @@ class LegacyConfig
      * @param string $enviroment
      * @param null $tenant
      */
-    public function __construct($legacyConfigPath, $enviroment = 'development', $tenant = null)
+    public function __construct($legacyConfigPath, $enviroment = 'local', $tenant = null)
     {
         $this->config = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
     }

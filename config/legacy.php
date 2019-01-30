@@ -52,5 +52,5 @@ return [
         database_path('migrations/extras'),
     ],
 
-    'env' => env('LEGACY_ENV', 'development'),
+    'env' => env('LEGACY_ENV', 'local'),
 ];
