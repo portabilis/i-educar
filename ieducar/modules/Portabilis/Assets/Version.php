@@ -2,5 +2,5 @@
 
 class Portabilis_Assets_Version
 {
-    const VERSION = '20191622-105403';
+    const VERSION = '20193001-140100';
 }

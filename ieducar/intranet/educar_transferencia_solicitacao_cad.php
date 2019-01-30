@@ -217,13 +217,13 @@ class indice extends clsCadastro
 
         if (is_null($det_matricula['data_matricula'])) {
             if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
+                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
 
                 return false;
             }
         } else {
             if (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
+                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
 
                 return false;
             }
@@ -291,10 +291,10 @@ class indice extends clsCadastro
 
             if ($notasAluno && count($notasAluno)) {
                 $notaAlunoId = $notasAluno[0]->get('id');
-            }
 
-            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+            }
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             header("Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");

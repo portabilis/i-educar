@@ -475,6 +475,10 @@ class EditController extends Core_Controller_Page_EditController
             }
         }
 
+        if (!$this->validatesRange($this->valor_minimo, $this->valor_maximo)) {
+            return false;
+        }
+
         // Se existir, chama _save() do parent
         if (!isset($entity)) {
             return parent::_save();
@@ -538,6 +542,37 @@ class EditController extends Core_Controller_Page_EditController
 
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    protected function validatesRange($minValues = [], $maxValues = [])
+    {
+        $repeatedValues = count($minValues) !== count(array_unique($minValues));
+
+        if ($repeatedValues) {
+            $this->mensagem = 'Erro no formulário. Os valores devem ser diferentes entre os tipos de conceitos.';
+            return false;
+        }
+
+        $values = array_combine($minValues, $maxValues);
+        ksort($values);
+        $prevMax = -1;
+
+        foreach ($values as $minValue => $maxValue){
+
+            if ($minValue > $maxValue) {
+                $this->mensagem = 'Erro no formulário. Valor mínimo não pode ser maior que valor máximo dentro do mesmo conceito.';
+                return false;
+            }
+
+            if ($minValue <= $prevMax) {
+                $this->mensagem = 'Erro no formulário. Números preenchidos fora do alcance.';
+                return false;
+            }
+
+            $prevMax = $maxValue;
         }
 
         return true;
