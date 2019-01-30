@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RegraAvaliacao extends Model
+class EvaluationRule extends Model
 {
     /**
      * @var string

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Serie extends Model
+class Level extends Model
 {
     /**
      * @var string
@@ -31,10 +31,10 @@ class Serie extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function regrasAvaliacao()
+    public function evaluationRules()
     {
         return $this->belongsToMany(
-            RegraAvaliacao::class,
+            EvaluationRule::class,
             'modules.regra_avaliacao_serie_ano',
             'serie_id',
             'regra_avaliacao_id'

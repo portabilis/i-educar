@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Models\RegraAvaliacao::class, function (Faker $faker) {
+$factory->define(\App\Models\EvaluationRule::class, function (Faker $faker) {
     return [
         'instituicao_id' => 1,
         'nome' => $faker->words(3, true),

@@ -28,7 +28,7 @@
  * @version   $Id$
  */
 
-use App\Services\EscolaSerieService;
+use App\Services\SchoolLevelsService;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -106,7 +106,7 @@ class indice extends clsCadastro
     var $componente_anos_letivos;
 
     /**
-     * @var EscolaSerieService
+     * @var SchoolLevelsService
      */
     private $escolaSerieService;
 
@@ -121,7 +121,7 @@ class indice extends clsCadastro
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $this->escolaSerieService = app(EscolaSerieService::class);
+        $this->escolaSerieService = app(SchoolLevelsService::class);
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7, 'educar_escola_serie_lst.php');
@@ -170,7 +170,7 @@ class indice extends clsCadastro
             }
         }
 
-        $regrasAvaliacao = $this->escolaSerieService->getRegrasAvaliacaoSerie($this->ref_cod_serie);
+        $regrasAvaliacao = $this->escolaSerieService->getEvaluationRules($this->ref_cod_serie);
         $anosLetivos = [];
         foreach ($regrasAvaliacao as $regraAvaliacao) {
             $anosLetivos[$regraAvaliacao->pivot->ano_letivo] = $regraAvaliacao->pivot->ano_letivo;

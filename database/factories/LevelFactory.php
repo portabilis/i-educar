@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Models\Serie::class, function (Faker $faker) {
+$factory->define(\App\Models\Level::class, function (Faker $faker) {
     return [
         'nm_serie' => $faker->words(3, true),
         'ref_usuario_cad' => 1,
