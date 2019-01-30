@@ -7,6 +7,11 @@ use Illuminate\Support\ServiceProvider;
 
 class LoadLegacyConfig extends ServiceProvider
 {
+    /**
+     * Load legacy configs
+     *
+     * @return void
+     */
     public function register()
     {
         $legacyConfigPath = base_path() . '/' . config('legacy.path') . '/configuration/';
