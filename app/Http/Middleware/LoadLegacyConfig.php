@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Providers;
+namespace App\Http\Middleware;
 
+use Closure;
 use iEducar\Support\Config\LegacyConfig;
-use Illuminate\Support\ServiceProvider;
 
-class LoadLegacyConfig extends ServiceProvider
+class LoadLegacyConfig
 {
     /**
-     * Load legacy configs
+     * Handle an incoming request.
      *
-     * @return void
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     * @return mixed
      */
-    public function register()
+    public function handle($request, Closure $next)
     {
         $legacyConfigPath = base_path() . '/' . config('legacy.path') . '/configuration/';
 
@@ -21,5 +23,7 @@ class LoadLegacyConfig extends ServiceProvider
         $laravelLegacyConfig = config()->get('legacy');
 
         config()->set(['legacy' => array_merge($laravelLegacyConfig, $configObject->getArrayConfig())]);
+
+        return $next($request);
     }
 }
