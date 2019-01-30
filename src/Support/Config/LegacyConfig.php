@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\Config;
 
+use Exception;
 use iEducar\Modules\Config\CoreConfig;
 use iEducar\Modules\Config\IniConfig;
 
@@ -32,7 +33,7 @@ class LegacyConfig
      * @param $enviroment
      * @param $tenant
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function loadConfig($legacyConfigPath, $enviroment, $tenant)
     {
@@ -40,16 +41,18 @@ class LegacyConfig
 
         if (!file_exists($configFile)) {
             $configFile = $legacyConfigPath . '/ieducar.ini';
+
+            if (!file_exists($configFile)) {
+                throw new Exception("Config file [{$configFile}] not found");
+            }
         }
 
         $configObject = new IniConfig($configFile, $enviroment);
 
         if ($configObject->hasEnviromentSection($tenant)) {
             $configObject->changeEnviroment($tenant);
-        } else {
-            if (!$configObject->hasEnviromentSection($tenant) && $enviroment !== "development") {
+        } elseif (!$configObject->hasEnviromentSection($tenant) && $enviroment !== "local") {
                 $configObject->app->ambiente_inexistente = true;
-            }
         }
 
         $configArray = $configObject->toArray();
