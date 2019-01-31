@@ -1,6 +1,26 @@
 <?php
 
-$config = [
+$database = [
+    'host' => env('DB_HOST', '127.0.0.1'),
+    'port' => env('DB_PORT', '5432'),
+    'database' => env('DB_DATABASE', 'forge'),
+    'username' => env('DB_USERNAME', 'forge'),
+    'password' => env('DB_PASSWORD', ''),
+];
+
+if ($databaseUrl = env('DATABASE_URL')) {
+    $database = parse_url($databaseUrl);
+
+    $database = [
+        'host' => $database['host'],
+        'port' => $database['port'],
+        'database' => trim($database['path'], '/'),
+        'username' => $database['user'],
+        'password' => $database['pass'],
+    ];
+}
+
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -58,11 +78,11 @@ $config = [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_HOST', $database['host']),
+            'port' => env('DB_PORT', $database['port']),
+            'database' => env('DB_DATABASE', $database['database']),
+            'username' => env('DB_USERNAME', $database['username']),
+            'password' => env('DB_PASSWORD', $database['password']),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
@@ -129,24 +149,3 @@ $config = [
     ],
 
 ];
-
-if ($databaseUrl = env('DATABASE_URL')) {
-    $database = parse_url($databaseUrl);
-
-    $config['connections']['heroku'] = [
-        'driver' => 'pgsql',
-        'host' => $database['host'],
-        'port' => $database['port'],
-        'database' => trim($database['path'], '/'),
-        'username' => $database['user'],
-        'password' => $database['pass'],
-        'charset' => 'utf8',
-        'prefix' => '',
-        'prefix_indexes' => true,
-        'schema' => 'public',
-        'sslmode' => 'prefer',
-    ];
-
-}
-
-return $config;
