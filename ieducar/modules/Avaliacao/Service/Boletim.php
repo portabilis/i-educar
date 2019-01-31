@@ -1233,11 +1233,28 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return FALSE;
   }
 
-  public function getQtdComponentes(){
-    $codMatricula = $this->getOption('matricula');
-    $matriculaData = $this->getOption('matriculaData');
+  public function getQtdComponentes()
+  {
+    $matricula = $this->getOption('matriculaData');
 
-    return count(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(),null,null,null, $matriculaData, false ));
+    $results = Portabilis_Utils_Database::fetchPreparedQuery('
+        SELECT COUNT(*) AS count
+        FROM pmieducar.escola_serie_disciplina
+        WHERE TRUE
+        AND ref_ref_cod_serie = $1
+        AND ref_ref_cod_escola = $2
+        AND ativo = 1
+        AND $3 = ANY (anos_letivos)
+        AND CASE WHEN etapas_especificas = 1 THEN etapas_utilizadas != \'\' END;
+    ', [
+        'params' => [
+            $matricula['ref_ref_cod_serie'],
+            $matricula['ref_ref_cod_escola'],
+            $matricula['ano'],
+        ]
+    ]);
+
+    return (int) $results[0]['count'];
   }
 
   /**
@@ -1433,8 +1450,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $matriculaId = $infosMatricula['cod_matricula'];
 
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
-    $mediasComponentes = $this->_loadMedias()
-                              ->getMediasComponentes();
+    $mediasComponentes = $mediasComponenentesTotal = $this->_loadMedias()
+      ->getMediasComponentes();
     $componentes = $this->getComponentes();
     $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
 
@@ -1503,7 +1520,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $totalComponentes = $this->getQtdComponentes();
 
-    if ((0 == count($mediasComponentes) || count($mediasComponentes) < $totalComponentes)
+    if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
          && $this->getRegra()->get('definirComponentePorEtapa') == "1"){
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
@@ -2821,7 +2838,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (count($regrasRecuperacoes)) {
         $data['Se'] = 0;
     }
-    
+
     foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
       $cont++;
       $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
@@ -2974,7 +2991,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $notaAluno = $this->_getNotaAluno();
       $notas = $this->getNotas();
-      
+
       foreach ($notas as $nota) {
           $nota->notaAluno = $notaAluno;
           if($nota instanceof Avaliacao_Model_NotaComponente){
