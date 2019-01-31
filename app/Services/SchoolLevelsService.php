@@ -28,10 +28,10 @@ class SchoolLevelsService
      * Verifica se a regra de avaliação da série permite definir componentes por etapa
      *
      * @param $levelId
-     * @param $anoLetivo
+     * @param $academicYear
      * @return bool
      */
-    public function levelAllowDefineDisciplinePerStage($levelId, $anoLetivo)
+    public function levelAllowDefineDisciplinePerStage($levelId, $academicYear)
     {
         /** @var Level $level */
         $level = Level::with('evaluationRules')
@@ -44,7 +44,7 @@ class SchoolLevelsService
         }
 
         $evaluationRule = $level->evaluationRules()
-            ->wherePivot('ano_letivo', $anoLetivo)
+            ->wherePivot('ano_letivo', $academicYear)
             ->get()
             ->first();
 
