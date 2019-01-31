@@ -22,5 +22,8 @@
       "url": "heroku/php"
     }
   ],
+  "scripts": {
+    "postdeploy": "php artisan migrate --force"
+  },
   "stack": "heroku-18"
 }
