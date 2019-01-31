@@ -9,14 +9,13 @@ class clsBanco extends clsBancoSQL_
     {
         parent::__construct($strDataBase);
 
-        global $coreExt;
-        $config = $coreExt['Config']->app->database;
+        $config = app()->db->connection()->getConfig();
 
-        $this->setHost($config->hostname);
-        $this->setDbname($config->dbname);
-        $this->setPassword($config->password);
-        $this->setUser($config->username);
-        $this->setPort($config->port);
+        $this->setHost($config['host']);
+        $this->setDbname($config['database']);
+        $this->setPassword($config['password']);
+        $this->setUser($config['username']);
+        $this->setPort($config['port']);
     }
 
     /**
