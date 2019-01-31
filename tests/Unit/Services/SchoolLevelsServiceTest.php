@@ -55,11 +55,11 @@ class SchoolLevelsServiceTest extends TestCase
 
     public function testSemRegraAvaliacaoDeveRetornarFalse()
     {
-        $result = $this->service->seriePermiteDefinirComponentesPorEtapa(null, 2019);
+        $result = $this->service->levelAllowDefineDisciplinePerStage(null, 2019);
         $this->assertFalse($result);
 
         $level = factory(Level::class)->create();
-        $result = $this->service->seriePermiteDefinirComponentesPorEtapa($level->cod_serie, 2019);
+        $result = $this->service->levelAllowDefineDisciplinePerStage($level->cod_serie, 2019);
         $this->assertFalse($result);
 
         $level = factory(Level::class)->create();
@@ -67,7 +67,7 @@ class SchoolLevelsServiceTest extends TestCase
             'definir_componente_etapa' => true,
         ]);
         $level->evaluationRules()->attach($regraAvaliacaoFake->id, ['ano_letivo' => 2019]);
-        $result = $this->service->seriePermiteDefinirComponentesPorEtapa($level->cod_serie, 2021);
+        $result = $this->service->levelAllowDefineDisciplinePerStage($level->cod_serie, 2021);
         $this->assertFalse($result);
     }
 
@@ -79,7 +79,7 @@ class SchoolLevelsServiceTest extends TestCase
         ]);
 
         $level->evaluationRules()->attach($regraAvaliacaoFake->id, ['ano_letivo' => 2019]);
-        $result = $this->service->seriePermiteDefinirComponentesPorEtapa($level->cod_serie, 2019);
+        $result = $this->service->levelAllowDefineDisciplinePerStage($level->cod_serie, 2019);
 
         $this->assertTrue($result);
 
@@ -89,7 +89,7 @@ class SchoolLevelsServiceTest extends TestCase
         ]);
 
         $level->evaluationRules()->attach($regraAvaliacaoFake->id, ['ano_letivo' => 2019]);
-        $result = $this->service->seriePermiteDefinirComponentesPorEtapa($level->cod_serie, 2019);
+        $result = $this->service->levelAllowDefineDisciplinePerStage($level->cod_serie, 2019);
 
         $this->assertFalse($result);
     }

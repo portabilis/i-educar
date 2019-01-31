@@ -183,7 +183,7 @@ class indice extends clsCadastro
             $anoLetivoSelected = request('ano_letivo');
         }
 
-        $this->definirComponentePorEtapa = $this->escolaSerieService->seriePermiteDefinirComponentesPorEtapa(
+        $this->definirComponentePorEtapa = $this->escolaSerieService->levelAllowDefineDisciplinePerStage(
             $this->ref_cod_serie, $anoLetivoSelected);
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {

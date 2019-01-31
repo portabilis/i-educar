@@ -31,7 +31,7 @@ class SchoolLevelsService
      * @param $anoLetivo
      * @return bool
      */
-    public function seriePermiteDefinirComponentesPorEtapa($levelId, $anoLetivo)
+    public function levelAllowDefineDisciplinePerStage($levelId, $anoLetivo)
     {
         /** @var Level $level */
         $level = Level::with('evaluationRules')
