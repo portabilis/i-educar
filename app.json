@@ -1,6 +1,5 @@
 {
   "name": "i-educar",
-  "scripts": {},
   "env": {
     "APP_ENV": {
       "required": true
