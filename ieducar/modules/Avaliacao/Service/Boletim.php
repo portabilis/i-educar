@@ -950,18 +950,22 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
-    $maiorEtapaUtilizada = [];
+    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
+
+    $maiorEtapaUtilizada = $etapas;
 
     // Foi preciso adicionar esta validação pois é possível filtrar sem
     // selecionar um componente curricular, neste caso um erro SQL era gerado.
 
     if ($componenteCurricularId = $this->getComponenteCurricularId()) {
-        $maiorEtapaUtilizada = explode(',', App_Model_IedFinder::getEtapasComponente($matricula['ref_cod_turma'], $componenteCurricularId));
+        $ultimaEtapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente(
+            $matricula['ref_cod_turma'], $componenteCurricularId
+        );
+
+        if ($ultimaEtapaEspecifica) {
+            $maiorEtapaUtilizada = $ultimaEtapaEspecifica;
+        }
     }
-
-    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
-
-    $maiorEtapaUtilizada = count($maiorEtapaUtilizada) ? max($maiorEtapaUtilizada) : $etapas;
 
     $etapaAtual = $_GET['etapa'] == 'Rc' ? $maiorEtapaUtilizada : $_GET['etapa'];
 
