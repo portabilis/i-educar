@@ -1,6 +1,5 @@
 {
   "name": "i-educar",
-  "scripts": {},
   "env": {
     "APP_ENV": {
       "required": true
@@ -22,5 +21,8 @@
       "url": "heroku/php"
     }
   ],
+  "scripts": {
+    "postdeploy": "php artisan migrate --force"
+  },
   "stack": "heroku-18"
 }
