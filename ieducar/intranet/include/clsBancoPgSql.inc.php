@@ -65,12 +65,6 @@ abstract class clsBancoSQL_
   public $arrayStrRegistro = array();
 
   /**
-   * Ponteiro interno para a tupla atual da consulta.
-   * @var int
-   */
-  public $iLinha           = 0;
-
-  /**
    * Se ocorreu erro na consulta, retorna FALSE.
    * @var int
    */
@@ -377,7 +371,6 @@ abstract class clsBancoSQL_
     $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
     $this->strErro = pg_result_error($this->bConsulta_ID);
     $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
-    $this->iLinha   = 0;
 
     $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
