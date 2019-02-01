@@ -838,40 +838,40 @@ abstract class clsBancoSQL_
       return $this->bConsulta_ID;
   }
 
-  /**
-   * Lança um evento "QueryExecuted".
-   *
-   * @see Connection::logQuery()
-   *
-   * @param string $query
-   * @param array  $bindings
-   * @param string $time
-   *
-   * @return void
-   */
-  protected function logQuery($query, $bindings, $time)
-  {
-    if (env('APP_ENV') == 'testing') {
-        return;
+    /**
+     * Lança um evento "QueryExecuted".
+     *
+     * @see Connection::logQuery()
+     *
+     * @param string $query
+     * @param array $bindings
+     * @param string $time
+     *
+     * @return void
+     */
+    protected function logQuery($query, $bindings, $time)
+    {
+        if (env('APP_ENV') == 'testing') {
+            return;
+        }
+
+        /** @var Connection $connection */
+        $connection = app(Connection::class);
+
+        $connection->logQuery($query, $bindings, $time);
     }
 
-    /** @var Connection $connection */
-    $connection = app(Connection::class);
-
-    $connection->logQuery($query, $bindings, $time);
-  }
-
-  /**
-   * Retorna o tempo gasto na operação.
-   *
-   * @see Connection::getElapsedTime()
-   *
-   * @param int $start
-   *
-   * @return float
-   */
-  protected function getElapsedTime($start)
-  {
-      return round((microtime(true) - $start) * 1000, 2);
-  }
+    /**
+     * Retorna o tempo gasto na operação.
+     *
+     * @see Connection::getElapsedTime()
+     *
+     * @param int $start
+     *
+     * @return float
+     */
+    protected function getElapsedTime($start)
+    {
+        return round((microtime(true) - $start) * 1000, 2);
+    }
 }
