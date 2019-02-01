@@ -529,28 +529,6 @@ abstract class clsBancoSQL_
   }
 
   /**
-   * Retorna um único registro de uma query SELECT.
-   * @param  string $consulta
-   * @return mixed
-   */
-  function UnicaTupla($consulta)
-  {
-    $this->Consulta($consulta);
-    $this->ProximoRegistro();
-    $tupla = $this->Tupla();
-    $this->Libera();
-    return $tupla;
-  }
-
-  /**
-   * @see clsBancoSQL_#UnicaTupla()
-   */
-  function TuplaUnica($consulta)
-  {
-    return $this->UnicaTupla;
-  }
-
-  /**
    * Mostra a mensagem de erro e interrompe a execução do script.
    * @param  string $msg
    * @param  bool   $getError
