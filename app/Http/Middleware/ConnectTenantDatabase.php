@@ -21,7 +21,7 @@ class ConnectTenantDatabase
         $tenant = $request->getSubdomain();
 
         if (isset($connections[$tenant])) {
-            DB::setDefaultConnection($connections[$tenant]);
+            DB::setDefaultConnection($tenant);
         }
 
         return $next($request);
