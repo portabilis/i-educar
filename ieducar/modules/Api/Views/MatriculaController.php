@@ -650,6 +650,47 @@ class MatriculaController extends ApiCoreController
         return ['dispensas' => $dispensas];
     }
 
+    protected function getEnturmacoesExcluidas()
+    {
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
+        $deletedAt = $this->getRequest()->deleted_at;
+
+        if ($this->canGetEnturmacoesExcluidas()) {
+            if (!$escola) {
+                $escola = 0;
+            }
+
+            $sql = 'SELECT id, deleted_at 
+                    FROM pmieducar.matricula_turma_excluidos
+                    JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma_excluidos.ref_cod_matricula
+                    WHERE matricula.ano = $1
+                    AND CASE WHEN $2 = 0 THEN TRUE ELSE ref_ref_cod_escola = $2 END';
+
+            $params = [$ano, $escola];
+
+            if ($deletedAt) {
+                $sql .= ' AND matricula_turma_excluidos.deleted_at > $3';
+                $params[] = $deletedAt;
+            }
+            
+            $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
+
+            $attrs = [
+                'id',
+                'deleted_at',
+            ];
+            $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
+
+            return ['enturmacoes' => $enturmacoes];
+        }
+    }
+
+    protected function canGetEnturmacoesExcluidas()
+    {
+        return $this->validatesPresenceOf('ano');
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'matricula')) {
@@ -680,6 +721,8 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->getMatriculasDependencia());
         } elseif ($this->isRequestFor('get', 'dispensa-disciplina')) {
             $this->appendResponse($this->getDispensaDisciplina());
+        } elseif ($this->isRequestFor('get', 'enturmacoes-excluidas')) {
+            $this->appendResponse($this->getEnturmacoesExcluidas());
         } else {
             $this->notImplementedOperationError();
         }
