@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
+use Illuminate\Database\Connection;
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
@@ -791,7 +792,7 @@ abstract class clsBancoSQL_
             'request' => $_REQUEST,
         ];
 
-        $tracker->notify(new \Exception($lastError['message']), $data);
+        $tracker->notify(new Exception($lastError['message']), $data);
     }
 
     die("<script>document.location.href = '/module/Error/unexpected';</script>");
@@ -840,7 +841,7 @@ abstract class clsBancoSQL_
   /**
    * Lança um evento "QueryExecuted".
    *
-   * @see \Illuminate\Database\Connection::logQuery()
+   * @see Connection::logQuery()
    *
    * @param string $query
    * @param array  $bindings
@@ -854,8 +855,8 @@ abstract class clsBancoSQL_
         return;
     }
 
-    /** @var \Illuminate\Database\Connection $connection */
-    $connection = app(\Illuminate\Database\Connection::class);
+    /** @var Connection $connection */
+    $connection = app(Connection::class);
 
     $connection->logQuery($query, $bindings, $time);
   }
@@ -863,7 +864,7 @@ abstract class clsBancoSQL_
   /**
    * Retorna o tempo gasto na operação.
    *
-   * @see \Illuminate\Database\Connection::getElapsedTime()
+   * @see Connection::getElapsedTime()
    *
    * @param int $start
    *
