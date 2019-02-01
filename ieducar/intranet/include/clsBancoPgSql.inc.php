@@ -101,16 +101,6 @@ abstract class clsBancoSQL_
   public $strStringSQL     = '';
 
   /**
-   * @var mixed
-   */
-  var $transactionBlock    = FALSE;
-
-  /**
-   * @var array
-   */
-  var $savePoints          = array();
-
-  /**
    * Define se serão lançadas exceções como respostas a erros da extensão
    * ext/pgsql. Implementado no método Consulta().
    * @see clsBancoSQL_#Consulta()
