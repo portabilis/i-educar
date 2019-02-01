@@ -1235,9 +1235,20 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function getQtdComponentes()
   {
-    $matricula = $this->getOption('matriculaData');
+    $enrollment = $this->getOption('matriculaData');
 
-    $results = Portabilis_Utils_Database::fetchPreparedQuery('
+    $total = count(App_Model_IedFinder::getComponentesPorMatricula(
+        $enrollment['cod_matricula'],
+        $this->getComponenteDataMapper(),
+        $this->getComponenteTurmaDataMapper(),
+        null,
+        null,
+        null,
+        $enrollment,
+        false
+    ));
+
+    $disciplinesWithoutStage = Portabilis_Utils_Database::fetchPreparedQuery('
         SELECT COUNT(*) AS count
         FROM pmieducar.escola_serie_disciplina
         WHERE TRUE
@@ -1245,16 +1256,17 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         AND ref_ref_cod_escola = $2
         AND ativo = 1
         AND $3 = ANY (anos_letivos)
-        AND CASE WHEN etapas_especificas = 1 THEN etapas_utilizadas != \'\' END;
+        AND etapas_especificas = 1
+        AND etapas_utilizadas LIKE \'\';
     ', [
         'params' => [
-            $matricula['ref_ref_cod_serie'],
-            $matricula['ref_ref_cod_escola'],
-            $matricula['ano'],
+            $enrollment['ref_ref_cod_serie'],
+            $enrollment['ref_ref_cod_escola'],
+            $enrollment['ano'],
         ]
     ]);
 
-    return (int) $results[0]['count'];
+    return $total - (int) $disciplinesWithoutStage[0]['count'];
   }
 
   /**
