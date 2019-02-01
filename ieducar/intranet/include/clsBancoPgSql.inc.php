@@ -536,16 +536,6 @@ abstract class clsBancoSQL_
   }
 
   /**
-   * Setter para índice de um registro do array de resultados retornado por
-   * Consulta().
-   * @param int $Pos
-   */
-  function Procura($Pos)
-  {
-    $this->iLinha = $Pos;
-  }
-
-  /**
    * Retorna a quantidade de linhas afetadas por queries INSERT, UPDATE e DELETE.
    */
   function Linhas_Afetadas()
