@@ -972,8 +972,6 @@ class App_Model_IedFinder extends CoreExt_Entity
             $turma = $matricula['ref_cod_turma'];
         }
 
-        $serie = self::getSerie($codSerie);
-
         $ret = [];
 
         if (is_numeric($turma) && is_numeric($codSerie) && is_numeric($codEscola)) {
