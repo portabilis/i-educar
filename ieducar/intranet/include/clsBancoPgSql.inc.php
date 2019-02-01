@@ -469,45 +469,6 @@ abstract class clsBancoSQL_
   }
 
   /**
-   * Inicia um bloco de transação (transaction block).
-   * @return bool
-   */
-  function begin()
-  {
-    if (!$this->transactionBlock) {
-      $this->Consulta( "BEGIN" );
-      $this->transactionBlock = TRUE;
-
-      // Reseta os savePoints.
-      $this->savePoints = array();
-      return TRUE;
-    }
-
-    // Tratamento de erro informando que está dentro de um transaction block
-    return FALSE;
-  }
-
-  /**
-   * Processa umbloco de transacao (transaction block)
-   *
-    * @return bool
-   */
-  function commit()
-  {
-    if ($this->transactionBlock) {
-      $this->Consulta('COMMIT');
-      $this->transactionBlock = FALSE;
-
-      // Reseta os savePoints
-      $this->savePoints = array();
-      return TRUE;
-    }
-
-    // Tratamento de erro informando que está dentro de um transaction block
-    return FALSE;
-  }
-
-  /**
    * Cria um novo savePoint.
    * @param  string $strSavePointName Nome do savePoint a ser criado.
    * @return bool
