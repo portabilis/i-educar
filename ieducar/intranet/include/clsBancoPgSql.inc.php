@@ -111,11 +111,6 @@ abstract class clsBancoSQL_
   var $savePoints          = array();
 
   /**
-   * @var bool
-   */
-  var $executandoEcho      = FALSE;
-
-  /**
    * Define se serão lançadas exceções como respostas a erros da extensão
    * ext/pgsql. Implementado no método Consulta().
    * @see clsBancoSQL_#Consulta()
@@ -385,11 +380,6 @@ abstract class clsBancoSQL_
           $this->Interrompe($erroMsg);
         }
       }
-    }
-
-    // Executa a Consulta
-    if ($this->executandoEcho) {
-      echo $this->strStringSQL."\n<br>";
     }
 
     $start = microtime(true);
