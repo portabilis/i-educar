@@ -17,18 +17,12 @@ class ConnectTenantDatabase
      */
     public function handle($request, Closure $next)
     {
-        $envDatabase = config('database.connections.pgsql.database');
+        $connections = config('database.connections');
+        $tenant = $request->getSubdomain();
 
-        $legacyConfigDatabase = config('legacy.app.database.dbname');
-
-        if ($envDatabase == $legacyConfigDatabase) {
-            return $next($request);
+        if (isset($connections[$tenant])) {
+            DB::setDefaultConnection($tenant);
         }
-
-        DB::purge('pgsql');
-        config(['database.connections.pgsql.database' => $legacyConfigDatabase]);
-        DB::reconnect('pgsql');
-        Schema::connection('pgsql')->getConnection()->reconnect();
 
         return $next($request);
     }
