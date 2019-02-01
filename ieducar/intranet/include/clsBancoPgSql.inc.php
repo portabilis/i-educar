@@ -2,8 +2,6 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'Portabilis/Mailer.php';
