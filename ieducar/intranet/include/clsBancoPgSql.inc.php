@@ -307,9 +307,6 @@ abstract class clsBancoSQL_
    */
   public function Consulta($consulta, $reescrever = true)
   {
-    $cronometro = new clsCronometro();
-    $cronometro->marca('inicio');
-
     if (empty($consulta)) {
       return FALSE;
     }
@@ -373,11 +370,6 @@ abstract class clsBancoSQL_
         throw new Exception("Erro ao executar uma ação no banco de dados: $erroMsg");
       }
     }
-
-
-    $cronometro->marca('fim');
-
-    $tempoTotal = $cronometro->getTempoTotal();
 
     return $this->bConsulta_ID;
   }
