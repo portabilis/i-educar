@@ -314,8 +314,6 @@ abstract class clsBancoSQL_
       $this->strStringSQL = $consulta;
     }
 
-    $this->strStringSQLOriginal = $this->strStringSQL;
-
     $this->Conecta();
 
     // Alterações de padrão MySQL para PostgreSQL
