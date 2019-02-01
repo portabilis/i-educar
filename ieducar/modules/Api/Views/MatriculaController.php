@@ -230,6 +230,7 @@ class MatriculaController extends ApiCoreController
     {
         $ano = $this->getRequest()->ano;
         $escola = $this->getRequest()->escola;
+        $updatedAt = $this->getRequest()->data_atualizacao;
 
         if ($this->canGetMovimentacaoEnturmacao()) {
             if (!$escola) {
@@ -254,7 +255,9 @@ class MatriculaController extends ApiCoreController
                 $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
                 foreach ($matriculas as $key => $matricula) {
-                    $sql = 'SELECT matricula_turma.ref_cod_turma AS turma_id,
+                    $sql = 'SELECT 
+                         matricula_turma.id,
+                         matricula_turma.ref_cod_turma AS turma_id,
                          matricula_turma.sequencial AS sequencial,
                          matricula_turma.sequencial_fechamento AS sequencial_fechamento,
                          coalesce(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
@@ -278,11 +281,19 @@ class MatriculaController extends ApiCoreController
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                   WHERE cod_matricula = $1';
 
-                    $params = [$matriculas[$key]['matricula_id']];
+                    $params = [];
+                    $params[] = $matriculas[$key]['matricula_id'];
+
+                    if ($updatedAt) {
+                        $sql .= ' AND matricula_turma.updated_at > $2';
+                        $params[] = $updatedAt;
+                    }
+
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
                     if (is_array($enturmacoes) && count($enturmacoes) > 0) {
                         $attrs = [
+                            'id',
                             'turma_id',
                             'sequencial',
                             'sequencial_fechamento',
