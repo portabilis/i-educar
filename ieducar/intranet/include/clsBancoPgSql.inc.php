@@ -77,12 +77,6 @@ abstract class clsBancoSQL_
   public $strErro          = '';
 
   /**
-   * '1' para limpar o resultado assim que chegar ao último registro.
-   * @var bool
-   */
-  public $bAuto_Limpa      = FALSE;
-
-  /**
    * Query SQL.
    * @var string
    */
@@ -486,11 +480,6 @@ abstract class clsBancoSQL_
 
     // Testa se está vazio e verifica se Auto_Limpa é TRUE
     $stat = is_array($this->arrayStrRegistro);
-
-    if (!$stat && $this->bAuto_Limpa)
-    {
-      $this->Libera();
-    }
 
     return $stat;
   }
