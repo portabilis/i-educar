@@ -379,49 +379,6 @@ abstract class clsBancoSQL_
 
     $tempoTotal = $cronometro->getTempoTotal();
 
-    $objConfig = new clsConfig();
-    if ($tempoTotal > $objConfig->arrayConfig['intSegundosQuerySQL']) {
-      $conteudo = "<table border=\"1\" width=\"100%\">";
-      $conteudo .= "<tr><td><b>Data</b>:</td><td>" . date( "d/m/Y H:i:s", time() ) . "</td></tr>";
-      $conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER["PHP_SELF"]}</td></tr>";
-      $conteudo .= "<tr><td><b>Tempo da query</b>:</td><td>{$tempoTotal} segundos</td></tr>";
-      $conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig["intSegundosQuerySQL"]} segundos</td></tr>";
-      $conteudo .= "<tr><td><b>SQL Query Original</b>:</td><td>{$this->strStringSQLOriginal}</td></tr>";
-      $conteudo .= "<tr><td><b>SQL Query Executado</b>:</td><td>{$this->strStringSQL}</td></tr>";
-      $conteudo .= "<tr><td><b>URL get</b>:</td><td>{$_SERVER['QUERY_STRING']}</td></tr>";
-      $conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER["REQUEST_METHOD"]}</td></tr>";
-
-      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $conteudo .= "<tr><td><b>POST vars</b>:</td><td>";
-
-        foreach ($_POST as $var => $val) {
-          $conteudo .= "{$var} => {$val}<br>";
-        }
-        $conteudo .= "</td></tr>";
-      }
-      elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        $conteudo .= "<tr><td><b>GET vars</b>:</td><td>";
-
-        foreach ($_GET as $var => $val) {
-          $conteudo .= "{$var} => {$val}<br>";
-        }
-        $conteudo .= "</td></tr>";
-      }
-
-      if ($_SERVER['HTTP_REFERER']) {
-        $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
-      }
-
-      $conteudo .= "</table>";
-
-      (new Portabilis_Mailer)->sendMail(
-          $objConfig->arrayConfig['ArrStrEmailsAdministradores'],
-          '[INTRANET - PMI] Desempenho de query',
-          $conteudo,
-          ['mime' => 'text/html']
-      );
-    }
-
     return $this->bConsulta_ID;
   }
 
