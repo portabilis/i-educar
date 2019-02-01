@@ -77,12 +77,6 @@ abstract class clsBancoSQL_
   public $strErro          = '';
 
   /**
-   * Ativa ou desativa funções de depuração
-   * @var bool
-   */
-  public $bDepurar         = FALSE;
-
-  /**
    * '1' para limpar o resultado assim que chegar ao último registro.
    * @var bool
    */
@@ -333,10 +327,6 @@ abstract class clsBancoSQL_
 
     $this->Conecta();
 
-    if ($this->bDepurar) {
-      printf("<br>Depurar: Frase de Consulta = %s<br>\n", $this->strStringSQL);
-    }
-
     // Alterações de padrão MySQL para PostgreSQL
     if ($reescrever) {
       // Altera o Limit
@@ -496,9 +486,6 @@ abstract class clsBancoSQL_
 
     // Testa se está vazio e verifica se Auto_Limpa é TRUE
     $stat = is_array($this->arrayStrRegistro);
-    if ($this->bDepurar && $stat) {
-      printf("<br>Depurar: Registro : %s <br>\n", implode($this->arrayStrRegistro));
-    }
 
     if (!$stat && $this->bAuto_Limpa)
     {
