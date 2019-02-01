@@ -285,7 +285,7 @@ class MatriculaController extends ApiCoreController
                     $params[] = $matriculas[$key]['matricula_id'];
 
                     if ($updatedAt) {
-                        $sql .= ' AND matricula_turma.updated_at > $2';
+                        $sql .= ' AND matricula_turma.updated_at >= $2';
                         $params[] = $updatedAt;
                     }
 
@@ -670,10 +670,10 @@ class MatriculaController extends ApiCoreController
             $params = [$ano, $escola];
 
             if ($deletedAt) {
-                $sql .= ' AND matricula_turma_excluidos.deleted_at > $3';
+                $sql .= ' AND matricula_turma_excluidos.deleted_at >= $3';
                 $params[] = $deletedAt;
             }
-            
+
             $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
             $attrs = [
