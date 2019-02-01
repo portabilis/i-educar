@@ -1450,8 +1450,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $matriculaId = $infosMatricula['cod_matricula'];
 
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
-    $mediasComponentes = $mediasComponenentesTotal = $this->_loadMedias()
-      ->getMediasComponentes();
+    $mediasComponentes = $this->_loadMedias()->getMediasComponentes();
+    $mediasComponenentesTotal = $mediasComponentes;
     $componentes = $this->getComponentes();
     $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
 
