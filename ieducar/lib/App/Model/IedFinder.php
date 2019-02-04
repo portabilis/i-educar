@@ -2,6 +2,7 @@
 
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
+use Illuminate\Support\Facades\Cache;
 
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/Exception.php';
@@ -1448,6 +1449,12 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getEtapasComponente($turma, $componente)
     {
+        $key = "App_Model_IedFinder::getEtapasComponente({$turma}, {$componente})";
+
+        if ($value = Cache::store('array')->get($key)) {
+            return $value === $key ? null : $value;
+        }
+
         $sql = '
             SELECT componente_curricular_turma.etapas_utilizadas
             FROM modules.componente_curricular_turma
@@ -1459,7 +1466,11 @@ class App_Model_IedFinder extends CoreExt_Entity
         $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$turma, $componente]]);
 
         if ($resultado) {
-            return explode(',', $resultado[0]['etapas_utilizadas']);
+            $etapas = explode(',', $resultado[0]['etapas_utilizadas']);
+
+            Cache::store('array')->put($key, $etapas, 1);
+
+            return $etapas;
         }
 
         $sql = '
@@ -1475,8 +1486,14 @@ class App_Model_IedFinder extends CoreExt_Entity
         $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$turma, $componente]]);
 
         if ($resultado) {
-            return explode(',', $resultado[0]['etapas_utilizadas']);
+            $etapas = explode(',', $resultado[0]['etapas_utilizadas']);
+
+            Cache::store('array')->put($key, $etapas, 1);
+
+            return $etapas;
         }
+
+        Cache::store('array')->put($key, $key, 1);
 
         return [];
     }
