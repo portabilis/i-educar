@@ -42,6 +42,7 @@ class clsPessoa_
     public function cadastra()
     {
         if ($this->nome && $this->tipo) {
+            $this->nome = $this->cleanUpName($this->nome);
             $this->nome = str_replace('\'', '\'\'', $this->nome);
             $campos = '';
             $valores = '';
@@ -88,6 +89,7 @@ class clsPessoa_
                 $gruda = ', ';
             }
             if ($this->nome || $this->nome==='') {
+                $this->nome = $this->cleanUpName($this->nome);
                 $this->nome = str_replace('\'', '\'\'', $this->nome);
                 $set .= "$gruda nome = '$this->nome' ";
                 $gruda = ', ';
@@ -317,5 +319,12 @@ class clsPessoa_
         }
 
         return false;
+    }
+
+    protected function cleanUpName($name)
+    {
+        $name = preg_replace('/\s+/', ' ', $name);
+
+        return trim($name);
     }
 }

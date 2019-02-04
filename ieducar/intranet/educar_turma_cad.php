@@ -647,8 +647,7 @@ class indice extends clsCadastro
         $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
             $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, true, $this->ano
         );
-      }  catch (App_Model_Exception $e) {
-          $this->mensagem = $e->getMessage();
+      }  catch (Throwable $e) {
           return;
       }
 

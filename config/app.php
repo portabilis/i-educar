@@ -174,9 +174,8 @@ return [
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\LoadLegacyConfig::class,
-
         Tooleks\LaravelAssetVersion\Providers\AssetServiceProvider::class,
-        Prettus\Repository\Providers\RepositoryServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class
     ],
 
     /*
@@ -230,4 +229,6 @@ return [
     ],
 
     'trackerror' => env('APP_TRACK_ERROR', false),
+
+    'default_host' => env('APP_DEFAULT_HOST', 'ieducar.com.br'),
 ];

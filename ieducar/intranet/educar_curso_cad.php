@@ -409,7 +409,7 @@ class indice extends clsCadastro
         // Padrão ano escolar
         $this->campoCheck('padrao_ano_escolar', 'Padrão Ano Escolar', $this->padrao_ano_escolar);
 
-        $this->campoCheck('multi_seriado', 'Multi seriado', $this->multi_seriado);
+        $this->campoCheck('multi_seriado', 'Multisseriado', $this->multi_seriado);
 
         // Objetivo do curso
         $this->campoMemo(

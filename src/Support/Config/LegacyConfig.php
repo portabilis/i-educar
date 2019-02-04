@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\Config;
 
+use Exception;
 use iEducar\Modules\Config\CoreConfig;
 use iEducar\Modules\Config\IniConfig;
 
@@ -9,15 +10,31 @@ class LegacyConfig
 {
     private $config;
 
-    public function __construct($legacyConfigPath, $enviroment = 'development', $tenant = null)
+    /**
+     * @param $legacyConfigPath
+     * @param string $enviroment
+     * @param null $tenant
+     */
+    public function __construct($legacyConfigPath, $enviroment = 'local', $tenant = null)
     {
         $this->config = $this->loadConfig($legacyConfigPath, $enviroment, $tenant);
     }
 
+    /**
+     * @return array
+     */
     public function getArrayConfig()
     {
         return $this->config;
     }
+
+    /**
+     * @param $legacyConfigPath
+     * @param $enviroment
+     * @param $tenant
+     * @return array
+     * @throws Exception
+     */
 
     private function loadConfig($legacyConfigPath, $enviroment, $tenant)
     {
@@ -25,16 +42,18 @@ class LegacyConfig
 
         if (!file_exists($configFile)) {
             $configFile = $legacyConfigPath . '/ieducar.ini';
+
+            if (!file_exists($configFile)) {
+                throw new Exception("Config file [{$configFile}] not found");
+            }
         }
 
         $configObject = new IniConfig($configFile, $enviroment);
 
         if ($configObject->hasEnviromentSection($tenant)) {
             $configObject->changeEnviroment($tenant);
-        } else {
-            if (!$configObject->hasEnviromentSection($tenant) && $enviroment !== "development") {
+        } elseif (!$configObject->hasEnviromentSection($tenant) && $enviroment !== "local") {
                 $configObject->app->ambiente_inexistente = true;
-            }
         }
 
         $configArray = $configObject->toArray();
@@ -42,6 +61,10 @@ class LegacyConfig
         return $this->handleConfigArray($configArray);
     }
 
+    /**
+     * @param $configArray
+     * @return array
+     */
     private function handleConfigArray($configArray)
     {
         $configResult = [];

@@ -141,6 +141,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
             flush();
 
             echo $result;
+            die();
         } catch (Exception $e) {
             if ($GLOBALS['coreExt']['Config']->modules->error->track) {
                 $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);

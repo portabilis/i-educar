@@ -247,7 +247,7 @@ class LegacyController extends Controller
         $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? $this->request->getRequestUri();
 
         $_GET = empty($_GET) ? $this->request->query->all() : $_GET;
-        $_POST = empty($_POST) ? $this->request->request->all() : $_POST;
+        $_POST = (empty($_POST) && $this->request->isMethod('post')) ? $this->request->request->all() : $_POST;
         $_FILES = empty($_FILES) ? $this->request->files->all() : $_FILES;
         $_COOKIE = empty($_COOKIE) ? $this->request->cookies->all() : $_COOKIE;
     }

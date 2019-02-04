@@ -8,6 +8,8 @@ use App\Http\Middleware\LegacyAuthenticateSession;
 use App\Http\Middleware\Menu;
 use App\Http\Middleware\Navigation;
 use App\Http\Middleware\SetLayoutVariables;
+use App\Http\Middleware\ConnectTenantDatabase;
+use App\Http\Middleware\LoadLegacyConfig;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -45,6 +47,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ChangeAppName::class,
             GetLegacySession::class,
+            ConnectTenantDatabase::class,
+            LoadLegacyConfig::class,
         ],
 
         'api' => [
@@ -85,6 +89,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewarePriority = [
+        LoadLegacyConfig::class,
+        ConnectTenantDatabase::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\Authenticate::class,

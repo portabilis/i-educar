@@ -190,7 +190,7 @@ class clsPublicUf
             if( is_string( $this->nome ) )
             {
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'" . addslashes($this->nome) . "'";
+                $valores .= "{$gruda}'" . pg_escape_string($this->nome) . "'";
                 $gruda = ", ";
             }
             if( is_string( $this->geom ) )
@@ -231,10 +231,11 @@ class clsPublicUf
 
             $db = new clsBanco();
             $set = "";
+            $gruda = '';
 
             if( is_string( $this->nome ) )
             {
-                $set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
+                $set .= "{$gruda}nome = '" . pg_escape_string($this->nome) . "'";
                 $gruda = ", ";
             }
             if( is_string( $this->geom ) )
