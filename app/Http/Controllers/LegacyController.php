@@ -204,23 +204,11 @@ class LegacyController extends Controller
 
         $content = ob_get_contents();
 
-        $headers = $this->getHttpHeaders();
-
-        if ($this->isPdfResponse($headers)) {
-            return new Response(
-                $content, $this->getHttpStatusCode(), $headers
-            );
-        }
-
         ob_end_clean();
 
-        if ($this->isJsonResponse($headers) || $this->isXmlResponse($headers)) {
-            return new Response(
-                $content, $this->getHttpStatusCode(), $headers
-            );
-        }
-
-        return view('legacy.body', ['body' => $content]);
+        return new Response(
+            $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
+        );
     }
 
     /**
@@ -290,26 +278,5 @@ class LegacyController extends Controller
     public function modules($uri)
     {
         return $this->requireFileFromLegacy('modules/' . $uri);
-    }
-
-    /**
-     * Checks if the content type has been set to json
-     *
-     * @param array $headers
-     * @return bool
-     */
-    private function isJsonResponse(array $headers)
-    {
-        return Str::contains($headers['Content-type'], 'application/json');
-    }
-
-    private function isPdfResponse(array $headers)
-    {
-        return Str::contains($headers['Content-type'], 'application/pdf');
-    }
-
-    private function isXmlResponse(array $headers)
-    {
-        return Str::contains($headers['Content-type'], 'text/xml');
     }
 }
