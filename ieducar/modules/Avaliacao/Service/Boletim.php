@@ -1233,11 +1233,40 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return FALSE;
   }
 
-  public function getQtdComponentes(){
-    $codMatricula = $this->getOption('matricula');
-    $matriculaData = $this->getOption('matriculaData');
+  public function getQtdComponentes()
+  {
+    $enrollment = $this->getOption('matriculaData');
 
-    return count(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(),null,null,null, $matriculaData, false ));
+    $total = count(App_Model_IedFinder::getComponentesPorMatricula(
+        $enrollment['cod_matricula'],
+        $this->getComponenteDataMapper(),
+        $this->getComponenteTurmaDataMapper(),
+        null,
+        null,
+        null,
+        $enrollment,
+        false
+    ));
+
+    $disciplinesWithoutStage = Portabilis_Utils_Database::fetchPreparedQuery('
+        SELECT COUNT(*) AS count
+        FROM pmieducar.escola_serie_disciplina
+        WHERE TRUE
+        AND ref_ref_cod_serie = $1
+        AND ref_ref_cod_escola = $2
+        AND ativo = 1
+        AND $3 = ANY (anos_letivos)
+        AND etapas_especificas = 1
+        AND etapas_utilizadas LIKE \'\';
+    ', [
+        'params' => [
+            $enrollment['ref_ref_cod_serie'],
+            $enrollment['ref_ref_cod_escola'],
+            $enrollment['ano'],
+        ]
+    ]);
+
+    return $total - (int) $disciplinesWithoutStage[0]['count'];
   }
 
   /**
@@ -1435,8 +1464,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $matriculaId = $infosMatricula['cod_matricula'];
 
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
-    $mediasComponentes = $this->_loadMedias()
-                              ->getMediasComponentes();
+    $mediasComponentes = $this->_loadMedias()->getMediasComponentes();
+    $mediasComponenentesTotal = $mediasComponentes;
     $componentes = $this->getComponentes();
     $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
 
@@ -1507,7 +1536,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $totalComponentes = $this->getQtdComponentes();
 
-    if ((0 == count($mediasComponentes) || count($mediasComponentes) < $totalComponentes)
+    if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
          && $this->getRegra()->get('definirComponentePorEtapa') == "1"){
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
