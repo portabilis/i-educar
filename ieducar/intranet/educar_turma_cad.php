@@ -1006,8 +1006,8 @@ class indice extends clsCadastro
       $objTurma->ref_cod_instituicao_regente = $this->ref_cod_instituicao_regente;
       $objTurma->ref_cod_instituicao = $this->ref_cod_instituicao;
       $objTurma->ref_cod_curso = $this->ref_cod_curso;
-      $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult;
-      $objTurma->ref_ref_cod_escola_mult = $this->ref_cod_escola;
+      $objTurma->ref_ref_cod_serie_mult = $objTurma->multiseriada ? $this->ref_cod_serie_mult : null;
+      $objTurma->ref_ref_cod_escola_mult = $objTurma->multiseriada ? $this->ref_cod_escola : null;
       $objTurma->visivel = $this->visivel;
       $objTurma->turma_turno_id = $this->turma_turno_id;
       $objTurma->tipo_boletim = $this->tipo_boletim;
@@ -1017,7 +1017,6 @@ class indice extends clsCadastro
       $objTurma->turma_mais_educacao = $this->turma_mais_educacao;
       $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
       $objTurma->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
-      $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult == "" ? NULL : $this->ref_cod_serie_mult;
       $objTurma->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $objTurma->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
       $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;

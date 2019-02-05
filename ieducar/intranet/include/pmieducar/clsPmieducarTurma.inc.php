@@ -460,10 +460,12 @@ class clsPmieducarTurma
             }
         }
 
-        if( is_numeric( $ref_ref_cod_escola_mult ) && is_numeric( $ref_ref_cod_serie_mult ) )
+        if( (is_numeric( $ref_ref_cod_escola_mult ) && is_numeric( $ref_ref_cod_serie_mult )) || is_null($ref_ref_cod_serie_mult) )
         {
-            if( class_exists( "clsPmieducarEscolaSerie" ) )
-            {
+            if (is_null($ref_ref_cod_serie_mult)) {
+                $this->ref_ref_cod_escola_mult = '';
+                $this->ref_ref_cod_serie_mult = '';
+            } else if( class_exists( "clsPmieducarEscolaSerie" ) ) {
                 $tmp_obj = new clsPmieducarEscolaSerie( $ref_ref_cod_escola_mult, $ref_ref_cod_serie_mult );
                 if( method_exists( $tmp_obj, "existe") )
                 {
@@ -974,15 +976,22 @@ class clsPmieducarTurma
                 $set .= "{$gruda}ref_cod_curso = '{$this->ref_cod_curso}'";
                 $gruda = ", ";
             }
-            if( is_numeric( $this->ref_ref_cod_escola_mult ) )
+
+            if( is_numeric($this->ref_ref_cod_escola_mult) )
             {
                 $set .= "{$gruda}ref_ref_cod_escola_mult = '{$this->ref_ref_cod_escola_mult}'";
                 $gruda = ", ";
+            }elseif(empty($this->ref_ref_cod_escola_mult)) {
+                $set .= "{$gruda}ref_ref_cod_escola_mult = NULL";
+                $gruda = ", ";
             }
 
-            if( is_numeric( $this->ref_ref_cod_serie_mult ) )
+            if( is_numeric($this->ref_ref_cod_serie_mult) )
             {
                 $set .= "{$gruda}ref_ref_cod_serie_mult = '{$this->ref_ref_cod_serie_mult}'";
+                $gruda = ", ";
+            } elseif(empty($this->ref_ref_cod_serie_mult)) {
+                $set .= "{$gruda}ref_ref_cod_serie_mult = NULL";
                 $gruda = ", ";
             }
 
