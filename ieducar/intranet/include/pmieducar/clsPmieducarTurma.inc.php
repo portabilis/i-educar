@@ -338,9 +338,9 @@ class clsPmieducarTurma
             if (is_null($ref_ref_cod_serie_mult)) {
                 $this->ref_ref_cod_escola_mult = '';
                 $this->ref_ref_cod_serie_mult = '';
-            } else if (class_exists("clsPmieducarEscolaSerie")) {
+            } else if (class_exists('clsPmieducarEscolaSerie')) {
                 $tmp_obj = new clsPmieducarEscolaSerie($ref_ref_cod_escola_mult, $ref_ref_cod_serie_mult);
-                if (method_exists($tmp_obj, "existe")) {
+                if (method_exists($tmp_obj, 'existe')) {
                     if ($tmp_obj->existe()) {
                         $this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
                         $this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
