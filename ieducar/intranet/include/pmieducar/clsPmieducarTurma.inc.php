@@ -682,7 +682,6 @@ class clsPmieducarTurma
             if (is_string($this->atividades_aee)) {
                 $campos .= "{$gruda}atividades_aee";
                 $valores .= "{$gruda}'{$this->atividades_aee}'";
-                $gruda = ', ';
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -703,6 +702,7 @@ class clsPmieducarTurma
         if (is_numeric($this->cod_turma) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
@@ -1016,7 +1016,6 @@ class clsPmieducarTurma
 
             if (is_string($this->atividades_aee)) {
                 $set .= "{$gruda}atividades_aee = '{$this->atividades_aee}'";
-                $gruda = ', ';
             }
 
             if ($set) {
@@ -1536,7 +1535,6 @@ class clsPmieducarTurma
 
         if (!$this->listarNaoInformarEducacenso) {
             $filtros .= "{$whereAnd} COALESCE(t.nao_informar_educacenso,0) <> 1";
-            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
@@ -1765,7 +1763,6 @@ and  e.cod_escola = t.ref_ref_cod_escola
 
         if (is_numeric($ano)) {
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
-            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
@@ -1997,7 +1994,6 @@ and  e.cod_escola = t.ref_ref_cod_escola
 
         if (is_numeric($ano)) {
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
-            $whereAnd = ' AND ';
         }
 
         // Retirar OR quando todas turmas tiverem a coluna ANO definido.

@@ -218,10 +218,6 @@ class indice extends clsCadastro
         $this->campoOculto('retorno', $this->retorno);
 
         $bloqueia = false;
-        $anoVisivel = false;
-        if (!isset($this->ano) || isset($this->cod_turma)) {
-            $anoVisivel = true;
-        }
         if (!isset($this->cod_turma)) {
             $bloqueia = false;
         } else {
@@ -257,7 +253,6 @@ class indice extends clsCadastro
 
                 if (is_array($lst_matriculas_turma) && count($lst_matriculas_turma) > 0) {
                     $bloqueia = true;
-                    $anoVisivel = false;
                 }
             }
         }
@@ -511,7 +506,7 @@ class indice extends clsCadastro
             null,
             null,
             1,
-            $ref_cod_instituicao
+            null
         );
 
         $opcoesCampoModulo = [];
@@ -694,7 +689,6 @@ class indice extends clsCadastro
         $this->campoQuebra2();
 
         if ($this->ref_cod_serie) {
-            $disciplinas = '';
             $conteudo = '';
 
             try {
