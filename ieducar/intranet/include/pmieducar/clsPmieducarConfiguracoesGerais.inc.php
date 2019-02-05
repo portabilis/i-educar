@@ -174,7 +174,7 @@ class clsPmieducarConfiguracoesGerais
         $this->active_on_ieducar = $campos['active_on_ieducar'];
     }
 
-    if (!empty($campos['ieducar_image'])) {
+    if (isset($campos['ieducar_image'])) {
         $this->ieducar_image = $campos['ieducar_image'];
     }
 
@@ -182,27 +182,27 @@ class clsPmieducarConfiguracoesGerais
         $this->ieducar_entity_name = $campos['ieducar_entity_name'];
     }
 
-    if (!empty($campos['ieducar_login_footer'])) {
+    if (isset($campos['ieducar_login_footer'])) {
         $this->ieducar_login_footer = $campos['ieducar_login_footer'];
     }
 
-    if (!empty($campos['ieducar_external_footer'])) {
+    if (isset($campos['ieducar_external_footer'])) {
         $this->ieducar_external_footer = $campos['ieducar_external_footer'];
     }
 
-    if (!empty($campos['ieducar_internal_footer'])) {
+    if (isset($campos['ieducar_internal_footer'])) {
         $this->ieducar_internal_footer = $campos['ieducar_internal_footer'];
     }
 
-    if (!empty($campos['facebook_url'])) {
+    if (isset($campos['facebook_url'])) {
         $this->facebook_url = $campos['facebook_url'];
     }
 
-    if (!empty($campos['twitter_url'])) {
+    if (isset($campos['twitter_url'])) {
         $this->twitter_url = $campos['twitter_url'];
     }
 
-    if (!empty($campos['linkedin_url'])) {
+    if (isset($campos['linkedin_url'])) {
         $this->linkedin_url = $campos['linkedin_url'];
     }
 
@@ -269,7 +269,7 @@ class clsPmieducarConfiguracoesGerais
         $set[] = "active_on_ieducar = '{$this->active_on_ieducar}'";
     }
 
-    if (!empty($this->ieducar_image)) {
+    if (isset($this->ieducar_image)) {
         $set[] = "ieducar_image = '{$this->ieducar_image}'";
     }
 
@@ -277,27 +277,27 @@ class clsPmieducarConfiguracoesGerais
         $set[] = "ieducar_entity_name = '{$this->ieducar_entity_name}'";
     }
 
-    if (!empty($this->ieducar_login_footer)) {
+    if (isset($this->ieducar_login_footer)) {
         $set[] = "ieducar_login_footer = '{$this->ieducar_login_footer}'";
     }
 
-    if (!empty($this->ieducar_external_footer)) {
+    if (isset($this->ieducar_external_footer)) {
         $set[] = "ieducar_external_footer = '{$this->ieducar_external_footer}'";
     }
 
-    if (!empty($this->ieducar_internal_footer)) {
+    if (isset($this->ieducar_internal_footer)) {
         $set[] = "ieducar_internal_footer = '{$this->ieducar_internal_footer}'";
     }
 
-    if (!empty($this->facebook_url)) {
+    if (isset($this->facebook_url)) {
         $set[] = "facebook_url = '{$this->facebook_url}'";
     }
 
-    if (!empty($this->twitter_url)) {
+    if (isset($this->twitter_url)) {
         $set[] = "twitter_url = '{$this->twitter_url}'";
     }
 
-    if (!empty($this->linkedin_url)) {
+    if (isset($this->linkedin_url)) {
         $set[] = "linkedin_url = '{$this->linkedin_url}'";
     }
 
