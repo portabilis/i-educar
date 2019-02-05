@@ -752,7 +752,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     public static function getMatricula($codMatricula)
     {
         $sql = '
-            SELECT 
+            SELECT
                 m.cod_matricula,
                 m.ref_cod_reserva_vaga,
                 m.ref_ref_cod_escola,
@@ -797,19 +797,19 @@ class App_Model_IedFinder extends CoreExt_Entity
                 e.utiliza_regra_diferenciada as escola_utiliza_regra_diferenciada,
                 mt.data_enturmacao
             FROM pmieducar.matricula m
-            JOIN pmieducar.aluno a 
+            JOIN pmieducar.aluno a
             ON a.cod_aluno = m.ref_cod_aluno
-            JOIN cadastro.pessoa p 
+            JOIN cadastro.pessoa p
             ON p.idpes = a.ref_idpes
-            JOIN pmieducar.escola e 
+            JOIN pmieducar.escola e
             ON m.ref_ref_cod_escola = e.cod_escola
-            JOIN pmieducar.matricula_turma mt 
+            JOIN pmieducar.matricula_turma mt
             ON mt.ref_cod_matricula = m.cod_matricula
-            JOIN pmieducar.turma t 
+            JOIN pmieducar.turma t
             ON t.cod_turma = mt.ref_cod_turma
-            JOIN pmieducar.curso c 
+            JOIN pmieducar.curso c
             ON m.ref_cod_curso = c.cod_curso
-            JOIN pmieducar.serie s 
+            JOIN pmieducar.serie s
             ON m.ref_ref_cod_serie = s.cod_serie
             LEFT JOIN modules.regra_avaliacao_serie_ano rasa
             ON rasa.ano_letivo = m.ano
@@ -817,10 +817,10 @@ class App_Model_IedFinder extends CoreExt_Entity
             WHERE m.cod_matricula = $1
             AND a.ativo = 1
             AND t.ativo = 1
-            AND 
+            AND
             (
                 mt.ativo = 1
-                OR 
+                OR
                 (
                     NOT EXISTS
                     (
@@ -958,7 +958,8 @@ class App_Model_IedFinder extends CoreExt_Entity
         $etapa = null,
         $turma = null,
         $matricula = null,
-        $trazerDetalhes = true
+        $trazerDetalhes = true,
+        $ignorarDispensasParciais = false
     ) {
         if (empty($matricula)) {
             $matricula = self::getMatricula($codMatricula);
@@ -996,7 +997,8 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $codMatricula,
                 $codSerie,
                 $codEscola,
-                $etapa
+                $etapa,
+                $ignorarDispensasParciais
             );
 
             if (dbBool($matricula['dependencia'])) {
@@ -1047,7 +1049,8 @@ class App_Model_IedFinder extends CoreExt_Entity
         $codMatricula,
         $codSerie,
         $codEscola,
-        $etapa
+        $etapa,
+        $ignorarDispensasParciais = false
     ) {
         $dispensas = self::addClassToStorage(
             'clsPmieducarDispensaDisciplina',
@@ -1055,7 +1058,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
         );
 
-        $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa);
+        $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
 
         if (false === $dispensas) {
             return [];
@@ -1363,7 +1366,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $resultado = [];
 
         $sql = '
-            SELECT 
+            SELECT
                 area_conhecimento.id AS id_teste,
                 area_conhecimento.nome AS nome
             FROM modules.area_conhecimento
@@ -1481,6 +1484,39 @@ class App_Model_IedFinder extends CoreExt_Entity
         return null;
     }
 
+    /**
+     * Retorna um array com as etapas dispensadas para o componente,
+     *
+     * @param int $enrollmentId
+     * @param int $disciplineId
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public static function getExemptedStages($enrollmentId, $disciplineId)
+    {
+        $stages = [];
+
+        $sql = '
+            SELECT distinct etapa
+            FROM pmieducar.dispensa_disciplina
+            JOIN pmieducar.dispensa_etapa
+            ON dispensa_disciplina.cod_dispensa = dispensa_etapa.ref_cod_dispensa
+            WHERE ref_cod_matricula = $1
+            AND ref_cod_disciplina = $2
+            order by etapa
+        ';
+
+        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId, $disciplineId]]);
+
+        foreach ($query as $stage) {
+            $stages[] = $stage;
+        }
+
+        return $stages;
+    }
+
     //Retorna a quantidade de etapas resgatadas na function getEtapasComponente
     public static function getQtdeEtapasComponente($turma, $componente)
     {
@@ -1544,7 +1580,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     public static function getNotasLancadasAluno($ref_cod_matricula, $ref_cod_disciplina, $etapa)
     {
         $notas_lancadas_aluno = '
-            SELECT 
+            SELECT
                 na.matricula_id,
                 ncc.componente_curricular_id,
                 ncc.nota,
@@ -1566,7 +1602,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     public static function getFaltasLancadasAluno($ref_cod_matricula, $ref_cod_disciplina, $etapa)
     {
         $faltas_lancadas_aluno = '
-            SELECT 
+            SELECT
                 fa.matricula_id,
                 fcc.componente_curricular_id,
                 fcc.quantidade,
@@ -1586,7 +1622,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     public static function getEscolasUser($cod_usuario)
     {
         $escolas_user = '
-            SELECT 
+            SELECT
                 escola_usuario.ref_cod_escola AS ref_cod_escola,
                 coalesce(juridica.fantasia, escola_complemento.nm_escola) AS nome,
                 escola.ref_cod_instituicao AS instituicao
@@ -1627,7 +1663,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     public static function getEtapasDaTurma($turma)
     {
         $sql = '
-            select * from 
+            select * from
             (
                 select
                     t.cod_turma,
@@ -1643,9 +1679,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                 on anm.ref_ref_cod_escola = t.ref_ref_cod_escola
                 and anm.ref_ano = t.ano
                 where c.padrao_ano_escolar = 1
-                
+
                 union all
-                
+
                 select
                     t.cod_turma,
                     tm.sequencial,

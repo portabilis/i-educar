@@ -442,7 +442,8 @@ class clsPmieducarDispensaDisciplina
         $int_ref_cod_matricula = null,
         $int_ref_cod_serie = null,
         $int_ref_cod_escola = null,
-        $int_etapa = null
+        $int_etapa = null,
+        $ignorarDispensasParciais = false
     ) {
         $sql = "SELECT {$this->_campos_lista}, etapa
                   FROM {$this->_tabela}
@@ -468,6 +469,16 @@ class clsPmieducarDispensaDisciplina
 
         if (is_numeric($int_etapa)) {
             $filtros .= "{$whereAnd} etapa = '{$int_etapa}'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($ignorarDispensasParciais) {
+            $filtros .= "{$whereAnd} number_of_stages_by_enrollment(ref_cod_matricula) = (
+                SELECT count(1)
+                FROM pmieducar.dispensa_etapa sde
+                WHERE sde.ref_cod_dispensa = dispensa_disciplina.cod_dispensa
+            )
+            ";
             $whereAnd = ' AND ';
         }
 
