@@ -1845,19 +1845,6 @@ class clsPmieducarTurma
      */
     function lista2( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
     {
-
-        /*$nm_escola = "(
-    SELECT c.nm_escola AS nm_escola
-    FROM  pmieducar.escola_complemento c
-    WHERE c.ref_cod_escola = t.ref_ref_cod_escola
-AND e.cod_escola = t.ref_ref_cod_escola
-
-UNION
-    SELECT j.fantasia AS nm_escola
-    FROM  cadastro.juridica j
-    WHERE j.idpes = e.ref_idpes
-and  e.cod_escola = t.ref_ref_cod_escola
-                    )  AS nm_escola ";a*/
         $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = "";
 
@@ -2123,19 +2110,6 @@ and  e.cod_escola = t.ref_ref_cod_escola
      */
     function lista3( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
     {
-
-        /*$nm_escola = "(
-    SELECT c.nm_escola AS nm_escola
-    FROM  pmieducar.escola_complemento c
-    WHERE c.ref_cod_escola = t.ref_ref_cod_escola
-AND e.cod_escola = t.ref_ref_cod_escola
-
-UNION
-    SELECT j.fantasia AS nm_escola
-    FROM  cadastro.juridica j
-    WHERE j.idpes = e.ref_idpes
-and  e.cod_escola = t.ref_ref_cod_escola
-                    )  AS nm_escola ";a*/
         $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = "";
 
@@ -2442,14 +2416,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
     {
         if( is_numeric( $this->cod_turma ) && is_numeric( $this->ref_usuario_exc ) )
         {
-
-        /*
-            delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'" );
-        return true;
-        */
-
+            
         $this->ativo = 0;
             return $this->edita();
         }
