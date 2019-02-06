@@ -263,14 +263,18 @@ class ApiCoreController extends Core_Controller_Page_EditController
                 $instance->Gerar();
             }
         } catch (iEducarException $exception) {
-            $this->messenger->append($exception->getMessage(), 'error');
+
+            // Todos os erros do i-Educar serão pegos neste catch para
+            // futuramente movermos para um Exception Handler
+
+            $this->messenger->append($exception->getMessage(), 'error', true);
+
             $this->appendResponse('error', [
                 'code' => $exception->getCode(),
                 'message' => $exception->getMessage(),
                 'extra' => $exception->getExtraInfo(),
             ]);
 
-            return false;
         } catch (Exception $e) {
             $this->messenger->append('Exception: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
         }
