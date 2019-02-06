@@ -29,6 +29,8 @@
  * @version     $Id$
  */
 
+use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
+
 require_once 'App/Model/IedFinder.php';
 require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
 require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
@@ -320,7 +322,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
   public function testGetMatriculaAlunoNaoEnturmado()
   {
-    $this->expectException('App_Model_Exception');
+    $this->expectException(StudentNotEnrolledInSchoolClass::class);
     $this->expectExceptionMessage('Aluno não enturmado.');
     App_Model_IedFinder::getMatricula(1);
   }
