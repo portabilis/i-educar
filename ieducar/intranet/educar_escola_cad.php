@@ -1512,6 +1512,7 @@ class indice extends clsCadastro
                     $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+                    $obj->esfera_administrativa = $this->esfera_administrativa;
 
                     $cod_escola = $cadastrou1 = $obj->cadastra();
 
@@ -1686,6 +1687,8 @@ class indice extends clsCadastro
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+            $obj->esfera_administrativa = $this->esfera_administrativa;
+
             $cod_escola = $cadastrou = $obj->cadastra();
 
             if ($cadastrou) {
@@ -1891,6 +1894,8 @@ class indice extends clsCadastro
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+            $obj->esfera_administrativa = $this->esfera_administrativa;
+
             $editou = $obj->edita();
 
             if ($editou) {
@@ -1998,6 +2003,8 @@ class indice extends clsCadastro
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+            $obj->esfera_administrativa = $this->esfera_administrativa;
+            
             $this->cod_escola = $editou = $obj->cadastra();
 
             if ($this->cod_escola) {
