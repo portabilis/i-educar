@@ -178,6 +178,16 @@ $j('#computadores').change(
   }
 ).trigger('change');
 
+function habilitaCampoEsferaAdministrativa() {
+  let regulamentacao = $j('#regulamentacao').val();
+
+  if (regulamentacao === '0') {
+    $j("#esfera_administrativa").prop('disabled', true);
+  } else {
+    $j("#esfera_administrativa").prop('disabled', false);
+  }
+}
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
@@ -342,6 +352,7 @@ $j(document).ready(function() {
 
   $j('#dependencia_administrativa').on('change', verificaCamposDepAdm);
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
+  $j('#regulamentacao').on('change', habilitaCampoEsferaAdministrativa);
   verificaCamposDepAdm();
 
   let verificaLatitudeLongitude = () => {
