@@ -30,6 +30,8 @@ class MenuServiceTest extends TestCase
         parent::setUp();
         $this->service = app(MenuService::class);
         $this->repository = app(MenuRepository::class);
+        Menu::query()->truncate();
+        Submenu::query()->truncate();
     }
 
     public function testWithoutPermissionUserShouldReturnEmpty()
