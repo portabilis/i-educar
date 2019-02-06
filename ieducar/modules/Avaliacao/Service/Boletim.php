@@ -3383,6 +3383,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
   public function deleteNota($etapa, $ComponenteCurricularId)
   {
+    $this->setCurrentComponenteCurricular($ComponenteCurricularId);
     $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
     $this->getNotaComponenteDataMapper()->delete($nota);
 
