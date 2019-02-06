@@ -439,19 +439,21 @@ class DiarioController extends ApiCoreController
                     $faltas = $faltaTurmaAluno['valor'];
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
-                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
-                        }
-
-                        $falta = new Avaliacao_Model_FaltaGeral([
-                            'quantidade' => $faltas,
-                            'etapa' => $etapa,
-                        ]);
-
-                        $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                        $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
+                    if (empty($matriculaId)) {
+                        continue;
                     }
+
+                    if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
+                        throw new CoreExt_Exception("A regra da turma $turmaId não permite lançamento de faltas geral.");
+                    }
+
+                    $falta = new Avaliacao_Model_FaltaGeral([
+                        'quantidade' => $faltas,
+                        'etapa' => $etapa,
+                    ]);
+
+                    $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+                    $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
                 }
             }
 
