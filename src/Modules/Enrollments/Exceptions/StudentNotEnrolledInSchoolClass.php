@@ -10,18 +10,18 @@ class StudentNotEnrolledInSchoolClass extends Exception
     /**
      * @var int
      */
-    protected $enrollmentCode;
+    protected $enrollmentId;
 
     /**
-     * @param int $enrollmentCode
+     * @param int $enrollmentId
      */
-    public function __construct($enrollmentCode)
+    public function __construct($enrollmentId)
     {
         parent::__construct(
             "Aluno não enturmado.", Error::STUDENT_NOT_ENROLLED_IN_SCHOOL_CLASS
         );
 
-        $this->enrollmentCode = $enrollmentCode;
+        $this->enrollmentId = $enrollmentId;
     }
 
     /**
@@ -32,7 +32,7 @@ class StudentNotEnrolledInSchoolClass extends Exception
     public function getExtraInfo()
     {
         return [
-            'enrollment_code' => $this->enrollmentCode,
+            'enrollment_code' => $this->enrollmentId,
         ];
     }
 }

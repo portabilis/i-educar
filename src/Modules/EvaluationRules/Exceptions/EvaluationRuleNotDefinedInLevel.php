@@ -10,19 +10,19 @@ class EvaluationRuleNotDefinedInLevel extends Exception
     /**
      * @var int
      */
-    private $levelCode;
+    private $levelId;
 
     /**
-     * @param int $levelCode
+     * @param int $levelId
      */
-    public function __construct($levelCode)
+    public function __construct($levelId)
     {
         parent::__construct(
             "Regra de avaliação não informada na série para o ano letivo informado.",
             Error::EVALUATION_RULE_NOT_DEFINED_IN_LEVEL
         );
 
-        $this->levelCode = $levelCode;
+        $this->levelId = $levelId;
     }
 
     /**
@@ -31,7 +31,7 @@ class EvaluationRuleNotDefinedInLevel extends Exception
     public function getExtraInfo()
     {
         return [
-            'level_code' => $this->levelCode,
+            'level_code' => $this->levelId,
         ];
     }
 }
