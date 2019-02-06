@@ -1,5 +1,8 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\Regulamentacao;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -177,6 +180,7 @@ class indice extends clsCadastro
     public $sem_cnpj;
     public $com_cnpj;
     public $isEnderecoExterno = 0;
+    public $esfera_administrativa;
 
     public function Inicializar()
     {
@@ -798,6 +802,16 @@ class indice extends clsCadastro
             $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
 
             $this->inputsHelper()->text('email_gestor', $options);
+
+            $resources = EsferaAdministrativa::getDescriptiveValues();
+            $options = [
+                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
+                'resources' => $resources,
+                'value' => $this->esfera_administrativa,
+                'required' => $obrigarCamposCenso && $this->regulamentacao != Regulamentacao::NAO,
+                'disabled' => $this->regulamentacao == Regulamentacao::NAO,
+            ];
+            $this->inputsHelper()->select('esfera_administrativa', $options);
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
