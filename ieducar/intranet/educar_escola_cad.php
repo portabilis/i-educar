@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 
@@ -2004,7 +2005,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
-            
+
             $this->cod_escola = $editou = $obj->cadastra();
 
             if ($this->cod_escola) {
@@ -2195,7 +2196,8 @@ class indice extends clsCadastro
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
                 $this->validaSalasExistentes() &&
-                $this->validaPossuiBandaLarga();
+                $this->validaPossuiBandaLarga() &&
+                $this->validaEsferaAdministrativa();
     }
 
     protected function validaOcupacaoPredio()
@@ -2223,6 +2225,58 @@ class indice extends clsCadastro
             return FALSE;
         }
         return TRUE;
+    }
+
+    protected function validaEsferaAdministrativa()
+    {
+        $esferaAdministrativa = $this->esfera_administrativa;
+        $dependenciaAdministrativa = $this->dependencia_administrativa;
+        $mensagem = 'O campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização, foi preenchido com um valor incorreto';
+
+        if ($this->regulamentacao != Regulamentacao::NAO && empty($esferaAdministrativa)) {
+            $this->mensagem = '1'.$mensagem;
+            return false;
+        }
+
+        /**
+         * Se o campo "dependência administrativa" for:
+         * 2 (Estadual) este campo também deve ser 2
+         */
+        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::ESTADUAL) {
+            if ($esferaAdministrativa != EsferaAdministrativa::ESTADUAL) {
+                $this->mensagem = '2'.$mensagem;
+                return false;
+            }
+        }
+        /**
+         * Se o campo "dependência administrativa" for:
+         * 1 (Federal) este campo deve ser 1 ou 2
+         */
+        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::FEDERAL) {
+            if (
+                $esferaAdministrativa != EsferaAdministrativa::FEDERAL &&
+                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL
+            ) {
+                $this->mensagem = '3'.$mensagem;
+                return false;
+            }
+
+        }
+        /**
+         * Se o campo "dependência administrativa" for:
+         * 3 (Municipal) este campo deve ser 2 ou 3
+         */
+        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::MUNICIPAL) {
+            if (
+                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL &&
+                $esferaAdministrativa != EsferaAdministrativa::MUNICIPAL
+            ) {
+                $this->mensagem = '4'.$mensagem;
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected function validaEscolaPrivada()
