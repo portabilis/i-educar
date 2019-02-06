@@ -213,7 +213,7 @@ ModalSelectEscolas = {
 
         msgContainer.append(this.getEscolasTable(data));
 
-        this.dialog.dialog('option', 'position', {my: 'center', at: 'center', of: window});
+        this.dialog.dialog('option', 'position', {my: 'center', at: 'center top', of: window});
     },
     getContainerMessage: function () {
         let msg = 'Foram feitas as seguintes alterações:<br>';
