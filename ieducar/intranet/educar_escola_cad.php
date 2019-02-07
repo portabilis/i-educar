@@ -2316,7 +2316,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosSequenciasDoTelefone($telefone, $nomeCampo)) {
+        if (!$this->validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)) {
             return false;
         }
 
@@ -2348,7 +2348,7 @@ class indice extends clsCadastro
         return true;
     }
 
-    protected function validaDigitosSequenciasDoTelefone($telefone, $nomeCampo)
+    protected function validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)
     {
         $possuiTodosOsDigitosRepetidos = preg_match('/^(.)\1*$/', $telefone);
 
