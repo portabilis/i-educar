@@ -1368,6 +1368,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaDadosTelefones()) {
+            return false;
+        }
+
         if (!$this->validaCamposCenso()) {
             return false;
         }
