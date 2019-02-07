@@ -2175,7 +2175,8 @@ class indice extends clsCadastro
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
                 $this->validaSalasExistentes() &&
-                $this->validaPossuiBandaLarga();
+                $this->validaPossuiBandaLarga() &&
+                $this->validaLocalizacaoDiferenciada();
     }
 
     protected function validaOcupacaoPredio()
@@ -2194,6 +2195,16 @@ class indice extends clsCadastro
             return FALSE;
         }
         return TRUE;
+    }
+
+    protected function validaLocalizacaoDiferenciada()
+    {
+        if ($this->localizacao_diferenciada == 1 && $this->zona_localizacao == 1) {
+            $this->mensagem = 'O campo: Localização diferenciada da escola não pode ser preenchido com Área de assentamento quando o campo: Zona localização for Urbana';
+            return false;
+        }
+
+        return true;
     }
 
     protected function validaPossuiBandaLarga()
