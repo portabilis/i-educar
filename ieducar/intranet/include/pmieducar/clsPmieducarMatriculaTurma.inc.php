@@ -62,6 +62,7 @@ class clsPmieducarMatriculaTurma
   var $etapa_educacenso;
   var $turma_unificada;
   var $remanejado;
+  var $turno_id;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -130,7 +131,7 @@ class clsPmieducarMatriculaTurma
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, mt.turno_id, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -337,6 +338,12 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
+      if(is_numeric($this->turno_id)){
+        $campos .= "{$gruda}turno_id";
+        $valores .= "{$gruda}'{$this->turno_id}'";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
       $detalhe = $this->detalhe();
@@ -435,6 +442,14 @@ class clsPmieducarMatriculaTurma
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";
         $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->turno_id)) {
+        $set .= "{$gruda}turno_id = '{$this->turno_id}'";
+        $gruda = ", ";
+      }elseif(is_null($this->turno_id) || empty($this->turno_id)){
+        $set .= "{$gruda}turno_id = NULL";
         $gruda = ", ";
       }
 

@@ -35,6 +35,7 @@ class indice extends clsCadastro
   var $data_enturmacao;
 
   var $sequencial;
+  var $turno_id;
 
   function Inicializar()
   {
@@ -125,6 +126,7 @@ class indice extends clsCadastro
                                                    1);
 
       $enturmacao->data_enturmacao = $this->data_enturmacao;
+      $enturmacao->turno_id = $this->turno_id;
       $this->atualizaUltimaEnturmacao($matriculaId);
       return $enturmacao->cadastra();
     }
