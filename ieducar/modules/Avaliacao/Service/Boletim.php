@@ -1233,11 +1233,40 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return FALSE;
   }
 
-  public function getQtdComponentes(){
-    $codMatricula = $this->getOption('matricula');
-    $matriculaData = $this->getOption('matriculaData');
+  public function getQtdComponentes()
+  {
+    $enrollment = $this->getOption('matriculaData');
 
-    return count(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(),null,null,null, $matriculaData, false ));
+    $total = count(App_Model_IedFinder::getComponentesPorMatricula(
+        $enrollment['cod_matricula'],
+        $this->getComponenteDataMapper(),
+        $this->getComponenteTurmaDataMapper(),
+        null,
+        null,
+        null,
+        $enrollment,
+        false
+    ));
+
+    $disciplinesWithoutStage = Portabilis_Utils_Database::fetchPreparedQuery('
+        SELECT COUNT(*) AS count
+        FROM pmieducar.escola_serie_disciplina
+        WHERE TRUE
+        AND ref_ref_cod_serie = $1
+        AND ref_ref_cod_escola = $2
+        AND ativo = 1
+        AND $3 = ANY (anos_letivos)
+        AND etapas_especificas = 1
+        AND etapas_utilizadas LIKE \'\';
+    ', [
+        'params' => [
+            $enrollment['ref_ref_cod_serie'],
+            $enrollment['ref_ref_cod_escola'],
+            $enrollment['ano'],
+        ]
+    ]);
+
+    return $total - (int) $disciplinesWithoutStage[0]['count'];
   }
 
   /**
@@ -1310,8 +1339,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
           if ($this->getTipoNotaRegraAvaliacao() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
             // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
-            $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
-            $andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
+            $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
+            $andamento = in_array($flagSituacaoNota, $situacoesFinais) === false;
           }
 
           if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
@@ -1325,6 +1354,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
         break;
+      default:
+        $situacao->andamento = TRUE;
     }
 
       // seta situacao geral
@@ -1433,8 +1464,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $matriculaId = $infosMatricula['cod_matricula'];
 
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
-    $mediasComponentes = $this->_loadMedias()
-                              ->getMediasComponentes();
+    $mediasComponentes = $this->_loadMedias()->getMediasComponentes();
+    $mediasComponenentesTotal = $mediasComponentes;
     $componentes = $this->getComponentes();
     $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
 
@@ -1444,6 +1475,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
 
     if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+
       return $situacao;
     }
 
@@ -1503,7 +1536,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $totalComponentes = $this->getQtdComponentes();
 
-    if ((0 == count($mediasComponentes) || count($mediasComponentes) < $totalComponentes)
+    if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
          && $this->getRegra()->get('definirComponentePorEtapa') == "1"){
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
@@ -1854,44 +1887,46 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getSituacaoComponentesCurriculares()
   {
-    $situacao                          = new stdClass();
-    $situacao->situacao                = App_Model_MatriculaSituacao::APROVADO;
+    $situacao = new stdClass();
+    $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
     $situacao->componentesCurriculares = array();
 
-    $situacaoNotas  = $this->getSituacaoNotas();
+    $componentes = $this->getComponentes();
+    $situacaoNotas = $this->getSituacaoNotas();
     $situacaoFaltas = $this->getSituacaofaltas();
 
-    foreach($situacaoNotas->componentesCurriculares as $ccId => $situacaoNotaCc) {
+    foreach ($componentes as $ccId => $componente) {
       // seta tipos nota, falta
-      $tipoNotaNenhum         = $this->getRegra()->get('tipoNota')  ==
-                                RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+      $tipoNotaNenhum = $this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+      $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
-      $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') ==
-                                RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
+      $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
 
       // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
-      $situacaoFaltaCc           = new stdClass();
+      $situacaoFaltaCc = new stdClass();
       $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
       // caso possua situacaoFalta para o componente substitui situacao inicializada
-      if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId]))
+      if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId])) {
         $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
+      }
 
       // pega situação nota geral ou do componente
-      if ($tipoNotaNenhum)
+      if ($tipoNotaNenhum) {
         $situacaoNota = $situacaoNotas->situacao;
-      else
+      } else {
         $situacaoNota = $situacaoNotaCc->situacao;
+      }
 
       // pega situacao da falta componente ou geral.
-      if($tipoFaltaPorComponente)
+      if ($tipoFaltaPorComponente) {
         $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
-      else
+      } else {
         $situacaoFalta = $situacaoFaltas->situacao;
+      }
 
       $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
     }
-    // #FIXME verificar porque para regras sem nota, não é retornado a situacao.
 
     return $situacao;
   }
@@ -2821,7 +2856,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (count($regrasRecuperacoes)) {
         $data['Se'] = 0;
     }
-    
+
     foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
       $cont++;
       $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
@@ -2974,7 +3009,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $notaAluno = $this->_getNotaAluno();
       $notas = $this->getNotas();
-      
+
       foreach ($notas as $nota) {
           $nota->notaAluno = $notaAluno;
           if($nota instanceof Avaliacao_Model_NotaComponente){

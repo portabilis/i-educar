@@ -171,6 +171,21 @@ class indice extends clsCadastro
     return false;
   }
 
+    /**
+     * Retorna a data base de remanejamento para a instituição.
+     *
+     * @param int $instituicao
+     *
+     * @return string|null
+     */
+  public function getDataBaseRemanejamento($instituicao)
+  {
+      $instituicao = new clsPmieducarInstituicao($instituicao);
+
+      $instituicao = $instituicao->detalhe();
+
+      return $instituicao['data_base_remanejamento'];
+  }
 
   function removerEnturmacao($matriculaId, $turmaId, $remanejado = FALSE) {
 
@@ -224,12 +239,20 @@ class indice extends clsCadastro
 
   function atualizaUltimaEnturmacao($matriculaId)
   {
-    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+    $objMatriculaTurma = new clsPmieducarMatriculaTurma($matriculaId);
     $ultima_turma = $objMatriculaTurma->getUltimaTurmaEnturmacao($matriculaId);
     $sequencial = $objMatriculaTurma->getMaxSequencialEnturmacao($matriculaId);
     $lst_ativo = $objMatriculaTurma->lista($matriculaId, $ultima_turma, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $sequencial);
+
     $ativo = $lst_ativo[0]['ativo'];
-    if ($sequencial >= 1) {
+
+    $dataBaseRemanejamento = $this->getDataBaseRemanejamento(
+        $objMatriculaTurma->getInstituicao()
+    );
+
+    $marcarAlunoComoRemanejado = is_null($dataBaseRemanejamento) || strtotime($dataBaseRemanejamento) < strtotime(date('Y-m-d'));
+
+    if ($sequencial >= 1 && $marcarAlunoComoRemanejado) {
         $remanejado = TRUE;
         $enturmacao = new clsPmieducarMatriculaTurma(
             $matriculaId,

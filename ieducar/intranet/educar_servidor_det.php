@@ -231,7 +231,7 @@ class indice extends clsDetalhe
 
     $this->addDetalhe(
       array(
-        'Multi-seriado',
+        'Multisseriado',
         dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'
       )
     );
