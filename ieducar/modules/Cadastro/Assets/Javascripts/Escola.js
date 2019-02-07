@@ -31,7 +31,7 @@ var $arrayCheckDependencias = ['dependencia_sala_diretoria',
                                'dependencia_area_verde',
                                'dependencia_lavanderia'];
 
-const C_DEPENDENCIA_ADMINISTRATIVA = {
+const DEPENDENCIA_ADMINISTRATIVA = {
   FEDERAL: 1,
   ESTADUAL: 2,
   MUNICIPAL: 3,
@@ -188,7 +188,7 @@ $j('#computadores').change(
 
 
 function habilitaCampoOrgaoVinculadoEscola() {
-  if ($j('#dependencia_administrativa').val() != C_DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+  if ($j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
     $j("#orgao_vinculado_escola").prop('disabled', false);
     $j("#orgao_vinculado_escola").trigger("chosen:updated");
   } else {
@@ -321,7 +321,7 @@ $j(document).ready(function() {
           return false;
       });
 
-      if($j('#dependencia_administrativa').val() == C_DEPENDENCIA_ADMINISTRATIVA.PRIVADA && $j('#situacao_funcionamento').val() == '1'){
+      if($j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA && $j('#situacao_funcionamento').val() == '1'){
             $j('#categoria_escola_privada').closest('tr').show();
             $j('#conveniada_com_poder_publico').closest('tr').show();
             $j('#mantenedora_escola_privada').closest('tr').show();
@@ -342,7 +342,7 @@ $j(document).ready(function() {
     $j('#conveniada_com_poder_publico').makeUnrequired();
     $j('#mantenedora_escola_privada').makeUnrequired();
     $j('#cnpj_mantenedora_principal').makeUnrequired();
-    if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == C_DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
+    if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
       $j('#categoria_escola_privada').makeRequired();
       $j('#conveniada_com_poder_publico').makeRequired();
       $j('#mantenedora_escola_privada').makeRequired();
