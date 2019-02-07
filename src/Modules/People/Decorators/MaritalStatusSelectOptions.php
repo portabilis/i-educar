@@ -17,11 +17,11 @@ class MaritalStatusSelectOptions
     {
         return [
             MaritalStatus::MARRIED => 'Casado(a)',
- 			MaritalStatus::COMPANION => 'Companheiro(a)',
- 			MaritalStatus::DIVORCED => 'Divorciado(a)',
- 			MaritalStatus::SEPARATE => 'Separado(a)',
- 			MaritalStatus::NOT_MARRIED => 'Solteiro(a)',
- 			MaritalStatus::WIDOWER => 'Viúvo(a)',
+            MaritalStatus::COMPANION => 'Companheiro(a)',
+            MaritalStatus::DIVORCED => 'Divorciado(a)',
+            MaritalStatus::SEPARATED => 'Separado(a)',
+            MaritalStatus::SINGLE => 'Solteiro(a)',
+            MaritalStatus::WIDOWER => 'Viúvo(a)',
         ];
     }
 

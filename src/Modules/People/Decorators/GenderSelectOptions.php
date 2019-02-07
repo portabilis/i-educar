@@ -17,7 +17,7 @@ class GenderSelectOptions
     {
         return [
             Gender::MALE => 'Masculino',
- 			Gender::FEMALE => 'Feminino',
+            Gender::FEMALE => 'Feminino',
         ];
     }
 
