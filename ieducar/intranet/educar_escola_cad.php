@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
+use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1239,11 +1240,7 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
-            $resources = array(NULL => 'Selecione',
-                1 => 'Área de assentamento',
-                2 => 'Terra indígena',
-                3 => 'Área onde se localiza comunidades remanescentes de quilombos',
-                7 => 'A escola não está em área de localização diferenciada');
+            $resources = LocalizacaoDiferenciadaEscola::getDescriptiveValues();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
@@ -2199,7 +2196,8 @@ class indice extends clsCadastro
 
     protected function validaLocalizacaoDiferenciada()
     {
-        if ($this->localizacao_diferenciada == 1 && $this->zona_localizacao == 1) {
+        if ($this->localizacao_diferenciada == LocalizacaoDiferenciadaEscola::AREA_ASSENTAMENTO &&
+            $this->zona_localizacao == App_Model_ZonaLocalizacao::URBANA) {
             $this->mensagem = 'O campo: Localização diferenciada da escola não pode ser preenchido com Área de assentamento quando o campo: Zona localização for Urbana';
             return false;
         }
