@@ -31,6 +31,13 @@ var $arrayCheckDependencias = ['dependencia_sala_diretoria',
                                'dependencia_area_verde',
                                'dependencia_lavanderia'];
 
+const DEPENDENCIA_ADMINISTRATIVA = {
+  FEDERAL: 1,
+  ESTADUAL: 2,
+  MUNICIPAL: 3,
+  PRIVADA: 4
+}
+
 $escolaInepIdField.closest('tr').hide();
 
 var submitForm = function(){
@@ -178,6 +185,18 @@ $j('#computadores').change(
   }
 ).trigger('change');
 
+
+
+function habilitaCampoOrgaoVinculadoEscola() {
+  if ($j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+    $j("#orgao_vinculado_escola").prop('disabled', false);
+    $j("#orgao_vinculado_escola").trigger("chosen:updated");
+  } else {
+    $j("#orgao_vinculado_escola").prop('disabled', true);
+    $j("#orgao_vinculado_escola").trigger("chosen:updated");
+  }
+}
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
@@ -302,7 +321,7 @@ $j(document).ready(function() {
           return false;
       });
 
-      if($j('#dependencia_administrativa').val() == 4 && $j('#situacao_funcionamento').val() == '1'){
+      if($j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA && $j('#situacao_funcionamento').val() == '1'){
             $j('#categoria_escola_privada').closest('tr').show();
             $j('#conveniada_com_poder_publico').closest('tr').show();
             $j('#mantenedora_escola_privada').closest('tr').show();
@@ -323,7 +342,7 @@ $j(document).ready(function() {
     $j('#conveniada_com_poder_publico').makeUnrequired();
     $j('#mantenedora_escola_privada').makeUnrequired();
     $j('#cnpj_mantenedora_principal').makeUnrequired();
-    if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == '4'){
+    if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
       $j('#categoria_escola_privada').makeRequired();
       $j('#conveniada_com_poder_publico').makeRequired();
       $j('#mantenedora_escola_privada').makeRequired();
@@ -340,7 +359,15 @@ $j(document).ready(function() {
     }
   });
 
-  $j('#dependencia_administrativa').on('change', verificaCamposDepAdm);
+  $j('#dependencia_administrativa').change(
+    function (){
+      verificaCamposDepAdm();
+      habilitaCampoOrgaoVinculadoEscola();
+    }
+  );
+
+  habilitaCampoOrgaoVinculadoEscola();
+
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
   verificaCamposDepAdm();
 

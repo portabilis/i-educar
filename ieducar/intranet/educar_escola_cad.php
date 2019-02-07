@@ -1,5 +1,8 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
+use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -15,7 +18,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
         $this->processoAp = "561";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 
@@ -78,6 +80,7 @@ class indice extends clsCadastro
     public $andar;
     public $situacao_funcionamento;
     public $dependencia_administrativa;
+    public $orgao_vinculado_escola;
     public $latitude;
     public $longitude;
     public $regulamentacao;
@@ -181,14 +184,11 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
-        $this->cod_escola = $_GET["cod_escola"];
+        $this->cod_escola = $this->getQueryString('cod_escola');
 
         $this->sem_cnpj = false;
 
@@ -399,15 +399,13 @@ class indice extends clsCadastro
             $this->mantenedora_escola_privada = explode(',', str_replace(array('{', "}"), '', $this->mantenedora_escola_privada));
         }
 
+        if (is_string($this->orgao_vinculado_escola)) {
+            $this->orgao_vinculado_escola = explode(',', str_replace(array('{', "}"), '', $this->orgao_vinculado_escola));
+        }
+
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "{$nomeMenu} escola",
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
         $this->nome_url_cancelar = "Cancelar";
         return $retorno;
     }
@@ -763,6 +761,19 @@ class indice extends clsCadastro
                 4 => 'Privada');
             $options = array('label' => 'Dependência administrativa', 'resources' => $resources, 'value' => $this->dependencia_administrativa);
             $this->inputsHelper()->select('dependencia_administrativa', $options);
+
+            $orgaos = OrgaoVinculadoEscola::getDescriptiveValues();
+            $helperOptions = ['objectName'  => 'orgao_vinculado_escola'];
+            $options = [
+                'label' => 'Órgão que a escola pública está vinculada',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->orgao_vinculado_escola,
+                    'all_values' => $orgaos
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $resources = array(0 => 'Não',
                 1 => 'Sim',
@@ -1229,14 +1240,7 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
-            $resources = array(NULL => 'Selecione',
-                1 => 'Área de assentamento',
-                2 => 'Terra indígena',
-                3 => 'Área onde se localiza comunidades remanescentes de quilombos',
-                4 => 'Unidade de uso sustentável',
-                5 => 'Unidade de uso sustentável em terra indígena',
-                6 => 'Unidade de uso sustentável em área onde se localiza comunidade remanescente de quilombos',
-                7 => 'Não se aplica');
+            $resources = LocalizacaoDiferenciadaEscola::getDescriptiveValues();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
@@ -1341,12 +1345,9 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
+        $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
@@ -1358,6 +1359,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaLatitudeLongitude()) {
+            return false;
+        }
+
+        if (!$this->validaDadosTelefones()) {
             return false;
         }
 
@@ -1404,6 +1409,7 @@ class indice extends clsCadastro
                     $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
                     $obj->situacao_funcionamento = $this->situacao_funcionamento;
                     $obj->dependencia_administrativa = $this->dependencia_administrativa;
+                    $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
                     $obj->latitude = $this->latitude;
                     $obj->longitude = $this->longitude;
                     $obj->regulamentacao = $this->regulamentacao;
@@ -1577,6 +1583,7 @@ class indice extends clsCadastro
         } elseif ($this->sem_cnpj) {
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
+            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
@@ -1719,10 +1726,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
@@ -1751,6 +1754,7 @@ class indice extends clsCadastro
             }
         }
 
+        $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
@@ -1780,6 +1784,7 @@ class indice extends clsCadastro
         if ($this->cod_escola) {
             $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
+            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
@@ -1888,6 +1893,7 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
+            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
@@ -2114,10 +2120,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
         $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
@@ -2174,7 +2176,8 @@ class indice extends clsCadastro
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
                 $this->validaSalasExistentes() &&
-                $this->validaPossuiBandaLarga();
+                $this->validaPossuiBandaLarga() &&
+                $this->validaLocalizacaoDiferenciada();
     }
 
     protected function validaOcupacaoPredio()
@@ -2193,6 +2196,17 @@ class indice extends clsCadastro
             return FALSE;
         }
         return TRUE;
+    }
+
+    protected function validaLocalizacaoDiferenciada()
+    {
+        if ($this->localizacao_diferenciada == LocalizacaoDiferenciadaEscola::AREA_ASSENTAMENTO &&
+            $this->zona_localizacao == App_Model_ZonaLocalizacao::URBANA) {
+            $this->mensagem = 'O campo: Localização diferenciada da escola não pode ser preenchido com Área de assentamento quando o campo: Zona localização for Urbana';
+            return false;
+        }
+
+        return true;
     }
 
     protected function validaPossuiBandaLarga()
@@ -2267,7 +2281,9 @@ class indice extends clsCadastro
     protected function validaDadosTelefones()
     {
         return $this->validaDDDTelefone($this->p_ddd_telefone_1, $this->p_telefone_1, 'Telefone 1') &&
+        $this->validaTelefone($this->p_telefone_1, 'Telefone 1') &&
         $this->validaDDDTelefone($this->p_ddd_telefone_2, $this->p_telefone_2, 'Telefone 2') &&
+        $this->validaTelefone($this->p_telefone_2, 'Telefone 2') &&
         $this->validaDDDTelefone($this->p_ddd_telefone_mov, $this->p_telefone_mov, 'Celular') &&
         $this->validaDDDTelefone($this->p_ddd_telefone_fax, $this->p_telefone_fax, 'Fax');
     }
@@ -2289,6 +2305,65 @@ class indice extends clsCadastro
 
         return true;
     }
+
+    protected function validaTelefone($telefone, $nomeCampo)
+    {
+        if (empty($telefone)) {
+            return true;
+        }
+
+        if (!$this->validaQuantidadeDeDigitosDoTelefone($telefone, $nomeCampo)) {
+            return false;
+        }
+
+        if (!$this->validaPrimeiroDigitoDoTelefone($telefone, $nomeCampo)) {
+            return false;
+        }
+
+        if (!$this->validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaQuantidadeDeDigitosDoTelefone($telefone, $nomeCampo)
+    {
+        $quantidadeDeDigitos = strlen($telefone);
+
+        if ($quantidadeDeDigitos < 8 || $quantidadeDeDigitos > 9) {
+            $this->mensagem = "O campo: {$nomeCampo} deve possuir de 8 a 9 números.";
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaPrimeiroDigitoDoTelefone($telefone, $nomeCampo)
+    {
+        $quantidadeDeDigitos = strlen($telefone);
+        $primeiroDigito = substr($telefone, 0, 1);
+
+        if ($quantidadeDeDigitos == 9 && $primeiroDigito != 9) {
+            $this->mensagem = "No campo: {$nomeCampo} o primeiro dígito deve ser o número 9.";
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)
+    {
+        $possuiTodosOsDigitosRepetidos = preg_match('/^(.)\1*$/', $telefone);
+
+        if ($possuiTodosOsDigitosRepetidos) {
+            $this->mensagem = "Os números do campo: {$nomeCampo} não podem ser todos repetidos.";
+            return false;
+        }
+
+        return true;
+    }
+
 
     protected function validaDigitosInepEscola($inep, $nomeCampo)
     {
