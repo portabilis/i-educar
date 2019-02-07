@@ -1243,10 +1243,7 @@ class indice extends clsCadastro
                 1 => 'Área de assentamento',
                 2 => 'Terra indígena',
                 3 => 'Área onde se localiza comunidades remanescentes de quilombos',
-                4 => 'Unidade de uso sustentável',
-                5 => 'Unidade de uso sustentável em terra indígena',
-                6 => 'Unidade de uso sustentável em área onde se localiza comunidade remanescente de quilombos',
-                7 => 'Não se aplica');
+                7 => 'A escola não está em área de localização diferenciada');
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
