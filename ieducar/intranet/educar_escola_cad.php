@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
+use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1239,14 +1240,7 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
-            $resources = array(NULL => 'Selecione',
-                1 => 'Área de assentamento',
-                2 => 'Terra indígena',
-                3 => 'Área onde se localiza comunidades remanescentes de quilombos',
-                4 => 'Unidade de uso sustentável',
-                5 => 'Unidade de uso sustentável em terra indígena',
-                6 => 'Unidade de uso sustentável em área onde se localiza comunidade remanescente de quilombos',
-                7 => 'Não se aplica');
+            $resources = LocalizacaoDiferenciadaEscola::getDescriptiveValues();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
@@ -2182,7 +2176,8 @@ class indice extends clsCadastro
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
                 $this->validaSalasExistentes() &&
-                $this->validaPossuiBandaLarga();
+                $this->validaPossuiBandaLarga() &&
+                $this->validaLocalizacaoDiferenciada();
     }
 
     protected function validaOcupacaoPredio()
@@ -2201,6 +2196,17 @@ class indice extends clsCadastro
             return FALSE;
         }
         return TRUE;
+    }
+
+    protected function validaLocalizacaoDiferenciada()
+    {
+        if ($this->localizacao_diferenciada == LocalizacaoDiferenciadaEscola::AREA_ASSENTAMENTO &&
+            $this->zona_localizacao == App_Model_ZonaLocalizacao::URBANA) {
+            $this->mensagem = 'O campo: Localização diferenciada da escola não pode ser preenchido com Área de assentamento quando o campo: Zona localização for Urbana';
+            return false;
+        }
+
+        return true;
     }
 
     protected function validaPossuiBandaLarga()
@@ -2314,7 +2320,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosSequenciasDoTelefone($telefone, $nomeCampo)) {
+        if (!$this->validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)) {
             return false;
         }
 
@@ -2346,7 +2352,7 @@ class indice extends clsCadastro
         return true;
     }
 
-    protected function validaDigitosSequenciasDoTelefone($telefone, $nomeCampo)
+    protected function validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)
     {
         $possuiTodosOsDigitosRepetidos = preg_match('/^(.)\1*$/', $telefone);
 
