@@ -100,6 +100,7 @@ class indice extends clsListagem
     $this->addCabecalhos(array(
       'Sequencial',
       'Turma',
+      'Turno',
       'Ativo',
       'Data de enturmação',
       'Data de saída',
@@ -166,10 +167,16 @@ class indice extends clsListagem
         $usuarioEditou = new clsPessoa_($registro['ref_usuario_exc']);
         $usuarioEditou = $usuarioEditou->detalhe();
 
+        $turno = '';
+        if ($registro['turno_id']) {
+            $turno = Portabilis_Utils_Database::selectField('SELECT nome FROM pmieducar.turma_turno WHERE id = $1', [$registro['turno_id']]);
+        }
+
         $this->addLinhas(
           array(
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$registro["sequencial"]}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$registro["nm_turma"]}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$turno}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$ativo}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$dataEnturmacao}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$dataSaida}</a>",
