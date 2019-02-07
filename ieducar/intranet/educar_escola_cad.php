@@ -2271,7 +2271,9 @@ class indice extends clsCadastro
     protected function validaDadosTelefones()
     {
         return $this->validaDDDTelefone($this->p_ddd_telefone_1, $this->p_telefone_1, 'Telefone 1') &&
+        $this->validaTelefone($this->p_telefone_1, 'Telefone 1') &&
         $this->validaDDDTelefone($this->p_ddd_telefone_2, $this->p_telefone_2, 'Telefone 2') &&
+        $this->validaTelefone($this->p_telefone_2, 'Telefone 2') &&
         $this->validaDDDTelefone($this->p_ddd_telefone_mov, $this->p_telefone_mov, 'Celular') &&
         $this->validaDDDTelefone($this->p_ddd_telefone_fax, $this->p_telefone_fax, 'Fax');
     }
@@ -2293,6 +2295,65 @@ class indice extends clsCadastro
 
         return true;
     }
+
+    protected function validaTelefone($telefone, $nomeCampo)
+    {
+        if (empty($telefone)) {
+            return true;
+        }
+
+        if (!$this->validaQuantidadeDeDigitosDoTelefone($telefone, $nomeCampo)) {
+            return false;
+        }
+
+        if (!$this->validaPrimeiroDigitoDoTelefone($telefone, $nomeCampo)) {
+            return false;
+        }
+
+        if (!$this->validaDigitosSequenciasDoTelefone($telefone, $nomeCampo)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaQuantidadeDeDigitosDoTelefone($telefone, $nomeCampo)
+    {
+        $quantidadeDeDigitos = strlen($telefone);
+
+        if ($quantidadeDeDigitos < 8 || $quantidadeDeDigitos > 9) {
+            $this->mensagem = "O campo: {$nomeCampo} deve possuir de 8 a 9 números.";
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaPrimeiroDigitoDoTelefone($telefone, $nomeCampo)
+    {
+        $quantidadeDeDigitos = strlen($telefone);
+        $primeiroDigito = substr($telefone, 0, 1);
+
+        if ($quantidadeDeDigitos == 9 && $primeiroDigito != 9) {
+            $this->mensagem = "No campo: {$nomeCampo} o primeiro dígito deve ser o número 9.";
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaDigitosSequenciasDoTelefone($telefone, $nomeCampo)
+    {
+        $possuiTodosOsDigitosRepetidos = preg_match('/^(.)\1*$/', $telefone);
+
+        if ($possuiTodosOsDigitosRepetidos) {
+            $this->mensagem = "Os números do campo: {$nomeCampo} não podem ser todos repetidos.";
+            return false;
+        }
+
+        return true;
+    }
+
 
     protected function validaDigitosInepEscola($inep, $nomeCampo)
     {
