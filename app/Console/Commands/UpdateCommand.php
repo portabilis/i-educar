@@ -48,6 +48,18 @@ class UpdateCommand extends Command
             'migration' => '2019_01_01_800000_altera_tamanho_coluna_cartorio_na_tabela_historico_documento'
         ]);
 
+        DB::table($table)->where([
+            'migration' => '2019_01_04_153440_adiciona_coluna_bloquear_cadastro_aluno_configuracoes_gerais'
+        ])->update([
+            'migration' => '2019_01_01_800000_adiciona_coluna_bloquear_cadastro_aluno_configuracoes_gerais'
+        ]);
+
+        DB::table($table)->where([
+            'migration' => '2019_01_22_142832_inserir_tipos_logradouros'
+        ])->update([
+            'migration' => '2019_01_01_800000_inserir_tipos_logradouros'
+        ]);
+
         $files = $filesystem->allFiles($path);
 
         foreach ($files as $file) {
