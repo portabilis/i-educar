@@ -1,5 +1,8 @@
 <?php
 
+use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
+
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/Exception.php';
 
@@ -747,7 +750,8 @@ class App_Model_IedFinder extends CoreExt_Entity
      *
      * @return array
      *
-     * @throws App_Model_Exception
+     * @throws EvaluationRuleNotDefinedInLevel
+     * @throws StudentNotEnrolledInSchoolClass
      */
     public static function getMatricula($codMatricula)
     {
@@ -843,12 +847,11 @@ class App_Model_IedFinder extends CoreExt_Entity
     ';
 
         $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => $codMatricula]);
-        ;
 
         if (!$matricula) {
-            throw new App_Model_Exception('Aluno não enturmado.');
+            throw new StudentNotEnrolledInSchoolClass($codMatricula);
         } elseif (empty($matricula['serie_regra_avaliacao_id'])) {
-            throw new App_Model_Exception('Regra de avaliação não informada na série para o ano letivo informado.');
+            throw new EvaluationRuleNotDefinedInLevel($matricula['ref_ref_cod_serie']);
         }
 
         return $matricula;
