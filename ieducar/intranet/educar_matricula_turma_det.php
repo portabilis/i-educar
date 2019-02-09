@@ -264,29 +264,8 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('<b>Enturmação atual</b>', $selectEnturmacoes));
     }
 
-    $sql = 'select id, nome from pmieducar.turma_turno where ativo = 1 order by id DESC';
-    $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql);
-    $turnos = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
-    $descricaoTurno = '';
-
-    if (isset($turnos[$det_mat_turma['turno_id']])) {
-        $descricaoTurno = $turnos[$det_mat_turma['turno_id']];
-    }
-
     if(!$this->possuiEnturmacaoTurmaDestino) {
         $this->addDetalhe(array('Data da enturmação', '<input onkeypress="formataData(this,event);" value="" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));
-        $infoTurno = view('inputs.turno', ['turnos' => $turnos])->render();
-    } else {
-        $infoTurno = $descricaoTurno;
-    }
-
-    if ($descricaoTurno || !$this->possuiEnturmacaoTurmaDestino) {
-        $this->addDetalhe(
-            [
-                'Turno',
-                $infoTurno,
-            ]
-        );
     }
 
     $this->addDetalhe(array(
@@ -299,7 +278,6 @@ class indice extends clsDetalhe
           <input type="hidden" name="ref_cod_turma_origem" value="%d">
           <input type="hidden" name="ref_cod_turma_destino" value="">
           <input type="hidden" name="data_enturmacao" value="">
-          <input type="hidden" name="turno_id" value="">
           <input type="hidden" name="sequencial" value="%d">
         </form>
       ', $this->ref_cod_turma_origem, $this->sequencial)
@@ -332,7 +310,6 @@ class indice extends clsDetalhe
 
         function enturmar(ref_cod_matricula, ref_cod_turma_destino, tipo){
           var data = $j("#data_enturmacao").val();
-          var turno_id = $j("#turno_id").val();
           var array_data = data.split("/");
           var data_valida = IsDate(array_data[0], array_data[1], array_data[2]);
           if (data_valida == false) {
@@ -357,7 +334,6 @@ class indice extends clsDetalhe
           document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
           document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
           document.formcadastro.data_enturmacao.value = document.getElementById("data_enturmacao").value;
-          document.formcadastro.turno_id.value = turno_id;
           document.formcadastro.submit();
         }
 
