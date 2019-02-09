@@ -445,7 +445,7 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
-      if (is_string($this->turno_id)) {
+      if (is_string($this->turno_id) && !empty($this->turno_id)) {
         $set .= "{$gruda}turno_id = '{$this->turno_id}'";
         $gruda = ", ";
       }elseif(is_null($this->turno_id) || empty($this->turno_id)){
