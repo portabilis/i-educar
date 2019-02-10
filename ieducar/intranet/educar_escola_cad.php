@@ -2,6 +2,9 @@
 
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\Regulamentacao;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -180,6 +183,7 @@ class indice extends clsCadastro
     public $sem_cnpj;
     public $com_cnpj;
     public $isEnderecoExterno = 0;
+    public $esfera_administrativa;
 
     public function Inicializar()
     {
@@ -809,6 +813,16 @@ class indice extends clsCadastro
             $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
 
             $this->inputsHelper()->text('email_gestor', $options);
+
+            $resources = EsferaAdministrativa::getDescriptiveValues();
+            $options = [
+                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
+                'resources' => $resources,
+                'value' => $this->esfera_administrativa,
+                'required' => $obrigarCamposCenso && $this->regulamentacao != Regulamentacao::NAO,
+                'disabled' => $this->regulamentacao == Regulamentacao::NAO,
+            ];
+            $this->inputsHelper()->select('esfera_administrativa', $options);
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
@@ -1504,6 +1518,7 @@ class indice extends clsCadastro
                     $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+                    $obj->esfera_administrativa = $this->esfera_administrativa;
 
                     $cod_escola = $cadastrou1 = $obj->cadastra();
 
@@ -1679,6 +1694,8 @@ class indice extends clsCadastro
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+            $obj->esfera_administrativa = $this->esfera_administrativa;
+
             $cod_escola = $cadastrou = $obj->cadastra();
 
             if ($cadastrou) {
@@ -1882,6 +1899,8 @@ class indice extends clsCadastro
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+            $obj->esfera_administrativa = $this->esfera_administrativa;
+
             $editou = $obj->edita();
 
             if ($editou) {
@@ -1990,6 +2009,8 @@ class indice extends clsCadastro
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+            $obj->esfera_administrativa = $this->esfera_administrativa;
+
             $this->cod_escola = $editou = $obj->cadastra();
 
             if ($this->cod_escola) {
@@ -2177,7 +2198,8 @@ class indice extends clsCadastro
                 $this->validaOcupacaoPredio() &&
                 $this->validaSalasExistentes() &&
                 $this->validaPossuiBandaLarga() &&
-                $this->validaLocalizacaoDiferenciada();
+                $this->validaLocalizacaoDiferenciada() &&
+                $this->validaEsferaAdministrativa();
     }
 
     protected function validaOcupacaoPredio()
@@ -2216,6 +2238,58 @@ class indice extends clsCadastro
             return FALSE;
         }
         return TRUE;
+    }
+
+    protected function validaEsferaAdministrativa()
+    {
+        $esferaAdministrativa = $this->esfera_administrativa;
+        $dependenciaAdministrativa = $this->dependencia_administrativa;
+        $mensagem = 'O campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização, foi preenchido com um valor incorreto';
+
+        if ($this->regulamentacao != Regulamentacao::NAO && empty($esferaAdministrativa)) {
+            $this->mensagem = '1'.$mensagem;
+            return false;
+        }
+
+        /**
+         * Se o campo "dependência administrativa" for:
+         * 2 (Estadual) este campo também deve ser 2
+         */
+        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::ESTADUAL) {
+            if ($esferaAdministrativa != EsferaAdministrativa::ESTADUAL) {
+                $this->mensagem = '2'.$mensagem;
+                return false;
+            }
+        }
+        /**
+         * Se o campo "dependência administrativa" for:
+         * 1 (Federal) este campo deve ser 1 ou 2
+         */
+        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::FEDERAL) {
+            if (
+                $esferaAdministrativa != EsferaAdministrativa::FEDERAL &&
+                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL
+            ) {
+                $this->mensagem = '3'.$mensagem;
+                return false;
+            }
+
+        }
+        /**
+         * Se o campo "dependência administrativa" for:
+         * 3 (Municipal) este campo deve ser 2 ou 3
+         */
+        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::MUNICIPAL) {
+            if (
+                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL &&
+                $esferaAdministrativa != EsferaAdministrativa::MUNICIPAL
+            ) {
+                $this->mensagem = '4'.$mensagem;
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected function validaEscolaPrivada()

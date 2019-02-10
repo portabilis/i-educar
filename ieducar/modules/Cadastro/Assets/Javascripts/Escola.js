@@ -185,8 +185,6 @@ $j('#computadores').change(
   }
 ).trigger('change');
 
-
-
 function habilitaCampoOrgaoVinculadoEscola() {
   if ($j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
     $j("#orgao_vinculado_escola").prop('disabled', false);
@@ -194,6 +192,16 @@ function habilitaCampoOrgaoVinculadoEscola() {
   } else {
     $j("#orgao_vinculado_escola").prop('disabled', true);
     $j("#orgao_vinculado_escola").trigger("chosen:updated");
+  }
+}
+
+function habilitaCampoEsferaAdministrativa() {
+  let regulamentacao = $j('#regulamentacao').val();
+
+  if (regulamentacao === '0') {
+    $j("#esfera_administrativa").prop('disabled', true);
+  } else {
+    $j("#esfera_administrativa").prop('disabled', false);
   }
 }
 
@@ -369,6 +377,7 @@ $j(document).ready(function() {
   habilitaCampoOrgaoVinculadoEscola();
 
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
+  $j('#regulamentacao').on('change', habilitaCampoEsferaAdministrativa);
   verificaCamposDepAdm();
 
   let verificaLatitudeLongitude = () => {
