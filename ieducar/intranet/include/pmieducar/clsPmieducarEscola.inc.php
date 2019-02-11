@@ -160,6 +160,7 @@ class clsPmieducarEscola
   var $inep_escola_sede;
   var $codigo_ies;
   var $codUsuario;
+  var $esfera_administrativa;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -244,7 +245,7 @@ class clsPmieducarEscola
           e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
           e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
           e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
-          e.email_gestor, e.orgao_vinculado_escola, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies
+          e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -1054,6 +1055,12 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->esfera_administrativa)) {
+        $campos .= "{$gruda}esfera_administrativa";
+        $valores .= "{$gruda}'{$this->esfera_administrativa}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -1719,6 +1726,14 @@ class clsPmieducarEscola
       }else{
         $set .= "{$gruda}cnpj_mantenedora_principal = NULL ";
         $gruda = ", ";
+      }
+
+      if (is_numeric($this->esfera_administrativa)) {
+        $gruda = ", ";
+        $set .= "{$gruda}esfera_administrativa = '{$this->esfera_administrativa}'";
+      } elseif (is_null($this->esfera_administrativa) || $this->esfera_administrativa = '') {
+        $gruda = ", ";
+        $set .= "{$gruda}esfera_administrativa = NULL ";
       }
 
       if ($set) {
