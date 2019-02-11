@@ -156,7 +156,7 @@
                      style="background: url('/intranet/imagens/user-perfil.png')"></div>
             </a>
             <div class="dropdown">
-                <div class="dropbtn">Administrador</div>
+                <div class="dropbtn">{{$loggedUser->name}}</div>
                 <div class="dropdown-content">
                     <a href="/intranet/agenda.php">Agenda</a>
                     <a href="/intranet/index.php">Calendário</a>

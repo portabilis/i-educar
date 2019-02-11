@@ -48,6 +48,7 @@ class Kernel extends HttpKernel
             GetLegacySession::class,
             ConnectTenantDatabase::class,
             LoadLegacyConfig::class,
+            SetLayoutVariables::class,
         ],
 
         'api' => [
