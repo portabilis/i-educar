@@ -5,6 +5,11 @@ require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma
 {
+    const TURNO_MATUTINO = 1;
+    const TURNO_VESPERTINO = 2;
+    const TURNO_NOTURNO = 3;
+    const TURNO_INTEGRAL = 4;
+    
     public $cod_turma;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
