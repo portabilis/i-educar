@@ -396,12 +396,18 @@ $j(document).ready(function() {
     if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA) {
       $j('#inep_escola_sede').closest('tr').show();
       $j('#codigo_ies').closest('tr').hide();
+      $j('#codigo_ies').val('');
+      $j('#codigo_ies_id').val('');
     } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR) {
       $j('#codigo_ies').closest('tr').show();
       $j('#inep_escola_sede').closest('tr').hide();
+      $j('#inep_escola_sede').val('');
     } else {
       $j('#inep_escola_sede').closest('tr').hide();
       $j('#codigo_ies').closest('tr').hide();
+      $j('#inep_escola_sede').val('');
+      $j('#codigo_ies').val('');
+      $j('#codigo_ies_id').val('');
     }
   }
 
