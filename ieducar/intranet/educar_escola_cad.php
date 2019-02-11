@@ -2214,7 +2214,9 @@ class indice extends clsCadastro
                 $this->validaOcupacaoPredio() &&
                 $this->validaSalasExistentes() &&
                 $this->validaPossuiBandaLarga() &&
-                $this->validaLocalizacaoDiferenciada();
+                $this->validaLocalizacaoDiferenciada() &&
+                $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
+                $this->inepEscolaSedeDiferenteDaEscolaPrincipal();
     }
 
     protected function validaOcupacaoPredio()
@@ -2408,6 +2410,16 @@ class indice extends clsCadastro
             $this->mensagem = "O campo: {$nomeCampo} deve conter 8 dígitos.";
             return false;
         }
+        return true;
+    }
+
+    protected function inepEscolaSedeDiferenteDaEscolaPrincipal()
+    {
+        if ($this->inep_escola_sede == $this->escola_inep_id) {
+            $this->mensagem = "O campo: Código da escola sede deve ser diferente do campo: Código INEP";
+            return false;
+        }
+
         return true;
     }
 
