@@ -200,8 +200,11 @@ function habilitaCampoEsferaAdministrativa() {
 
   if (regulamentacao === '0') {
     $j("#esfera_administrativa").prop('disabled', true);
+    $j('#esfera_administrativa').makeUnrequired();
+    $j("#esfera_administrativa").val('');
   } else {
     $j("#esfera_administrativa").prop('disabled', false);
+    $j('#esfera_administrativa').makeRequired();
   }
 }
 
@@ -379,6 +382,7 @@ $j(document).ready(function() {
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
   $j('#regulamentacao').on('change', habilitaCampoEsferaAdministrativa);
   verificaCamposDepAdm();
+  habilitaCampoEsferaAdministrativa();
 
   let verificaLatitudeLongitude = () => {
     let regex = new RegExp('^(\\-?\\d+(\\.\\d+)?)\\.\\s*(\\-?\\d+(\\.\\d+)?)\$');

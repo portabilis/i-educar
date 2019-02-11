@@ -814,13 +814,12 @@ class indice extends clsCadastro
 
             $this->inputsHelper()->text('email_gestor', $options);
 
-            $resources = EsferaAdministrativa::getDescriptiveValues();
+            $resources = [null => 'Selecione'] + EsferaAdministrativa::getDescriptiveValues();
             $options = [
                 'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
                 'resources' => $resources,
                 'value' => $this->esfera_administrativa,
-                'required' => $obrigarCamposCenso && $this->regulamentacao != Regulamentacao::NAO,
-                'disabled' => $this->regulamentacao == Regulamentacao::NAO,
+                'required' => false,
             ];
             $this->inputsHelper()->select('esfera_administrativa', $options);
 
@@ -2242,12 +2241,16 @@ class indice extends clsCadastro
 
     protected function validaEsferaAdministrativa()
     {
+        if ($this->regulamentacao == Regulamentacao::NAO) {
+            return true;
+        }
+
         $esferaAdministrativa = $this->esfera_administrativa;
         $dependenciaAdministrativa = $this->dependencia_administrativa;
         $mensagem = 'O campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização, foi preenchido com um valor incorreto';
 
         if ($this->regulamentacao != Regulamentacao::NAO && empty($esferaAdministrativa)) {
-            $this->mensagem = '1'.$mensagem;
+            $this->mensagem = $mensagem;
             return false;
         }
 
@@ -2257,7 +2260,7 @@ class indice extends clsCadastro
          */
         if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::ESTADUAL) {
             if ($esferaAdministrativa != EsferaAdministrativa::ESTADUAL) {
-                $this->mensagem = '2'.$mensagem;
+                $this->mensagem = $mensagem;
                 return false;
             }
         }
@@ -2270,7 +2273,7 @@ class indice extends clsCadastro
                 $esferaAdministrativa != EsferaAdministrativa::FEDERAL &&
                 $esferaAdministrativa != EsferaAdministrativa::ESTADUAL
             ) {
-                $this->mensagem = '3'.$mensagem;
+                $this->mensagem = $mensagem;
                 return false;
             }
 
@@ -2284,7 +2287,7 @@ class indice extends clsCadastro
                 $esferaAdministrativa != EsferaAdministrativa::ESTADUAL &&
                 $esferaAdministrativa != EsferaAdministrativa::MUNICIPAL
             ) {
-                $this->mensagem = '4'.$mensagem;
+                $this->mensagem = $mensagem;
                 return false;
             }
         }
