@@ -1315,11 +1315,11 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->select('unidade_vinculada_outra_instituicao', $options);
 
-            $this->campoTexto("inep_escola_sede", "Código da escola sede", $this->inep_escola_sede, 10, 8, $this->unidade_vinculada_outra_instituicao == '1');
+            $this->campoTexto("inep_escola_sede", "Código da escola sede", $this->inep_escola_sede, 10, 8, false);
 
             $options = [
                 'label' => 'Código da IES',
-                'required' => $this->unidade_vinculada_outra_instituicao == '2'
+                'required' => false
             ];
             $helperOptions = [
                 'objectName' => 'codigo_ies',
