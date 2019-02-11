@@ -16,7 +16,7 @@
         }];
     </script>
 
-@if(!empty($config['app']['gtm']['id']))
+    @if(!empty($config['app']['gtm']['id']))
     <!-- Google Tag Manager -->
         <script>(function (w, d, s, l, i) {
                 w[l] = w[l] || [];

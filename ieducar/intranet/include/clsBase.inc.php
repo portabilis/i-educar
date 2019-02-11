@@ -419,7 +419,13 @@ class clsBase extends clsConfig
                 die();
             }
 
-            echo view('legacy.body', ['body' => $saida_geral])->render();
+            $view = 'legacy.body';
+
+            if (!$this->renderMenu || !$this->renderMenuSuspenso) {
+                $view = 'legacy.blank';
+            }
+
+            echo view($view, ['body' => $saida_geral])->render();
 
         } catch (Exception $e) {
 
