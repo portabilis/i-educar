@@ -195,6 +195,15 @@ function habilitaCampoOrgaoVinculadoEscola() {
   }
 }
 
+function obrigaCampoOrgaoVinculadoEscola() {
+  if (obrigarCamposCenso && $j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+    $j("#orgao_vinculado_escola").makeUnrequired();
+    $j("#orgao_vinculado_escola").makeRequired();
+  } else {
+    $j("#orgao_vinculado_escola").makeUnrequired();
+  }
+}
+
 function habilitaCampoEsferaAdministrativa() {
   let regulamentacao = $j('#regulamentacao').val();
 
@@ -371,10 +380,12 @@ $j(document).ready(function() {
     function (){
       verificaCamposDepAdm();
       habilitaCampoOrgaoVinculadoEscola();
+      obrigaCampoOrgaoVinculadoEscola();
     }
   );
 
   habilitaCampoOrgaoVinculadoEscola();
+  obrigaCampoOrgaoVinculadoEscola();
 
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
   $j('#regulamentacao').on('change', habilitaCampoEsferaAdministrativa);
