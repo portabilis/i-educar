@@ -828,19 +828,21 @@ class indice extends clsCadastro
      * @see SchoolClassService::isAvailableName()
      *
      * @param int      $ano
+     * @param int      $curso
+     * @param int      $serie
      * @param int      $escola
      * @param string   $nome
      * @param int|null $id
      *
      * @return bool
      */
-    public function nomeEstaDisponivel($ano, $escola, $nome, $id = null)
+    public function nomeEstaDisponivel($ano, $curso, $serie, $escola, $nome, $id = null)
     {
-        $this->mensagem = 'O nome da turma já está sendo utilizado em outra turma.';
+        $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
 
         $service = new SchoolClassService();
 
-        return $service->isAvailableName($nome, $escola, $ano, $id);
+        return $service->isAvailableName($nome, $curso, $serie, $escola, $ano, $id);
     }
 
     public function Novo()
@@ -857,7 +859,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_escola, $this->nm_turma)) {
+        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma)) {
             return false;
         }
 
@@ -910,7 +912,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_escola, $this->nm_turma, $this->cod_turma)) {
+        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma, $this->cod_turma)) {
             return false;
         }
 
