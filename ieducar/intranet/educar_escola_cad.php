@@ -2,6 +2,7 @@
 
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\UnidadeVinculadaComOutraInstituicao;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1303,6 +1304,30 @@ class indice extends clsCadastro
                 'value' => $this->proposta_pedagogica,
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
+            
+            $resources = UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
+            $options = [
+                'label' => 'Unidade vinculada à Escola de Educação Básica ou Unidade Ofertante de Educação Superior',
+                'resources' => $resources,
+                'value' => $this->unidade_vinculada_outra_instituicao,
+                'required' => $obrigarCamposCenso,
+                'size' => 70
+            ];
+            $this->inputsHelper()->select('unidade_vinculada_outra_instituicao', $options);
+
+            $this->campoTexto("inep_escola_sede", "Código da escola sede", $this->inep_escola_sede, 10, 8, $this->unidade_vinculada_outra_instituicao == '1');
+
+            $options = [
+                'label' => 'Código da IES',
+                'required' => $this->unidade_vinculada_outra_instituicao == '2'
+            ];
+            $helperOptions = [
+                'objectName' => 'codigo_ies',
+                'hiddenInputOptions' => [
+                    'options' => ['value' => $this->codigo_ies]
+                ]
+            ];
+            $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
             $resources = array('' => 'Selecione',
                 1 => 'Particular',
@@ -1500,6 +1525,9 @@ class indice extends clsCadastro
                     $obj->ato_criacao = $this->ato_criacao;
                     $obj->ato_autorizativo = $this->ato_autorizativo;
                     $obj->ref_idpes_secretario_escolar = $this->secretario_id;
+                    $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
+                    $obj->inep_escola_sede = $this->inep_escola_sede;
+                    $obj->codigo_ies = $this->codigo_ies_id;
                     $obj->categoria_escola_privada = $this->categoria_escola_privada;
                     $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
@@ -1675,6 +1703,9 @@ class indice extends clsCadastro
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
             $obj->ref_idpes_secretario_escolar = $this->secretario_id;
+            $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
+            $obj->inep_escola_sede = $this->inep_escola_sede;
+            $obj->codigo_ies = $this->codigo_ies_id;
             $obj->categoria_escola_privada = $this->categoria_escola_privada;
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
@@ -1878,6 +1909,9 @@ class indice extends clsCadastro
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
             $obj->ref_idpes_secretario_escolar = $this->secretario_id;
+            $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
+            $obj->inep_escola_sede = $this->inep_escola_sede;
+            $obj->codigo_ies = $this->codigo_ies_id;
             $obj->categoria_escola_privada = $this->categoria_escola_privada;
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
@@ -1986,6 +2020,9 @@ class indice extends clsCadastro
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
             $obj->ref_idpes_secretario_escolar = $this->secretario_id;
+            $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
+            $obj->inep_escola_sede = $this->inep_escola_sede;
+            $obj->codigo_ies = $this->codigo_ies_id;
             $obj->categoria_escola_privada = $this->categoria_escola_privada;
             $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
