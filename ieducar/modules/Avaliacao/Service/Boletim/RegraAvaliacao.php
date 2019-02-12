@@ -13,9 +13,21 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     /**
      * @return RegraAvaliacao_Model_Regra
      */
-    public function getRegra()
+    public function getRegraAvaliacao()
     {
         return $this->_regra;
+    }
+
+    /**
+     * @deprecated
+     *
+     * @see Avaliacao_Service_Boletim_RegraAvaliacao::getRegraAvaliacao()
+     *
+     * @return RegraAvaliacao_Model_Regra
+     */
+    public function getRegra()
+    {
+        return $this->getRegraAvaliacao();
     }
 
     /**
@@ -37,7 +49,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function getRegraTipoPresenca()
     {
-        return $this->getRegra()->get('tipoPresenca');
+        return $this->getRegraAvaliacao()->get('tipoPresenca');
     }
 
     /**
@@ -47,7 +59,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function getRegraTipoParecerDescritivo()
     {
-        return $this->getRegra()->get('parecerDescritivo');
+        return $this->getRegraAvaliacao()->get('parecerDescritivo');
     }
 
     /**
@@ -55,7 +67,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function getRegraTabelaArredondamento()
     {
-        return $this->getRegra()->tabelaArredondamento;
+        return $this->getRegraAvaliacao()->tabelaArredondamento;
     }
 
     /**
@@ -65,6 +77,6 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function hasRegraFormulaRecuperacao()
     {
-        return ! is_null($this->getRegra()->get('formulaRecuperacao'));
+        return ! is_null($this->getRegraAvaliacao()->get('formulaRecuperacao'));
     }
 }
