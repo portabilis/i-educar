@@ -653,17 +653,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
-   * Indica se a regra de avaliação tem fórmula para calcular a média da
-   * recuperação.
-   *
-   * @return bool
-   */
-  public function hasMediaRecuperacaoRegraAvaliacao()
-  {
-      return boolval($this->getRegra()->get('mediaRecuperacao'));
-  }
-
-  /**
    * Retorna o tipo de nota da regra de avaliação.
    *
    * @return RegraAvaliacao_Model_Nota_TipoValor
@@ -718,7 +707,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // esteja retido por falta, apenas quando a regra de avaliação possuir
         // uma média para recuperação (exame final).
 
-        if ($this->hasMediaRecuperacaoRegraAvaliacao()) {
+        if ($this->hasRegraAvaliacaoMediaRecuperacao()) {
 
           if ($this->getTipoNotaRegraAvaliacao() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
             // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas

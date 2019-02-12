@@ -71,12 +71,23 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
-     * Verifica se a regra de avaliacação possui recuperação final.
+     * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool
      */
     public function hasRegraAvaliacaoFormulaRecuperacao()
     {
         return ! is_null($this->getRegraAvaliacao()->get('formulaRecuperacao'));
+    }
+
+    /**
+     * Indica se a regra de avaliação possui fórmula para calcular a média da
+     * recuperação.
+     *
+     * @return bool
+     */
+    public function hasRegraAvaliacaoMediaRecuperacao()
+    {
+        return boolval($this->getRegraAvaliacao()->get('mediaRecuperacao'));
     }
 }
