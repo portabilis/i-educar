@@ -45,7 +45,7 @@ trait Avaliacao_Service_Boletim_Regra
      *
      * @return int
      */
-    public function getRegraParecerDescritivo()
+    public function getRegraTipoParecerDescritivo()
     {
         return $this->getRegra()->get('parecerDescritivo');
     }

@@ -342,7 +342,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getParecerDescritivo($etapa = 1, $id = NULL)
   {
-    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
 
     $gerais = array(
       RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
@@ -555,7 +555,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _loadParecerDescritivo()
   {
-    if ($this->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+    if ($this->getRegraTipoParecerDescritivo() == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
       return $this;
     }
 
@@ -579,7 +579,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
     );
 
-    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
     if (in_array($parecerDescritivo, $gerais)) {
       $pareceresGerais = array();
 
@@ -1697,7 +1697,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $parecerDescritivoAluno = new Avaliacao_Model_ParecerDescritivoAluno();
     $parecerDescritivoAluno->matricula         = $this->getOption('matricula');
-    $parecerDescritivoAluno->parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    $parecerDescritivoAluno->parecerDescritivo = $this->getRegraTipoParecerDescritivo();
     return $this->getParecerDescritivoAlunoDataMapper()->save($parecerDescritivoAluno);
   }
 
@@ -1763,7 +1763,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
     );
 
-    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
 
     if (in_array($parecerDescritivo, $gerais)) {
       if (!$this->_hasParecerGeral()) {
@@ -1983,7 +1983,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
       );
 
-      $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+      $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
 
       if (in_array($parecerDescritivo, $anuais)) {
         $validators['etapa'] = new CoreExt_Validate_Choice(array(
@@ -2120,7 +2120,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
     );
 
-    $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
+    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
     if (in_array($parecerDescritivo, $anuais)) {
       $instance->etapa = 'An';
       return $instance;
