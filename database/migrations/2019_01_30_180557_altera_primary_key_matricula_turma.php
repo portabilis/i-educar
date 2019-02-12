@@ -15,10 +15,10 @@ class AlteraPrimaryKeyMatriculaTurma extends Migration
     public function up()
     {
         // Remove dependencia
-        DB::statement('alter table pmieducar.matricula_excessao drop constraint matricula_excessao_ref_cod_matricula_fkey;');
+        DB::statement('alter table pmieducar.matricula_excessao drop constraint if exists matricula_excessao_ref_cod_matricula_fkey;');
 
         // Remove primary key antiga
-        DB::statement('alter table pmieducar.matricula_turma drop constraint matricula_turma_pkey;');
+        DB::statement('alter table pmieducar.matricula_turma drop constraint  if exists matricula_turma_pkey;');
 
         // Cria indice unico
         DB::statement('create unique index matricula_turma_uindex_matricula_turma_sequencial 
