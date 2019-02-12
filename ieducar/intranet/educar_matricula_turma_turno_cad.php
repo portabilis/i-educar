@@ -27,7 +27,11 @@ class indice extends clsCadastro
     {
         $this->nome_url_cancelar = "Voltar";
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
-        $this->montaLocalizacao();
+
+        $this->breadcrumb('Turno do aluno', [
+            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
+            "educar_index.php" => "Escola",
+        ]);
     }
 
     public function Inicializar()
@@ -89,17 +93,6 @@ class indice extends clsCadastro
 
         $this->mensagem .= "Turno atualizado com sucesso.<br>";
         return true;
-    }
-
-    private function montaLocalizacao()
-    {
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "Turno do aluno",
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     private function validaPermissao()
