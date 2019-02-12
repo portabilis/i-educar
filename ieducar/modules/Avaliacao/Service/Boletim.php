@@ -1420,8 +1420,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $situacaoNotas  = $this->getSituacaoNotas(true);
     $situacaoFaltas = $this->getSituacaoFaltas();
-    dump($situacaoNotas);
-    dump($situacaoFaltas);
 
     $situacao        = $this->getSituacaoNotaFalta($situacaoNotas->situacao, $situacaoFaltas->situacao);
     $situacao->nota  = $situacaoNotas;
