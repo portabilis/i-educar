@@ -420,7 +420,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getFaltaAbstractDataMapper()
     {
         if (is_null($this->_faltaAbstractDataMapper)) {
-            switch ($this->getRegraTipoPresenca()) {
+            switch ($this->getRegraAvaliacaoTipoPresenca()) {
                 case RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE:
                     require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
                     $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaComponenteDataMapper());
@@ -480,7 +480,7 @@ trait Avaliacao_Service_Boletim_Acessores
     {
         if (is_null($this->_parecerDescritivoAbstractDataMapper)) {
 
-            switch ($this->getRegraTipoParecerDescritivo()) {
+            switch ($this->getRegraAvaliacaoTipoParecerDescritivo()) {
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
                     $filename = 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';

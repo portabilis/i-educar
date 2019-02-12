@@ -311,7 +311,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getFalta($etapa = 1, $id = NULL)
   {
-    if ($this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+    if ($this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $faltas = $this->getFaltasComponentes();
 
       if (!isset($faltas[$id])) {
@@ -342,7 +342,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getParecerDescritivo($etapa = 1, $id = NULL)
   {
-    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
+    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
 
     $gerais = array(
       RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
@@ -555,7 +555,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _loadParecerDescritivo()
   {
-    if ($this->getRegraTipoParecerDescritivo() == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+    if ($this->getRegraAvaliacaoTipoParecerDescritivo() == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
       return $this;
     }
 
@@ -579,7 +579,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
     );
 
-    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
+    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
     if (in_array($parecerDescritivo, $gerais)) {
       $pareceresGerais = array();
 
@@ -917,7 +917,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $etapa = $mediaGeral->etapa;
 
-      if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRegraFormulaRecuperacao()) {
+      if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
         $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
       }
       elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
@@ -926,7 +926,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
         $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraFormulaRecuperacao()) {
+      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
       elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
@@ -1018,7 +1018,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $permiteSituacaoEmExame = FALSE;
       }
 
-      if ($etapa == $lastStage && $media < $this->getRegra()->media && $this->hasRegraFormulaRecuperacao() && $permiteSituacaoEmExame) {
+      if ($etapa == $lastStage && $media < $this->getRegra()->media && $this->hasRegraAvaliacaoFormulaRecuperacao() && $permiteSituacaoEmExame) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
@@ -1038,7 +1038,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraFormulaRecuperacao()) {
+      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
       elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
@@ -1137,7 +1137,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->porcentagemPresenca      = 0;
     $presenca->porcentagemPresencaRegra = $this->getRegra()->porcentagemPresenca;
 
-    $presenca->tipoFalta                = $this->getRegraTipoPresenca();
+    $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
     $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
     $presenca->diasLetivos              = $this->getOption('serieDiasLetivos');
 
@@ -1324,7 +1324,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     foreach ($componentes as $ccId => $componente) {
       // seta tipos nota, falta
       $tipoNotaNenhum = $this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
-      $tipoFaltaPorComponente = $this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
+      $tipoFaltaPorComponente = $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
       $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
 
@@ -1506,7 +1506,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $this->_faltaAluno = $falta;
     $tipoFaltaAtual = $this->_faltaAluno->get('tipoFalta');
-    $tipoFaltaRegraAvaliacao = $this->getRegraTipoPresenca();
+    $tipoFaltaRegraAvaliacao = $this->getRegraAvaliacaoTipoPresenca();
 
     if ($tipoFaltaAtual != $tipoFaltaRegraAvaliacao){
       $this->_faltaAluno->tipoFalta = $tipoFaltaRegraAvaliacao;
@@ -1547,7 +1547,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $faltaAluno = new Avaliacao_Model_FaltaAluno();
     $faltaAluno->matricula = $this->getOption('matricula');
-    $faltaAluno->tipoFalta = $this->getRegraTipoPresenca();
+    $faltaAluno->tipoFalta = $this->getRegraAvaliacaoTipoPresenca();
     return $this->getFaltaAlunoDataMapper()->save($faltaAluno);
   }
 
@@ -1676,7 +1676,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $parecerDescritivoAluno = new Avaliacao_Model_ParecerDescritivoAluno();
     $parecerDescritivoAluno->matricula         = $this->getOption('matricula');
-    $parecerDescritivoAluno->parecerDescritivo = $this->getRegraTipoParecerDescritivo();
+    $parecerDescritivoAluno->parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
     return $this->getParecerDescritivoAlunoDataMapper()->save($parecerDescritivoAluno);
   }
 
@@ -1742,7 +1742,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
     );
 
-    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
+    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
 
     if (in_array($parecerDescritivo, $gerais)) {
       if (!$this->_hasParecerGeral()) {
@@ -1931,7 +1931,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $validators = $this->_validators;
 
-    if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+    if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
     }
     $validatable->setValidator('etapa', $validators['etapa']);
@@ -1962,7 +1962,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
       );
 
-      $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
+      $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
 
       if (in_array($parecerDescritivo, $anuais)) {
         $validators['etapa'] = new CoreExt_Validate_Choice(array(
@@ -2053,7 +2053,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
     // Se for maior, verifica se tem recuperação e atribui etapa como 'Rc'
     elseif ($proximaEtapa > $this->getOption('etapas') &&
-      $this->hasRegraFormulaRecuperacao()) {
+      $this->hasRegraAvaliacaoFormulaRecuperacao()) {
       $instance->etapa = 'Rc';
     }
 
@@ -2099,7 +2099,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
     );
 
-    $parecerDescritivo = $this->getRegraTipoParecerDescritivo();
+    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
     if (in_array($parecerDescritivo, $anuais)) {
       $instance->etapa = 'An';
       return $instance;
@@ -2126,7 +2126,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if ($proximaEtapa <= $this->getOption('etapas')) {
       $instance->etapa = $proximaEtapa;
     }
-    elseif ($this->hasRegraFormulaRecuperacao()) {
+    elseif ($this->hasRegraAvaliacaoFormulaRecuperacao()) {
       $instance->etapa = 'Rc';
     }
 
@@ -2380,7 +2380,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _calculaMedia(array $values)
   {
-    if (isset($values['Rc']) && $this->hasRegraFormulaRecuperacao()) {
+    if (isset($values['Rc']) && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
       $media = $this->getRegra()->formulaRecuperacao->execFormulaMedia($values);
     }
     else {
@@ -2999,7 +2999,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $mensagem = 'Falta somente pode ser lançada após lançar faltas nas '
             . 'etapas anteriores: ' . join(', ', $etapasSemFaltas);
 
-        if ($this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+        if ($this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             $mensagem .= ' deste componente curricular.';
         }
 
@@ -3034,7 +3034,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     public function getFaltaAtual($etapa, $componenteCurricularId)
     {
         $faltas = null;
-        $tipoPresenca = $this->getRegraTipoPresenca();
+        $tipoPresenca = $this->getRegraAvaliacaoTipoPresenca();
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade;
