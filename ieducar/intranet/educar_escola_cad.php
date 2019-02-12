@@ -6,6 +6,7 @@ use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\UnidadeVinculadaComOutraInstituicao;
+use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1365,16 +1366,17 @@ class indice extends clsCadastro
                 'size' => 70);
             $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
 
-            $helperOptions = array('objectName' => 'mantenedora_escola_privada');
-            $options = array('label' => 'Mantenedora escola privada',
+            $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
+            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
+            $options = [
+                'label' => 'Mantenedora escola privada',
                 'size' => 50,
                 'required' => false,
-                'options' => array('values' => $this->mantenedora_escola_privada,
-                    'all_values' => array(1 => 'Empresa, grupos empresariais do setor privado ou pessoa física',
-                        2 => 'Sindicatos de trabalhadores ou patronais, associações ou cooperativas',
-                        3 => 'Organização não governamental (ONG) internacional ou nacional/Oscip',
-                        4 => 'Instituições sem fins lucrativos',
-                        5 => 'Sistema S (Sesi, Senai, Sesc, outros)')));
+                'options' => [
+                    'values' => $this->mantenedora_escola_privada,
+                    'all_values' => $mantenedoras
+                ]
+            ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
