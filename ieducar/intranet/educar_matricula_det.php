@@ -203,7 +203,7 @@ class indice extends clsDetalhe
       if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapasEnsinoUnificadas())) {
         $existeTurmaUnificada = true;
       }
-      if ($turma['turma_turno_id'] == 4) {
+      if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
           $existeTurmaTurnoIntegral = true;
       }
     }
