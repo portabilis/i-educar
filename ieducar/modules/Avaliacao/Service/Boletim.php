@@ -960,18 +960,22 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
-    $maiorEtapaUtilizada = [];
+    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
+
+    $maiorEtapaUtilizada = $etapas;
 
     // Foi preciso adicionar esta validação pois é possível filtrar sem
     // selecionar um componente curricular, neste caso um erro SQL era gerado.
 
     if ($componenteCurricularId = $this->getComponenteCurricularId()) {
-        $maiorEtapaUtilizada = explode(',', App_Model_IedFinder::getEtapasComponente($matricula['ref_cod_turma'], $componenteCurricularId));
+        $ultimaEtapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente(
+            $matricula['ref_cod_turma'], $componenteCurricularId
+        );
+
+        if ($ultimaEtapaEspecifica) {
+            $maiorEtapaUtilizada = $ultimaEtapaEspecifica;
+        }
     }
-
-    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
-
-    $maiorEtapaUtilizada = count($maiorEtapaUtilizada) ? max($maiorEtapaUtilizada) : $etapas;
 
     $etapaAtual = $_GET['etapa'] == 'Rc' ? $maiorEtapaUtilizada : $_GET['etapa'];
 
@@ -1365,6 +1369,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       case App_Model_MatriculaSituacao::APROVADO:
         $situacao->retidoFalta = FALSE;
         break;
+      default:
+        $situacao->andamento = TRUE;
     }
 
       // seta situacao geral
@@ -1510,6 +1516,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
 
     if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+
       return $situacao;
     }
 
@@ -1922,44 +1930,46 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getSituacaoComponentesCurriculares()
   {
-    $situacao                          = new stdClass();
-    $situacao->situacao                = App_Model_MatriculaSituacao::APROVADO;
+    $situacao = new stdClass();
+    $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
     $situacao->componentesCurriculares = array();
 
-    $situacaoNotas  = $this->getSituacaoNotas();
+    $componentes = $this->getComponentes();
+    $situacaoNotas = $this->getSituacaoNotas();
     $situacaoFaltas = $this->getSituacaofaltas();
 
-    foreach($situacaoNotas->componentesCurriculares as $ccId => $situacaoNotaCc) {
+    foreach ($componentes as $ccId => $componente) {
       // seta tipos nota, falta
-      $tipoNotaNenhum         = $this->getRegra()->get('tipoNota')  ==
-                                RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+      $tipoNotaNenhum = $this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+      $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
-      $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') ==
-                                RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
+      $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
 
       // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
-      $situacaoFaltaCc           = new stdClass();
+      $situacaoFaltaCc = new stdClass();
       $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
       // caso possua situacaoFalta para o componente substitui situacao inicializada
-      if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId]))
+      if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId])) {
         $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
+      }
 
       // pega situação nota geral ou do componente
-      if ($tipoNotaNenhum)
+      if ($tipoNotaNenhum) {
         $situacaoNota = $situacaoNotas->situacao;
-      else
+      } else {
         $situacaoNota = $situacaoNotaCc->situacao;
+      }
 
       // pega situacao da falta componente ou geral.
-      if($tipoFaltaPorComponente)
+      if ($tipoFaltaPorComponente) {
         $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
-      else
+      } else {
         $situacaoFalta = $situacaoFaltas->situacao;
+      }
 
       $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
     }
-    // #FIXME verificar porque para regras sem nota, não é retornado a situacao.
 
     return $situacao;
   }
@@ -3219,10 +3229,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     catch (Exception $e) {
       // Prossegue, sem problemas.
     }
-    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
 
     // Salva a média
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
+    // Atualiza situação matricula
+    $this->promover();
     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
     $notaComponenteCurricularMedia->markOld();
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
@@ -3412,6 +3424,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
   public function deleteNota($etapa, $ComponenteCurricularId)
   {
+    $this->setCurrentComponenteCurricular($ComponenteCurricularId);
     $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
     $this->getNotaComponenteDataMapper()->delete($nota);
 

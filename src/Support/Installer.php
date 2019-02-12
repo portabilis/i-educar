@@ -34,6 +34,7 @@ class Installer
         'link' => 'legacy:link',
         'migrate' => 'migrate --force',
         'password' => 'admin:password',
+        'reports' => 'reports:install --no-compile',
     ];
 
     public $composerData;

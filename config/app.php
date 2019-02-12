@@ -173,7 +173,6 @@ return [
         App\Providers\EventServiceProvider::class,
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
     ],
 
     /*
@@ -226,4 +225,6 @@ return [
     ],
 
     'trackerror' => env('APP_TRACK_ERROR', false),
+
+    'default_host' => env('APP_DEFAULT_HOST', 'ieducar.com.br'),
 ];
