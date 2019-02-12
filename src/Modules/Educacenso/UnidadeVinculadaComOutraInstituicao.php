@@ -4,11 +4,13 @@ namespace iEducar\Modules\Educacenso;
 
 class UnidadeVinculadaComOutraInstituicao
 {
-
     const SEM_VINCULO = 0;
     const EDUCACAO_BASICA = 1;
     const ENSINO_SUPERIOR = 2;
 
+    /**
+     * @return array
+     */
     public static function getDescriptiveValues()
     {
         return [
