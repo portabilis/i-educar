@@ -49,4 +49,12 @@ trait Avaliacao_Service_Boletim_Regra
     {
         return $this->getRegra()->get('parecerDescritivo');
     }
+
+    /**
+     * @return TabelaArredondamento_Model_Tabela
+     */
+    public function getRegraTabelaArredondamento()
+    {
+        return $this->getRegra()->tabelaArredondamento;
+    }
 }

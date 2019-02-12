@@ -603,15 +603,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
-   * Getter.
-   * @return TabelaArredondamento_Model_Tabela
-   */
-  public function getTabelaArredondamento()
-  {
-    return $this->getRegra()->tabelaArredondamento;
-  }
-
-  /**
    * Verifica se a regra de avaliacação possui recuperação final.
    * @return bool
    */
