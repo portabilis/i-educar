@@ -1343,6 +1343,19 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
+            $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
+            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
+            $options = [
+                'label' => 'Mantenedora escola privada',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->mantenedora_escola_privada,
+                    'all_values' => $mantenedoras
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $resources = array('' => 'Selecione',
                 1 => 'Particular',
                 2 => 'Comunitária',
@@ -1365,19 +1378,6 @@ class indice extends clsCadastro
                 'required' => false,
                 'size' => 70);
             $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
-
-            $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
-            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
-            $options = [
-                'label' => 'Mantenedora escola privada',
-                'size' => 50,
-                'required' => false,
-                'options' => [
-                    'values' => $this->mantenedora_escola_privada,
-                    'all_values' => $mantenedoras
-                ]
-            ];
-            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
         }
