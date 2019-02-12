@@ -38,6 +38,12 @@ const DEPENDENCIA_ADMINISTRATIVA = {
   PRIVADA: 4
 }
 
+const UNIDADE_VINCULADA = {
+  SEM_VINCULO : 0,
+  EDUCACAO_BASICA : 1,
+  ENSINO_SUPERIOR : 2
+}
+
 $escolaInepIdField.closest('tr').hide();
 
 var submitForm = function(){
@@ -354,6 +360,9 @@ $j(document).ready(function() {
             $j('#mantenedora_escola_privada').closest('tr').hide();
             $j('#cnpj_mantenedora_principal').closest('tr').hide();
         }
+
+        mostrarCamposDaUnidadeVinculada();
+        obrigarCamposDaUnidadeVinculada();
       });
 
   // fix checkboxs
@@ -391,6 +400,45 @@ $j(document).ready(function() {
 
   habilitaCampoOrgaoVinculadoEscola();
   obrigaCampoOrgaoVinculadoEscola();
+
+  $j('#unidade_vinculada_outra_instituicao').change(
+    function (){
+      mostrarCamposDaUnidadeVinculada();
+      obrigarCamposDaUnidadeVinculada();
+    }
+  );
+
+  function mostrarCamposDaUnidadeVinculada() {
+    if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA) {
+      $j('#inep_escola_sede').closest('tr').show();
+      $j('#codigo_ies').closest('tr').hide();
+      $j('#codigo_ies').val('');
+      $j('#codigo_ies_id').val('');
+    } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR) {
+      $j('#codigo_ies').closest('tr').show();
+      $j('#inep_escola_sede').closest('tr').hide();
+      $j('#inep_escola_sede').val('');
+    } else {
+      $j('#inep_escola_sede').closest('tr').hide();
+      $j('#codigo_ies').closest('tr').hide();
+      $j('#inep_escola_sede').val('');
+      $j('#codigo_ies').val('');
+      $j('#codigo_ies_id').val('');
+    }
+  }
+
+  function obrigarCamposDaUnidadeVinculada() {
+    if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA) {
+      $j('#inep_escola_sede').makeRequired();
+      $j('#codigo_ies').makeUnrequired();
+    } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR) {
+      $j('#codigo_ies').makeRequired();
+      $j('#inep_escola_sede').makeUnrequired();
+    } else {
+      $j('#inep_escola_sede').makeUnrequired();
+      $j('#codigo_ies').makeUnrequired();
+    }
+  }
 
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
   $j('#regulamentacao').on('change', habilitaCampoEsferaAdministrativa);
