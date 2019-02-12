@@ -57,4 +57,14 @@ trait Avaliacao_Service_Boletim_Regra
     {
         return $this->getRegra()->tabelaArredondamento;
     }
+
+    /**
+     * Verifica se a regra de avaliacação possui recuperação final.
+     *
+     * @return bool
+     */
+    public function hasRegraFormulaRecuperacao()
+    {
+        return ! is_null($this->getRegra()->get('formulaRecuperacao'));
+    }
 }

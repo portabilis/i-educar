@@ -603,18 +603,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
-   * Verifica se a regra de avaliacação possui recuperação final.
-   * @return bool
-   */
-  public function hasRecuperacao()
-  {
-    if (is_null($this->getRegra()->get('formulaRecuperacao'))) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
    * Verifica se o aluno tem notas lançadas.
    * @return bool
    */
@@ -929,7 +917,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $etapa = $mediaGeral->etapa;
 
-      if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRecuperacao()) {
+      if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRegraFormulaRecuperacao()) {
         $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
       }
       elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
@@ -938,7 +926,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
         $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
+      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraFormulaRecuperacao()) {
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
       elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
@@ -1030,7 +1018,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $permiteSituacaoEmExame = FALSE;
       }
 
-      if ($etapa == $lastStage && $media < $this->getRegra()->media && $this->hasRecuperacao() && $permiteSituacaoEmExame) {
+      if ($etapa == $lastStage && $media < $this->getRegra()->media && $this->hasRegraFormulaRecuperacao() && $permiteSituacaoEmExame) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
@@ -1050,7 +1038,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
+      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraFormulaRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
       elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
@@ -2065,7 +2053,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
     // Se for maior, verifica se tem recuperação e atribui etapa como 'Rc'
     elseif ($proximaEtapa > $this->getOption('etapas') &&
-      $this->hasRecuperacao()) {
+      $this->hasRegraFormulaRecuperacao()) {
       $instance->etapa = 'Rc';
     }
 
@@ -2138,7 +2126,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if ($proximaEtapa <= $this->getOption('etapas')) {
       $instance->etapa = $proximaEtapa;
     }
-    elseif ($this->hasRecuperacao()) {
+    elseif ($this->hasRegraFormulaRecuperacao()) {
       $instance->etapa = 'Rc';
     }
 
@@ -2392,7 +2380,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _calculaMedia(array $values)
   {
-    if (isset($values['Rc']) && $this->hasRecuperacao()) {
+    if (isset($values['Rc']) && $this->hasRegraFormulaRecuperacao()) {
       $media = $this->getRegra()->formulaRecuperacao->execFormulaMedia($values);
     }
     else {
