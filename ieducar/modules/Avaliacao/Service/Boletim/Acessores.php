@@ -1,7 +1,11 @@
 <?php
 
+require_once 'Avaliacao/Service/Boletim/Regra.php';
+
 trait Avaliacao_Service_Boletim_Acessores
 {
+    use Avaliacao_Service_Boletim_Regra;
+
     /**
      * @var array
      */
@@ -416,19 +420,17 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getFaltaAbstractDataMapper()
     {
         if (is_null($this->_faltaAbstractDataMapper)) {
-            switch ($this->getRegra()->get('tipoPresenca')) {
+            switch ($this->getRegraTipoPresenca()) {
                 case RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE:
                     require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
-                    $class = 'Avaliacao_Model_FaltaComponenteDataMapper';
+                    $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaComponenteDataMapper());
                     break;
 
                 case RegraAvaliacao_Model_TipoPresenca::GERAL:
                     require_once 'Avaliacao/Model/FaltaGeralDataMapper.php';
-                    $class = 'Avaliacao_Model_FaltaGeralDataMapper';
+                    $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaGeralDataMapper());
                     break;
             }
-
-            $this->setFaltaAbstractDataMapper(new $class());
         }
 
         return $this->_faltaAbstractDataMapper;
@@ -477,14 +479,14 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getParecerDescritivoAbstractDataMapper()
     {
         if (is_null($this->_parecerDescritivoAbstractDataMapper)) {
-            $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
 
-            switch ($parecerDescritivo) {
+            switch ($this->getRegraParecerDescritivo()) {
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
                     $filename = 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
                     $class = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
                     break;
+
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
                     $filename = 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
@@ -498,6 +500,7 @@ trait Avaliacao_Service_Boletim_Acessores
             }
 
             require_once $filename;
+
             $this->setParecerDescritivoAbstractDataMapper(new $class());
         }
 
@@ -643,26 +646,6 @@ trait Avaliacao_Service_Boletim_Acessores
     protected function _setComponentes(array $componentes)
     {
         $this->_componentes = $componentes;
-
-        return $this;
-    }
-
-    /**
-     * @return RegraAvaliacao_Model_Regra
-     */
-    public function getRegra()
-    {
-        return $this->_regra;
-    }
-
-    /**
-     * @param RegraAvaliacao_Model_Regra $regra
-     *
-     * @return $this
-     */
-    protected function _setRegra(RegraAvaliacao_Model_Regra $regra)
-    {
-        $this->_regra = $regra;
 
         return $this;
     }
