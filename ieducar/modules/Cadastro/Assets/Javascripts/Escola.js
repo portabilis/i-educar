@@ -213,7 +213,9 @@ function habilitaCampoEsferaAdministrativa() {
     $j("#esfera_administrativa").val('');
   } else {
     $j("#esfera_administrativa").prop('disabled', false);
-    $j('#esfera_administrativa').makeRequired();
+    if (obrigarCamposCenso) {
+      $j('#esfera_administrativa').makeRequired();
+    }
   }
 }
 
