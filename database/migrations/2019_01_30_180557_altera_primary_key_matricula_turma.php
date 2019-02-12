@@ -21,7 +21,7 @@ class AlteraPrimaryKeyMatriculaTurma extends Migration
         DB::statement('alter table pmieducar.matricula_turma drop constraint  if exists matricula_turma_pkey;');
 
         // Cria indice unico
-        DB::statement('create unique index matricula_turma_uindex_matricula_turma_sequencial 
+        DB::statement('create unique index if not exists matricula_turma_uindex_matricula_turma_sequencial 
                                 on pmieducar.matricula_turma (ref_cod_matricula, ref_cod_turma, sequencial);');
 
         Schema::table('pmieducar.matricula_turma', function (Blueprint $table) {
