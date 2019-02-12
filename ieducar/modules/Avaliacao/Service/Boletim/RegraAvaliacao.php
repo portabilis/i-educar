@@ -1,6 +1,6 @@
 <?php
 
-trait Avaliacao_Service_Boletim_Regra
+trait Avaliacao_Service_Boletim_RegraAvaliacao
 {
     /**
      * Instância da regra de avaliação, com o qual o serviço irá utilizar para
