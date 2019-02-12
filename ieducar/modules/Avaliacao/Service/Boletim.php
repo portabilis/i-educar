@@ -18,13 +18,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     use Avaliacao_Service_Boletim_Acessores;
 
   /**
-   * Instância da regra de avaliação, com o qual o serviço irá utilizar para
-   * decidir o fluxo da lógica.
-   * @var RegraAvaliacao_Model_Regra
-   */
-  protected $_regra = NULL;
-
-  /**
    * Uma instância de Avaliacao_Model_NotaAluno, que é a entrada que contém
    * o cruzamento de matrícula com as notas do aluno nos diversos componentes
    * cursados.
@@ -597,26 +590,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     return $this;
-  }
-
-  /**
-   * Setter.
-   * @param RegraAvaliacao_Model_Regra $regra
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  protected function _setRegra(RegraAvaliacao_Model_Regra $regra)
-  {
-    $this->_regra = $regra;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return RegraAvaliacao_Model_Regra
-   */
-  public function getRegra()
-  {
-    return $this->_regra;
   }
 
   /**
