@@ -52,13 +52,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected $_parecerDescritivoAluno = NULL;
 
   /**
-   * Componentes que o aluno cursa, indexado pelo id de
-   * ComponenteCurricular_Model_Componente.
-   * @var array
-   */
-  protected $_componentes = NULL;
-
-  /**
    * Notas do aluno nos componentes cursados.
    * @var array
    */
@@ -149,8 +142,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
 
   private $notaLancada = NULL;
-
-  private $_currentComponenteCurricular = NULL;
 
   protected $_situacaoPrioridade = array(
     App_Model_MatriculaSituacao::EM_ANDAMENTO        => 1,
@@ -626,26 +617,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   public function getRegra()
   {
     return $this->_regra;
-  }
-
-  /**
-   * Setter.
-   * @param array $componentes
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setComponentes(array $componentes)
-  {
-    $this->_componentes = $componentes;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return array
-   */
-  public function getComponentes()
-  {
-    return $this->_componentes;
   }
 
   /**
@@ -2436,14 +2407,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     catch (Exception $e) {
       throw $e;
     }
-  }
-
-  public function setCurrentComponenteCurricular($componenteId){
-    $this->_currentComponenteCurricular = $componenteId;
-  }
-
-  public function getCurrentComponenteCurricular(){
-    return $this->_currentComponenteCurricular;
   }
 
   /**

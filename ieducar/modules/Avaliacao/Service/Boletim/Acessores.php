@@ -82,6 +82,19 @@ trait Avaliacao_Service_Boletim_Acessores
     protected $_componenteCurricularId;
 
     /**
+     * @var int
+     */
+    protected $_currentComponenteCurricular;
+
+    /**
+     * Componentes que o aluno cursa, indexado pelo id de
+     * ComponenteCurricular_Model_Componente.
+     *
+     * @var array
+     */
+    protected $_componentes;
+
+    /**
      * @see CoreExt_Configurable::getOptions()
      *
      * @return array
@@ -582,6 +595,46 @@ trait Avaliacao_Service_Boletim_Acessores
     public function setComponenteCurricularId($componenteCurricularId)
     {
         $this->_componenteCurricularId = $componenteCurricularId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentComponenteCurricular()
+    {
+        return $this->_currentComponenteCurricular;
+    }
+
+    /**
+     * @param int $componenteId
+     *
+     * @return $this
+     */
+    public function setCurrentComponenteCurricular($componenteId)
+    {
+        $this->_currentComponenteCurricular = $componenteId;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getComponentes()
+    {
+        return $this->_componentes;
+    }
+
+    /**
+     * @param array $componentes
+     *
+     * @return $this
+     */
+    protected function _setComponentes(array $componentes)
+    {
+        $this->_componentes = $componentes;
 
         return $this;
     }
