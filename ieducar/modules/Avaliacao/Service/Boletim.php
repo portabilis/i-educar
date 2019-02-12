@@ -311,7 +311,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getFalta($etapa = 1, $id = NULL)
   {
-    if ($this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+    if ($this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $faltas = $this->getFaltasComponentes();
 
       if (!isset($faltas[$id])) {
@@ -1158,7 +1158,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->porcentagemPresenca      = 0;
     $presenca->porcentagemPresencaRegra = $this->getRegra()->porcentagemPresenca;
 
-    $presenca->tipoFalta                = $this->getRegra()->get('tipoPresenca');
+    $presenca->tipoFalta                = $this->getRegraTipoPresenca();
     $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
     $presenca->diasLetivos              = $this->getOption('serieDiasLetivos');
 
@@ -1345,7 +1345,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     foreach ($componentes as $ccId => $componente) {
       // seta tipos nota, falta
       $tipoNotaNenhum = $this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
-      $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
+      $tipoFaltaPorComponente = $this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
       $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
 
@@ -1527,7 +1527,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $this->_faltaAluno = $falta;
     $tipoFaltaAtual = $this->_faltaAluno->get('tipoFalta');
-    $tipoFaltaRegraAvaliacao = $this->getRegra()->get('tipoPresenca');
+    $tipoFaltaRegraAvaliacao = $this->getRegraTipoPresenca();
 
     if ($tipoFaltaAtual != $tipoFaltaRegraAvaliacao){
       $this->_faltaAluno->tipoFalta = $tipoFaltaRegraAvaliacao;
@@ -1568,7 +1568,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $faltaAluno = new Avaliacao_Model_FaltaAluno();
     $faltaAluno->matricula = $this->getOption('matricula');
-    $faltaAluno->tipoFalta = $this->getRegra()->get('tipoPresenca');
+    $faltaAluno->tipoFalta = $this->getRegraTipoPresenca();
     return $this->getFaltaAlunoDataMapper()->save($faltaAluno);
   }
 
@@ -1952,7 +1952,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $validators = $this->_validators;
 
-    if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+    if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
     }
     $validatable->setValidator('etapa', $validators['etapa']);
@@ -3020,7 +3020,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $mensagem = 'Falta somente pode ser lançada após lançar faltas nas '
             . 'etapas anteriores: ' . join(', ', $etapasSemFaltas);
 
-        if ($this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+        if ($this->getRegraTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             $mensagem .= ' deste componente curricular.';
         }
 
@@ -3055,7 +3055,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     public function getFaltaAtual($etapa, $componenteCurricularId)
     {
         $faltas = null;
-        $tipoPresenca = $this->getRegra()->get('tipoPresenca');
+        $tipoPresenca = $this->getRegraTipoPresenca();
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade;
