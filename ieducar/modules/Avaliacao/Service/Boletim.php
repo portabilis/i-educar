@@ -3190,10 +3190,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     catch (Exception $e) {
       // Prossegue, sem problemas.
     }
-    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
 
     // Salva a média
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
+    // Atualiza situação matricula
+    $this->promover();
     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
     $notaComponenteCurricularMedia->markOld();
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
