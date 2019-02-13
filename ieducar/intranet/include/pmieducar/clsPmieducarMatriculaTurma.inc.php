@@ -444,7 +444,7 @@ class clsPmieducarMatriculaTurma
 
         $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
         $auditoria->alteracao($detalheAntigo, $this->detalhe());
-        
+
         return TRUE;
       }
     }
@@ -1542,7 +1542,7 @@ class clsPmieducarMatriculaTurma
   }
 
   function marcaAlunoFalecido($data = null){
-    $data = implode( '-', array_reverse( explode( '/', $data ) ) );
+    $data =  $data ? implode( '-', array_reverse( explode( '/', $data ) ) ) : date('Y-m-d');
     if ($this->ref_cod_matricula && $this->sequencial){
         $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = false, reclassificado = false, falecido = true, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");

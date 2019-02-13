@@ -507,6 +507,7 @@ class MatriculaController extends ApiCoreController
             if (
                 $situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
                 $situacaoNova == App_Model_MatriculaSituacao::ABANDONO ||
+                $situacaoNova == App_Model_MatriculaSituacao::FALECIDO ||
                 $situacaoNova == App_Model_MatriculaSituacao::FALECIDO
             ) {
                 if ($enturmacoes) {
@@ -521,6 +522,8 @@ class MatriculaController extends ApiCoreController
                             $enturmacao->marcaAlunoTransferido();
                         } elseif ($situacaoNova == App_Model_MatriculaSituacao::ABANDONO) {
                             $enturmacao->marcaAlunoAbandono();
+                        }elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
+                            $enturmacao->marcaAlunoFalecido();
                         }
                     }
                 }
