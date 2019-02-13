@@ -896,16 +896,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $etapa = $mediaGeral->etapa;
 
-      if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+      if ($etapa == $this->getOption('etapas') && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
         $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
       }
-      elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
+      elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegraAvaliacaoMedia()) {
         $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+      elseif ($etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
         $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+      elseif ($etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
       elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
@@ -997,7 +997,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $permiteSituacaoEmExame = FALSE;
       }
 
-      if ($etapa == $lastStage && $media < $this->getRegra()->media && $this->hasRegraAvaliacaoFormulaRecuperacao() && $permiteSituacaoEmExame) {
+      if ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao() && $permiteSituacaoEmExame) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
@@ -1009,15 +1009,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           }
         }
       }
-      elseif ($etapa == $lastStage && $media < $this->getRegra()->media) {
+      elseif ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia()) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ((string)$etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+      elseif ((string)$etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
       elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
@@ -1051,7 +1051,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
         && $this->getRegra()->get('aprovaMediaDisciplina')
-        && ($somaMedias / $qtdComponentes) >= $this->getRegra()->mediaRecuperacao){
+        && ($somaMedias / $qtdComponentes) >= $this->getRegraAvaliacaoMediaRecuperacao()){
 
       $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
 
@@ -2238,7 +2238,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // da média seja superior a média de aprovação de recuperação
     for($i = $increment ; $i <= $notaMax; $i = round($i+$increment, 1)){
       $data['Rc']=$i;
-      if ($this->getRegra()->formulaRecuperacao->execFormulaMedia($data) >= $this->getRegra()->mediaRecuperacao)
+      if ($this->getRegra()->formulaRecuperacao->execFormulaMedia($data) >= $this->getRegraAvaliacaoMediaRecuperacao())
         return $i;
     }
 

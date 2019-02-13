@@ -101,6 +101,27 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna a média que o aluno deve atingir para ser aprovado.
+     *
+     * @return float
+     */
+    public function getRegraAvaliacaoMedia()
+    {
+        return $this->getRegraAvaliacao()->media;
+    }
+
+    /**
+     * Retorna a média que o aluno deve atingir no exame final para ser
+     * aprovado.
+     *
+     * @return float
+     */
+    public function getRegraAvaliacaoMediaRecuperacao()
+    {
+        return $this->getRegraAvaliacao()->mediaRecuperacao;
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool
