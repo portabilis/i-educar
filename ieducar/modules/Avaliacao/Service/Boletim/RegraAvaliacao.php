@@ -91,6 +91,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna "1" se a regra de avaliação é do tipo nota geral por etapa.
+     *
+     * @return string
+     */
+    public function getRegraAvaliacaoNotaGeralPorEtapa()
+    {
+        return $this->getRegraAvaliacao()->get('notaGeralPorEtapa');
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool

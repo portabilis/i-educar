@@ -883,7 +883,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       return $situacao;
     }
 
-    if($this->getRegra()->get('notaGeralPorEtapa') == "1"){
+    if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
 
        $mediaGeral = $this->getMediasGerais();
 
@@ -2632,7 +2632,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
     $etapa = 1;
 
-    if($regra->get('notaGeralPorEtapa') == "1"){
+    if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
       $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
 
       foreach($this->_notasGerais as $id => $notaGeral){
