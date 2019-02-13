@@ -652,16 +652,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $total - (int) $disciplinesWithoutStage[0]['count'];
   }
 
-  /**
-   * Retorna o tipo de nota da regra de avaliação.
-   *
-   * @return RegraAvaliacao_Model_Nota_TipoValor
-   */
-  public function getTipoNotaRegraAvaliacao()
-  {
-      return $this->getRegra()->get('tipoNota');
-  }
-
   function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
   {
     $situacao                          = new stdClass();
@@ -709,7 +699,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if ($this->hasRegraAvaliacaoMediaRecuperacao()) {
 
-          if ($this->getTipoNotaRegraAvaliacao() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+          if ($this->getRegraAvaliacaoTipoNota() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
             // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
             $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
             $andamento = in_array($flagSituacaoNota, $situacoesFinais) === false;

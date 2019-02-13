@@ -71,6 +71,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna o tipo de nota da regra de avaliação.
+     *
+     * @return RegraAvaliacao_Model_Nota_TipoValor
+     */
+    public function getRegraAvaliacaoTipoNota()
+    {
+        return $this->getRegraAvaliacao()->get('tipoNota');
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool
