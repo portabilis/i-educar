@@ -877,7 +877,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // A situação é "aprovado" por padrão
     $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
 
-    if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+    if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
       $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
 
       return $situacao;
@@ -887,7 +887,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
        $mediaGeral = $this->getMediasGerais();
 
-      if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
         $media = $mediaGeral->mediaArredondada;
       }
       else {
@@ -981,7 +981,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         continue;
       }
 
-      if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
         $media = $mediaComponente[0]->mediaArredondada;
       }
       else {
@@ -1302,7 +1302,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     foreach ($componentes as $ccId => $componente) {
       // seta tipos nota, falta
-      $tipoNotaNenhum = $this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+      $tipoNotaNenhum = $this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
       $tipoFaltaPorComponente = $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
       $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
@@ -2142,7 +2142,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function regraUsaTipoNotaNumericaConceitual()
   {
-      if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
+      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
           return true;
       }
 
@@ -2400,7 +2400,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function saveNotas()
   {
-      if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
           return $this;
       }
 
