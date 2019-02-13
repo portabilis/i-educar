@@ -964,7 +964,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
-      if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
+      if($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
 
         $getCountNotaCC = App_Model_IedFinder::verificaSeExisteNotasComponenteCurricular($matriculaId, $id);
 
@@ -2489,7 +2489,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Essa função é necessária para promoção pois precisamos considerar a
     // situação de todas as disciplinas e não só da que está sendo lançada
     $this->reloadComponentes();
-    $tipoProgressao = $this->getRegra()->get('tipoProgressao');
+    $tipoProgressao = $this->getRegraAvaliacaoTipoProgressao();
     $situacaoMatricula = $this->getOption('aprovado');
     $situacaoBoletim = $this->getSituacaoAluno();
     $exceptionMsg = '';
