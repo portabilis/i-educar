@@ -38,16 +38,25 @@ const DEPENDENCIA_ADMINISTRATIVA = {
   PRIVADA: 4
 }
 
+const SITUACAO_FUNCIONAMENTO = {
+  EM_ATIVIDADE : 1,
+  PARALISADA : 2,
+  EXTINTA : 3
+}
+
 const UNIDADE_VINCULADA = {
   SEM_VINCULO : 0,
   EDUCACAO_BASICA : 1,
   ENSINO_SUPERIOR : 2
 }
 
-const SITUACAO_FUNCIONAMENTO = {
-  EM_ATIVIDADE : 1,
-  PARALISADA : 2,
-  EXTINTA : 3
+const MANTENEDORA_ESCOLA_PRIVADA = {
+  GRUPOS_EMPRESARIAIS : 1,
+  SINDICATOS_TRABALHISTAS : 2,
+  ORGANIZACOES_NAO_GOVERNAMENTAIS : 3,
+  INSTITUICOES_SIM_FINS_LUCRATIVOS : 4,
+  SISTEMA_S : 5,
+  OSCIP : 6
 }
 
 $escolaInepIdField.closest('tr').hide();
@@ -371,16 +380,15 @@ $j(document).ready(function() {
             $j('#categoria_escola_privada').closest('tr').show();
             $j('#conveniada_com_poder_publico').closest('tr').show();
             $j('#mantenedora_escola_privada').closest('tr').show();
-            $j('#cnpj_mantenedora_principal').closest('tr').show();
         }else{
             $j('#categoria_escola_privada').closest('tr').hide();
             $j('#conveniada_com_poder_publico').closest('tr').hide();
             $j('#mantenedora_escola_privada').closest('tr').hide();
-            $j('#cnpj_mantenedora_principal').closest('tr').hide();
         }
 
         mostrarCamposDaUnidadeVinculada();
         obrigarCamposDaUnidadeVinculada();
+        mostrarObrigarCnpjMantenedora();
       });
 
   // fix checkboxs
@@ -390,12 +398,10 @@ $j(document).ready(function() {
     $j('#categoria_escola_privada').makeUnrequired();
     $j('#conveniada_com_poder_publico').makeUnrequired();
     $j('#mantenedora_escola_privada').makeUnrequired();
-    $j('#cnpj_mantenedora_principal').makeUnrequired();
     if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
       $j('#categoria_escola_privada').makeRequired();
       $j('#conveniada_com_poder_publico').makeRequired();
       $j('#mantenedora_escola_privada').makeRequired();
-      $j('#cnpj_mantenedora_principal').makeRequired();
     }
   }
 
@@ -456,6 +462,27 @@ $j(document).ready(function() {
     } else {
       $j('#inep_escola_sede').makeUnrequired();
       $j('#codigo_ies').makeUnrequired();
+    }
+  }
+
+
+  $j('#mantenedora_escola_privada').change(
+    function (){
+      mostrarObrigarCnpjMantenedora();
+    }
+  );
+
+  function mostrarObrigarCnpjMantenedora() {
+    dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
+    mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
+    escolaRegulamentada = $j('#regulamentacao').val() == 1;
+
+    $j('#cnpj_mantenedora_principal').closest('tr').hide();
+    $j('#cnpj_mantenedora_principal').makeUnrequired();
+
+    if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada) {
+      $j('#cnpj_mantenedora_principal').closest('tr').show();
+      $j('#cnpj_mantenedora_principal').makeRequired();
     }
   }
 
