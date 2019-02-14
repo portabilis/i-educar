@@ -1050,7 +1050,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
-        && $this->getRegra()->get('aprovaMediaDisciplina')
+        && $this->hasRegraAvaliacaoAprovaMediaDisciplina()
         && ($somaMedias / $qtdComponentes) >= $this->getRegraAvaliacaoMediaRecuperacao()){
 
       $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;

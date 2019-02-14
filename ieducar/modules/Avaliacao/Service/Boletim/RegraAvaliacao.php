@@ -172,4 +172,15 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     {
         return boolval($this->getRegraAvaliacao()->reprovacaoAutomatica);
     }
+
+    /**
+     * Indica se a regra de avaliação pode aprovar o aluno baseado na média
+     * geral de todas as disciplinas.
+     *
+     * @return bool
+     */
+    public function hasRegraAvaliacaoAprovaMediaDisciplina()
+    {
+        return boolval($this->getRegraAvaliacao()->get('aprovaMediaDisciplina'));
+    }
 }
