@@ -2252,7 +2252,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   protected function _calculateNotasRecuperacoesEspecificas($id, $data = array()){
     // Verifica regras de recuperações (Recuperações específicas por etapa)
-    $regrasRecuperacoes = $this->getRegra()->findRegraRecuperacao();
+    $regrasRecuperacoes = $this->getRegrasRecuperacao();
 
     $cont = 0;
 
@@ -3020,5 +3020,19 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         }
 
         return $faltas;
+    }
+
+    /**
+     * Retorna as regras de avaliação.
+     *
+     * @deprecated
+     *
+     * @see RegraAvaliacao_Model_Regra::findRegraRecuperacao()
+     *
+     * @return array
+     */
+    public function getRegrasRecuperacao()
+    {
+        return $this->getRegraAvaliacao()->findRegraRecuperacao();;
     }
 }
