@@ -8,11 +8,13 @@ class Avaliacao_Model_NotaComponenteMedia extends CoreExt_Entity
         'media' => null,
         'mediaArredondada' => null,
         'etapa' => null,
-        'situacao' => null
+        'situacao' => null,
+        'bloqueada' => false,
     ];
 
     protected $_dataTypes = [
-        'media' => 'numeric'
+        'media' => 'numeric',
+        'bloqueada' => 'boolean',
     ];
 
     protected $_references = [
