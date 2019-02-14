@@ -2835,11 +2835,10 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     {
         $temEtapasAnterioresLancadas = true;
         $etapasSemNotas = [];
-        $regra = $this->getRegra();
         $matriculaId = $this->getOption('matricula');
         $serieId = $this->getOption('ref_cod_serie');
         $escolaId = $this->getOption('ref_cod_escola');
-        $instituicao = App_Model_IedFinder::getInstituicao($regra->instituicao);
+        $instituicao = App_Model_IedFinder::getInstituicao($this->getRegraAvaliacaoInstituicao());
 
         // Pelo que eu entendi, caso a opção `definirComponentePorEtapa` é
         // possível lançar notas para etapas futuras.

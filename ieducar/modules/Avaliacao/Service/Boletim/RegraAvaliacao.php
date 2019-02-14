@@ -204,6 +204,18 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna o código da instituição.
+     *
+     * @deprecated
+     *
+     * @return int
+     */
+    public function getRegraAvaliacaoInstituicao()
+    {
+        return $this->getRegraAvaliacao()->instituicao;
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool
