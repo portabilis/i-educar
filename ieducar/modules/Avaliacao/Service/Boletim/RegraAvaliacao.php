@@ -143,6 +143,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna o percentual de presença que o aluno deve possuir.
+     *
+     * @return float
+     */
+    public function getRegraAvaliacaoPorcentagemPresenca()
+    {
+        return $this->getRegraAvaliacao()->get('porcentagemPresenca');
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool

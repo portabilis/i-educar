@@ -1114,7 +1114,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->horasFaltas              = 0;
     $presenca->porcentagemFalta         = 0;
     $presenca->porcentagemPresenca      = 0;
-    $presenca->porcentagemPresencaRegra = $this->getRegra()->porcentagemPresenca;
+    $presenca->porcentagemPresencaRegra = $this->getRegraAvaliacaoPorcentagemPresenca();
 
     $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
     $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
@@ -1196,7 +1196,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // Na última etapa seta situação presença como aprovado ou reprovado.
         $lastStage = $this->getLastStage($enrollmentId, $classroomId, $id);
         if ($etapa == $lastStage || $etapa == 'Rc') {
-          $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
+          $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
           $faltasComponentes[$id]->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                                           App_Model_MatriculaSituacao::REPROVADO;
             // Se etapa = quantidade de etapas dessa disciplina, vamos assumir que é a última etapa
@@ -1241,7 +1241,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Na última etapa seta situação presença como aprovado ou reprovado.
     if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
-      $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
+      $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
       $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                         App_Model_MatriculaSituacao::REPROVADO;
     }
