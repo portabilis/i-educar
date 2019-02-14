@@ -2215,8 +2215,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr($notas, 'etapa', 'nota'));
 
-    $formula    = $this->getRegraAvaliacaoFormulaRecuperacao();
-
     $data = array(
         'Se' => $somaEtapas,
         'Et' => $this->getOption('etapas'),
