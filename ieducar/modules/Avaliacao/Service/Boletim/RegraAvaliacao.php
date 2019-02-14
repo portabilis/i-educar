@@ -152,4 +152,14 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     {
         return boolval($this->getRegraAvaliacao()->get('mediaRecuperacao'));
     }
+
+    /**
+     * Indica se a regra de avaliação tem reprovação automática.
+     *
+     * @return bool
+     */
+    public function hasRegraAvaliacaoReprovacaoAutomatica()
+    {
+        return boolval($this->getRegraAvaliacao()->reprovacaoAutomatica);
+    }
 }

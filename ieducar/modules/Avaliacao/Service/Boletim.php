@@ -1002,7 +1002,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
-        if($this->getRegra()->reprovacaoAutomatica){
+        if($this->hasRegraAvaliacaoReprovacaoAutomatica()){
           if(!is_numeric($this->preverNotaRecuperacao($id))){
             $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
             $qtdComponenteReprovado++;
