@@ -2137,7 +2137,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($nota, 1);
     }
 
-    return $this->getRegra()->tabelaArredondamento->round($nota, 1);
+    return $this->getRegraAvaliacaoTabelaArredondamento()->round($nota, 1);
   }
 
   public function regraUsaTipoNotaNumericaConceitual()
@@ -2191,7 +2191,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
     }
 
-    return $this->getRegra()->tabelaArredondamento->round($media, 2);
+    return $this->getRegraAvaliacaoTabelaArredondamento()->round($media, 2);
   }
 
   /**
