@@ -781,10 +781,13 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $resources = array(0 => 'Não',
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
                 1 => 'Sim',
-                2 => 'Em tramitação');
-            $options = array('label' => 'Regulamentação/ Autorização no conselho ou órgão público de educação', 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70);
+                2 => 'Em tramitação'
+            ];
+            $options = array('label' => 'Regulamentação/Autorização no conselho ou órgão público de educação', 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70);
             $this->inputsHelper()->select('regulamentacao', $options);
 
             $options = array('label' => 'Ato de criação', 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
