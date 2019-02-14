@@ -2231,7 +2231,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $increment = 0.1;
     $notaMax = $this->getRegraAvaliacaoNotaMaximaExameFinal();
 
-    if($this->getRegra()->qtdCasasDecimais == 0)
+    if($this->getRegraAvaliacaoQtdCasasDecimais() == 0)
       $increment = 1;
 
     // Definida varíavel de incremento e nota máxima, vai testando notas de Recuperação até que o resultado

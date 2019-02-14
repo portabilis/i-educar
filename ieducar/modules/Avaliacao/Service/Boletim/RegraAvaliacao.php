@@ -183,6 +183,17 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna a quantidade de casas decimais que devem ser armazenadas para
+     * uma nota.
+     *
+     * @return int
+     */
+    public function getRegraAvaliacaoQtdCasasDecimais()
+    {
+        return $this->getRegraAvaliacao()->qtdCasasDecimais;
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool
