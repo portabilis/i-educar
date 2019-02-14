@@ -342,10 +342,6 @@ class DiarioApiController extends ApiCoreController
     {
         return $this->canPost() &&
         $this->validatesIsNumeric('att_value');
-        // $this->validatesRegraAvaliacaoHasNota() &&
-        // $this->validatesRegraAvaliacaoHasFormulaRecuperacao() &&
-        // $this->validatesRegraAvaliacaoHasFormulaRecuperacaoWithTypeRecuperacao() &&
-        // $this->validatesPreviousNotasHasBeenSet();
     }
 
     protected function canPostFalta()
@@ -445,6 +441,7 @@ class DiarioApiController extends ApiCoreController
             $this->trySaveServiceBoletim();
             $this->messenger->append('Nota geral da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
+
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
@@ -468,6 +465,18 @@ class DiarioApiController extends ApiCoreController
             $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
         } else {
             $this->messenger->append('Usuário não possui permissão para alterar a média do aluno.', 'error');
+        }
+    }
+
+    protected function postMediaDesbloqueia() {
+        if ($this->canPostMedia()) {
+            $componenteCurricular = $this->getRequest()->componente_curricular_id;
+
+            if ($this->serviceBoletim()->unlockMediaComponente($componenteCurricular)) {
+                $this->messenger->append('Média desbloqueada com sucesso.', 'success');
+            } else {
+                $this->messenger->append('Ocorreu um erro ao desbloquear a média. Tente novamente.', 'error');
+            }
         }
     }
 
@@ -1736,6 +1745,8 @@ class DiarioApiController extends ApiCoreController
             $this->postNotaGeral();
         } elseif ($this->isRequestFor('post', 'media')) {
             $this->postMedia();
+        } elseif ($this->isRequestFor('post', 'media_desbloqueia')) {
+            $this->postMediaDesbloqueia();
         } elseif ($this->isRequestFor('delete', 'media')) {
             $this->deleteMedia();
         } elseif ($this->isRequestFor('post', 'situacao')) {

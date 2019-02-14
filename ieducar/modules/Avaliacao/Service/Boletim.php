@@ -3168,6 +3168,23 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
   }
 
+  public function unlockMediaComponente($componente)
+  {
+      try {
+          $media = $this->getNotaComponenteMediaDataMapper()->find(array(
+            'notaAluno' => $this->_getNotaAluno()->id,
+            'componenteCurricular' => $componente
+          ));
+
+          $media->bloqueada = 'f';
+
+          $media->markOld();
+
+          return $this->getNotaComponenteMediaDataMapper()->save($media);
+      } catch (Exception $e) {
+          return false;
+      }
+  }
 
   public function updateMediaComponente($media, $componente, $etapa, bool $lock = false) {
     try {
