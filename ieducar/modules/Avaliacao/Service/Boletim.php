@@ -2626,7 +2626,6 @@ public function alterarSituacao($novaSituacao, $matriculaId){
   {
     require_once 'Avaliacao/Model/NotaComponenteMedia.php';
     $this->_loadNotas(FALSE);
-    $regra = $this->getRegra();
 
     $etapa = 1;
 
