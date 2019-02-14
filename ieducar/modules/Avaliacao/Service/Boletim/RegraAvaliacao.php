@@ -153,6 +153,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna a fórmula para o cálculo da média da recuperação.
+     *
+     * @return FormulaMedia_Model_FormulaDataMapper
+     */
+    public function getRegraAvaliacaoFormulaRecuperacao()
+    {
+        return $this->getRegraAvaliacao()->formulaRecuperacao;
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool

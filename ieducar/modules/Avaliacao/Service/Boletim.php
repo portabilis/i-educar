@@ -2205,7 +2205,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   public function preverNotaRecuperacao($id)
   {
 
-    if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
+    if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($this->_notasComponentes[$id])) {
       return NULL;
     }
 
@@ -2215,7 +2215,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr($notas, 'etapa', 'nota'));
 
-    $formula    = $this->getRegra()->formulaRecuperacao;
+    $formula    = $this->getRegraAvaliacaoFormulaRecuperacao();
 
     $data = array(
         'Se' => $somaEtapas,
@@ -2238,7 +2238,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // da média seja superior a média de aprovação de recuperação
     for($i = $increment ; $i <= $notaMax; $i = round($i+$increment, 1)){
       $data['Rc']=$i;
-      if ($this->getRegra()->formulaRecuperacao->execFormulaMedia($data) >= $this->getRegraAvaliacaoMediaRecuperacao())
+      if ($this->getRegraAvaliacaoFormulaRecuperacao()->execFormulaMedia($data) >= $this->getRegraAvaliacaoMediaRecuperacao())
         return $i;
     }
 
@@ -2360,7 +2360,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _calculaMedia(array $values)
   {
     if (isset($values['Rc']) && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
-      $media = $this->getRegra()->formulaRecuperacao->execFormulaMedia($values);
+      $media = $this->getRegraAvaliacaoFormulaRecuperacao()->execFormulaMedia($values);
     }
     else {
       $media = $this->getRegra()->formulaMedia->execFormulaMedia($values);
