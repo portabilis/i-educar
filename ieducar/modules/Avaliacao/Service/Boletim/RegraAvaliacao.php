@@ -133,6 +133,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna a quantidade de disciplinas que o aluno pode pegar dependência.
+     *
+     * @return int
+     */
+    public function getRegraAvaliacaoQtdDisciplinasDependencia()
+    {
+        return $this->getRegraAvaliacao()->get('qtdDisciplinasDependencia');
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool

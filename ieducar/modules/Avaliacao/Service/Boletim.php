@@ -1043,7 +1043,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $aprovaDependencia = !($reprovaAnoConcluinte && $anoConcluinte);
     $aprovaDependencia = ($aprovaDependencia && !dbBool($matricula['dependencia']));
     $aprovaDependencia = ($aprovaDependencia && $situacaoGeral == App_Model_MatriculaSituacao::REPROVADO);
-    $aprovaDependencia = ($aprovaDependencia && $qtdComponenteReprovado <= $this->getRegra()->get('qtdDisciplinasDependencia'));
+    $aprovaDependencia = ($aprovaDependencia && $qtdComponenteReprovado <= $this->getRegraAvaliacaoQtdDisciplinasDependencia());
 
     if ($aprovaDependencia) {
       $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
