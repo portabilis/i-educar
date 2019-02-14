@@ -163,6 +163,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna a tabela de arredondamento conceitual.
+     *
+     * @return TabelaArredondamento_Model_TabelaDataMapper
+     */
+    public function getRegraAvaliacaoTabelaArredondamentoConceitual()
+    {
+        return $this->getRegraAvaliacao()->tabelaArredondamentoConceitual;
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool

@@ -2134,7 +2134,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
-        return $this->getRegra()->tabelaArredondamentoConceitual->round($nota, 1);
+        return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($nota, 1);
     }
 
     return $this->getRegra()->tabelaArredondamento->round($nota, 1);
@@ -2188,7 +2188,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
-        return $this->getRegra()->tabelaArredondamentoConceitual->round($media, 2);
+        return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
     }
 
     return $this->getRegra()->tabelaArredondamento->round($media, 2);
