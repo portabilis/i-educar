@@ -173,6 +173,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna a nota máxima possível para o exame final.
+     *
+     * @return float
+     */
+    public function getRegraAvaliacaoNotaMaximaExameFinal()
+    {
+        return $this->getRegraAvaliacao()->notaMaximaExameFinal;
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool

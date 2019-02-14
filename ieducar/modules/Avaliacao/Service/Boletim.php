@@ -2229,7 +2229,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $data = $this->_calculateNotasRecuperacoesEspecificas($id, $data);
 
     $increment = 0.1;
-    $notaMax = $this->getRegra()->notaMaximaExameFinal;
+    $notaMax = $this->getRegraAvaliacaoNotaMaximaExameFinal();
 
     if($this->getRegra()->qtdCasasDecimais == 0)
       $increment = 1;
