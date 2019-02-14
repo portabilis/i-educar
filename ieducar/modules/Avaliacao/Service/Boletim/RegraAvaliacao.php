@@ -163,6 +163,16 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna a fórmula para o cálculo da média da recuperação.
+     *
+     * @return FormulaMedia_Model_FormulaDataMapper
+     */
+    public function getRegraAvaliacaoFormulaMedia()
+    {
+        return $this->getRegraAvaliacao()->formulaMedia;
+    }
+
+    /**
      * Retorna a tabela de arredondamento conceitual.
      *
      * @return TabelaArredondamento_Model_TabelaDataMapper
