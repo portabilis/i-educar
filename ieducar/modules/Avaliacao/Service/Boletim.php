@@ -3187,6 +3187,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   public function updateMediaComponente($media, $componente, $etapa, bool $lock = false) {
+    $lock = $lock === false ? 'f' : 't';
+
     try {
       $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find(array(
         'notaAluno' => $this->_getNotaAluno()->id,
