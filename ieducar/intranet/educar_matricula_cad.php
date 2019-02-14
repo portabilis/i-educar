@@ -878,7 +878,7 @@ class indice extends clsCadastro
             $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim($this->ref_cod_turma);
 
             if (empty($dataAnoLetivoTermino)) {
-                $this->mensagem = 'Não está definida da data de término do ano letivo.';
+                $this->mensagem = 'Não está definida a data de término do ano letivo.';
 
                 return false;
             }
