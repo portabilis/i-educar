@@ -939,7 +939,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
         // curriculares da matrícula, ainda está em andamento
         if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
-             && $this->getRegra()->get('definirComponentePorEtapa') != "1") {
+             && $this->getRegraAvaliacaoDefinirComponentePorEtapa() != "1") {
           $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }
     } elseif($calcularSituacaoAluno && count($mediasComponenentesTotal) < $totalComponentes) {
@@ -947,7 +947,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
-         && $this->getRegra()->get('definirComponentePorEtapa') == "1"){
+         && $this->getRegraAvaliacaoDefinirComponentePorEtapa() == "1"){
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
 
@@ -2691,7 +2691,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
           $qtdeEtapas = $this->getOption('etapas');
 
-          if($regra->get('definirComponentePorEtapa') == "1"){
+          if($this->getRegraAvaliacaoDefinirComponentePorEtapa() == "1"){
             $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
 
             $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
@@ -2847,7 +2847,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         // Pelo que eu entendi, caso a opção `definirComponentePorEtapa` é
         // possível lançar notas para etapas futuras.
 
-        if ($regra->get('definirComponentePorEtapa') == "1") {
+        if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == "1") {
             return true;
         }
 

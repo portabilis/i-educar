@@ -122,6 +122,17 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Retorna "1" se a regra de avaliação permite definir componente
+     * curricular por etapa.
+     *
+     * @return string
+     */
+    public function getRegraAvaliacaoDefinirComponentePorEtapa()
+    {
+        return $this->getRegraAvaliacao()->get('definirComponentePorEtapa');
+    }
+
+    /**
      * Indica se a regra de avaliação possui recuperação final.
      *
      * @return bool
