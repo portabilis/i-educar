@@ -254,29 +254,29 @@ class MatriculaController extends ApiCoreController
 
                 foreach ($matriculas as $key => $matricula) {
                     $sql = 'SELECT matricula_turma.ref_cod_turma AS turma_id,
-                         matricula_turma.sequencial AS sequencial,
-                         matricula_turma.sequencial_fechamento AS sequencial_fechamento,
-                         coalesce(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
-                         coalesce(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
-                         coalesce(matricula_turma.updated_at::varchar, \'\') AS data_atualizacao,
-                         (CASE
-                              WHEN coalesce(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN false
-                              WHEN matricula.aprovado = 4
-                                   AND matricula_turma.transferido = TRUE THEN TRUE
-                              WHEN matricula.aprovado = 3
-                                   AND matricula_turma.remanejado = TRUE THEN TRUE
-                              ELSE FALSE
-                          END) AS apresentar_fora_da_data,
-                          (CASE
-                              WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, FALSE) = FALSE
-                              ELSE TRUE
-                          END) AS mostrar_enturmacao,
-                          matricula_turma.turno_id
-                  FROM matricula
-                  INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
-                  INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
-                  LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE cod_matricula = $1';
+                             matricula_turma.sequencial AS sequencial,
+                             matricula_turma.sequencial_fechamento AS sequencial_fechamento,
+                             coalesce(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
+                             coalesce(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
+                             coalesce(matricula_turma.updated_at::varchar, \'\') AS data_atualizacao,
+                             (CASE
+                                  WHEN coalesce(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN false
+                                  WHEN matricula.aprovado = 4
+                                       AND matricula_turma.transferido = TRUE THEN TRUE
+                                  WHEN matricula.aprovado = 3
+                                       AND matricula_turma.remanejado = TRUE THEN TRUE
+                                  ELSE FALSE
+                              END) AS apresentar_fora_da_data,
+                              (CASE
+                                  WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, FALSE) = FALSE
+                                  ELSE TRUE
+                              END) AS mostrar_enturmacao,
+                              matricula_turma.turno_id
+                      FROM matricula
+                      INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+                      INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
+                      LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                      WHERE cod_matricula = $1';
 
                     $params = [$matriculas[$key]['matricula_id']];
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
