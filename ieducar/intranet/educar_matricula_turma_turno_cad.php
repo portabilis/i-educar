@@ -62,7 +62,7 @@ class indice extends clsCadastro
             null, null, null, null, null, 1, null, null, null,
             null, null, null, null, null, null, null, null, false,
             null, null, null, false, false, false, null, null,
-            false, null, false, false, false, null, true
+            false, null, false, false, false
         );
 
         $turnos = [
