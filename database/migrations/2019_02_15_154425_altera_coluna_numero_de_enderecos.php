@@ -20,7 +20,13 @@ class AlteraColunaNumeroDeEnderecos extends Migration
         Schema::table('cadastro.endereco_pessoa', function (Blueprint $table) {
             $table->decimal('numero', 10, 0)->change();
         });
+        Schema::table('historico.endereco_pessoa', function (Blueprint $table) {
+            $table->decimal('numero', 10, 0)->change();
+        });
         Schema::table('cadastro.endereco_externo', function (Blueprint $table) {
+            $table->decimal('numero', 10, 0)->change();
+        });
+        Schema::table('historico.endereco_externo', function (Blueprint $table) {
             $table->decimal('numero', 10, 0)->change();
         });
         Schema::table('pmieducar.escola_complemento', function (Blueprint $table) {
@@ -46,7 +52,13 @@ class AlteraColunaNumeroDeEnderecos extends Migration
         Schema::table('cadastro.endereco_pessoa', function (Blueprint $table) {
             $table->decimal('numero', 6, 0)->change();
         });
+        Schema::table('historico.endereco_pessoa', function (Blueprint $table) {
+            $table->decimal('numero', 6, 0)->change();
+        });
         Schema::table('cadastro.endereco_externo', function (Blueprint $table) {
+            $table->decimal('numero', 6, 0)->change();
+        });
+        Schema::table('historico.endereco_externo', function (Blueprint $table) {
             $table->decimal('numero', 6, 0)->change();
         });
         Schema::table('pmieducar.escola_complemento', function (Blueprint $table) {
