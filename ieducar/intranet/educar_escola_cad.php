@@ -1349,7 +1349,7 @@ class indice extends clsCadastro
             $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
             $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
             $options = [
-                'label' => 'Mantenedora escola privada',
+                'label' => 'Mantenedora da escola privada',
                 'size' => 50,
                 'required' => false,
                 'options' => [
@@ -2356,11 +2356,7 @@ class indice extends clsCadastro
             (is_array($this->mantenedora_escola_privada) &&
             count($this->mantenedora_escola_privada) == 1 &&
             empty($this->mantenedora_escola_privada[0]))) {
-            $this->mensagem = "O campo mantenedora escola privada é obrigatório para escolas em atividade de administração privada.";
-            return FALSE;
-        }
-        if (empty($this->cnpj_mantenedora_principal)) {
-            $this->mensagem = "O campo CNPJ da mantenedora principal da escola privada é obrigatório para escolas em atividade de administração privada.";
+            $this->mensagem = "O campo mantenedora da escola privada é obrigatório para escolas em atividade de administração privada.";
             return FALSE;
         }
         return TRUE;
