@@ -489,7 +489,6 @@ $j(document).ready(function() {
 
   $j('#situacao_funcionamento').change(
     function(){
-      console.log('oi');
       verificaCamposDepAdm();
       obrigaCampoRegulamentacao();
     }
@@ -497,7 +496,6 @@ $j(document).ready(function() {
 
   $j('#regulamentacao').change(
     function(){
-      console.log('oi');
       habilitaCampoEsferaAdministrativa();
       mostrarObrigarCnpjMantenedora();
     }
