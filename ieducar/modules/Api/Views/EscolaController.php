@@ -466,6 +466,9 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasMultipleSearch()
     {
+        $cod_usuario = $this->getSession()->id_pessoa;
+        $permissao = new clsPermissoes();
+        $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
 
         $sql = 'SELECT cod_escola as id,
@@ -479,6 +482,14 @@ class EscolaController extends ApiCoreController
           where escola.ativo = 1
             and curso.ativo = 1
             and escola_curso.ativo = 1';
+
+        if (is_numeric($cod_usuario) && $nivel == App_Model_NivelTipoUsuario::ESCOLA) {
+            $escolas = $this->getEscolasUsuarios($cod_usuario);
+            if (! empty($escolas['escolas'])) {
+                $escolas = implode(", ", $escolas['escolas']);
+                $sql .= " and escola.cod_escola in ({$escolas})";
+            }
+        }
 
         if (is_numeric($cursoId)) {
             $sql .= ' and curso.cod_curso = $1';
@@ -518,9 +529,11 @@ class EscolaController extends ApiCoreController
         return $dependenciaAdministrativa;
     }
 
-    protected function getEscolasUsuarios()
+    protected function getEscolasUsuarios($ref_cod_usuario = null)
     {
-        $ref_cod_usuario = $this->getRequest()->id;
+        if (!$ref_cod_usuario) {
+            $ref_cod_usuario = $this->getRequest()->id;
+        }
 
         if (!$ref_cod_usuario) {
             return null;
