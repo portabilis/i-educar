@@ -546,7 +546,7 @@ class indice extends clsCadastro
                 $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "20", true);
                 $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true);
                 $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false);
-                $this->campoNumero("numero", "Número", $this->numero, "6", "6", true);
+                $this->campoNumero("numero", "Número", $this->numero, "10", "10", true);
                 $this->campoTexto("p_ddd_telefone_1", "DDD Telefone 1", $this->p_ddd_telefone_1, "2", "2", false);
                 $this->campoTexto("p_telefone_1", "Telefone 1", $this->p_telefone_1, "10", "15", false);
                 $this->campoTexto("p_ddd_telefone_fax", "DDD Fax", $this->p_ddd_telefone_fax, "2", "2", false);
@@ -688,7 +688,7 @@ class indice extends clsCadastro
                     $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, true, true);
                     $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", true);
                     $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false);
-                    $this->campoNumero("numero", "Número", $this->numero, "6", "6", false);
+                    $this->campoNumero("numero", "Número", $this->numero, "10", "10", false);
                     $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
                 } elseif ($this->ref_idpes && $this->cep) {
                     $this->cep = (is_numeric($this->cep)) ? int2CEP($this->cep) : $this->cep;
@@ -699,7 +699,7 @@ class indice extends clsCadastro
                     $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, "", false, "", "", false, true);
                     $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", false);
                     $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoNumero("numero", "Número", $this->numero, 6, 6, false, "", "");
+                    $this->campoNumero("numero", "Número", $this->numero, 10, 10, false, "", "");
                     $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
                 } else {
                     if (!$this->isEnderecoExterno) {
@@ -737,7 +737,7 @@ class indice extends clsCadastro
                     $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, $disabled, true);
                     $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "", $disabled, true);
                     $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false, false);
-                    $this->campoNumero("numero", "N&uacute;mero", $this->numero, "6", "6", false);
+                    $this->campoNumero("numero", "N&uacute;mero", $this->numero, "10", "10", false);
                     $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
                 }
 
