@@ -1212,6 +1212,9 @@ class clsPmieducarEscola
       if (is_numeric($this->regulamentacao)) {
         $set .= "{$gruda}regulamentacao = '{$this->regulamentacao}'";
         $gruda = ", ";
+      } else {
+        $set .= "{$gruda}regulamentacao = null";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->acesso)) {

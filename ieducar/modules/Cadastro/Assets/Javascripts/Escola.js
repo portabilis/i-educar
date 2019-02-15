@@ -38,6 +38,12 @@ const DEPENDENCIA_ADMINISTRATIVA = {
   PRIVADA: 4
 }
 
+const SITUACAO_FUNCIONAMENTO = {
+  EM_ATIVIDADE : 1,
+  PARALISADA : 2,
+  EXTINTA : 3
+}
+
 const UNIDADE_VINCULADA = {
   SEM_VINCULO : 0,
   EDUCACAO_BASICA : 1,
@@ -199,6 +205,18 @@ $j('#computadores').change(
       }
   }
 ).trigger('change');
+
+function obrigaCampoRegulamentacao() {
+  escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
+
+  if (escolaEmAtividade) {
+    $j('#regulamentacao').makeRequired();
+    $j("#regulamentacao").prop('disabled', false);
+  } else {
+    $j('#regulamentacao').makeUnrequired();
+    $j("#regulamentacao").prop('disabled', true);
+  }
+}
 
 function habilitaCampoOrgaoVinculadoEscola() {
   if ($j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
@@ -406,6 +424,7 @@ $j(document).ready(function() {
 
   habilitaCampoOrgaoVinculadoEscola();
   obrigaCampoOrgaoVinculadoEscola();
+  obrigaCampoRegulamentacao();
 
   $j('#unidade_vinculada_outra_instituicao').change(
     function (){
@@ -446,6 +465,7 @@ $j(document).ready(function() {
     }
   }
 
+
   $j('#mantenedora_escola_privada').change(
     function (){
       mostrarObrigarCnpjMantenedora();
@@ -466,7 +486,14 @@ $j(document).ready(function() {
     }
   }
 
-  $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
+  $j('#situacao_funcionamento').change(
+    function(){
+      console.log('oi');
+      verificaCamposDepAdm();
+      obrigaCampoRegulamentacao();
+    }
+  );
+
   $j('#regulamentacao').on('change', habilitaCampoEsferaAdministrativa);
   verificaCamposDepAdm();
   habilitaCampoEsferaAdministrativa();
