@@ -787,7 +787,13 @@ class indice extends clsCadastro
                 1 => 'Sim',
                 2 => 'Em tramitação'
             ];
-            $options = array('label' => 'Regulamentação/Autorização no conselho ou órgão público de educação', 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70);
+            $options = [
+                'label' => 'Regulamentação/Autorização no conselho ou órgão público de educação',
+                'resources' => $resources,
+                'value' => $this->regulamentacao,
+                'size' => 70,
+                'required' => false
+            ];
             $this->inputsHelper()->select('regulamentacao', $options);
 
             $options = array('label' => 'Ato de criação', 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);

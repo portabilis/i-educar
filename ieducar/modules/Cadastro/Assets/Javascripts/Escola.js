@@ -419,6 +419,7 @@ $j(document).ready(function() {
       verificaCamposDepAdm();
       habilitaCampoOrgaoVinculadoEscola();
       obrigaCampoOrgaoVinculadoEscola();
+      mostrarObrigarCnpjMantenedora();
     }
   );
 
@@ -488,13 +489,18 @@ $j(document).ready(function() {
 
   $j('#situacao_funcionamento').change(
     function(){
-      console.log('oi');
       verificaCamposDepAdm();
       obrigaCampoRegulamentacao();
     }
   );
 
-  $j('#regulamentacao').on('change', habilitaCampoEsferaAdministrativa);
+  $j('#regulamentacao').change(
+    function(){
+      habilitaCampoEsferaAdministrativa();
+      mostrarObrigarCnpjMantenedora();
+    }
+  );
+
   verificaCamposDepAdm();
   habilitaCampoEsferaAdministrativa();
 
