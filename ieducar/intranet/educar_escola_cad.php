@@ -2359,10 +2359,6 @@ class indice extends clsCadastro
             $this->mensagem = "O campo mantenedora escola privada é obrigatório para escolas em atividade de administração privada.";
             return FALSE;
         }
-        if (empty($this->cnpj_mantenedora_principal)) {
-            $this->mensagem = "O campo CNPJ da mantenedora principal da escola privada é obrigatório para escolas em atividade de administração privada.";
-            return FALSE;
-        }
         return TRUE;
     }
 
