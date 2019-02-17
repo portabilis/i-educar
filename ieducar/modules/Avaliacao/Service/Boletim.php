@@ -301,7 +301,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $notasGerais[$nota->get('etapa')] = $nota;
     }
 
-    $this->_notasComponentes = $notasComponentes;
+    $this->setNotasComponentes($notasComponentes);
     $this->_notasGerais = $notasGerais;
 
     if (FALSE == $loadMedias) {
@@ -1904,12 +1904,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function preverNotaRecuperacao($id)
   {
+    $notasComponentes = $this->getNotasComponentes();
 
-    if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($this->_notasComponentes[$id])) {
+    if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($notasComponentes[$id])) {
       return NULL;
     }
 
-    $notas      = $this->_notasComponentes[$id];
+    $notas      = $notasComponentes[$id];
 
     unset($notas[$this->getOption('etapas')]);
 
@@ -2380,7 +2381,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       $escolaId = $infosMatricula['ref_ref_cod_escola'];
       $notaAlunoId = $this->_getNotaAluno()->id;
 
-      foreach ($this->_notasComponentes as $id => $notasComponentes) {
+      foreach ($this->getNotasComponentes() as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
         //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
         if(!isset($this->_currentComponenteCurricular) || $this->_currentComponenteCurricular == $id){
