@@ -98,7 +98,7 @@ trait UpdatedAtTrigger
     public function createUpdatedAtTrigger($table)
     {
         Schema::table($table, function (Blueprint $table) {
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('updated_at')->nullable()->default(DB::raw('NOW()'));
         });
 
         $this->runUpdateColumn($table);
