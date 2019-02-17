@@ -18,15 +18,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     use Avaliacao_Service_Boletim_Acessores;
 
   /**
-   * Uma instância de Avaliacao_Model_NotaAluno, que é a entrada que contém
-   * o cruzamento de matrícula com as notas do aluno nos diversos componentes
-   * cursados.
-   *
-   * @var Avaliacao_Model_NotaAluno
-   */
-  protected $_notaAluno = NULL;
-
-  /**
    * Uma instância de Avaliacao_Model_FaltaAluno, que é a entrada que contém
    * o cruzamento de matrícula com as faltas do aluno nos diversos componentes
    * cursados ou no geral.
@@ -1346,40 +1337,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _situacaoPrioritaria($item1, $item2)
   {
     return ($this->_situacaoPrioridade[$item1] <= $this->_situacaoPrioridade[$item2]);
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_NotaAluno $nota
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setNotaAluno(Avaliacao_Model_NotaAluno $nota)
-  {
-    $this->_notaAluno = $nota;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_NotaAluno|NULL
-   */
-  protected function _getNotaAluno()
-  {
-    if (!is_null($this->_notaAluno)) {
-      return $this->_notaAluno;
-    }
-
-    $notaAluno = $this->getNotaAlunoDataMapper()->findAll(
-      array(),
-      array('matricula' => $this->getOption('matricula'))
-    );
-
-    if (0 == count($notaAluno)) {
-      return NULL;
-    }
-
-    $this->_setNotaAluno($notaAluno[0]);
-    return $this->_notaAluno;
   }
 
   /**
