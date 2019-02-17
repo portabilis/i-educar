@@ -12,20 +12,6 @@ trait Avaliacao_Service_Boletim_NotaAluno
     protected $_notaAluno;
 
     /**
-     * Setter.
-     *
-     * @param Avaliacao_Model_NotaAluno $nota
-     *
-     * @return $this
-     */
-    protected function _setNotaAluno(Avaliacao_Model_NotaAluno $nota)
-    {
-        $this->_notaAluno = $nota;
-
-        return $this;
-    }
-
-    /**
      * Getter.
      *
      * @return Avaliacao_Model_NotaAluno|NULL
@@ -48,5 +34,19 @@ trait Avaliacao_Service_Boletim_NotaAluno
         $this->_setNotaAluno($notaAluno[0]);
 
         return $this->_notaAluno;
+    }
+
+    /**
+     * Setter.
+     *
+     * @param Avaliacao_Model_NotaAluno $nota
+     *
+     * @return $this
+     */
+    protected function _setNotaAluno(Avaliacao_Model_NotaAluno $nota)
+    {
+        $this->_notaAluno = $nota;
+
+        return $this;
     }
 }
