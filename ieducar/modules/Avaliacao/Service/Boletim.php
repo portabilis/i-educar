@@ -18,15 +18,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     use Avaliacao_Service_Boletim_Acessores;
 
   /**
-   * Uma instância de Avaliacao_Model_FaltaAluno, que é a entrada que contém
-   * o cruzamento de matrícula com as faltas do aluno nos diversos componentes
-   * cursados ou no geral.
-   *
-   * @var Avaliacao_Model_NotaAluno
-   */
-  protected $_faltaAluno = NULL;
-
-  /**
    * Uma instância de Avaliacao_Model_ParecerDescritivoAluno, que é a entrada
    * que contém o cruzamento de matrícula com os pareceres do aluno nos diversos
    * componentes cursados ou no geral.
@@ -1431,48 +1422,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     return FALSE;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_FaltaAluno $falta
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setFaltaAluno(Avaliacao_Model_FaltaAluno $falta)
-  {
-    $this->_faltaAluno = $falta;
-    $tipoFaltaAtual = $this->_faltaAluno->get('tipoFalta');
-    $tipoFaltaRegraAvaliacao = $this->getRegraAvaliacaoTipoPresenca();
-
-    if ($tipoFaltaAtual != $tipoFaltaRegraAvaliacao){
-      $this->_faltaAluno->tipoFalta = $tipoFaltaRegraAvaliacao;
-      $this->getFaltaAlunoDataMapper()->save($this->_faltaAluno);
-    }
-
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_FaltaAluno|NULL
-   */
-  protected function _getFaltaAluno()
-  {
-    if (!is_null($this->_faltaAluno)) {
-      return $this->_faltaAluno;
-    }
-
-    $faltaAluno = $this->getFaltaAlunoDataMapper()->findAll(
-      array(),
-      array('matricula' => $this->getOption('matricula'))
-    );
-
-    if (0 == count($faltaAluno)) {
-      return NULL;
-    }
-
-    $this->_setFaltaAluno($faltaAluno[0]);
-    return $this->_faltaAluno;
   }
 
   /**

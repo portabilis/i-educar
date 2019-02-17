@@ -1,11 +1,14 @@
 <?php
 
+require_once 'Avaliacao/Service/Boletim/FaltaAluno.php';
 require_once 'Avaliacao/Service/Boletim/NotaAluno.php';
 require_once 'Avaliacao/Service/Boletim/RegraAvaliacao.php';
 
 trait Avaliacao_Service_Boletim_Acessores
 {
-    use Avaliacao_Service_Boletim_RegraAvaliacao, Avaliacao_Service_Boletim_NotaAluno;
+    use Avaliacao_Service_Boletim_RegraAvaliacao,
+        Avaliacao_Service_Boletim_NotaAluno,
+        Avaliacao_Service_Boletim_FaltaAluno;
 
     /**
      * @var array
