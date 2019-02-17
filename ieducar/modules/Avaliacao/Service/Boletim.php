@@ -338,7 +338,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $mediasGerais = $mediaGeral;
     }
 
-    $this->_mediasComponentes = $mediasComponentes;
+    $this->setMediasComponentes($mediasComponentes);
     $this->_mediasGerais = $mediasGerais;
 
     return $this;

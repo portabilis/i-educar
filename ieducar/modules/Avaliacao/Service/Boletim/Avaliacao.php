@@ -132,6 +132,20 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
+     * Retorna as instâncias de Avaliacao_Model_NotaComponenteMedia do aluno.
+     *
+     * @param array $mediasComponentes
+     *
+     * @return $this
+     */
+    public function setMediasComponentes(array $mediasComponentes)
+    {
+        $this->_mediasComponentes = $mediasComponentes;
+
+        return $this;
+    }
+
+    /**
      * Retorna as instâncias de Avaliacao_Model_MediaGeral do aluno.
      *
      * @return array
