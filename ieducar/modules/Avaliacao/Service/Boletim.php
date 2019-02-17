@@ -1489,7 +1489,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $nota = $this->_addValidators($nota);
     $nota = $this->_updateEtapa($nota);
     $nota->notaArredondada = $this->arredondaNota($nota);
-    $this->_notas[$key]    = $nota;
+
+    $this->addNotaItem($key, $nota);
 
     $this->notaLancada = $nota;
 
@@ -1504,7 +1505,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $notaGeral = $this->_updateEtapa($notaGeral);
 
     $notaGeral->notaArredondada = $this->arredondaNota($notaGeral);
-    $this->_notas[$key]    = $notaGeral;
+
+    $this->addNotaItem($key, $notaGeral);
 
     return $this;
 
