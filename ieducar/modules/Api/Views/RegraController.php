@@ -81,7 +81,8 @@ class RegraController extends ApiCoreController
                 rar.descricao,
                 rar.etapas_recuperadas,
                 rar.media,
-                rar.nota_maxima
+                rar.nota_maxima,
+                rar.updated_at
                 FROM modules.regra_avaliacao_recuperacao rar
                 INNER JOIN modules.regra_avaliacao ra
                     ON rar.regra_avaliacao_id = ra.id
@@ -89,7 +90,7 @@ class RegraController extends ApiCoreController
                 ';
 
             $regrasRecuperacao = $this->fetchPreparedQuery($sql, [$instituicaoId]);
-            $attrs = ['id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas', 'media', 'nota_maxima'];
+            $attrs = ['id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas', 'media', 'nota_maxima', 'updated_at'];
             $regrasRecuperacao = Portabilis_Array_Utils::filterSet($regrasRecuperacao, $attrs);
 
             foreach ($regrasRecuperacao as &$regra) {
