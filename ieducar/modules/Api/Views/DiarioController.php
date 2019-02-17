@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 
@@ -185,6 +186,12 @@ class DiarioController extends ApiCoreController
         return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
     }
 
+    /**
+     * @return bool
+     *
+     * @throws CoreExt_Exception
+     * @throws MissingStagesException
+     */
     protected function postNotas()
     {
         if (! $this->canPostNotas()) {
@@ -266,24 +273,9 @@ class DiarioController extends ApiCoreController
 
                     $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
-                    try {
-                        $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
-                            $etapa, $componenteCurricularId
-                        );
-                    } catch (MissingStagesException $exception) {
-                        $this->messenger->append($exception->getMessage(), 'error');
-                        $this->appendResponse('error', [
-                            'code' => $exception->getCode(),
-                            'message' => $exception->getMessage(),
-                            'extra' => $exception->getExtraInfo(),
-                        ]);
-
-                        return false;
-                    } catch (Exception $e) {
-                        $this->messenger->append($e->getMessage(), 'error');
-
-                        return false;
-                    }
+                    $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
+                        $etapa, $componenteCurricularId
+                    );
 
                     $serviceBoletim->addNota($nota);
 
@@ -428,6 +420,10 @@ class DiarioController extends ApiCoreController
         }
     }
 
+    /**
+     * @throws CoreExt_Exception
+     * @throws EvaluationRuleNotAllowGeneralAbsence
+     */
     protected function postFaltasGeral()
     {
         if ($this->canPostFaltasPorComponente()) {
@@ -439,19 +435,21 @@ class DiarioController extends ApiCoreController
                     $faltas = $faltaTurmaAluno['valor'];
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
-                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
-                        }
-
-                        $falta = new Avaliacao_Model_FaltaGeral([
-                            'quantidade' => $faltas,
-                            'etapa' => $etapa,
-                        ]);
-
-                        $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                        $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
+                    if (empty($matriculaId)) {
+                        continue;
                     }
+
+                    if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
+                        throw new EvaluationRuleNotAllowGeneralAbsence($turmaId);
+                    }
+
+                    $falta = new Avaliacao_Model_FaltaGeral([
+                        'quantidade' => $faltas,
+                        'etapa' => $etapa,
+                    ]);
+
+                    $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+                    $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
                 }
             }
 

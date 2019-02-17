@@ -257,7 +257,7 @@ $j(document).ready(function() {
       $j('.turmaTab-active').toggleClass('turmaTab-active turmaTab');
       $j('#tab1').toggleClass('turmaTab turmaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-        if (index>=linha_inicial_tipo-1){
+        if (index>=linha_inicial_tipo){
           if (row.id!='stop')
             row.hide();
           else

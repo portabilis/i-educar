@@ -444,7 +444,7 @@ class clsPmieducarMatriculaTurma
 
         $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
         $auditoria->alteracao($detalheAntigo, $this->detalhe());
-        
+
         return TRUE;
       }
     }
@@ -1458,6 +1458,25 @@ class clsPmieducarMatriculaTurma
             and data_exclusao is not null
         order by
             data_exclusao desc
+        limit 1
+    ");
+  }
+
+
+  public function getMaiorDataEnturmacao(int $codMatricula)
+  {
+    $db = new clsBanco();
+
+    return $db->CampoUnico("
+        select
+            to_char(data_enturmacao, 'YYYY-MM-DD')
+        from
+            pmieducar.matricula_turma
+        where true
+            and ref_cod_matricula = $codMatricula
+            and data_enturmacao is not null
+        order by
+            data_enturmacao desc
         limit 1
     ");
   }

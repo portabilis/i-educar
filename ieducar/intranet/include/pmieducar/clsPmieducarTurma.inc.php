@@ -1,108 +1,75 @@
 <?php
 
-// error_reporting(E_ERROR);
-// ini_set("display_errors", 1);
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaí                               *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-*   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-*   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-*   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-*                                                                        *
-*   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-*   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-*   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-*   junto  com  este  programa. Se não, escreva para a Free Software     *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/**
-* @author Prefeitura Municipal de Itajaï¿½
-*
-* Criado em 02/08/2006 08:42 pelo gerador automatico de classes
-*/
-
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma
 {
-    var $cod_turma;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_ref_cod_serie;
-    var $ref_ref_cod_escola;
-    var $ref_cod_infra_predio_comodo;
-    var $nm_turma;
-    var $sgl_turma;
-    var $max_aluno;
-    var $multiseriada;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_turma_tipo;
-    var $hora_inicial;
-    var $hora_final;
-    var $hora_inicio_intervalo;
-  var $hora_fim_intervalo;
-    var $ano;
+    public $cod_turma;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_ref_cod_serie;
+    public $ref_ref_cod_escola;
+    public $ref_cod_infra_predio_comodo;
+    public $nm_turma;
+    public $sgl_turma;
+    public $max_aluno;
+    public $multiseriada;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_turma_tipo;
+    public $hora_inicial;
+    public $hora_final;
+    public $hora_inicio_intervalo;
+    public $hora_fim_intervalo;
+    public $ano;
 
-    var $ref_cod_regente;
-    var $ref_cod_instituicao_regente;
+    public $ref_cod_regente;
+    public $ref_cod_instituicao_regente;
 
-    var $ref_cod_instituicao;
-    var $ref_cod_curso;
+    public $ref_cod_instituicao;
+    public $ref_cod_curso;
 
-    var $ref_ref_cod_serie_mult;
-  var $ref_ref_cod_escola_mult;
-  var $visivel;
-  var $data_fechamento;
+    public $ref_ref_cod_serie_mult;
+    public $ref_ref_cod_escola_mult;
+    public $visivel;
+    public $data_fechamento;
 
-  var $tipo_atendimento;
-  var $turma_mais_educacao;
-  var $atividade_complementar_1;
-  var $atividade_complementar_2;
-  var $atividade_complementar_3;
-  var $atividade_complementar_4;
-  var $atividade_complementar_5;
-  var $atividade_complementar_6;
-  var $aee_braille;
-  var $aee_recurso_optico;
-  var $aee_estrategia_desenvolvimento;
-  var $aee_tecnica_mobilidade;
-  var $aee_libras;
-  var $aee_caa;
-  var $aee_curricular;
-  var $aee_soroban;
-  var $aee_informatica;
-  var $aee_lingua_escrita;
-  var $aee_autonomia;
-  var $cod_curso_profissional;
-  var $etapa_educacenso;
-  var $ref_cod_disciplina_dispensada;
-  var $parecer_1_etapa;
-  var $parecer_2_etapa;
-  var $parecer_3_etapa;
-  var $parecer_4_etapa;
-  var $nao_informar_educacenso;
-  var $tipo_mediacao_didatico_pedagogico;
-  var $dias_semana;
-  var $atividades_complementares;
-  var $atividades_aee;
+    public $tipo_atendimento;
+    public $turma_mais_educacao;
+    public $atividade_complementar_1;
+    public $atividade_complementar_2;
+    public $atividade_complementar_3;
+    public $atividade_complementar_4;
+    public $atividade_complementar_5;
+    public $atividade_complementar_6;
+    public $aee_braille;
+    public $aee_recurso_optico;
+    public $aee_estrategia_desenvolvimento;
+    public $aee_tecnica_mobilidade;
+    public $aee_libras;
+    public $aee_caa;
+    public $aee_curricular;
+    public $aee_soroban;
+    public $aee_informatica;
+    public $aee_lingua_escrita;
+    public $aee_autonomia;
+    public $cod_curso_profissional;
+    public $etapa_educacenso;
+    public $ref_cod_disciplina_dispensada;
+    public $parecer_1_etapa;
+    public $parecer_2_etapa;
+    public $parecer_3_etapa;
+    public $parecer_4_etapa;
+    public $nao_informar_educacenso;
+    public $tipo_mediacao_didatico_pedagogico;
+    public $dias_semana;
+    public $atividades_complementares;
+    public $atividades_aee;
 
-  var $listarNaoInformarEducacenso = TRUE;
-    var $codUsuario;
+    public $listarNaoInformarEducacenso = true;
+    public $codUsuario;
     // propriedades padrao
 
     /**
@@ -110,401 +77,299 @@ class clsPmieducarTurma
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
-
+    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4)
      *
      * @return object
      */
-    function __construct( $cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $data_fechamento = NULL, $ref_cod_disciplina_dispensada = NULL)
+    public function __construct($cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $data_fechamento = null, $ref_cod_disciplina_dispensada = null)
     {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}turma";
 
-        $this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
+        $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
         t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee ";
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee ';
 
-        if( is_numeric( $ref_cod_turma_tipo ) )
-        {
-            if( class_exists( "clsPmieducarTurmaTipo" ) )
-            {
-                $tmp_obj = new clsPmieducarTurmaTipo( $ref_cod_turma_tipo );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_turma_tipo)) {
+            if (class_exists('clsPmieducarTurmaTipo')) {
+                $tmp_obj = new clsPmieducarTurmaTipo($ref_cod_turma_tipo);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.turma_tipo WHERE cod_turma_tipo = '{$ref_cod_turma_tipo}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.turma_tipo WHERE cod_turma_tipo = '{$ref_cod_turma_tipo}'")) {
                     $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
                 }
             }
         }
-        if( is_numeric( $ref_ref_cod_escola ) && is_numeric( $ref_ref_cod_serie ) )
-        {
-            if( class_exists( "clsPmieducarEscolaSerie" ) )
-            {
-                $tmp_obj = new clsPmieducarEscolaSerie( $ref_ref_cod_escola, $ref_ref_cod_serie );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie)) {
+            if (class_exists('clsPmieducarEscolaSerie')) {
+                $tmp_obj = new clsPmieducarEscolaSerie($ref_ref_cod_escola, $ref_ref_cod_serie);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+                        $this->ref_ref_cod_serie = $ref_ref_cod_serie;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_ref_cod_escola = $ref_ref_cod_escola;
                         $this->ref_ref_cod_serie = $ref_ref_cod_serie;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                        $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.escola_serie WHERE ref_cod_escola = '{$ref_ref_cod_escola}' AND ref_cod_serie = '{$ref_ref_cod_serie}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie WHERE ref_cod_escola = '{$ref_ref_cod_escola}' AND ref_cod_serie = '{$ref_ref_cod_serie}'")) {
                     $this->ref_ref_cod_escola = $ref_ref_cod_escola;
                     $this->ref_ref_cod_serie = $ref_ref_cod_serie;
                 }
             }
         }
-        if( is_numeric( $ref_cod_infra_predio_comodo ) )
-        {
-            if( class_exists( "clsPmieducarInfraPredioComodo" ) )
-            {
-                $tmp_obj = new clsPmieducarInfraPredioComodo( $ref_cod_infra_predio_comodo );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_infra_predio_comodo)) {
+            if (class_exists('clsPmieducarInfraPredioComodo')) {
+                $tmp_obj = new clsPmieducarInfraPredioComodo($ref_cod_infra_predio_comodo);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_infra_predio_comodo = $ref_cod_infra_predio_comodo;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_infra_predio_comodo = $ref_cod_infra_predio_comodo;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_infra_predio_comodo = $ref_cod_infra_predio_comodo;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.infra_predio_comodo WHERE cod_infra_predio_comodo = '{$ref_cod_infra_predio_comodo}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.infra_predio_comodo WHERE cod_infra_predio_comodo = '{$ref_cod_infra_predio_comodo}'")) {
                     $this->ref_cod_infra_predio_comodo = $ref_cod_infra_predio_comodo;
                 }
             }
         }
-        if( is_numeric( $ref_usuario_cad ) )
-        {
-            if( class_exists( "clsPmieducarUsuario" ) )
-            {
-                $tmp_obj = new clsPmieducarUsuario( $ref_usuario_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_usuario_cad)) {
+            if (class_exists('clsPmieducarUsuario')) {
+                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_usuario_cad = $ref_usuario_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_usuario_cad = $ref_usuario_cad;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
                 }
             }
         }
-        if( is_numeric( $ref_usuario_exc ) )
-        {
-            if( class_exists( "clsPmieducarUsuario" ) )
-            {
-                $tmp_obj = new clsPmieducarUsuario( $ref_usuario_exc );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_usuario_exc)) {
+            if (class_exists('clsPmieducarUsuario')) {
+                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_usuario_exc = $ref_usuario_exc;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_usuario_exc = $ref_usuario_exc;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
                 }
             }
         }
 
-        if( is_numeric( $ref_cod_regente ) && is_numeric( $ref_cod_instituicao_regente ) )
-        {
-            if( class_exists( "clsPmieducarServidor" ) )
-            {
-                $tmp_obj = new clsPmieducarServidor($ref_cod_regente,null,null,null,null,null,null,$ref_cod_instituicao_regente,null);
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_regente) && is_numeric($ref_cod_instituicao_regente)) {
+            if (class_exists('clsPmieducarServidor')) {
+                $tmp_obj = new clsPmieducarServidor($ref_cod_regente, null, null, null, null, null, null, $ref_cod_instituicao_regente, null);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_regente = $ref_cod_regente;
+                        $this->ref_cod_instituicao_regente = $ref_cod_instituicao_regente;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_regente = $ref_cod_regente;
                         $this->ref_cod_instituicao_regente = $ref_cod_instituicao_regente;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_regente = $ref_cod_regente;
-                        $this->ref_cod_instituicao_regente = $ref_cod_instituicao_regente;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.servidor WHERE ref_cod_regente = '{$ref_cod_regente}' AND ref_cod_instituicao_regente = '{$ref_cod_instituicao_regente}'" ) )
-                {
-                        $this->ref_cod_regente = $ref_cod_regente;
-                        $this->ref_cod_instituicao_regente = $ref_cod_instituicao_regente;
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE ref_cod_regente = '{$ref_cod_regente}' AND ref_cod_instituicao_regente = '{$ref_cod_instituicao_regente}'")) {
+                    $this->ref_cod_regente = $ref_cod_regente;
+                    $this->ref_cod_instituicao_regente = $ref_cod_instituicao_regente;
                 }
             }
         }
 
-        if( is_numeric( $cod_turma ) )
-        {
+        if (is_numeric($cod_turma)) {
             $this->cod_turma = $cod_turma;
         }
-        if( is_string( $nm_turma ) )
-        {
+        if (is_string($nm_turma)) {
             $this->nm_turma = $nm_turma;
         }
-        if( is_string( $sgl_turma ) )
-        {
+        if (is_string($sgl_turma)) {
             $this->sgl_turma = $sgl_turma;
         }
-        if( is_numeric( $max_aluno ) )
-        {
+        if (is_numeric($max_aluno)) {
             $this->max_aluno = $max_aluno;
         }
-        if( is_numeric( $multiseriada ) )
-        {
+        if (is_numeric($multiseriada)) {
             $this->multiseriada = $multiseriada;
         }
-        if( is_string( $data_cadastro ) )
-        {
+        if (is_string($data_cadastro)) {
             $this->data_cadastro = $data_cadastro;
         }
-        if( is_string( $data_exclusao ) )
-        {
+        if (is_string($data_exclusao)) {
             $this->data_exclusao = $data_exclusao;
         }
-        if( is_numeric( $ativo ) )
-        {
+        if (is_numeric($ativo)) {
             $this->ativo = $ativo;
         }
-        if( ( $hora_inicial ) )
-        {
+        if (($hora_inicial)) {
             $this->hora_inicial = $hora_inicial;
         }
-        if( ( $hora_final ) )
-        {
+        if (($hora_final)) {
             $this->hora_final = $hora_final;
         }
-        if( ( $hora_inicio_intervalo ) )
-        {
+        if (($hora_inicio_intervalo)) {
             $this->hora_inicio_intervalo = $hora_inicio_intervalo;
         }
-        if( ( $hora_fim_intervalo ) )
-        {
+        if (($hora_fim_intervalo)) {
             $this->hora_fim_intervalo = $hora_fim_intervalo;
         }
 
-        if( is_numeric( $ref_cod_instituicao ) )
-        {
-            if( class_exists( "clsPmieducarInstituicao" ) )
-            {
-                $tmp_obj = new clsPmieducarInstituicao( $ref_cod_instituicao );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_instituicao)) {
+            if (class_exists('clsPmieducarInstituicao')) {
+                $tmp_obj = new clsPmieducarInstituicao($ref_cod_instituicao);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_instituicao = $ref_cod_instituicao;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_instituicao = $ref_cod_instituicao;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'")) {
                     $this->ref_cod_instituicao = $ref_cod_instituicao;
                 }
             }
         }
 
-        if( is_numeric( $ref_cod_curso ) )
-        {
-            if( class_exists( "clsPmieducarCurso" ) )
-            {
-                $tmp_obj = new clsPmieducarCurso( $ref_cod_curso );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_curso)) {
+            if (class_exists('clsPmieducarCurso')) {
+                $tmp_obj = new clsPmieducarCurso($ref_cod_curso);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_curso = $ref_cod_curso;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_curso = $ref_cod_curso;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_curso = $ref_cod_curso;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.curso WHERE cod_curso = '{$ref_cod_curso}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.curso WHERE cod_curso = '{$ref_cod_curso}'")) {
                     $this->ref_cod_curso = $ref_cod_curso;
                 }
             }
         }
 
-        if( is_numeric( $ref_ref_cod_escola_mult ) && is_numeric( $ref_ref_cod_serie_mult ) )
-        {
-            if( class_exists( "clsPmieducarEscolaSerie" ) )
-            {
-                $tmp_obj = new clsPmieducarEscolaSerie( $ref_ref_cod_escola_mult, $ref_ref_cod_serie_mult );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if ((is_numeric($ref_ref_cod_escola_mult) && is_numeric($ref_ref_cod_serie_mult)) || is_null($ref_ref_cod_serie_mult)) {
+            if (is_null($ref_ref_cod_serie_mult)) {
+                $this->ref_ref_cod_escola_mult = '';
+                $this->ref_ref_cod_serie_mult = '';
+            } else if (class_exists('clsPmieducarEscolaSerie')) {
+                $tmp_obj = new clsPmieducarEscolaSerie($ref_ref_cod_escola_mult, $ref_ref_cod_serie_mult);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
+                        $this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
                         $this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
-                        $this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.escola_serie WHERE ref_cod_escola = '{$ref_ref_cod_escola_mult}' AND ref_cod_serie = '{$ref_ref_cod_serie_mult}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie WHERE ref_cod_escola = '{$ref_ref_cod_escola_mult}' AND ref_cod_serie = '{$ref_ref_cod_serie_mult}'")) {
                     $this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
                     $this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
                 }
             }
         }
-        if (is_bool($visivel))
-        {
+        if (is_bool($visivel)) {
             $this->visivel = dbBool($visivel);
         }
 
-    $this->turma_turno_id  = $turma_turno_id;
-    $this->tipo_boletim    = $tipo_boletim;
-    $this->ano             = $ano;
-    $this->data_fechamento = $data_fechamento;
+        $this->turma_turno_id = $turma_turno_id;
+        $this->tipo_boletim = $tipo_boletim;
+        $this->ano = $ano;
+        $this->data_fechamento = $data_fechamento;
 
-    if (is_numeric($ref_cod_disciplina_dispensada) || is_null($ref_cod_disciplina_dispensada)){
-        $this->ref_cod_disciplina_dispensada = $ref_cod_disciplina_dispensada;
-    }
-
+        if (is_numeric($ref_cod_disciplina_dispensada) || is_null($ref_cod_disciplina_dispensada)) {
+            $this->ref_cod_disciplina_dispensada = $ref_cod_disciplina_dispensada;
+        }
     }
 
     /**
@@ -512,340 +377,321 @@ class clsPmieducarTurma
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_usuario_cad ) /*&& is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo )*/ && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo ) )
-        {
+        if (is_numeric($this->ref_usuario_cad) /*&& is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo )*/ && is_string($this->nm_turma) && is_numeric($this->max_aluno) && is_numeric($this->multiseriada) && is_numeric($this->ref_cod_turma_tipo)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_usuario_cad ) )
-            {
+            if (is_numeric($this->ref_usuario_cad)) {
                 $campos .= "{$gruda}ref_usuario_cad";
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_ref_cod_serie ) )
-            {
+            if (is_numeric($this->ref_ref_cod_serie)) {
                 $campos .= "{$gruda}ref_ref_cod_serie";
                 $valores .= "{$gruda}'{$this->ref_ref_cod_serie}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_ref_cod_escola ) )
-            {
+            if (is_numeric($this->ref_ref_cod_escola)) {
                 $campos .= "{$gruda}ref_ref_cod_escola";
                 $valores .= "{$gruda}'{$this->ref_ref_cod_escola}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_infra_predio_comodo ) )
-            {
+            if (is_numeric($this->ref_cod_infra_predio_comodo)) {
                 $campos .= "{$gruda}ref_cod_infra_predio_comodo";
                 $valores .= "{$gruda}'{$this->ref_cod_infra_predio_comodo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nm_turma ) )
-            {
+            if (is_string($this->nm_turma)) {
                 $campos .= "{$gruda}nm_turma";
                 $valores .= "{$gruda}'{$this->nm_turma}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->sgl_turma ) )
-            {
+            if (is_string($this->sgl_turma)) {
                 $campos .= "{$gruda}sgl_turma";
                 $valores .= "{$gruda}'{$this->sgl_turma}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->max_aluno ) )
-            {
+            if (is_numeric($this->max_aluno)) {
                 $campos .= "{$gruda}max_aluno";
                 $valores .= "{$gruda}'{$this->max_aluno}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->multiseriada ) )
-            {
+            if (is_numeric($this->multiseriada)) {
                 $campos .= "{$gruda}multiseriada";
                 $valores .= "{$gruda}'{$this->multiseriada}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_regente ) )
-            {
+            if (is_numeric($this->ref_cod_regente)) {
                 $campos .= "{$gruda}ref_cod_regente";
                 $valores .= "{$gruda}'{$this->ref_cod_regente}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_instituicao_regente ) )
-            {
+            if (is_numeric($this->ref_cod_instituicao_regente)) {
                 $campos .= "{$gruda}ref_cod_instituicao_regente";
                 $valores .= "{$gruda}'{$this->ref_cod_instituicao_regente}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_instituicao ) )
-            {
+            if (is_numeric($this->ref_cod_instituicao)) {
                 $campos .= "{$gruda}ref_cod_instituicao";
                 $valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_curso ) )
-            {
+            if (is_numeric($this->ref_cod_curso)) {
                 $campos .= "{$gruda}ref_cod_curso";
                 $valores .= "{$gruda}'{$this->ref_cod_curso}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda = ", ";
+            $gruda = ', ';
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
-            $gruda = ", ";
-            if( is_numeric( $this->ref_cod_turma_tipo ) )
-            {
+            $gruda = ', ';
+            if (is_numeric($this->ref_cod_turma_tipo)) {
                 $campos .= "{$gruda}ref_cod_turma_tipo";
                 $valores .= "{$gruda}'{$this->ref_cod_turma_tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_inicial ) )
-            {
+            if (($this->hora_inicial)) {
                 $campos .= "{$gruda}hora_inicial";
                 $valores .= "{$gruda}'{$this->hora_inicial}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_final ) )
-            {
+            if (($this->hora_final)) {
                 $campos .= "{$gruda}hora_final";
                 $valores .= "{$gruda}'{$this->hora_final}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_inicio_intervalo ) )
-            {
+            if (($this->hora_inicio_intervalo)) {
                 $campos .= "{$gruda}hora_inicio_intervalo";
                 $valores .= "{$gruda}'{$this->hora_inicio_intervalo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_fim_intervalo ) )
-            {
+            if (($this->hora_fim_intervalo)) {
                 $campos .= "{$gruda}hora_fim_intervalo";
                 $valores .= "{$gruda}'{$this->hora_fim_intervalo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_ref_cod_escola_mult ) )
-            {
+            if (is_numeric($this->ref_ref_cod_escola_mult)) {
                 $campos .= "{$gruda}ref_ref_cod_escola_mult";
                 $valores .= "{$gruda}'{$this->ref_ref_cod_escola_mult}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_ref_cod_serie_mult ) )
-            {
+            if (is_numeric($this->ref_ref_cod_serie_mult)) {
                 $campos .= "{$gruda}ref_ref_cod_serie_mult";
                 $valores .= "{$gruda}'{$this->ref_ref_cod_serie_mult}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            $this->visivel = dbBool($this->visivel) ? "TRUE" : "FALSE";
+            $this->visivel = dbBool($this->visivel) ? 'TRUE' : 'FALSE';
             $campos .= "{$gruda}visivel";
             $valores .= "{$gruda}'{$this->visivel}'";
-            $gruda = ", ";
+            $gruda = ', ';
 
-            if(is_numeric($this->turma_turno_id)){
-                $campos  .= "{$gruda}turma_turno_id";
+            if (is_numeric($this->turma_turno_id)) {
+                $campos .= "{$gruda}turma_turno_id";
                 $valores .= "{$gruda}'{$this->turma_turno_id}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->tipo_boletim)){
-                $campos  .= "{$gruda}tipo_boletim";
+            if (is_numeric($this->tipo_boletim)) {
+                $campos .= "{$gruda}tipo_boletim";
                 $valores .= "{$gruda}'{$this->tipo_boletim}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->tipo_boletim_diferenciado)){
-                $campos  .= "{$gruda}tipo_boletim_diferenciado";
+            if (is_numeric($this->tipo_boletim_diferenciado)) {
+                $campos .= "{$gruda}tipo_boletim_diferenciado";
                 $valores .= "{$gruda}'{$this->tipo_boletim_diferenciado}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->ano)){
-                $campos  .= "{$gruda}ano";
+            if (is_numeric($this->ano)) {
+                $campos .= "{$gruda}ano";
                 $valores .= "{$gruda}'{$this->ano}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_string($this->data_fechamento)  && $this->data_fechamento!=''){
-                $campos  .= "{$gruda}data_fechamento";
+            if (is_string($this->data_fechamento) && $this->data_fechamento != '') {
+                $campos .= "{$gruda}data_fechamento";
                 $valores .= "{$gruda}'{$this->data_fechamento}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->tipo_atendimento)){
-                $campos  .= "{$gruda}tipo_atendimento";
+            if (is_numeric($this->tipo_atendimento)) {
+                $campos .= "{$gruda}tipo_atendimento";
                 $valores .= "{$gruda}'{$this->tipo_atendimento}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->turma_mais_educacao)){
-                $campos  .= "{$gruda}turma_mais_educacao";
+            if (is_numeric($this->turma_mais_educacao)) {
+                $campos .= "{$gruda}turma_mais_educacao";
                 $valores .= "{$gruda}'{$this->turma_mais_educacao}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_1)){
-                $campos  .= "{$gruda}atividade_complementar_1";
+            if (is_numeric($this->atividade_complementar_1)) {
+                $campos .= "{$gruda}atividade_complementar_1";
                 $valores .= "{$gruda}'{$this->atividade_complementar_1}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_2)){
-                $campos  .= "{$gruda}atividade_complementar_2";
+            if (is_numeric($this->atividade_complementar_2)) {
+                $campos .= "{$gruda}atividade_complementar_2";
                 $valores .= "{$gruda}'{$this->atividade_complementar_2}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_3)){
-                $campos  .= "{$gruda}atividade_complementar_3";
+            if (is_numeric($this->atividade_complementar_3)) {
+                $campos .= "{$gruda}atividade_complementar_3";
                 $valores .= "{$gruda}'{$this->atividade_complementar_3}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_4)){
-                $campos  .= "{$gruda}atividade_complementar_4";
+            if (is_numeric($this->atividade_complementar_4)) {
+                $campos .= "{$gruda}atividade_complementar_4";
                 $valores .= "{$gruda}'{$this->atividade_complementar_4}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_5)){
-                $campos  .= "{$gruda}atividade_complementar_5";
+            if (is_numeric($this->atividade_complementar_5)) {
+                $campos .= "{$gruda}atividade_complementar_5";
                 $valores .= "{$gruda}'{$this->atividade_complementar_5}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_6)){
-                $campos  .= "{$gruda}atividade_complementar_6";
+            if (is_numeric($this->atividade_complementar_6)) {
+                $campos .= "{$gruda}atividade_complementar_6";
                 $valores .= "{$gruda}'{$this->atividade_complementar_6}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_braille)){
-                $campos  .= "{$gruda}aee_braille";
+            if (is_numeric($this->aee_braille)) {
+                $campos .= "{$gruda}aee_braille";
                 $valores .= "{$gruda}'{$this->aee_braille}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_recurso_optico)){
-                $campos  .= "{$gruda}aee_recurso_optico";
+            if (is_numeric($this->aee_recurso_optico)) {
+                $campos .= "{$gruda}aee_recurso_optico";
                 $valores .= "{$gruda}'{$this->aee_recurso_optico}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_estrategia_desenvolvimento)){
-                $campos  .= "{$gruda}aee_estrategia_desenvolvimento";
+            if (is_numeric($this->aee_estrategia_desenvolvimento)) {
+                $campos .= "{$gruda}aee_estrategia_desenvolvimento";
                 $valores .= "{$gruda}'{$this->aee_estrategia_desenvolvimento}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_tecnica_mobilidade)){
-                $campos  .= "{$gruda}aee_tecnica_mobilidade";
+            if (is_numeric($this->aee_tecnica_mobilidade)) {
+                $campos .= "{$gruda}aee_tecnica_mobilidade";
                 $valores .= "{$gruda}'{$this->aee_tecnica_mobilidade}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_libras)){
-                $campos  .= "{$gruda}aee_libras";
+            if (is_numeric($this->aee_libras)) {
+                $campos .= "{$gruda}aee_libras";
                 $valores .= "{$gruda}'{$this->aee_libras}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_caa)){
-                $campos  .= "{$gruda}aee_caa";
+            if (is_numeric($this->aee_caa)) {
+                $campos .= "{$gruda}aee_caa";
                 $valores .= "{$gruda}'{$this->aee_caa}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_curricular)){
-                $campos  .= "{$gruda}aee_curricular";
+            if (is_numeric($this->aee_curricular)) {
+                $campos .= "{$gruda}aee_curricular";
                 $valores .= "{$gruda}'{$this->aee_curricular}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_soroban)){
-                $campos  .= "{$gruda}aee_soroban";
+            if (is_numeric($this->aee_soroban)) {
+                $campos .= "{$gruda}aee_soroban";
                 $valores .= "{$gruda}'{$this->aee_soroban}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_informatica)){
-                $campos  .= "{$gruda}aee_informatica";
+            if (is_numeric($this->aee_informatica)) {
+                $campos .= "{$gruda}aee_informatica";
                 $valores .= "{$gruda}'{$this->aee_informatica}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_lingua_escrita)){
-                $campos  .= "{$gruda}aee_lingua_escrita";
+            if (is_numeric($this->aee_lingua_escrita)) {
+                $campos .= "{$gruda}aee_lingua_escrita";
                 $valores .= "{$gruda}'{$this->aee_lingua_escrita}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_autonomia)){
-                $campos  .= "{$gruda}aee_autonomia";
+            if (is_numeric($this->aee_autonomia)) {
+                $campos .= "{$gruda}aee_autonomia";
                 $valores .= "{$gruda}'{$this->aee_autonomia}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->cod_curso_profissional)){
-                $campos  .= "{$gruda}cod_curso_profissional";
+            if (is_numeric($this->cod_curso_profissional)) {
+                $campos .= "{$gruda}cod_curso_profissional";
                 $valores .= "{$gruda}'{$this->cod_curso_profissional}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->etapa_educacenso)){
-                $campos  .= "{$gruda}etapa_educacenso";
+            if (is_numeric($this->etapa_educacenso)) {
+                $campos .= "{$gruda}etapa_educacenso";
                 $valores .= "{$gruda}'{$this->etapa_educacenso}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->ref_cod_disciplina_dispensada)){
-                $campos  .= "{$gruda}ref_cod_disciplina_dispensada";
+            if (is_numeric($this->ref_cod_disciplina_dispensada)) {
+                $campos .= "{$gruda}ref_cod_disciplina_dispensada";
                 $valores .= "{$gruda}'{$this->ref_cod_disciplina_dispensada}'";
-                $gruda    = ", ";
-            }elseif(is_null($this->ref_cod_disciplina_dispensada)){
-                $campos  .= "{$gruda}ref_cod_disciplina_dispensada";
-                $valores .= "{$gruda}NULL";
-                $gruda    = ", ";
+                $gruda = ', ';
+            } elseif (is_null($this->ref_cod_disciplina_dispensada)) {
+                $campos .= "{$gruda}ref_cod_disciplina_dispensada";
+                $valores .= "{$gruda}null";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->nao_informar_educacenso)){
-                $campos  .= "{$gruda}nao_informar_educacenso";
+            if (is_numeric($this->nao_informar_educacenso)) {
+                $campos .= "{$gruda}nao_informar_educacenso";
                 $valores .= "{$gruda}'{$this->nao_informar_educacenso}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->tipo_mediacao_didatico_pedagogico)){
-                $campos  .= "{$gruda}tipo_mediacao_didatico_pedagogico";
+            if (is_numeric($this->tipo_mediacao_didatico_pedagogico)) {
+                $campos .= "{$gruda}tipo_mediacao_didatico_pedagogico";
                 $valores .= "{$gruda}'{$this->tipo_mediacao_didatico_pedagogico}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_string($this->dias_semana)){
-                $campos  .= "{$gruda}dias_semana";
+            if (is_string($this->dias_semana)) {
+                $campos .= "{$gruda}dias_semana";
                 $valores .= "{$gruda}'{$this->dias_semana}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_string($this->atividades_complementares)){
-                $campos  .= "{$gruda}atividades_complementares";
+            if (is_string($this->atividades_complementares)) {
+                $campos .= "{$gruda}atividades_complementares";
                 $valores .= "{$gruda}'{$this->atividades_complementares}'";
-                $gruda    = ", ";
+                $gruda = ', ';
             }
 
-            if(is_string($this->atividades_aee)){
-                $campos  .= "{$gruda}atividades_aee";
+            if (is_string($this->atividades_aee)) {
+                $campos .= "{$gruda}atividades_aee";
                 $valores .= "{$gruda}'{$this->atividades_aee}'";
-                $gruda    = ", ";
             }
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_turma_seq");
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
+            return $db->InsertId("{$this->_tabela}_cod_turma_seq");
         }
+
         return false;
     }
 
@@ -854,360 +700,341 @@ class clsPmieducarTurma
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_turma ) && is_numeric( $this->ref_usuario_exc ) )
-        {
-
+        if (is_numeric($this->cod_turma) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_usuario_exc ) )
-            {
+            if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_usuario_cad ) )
-            {
+            if (is_numeric($this->ref_usuario_cad)) {
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_ref_cod_serie ) )
-            {
+            if (is_numeric($this->ref_ref_cod_serie)) {
                 $set .= "{$gruda}ref_ref_cod_serie = '{$this->ref_ref_cod_serie}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_ref_cod_escola ) )
-            {
+            if (is_numeric($this->ref_ref_cod_escola)) {
                 $set .= "{$gruda}ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_infra_predio_comodo ) )
-            {
+            if (is_numeric($this->ref_cod_infra_predio_comodo)) {
                 $set .= "{$gruda}ref_cod_infra_predio_comodo = '{$this->ref_cod_infra_predio_comodo}'";
-                $gruda = ", ";
-            }elseif( is_null( $this->ref_cod_infra_predio_comodo ) )
-            {
+                $gruda = ', ';
+            } elseif (is_null($this->ref_cod_infra_predio_comodo)) {
                 $set .= "{$gruda}ref_cod_infra_predio_comodo = NULL";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->nm_turma ) )
-            {
+            if (is_string($this->nm_turma)) {
                 $set .= "{$gruda}nm_turma = '{$this->nm_turma}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->sgl_turma ) )
-            {
+            if (is_string($this->sgl_turma)) {
                 $set .= "{$gruda}sgl_turma = '{$this->sgl_turma}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->max_aluno ) )
-            {
+            if (is_numeric($this->max_aluno)) {
                 $set .= "{$gruda}max_aluno = '{$this->max_aluno}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->multiseriada ) )
-            {
+            if (is_numeric($this->multiseriada)) {
                 $set .= "{$gruda}multiseriada = '{$this->multiseriada}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if( is_string( $this->data_cadastro ) )
-            {
+            if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_regente ) )
-            {
+            if (is_numeric($this->ref_cod_regente)) {
                 $set .= "{$gruda}ref_cod_regente = '{$this->ref_cod_regente}'";
-                $gruda = ", ";
-            }
-            else
-            {
+                $gruda = ', ';
+            } else {
                 $set .= "{$gruda}ref_cod_regente = null";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_instituicao_regente ) )
-            {
+            if (is_numeric($this->ref_cod_instituicao_regente)) {
                 $set .= "{$gruda}ref_cod_instituicao_regente = '{$this->ref_cod_instituicao_regente}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ", ";
-            if( is_numeric( $this->ativo ) )
-            {
+            $gruda = ', ';
+            if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_turma_tipo ) )
-            {
+            if (is_numeric($this->ref_cod_turma_tipo)) {
                 $set .= "{$gruda}ref_cod_turma_tipo = '{$this->ref_cod_turma_tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_inicial ) )
-            {
+            if (($this->hora_inicial)) {
                 $set .= "{$gruda}hora_inicial = '{$this->hora_inicial}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_final ) )
-            {
+            if (($this->hora_final)) {
                 $set .= "{$gruda}hora_final = '{$this->hora_final}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_inicio_intervalo ) )
-            {
+            if (($this->hora_inicio_intervalo)) {
                 $set .= "{$gruda}hora_inicio_intervalo = '{$this->hora_inicio_intervalo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( ( $this->hora_fim_intervalo ) )
-            {
+            if (($this->hora_fim_intervalo)) {
                 $set .= "{$gruda}hora_fim_intervalo = '{$this->hora_fim_intervalo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_instituicao ) )
-            {
+            if (is_numeric($this->ref_cod_instituicao)) {
                 $set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_curso ) )
-            {
+            if (is_numeric($this->ref_cod_curso)) {
                 $set .= "{$gruda}ref_cod_curso = '{$this->ref_cod_curso}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_ref_cod_escola_mult ) )
-            {
+
+            if (is_numeric($this->ref_ref_cod_escola_mult)) {
                 $set .= "{$gruda}ref_ref_cod_escola_mult = '{$this->ref_ref_cod_escola_mult}'";
+                $gruda = ", ";
+            } elseif (empty($this->ref_ref_cod_escola_mult)) {
+                $set .= "{$gruda}ref_ref_cod_escola_mult = NULL";
                 $gruda = ", ";
             }
 
-            if( is_numeric( $this->ref_ref_cod_serie_mult ) )
-            {
+            if (is_numeric($this->ref_ref_cod_serie_mult)) {
                 $set .= "{$gruda}ref_ref_cod_serie_mult = '{$this->ref_ref_cod_serie_mult}'";
+                $gruda = ", ";
+            } elseif (empty($this->ref_ref_cod_serie_mult)) {
+                $set .= "{$gruda}ref_ref_cod_serie_mult = NULL";
                 $gruda = ", ";
             }
 
             if (is_bool($this->visivel)) {
-                $this->visivel = dbBool($this->visivel) ? "TRUE" : "FALSE";
+                $this->visivel = dbBool($this->visivel) ? 'TRUE' : 'FALSE';
                 $set .= "{$gruda}visivel = '{$this->visivel}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->turma_turno_id)) {
-                $set  .= "{$gruda}turma_turno_id = '{$this->turma_turno_id}'";
-                $gruda = ", ";
+            if (is_numeric($this->turma_turno_id)) {
+                $set .= "{$gruda}turma_turno_id = '{$this->turma_turno_id}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->tipo_boletim)) {
-                $set  .= "{$gruda}tipo_boletim = '{$this->tipo_boletim}'";
-                $gruda = ", ";
+            if (is_numeric($this->tipo_boletim)) {
+                $set .= "{$gruda}tipo_boletim = '{$this->tipo_boletim}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->tipo_boletim_diferenciado)) {
-                $set  .= "{$gruda}tipo_boletim_diferenciado = '{$this->tipo_boletim_diferenciado}'";
-                $gruda = ", ";
+            if (is_numeric($this->tipo_boletim_diferenciado)) {
+                $set .= "{$gruda}tipo_boletim_diferenciado = '{$this->tipo_boletim_diferenciado}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->ano)) {
-                $set  .= "{$gruda}ano = '{$this->ano}'";
-                $gruda = ", ";
+            if (is_numeric($this->ano)) {
+                $set .= "{$gruda}ano = '{$this->ano}'";
+                $gruda = ', ';
             }
 
-            if(is_string($this->data_fechamento) && $this->data_fechamento!='') {
-                $set  .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
-                $gruda = ", ";
+            if (is_string($this->data_fechamento) && $this->data_fechamento != '') {
+                $set .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->tipo_atendimento)) {
-                $set  .= "{$gruda}tipo_atendimento = '{$this->tipo_atendimento}'";
-                $gruda = ", ";
+            if (is_numeric($this->tipo_atendimento)) {
+                $set .= "{$gruda}tipo_atendimento = '{$this->tipo_atendimento}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->turma_mais_educacao)) {
-                $set  .= "{$gruda}turma_mais_educacao = '{$this->turma_mais_educacao}'";
-                $gruda = ", ";
+            if (is_numeric($this->turma_mais_educacao)) {
+                $set .= "{$gruda}turma_mais_educacao = '{$this->turma_mais_educacao}'";
+                $gruda = ', ';
             } else {
-                $set  .= "{$gruda}turma_mais_educacao = NULL";
-                $gruda = ", ";
+                $set .= "{$gruda}turma_mais_educacao = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_1)) {
-                $set  .= "{$gruda}atividade_complementar_1 = '{$this->atividade_complementar_1}'";
-                $gruda = ", ";
-            }elseif(trim($this->atividade_complementar_1) == ""){
-                $set  .= "{$gruda}atividade_complementar_1 = NULL";
-                $gruda = ", ";
+            if (is_numeric($this->atividade_complementar_1)) {
+                $set .= "{$gruda}atividade_complementar_1 = '{$this->atividade_complementar_1}'";
+                $gruda = ', ';
+            } elseif (trim($this->atividade_complementar_1) == '') {
+                $set .= "{$gruda}atividade_complementar_1 = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_2)) {
-                $set  .= "{$gruda}atividade_complementar_2 = '{$this->atividade_complementar_2}'";
-                $gruda = ", ";
-            }elseif(trim($this->atividade_complementar_2) == ""){
-                $set  .= "{$gruda}atividade_complementar_2 = NULL";
-                $gruda = ", ";
+            if (is_numeric($this->atividade_complementar_2)) {
+                $set .= "{$gruda}atividade_complementar_2 = '{$this->atividade_complementar_2}'";
+                $gruda = ', ';
+            } elseif (trim($this->atividade_complementar_2) == '') {
+                $set .= "{$gruda}atividade_complementar_2 = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_3)) {
-                $set  .= "{$gruda}atividade_complementar_3 = '{$this->atividade_complementar_3}'";
-                $gruda = ", ";
-            }elseif(trim($this->atividade_complementar_3) == ""){
-                $set  .= "{$gruda}atividade_complementar_3 = NULL";
-                $gruda = ", ";
+            if (is_numeric($this->atividade_complementar_3)) {
+                $set .= "{$gruda}atividade_complementar_3 = '{$this->atividade_complementar_3}'";
+                $gruda = ', ';
+            } elseif (trim($this->atividade_complementar_3) == '') {
+                $set .= "{$gruda}atividade_complementar_3 = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_4)) {
-                $set  .= "{$gruda}atividade_complementar_4 = '{$this->atividade_complementar_4}'";
-                $gruda = ", ";
-            }elseif(trim($this->atividade_complementar_4) == ""){
-                $set  .= "{$gruda}atividade_complementar_4 = NULL";
-                $gruda = ", ";
+            if (is_numeric($this->atividade_complementar_4)) {
+                $set .= "{$gruda}atividade_complementar_4 = '{$this->atividade_complementar_4}'";
+                $gruda = ', ';
+            } elseif (trim($this->atividade_complementar_4) == '') {
+                $set .= "{$gruda}atividade_complementar_4 = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_5)) {
-                $set  .= "{$gruda}atividade_complementar_5 = '{$this->atividade_complementar_5}'";
-                $gruda = ", ";
-            }elseif(trim($this->atividade_complementar_5) == ""){
-                $set  .= "{$gruda}atividade_complementar_5 = NULL";
-                $gruda = ", ";
+            if (is_numeric($this->atividade_complementar_5)) {
+                $set .= "{$gruda}atividade_complementar_5 = '{$this->atividade_complementar_5}'";
+                $gruda = ', ';
+            } elseif (trim($this->atividade_complementar_5) == '') {
+                $set .= "{$gruda}atividade_complementar_5 = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->atividade_complementar_6)) {
-                $set  .= "{$gruda}atividade_complementar_6 = '{$this->atividade_complementar_6}'";
-                $gruda = ", ";
-            }elseif(trim($this->atividade_complementar_6) == ""){
-                $set  .= "{$gruda}atividade_complementar_6 = NULL";
-                $gruda = ", ";
+            if (is_numeric($this->atividade_complementar_6)) {
+                $set .= "{$gruda}atividade_complementar_6 = '{$this->atividade_complementar_6}'";
+                $gruda = ', ';
+            } elseif (trim($this->atividade_complementar_6) == '') {
+                $set .= "{$gruda}atividade_complementar_6 = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_braille)) {
-                $set  .= "{$gruda}aee_braille = '{$this->aee_braille}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_braille)) {
+                $set .= "{$gruda}aee_braille = '{$this->aee_braille}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_recurso_optico)) {
-                $set  .= "{$gruda}aee_recurso_optico = '{$this->aee_recurso_optico}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_recurso_optico)) {
+                $set .= "{$gruda}aee_recurso_optico = '{$this->aee_recurso_optico}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_estrategia_desenvolvimento)) {
-                $set  .= "{$gruda}aee_estrategia_desenvolvimento = '{$this->aee_estrategia_desenvolvimento}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_estrategia_desenvolvimento)) {
+                $set .= "{$gruda}aee_estrategia_desenvolvimento = '{$this->aee_estrategia_desenvolvimento}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_tecnica_mobilidade)) {
-                $set  .= "{$gruda}aee_tecnica_mobilidade = '{$this->aee_tecnica_mobilidade}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_tecnica_mobilidade)) {
+                $set .= "{$gruda}aee_tecnica_mobilidade = '{$this->aee_tecnica_mobilidade}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_libras)) {
-                $set  .= "{$gruda}aee_libras = '{$this->aee_libras}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_libras)) {
+                $set .= "{$gruda}aee_libras = '{$this->aee_libras}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_caa)) {
-                $set  .= "{$gruda}aee_caa = '{$this->aee_caa}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_caa)) {
+                $set .= "{$gruda}aee_caa = '{$this->aee_caa}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_curricular)) {
-                $set  .= "{$gruda}aee_curricular = '{$this->aee_curricular}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_curricular)) {
+                $set .= "{$gruda}aee_curricular = '{$this->aee_curricular}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_soroban)) {
-                $set  .= "{$gruda}aee_soroban = '{$this->aee_soroban}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_soroban)) {
+                $set .= "{$gruda}aee_soroban = '{$this->aee_soroban}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_informatica)) {
-                $set  .= "{$gruda}aee_informatica = '{$this->aee_informatica}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_informatica)) {
+                $set .= "{$gruda}aee_informatica = '{$this->aee_informatica}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_lingua_escrita)) {
-                $set  .= "{$gruda}aee_lingua_escrita = '{$this->aee_lingua_escrita}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_lingua_escrita)) {
+                $set .= "{$gruda}aee_lingua_escrita = '{$this->aee_lingua_escrita}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->aee_autonomia)) {
-                $set  .= "{$gruda}aee_autonomia = '{$this->aee_autonomia}'";
-                $gruda = ", ";
+            if (is_numeric($this->aee_autonomia)) {
+                $set .= "{$gruda}aee_autonomia = '{$this->aee_autonomia}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->cod_curso)) {
-                $set  .= "{$gruda}cod_curso = '{$this->cod_curso}'";
-                $gruda = ", ";
+            if (is_numeric($this->cod_curso)) {
+                $set .= "{$gruda}cod_curso = '{$this->cod_curso}'";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->cod_curso_profissional)) {
-                $set  .= "{$gruda}cod_curso_profissional = '{$this->cod_curso_profissional}'";
-                $gruda = ", ";
+            if (is_numeric($this->cod_curso_profissional)) {
+                $set .= "{$gruda}cod_curso_profissional = '{$this->cod_curso_profissional}'";
+                $gruda = ', ';
             } else {
-                $set  .= "{$gruda}cod_curso_profissional = NULL";
-                $gruda = ", ";
+                $set .= "{$gruda}cod_curso_profissional = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->etapa_educacenso)) {
-                $set  .= "{$gruda}etapa_educacenso = '{$this->etapa_educacenso}'";
-                $gruda = ", ";
+            if (is_numeric($this->etapa_educacenso)) {
+                $set .= "{$gruda}etapa_educacenso = '{$this->etapa_educacenso}'";
+                $gruda = ', ';
             } elseif (is_null($this->etapa_educacenso)) {
-                $set  .= "{$gruda}etapa_educacenso = NULL";
-                $gruda = ", ";
+                $set .= "{$gruda}etapa_educacenso = NULL";
+                $gruda = ', ';
             }
 
-            if(is_numeric($this->ref_cod_disciplina_dispensada)){
-                $set  .= "{$gruda}ref_cod_disciplina_dispensada = {$this->ref_cod_disciplina_dispensada}";
-                $gruda = ", ";
-            }elseif(is_null($this->ref_cod_disciplina_dispensada)){
-                $set  .= "{$gruda}ref_cod_disciplina_dispensada = NULL";
-                $gruda = ", ";
+            if (is_numeric($this->ref_cod_disciplina_dispensada)) {
+                $set .= "{$gruda}ref_cod_disciplina_dispensada = {$this->ref_cod_disciplina_dispensada}";
+                $gruda = ', ';
+            } elseif (is_null($this->ref_cod_disciplina_dispensada)) {
+                $set .= "{$gruda}ref_cod_disciplina_dispensada = NULL";
+                $gruda = ', ';
             }
-            if(is_numeric($this->nao_informar_educacenso)) {
-                $set  .= "{$gruda}nao_informar_educacenso = '{$this->nao_informar_educacenso}'";
-                $gruda = ", ";
+            if (is_numeric($this->nao_informar_educacenso)) {
+                $set .= "{$gruda}nao_informar_educacenso = '{$this->nao_informar_educacenso}'";
+                $gruda = ', ';
             }
-            if(is_string($this->parecer_1_etapa)) {
-                $set  .= "{$gruda}parecer_1_etapa = '{$this->parecer_1_etapa}'";
-                $gruda = ", ";
+            if (is_string($this->parecer_1_etapa)) {
+                $set .= "{$gruda}parecer_1_etapa = '{$this->parecer_1_etapa}'";
+                $gruda = ', ';
             }
-            if(is_string($this->parecer_2_etapa)) {
-                $set  .= "{$gruda}parecer_2_etapa = '{$this->parecer_2_etapa}'";
-                $gruda = ", ";
+            if (is_string($this->parecer_2_etapa)) {
+                $set .= "{$gruda}parecer_2_etapa = '{$this->parecer_2_etapa}'";
+                $gruda = ', ';
             }
-            if(is_string($this->parecer_3_etapa)) {
-                $set  .= "{$gruda}parecer_3_etapa = '{$this->parecer_3_etapa}'";
-                $gruda = ", ";
+            if (is_string($this->parecer_3_etapa)) {
+                $set .= "{$gruda}parecer_3_etapa = '{$this->parecer_3_etapa}'";
+                $gruda = ', ';
             }
-            if(is_string($this->parecer_4_etapa)) {
-                $set  .= "{$gruda}parecer_4_etapa = '{$this->parecer_4_etapa}'";
-                $gruda = ", ";
-            }
-
-            if(is_numeric($this->tipo_mediacao_didatico_pedagogico)){
-                $set  .= "{$gruda}tipo_mediacao_didatico_pedagogico = '{$this->tipo_mediacao_didatico_pedagogico}'";
-                $gruda = ", ";
+            if (is_string($this->parecer_4_etapa)) {
+                $set .= "{$gruda}parecer_4_etapa = '{$this->parecer_4_etapa}'";
+                $gruda = ', ';
             }
 
-            if(is_string($this->dias_semana)){
-                $set  .= "{$gruda}dias_semana = '{$this->dias_semana}'";
-                $gruda = ", ";
+            if (is_numeric($this->tipo_mediacao_didatico_pedagogico)) {
+                $set .= "{$gruda}tipo_mediacao_didatico_pedagogico = '{$this->tipo_mediacao_didatico_pedagogico}'";
+                $gruda = ', ';
             }
 
-            if(is_string($this->atividades_complementares)){
-                $set  .= "{$gruda}atividades_complementares = '{$this->atividades_complementares}'";
-                $gruda = ", ";
+            if (is_string($this->dias_semana)) {
+                $set .= "{$gruda}dias_semana = '{$this->dias_semana}'";
+                $gruda = ', ';
             }
 
-            if(is_string($this->atividades_aee)){
-                $set  .= "{$gruda}atividades_aee = '{$this->atividades_aee}'";
-                $gruda = ", ";
+            if (is_string($this->atividades_complementares)) {
+                $set .= "{$gruda}atividades_complementares = '{$this->atividades_complementares}'";
+                $gruda = ', ';
             }
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_turma = '{$this->cod_turma}'" );
+            if (is_string($this->atividades_aee)) {
+                $set .= "{$gruda}atividades_aee = '{$this->atividades_aee}'";
+            }
+
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_turma = '{$this->cod_turma}'");
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -1216,24 +1043,23 @@ class clsPmieducarTurma
      *
      * @return bool
      */
-    function matriculados()
+    public function matriculados()
     {
-        $retorno = array();
-        if( is_numeric( $this->cod_turma ) )
-        {
+        $retorno = [];
+        if (is_numeric($this->cod_turma)) {
             $db = new clsBanco();
 
             $db->Consulta("SELECT cod_matricula FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ativo = 1 AND aprovado = 3");
-            if( $db->numLinhas() )
-            {
-                while ( $db->ProximoRegistro() )
-                {
+            if ($db->numLinhas()) {
+                while ($db->ProximoRegistro()) {
                     list($matricula) = $db->Tupla();
                     $retorno[$matricula] = $matricula;
                 }
+
                 return $retorno;
             }
         }
+
         return false;
     }
 
@@ -1242,10 +1068,9 @@ class clsPmieducarTurma
      *
      * @return bool
      */
-    function moduloMinimo()
+    public function moduloMinimo()
     {
-        if( is_numeric( $this->cod_turma ) )
-        {
+        if (is_numeric($this->cod_turma)) {
             $db = new clsBanco();
 
             // verifica se ainda existe alguem no primeiro modulo
@@ -1255,6 +1080,7 @@ class clsPmieducarTurma
                 WHERE ref_cod_turma = '{$this->cod_turma}'
                 AND aprovado = 3 AND ativo = 1
             ");
+
             return $modulo;
         }
     }
@@ -1264,18 +1090,17 @@ class clsPmieducarTurma
      *
      * @return bool
      */
-    function moduloMinimoDisciplina()
+    public function moduloMinimoDisciplina()
     {
-        if( is_numeric( $this->cod_turma ) )
-        {
-            $disciplinas = array();
+        if (is_numeric($this->cod_turma)) {
+            $disciplinas = [];
             $modulo = $this->moduloMinimo();
 
             $db = new clsBanco();
             $db->Consulta("SELECT ref_ref_cod_serie, ref_ref_cod_escola, multiseriada, ref_ref_cod_serie_mult, ref_ref_cod_escola_mult FROM pmieducar.turma WHERE cod_turma = '{$this->cod_turma}'");
 
             $db->ProximoRegistro();
-            list($cod_serie,$cod_escola,$multiseriada,$cod_serie_mult,$cod_escola_mult) = $db->Tupla();
+            list($cod_serie, $cod_escola, $multiseriada, $cod_serie_mult, $cod_escola_mult) = $db->Tupla();
 
             // ve se existe alguem que nao tem nenhuma nota nesse modulo
             $todas_disciplinas = $db->CampoUnico("
@@ -1292,66 +1117,49 @@ class clsPmieducarTurma
             WHERE notas = 0
             ");
 
-            if( $todas_disciplinas )
-            {
+            if ($todas_disciplinas) {
                 // existe um aluno que nao tem nenhuma nota nesse modulo
-                if( $multiseriada )
-                {
+                if ($multiseriada) {
                     $aluno_normal = false;
                     $aluno_multi = false;
-                    $filtro = "";
+                    $filtro = '';
 
                     // ve se tem algum aluno cadastrado na serie normal
                     $db->Consulta("SELECT 1 FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_escola = '{$cod_escola}' AND ref_cod_serie = '{$cod_serie}' AND aprovado = 3 AND ativo = 1 ");
-                    if ($db->ProximoRegistro())
-                    {
+                    if ($db->ProximoRegistro()) {
                         $aluno_normal = true;
                     }
 
-                    if(is_numeric($cod_serie_mult))
-                    {
+                    if (is_numeric($cod_serie_mult)) {
                         // ve se tem algum aluno na serie alterantiva
                         $db->Consulta("SELECT 1 FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_escola = '{$cod_escola}' AND ref_cod_serie = '{$cod_serie_mult}' AND aprovado = 3 AND ativo = 1 ");
-                        if ($db->ProximoRegistro())
-                        {
+                        if ($db->ProximoRegistro()) {
                             $aluno_multi = true;
                         }
                     }
 
                     // monta o filtro de acordo com os alunos na serie normal ou alternativa
-                    if ($aluno_normal || $aluno_multi)
-                    {
-                        if ($aluno_normal)
-                        {
-                            if($aluno_multi)
-                            {
+                    if ($aluno_normal || $aluno_multi) {
+                        if ($aluno_normal) {
+                            if ($aluno_multi) {
                                 $filtro = " AND ( ref_ref_cod_serie = '{$cod_serie}' OR ref_ref_cod_serie = '{$cod_serie_mult}' )";
-                            }
-                            else
-                            {
+                            } else {
                                 $filtro = " AND ref_ref_cod_serie = '{$cod_serie}'";
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $filtro = " AND ref_ref_cod_serie = '{$cod_serie_mult}'";
                         }
                     }
 
                     $db->Consulta("SELECT ref_cod_disciplina, ref_ref_cod_serie FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_escola = '{$cod_escola}' {$filtro} AND ativo = 1");
-                }
-                else
-                {
+                } else {
                     // nao eh multi-seriada
                     $db->Consulta("SELECT ref_cod_disciplina, ref_ref_cod_serie FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_escola = '{$cod_escola}' AND ref_ref_cod_serie = '{$cod_serie}' AND ativo = 1");
                 }
-            }
-            else
-            {
+            } else {
                 // todos os alunos tem pelo menos uma nota, vamos ver quais as disciplinas que estao faltando
                 $qtd_alunos = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_serie = '{$cod_serie}' AND aprovado = 3 AND ativo = 1");
-                if( $multiseriada )
-                {
+                if ($multiseriada) {
                     $qtd_alunos_mult = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_serie = '{$cod_serie_mult}' AND aprovado = 3 AND ativo = 1");
 //                  encontra as disciplinas que ainda precisam receber nota
                     $sql = "
@@ -1375,10 +1183,7 @@ class clsPmieducarTurma
                         ) AS sub2 WHERE dispensas + notas < $qtd_alunos_mult
                     )
                     ";
-
-                }
-                else
-                {
+                } else {
                     $sql = "
                     SELECT ref_cod_disciplina, serie FROM
                     (
@@ -1391,13 +1196,14 @@ class clsPmieducarTurma
                 }
                 $db->Consulta($sql);
             }
-            while( $db->ProximoRegistro() )
-            {
-                list($cod_disciplina,$cod_serie)=$db->Tupla();
-                $disciplinas[] = array( "cod_disciplina" => $cod_disciplina, "cod_serie" => $cod_serie );
+            while ($db->ProximoRegistro()) {
+                list($cod_disciplina, $cod_serie) = $db->Tupla();
+                $disciplinas[] = ['cod_disciplina' => $cod_disciplina, 'cod_serie' => $cod_serie];
             }
+
             return $disciplinas;
         }
+
         return false;
     }
 
@@ -1406,18 +1212,19 @@ class clsPmieducarTurma
      *
      * @return bool
      */
-    function moduloExameDisciplina($verifica_aluno_possui_nota = false)
+    public function moduloExameDisciplina($verifica_aluno_possui_nota = false)
     {
-        if( is_numeric( $this->cod_turma ) )
-        {
+        if (is_numeric($this->cod_turma)) {
             $cod_curso = $this->getCurso();
             $objCurso = new clsPmieducarCurso($cod_curso);
             $detCurso = $objCurso->detalhe();
 
             $modulos = $this->maxModulos();
             $objNotaAluno = new clsPmieducarNotaAluno();
-            return $objNotaAluno->getDisciplinasExame($this->cod_turma,$modulos,$detCurso["media"], $verifica_aluno_possui_nota);
+
+            return $objNotaAluno->getDisciplinasExame($this->cod_turma, $modulos, $detCurso['media'], $verifica_aluno_possui_nota);
         }
+
         return false;
     }
 
@@ -1426,18 +1233,19 @@ class clsPmieducarTurma
      *
      * @return bool
      */
-    function moduloExameAlunos($cod_disciplina_exame = null)
+    public function moduloExameAlunos($cod_disciplina_exame = null)
     {
-        if( is_numeric( $this->cod_turma ) )
-        {
+        if (is_numeric($this->cod_turma)) {
             $cod_curso = $this->getCurso();
             $objCurso = new clsPmieducarCurso($cod_curso);
             $detCurso = $objCurso->detalhe();
 
             $modulos = $this->maxModulos();
             $objNotaAluno = new clsPmieducarNotaAluno();
-            return $objNotaAluno->getAlunosExame($this->cod_turma,$modulos,$detCurso["media"],$cod_disciplina_exame);
+
+            return $objNotaAluno->getAlunosExame($this->cod_turma, $modulos, $detCurso['media'], $cod_disciplina_exame);
         }
+
         return false;
     }
 
@@ -1447,11 +1255,12 @@ class clsPmieducarTurma
      * @param int $cod_disciplina
      * @param int $cod_serie
      * @param int $modulo
+     *
      * @return array
      */
-    function matriculados_modulo_disciplina_sem_nota( $cod_disciplina, $cod_serie, $modulo )
+    public function matriculados_modulo_disciplina_sem_nota($cod_disciplina, $cod_serie, $modulo)
     {
-        $matriculas = array();
+        $matriculas = [];
 
         $db = new clsBanco();
         $db->Consulta("
@@ -1472,14 +1281,13 @@ class clsPmieducarTurma
         )
         ");
 
-        if( $db->numLinhas() )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($db->numLinhas()) {
+            while ($db->ProximoRegistro()) {
                 list($matricula) = $db->Tupla();
                 $matriculas[$matricula] = $matricula;
             }
         }
+
         return $matriculas;
     }
 
@@ -1488,52 +1296,44 @@ class clsPmieducarTurma
      *
      * @return unknown
      */
-    function maxModulos()
+    public function maxModulos()
     {
-        if( is_numeric($this->cod_turma) )
-        {
+        if (is_numeric($this->cod_turma)) {
             $db = new clsBanco();
             // ve se o curso segue o padrao escolar
             $padrao = $db->CampoUnico("SELECT c.padrao_ano_escolar FROM {$this->_schema}curso c, {$this->_tabela} t WHERE cod_turma = {$this->cod_turma} AND c.cod_curso = t.ref_cod_curso AND c.ativo = 1 AND t.ativo = 1");
-            if( $padrao )
-            {
+            if ($padrao) {
                 // segue o padrao
                 $cod_escola = $db->CampoUnico("SELECT ref_ref_cod_escola FROM {$this->_tabela} WHERE cod_turma = {$this->cod_turma} AND ativo = 1");
                 $ano = $db->CampoUnico("SELECT COALESCE(MAX(ano),0) FROM {$this->_schema}escola_ano_letivo WHERE ref_cod_escola = {$cod_escola} AND andamento = 1 AND ativo = 1");
-                if( $ano )
-                {
+                if ($ano) {
                     return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) FROM {$this->_schema}ano_letivo_modulo WHERE ref_ref_cod_escola = {$cod_escola} AND ref_ano = {$ano}");
                 }
-            }
-            else
-            {
+            } else {
                 // nao segue o padrao escolar
                 return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) FROM {$this->_schema}turma_modulo WHERE ref_cod_turma = {$this->cod_turma}");
             }
         }
+
         return false;
     }
 
-    function getCurso()
+    public function getCurso()
     {
-        if( is_numeric($this->cod_turma) )
-        {
+        if (is_numeric($this->cod_turma)) {
             $db = new clsBanco();
             $db->Consulta("SELECT ref_cod_curso, ref_ref_cod_serie FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'");
             $db->ProximoRegistro();
-            list($cod_curso,$cod_serie) = $db->Tupla();
-            if( is_numeric($cod_curso) )
-            {
+            list($cod_curso, $cod_serie) = $db->Tupla();
+            if (is_numeric($cod_curso)) {
                 return $cod_curso;
             }
 
-            if(is_numeric($cod_serie))
-            {
+            if (is_numeric($cod_serie)) {
                 $db->Consulta("SELECT ref_cod_curso FROM {$this->_schema}serie WHERE cod_serie = '{$cod_serie}'");
                 $db->ProximoRegistro();
                 list($cod_curso) = $db->Tupla();
-                if( is_numeric($cod_curso) )
-                {
+                if (is_numeric($cod_curso)) {
                     return $cod_curso;
                 }
             }
@@ -1547,282 +1347,230 @@ class clsPmieducarTurma
      *
      * @return array
      */
-    function lista( $int_cod_turma = null, z$int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = FALSE)
+    public function lista($int_cod_turma = null, z $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
-
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} t";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( is_numeric( $int_cod_turma ) )
-        {
+        if (is_numeric($int_cod_turma)) {
             $filtros .= "{$whereAnd} t.cod_turma = '{$int_cod_turma}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_exc ) )
-        {
+        if (is_numeric($int_ref_usuario_exc)) {
             $filtros .= "{$whereAnd} t.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_cad ) )
-        {
+        if (is_numeric($int_ref_usuario_cad)) {
             $filtros .= "{$whereAnd} t.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_serie ) )
-        {
-            if($bool_verifica_serie_multiseriada == true)
-            {
+        if (is_numeric($int_ref_ref_cod_serie)) {
+            if ($bool_verifica_serie_multiseriada == true) {
                 $mult = " OR  t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie}' ";
             }
 
             $filtros .= "{$whereAnd} ( t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}' $mult )";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_escola ) )
-        {
+        if (is_numeric($int_ref_ref_cod_escola)) {
             /*if($bool_verifica_serie_multiseriada === true)
             {
                 $mult = " OR  t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola}' ";
             }*/
 
             $filtros .= "{$whereAnd} ( t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}' )";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
-        {
+        if (is_numeric($int_ref_cod_infra_predio_comodo)) {
             $filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nm_turma ) )
-        {
+        if (is_string($str_nm_turma)) {
             $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_sgl_turma ) )
-        {
+        if (is_string($str_sgl_turma)) {
             $filtros .= "{$whereAnd} t.sgl_turma LIKE '%{$str_sgl_turma}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_max_aluno ) )
-        {
+        if (is_numeric($int_max_aluno)) {
             $filtros .= "{$whereAnd} t.max_aluno = '{$int_max_aluno}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_multiseriada ) )
-        {
+        if (is_numeric($int_multiseriada)) {
             $filtros .= "{$whereAnd} t.multiseriada = '{$int_multiseriada}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_ini ) )
-        {
+        if (is_string($date_data_cadastro_ini)) {
             $filtros .= "{$whereAnd} t.data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_fim ) )
-        {
+        if (is_string($date_data_cadastro_fim)) {
             $filtros .= "{$whereAnd} t.data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_ini ) )
-        {
+        if (is_string($date_data_exclusao_ini)) {
             $filtros .= "{$whereAnd} t.data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_fim ) )
-        {
+        if (is_string($date_data_exclusao_fim)) {
             $filtros .= "{$whereAnd} t.data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_null( $int_ativo ) || $int_ativo )
-        {
+        if (is_null($int_ativo) || $int_ativo) {
             $filtros .= "{$whereAnd} t.ativo = '1'";
-            $whereAnd = " AND ";
-        }
-        else
-        {
+            $whereAnd = ' AND ';
+        } else {
             $filtros .= "{$whereAnd} t.ativo = '0'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_turma_tipo ) )
-        {
+        if (is_numeric($int_ref_cod_turma_tipo)) {
             $filtros .= "{$whereAnd} t.ref_cod_turma_tipo = '{$int_ref_cod_turma_tipo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicial_ini ) )
-        {
+        if (($time_hora_inicial_ini)) {
             $filtros .= "{$whereAnd} t.hora_inicial >= '{$time_hora_inicial_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicial_fim ) )
-        {
+        if (($time_hora_inicial_fim)) {
             $filtros .= "{$whereAnd} t.hora_inicial <= '{$time_hora_inicial_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_final_ini ) )
-        {
+        if (($time_hora_final_ini)) {
             $filtros .= "{$whereAnd} t.hora_final >= '{$time_hora_final_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_final_fim ) )
-        {
+        if (($time_hora_final_fim)) {
             $filtros .= "{$whereAnd} t.hora_final <= '{$time_hora_final_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicio_intervalo_ini ) )
-        {
+        if (($time_hora_inicio_intervalo_ini)) {
             $filtros .= "{$whereAnd} t.hora_inicio_intervalo >= '{$time_hora_inicio_intervalo_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicio_intervalo_fim ) )
-        {
+        if (($time_hora_inicio_intervalo_fim)) {
             $filtros .= "{$whereAnd} t.hora_inicio_intervalo <= '{$time_hora_inicio_intervalo_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_fim_intervalo_ini ) )
-        {
+        if (($time_hora_fim_intervalo_ini)) {
             $filtros .= "{$whereAnd} t.hora_fim_intervalo >= '{$time_hora_fim_intervalo_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_fim_intervalo_fim ) )
-        {
+        if (($time_hora_fim_intervalo_fim)) {
             $filtros .= "{$whereAnd} t.hora_fim_intervalo <= '{$time_hora_fim_intervalo_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-    /*  if( is_numeric( $int_ref_cod_curso ) )
-        {
-            $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_ref_cod_instituicao ) )
-        {
-            $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = " AND ";
-        }*/
-        if( is_numeric( $int_ref_cod_regente ) )
-        {
+        /*  if( is_numeric( $int_ref_cod_curso ) )
+            {
+                $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
+                $whereAnd = " AND ";
+            }
+            if( is_numeric( $int_ref_cod_instituicao ) )
+            {
+                $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+                $whereAnd = " AND ";
+            }*/
+        if (is_numeric($int_ref_cod_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_regente = '{$int_ref_cod_regente}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_instituicao_regente ) )
-        {
+        if (is_numeric($int_ref_cod_instituicao_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_instituicao_regente = '{$int_ref_cod_instituicao_regente}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_instituicao ) )
-        {
+        if (is_numeric($int_ref_cod_instituicao)) {
             $filtros .= "{$whereAnd} t.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_curso ))
-        {
+        if (is_numeric($int_ref_cod_curso)) {
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_escola_mult ) )
-        {
+        if (is_numeric($int_ref_ref_cod_escola_mult)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_serie_mult ))
-        {
+        if (is_numeric($int_ref_ref_cod_serie_mult)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric($int_qtd_min_alunos_matriculados) )
-        {
+        if (is_numeric($int_qtd_min_alunos_matriculados)) {
             $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.matricula_turma WHERE ref_cod_turma = t.cod_turma) >= '{$int_qtd_min_alunos_matriculados}' ";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if (is_bool($bool_tem_alunos_aguardando_nota) )
-        {
-            if ($bool_tem_alunos_aguardando_nota)
-            {
+        if (is_bool($bool_tem_alunos_aguardando_nota)) {
+            if ($bool_tem_alunos_aguardando_nota) {
                 $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma mmt WHERE mmt.ref_cod_turma = t.cod_turma AND mmt.aprovado = 3 AND mmt.ativo = 1 ) > 0 ";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             }
         }
-        if (is_bool($visivel))
-        {
-            if ($visivel)
-            {
+        if (is_bool($visivel)) {
+            if ($visivel) {
                 $filtros .= "{$whereAnd} t.visivel = TRUE";
-                $whereAnd = " AND ";
-            }
-            else
-            {
+                $whereAnd = ' AND ';
+            } else {
                 $filtros .= "{$whereAnd} t.visivel = FALSE";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             }
-        }
-        elseif (is_array($visivel) && count($visivel))
-        {
-            $filtros .= "{$whereAnd} t.visivel IN (".implode(",", $visivel).")";
-            $whereAnd = " AND ";
-        }
-        else
-        {
+        } elseif (is_array($visivel) && count($visivel)) {
+            $filtros .= "{$whereAnd} t.visivel IN (" . implode(',', $visivel) . ')';
+            $whereAnd = ' AND ';
+        } else {
             $filtros .= "{$whereAnd} t.visivel = TRUE";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $turma_turno_id ) ) {
+        if (is_numeric($turma_turno_id)) {
             $filtros .= "{$whereAnd} t.turma_turno_id = '{$turma_turno_id}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $tipo_boletim ) ) {
+        if (is_numeric($tipo_boletim)) {
             $filtros .= "{$whereAnd} t.tipo_boletim = '{$tipo_boletim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $ano ) ) {
+        if (is_numeric($ano)) {
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( $somenteAnoLetivoEmAndamento ) {
+        if ($somenteAnoLetivoEmAndamento) {
             $filtros .= "{$whereAnd}  t.ano in (SELECT ano FROM pmieducar.escola_ano_letivo WHERE andamento = 1 AND ativo = 1 AND ref_cod_escola = t.ref_ref_cod_escola)";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (!$this->listarNaoInformarEducacenso) {
             $filtros .= "{$whereAnd} COALESCE(t.nao_informar_educacenso,0) <> 1";
-            $whereAnd = " AND ";
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 //      $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
 
@@ -1834,575 +1582,436 @@ class clsPmieducarTurma
      *
      * @return array
      */
-    function lista2( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
+    public function lista2($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null)
     {
-
-        /*$nm_escola = "(
-    SELECT c.nm_escola AS nm_escola
-    FROM  pmieducar.escola_complemento c
-    WHERE c.ref_cod_escola = t.ref_ref_cod_escola
-AND e.cod_escola = t.ref_ref_cod_escola
-
-UNION
-    SELECT j.fantasia AS nm_escola
-    FROM  cadastro.juridica j
-    WHERE j.idpes = e.ref_idpes
-and  e.cod_escola = t.ref_ref_cod_escola
-                    )  AS nm_escola ";a*/
         $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ";
+        $whereAnd = ' WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ';
 
-        if( is_numeric( $int_cod_turma ) )
-        {
+        if (is_numeric($int_cod_turma)) {
             $filtros .= "{$whereAnd} t.cod_turma = '{$int_cod_turma}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_exc ) )
-        {
+        if (is_numeric($int_ref_usuario_exc)) {
             $filtros .= "{$whereAnd} t.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_cad ) )
-        {
+        if (is_numeric($int_ref_usuario_cad)) {
             $filtros .= "{$whereAnd} t.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_serie ) )
-        {
+        if (is_numeric($int_ref_ref_cod_serie)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_escola ) )
-        {
+        if (is_numeric($int_ref_ref_cod_escola)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
-            $whereAnd = " AND ";
-        }
-        elseif ($this->codUsuario) {
+            $whereAnd = ' AND ';
+        } elseif ($this->codUsuario) {
             $filtros .= "{$whereAnd} EXISTS (SELECT 1
                                                FROM pmieducar.escola_usuario
                                                                                 WHERE escola_usuario.ref_cod_escola = t.ref_ref_cod_escola
                                                                                   AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
-        {
+        if (is_numeric($int_ref_cod_infra_predio_comodo)) {
             $filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nm_turma ) )
-        {
+        if (is_string($str_nm_turma)) {
             $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_sgl_turma ) )
-        {
+        if (is_string($str_sgl_turma)) {
             $filtros .= "{$whereAnd} t.sgl_turma LIKE '%{$str_sgl_turma}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_max_aluno ) )
-        {
+        if (is_numeric($int_max_aluno)) {
             $filtros .= "{$whereAnd} t.max_aluno = '{$int_max_aluno}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_multiseriada ) )
-        {
+        if (is_numeric($int_multiseriada)) {
             $filtros .= "{$whereAnd} t.multiseriada = '{$int_multiseriada}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_ini ) )
-        {
+        if (is_string($date_data_cadastro_ini)) {
             $filtros .= "{$whereAnd} t.data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_fim ) )
-        {
+        if (is_string($date_data_cadastro_fim)) {
             $filtros .= "{$whereAnd} t.data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_ini ) )
-        {
+        if (is_string($date_data_exclusao_ini)) {
             $filtros .= "{$whereAnd} t.data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_fim ) )
-        {
+        if (is_string($date_data_exclusao_fim)) {
             $filtros .= "{$whereAnd} t.data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_null( $int_ativo ) || $int_ativo )
-        {
+        if (is_null($int_ativo) || $int_ativo) {
             $filtros .= "{$whereAnd} t.ativo = '1'";
-            $whereAnd = " AND ";
-        }
-        else
-        {
+            $whereAnd = ' AND ';
+        } else {
             $filtros .= "{$whereAnd} t.ativo = '0'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_turma_tipo ) )
-        {
+        if (is_numeric($int_ref_cod_turma_tipo)) {
             $filtros .= "{$whereAnd} t.ref_cod_turma_tipo = '{$int_ref_cod_turma_tipo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicial_ini ) )
-        {
+        if (($time_hora_inicial_ini)) {
             $filtros .= "{$whereAnd} t.hora_inicial >= '{$time_hora_inicial_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicial_fim ) )
-        {
+        if (($time_hora_inicial_fim)) {
             $filtros .= "{$whereAnd} t.hora_inicial <= '{$time_hora_inicial_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_final_ini ) )
-        {
+        if (($time_hora_final_ini)) {
             $filtros .= "{$whereAnd} t.hora_final >= '{$time_hora_final_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_final_fim ) )
-        {
+        if (($time_hora_final_fim)) {
             $filtros .= "{$whereAnd} t.hora_final <= '{$time_hora_final_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicio_intervalo_ini ) )
-        {
+        if (($time_hora_inicio_intervalo_ini)) {
             $filtros .= "{$whereAnd} t.hora_inicio_intervalo >= '{$time_hora_inicio_intervalo_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicio_intervalo_fim ) )
-        {
+        if (($time_hora_inicio_intervalo_fim)) {
             $filtros .= "{$whereAnd} t.hora_inicio_intervalo <= '{$time_hora_inicio_intervalo_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_fim_intervalo_ini ) )
-        {
+        if (($time_hora_fim_intervalo_ini)) {
             $filtros .= "{$whereAnd} t.hora_fim_intervalo >= '{$time_hora_fim_intervalo_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_fim_intervalo_fim ) )
-        {
+        if (($time_hora_fim_intervalo_fim)) {
             $filtros .= "{$whereAnd} t.hora_fim_intervalo <= '{$time_hora_fim_intervalo_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-    /*  if( is_numeric( $int_ref_cod_curso ) )
-        {
-            $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_ref_cod_instituicao ) )
-        {
-            $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = " AND ";
-        }*/
-        if( is_numeric( $int_ref_cod_regente ) )
-        {
+        /*  if( is_numeric( $int_ref_cod_curso ) )
+            {
+                $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
+                $whereAnd = " AND ";
+            }
+            if( is_numeric( $int_ref_cod_instituicao ) )
+            {
+                $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+                $whereAnd = " AND ";
+            }*/
+        if (is_numeric($int_ref_cod_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_regente = '{$int_ref_cod_regente}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_instituicao_regente ) )
-        {
+        if (is_numeric($int_ref_cod_instituicao_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_instituicao_regente = '{$int_ref_cod_instituicao_regente}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_instituicao ) )
-        {
+        if (is_numeric($int_ref_cod_instituicao)) {
             $filtros .= "{$whereAnd} t.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_curso ) )
-        {
+        if (is_numeric($int_ref_cod_curso)) {
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_escola_mult ) )
-        {
+        if (is_numeric($int_ref_ref_cod_escola_mult)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_serie_mult ) )
-        {
+        if (is_numeric($int_ref_ref_cod_serie_mult)) {
             $filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric($int_qtd_min_alunos_matriculados) )
-        {
+        if (is_numeric($int_qtd_min_alunos_matriculados)) {
             $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.matricula_turma WHERE ref_cod_turma = t.cod_turma) >= '{$int_qtd_min_alunos_matriculados}' ";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if (is_bool($visivel))
-        {
-            if ($visivel)
-            {
+        if (is_bool($visivel)) {
+            if ($visivel) {
                 $filtros .= "{$whereAnd} t.visivel = TRUE";
-                $whereAnd = " AND ";
-            }
-            else
-            {
+                $whereAnd = ' AND ';
+            } else {
                 $filtros .= "{$whereAnd} t.visivel = FALSE";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             }
-        }
-        elseif (is_array($visivel) && count($visivel))
-        {
-            $filtros .= "{$whereAnd} t.visivel IN (".implode(",", $visivel).")";
-            $whereAnd = " AND ";
-        }
-        else
-        {
+        } elseif (is_array($visivel) && count($visivel)) {
+            $filtros .= "{$whereAnd} t.visivel IN (" . implode(',', $visivel) . ')';
+            $whereAnd = ' AND ';
+        } else {
             $filtros .= "{$whereAnd} t.visivel = TRUE";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $turma_turno_id ) ) {
+        if (is_numeric($turma_turno_id)) {
             $filtros .= "{$whereAnd} t.turma_turno_id = '{$turma_turno_id}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $tipo_boletim ) ) {
+        if (is_numeric($tipo_boletim)) {
             $filtros .= "{$whereAnd} t.tipo_boletim = '{$tipo_boletim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $ano ) ) {
+        if (is_numeric($ano)) {
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
-            $whereAnd = " AND ";
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 //      echo "<!--{$sql}-->";
 
 //      $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
-/**
+    /**
      * Retorna uma lista filtrados de acordo com os parametros
      * (Modificação da lista2, agora trazendo somente turmas do ano atual)
+     *
      * @return array
      */
-    function lista3( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
+    public function lista3($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null)
     {
-
-        /*$nm_escola = "(
-    SELECT c.nm_escola AS nm_escola
-    FROM  pmieducar.escola_complemento c
-    WHERE c.ref_cod_escola = t.ref_ref_cod_escola
-AND e.cod_escola = t.ref_ref_cod_escola
-
-UNION
-    SELECT j.fantasia AS nm_escola
-    FROM  cadastro.juridica j
-    WHERE j.idpes = e.ref_idpes
-and  e.cod_escola = t.ref_ref_cod_escola
-                    )  AS nm_escola ";a*/
         $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ";
+        $whereAnd = ' WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ';
 
-        if( is_numeric( $int_cod_turma ) )
-        {
+        if (is_numeric($int_cod_turma)) {
             $filtros .= "{$whereAnd} t.cod_turma = '{$int_cod_turma}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_exc ) )
-        {
+        if (is_numeric($int_ref_usuario_exc)) {
             $filtros .= "{$whereAnd} t.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_cad ) )
-        {
+        if (is_numeric($int_ref_usuario_cad)) {
             $filtros .= "{$whereAnd} t.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_serie ) )
-        {
+        if (is_numeric($int_ref_ref_cod_serie)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_escola ) )
-        {
+        if (is_numeric($int_ref_ref_cod_escola)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
-            $whereAnd = " AND ";
-        }
-        elseif ($this->codUsuario) {
+            $whereAnd = ' AND ';
+        } elseif ($this->codUsuario) {
             $filtros .= "{$whereAnd} EXISTS (SELECT 1
                                                FROM pmieducar.escola_usuario
                                                                                 WHERE escola_usuario.ref_cod_escola = t.ref_ref_cod_escola
                                                                                   AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
-        {
+        if (is_numeric($int_ref_cod_infra_predio_comodo)) {
             $filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_nm_turma ) )
-        {
+        if (is_string($str_nm_turma)) {
             $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_sgl_turma ) )
-        {
+        if (is_string($str_sgl_turma)) {
             $filtros .= "{$whereAnd} t.sgl_turma LIKE '%{$str_sgl_turma}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_max_aluno ) )
-        {
+        if (is_numeric($int_max_aluno)) {
             $filtros .= "{$whereAnd} t.max_aluno = '{$int_max_aluno}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_multiseriada ) )
-        {
+        if (is_numeric($int_multiseriada)) {
             $filtros .= "{$whereAnd} t.multiseriada = '{$int_multiseriada}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_ini ) )
-        {
+        if (is_string($date_data_cadastro_ini)) {
             $filtros .= "{$whereAnd} t.data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_fim ) )
-        {
+        if (is_string($date_data_cadastro_fim)) {
             $filtros .= "{$whereAnd} t.data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_ini ) )
-        {
+        if (is_string($date_data_exclusao_ini)) {
             $filtros .= "{$whereAnd} t.data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_fim ) )
-        {
+        if (is_string($date_data_exclusao_fim)) {
             $filtros .= "{$whereAnd} t.data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_null( $int_ativo ) || $int_ativo )
-        {
+        if (is_null($int_ativo) || $int_ativo) {
             $filtros .= "{$whereAnd} t.ativo = '1'";
-            $whereAnd = " AND ";
-        }
-        else
-        {
+            $whereAnd = ' AND ';
+        } else {
             $filtros .= "{$whereAnd} t.ativo = '0'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_turma_tipo ) )
-        {
+        if (is_numeric($int_ref_cod_turma_tipo)) {
             $filtros .= "{$whereAnd} t.ref_cod_turma_tipo = '{$int_ref_cod_turma_tipo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicial_ini ) )
-        {
+        if (($time_hora_inicial_ini)) {
             $filtros .= "{$whereAnd} t.hora_inicial >= '{$time_hora_inicial_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicial_fim ) )
-        {
+        if (($time_hora_inicial_fim)) {
             $filtros .= "{$whereAnd} t.hora_inicial <= '{$time_hora_inicial_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_final_ini ) )
-        {
+        if (($time_hora_final_ini)) {
             $filtros .= "{$whereAnd} t.hora_final >= '{$time_hora_final_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_final_fim ) )
-        {
+        if (($time_hora_final_fim)) {
             $filtros .= "{$whereAnd} t.hora_final <= '{$time_hora_final_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicio_intervalo_ini ) )
-        {
+        if (($time_hora_inicio_intervalo_ini)) {
             $filtros .= "{$whereAnd} t.hora_inicio_intervalo >= '{$time_hora_inicio_intervalo_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_inicio_intervalo_fim ) )
-        {
+        if (($time_hora_inicio_intervalo_fim)) {
             $filtros .= "{$whereAnd} t.hora_inicio_intervalo <= '{$time_hora_inicio_intervalo_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_fim_intervalo_ini ) )
-        {
+        if (($time_hora_fim_intervalo_ini)) {
             $filtros .= "{$whereAnd} t.hora_fim_intervalo >= '{$time_hora_fim_intervalo_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( ( $time_hora_fim_intervalo_fim ) )
-        {
+        if (($time_hora_fim_intervalo_fim)) {
             $filtros .= "{$whereAnd} t.hora_fim_intervalo <= '{$time_hora_fim_intervalo_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-    /*  if( is_numeric( $int_ref_cod_curso ) )
-        {
-            $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_ref_cod_instituicao ) )
-        {
-            $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = " AND ";
-        }*/
-        if( is_numeric( $int_ref_cod_regente ) )
-        {
+        /*  if( is_numeric( $int_ref_cod_curso ) )
+            {
+                $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
+                $whereAnd = " AND ";
+            }
+            if( is_numeric( $int_ref_cod_instituicao ) )
+            {
+                $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+                $whereAnd = " AND ";
+            }*/
+        if (is_numeric($int_ref_cod_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_regente = '{$int_ref_cod_regente}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_instituicao_regente ) )
-        {
+        if (is_numeric($int_ref_cod_instituicao_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_instituicao_regente = '{$int_ref_cod_instituicao_regente}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_instituicao ) )
-        {
+        if (is_numeric($int_ref_cod_instituicao)) {
             $filtros .= "{$whereAnd} t.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_curso ) )
-        {
+        if (is_numeric($int_ref_cod_curso)) {
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_escola_mult ) )
-        {
+        if (is_numeric($int_ref_ref_cod_escola_mult)) {
             $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_ref_cod_serie_mult ) )
-        {
+        if (is_numeric($int_ref_ref_cod_serie_mult)) {
             $filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric($int_qtd_min_alunos_matriculados) )
-        {
+        if (is_numeric($int_qtd_min_alunos_matriculados)) {
             $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.matricula_turma WHERE ref_cod_turma = t.cod_turma) >= '{$int_qtd_min_alunos_matriculados}' ";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if (is_bool($visivel))
-        {
-            if ($visivel)
-            {
+        if (is_bool($visivel)) {
+            if ($visivel) {
                 $filtros .= "{$whereAnd} t.visivel = TRUE";
-                $whereAnd = " AND ";
-            }
-            else
-            {
+                $whereAnd = ' AND ';
+            } else {
                 $filtros .= "{$whereAnd} t.visivel = FALSE";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             }
-        }
-        elseif (is_array($visivel) && count($visivel))
-        {
-            $filtros .= "{$whereAnd} t.visivel IN (".implode(",", $visivel).")";
-            $whereAnd = " AND ";
-        }
-        else
-        {
+        } elseif (is_array($visivel) && count($visivel)) {
+            $filtros .= "{$whereAnd} t.visivel IN (" . implode(',', $visivel) . ')';
+            $whereAnd = ' AND ';
+        } else {
             $filtros .= "{$whereAnd} t.visivel = TRUE";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $turma_turno_id ) ) {
+        if (is_numeric($turma_turno_id)) {
             $filtros .= "{$whereAnd} t.turma_turno_id = '{$turma_turno_id}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $tipo_boletim ) ) {
+        if (is_numeric($tipo_boletim)) {
             $filtros .= "{$whereAnd} t.tipo_boletim = '{$tipo_boletim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $ano ) ) {
+        if (is_numeric($ano)) {
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
-            $whereAnd = " AND ";
         }
 
         // Retirar OR quando todas turmas tiverem a coluna ANO definido.
         //$filtros .= "{$whereAnd} t.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = t.ref_ref_cod_escola AND andamento = 1 and ativo = 1)";
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 //      echo "<!--{$sql}-->";
 
 //      $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
+        $db->Consulta($sql);
 
-        $db->Consulta( $sql);
-
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
-        return false;
-    }
-    /**
-     * Retorna um array com os dados de um registro
-     *
-     * @return array
-     */
-    function detalhe()
-    {
-        if( is_numeric( $this->cod_turma ) )
-        {
 
-            $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} t WHERE t.cod_turma = '{$this->cod_turma}'" );
-            $db->ProximoRegistro();
-            return $db->Tupla();
-        }
         return false;
     }
 
@@ -2411,16 +2020,34 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return array
      */
-    function existe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_turma ) )
-        {
-
+        if (is_numeric($this->cod_turma)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} t WHERE t.cod_turma = '{$this->cod_turma}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
+        return false;
+    }
+
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    public function existe()
+    {
+        if (is_numeric($this->cod_turma)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'");
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
         return false;
     }
 
@@ -2429,21 +2056,14 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_turma ) && is_numeric( $this->ref_usuario_exc ) )
-        {
+        if (is_numeric($this->cod_turma) && is_numeric($this->ref_usuario_exc)) {
 
-        /*
-            delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'" );
-        return true;
-        */
-
-        $this->ativo = 0;
+            $this->ativo = 0;
             return $this->edita();
         }
+
         return false;
     }
 
@@ -2452,7 +2072,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -2462,7 +2082,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -2472,7 +2092,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -2483,18 +2103,18 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -2502,13 +2122,12 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
 
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -2518,101 +2137,110 @@ and  e.cod_escola = t.ref_ref_cod_escola
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
+
+        return '';
     }
 
-    function checaAnoLetivoEmAndamento()
+    public function checaAnoLetivoEmAndamento()
     {
-        if( is_numeric( $this->cod_turma ) )
-        {
-
+        if (is_numeric($this->cod_turma)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}' AND turma.ano in( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola AND andamento = 1)" );
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}' AND turma.ano in( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola AND andamento = 1)");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
-    function maximoAlunosSala(){
 
-      $detTurma = $this->detalhe();
-      $objInstituicao = new clsPmiEducarInstituicao($detTurma['ref_cod_instituicao']);
-      $detInstituicao = $objInstituicao->detalhe();
-      $controlaEspacoUtilizacaoAluno = $detInstituicao["controlar_espaco_utilizacao_aluno"];
-      //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
-      if($controlaEspacoUtilizacaoAluno){
-        $percentagemMaximaUtilizacaoSala  = $detInstituicao["percentagem_maxima_ocupacao_salas"];
-        $quantidadeAlunosPorMetroQuadrado = $detInstituicao["quantidade_alunos_metro_quadrado"];
-        $codSalaUtilizada  = $detTurma["ref_cod_infra_predio_comodo"];
+    public function maximoAlunosSala()
+    {
+        $detTurma = $this->detalhe();
+        $objInstituicao = new clsPmiEducarInstituicao($detTurma['ref_cod_instituicao']);
+        $detInstituicao = $objInstituicao->detalhe();
+        $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
+        //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
+        if ($controlaEspacoUtilizacaoAluno) {
+            $percentagemMaximaUtilizacaoSala = $detInstituicao['percentagem_maxima_ocupacao_salas'];
+            $quantidadeAlunosPorMetroQuadrado = $detInstituicao['quantidade_alunos_metro_quadrado'];
+            $codSalaUtilizada = $detTurma['ref_cod_infra_predio_comodo'];
 
-        $objInfraPredioComodo = new clsPmiEducarInfraPredioComodo($codSalaUtilizada);
-        $detInfraPredioComodo = $objInfraPredioComodo->detalhe();
-        $areaSala = $detInfraPredioComodo["area"];
+            $objInfraPredioComodo = new clsPmiEducarInfraPredioComodo($codSalaUtilizada);
+            $detInfraPredioComodo = $objInfraPredioComodo->detalhe();
+            $areaSala = $detInfraPredioComodo['area'];
 
-        if(is_numeric($percentagemMaximaUtilizacaoSala) AND (is_numeric($quantidadeAlunosPorMetroQuadrado)) AND is_numeric($areaSala)){
-          $metragemMaximaASerUtilizadaSala = ($areaSala * ($percentagemMaximaUtilizacaoSala/100.00));
-          $maximoAlunosSala = ($quantidadeAlunosPorMetroQuadrado * $metragemMaximaASerUtilizadaSala);
-          return round($maximoAlunosSala);
+            if (is_numeric($percentagemMaximaUtilizacaoSala) and (is_numeric($quantidadeAlunosPorMetroQuadrado)) and is_numeric($areaSala)) {
+                $metragemMaximaASerUtilizadaSala = ($areaSala * ($percentagemMaximaUtilizacaoSala / 100.00));
+                $maximoAlunosSala = ($quantidadeAlunosPorMetroQuadrado * $metragemMaximaASerUtilizadaSala);
+
+                return round($maximoAlunosSala);
+            }
         }
-      }
-      return false;
+
+        return false;
     }
 
-    public static function verificaDisciplinaDispensada($turmaId, $componenteId){
-    $sql           = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
+    public static function verificaDisciplinaDispensada($turmaId, $componenteId)
+    {
+        $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
 
-    $params        = array('params' => $turmaId, 'return_only' => 'first-field');
-    $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+        $params = ['params' => $turmaId, 'return_only' => 'first-field'];
+        $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
 
-    return $disciplina_dispensada == $componenteId;
-  }
+        return $disciplina_dispensada == $componenteId;
+    }
 
-  public static function getDisciplinaDispensada($turmaId){
-    $sql           = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
+    public static function getDisciplinaDispensada($turmaId)
+    {
+        $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
 
-    $params        = array('params' => $turmaId, 'return_only' => 'first-field');
-    $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+        $params = ['params' => $turmaId, 'return_only' => 'first-field'];
+        $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
 
-    return $disciplina_dispensada;
-  }
-  public function possuiAlunosVinculados(){
-    $sql = "SELECT 1
+        return $disciplina_dispensada;
+    }
+
+    public function possuiAlunosVinculados()
+    {
+        $sql = 'SELECT 1
               from pmieducar.matricula
              inner join pmieducar.matricula_turma on(matricula.cod_matricula = matricula_turma.ref_cod_matricula)
              where matricula.ativo = 1
                and matricula_turma.ref_cod_turma = $1
-               and matricula_turma.ativo = 1";
-     $params = array('params' => $this->cod_turma, 'return_only' => 'first-field');
-     return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
-  }
+               and matricula_turma.ativo = 1';
+        $params = ['params' => $this->cod_turma, 'return_only' => 'first-field'];
 
-  public function updateInep($codigo_inep_educacenso) {
-    if ($this->cod_turma) {
-        $db = new clsBanco();
-        $db->Consulta("DELETE FROM modules.educacenso_cod_turma WHERE cod_turma = '{$this->cod_turma}'");
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+    }
 
-        if ($codigo_inep_educacenso) {
-            $db->Consulta("INSERT INTO modules.educacenso_cod_turma (cod_turma, cod_turma_inep, created_at)
+    public function updateInep($codigo_inep_educacenso)
+    {
+        if ($this->cod_turma) {
+            $db = new clsBanco();
+            $db->Consulta("DELETE FROM modules.educacenso_cod_turma WHERE cod_turma = '{$this->cod_turma}'");
+
+            if ($codigo_inep_educacenso) {
+                $db->Consulta("INSERT INTO modules.educacenso_cod_turma (cod_turma, cod_turma_inep, created_at)
                            VALUES ('{$this->cod_turma}', '{$codigo_inep_educacenso}', NOW());");
+            }
         }
     }
-  }
 
-  public function getInep(){
-    if ($this->cod_turma) {
-        $sql = "SELECT cod_turma_inep
+    public function getInep()
+    {
+        if ($this->cod_turma) {
+            $sql = 'SELECT cod_turma_inep
                   FROM modules.educacenso_cod_turma
-                 WHERE cod_turma = $1";
-         $params = array('params' => $this->cod_turma, 'return_only' => 'first-field');
-         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
-    }
-  }
+                 WHERE cod_turma = $1';
+            $params = ['params' => $this->cod_turma, 'return_only' => 'first-field'];
 
+            return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+        }
+    }
 }
-?>

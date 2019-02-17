@@ -98,6 +98,9 @@ if (installButton) {
             }, {
                 command: 'migrate',
                 description: 'Executando migrações'
+            }, {
+                command: 'reports',
+                description: 'Instalando relatórios'
             }
         ];
 
