@@ -18,14 +18,14 @@ class AreaConhecimentoController extends ApiCoreController
         if ($this->canGetAreasDeConhecimento()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
 
-            $sql = 'SELECT id, nome, ordenamento_ac
+            $sql = 'SELECT id, nome, ordenamento_ac, updated_at
                       FROM modules.area_conhecimento
                      WHERE instituicao_id = $1
                   ORDER BY nome ';
 
             $areas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-            $attrs = ['id', 'nome', 'ordenamento_ac'];
+            $attrs = ['id', 'nome', 'ordenamento_ac', 'updated_at'];
             $areas = Portabilis_Array_Utils::filterSet($areas, $attrs);
 
             foreach ($areas as &$disciplina) {
