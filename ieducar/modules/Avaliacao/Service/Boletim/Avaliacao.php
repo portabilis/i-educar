@@ -110,6 +110,18 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
+     * @param array $notasGerais
+     *
+     * @return $this
+     */
+    public function setNotasGerais(array $notasGerais)
+    {
+        $this->_notasGerais = $notasGerais;
+
+        return $this;
+    }
+
+    /**
      * Retorna as instâncias de Avaliacao_Model_NotaComponenteMedia do aluno.
      *
      * @return array

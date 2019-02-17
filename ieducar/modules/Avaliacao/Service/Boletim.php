@@ -302,7 +302,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     $this->setNotasComponentes($notasComponentes);
-    $this->_notasGerais = $notasGerais;
+    $this->setNotasGerais($notasGerais);
 
     if (FALSE == $loadMedias) {
       return $this;
@@ -2333,7 +2333,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
       $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
 
-      foreach($this->_notasGerais as $id => $notaGeral){
+      foreach($this->getNotasGerais() as $id => $notaGeral){
 
         $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
 
