@@ -381,7 +381,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $faltasComponentes[$falta->get('componenteCurricular')][] = $falta;
       }
 
-      $this->_faltasComponentes = $faltasComponentes;
+      $this->setFaltasComponentes($faltasComponentes);
     }
 
     return $this;
@@ -993,7 +993,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     elseif ($tipoFaltaPorComponente) {
-      $faltas = $this->_faltasComponentes;
+      $faltas = $this->getFaltasComponentes();
       $faltas = array_intersect_key($faltas, $componentes);
       $total  = 0;
       $etapasComponentes = array();

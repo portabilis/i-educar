@@ -195,6 +195,18 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
+     * @param array $faltasComponentes
+     *
+     * @return $this
+     */
+    public function setFaltasComponentes(array $faltasComponentes)
+    {
+        $this->_faltasComponentes = $faltasComponentes;
+
+        return $this;
+    }
+
+    /**
      * Retorna as instâncias de Avaliacao_Model_FaltaGeral do aluno.
      *
      * @return array
