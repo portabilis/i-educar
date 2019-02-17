@@ -135,7 +135,8 @@ class RegraController extends ApiCoreController
                   ra.media_recuperacao_paralela,
                   ra.nota_maxima_geral,
                   ra.nota_maxima_exame_final AS nota_maxima_exame,
-                  COALESCE(ra.regra_diferenciada_id, 0) AS regra_diferenciada_id
+                  COALESCE(ra.regra_diferenciada_id, 0) AS regra_diferenciada_id,
+                  ra.updated_at
               FROM modules.regra_avaliacao ra
               WHERE true
                   AND ra.instituicao_id = $1
@@ -152,7 +153,7 @@ class RegraController extends ApiCoreController
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
                 'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turmas',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
-                'nota_maxima_exame', 'regra_diferenciada_id'
+                'nota_maxima_exame', 'regra_diferenciada_id', 'updated_at'
             ];
 
             $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
