@@ -35,7 +35,7 @@ class RegraController extends ApiCoreController
             $instituicaoId = $this->getRequest()->instituicao_id;
 
             $sql = 'SELECT ta.id, ta.nome, ta.tipo_nota, tav.nome as rotulo,
-                        tav.descricao, tav.valor_maximo, tav.casa_decimal_exata, tav.acao
+                        tav.descricao, tav.valor_maximo, tav.casa_decimal_exata, tav.acao, ta.updated_at
                 FROM modules.tabela_arredondamento ta
                 INNER JOIN modules.tabela_arredondamento_valor tav
                 ON tav.tabela_arredondamento_id = ta.id
@@ -43,7 +43,7 @@ class RegraController extends ApiCoreController
 
             $tabelas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-            $attrs = ['id', 'nome', 'tipo_nota', 'rotulo', 'descricao', 'valor_maximo', 'casa_decimal_exata', 'acao'];
+            $attrs = ['id', 'nome', 'tipo_nota', 'rotulo', 'descricao', 'valor_maximo', 'casa_decimal_exata', 'acao', 'updated_at'];
             $tabelas = Portabilis_Array_Utils::filterSet($tabelas, $attrs);
             $_tabelas = [];
 
@@ -58,6 +58,7 @@ class RegraController extends ApiCoreController
                     'casa_decimal_exata' => Portabilis_String_Utils::toUtf8($tabela['casa_decimal_exata']),
                     'acao' => Portabilis_String_Utils::toUtf8($tabela['acao']),
                 ];
+                $_tabelas[$tabela['id']]['updated_at'] = $tabela['updated_at'];
             }
 
             $tabelas = [];
