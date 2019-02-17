@@ -31,7 +31,7 @@ class CursoController extends ApiCoreController
                     $escolaId = implode(",", $escolaId);
                 }
 
-                $sql = "SELECT DISTINCT c.cod_curso, c.nm_curso
+                $sql = "SELECT DISTINCT c.cod_curso, c.nm_curso, c.updated_at
                   FROM pmieducar.curso c
                   INNER JOIN pmieducar.escola_curso ec ON ec.ref_cod_curso = c.cod_curso
                   WHERE c.ativo = 1
@@ -46,7 +46,7 @@ class CursoController extends ApiCoreController
 
                 $sql .= ' ORDER BY c.nm_curso ASC ';
             } else {
-                $sql = "SELECT cod_curso, nm_curso
+                $sql = "SELECT cod_curso, nm_curso, updated_at
                   FROM pmieducar.curso
                     WHERE ref_cod_instituicao = $1
                     AND ativo = 1
@@ -101,7 +101,8 @@ class CursoController extends ApiCoreController
 
             $attrs = [
                 'cod_curso' => 'id',
-                'nm_curso' => 'nome'
+                'nm_curso' => 'nome',
+                'updated_at' => 'updated_at',
             ];
 
             if ($getSeries) {
