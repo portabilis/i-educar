@@ -156,6 +156,20 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
+     * Retorna as instâncias de Avaliacao_Model_MediaGeral do aluno.
+     *
+     * @param array $mediasGerais
+     * 
+     * @return $this
+     */
+    public function setMediasGerais(array $mediasGerais)
+    {
+        $this->_mediasGerais = $mediasGerais;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getNotas()
