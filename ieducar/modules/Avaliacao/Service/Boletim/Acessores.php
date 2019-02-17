@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Avaliacao/Service/Boletim/Avaliacao.php';
 require_once 'Avaliacao/Service/Boletim/FaltaAluno.php';
 require_once 'Avaliacao/Service/Boletim/NotaAluno.php';
 require_once 'Avaliacao/Service/Boletim/ParecerDescritivoAluno.php';
@@ -7,7 +8,8 @@ require_once 'Avaliacao/Service/Boletim/RegraAvaliacao.php';
 
 trait Avaliacao_Service_Boletim_Acessores
 {
-    use Avaliacao_Service_Boletim_FaltaAluno,
+    use Avaliacao_Service_Boletim_Avaliacao,
+        Avaliacao_Service_Boletim_FaltaAluno,
         Avaliacao_Service_Boletim_NotaAluno,
         Avaliacao_Service_Boletim_ParecerDescritivoAluno,
         Avaliacao_Service_Boletim_RegraAvaliacao;

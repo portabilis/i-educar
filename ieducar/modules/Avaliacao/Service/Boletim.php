@@ -18,72 +18,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     use Avaliacao_Service_Boletim_Acessores;
 
   /**
-   * Notas do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_notasComponentes = array();
-
-  /**
-   * Notas do aluno por etapa.
-   * @var array
-   */
-  protected $_notasGerais = array();
-
-  /**
-   * Médias do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_mediasComponentes = array();
-
- /**
-   * Média geral do aluno.
-   * @var array
-   */
-  protected $_mediasGerais = array();
-
-  /**
-   * Notas adicionadas no boletim para inclusão ou edição.
-   * @var array
-   */
-  protected $_notas = array();
-
-  /**
-   * Faltas do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_faltasComponentes = array();
-
-  /**
-   * Faltas do aluno no geral.
-   * @var array
-   */
-  protected $_faltasGerais = array();
-
-  /**
-   * Faltas adicionadas no boletim para inclusão ou edição.
-   * @var array
-   */
-  protected $_faltas = array();
-
-  /**
-   * Pareceres descritivos adicionados no boletim para inclusão ou edição.
-   * @var array
-   */
-  protected $_pareceres = array();
-
-  /**
-   * Pareceres descritivos do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_pareceresComponentes = array();
-
-  /**
-   * Pareceres descritivos do aluno no geral.
-   * @var array
-   */
-  protected $_pareceresGerais = array();
-
-  /**
    * Validadores para instâncias de Avaliacao_Model_FaltaAbstract e
    * Avaliacao_Model_NotaComponente.
    *
@@ -146,75 +80,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         return $this->exemptedStages[$disciplineId];
     }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_NotaComponente do aluno.
-   * @return array
-   */
-  public function getNotasComponentes()
-  {
-    return $this->_notasComponentes;
-  }
-
-  public function getNotasGerais()
-  {
-    return $this->_notasGerais;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_NotaComponenteMedia do aluno.
-   * @return array
-   */
-  public function getMediasComponentes()
-  {
-    return $this->_mediasComponentes;
-  }
-
-/**
-   * Retorna as instâncias de Avaliacao_Model_MediaGeral do aluno.
-   * @return array
-   */
-  public function getMediasGerais()
-  {
-    return $this->_mediasGerais;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_FaltaComponente do aluno.
-   * @return array
-   */
-  public function getFaltasComponentes()
-  {
-    return $this->_faltasComponentes;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_FaltaGeral do aluno.
-   * @return array
-   */
-  public function getFaltasGerais()
-  {
-    return $this->_faltasGerais;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_ParecerDescritivoComponente do
-   * aluno.
-   * @return array
-   */
-  public function getPareceresComponentes()
-  {
-    return $this->_pareceresComponentes;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_ParecerDescritivoGeral do aluno.
-   * @return array
-   */
-  public function getPareceresGerais()
-  {
-    return $this->_pareceresGerais;
-  }
 
   /**
    * Retorna uma instância de Avaliacao_Model_NotaComponente.
@@ -1646,15 +1511,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
-   * Getter.
-   * @return array
-   */
-  public function getNotas()
-  {
-    return $this->_notas;
-  }
-
-  /**
    * Adiciona um array de instâncias Avaliacao_Model_FaltaAbstract no boletim.
    *
    * @param array $faltas
@@ -1682,15 +1538,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $this->_faltas[$key] = $falta;
     return $this;
-  }
-
-  /**
-   * Getter.
-   * @return array
-   */
-  public function getFaltas()
-  {
-    return $this->_faltas;
   }
 
   /**
@@ -1724,17 +1571,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $this->_addParecerValidators($parecer);
 
     return $this;
-  }
-
-  /**
-   * Getter para as instâncias de Avaliacao_Model_ParecerDescritivoAbstract
-   * adicionadas no boletim (não persistidas).
-   *
-   * @return array
-   */
-  public function getPareceres()
-  {
-    return $this->_pareceres;
   }
 
   /**
