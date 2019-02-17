@@ -20,7 +20,7 @@ class DeficienciaController extends ApiCoreController
 
     protected function getDeficiencias()
     {
-        $sql = " SELECT cod_deficiencia, nm_deficiencia
+        $sql = " SELECT cod_deficiencia, nm_deficiencia, updated_at
                    FROM cadastro.deficiencia
                   WHERE desconsidera_regra_diferenciada = 'FALSE'";
 
@@ -32,7 +32,8 @@ class DeficienciaController extends ApiCoreController
 
         $attrs = [
             'cod_deficiencia' => 'id',
-            'nm_deficiencia' => 'nome'
+            'nm_deficiencia' => 'nome',
+            'updated_at' => 'updated_at',
         ];
 
         $deficiencias = Portabilis_Array_Utils::filterSet($deficiencias, $attrs);
