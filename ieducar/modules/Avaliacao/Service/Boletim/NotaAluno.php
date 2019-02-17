@@ -12,9 +12,7 @@ trait Avaliacao_Service_Boletim_NotaAluno
     protected $_notaAluno;
 
     /**
-     * Getter.
-     *
-     * @return Avaliacao_Model_NotaAluno|NULL
+     * @return Avaliacao_Model_NotaAluno|null
      */
     protected function _getNotaAluno()
     {
@@ -37,8 +35,6 @@ trait Avaliacao_Service_Boletim_NotaAluno
     }
 
     /**
-     * Setter.
-     *
      * @param Avaliacao_Model_NotaAluno $nota
      *
      * @return $this

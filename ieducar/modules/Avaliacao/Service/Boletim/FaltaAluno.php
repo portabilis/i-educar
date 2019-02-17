@@ -4,16 +4,14 @@ trait Avaliacao_Service_Boletim_FaltaAluno
 {
     /**
      * Uma instância de Avaliacao_Model_FaltaAluno, que é a entrada que contém
-     * o cruzamento de matrícula com as faltas do aluno nos diversos componentes
-     * cursados ou no geral.
+     * o cruzamento de matrícula com as faltas do aluno nos diversos
+     * componentes cursados ou no geral.
      *
      * @var Avaliacao_Model_FaltaAluno
      */
     protected $_faltaAluno;
 
     /**
-     * Getter.
-     *
      * @return Avaliacao_Model_FaltaAluno|null
      */
     protected function _getFaltaAluno()
@@ -37,8 +35,6 @@ trait Avaliacao_Service_Boletim_FaltaAluno
     }
 
     /**
-     * Setter.
-     *
      * @param Avaliacao_Model_FaltaAluno $falta
      *
      * @return $this
