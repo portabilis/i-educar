@@ -36,6 +36,9 @@ class UserType extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function users()
     {
         return $this->hasMany(User::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
