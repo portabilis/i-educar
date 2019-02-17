@@ -100,7 +100,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
-        header('Content-type: application/pdf;');
+        header('Content-Type: application/pdf;');
         header('Content-Disposition: inline;');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . strlen($result));
