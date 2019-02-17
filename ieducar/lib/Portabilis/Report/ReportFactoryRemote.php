@@ -64,7 +64,7 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
             throw new Exception("Encoding {$options['encoding']} not supported!");
         }
 
-        header('Content-type: application/pdf;');
+        header('Content-Type: application/pdf;');
 
         return $report;
     }
