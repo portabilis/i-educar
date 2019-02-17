@@ -18,15 +18,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     use Avaliacao_Service_Boletim_Acessores;
 
   /**
-   * Uma instância de Avaliacao_Model_ParecerDescritivoAluno, que é a entrada
-   * que contém o cruzamento de matrícula com os pareceres do aluno nos diversos
-   * componentes cursados ou no geral.
-   *
-   * @var Avaliacao_Model_ParecerDescritivoAluno
-   */
-  protected $_parecerDescritivoAluno = NULL;
-
-  /**
    * Notas do aluno nos componentes cursados.
    * @var array
    */
@@ -1518,39 +1509,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       return TRUE;
     }
     return FALSE;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setParecerDescritivoAluno(Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno)
-  {
-    $this->_parecerDescritivoAluno = $parecerDescritivoAluno;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_ParecerDescritivoAluno|NULL
-   */
-  protected function _getParecerDescritivoAluno()
-  {
-    if (!is_null($this->_parecerDescritivoAluno)) {
-      return $this->_parecerDescritivoAluno;
-    }
-
-    $parecerDescritivoAluno = $this->getParecerDescritivoAlunoDataMapper()->findAll(
-      array(), array('matricula' => $this->getOption('matricula'))
-    );
-
-    if (0 == count($parecerDescritivoAluno)) {
-      return NULL;
-    }
-
-    $this->_setParecerDescritivoAluno($parecerDescritivoAluno[0]);
-    return $this->_parecerDescritivoAluno;
   }
 
   /**
