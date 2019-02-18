@@ -228,6 +228,13 @@ trait Avaliacao_Service_Boletim_Avaliacao
         return $this;
     }
 
+    public function addFaltaKey($key, $falta)
+    {
+        $this->_faltas[$key] = $falta;
+
+        return $this;
+    }
+
     /**
      * @return array
      */

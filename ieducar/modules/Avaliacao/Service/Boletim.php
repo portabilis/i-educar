@@ -1538,7 +1538,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $falta = $this->_addValidators($falta);
     $falta = $this->_updateEtapa($falta);
 
-    $this->_faltas[$key] = $falta;
+    $this->addFaltaKey($key, $falta);
+
     return $this;
   }
 
