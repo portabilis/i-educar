@@ -294,4 +294,16 @@ trait Avaliacao_Service_Boletim_Avaliacao
     {
         return $this->_pareceresGerais;
     }
+
+    /**
+     * @param array $pareceresGerais
+     *
+     * @return $this
+     */
+    public function setPareceresGerais(array $pareceresGerais)
+    {
+        $this->_pareceresGerais = $pareceresGerais;
+
+        return $this;
+    }
 }

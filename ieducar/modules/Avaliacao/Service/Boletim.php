@@ -425,7 +425,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $pareceresGerais[$parecer->etapa] = $parecer;
       }
 
-      $this->_pareceresGerais = $pareceresGerais;
+      $this->setPareceresGerais($pareceresGerais);
     }
     elseif (in_array($parecerDescritivo, $componentes)) {
       $pareceresComponentes = array();
