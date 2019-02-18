@@ -18,15 +18,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     use Avaliacao_Service_Boletim_Acessores;
 
   /**
-   * Validadores para uma instância de Avaliacao_Model_ParecerDescritivoAbstract
-   * adicionada no boletim.
-   *
-   * @see Avaliacao_Service_Boletim#_addParecerValidators()
-   * @var array
-   */
-  protected $_parecerValidators = NULL;
-
-  /**
    * Prioridade da situação da matrícula, usado para definir a situação
    * das notas e faltas.
    * @var array
@@ -1622,7 +1613,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _addParecerValidators(Avaliacao_Model_ParecerDescritivoAbstract $instance)
   {
-    if (is_null($this->_parecerValidators)) {
+    if (is_null($this->getParecerValidators())) {
       $validators = array();
 
       $anuais = array(
@@ -1661,10 +1652,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
 
       // Armazena os validadores na instância
-      $this->_parecerValidators = $validators;
+      $this->setParecerValidators($validators);
     }
 
-    $validators = $this->_parecerValidators;
+    $validators = $this->getParecerValidators();
 
     // Etapas
     $instance->setValidator('etapa', $validators['etapa']);
