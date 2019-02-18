@@ -19,15 +19,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
     use Avaliacao_Service_Boletim_Acessores;
 
+    private $exemptedStages = [];
+
   /**
    * Prioridade da situação da matrícula, usado para definir a situação
    * das notas e faltas.
    * @var array
    */
-
-  private $notaLancada = NULL;
-  private $exemptedStages = [];
-
   protected $_situacaoPrioridade = array(
     App_Model_MatriculaSituacao::EM_ANDAMENTO        => 1,
     App_Model_MatriculaSituacao::EM_EXAME            => 2,
@@ -1495,8 +1493,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $nota->notaArredondada = $this->arredondaNota($nota);
 
     $this->addNotaItem($key, $nota);
-
-    $this->notaLancada = $nota;
 
     return $this;
   }
