@@ -36,8 +36,6 @@ class CacheManagerTest extends TestCase
      */
     public function testDriverNotSupportTagsDoesNotThrowException()
     {
-        Cache::setDefaultDriver('file');
-
         Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
 
         Cache::invalidateByTags(['testTag']);
@@ -45,8 +43,6 @@ class CacheManagerTest extends TestCase
 
     public function testDriverSupportsPrefixDoesNotThrowException()
     {
-        Cache::setDefaultDriver('redis');
-
         $this->assertFalse(Cache::has('test-key'));
 
         Cache::invalidateByTags(['testTag']);
