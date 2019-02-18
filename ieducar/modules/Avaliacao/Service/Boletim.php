@@ -434,7 +434,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $pareceresComponentes[$parecer->get('componenteCurricular')][] = $parecer;
       }
 
-      $this->_pareceresComponentes = $pareceresComponentes;
+      $this->setPareceresComponentes($pareceresComponentes);
     }
 
     return $this;

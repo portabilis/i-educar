@@ -273,6 +273,18 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
+     * @param array $pareceresComponentes
+     *
+     * @return $this
+     */
+    public function setPareceresComponentes(array $pareceresComponentes)
+    {
+        $this->_pareceresComponentes = $pareceresComponentes;
+
+        return $this;
+    }
+
+    /**
      * Retorna as instâncias de Avaliacao_Model_ParecerDescritivoGeral do
      * aluno.
      *
