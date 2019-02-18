@@ -1569,7 +1569,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $key = 'p_' . spl_object_hash($parecer);
 
-    $this->_pareceres[$key] = $parecer;
+    $this->addParecerKey($key, $parecer);
     $this->_updateParecerEtapa($parecer);
     $this->_addParecerValidators($parecer);
 

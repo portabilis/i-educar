@@ -243,6 +243,13 @@ trait Avaliacao_Service_Boletim_Avaliacao
         return $this->_faltas;
     }
 
+    public function addParecerKey($key, $parecer)
+    {
+        $this->_pareceres[$key] = $parecer;
+
+        return $this;
+    }
+
     /**
      * Getter para as instâncias de Avaliacao_Model_ParecerDescritivoAbstract
      * adicionadas no boletim (não persistidas).
