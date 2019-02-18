@@ -109,14 +109,6 @@ trait Avaliacao_Service_Boletim_Acessores
     protected $_componentes;
 
     /**
-     * Instância da regra de avaliação, com o qual o serviço irá utilizar para
-     * decidir o fluxo da lógica.
-     *
-     * @var RegraAvaliacao_Model_Regra
-     */
-    protected $_regra;
-
-    /**
      * @see CoreExt_Configurable::getOptions()
      *
      * @return array

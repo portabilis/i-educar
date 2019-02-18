@@ -1026,7 +1026,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         // Calcula a porcentagem de falta no componente
         $faltasComponentes[$id]->porcentagemFalta =
-          $this->_calculatePorcentagem($this->_componentes[$id]->cargaHoraria,
+          $this->_calculatePorcentagem($componentes[$id]->cargaHoraria,
             $faltasComponentes[$id]->horasFaltas, FALSE);
 
         // Calcula a porcentagem de presença no componente
@@ -2387,7 +2387,10 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       foreach ($this->getNotasComponentes() as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
         //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
-        if(!isset($this->_currentComponenteCurricular) || $this->_currentComponenteCurricular == $id){
+
+        $currentComponenteCurricular = $this->getCurrentComponenteCurricular();
+
+        if(!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id){
           // Cria um array onde o índice é a etapa
           $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
           $qtdeEtapas = $this->getOption('etapas');
