@@ -217,6 +217,18 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
+     * @param array $faltasGerais
+     *
+     * @return $this
+     */
+    public function setFaltasGerais(array $faltasGerais)
+    {
+        $this->_faltasGerais = $faltasGerais;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getFaltas()

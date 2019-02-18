@@ -371,7 +371,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $faltasGerais[$falta->etapa] = $falta;
       }
 
-      $this->_faltasGerais = $faltasGerais;
+      $this->setFaltasGerais($faltasGerais);
     }
     // Separa cada nota em um array indexado pelo identity field do componente
     elseif ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
@@ -980,7 +980,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
     if ($tipoFaltaGeral) {
-      $faltas = $this->_faltasGerais;
+      $faltas = $this->getFaltasGerais();
 
       if (0 == count($faltas)) {
         $total = 0;
@@ -1705,8 +1705,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Se for falta e do tipo geral, verifica qual foi a última etapa
     if ($instance instanceof Avaliacao_Model_FaltaGeral) {
-      if (0 < count($this->_faltasGerais)) {
-        $etapas = CoreExt_Entity::entityFilterAttr($this->_faltasGerais, 'id', 'etapa');
+      if (0 < count($this->getFaltasGerais())) {
+        $etapas = CoreExt_Entity::entityFilterAttr($this->getFaltasGerais(), 'id', 'etapa');
         $proximaEtapa = max($etapas) + 1;
       }
     }
