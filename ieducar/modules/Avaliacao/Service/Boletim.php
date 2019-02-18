@@ -18,15 +18,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     use Avaliacao_Service_Boletim_Acessores;
 
   /**
-   * Validadores para instâncias de Avaliacao_Model_FaltaAbstract e
-   * Avaliacao_Model_NotaComponente.
-   *
-   * @see Avaliacao_Service_Boletim#_addValidators()
-   * @var array
-   */
-  protected $_validators = NULL;
-
-  /**
    * Validadores para uma instância de Avaliacao_Model_ParecerDescritivoAbstract
    * adicionada no boletim.
    *
@@ -1590,7 +1581,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $validators = array();
 
     // Como os componentes serão os mesmos, fazemos cache do validador
-    if (is_null($this->_validators)) {
+    if (is_null($this->getValidators())) {
 
       $componentes = $this->getComponentes();
       $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
@@ -1608,10 +1599,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         array('choices' => $etapas
       ));
 
-      $this->_validators = $validators;
+      $this->setValidators($validators);
     }
 
-    $validators = $this->_validators;
+    $validators = $this->getValidators();
 
     if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
