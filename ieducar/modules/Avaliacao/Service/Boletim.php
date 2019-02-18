@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
@@ -44,6 +46,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * - NotaAlunoDataMapper (Avaliacao_Model_NotaAlunoDataMapper), opcional
    *
    * @param array $options
+   *
+   * @throws App_Model_Exception
+   * @throws CoreExt_Service_Exception
+   * @throws EvaluationRuleNotDefinedInLevel
+   * @throws StudentNotEnrolledInSchoolClass
+   * @throws Exception
    */
   public function __construct(array $options = array())
   {
@@ -198,10 +206,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return NULL;
   }
 
-
   /**
-   * Setter.
-   * @return App_Service_Boletim Provê interface fluída
+   * @return $this
+   *
+   * @throws App_Model_Exception
+   * @throws StudentNotEnrolledInSchoolClass
+   * @throws EvaluationRuleNotDefinedInLevel
    */
   protected function _setMatriculaInfo()
   {
@@ -251,7 +261,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * Carrega todas as notas e médias já lançadas para a matrícula atual.
    *
    * @param bool $loadMedias FALSE caso não seja necessário carregar as médias
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadNotas($loadMedias = TRUE)
   {
@@ -295,7 +308,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega as médias dos componentes curriculares já lançadas.
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadMedias()
   {
@@ -328,7 +344,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega as faltas do aluno, sejam gerais ou por componente.
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadFalta()
   {
@@ -371,7 +390,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega os pareceres do aluno, sejam gerais ou por componentes.
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadParecerDescritivo()
   {
