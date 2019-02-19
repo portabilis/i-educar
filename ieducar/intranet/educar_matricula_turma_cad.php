@@ -97,7 +97,7 @@ class indice extends clsCadastro
     }
   }
 
-  function novaEnturmacao($matriculaId, $turmaDestinoId) {
+  function novaEnturmacao($matriculaId, $turmaDestinoId, $turnoId = null) {
     if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
         return false;
     }
@@ -115,20 +115,23 @@ class indice extends clsCadastro
 
     $enturmacaoExists = is_array($enturmacaoExists) && count($enturmacaoExists) > 0;
 
-    if (!$enturmacaoExists) {
-      $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
-                                                   $turmaDestinoId,
-                                                   $this->pessoa_logada,
-                                                   $this->pessoa_logada,
-                                                   NULL,
-                                                   NULL,
-                                                   1);
-
-      $enturmacao->data_enturmacao = $this->data_enturmacao;
-      $this->atualizaUltimaEnturmacao($matriculaId);
-      return $enturmacao->cadastra();
+    if ($enturmacaoExists) {
+        return false;
     }
-    return false;
+
+    $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
+      $turmaDestinoId,
+      $this->pessoa_logada,
+      $this->pessoa_logada,
+      NULL,
+      NULL,
+      1);
+
+    $enturmacao->data_enturmacao = $this->data_enturmacao;
+
+    $enturmacao->turno_id = $turnoId;
+    $this->atualizaUltimaEnturmacao($matriculaId);
+    return $enturmacao->cadastra();
   }
 
   public function validaDataEnturmacao($matriculaId, $turmaDestinoId)
@@ -164,8 +167,20 @@ class indice extends clsCadastro
         return false;
     }
 
+    $turnoId = null;
+
+    if ($this->isTurmaIntegral($turmaDestinoId)) {
+        $sequencialEnturmacaoAnterior = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaOrigemId);
+        $enturmacao = new clsPmieducarMatriculaTurma;
+        $enturmacao->ref_cod_matricula = $matriculaId;
+        $enturmacao->ref_cod_turma = $turmaOrigemId;
+        $enturmacao->sequencial = $sequencialEnturmacaoAnterior;
+        $dadosEnturmacaoAnterior = $enturmacao->detalhe();
+        $turnoId = $dadosEnturmacaoAnterior['turno_id'];
+    }
+
     if($this->removerEnturmacao($matriculaId, $turmaOrigemId, TRUE)) {
-      return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
+        return $this->novaEnturmacao($matriculaId, $turmaDestinoId, $turnoId);
     }
 
     return false;
@@ -204,6 +219,7 @@ class indice extends clsCadastro
                                                  NULL,
                                                  $sequencialEnturmacao);
     $detEnturmacao = $enturmacao->detalhe();
+
     $detEnturmacao = $detEnturmacao['data_enturmacao'];
     $enturmacao->data_enturmacao = $detEnturmacao;
 
@@ -290,6 +306,13 @@ class indice extends clsCadastro
 
   function Excluir()
   {
+  }
+
+  public function isTurmaIntegral($turmaId)
+  {
+    $turma         = new clsPmieducarTurma($turmaId);
+    $turma         = $turma->detalhe();
+    return $turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL;
   }
 }
 

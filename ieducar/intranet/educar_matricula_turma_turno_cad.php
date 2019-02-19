@@ -66,7 +66,7 @@ class indice extends clsCadastro
         );
 
         $turnos = [
-            null => 'Selecione',
+            0 => 'Selecione',
             clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
             clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino'
         ];
