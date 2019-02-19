@@ -62,15 +62,22 @@ class indice extends clsCadastro
             null, null, null, null, null, 1, null, null, null,
             null, null, null, null, null, null, null, null, false,
             null, null, null, false, false, false, null, null,
-            false, null, false, false, false, null, true
+            false, null, false, false, false
         );
 
-        $sql = 'select id, nome from pmieducar.turma_turno where ativo = 1 order by id DESC';
-        $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql);
-        $turnos = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
-        $turnos = ['' => 'Nenhum'] + $turnos;
+        $turnos = [
+            null => 'Selecione',
+            clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
+            clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino'
+        ];
 
         foreach ($enturmacoes as $enturmacao) {
+            $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
+            $turma         = $turma->detalhe();
+            if ($turma['turma_turno_id'] != clsPmieducarTurma::TURNO_INTEGRAL) {
+                continue;
+            }
+            
             $this->campoLista("turno[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Turno do aluno na turma: {$enturmacao['nm_turma']}", $turnos, $enturmacao['turno_id'], '', false, '', '', false, false);
         }
     }
