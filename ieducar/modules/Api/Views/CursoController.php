@@ -31,13 +31,26 @@ class CursoController extends ApiCoreController
                     $escolaId = implode(",", $escolaId);
                 }
 
-                $sql = "SELECT DISTINCT c.cod_curso, c.nm_curso, c.updated_at
-                  FROM pmieducar.curso c
-                  INNER JOIN pmieducar.escola_curso ec ON ec.ref_cod_curso = c.cod_curso
-                  WHERE c.ativo = 1
-                  AND ec.ativo = 1
-                  AND c.ref_cod_instituicao = $1
-                  AND ec.ref_cod_escola IN ($escolaId) ";
+                $sql = "
+                    SELECT DISTINCT 
+                        c.cod_curso, 
+                        c.nm_curso,
+                        c.updated_at,
+                        (
+                            CASE c.ativo WHEN 1 THEN 
+                                NULL 
+                            ELSE 
+                                c.data_exclusao::timestamp(0)
+                            END
+                        ) AS deleted_at
+                    FROM pmieducar.curso c
+                    INNER JOIN pmieducar.escola_curso ec ON TRUE 
+                        AND ec.ref_cod_curso = c.cod_curso
+                    WHERE TRUE 
+                        AND c.ref_cod_instituicao = $1
+                        AND ec.ativo = 1
+                        AND ec.ref_cod_escola IN ($escolaId) 
+                ";
 
                 if (!empty($ano)) {
                     $params[] = $ano;
@@ -46,11 +59,23 @@ class CursoController extends ApiCoreController
 
                 $sql .= ' ORDER BY c.nm_curso ASC ';
             } else {
-                $sql = "SELECT cod_curso, nm_curso, updated_at
-                  FROM pmieducar.curso
-                    WHERE ref_cod_instituicao = $1
-                    AND ativo = 1
-                    ORDER BY nm_curso ASC ";
+                $sql = "
+                    SELECT 
+                        cod_curso, 
+                        nm_curso, 
+                        updated_at,
+                        (
+                            CASE ativo WHEN 1 THEN 
+                                NULL 
+                            ELSE 
+                                data_exclusao::timestamp(0)
+                            END
+                        ) AS deleted_at
+                    FROM pmieducar.curso
+                    WHERE TRUE 
+                        AND ref_cod_instituicao = $1
+                    ORDER BY nm_curso ASC 
+                ";
             }
 
             $cursos = $this->fetchPreparedQuery($sql, $params);
@@ -103,6 +128,7 @@ class CursoController extends ApiCoreController
                 'cod_curso' => 'id',
                 'nm_curso' => 'nome',
                 'updated_at' => 'updated_at',
+                'deleted_at' => 'deleted_at',
             ];
 
             if ($getSeries) {
