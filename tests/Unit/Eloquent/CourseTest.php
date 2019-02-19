@@ -2,19 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Course;
+use Tests\EloquentTestCase;
 
-class CourseTest extends TestCase
+class CourseTest extends EloquentTestCase
 {
     /**
-     * A basic test example.
-     *
-     * @return void
+     * @return string
      */
-    public function testExample()
+    protected function getEloquentModelName()
     {
-        $this->assertTrue(true);
+        return Course::class;
     }
 }
