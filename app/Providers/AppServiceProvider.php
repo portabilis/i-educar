@@ -85,7 +85,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Request::macro('getSubdomain', function () {
-            return Str::replaceFirst('.' . config('app.default_host'), '', $this->getHost());
+            $host = str_replace('-', '', $this->getHost());
+            return Str::replaceFirst('.' . config('app.default_host'), '', $host);
         });
 
         // https://laravel.com/docs/5.5/migrations#indexes
