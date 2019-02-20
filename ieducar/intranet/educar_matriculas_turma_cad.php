@@ -473,6 +473,8 @@ $pagina->MakeAll();
 ?>
 
 <script type="text/javascript">
+$j('#btn_enviar').removeAttr('onclick');
+addOnConfirm();
 
     function fixUpCheckBoxes() {
         $j('input[name^=check_desenturma]').each(function (index, element) {
@@ -513,5 +515,29 @@ $pagina->MakeAll();
             }
         }
     }
-    
+
+    function addOnConfirm() {
+        $j('#btn_enviar').attr('onclick', 'confirm()');
+    }
+
+    function confirm() {
+        $j('#btn_enviar').dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "confirmar": function() {
+                    $j( this ).dialog( "close" );
+                    acao();
+                },
+                'Cancelar': function() {
+                    $j( this ).dialog( "close" );
+                    console.log('cancelado');
+                }
+            }
+        });
+    }
+
+
 </script>
