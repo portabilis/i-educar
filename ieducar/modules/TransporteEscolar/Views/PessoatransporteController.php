@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Support\View\SelectOptions;
+
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
@@ -128,20 +130,9 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
         ];
         $this->inputsHelper()->textArea('observacao', $options);
 
-        // turno
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('turno')), 'required' => false];
         $this->inputsHelper()->select('turno', [
             'required' => false,
-            'resources' => [
-                0 => 'Selecione',
-                1 => 'Matutino',
-                2 => 'Vespertino',
-                3 => 'Noturno',
-                4 => 'Integral',
-                5 => 'Matutino e vespertino',
-                6 => 'Matutino e noturno',
-                7 => 'Vespertino e noturno'
-            ]
+            'resources' => SelectOptions::transportPeriods(),
         ]);
 
         $this->loadResourceAssets($this->getDispatcher());
