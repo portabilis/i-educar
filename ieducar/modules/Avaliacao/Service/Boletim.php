@@ -1428,23 +1428,40 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $situacao;
   }
 
-    private function getStagesQuantity($enrollmentId, $classroomId, $disciplineId)
+    private function getLastStage($enrollmentId, $classroomId, $disciplineId)
     {
-        $stagesQuantity = $this->getOption('etapas');
+        $stages = range(1, $this->getOption('etapas'));
         $exemptedStages = $this->getExemptedStages($enrollmentId, $disciplineId);
 
         if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
             $specificStagesString = App_Model_IedFinder::getEtapasComponente($classroomId, $disciplineId);
 
             if ($specificStagesString) {
-                $specificStages = explode(',', $specificStagesString);
-                $stagesQuantity = count(array_diff($specificStages, $exemptedStages));
+                $stages = explode(',', $specificStagesString);
             }
-        } else {
-            $stagesQuantity -= count($exemptedStages);
         }
 
-        return $stagesQuantity;
+        $stages = array_diff($stages, $exemptedStages);
+
+        return max($stages);
+    }
+
+    private function deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId)
+    {
+        Portabilis_Utils_Database::fetchPreparedQuery('
+            DELETE FROM modules.nota_componente_curricular_media
+            WHERE nota_aluno_id = $1
+            AND NOT EXISTS(
+                SELECT 1
+                FROM modules.nota_componente_curricular
+                WHERE nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id
+                AND nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id
+            )
+        ', [
+            'params' => [
+                $notaAlunoId,
+            ]
+        ]);
     }
 
   /**
@@ -1569,6 +1586,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         unset($mediasComponentes[$disciplinaDispensadaTurma]);
     }
 
+    $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno);
+
     if (!$calcularSituacaoAluno) {
         // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
         // curriculares da matrícula, ainda está em andamento
@@ -1576,9 +1595,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
              && $this->getRegra()->get('definirComponentePorEtapa') != "1") {
           $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }
+    } elseif($calcularSituacaoAluno && count($mediasComponenentesTotal) < $totalComponentes) {
+        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
-
-    $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno);
 
     if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
          && $this->getRegra()->get('definirComponentePorEtapa') == "1"){
@@ -1596,7 +1615,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $qtdComponentes++;
       $somaMedias += $media;
 
-      $totalEtapasComponente = $this->getStagesQuantity($matriculaId, $turmaId, $id);
+      $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
       if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
 
@@ -1604,7 +1623,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if($getCountNotaCC[0]['cc'] == 0) $etapa = 0;
 
-        if ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc'){
+        if ($etapa < $lastStage && (string)$etapa != 'Rc'){
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
@@ -1633,7 +1652,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $permiteSituacaoEmExame = FALSE;
       }
 
-      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media && $this->hasRecuperacao() && $permiteSituacaoEmExame) {
+      if ($etapa == $lastStage && $media < $this->getRegra()->media && $this->hasRecuperacao() && $permiteSituacaoEmExame) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
@@ -1645,7 +1664,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           }
         }
       }
-      elseif ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media) {
+      elseif ($etapa == $lastStage && $media < $this->getRegra()->media) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
@@ -1656,7 +1675,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
-      elseif ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc') {
+      elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
       }
       else {
@@ -1830,8 +1849,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           100 - $faltasComponentes[$id]->porcentagemFalta;
 
         // Na última etapa seta situação presença como aprovado ou reprovado.
-        $stagesQuantity = $this->getStagesQuantity($enrollmentId, $classroomId, $id);
-        if ($etapa == $stagesQuantity || $etapa == 'Rc') {
+        $lastStage = $this->getLastStage($enrollmentId, $classroomId, $id);
+        if ($etapa == $lastStage || $etapa == 'Rc') {
           $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
           $faltasComponentes[$id]->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                                           App_Model_MatriculaSituacao::REPROVADO;
@@ -3325,6 +3344,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       $matriculaId = $infosMatricula['cod_matricula'];
       $serieId = $infosMatricula['ref_ref_cod_serie'];
       $escolaId = $infosMatricula['ref_ref_cod_escola'];
+      $notaAlunoId = $this->_getNotaAluno()->id;
 
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
@@ -3374,7 +3394,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
           // Cria uma nova instância de média, já com a nota arredondada e a etapa
           $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
-            'notaAluno' => $this->_getNotaAluno()->id,
+            'notaAluno' => $notaAlunoId,
             'componenteCurricular' => $id,
             'media' => $media,
             'mediaArredondada' => $this->arredondaMedia($media),
@@ -3403,6 +3423,8 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
         }
       }
+
+      $this->deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId);
     }
   }
 
