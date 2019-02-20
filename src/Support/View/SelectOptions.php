@@ -13,7 +13,7 @@ class SelectOptions
      */
     public static function getDefaultOption()
     {
-        return [0 => 'Selecione'];
+        return ['' => 'Selecione'];
     }
 
     /**
