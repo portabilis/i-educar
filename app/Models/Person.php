@@ -25,15 +25,14 @@ class Person extends EloquentBaseModel implements Transformable
     protected $primaryKey = 'idpes';
 
     /**
+     * @var array
+     */
+    protected $fillable = [
+        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao', 'idsis_cad',
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [];
-
 }

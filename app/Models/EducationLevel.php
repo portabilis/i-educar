@@ -4,23 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EvaluationRule extends Model
+class EducationLevel extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'modules.regra_avaliacao';
+    protected $table = 'pmieducar.nivel_ensino';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'cod_nivel_ensino';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
+        'ref_usuario_cad', 'nm_nivel', 'data_cadastro', 'ref_cod_instituicao',
     ];
 
     /**

@@ -4,23 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EvaluationRule extends Model
+class RegimeType extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'modules.regra_avaliacao';
+    protected $table = 'pmieducar.tipo_regime';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'cod_tipo_regime';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
+        'ref_usuario_cad', 'nm_tipo', 'data_cadastro', 'ativo', 'ref_cod_instituicao',
     ];
 
     /**

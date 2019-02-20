@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EvaluationRule extends Model
+class DisciplineScore extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'modules.regra_avaliacao';
+    protected $table = 'modules.nota_componente_curricular';
 
     /**
      * @var string
@@ -20,7 +20,7 @@ class EvaluationRule extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
+        'nota_aluno_id', 'componente_curricular_id', 'etapa',
     ];
 
     /**
