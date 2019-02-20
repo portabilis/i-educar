@@ -3033,6 +3033,6 @@ public function alterarSituacao($novaSituacao, $matriculaId){
      */
     public function getRegrasRecuperacao()
     {
-        return $this->getRegraAvaliacao()->findRegraRecuperacao();;
+        return $this->getRegraAvaliacao()->findRegraRecuperacao();
     }
 }
