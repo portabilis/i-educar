@@ -3375,7 +3375,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
               'media' => $media,
               'mediaArredondada' => $this->arredondaMedia($media),
               'etapa' => $etapa,
-              'bloqueada' => false,
+              'bloqueada' => 'f',
             ));
           }
 
