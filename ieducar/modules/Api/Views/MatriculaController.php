@@ -507,7 +507,6 @@ class MatriculaController extends ApiCoreController
             if (
                 $situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
                 $situacaoNova == App_Model_MatriculaSituacao::ABANDONO ||
-                $situacaoNova == App_Model_MatriculaSituacao::FALECIDO ||
                 $situacaoNova == App_Model_MatriculaSituacao::FALECIDO
             ) {
                 if ($enturmacoes) {
