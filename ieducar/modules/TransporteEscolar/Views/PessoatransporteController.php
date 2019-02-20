@@ -88,7 +88,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
         $this->inputsHelper()->integer('id', $options);
 
         // Pessoa
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('pessoa')), 'required' => true];
+        $options = ['label' => $this->_getLabel('pessoa'), 'required' => true];
         $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
         // Montar o inputsHelper->select \/
@@ -103,7 +103,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
         // Rota
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('rota')),
+            'label' => $this->_getLabel('rota'),
             'required' => true,
             'resources' => $rota_resources
         ];
@@ -111,19 +111,19 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
         // Ponto de Embarque
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ponto')),
+            'label' => $this->_getLabel('ponto'),
             'required' => false,
             'resources' => ['' => 'Selecione uma rota acima']
         ];
         $this->inputsHelper()->select('ponto', $options);
 
         // Destino
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('destino')), 'required' => false];
+        $options = ['label' => $this->_getLabel('destino'), 'required' => false];
         $this->inputsHelper()->simpleSearchPessoaj('destino', $options);
 
         // observacoes
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')),
+            'label' => $this->_getLabel('observacao'),
             'required' => false,
             'size' => 50,
             'max_length' => 255
