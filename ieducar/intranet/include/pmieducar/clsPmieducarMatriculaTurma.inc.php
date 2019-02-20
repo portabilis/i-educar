@@ -1553,7 +1553,7 @@ class clsPmieducarMatriculaTurma
   }
 
   function marcaAlunoAbandono($data = null){
-    $data = implode( '-', array_reverse( explode( '/', $data ) ) );
+    $data =  $data ? implode( '-', array_reverse( explode( '/', $data ) ) ) : date('Y-m-d');
     if ($this->ref_cod_matricula && $this->sequencial){
         $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = true, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
