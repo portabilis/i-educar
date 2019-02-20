@@ -100,7 +100,7 @@ class indice extends clsListagem
     $this->addCabecalhos(array(
       'Sequencial',
       'Turma',
-      'Turno',
+      'Turno do aluno',
       'Ativo',
       'Data de enturmação',
       'Data de saída',
@@ -190,6 +190,9 @@ class indice extends clsListagem
           ));
       }
     }
+
+    $this->addLinhas('<small>A coluna "Turno do aluno" permanecerá em branco quando o turno do aluno for o mesmo da turma.</small>');
+
     $this->addPaginador2( "educar_matricula_historico_lst.php", $total, $_GET, $this->nome, $this->limite );
 
     $this->acao = "go(\"educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}\")";
