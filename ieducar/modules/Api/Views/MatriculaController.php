@@ -527,11 +527,13 @@ class MatriculaController extends ApiCoreController
                     }
                 }
 
-                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                    ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0]->get('id');
+                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                    ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0];
 
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, $situacaoNova);
+                if (!is_null($notaAluno)) {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAluno->get('id'), $situacaoNova);
+                }
             } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
                 if ($enturmacoes) {
                     $params = [$matriculaId];
