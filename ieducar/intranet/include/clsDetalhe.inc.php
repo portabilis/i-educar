@@ -28,6 +28,9 @@
  * @version   $Id$
  */
 
+use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\View;
+
 require_once 'Core/Controller/Page/Abstract.php';
 require_once 'include/localizacaoSistema.php';
 
@@ -152,16 +155,10 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     }
 
     if ($this->locale){
+        app(Breadcrumb::class)->setLegacy($this->locale);
+    }
 
-      $retorno .=  "
-        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
-
-      $retorno .=  "<tr height='10px'>
-                      <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
-                    </tr>";
-
-      $retorno .= "</table>";
-    }    
+    View::share('title', $this->titulo);
 
     $retorno .= "
       <!-- detalhe begin -->

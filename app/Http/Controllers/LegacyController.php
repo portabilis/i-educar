@@ -7,6 +7,7 @@ use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -217,7 +218,11 @@ class LegacyController extends Controller
      */
     private function startLegacySession()
     {
-        @session_start();
+        try {
+            session_start();
+        } catch (Exception $e) {
+
+        }
     }
 
     /**

@@ -94,7 +94,7 @@ class indice extends clsListagem
       $this->addCabecalhos(array("CPF", "Nome"));
 
       // Filtros de Busca
-      $this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
+      $this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 35, 255, false, false, false, "Código/Nome" );
       $this->campoCpf( "cpf", "CPF", ($this->cpf)?int2CPF(idFederal2int($this->cpf)):"" );
 
       $chave_busca = @$_GET['campo_busca'];
@@ -180,7 +180,7 @@ class indice extends clsListagem
             $this->addCabecalhos( array( "CNPJ", "Nome" ) );
 
             // Filtros de Busca
-            $this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
+            $this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 35, 255, false, false, false, "Código/Nome" );
             if( $this->cnpj )
             {
                 if( is_numeric($this->cnpj) )
