@@ -309,7 +309,7 @@ class clsCadastro extends clsCampos
     $applicationTitle = $this->titulo_aplication ?? '';
     $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
-    View::share('title', $this->titulo);
+    View::share('title', $this->getPageTitle());
     /**
      * Adiciona os botoes de help para a pagina atual
      */
@@ -816,5 +816,21 @@ class clsCadastro extends clsCampos
   {
     $obj_permissoes = new clsPermissoes();
     return $obj_permissoes->nivel_acesso($this->currentUserId());
+  }
+
+    /**
+     * @return string
+     */
+    private function getPageTitle()
+  {
+      if (isset($this->titulo)) {
+          return $this->titulo;
+      }
+
+      if (isset($this->_titulo)) {
+          return $this->_titulo;
+      }
+
+      return '';
   }
 }
