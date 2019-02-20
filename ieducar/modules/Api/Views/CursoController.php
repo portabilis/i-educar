@@ -23,8 +23,9 @@ class CursoController extends ApiCoreController
             $getTurmas = (bool) $this->getRequest()->get_turmas;
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
             $turnoId = $this->getRequest()->turno_id;
+            $modified = $this->getRequest()->modified ?: null;
 
-            $params = [ $this->getRequest()->instituicao_id ];
+            $params = [$instituicaoId];
 
             if ($escolaId) {
                 if (is_array($escolaId)) {
@@ -52,13 +53,21 @@ class CursoController extends ApiCoreController
                         AND ec.ref_cod_escola IN ($escolaId) 
                 ";
 
+                if ($modified) {
+                    $params[] = $modified;
+                    $sql .= ' AND c.updated_at >= $2';
+                }
+
                 if (!empty($ano)) {
                     $params[] = $ano;
-                    $sql .= ' AND $2 = ANY(ec.anos_letivos) ';
+                    $sql .= $modified
+                        ? ' AND $3 = ANY(ec.anos_letivos) '
+                        : ' AND $2 = ANY(ec.anos_letivos) ';
                 }
 
                 $sql .= ' ORDER BY c.nm_curso ASC ';
             } else {
+
                 $sql = "
                     SELECT 
                         cod_curso, 
@@ -74,8 +83,14 @@ class CursoController extends ApiCoreController
                     FROM pmieducar.curso
                     WHERE TRUE 
                         AND ref_cod_instituicao = $1
-                    ORDER BY nm_curso ASC 
                 ";
+
+                if ($modified) {
+                    $params[] = $modified;
+                    $sql .= ' AND updated_at >= $2';
+                }
+
+                $sql .= ' ORDER BY nm_curso ASC';
             }
 
             $cursos = $this->fetchPreparedQuery($sql, $params);
