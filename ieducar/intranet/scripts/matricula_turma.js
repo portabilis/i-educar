@@ -67,9 +67,9 @@ addOnConfirm();
         if (checkedDesenturmados() && checkedEnturmados()){
             return ['Enturmação das matriculas.',
                     'Desenturmação das matriculas.'];
-        } else if (checkedDesenturmados()) {
-            return ['Enturmação das matriculas.']
         } else if (checkedEnturmados()) {
+            return ['Enturmação das matriculas.']
+        } else if (checkedDesenturmados()) {
             return ['Desenturmação das matriculas.']
         } else {
             return ['Nenhuma ação realizada'];
