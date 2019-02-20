@@ -64,7 +64,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
         $html .= $form->getAppendedOutput();
         $html .= $viewBase->MakeFootHtml();
 
-        echo $html;
+        echo view('legacy.body', ['body' => $html])->render();
     }
 
     /**

@@ -32,6 +32,12 @@ class IniConfig extends CoreConfig
     public function __construct($filename, $section = 'production')
     {
         $this->iniArr = $this->loadFile($filename);
+
+        if (!isset($this->iniArr[$section])) {
+            $message = sprintf('Seção %s não encontrada no arquivo', $section);
+            throw new Exception($message);
+        }
+
         parent::__construct($this->iniArr[$section]);
     }
 

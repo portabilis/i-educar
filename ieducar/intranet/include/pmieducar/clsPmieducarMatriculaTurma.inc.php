@@ -1462,6 +1462,25 @@ class clsPmieducarMatriculaTurma
     ");
   }
 
+
+  public function getMaiorDataEnturmacao(int $codMatricula)
+  {
+    $db = new clsBanco();
+
+    return $db->CampoUnico("
+        select
+            to_char(data_enturmacao, 'YYYY-MM-DD')
+        from
+            pmieducar.matricula_turma
+        where true
+            and ref_cod_matricula = $codMatricula
+            and data_enturmacao is not null
+        order by
+            data_enturmacao desc
+        limit 1
+    ");
+  }
+
  function getUltimaEnturmacao($ref_matricula){
     if (is_numeric($ref_matricula)){
       $db = new clsBanco();

@@ -30,6 +30,8 @@
  * @version     $Id$
  */
 
+use Illuminate\Support\Facades\Cache;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -272,6 +274,9 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
             $auditoria->inclusao($tipo_usuario);
 
+            // Reseta os caches de menu
+            Cache::invalidateByTags(['menu', 'topmenu']);
+
             $this->createMenuTipoUsuario();
         }
 
@@ -293,6 +298,10 @@ class indice extends clsCadastro
             $detalheAtual = $tipoUsuario->detalhe();
             $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
+
+            // Reseta os caches de menu
+            Cache::invalidateByTags(['menu', 'topmenu']);
+
             $this->createMenuTipoUsuario();
         }
 
