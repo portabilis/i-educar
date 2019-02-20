@@ -116,21 +116,16 @@ class CursoController extends ApiCoreController
                     AND t.ref_ref_cod_escola IN ({$escolaId}) ";
 
             foreach ($cursos as &$curso) {
-                $curso['nm_curso'] = Portabilis_String_Utils::toUtf8($curso['nm_curso']);
                 if ($getSeries) {
                     $series = $this->fetchPreparedQuery($sqlSerie . " AND s.ref_cod_curso = {$curso['cod_curso']} ORDER BY s.nm_serie ASC", $paramsSerie);
 
                     $attrs = array('cod_serie' => 'id', 'nm_serie' => 'nome');
                     foreach ($series as &$serie) {
-                        $serie['nm_serie'] = Portabilis_String_Utils::toUtf8($serie['nm_serie']);
-
                         if ($getTurmas && is_numeric($ano) && !empty($escolaId)) {
                             $turmas = $this->fetchPreparedQuery($sqlTurma . " AND t.ref_cod_curso = {$curso['cod_curso']} AND t.ref_ref_cod_serie = {$serie['cod_serie']}
                   " . (is_numeric($turnoId) ? " AND t.turma_turno_id = {$turnoId} " : "") . "
                ORDER BY t.nm_turma ASC");
-                            foreach ($turmas as &$turma) {
-                                $turma['nm_turma'] = Portabilis_String_Utils::toUtf8($turma['nm_turma']);
-                            }
+
                             $attrs['turmas'] = 'turmas';
                             $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, ['cod_turma', 'nm_turma', 'escola_id', 'turma_turno_id', 'ano']);
                         }
@@ -168,10 +163,6 @@ class CursoController extends ApiCoreController
                AND instituicao.cod_instituicao = $instituicaoId";
 
         $cursos = $this->fetchPreparedQuery($sql);
-
-        foreach ($cursos as &$curso) {
-            $curso['nome'] = Portabilis_String_Utils::toUtf8($curso['nome']);
-        }
 
         $cursos = Portabilis_Array_Utils::setAsIdValue($cursos, 'id', 'nome');
 
