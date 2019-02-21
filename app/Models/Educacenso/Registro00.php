@@ -203,4 +203,35 @@ class Registro00 implements RegistroEducacenso
      * @var string Campo 40
      */
     public $unidadeVinculada;
+
+    /**
+     * @var string Campo usado na validação
+     */
+    public $mantenedoraEscolaPrivada;
+
+    /**
+     * @var integer Campo usado na validação
+     */
+    public $idEscola;
+
+    /**
+     * @var integer Campo usado na validação
+     */
+    public $idInstituicao;
+
+    /**
+     * @var integer Campo usado na validação
+     */
+    public $idMunicipio;
+
+    /**
+     * @var integer Campo usado na validação
+     */
+    public $idDistrito;
+
+    /**
+     * @var string Campo usado na validação
+     */
+    public $siglaUf;
+
 }
