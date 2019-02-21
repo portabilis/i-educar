@@ -1014,14 +1014,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if ($etapa < $lastStage && (string)$etapa != 'Rc'){
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-        }else{
-          $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
-        }
-        if ($etapa < $totalEtapas && (string)$etapa != 'Rc'){
           $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
+          $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
           $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
         }
+
         continue;
       }
 
