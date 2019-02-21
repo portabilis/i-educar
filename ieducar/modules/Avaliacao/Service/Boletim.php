@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
@@ -17,126 +19,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
     use Avaliacao_Service_Boletim_Acessores;
 
-  /**
-   * Uma instância de Avaliacao_Model_NotaAluno, que é a entrada que contém
-   * o cruzamento de matrícula com as notas do aluno nos diversos componentes
-   * cursados.
-   *
-   * @var Avaliacao_Model_NotaAluno
-   */
-  protected $_notaAluno = NULL;
-
-  /**
-   * Uma instância de Avaliacao_Model_FaltaAluno, que é a entrada que contém
-   * o cruzamento de matrícula com as faltas do aluno nos diversos componentes
-   * cursados ou no geral.
-   *
-   * @var Avaliacao_Model_NotaAluno
-   */
-  protected $_faltaAluno = NULL;
-
-  /**
-   * Uma instância de Avaliacao_Model_ParecerDescritivoAluno, que é a entrada
-   * que contém o cruzamento de matrícula com os pareceres do aluno nos diversos
-   * componentes cursados ou no geral.
-   *
-   * @var Avaliacao_Model_ParecerDescritivoAluno
-   */
-  protected $_parecerDescritivoAluno = NULL;
-
-  /**
-   * Notas do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_notasComponentes = array();
-
-  /**
-   * Notas do aluno por etapa.
-   * @var array
-   */
-  protected $_notasGerais = array();
-
-  /**
-   * Médias do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_mediasComponentes = array();
-
- /**
-   * Média geral do aluno.
-   * @var array
-   */
-  protected $_mediasGerais = array();
-
-  /**
-   * Notas adicionadas no boletim para inclusão ou edição.
-   * @var array
-   */
-  protected $_notas = array();
-
-  /**
-   * Faltas do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_faltasComponentes = array();
-
-  /**
-   * Faltas do aluno no geral.
-   * @var array
-   */
-  protected $_faltasGerais = array();
-
-  /**
-   * Faltas adicionadas no boletim para inclusão ou edição.
-   * @var array
-   */
-  protected $_faltas = array();
-
-  /**
-   * Pareceres descritivos adicionados no boletim para inclusão ou edição.
-   * @var array
-   */
-  protected $_pareceres = array();
-
-  /**
-   * Pareceres descritivos do aluno nos componentes cursados.
-   * @var array
-   */
-  protected $_pareceresComponentes = array();
-
-  /**
-   * Pareceres descritivos do aluno no geral.
-   * @var array
-   */
-  protected $_pareceresGerais = array();
-
-  /**
-   * Validadores para instâncias de Avaliacao_Model_FaltaAbstract e
-   * Avaliacao_Model_NotaComponente.
-   *
-   * @see Avaliacao_Service_Boletim#_addValidators()
-   * @var array
-   */
-  protected $_validators = NULL;
-
-  /**
-   * Validadores para uma instância de Avaliacao_Model_ParecerDescritivoAbstract
-   * adicionada no boletim.
-   *
-   * @see Avaliacao_Service_Boletim#_addParecerValidators()
-   * @var array
-   */
-  protected $_parecerValidators = NULL;
+    private $exemptedStages = [];
 
   /**
    * Prioridade da situação da matrícula, usado para definir a situação
    * das notas e faltas.
    * @var array
    */
-
-  private $notaLancada = NULL;
-  private $exemptedStages = [];
-
   protected $_situacaoPrioridade = array(
     App_Model_MatriculaSituacao::EM_ANDAMENTO        => 1,
     App_Model_MatriculaSituacao::EM_EXAME            => 2,
@@ -155,6 +44,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * - NotaAlunoDataMapper (Avaliacao_Model_NotaAlunoDataMapper), opcional
    *
    * @param array $options
+   *
+   * @throws App_Model_Exception
+   * @throws CoreExt_Service_Exception
+   * @throws EvaluationRuleNotDefinedInLevel
+   * @throws StudentNotEnrolledInSchoolClass
+   * @throws Exception
    */
   public function __construct(array $options = array())
   {
@@ -173,75 +68,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         return $this->exemptedStages[$disciplineId];
     }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_NotaComponente do aluno.
-   * @return array
-   */
-  public function getNotasComponentes()
-  {
-    return $this->_notasComponentes;
-  }
-
-  public function getNotasGerais()
-  {
-    return $this->_notasGerais;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_NotaComponenteMedia do aluno.
-   * @return array
-   */
-  public function getMediasComponentes()
-  {
-    return $this->_mediasComponentes;
-  }
-
-/**
-   * Retorna as instâncias de Avaliacao_Model_MediaGeral do aluno.
-   * @return array
-   */
-  public function getMediasGerais()
-  {
-    return $this->_mediasGerais;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_FaltaComponente do aluno.
-   * @return array
-   */
-  public function getFaltasComponentes()
-  {
-    return $this->_faltasComponentes;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_FaltaGeral do aluno.
-   * @return array
-   */
-  public function getFaltasGerais()
-  {
-    return $this->_faltasGerais;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_ParecerDescritivoComponente do
-   * aluno.
-   * @return array
-   */
-  public function getPareceresComponentes()
-  {
-    return $this->_pareceresComponentes;
-  }
-
-  /**
-   * Retorna as instâncias de Avaliacao_Model_ParecerDescritivoGeral do aluno.
-   * @return array
-   */
-  public function getPareceresGerais()
-  {
-    return $this->_pareceresGerais;
-  }
 
   /**
    * Retorna uma instância de Avaliacao_Model_NotaComponente.
@@ -378,10 +204,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return NULL;
   }
 
-
   /**
-   * Setter.
-   * @return App_Service_Boletim Provê interface fluída
+   * @return $this
+   *
+   * @throws App_Model_Exception
+   * @throws StudentNotEnrolledInSchoolClass
+   * @throws EvaluationRuleNotDefinedInLevel
    */
   protected function _setMatriculaInfo()
   {
@@ -431,7 +259,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * Carrega todas as notas e médias já lançadas para a matrícula atual.
    *
    * @param bool $loadMedias FALSE caso não seja necessário carregar as médias
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadNotas($loadMedias = TRUE)
   {
@@ -463,8 +294,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $notasGerais[$nota->get('etapa')] = $nota;
     }
 
-    $this->_notasComponentes = $notasComponentes;
-    $this->_notasGerais = $notasGerais;
+    $this->setNotasComponentes($notasComponentes);
+    $this->setNotasGerais($notasGerais);
 
     if (FALSE == $loadMedias) {
       return $this;
@@ -475,7 +306,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega as médias dos componentes curriculares já lançadas.
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadMedias()
   {
@@ -500,15 +334,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $mediasGerais = $mediaGeral;
     }
 
-    $this->_mediasComponentes = $mediasComponentes;
-    $this->_mediasGerais = $mediasGerais;
+    $this->setMediasComponentes($mediasComponentes);
+    $this->setMediasGerais($mediasGerais);
 
     return $this;
   }
 
   /**
    * Carrega as faltas do aluno, sejam gerais ou por componente.
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadFalta()
   {
@@ -533,7 +370,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $faltasGerais[$falta->etapa] = $falta;
       }
 
-      $this->_faltasGerais = $faltasGerais;
+      $this->setFaltasGerais($faltasGerais);
     }
     // Separa cada nota em um array indexado pelo identity field do componente
     elseif ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
@@ -543,7 +380,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $faltasComponentes[$falta->get('componenteCurricular')][] = $falta;
       }
 
-      $this->_faltasComponentes = $faltasComponentes;
+      $this->setFaltasComponentes($faltasComponentes);
     }
 
     return $this;
@@ -551,7 +388,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Carrega os pareceres do aluno, sejam gerais ou por componentes.
-   * @return App_Service_Boletim Provê interface fluída
+   *
+   * @return $this
+   *
+   * @throws Exception
    */
   protected function _loadParecerDescritivo()
   {
@@ -587,7 +427,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $pareceresGerais[$parecer->etapa] = $parecer;
       }
 
-      $this->_pareceresGerais = $pareceresGerais;
+      $this->setPareceresGerais($pareceresGerais);
     }
     elseif (in_array($parecerDescritivo, $componentes)) {
       $pareceresComponentes = array();
@@ -596,7 +436,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $pareceresComponentes[$parecer->get('componenteCurricular')][] = $parecer;
       }
 
-      $this->_pareceresComponentes = $pareceresComponentes;
+      $this->setPareceresComponentes($pareceresComponentes);
     }
 
     return $this;
@@ -1142,7 +982,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
     if ($tipoFaltaGeral) {
-      $faltas = $this->_faltasGerais;
+      $faltas = $this->getFaltasGerais();
 
       if (0 == count($faltas)) {
         $total = 0;
@@ -1155,7 +995,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     elseif ($tipoFaltaPorComponente) {
-      $faltas = $this->_faltasComponentes;
+      $faltas = $this->getFaltasComponentes();
       $faltas = array_intersect_key($faltas, $componentes);
       $total  = 0;
       $etapasComponentes = array();
@@ -1186,7 +1026,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         // Calcula a porcentagem de falta no componente
         $faltasComponentes[$id]->porcentagemFalta =
-          $this->_calculatePorcentagem($this->_componentes[$id]->cargaHoraria,
+          $this->_calculatePorcentagem($componentes[$id]->cargaHoraria,
             $faltasComponentes[$id]->horasFaltas, FALSE);
 
         // Calcula a porcentagem de presença no componente
@@ -1349,40 +1189,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
-   * Setter.
-   * @param Avaliacao_Model_NotaAluno $nota
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setNotaAluno(Avaliacao_Model_NotaAluno $nota)
-  {
-    $this->_notaAluno = $nota;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_NotaAluno|NULL
-   */
-  protected function _getNotaAluno()
-  {
-    if (!is_null($this->_notaAluno)) {
-      return $this->_notaAluno;
-    }
-
-    $notaAluno = $this->getNotaAlunoDataMapper()->findAll(
-      array(),
-      array('matricula' => $this->getOption('matricula'))
-    );
-
-    if (0 == count($notaAluno)) {
-      return NULL;
-    }
-
-    $this->_setNotaAluno($notaAluno[0]);
-    return $this->_notaAluno;
-  }
-
-  /**
    * Cria e persiste uma instância de Avaliacao_Model_NotaAluno.
    * @return bool
    */
@@ -1474,48 +1280,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     return FALSE;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_FaltaAluno $falta
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setFaltaAluno(Avaliacao_Model_FaltaAluno $falta)
-  {
-    $this->_faltaAluno = $falta;
-    $tipoFaltaAtual = $this->_faltaAluno->get('tipoFalta');
-    $tipoFaltaRegraAvaliacao = $this->getRegraAvaliacaoTipoPresenca();
-
-    if ($tipoFaltaAtual != $tipoFaltaRegraAvaliacao){
-      $this->_faltaAluno->tipoFalta = $tipoFaltaRegraAvaliacao;
-      $this->getFaltaAlunoDataMapper()->save($this->_faltaAluno);
-    }
-
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_FaltaAluno|NULL
-   */
-  protected function _getFaltaAluno()
-  {
-    if (!is_null($this->_faltaAluno)) {
-      return $this->_faltaAluno;
-    }
-
-    $faltaAluno = $this->getFaltaAlunoDataMapper()->findAll(
-      array(),
-      array('matricula' => $this->getOption('matricula'))
-    );
-
-    if (0 == count($faltaAluno)) {
-      return NULL;
-    }
-
-    $this->_setFaltaAluno($faltaAluno[0]);
-    return $this->_faltaAluno;
   }
 
   /**
@@ -1612,39 +1376,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       return TRUE;
     }
     return FALSE;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setParecerDescritivoAluno(Avaliacao_Model_ParecerDescritivoAluno $parecerDescritivoAluno)
-  {
-    $this->_parecerDescritivoAluno = $parecerDescritivoAluno;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_ParecerDescritivoAluno|NULL
-   */
-  protected function _getParecerDescritivoAluno()
-  {
-    if (!is_null($this->_parecerDescritivoAluno)) {
-      return $this->_parecerDescritivoAluno;
-    }
-
-    $parecerDescritivoAluno = $this->getParecerDescritivoAlunoDataMapper()->findAll(
-      array(), array('matricula' => $this->getOption('matricula'))
-    );
-
-    if (0 == count($parecerDescritivoAluno)) {
-      return NULL;
-    }
-
-    $this->_setParecerDescritivoAluno($parecerDescritivoAluno[0]);
-    return $this->_parecerDescritivoAluno;
   }
 
   /**
@@ -1760,9 +1491,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $nota = $this->_addValidators($nota);
     $nota = $this->_updateEtapa($nota);
     $nota->notaArredondada = $this->arredondaNota($nota);
-    $this->_notas[$key]    = $nota;
 
-    $this->notaLancada = $nota;
+    $this->addNotaItem($key, $nota);
 
     return $this;
   }
@@ -1775,19 +1505,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $notaGeral = $this->_updateEtapa($notaGeral);
 
     $notaGeral->notaArredondada = $this->arredondaNota($notaGeral);
-    $this->_notas[$key]    = $notaGeral;
+
+    $this->addNotaItem($key, $notaGeral);
 
     return $this;
 
-  }
-
-  /**
-   * Getter.
-   * @return array
-   */
-  public function getNotas()
-  {
-    return $this->_notas;
   }
 
   /**
@@ -1816,17 +1538,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $falta = $this->_addValidators($falta);
     $falta = $this->_updateEtapa($falta);
 
-    $this->_faltas[$key] = $falta;
-    return $this;
-  }
+    $this->addFaltaKey($key, $falta);
 
-  /**
-   * Getter.
-   * @return array
-   */
-  public function getFaltas()
-  {
-    return $this->_faltas;
+    return $this;
   }
 
   /**
@@ -1855,22 +1569,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $key = 'p_' . spl_object_hash($parecer);
 
-    $this->_pareceres[$key] = $parecer;
+    $this->addParecerKey($key, $parecer);
     $this->_updateParecerEtapa($parecer);
     $this->_addParecerValidators($parecer);
 
     return $this;
-  }
-
-  /**
-   * Getter para as instâncias de Avaliacao_Model_ParecerDescritivoAbstract
-   * adicionadas no boletim (não persistidas).
-   *
-   * @return array
-   */
-  public function getPareceres()
-  {
-    return $this->_pareceres;
   }
 
   /**
@@ -1887,7 +1590,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $validators = array();
 
     // Como os componentes serão os mesmos, fazemos cache do validador
-    if (is_null($this->_validators)) {
+    if (is_null($this->getValidators())) {
 
       $componentes = $this->getComponentes();
       $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
@@ -1905,10 +1608,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         array('choices' => $etapas
       ));
 
-      $this->_validators = $validators;
+      $this->setValidators($validators);
     }
 
-    $validators = $this->_validators;
+    $validators = $this->getValidators();
 
     if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
@@ -1928,7 +1631,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _addParecerValidators(Avaliacao_Model_ParecerDescritivoAbstract $instance)
   {
-    if (is_null($this->_parecerValidators)) {
+    if (is_null($this->getParecerValidators())) {
       $validators = array();
 
       $anuais = array(
@@ -1967,10 +1670,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
 
       // Armazena os validadores na instância
-      $this->_parecerValidators = $validators;
+      $this->setParecerValidators($validators);
     }
 
-    $validators = $this->_parecerValidators;
+    $validators = $this->getParecerValidators();
 
     // Etapas
     $instance->setValidator('etapa', $validators['etapa']);
@@ -2003,8 +1706,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Se for falta e do tipo geral, verifica qual foi a última etapa
     if ($instance instanceof Avaliacao_Model_FaltaGeral) {
-      if (0 < count($this->_faltasGerais)) {
-        $etapas = CoreExt_Entity::entityFilterAttr($this->_faltasGerais, 'id', 'etapa');
+      if (0 < count($this->getFaltasGerais())) {
+        $etapas = CoreExt_Entity::entityFilterAttr($this->getFaltasGerais(), 'id', 'etapa');
         $proximaEtapa = max($etapas) + 1;
       }
     }
@@ -2204,12 +1907,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function preverNotaRecuperacao($id)
   {
+    $notasComponentes = $this->getNotasComponentes();
 
-    if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($this->_notasComponentes[$id])) {
+    if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($notasComponentes[$id])) {
       return NULL;
     }
 
-    $notas      = $this->_notasComponentes[$id];
+    $notas      = $notasComponentes[$id];
 
     unset($notas[$this->getOption('etapas')]);
 
@@ -2632,7 +2336,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
       $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
 
-      foreach($this->_notasGerais as $id => $notaGeral){
+      foreach($this->getNotasGerais() as $id => $notaGeral){
 
         $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
 
@@ -2680,10 +2384,13 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       $escolaId = $infosMatricula['ref_ref_cod_escola'];
       $notaAlunoId = $this->_getNotaAluno()->id;
 
-      foreach ($this->_notasComponentes as $id => $notasComponentes) {
+      foreach ($this->getNotasComponentes() as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
         //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
-        if(!isset($this->_currentComponenteCurricular) || $this->_currentComponenteCurricular == $id){
+
+        $currentComponenteCurricular = $this->getCurrentComponenteCurricular();
+
+        if(!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id){
           // Cria um array onde o índice é a etapa
           $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
           $qtdeEtapas = $this->getOption('etapas');

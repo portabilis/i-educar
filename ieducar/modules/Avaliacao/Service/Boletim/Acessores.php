@@ -1,10 +1,20 @@
 <?php
 
+require_once 'Avaliacao/Service/Boletim/Avaliacao.php';
+require_once 'Avaliacao/Service/Boletim/FaltaAluno.php';
+require_once 'Avaliacao/Service/Boletim/NotaAluno.php';
+require_once 'Avaliacao/Service/Boletim/ParecerDescritivoAluno.php';
 require_once 'Avaliacao/Service/Boletim/RegraAvaliacao.php';
+require_once 'Avaliacao/Service/Boletim/Validators.php';
 
 trait Avaliacao_Service_Boletim_Acessores
 {
-    use Avaliacao_Service_Boletim_RegraAvaliacao;
+    use Avaliacao_Service_Boletim_Avaliacao,
+        Avaliacao_Service_Boletim_FaltaAluno,
+        Avaliacao_Service_Boletim_NotaAluno,
+        Avaliacao_Service_Boletim_ParecerDescritivoAluno,
+        Avaliacao_Service_Boletim_RegraAvaliacao,
+        Avaliacao_Service_Boletim_Validators;
 
     /**
      * @var array
@@ -97,14 +107,6 @@ trait Avaliacao_Service_Boletim_Acessores
      * @var array
      */
     protected $_componentes;
-
-    /**
-     * Instância da regra de avaliação, com o qual o serviço irá utilizar para
-     * decidir o fluxo da lógica.
-     *
-     * @var RegraAvaliacao_Model_Regra
-     */
-    protected $_regra;
 
     /**
      * @see CoreExt_Configurable::getOptions()
