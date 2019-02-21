@@ -17,16 +17,16 @@ class Level extends Model
     protected $primaryKey = 'cod_serie';
 
     /**
+     * @var array
+     */
+    protected $fillable = [
+        'nm_serie', 'ref_usuario_cad', 'ref_cod_curso', 'etapa_curso', 'carga_horaria', 'data_cadastro',
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

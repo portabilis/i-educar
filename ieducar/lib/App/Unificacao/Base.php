@@ -24,19 +24,11 @@ class App_Unificacao_Base
     {
         $this->validaParametros();
 
-        if ($this->transacao) {
-            $db->begin();
-        }
-
         $this->desabilitaTodasTriggers();
         $this->processaChavesDeletarDuplicados();
         $this->processaChavesManterTodosVinculos();
         $this->processaChavesManterPrimeiroVinculo();
         $this->habilitaTodasTriggers();
-
-        if ($this->transacao) {
-            $db->commit();
-        }
     }
 
     protected function processaChavesDeletarDuplicados()
