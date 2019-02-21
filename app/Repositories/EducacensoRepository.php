@@ -2,22 +2,25 @@
 
 namespace App\Services;
 
-use Portabilis_Utils_Database;
+use Illuminate\Support\Facades\DB;
 
 class EducacensoRepository
 {
-    protected function fetchPreparedQuery($sql, $params = [], $hideExceptions = true, $returnOnly = '')
+    /**
+     * @param $sql
+     * @param array $params
+     * @return array
+     */
+    protected function fetchPreparedQuery($sql, $params = [])
     {
-        $options = [
-            'params' => $params,
-            'show_errors' => !$hideExceptions,
-            'return_only' => $returnOnly,
-            'messenger' => $this->messenger
-        ];
-
-        return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+        return DB::select(DB::raw($sql), $params);
     }
 
+    /**
+     * @param $school
+     * @param $year
+     * @return array
+     */
     public function getDataForRecord00($school, $year)
     {
         $sql = '
@@ -34,11 +37,11 @@ class EducacensoRepository
 
         (SELECT min(ano_letivo_modulo.data_inicio)
           FROM pmieducar.ano_letivo_modulo
-          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s8,
+          WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s8,
 
         (SELECT max(ano_letivo_modulo.data_fim)
           FROM pmieducar.ano_letivo_modulo
-          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s9,
+          WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s9,
 
         p.nome AS r00s10,
         e.latitude AS r00s11,
@@ -125,13 +128,18 @@ class EducacensoRepository
         LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
         LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
         LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
-        WHERE e.cod_escola = $1';
+        WHERE e.cod_escola = :school';
 
         return $this->fetchPreparedQuery($sql, [
-            $school, $year
+            'school' => $school,
+            'year' => $year,
         ]);
     }
 
+    /**
+     * @param $school
+     * @return array
+     */
     public function getDataForRecord10($school)
     {
         $sql = "
