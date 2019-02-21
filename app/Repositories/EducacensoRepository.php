@@ -101,8 +101,13 @@ class EducacensoRepository
             j.cnpj AS "cnpjEscolaPrivada",
             e.regulamentacao AS "regulamentacao",
             0 AS "unidadeVinculada",
-            e.situacao_funcionamento
-    
+            e.situacao_funcionamento,
+            e.mantenedora_escola_privada[1] AS "mantenedoraEscolaPrivada",
+            e.cod_escola AS "idEscola",
+            municipio.idmun AS "idMunicipio",
+            distrito.iddis AS "idDistrito",
+            i.cod_instituicao AS "idInstituicao",
+            uf.sigla_uf AS "siglaUf"
             FROM pmieducar.escola e
             JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
             INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
