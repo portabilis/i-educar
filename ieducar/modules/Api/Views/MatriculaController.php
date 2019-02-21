@@ -255,30 +255,31 @@ class MatriculaController extends ApiCoreController
 
                 foreach ($matriculas as $key => $matricula) {
                     $sql = 'SELECT matricula_turma.ref_cod_turma AS turma_id,
-                         matricula_turma.sequencial AS sequencial,
-                         matricula_turma.sequencial_fechamento AS sequencial_fechamento,
-                         coalesce(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
-                         coalesce(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
-                         coalesce(matricula_turma.updated_at::varchar, \'\') AS data_atualizacao,
-                         (CASE
-                              WHEN coalesce(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN false
-                              WHEN matricula.aprovado = 4
-                                   AND matricula_turma.transferido = TRUE THEN TRUE
-                              WHEN matricula.aprovado = 3
-                                   AND matricula_turma.remanejado = TRUE THEN TRUE
-                              ELSE FALSE
-                          END) AS apresentar_fora_da_data,
-                          (CASE
-                              WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, FALSE) = FALSE
-                              ELSE TRUE
-                          END) AS mostrar_enturmacao
-                  FROM matricula
-                  INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
-                  INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
-                  LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE cod_matricula = $1';
+                                   matricula_turma.sequencial AS sequencial,
+                                   matricula_turma.sequencial_fechamento AS sequencial_fechamento,
+                                   COALESCE(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
+                                   COALESCE(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
+                                   COALESCE(matricula_turma.updated_at::varchar, \'\') AS data_atualizacao,
+                                   CASE
+                                       WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
+                                       WHEN matricula.aprovado = 4 AND
+                                            matricula_turma.transferido AND
+                                            matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                       WHEN matricula.aprovado = 3 AND
+                                            matricula_turma.remanejado AND
+                                            matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                       ELSE FALSE
+                                   END AS apresentar_fora_da_data
+                              FROM matricula
+                        INNER JOIN pmieducar.escola
+                                ON escola.cod_escola = matricula.ref_ref_cod_escola
+                        INNER JOIN pmieducar.instituicao
+                                ON instituicao.cod_instituicao = escola.ref_cod_instituicao
+                         LEFT JOIN matricula_turma
+                                ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                             WHERE cod_matricula = $1';
 
-                    $params = [$matriculas[$key]['matricula_id']];
+                    $params = [$matriculas[$key]['matricula_id'], $ano];
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
                     if (is_array($enturmacoes) && count($enturmacoes) > 0) {
@@ -289,8 +290,7 @@ class MatriculaController extends ApiCoreController
                             'data_entrada',
                             'data_saida',
                             'data_atualizacao',
-                            'apresentar_fora_da_data',
-                            'mostrar_enturmacao'
+                            'apresentar_fora_da_data'
                         ];
                         $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
                         $matriculas[$key]['enturmacoes'] = $enturmacoes;
@@ -521,15 +521,19 @@ class MatriculaController extends ApiCoreController
                             $enturmacao->marcaAlunoTransferido();
                         } elseif ($situacaoNova == App_Model_MatriculaSituacao::ABANDONO) {
                             $enturmacao->marcaAlunoAbandono();
+                        }elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
+                            $enturmacao->marcaAlunoFalecido();
                         }
                     }
                 }
 
-                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                    ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0]->get('id');
+                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                    ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0];
 
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, $situacaoNova);
+                if (!is_null($notaAluno)) {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAluno->get('id'), $situacaoNova);
+                }
             } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
                 if ($enturmacoes) {
                     $params = [$matriculaId];

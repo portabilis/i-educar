@@ -10,85 +10,12 @@ require_once 'App/Model/IedFinder.php';
 require_once 'App/Model/Matricula.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
-require_once  'ComponenteCurricular/Model/TipoNotaComponenteSerie.php';
+require_once 'ComponenteCurricular/Model/TipoNotaComponenteSerie.php';
+require_once 'Avaliacao/Service/Boletim/Acessores.php';
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
-  /**
-   * Valores escalares.
-   * @var array
-   */
-  protected $_options = array(
-    'matricula' => NULL,
-    'etapas'    => NULL,
-    'usuario'   => NULL
-  );
-
-  /**
-   * Instância da regra de avaliação, com o qual o serviço irá utilizar para
-   * decidir o fluxo da lógica.
-   * @var RegraAvaliacao_Model_Regra
-   */
-  protected $_regra = NULL;
-
-  protected $_mediaGeralDataMapper = NULL;
-
-  protected $_notaGeralDataMapper = NULL;
-
-  /**
-   * @var ComponenteCurricular_Model_ComponenteDataMapper
-   */
-  protected $_componenteDataMapper = NULL;
-
-  /**
-   * @var ComponenteCurricular_Model_TurmaDataMapper
-   */
-  protected $_componenteTurmaDataMapper = NULL;
-
-  /**
-   * @var RegraAvaliacao_Model_RegraDataMapper
-   */
-  protected $_regraDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_NotaAlunoDataMapper
-   */
-  protected $_notaAlunoDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_FaltaAlunoDataMapper
-   */
-  protected $_faltaAlunoDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_ParecerDescritivoAlunoDataMapper
-   */
-  protected $_parecerDescritivoAlunoDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_NotaComponenteDataMapper
-   */
-  protected $_notaComponenteDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_FaltaAbstractDataMapper
-   */
-  protected $_faltaAbstractDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_NotaGeralAbstractDataMapper
-   */
-  protected $_notaGeralAbstractDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_NotaComponenteMediaDataMapper
-   */
-  protected $_notaComponenteMediaDataMapper = NULL;
-
-  /**
-   * @var Avaliacao_Model_ParecerDescritivoAbstractDataMapper
-   */
-  protected $_parecerDescritivoAbstractDataMapper = NULL;
+    use Avaliacao_Service_Boletim_Acessores;
 
   /**
    * Uma instância de Avaliacao_Model_NotaAluno, que é a entrada que contém
@@ -116,15 +43,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * @var Avaliacao_Model_ParecerDescritivoAluno
    */
   protected $_parecerDescritivoAluno = NULL;
-
-  /**
-   * Componentes que o aluno cursa, indexado pelo id de
-   * ComponenteCurricular_Model_Componente.
-   * @var array
-   */
-  protected $_componentes = NULL;
-
-  protected $_componenteCurricularId = NULL;
 
   /**
    * Notas do aluno nos componentes cursados.
@@ -217,8 +135,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
 
   private $notaLancada = NULL;
-
-  private $_currentComponenteCurricular = NULL;
+  private $exemptedStages = [];
 
   protected $_situacaoPrioridade = array(
     App_Model_MatriculaSituacao::EM_ANDAMENTO        => 1,
@@ -248,492 +165,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
          ->_loadParecerDescritivo();
   }
 
-  /**
-   * @see CoreExt_Configurable#setOptions()
-   */
-  public function setOptions(array $options = array())
-  {
-    if (!isset($options['matricula'])) {
-      require_once 'CoreExt/Service/Exception.php';
-      throw new CoreExt_Service_Exception('É necessário informar o número de '
-                . 'matrícula do aluno.');
+    private function getExemptedStages($enrollmentId, $disciplineId)
+    {
+        if (!isset($this->exemptedStages[$disciplineId])) {
+            $this->exemptedStages[$disciplineId] = App_Model_IedFinder::getExemptedStages($enrollmentId, $disciplineId);
+        }
+
+        return $this->exemptedStages[$disciplineId];
     }
-
-    if (isset($options['ComponenteDataMapper'])) {
-      $this->setComponenteDataMapper($options['ComponenteDataMapper']);
-      unset($options['ComponenteDataMapper']);
-    }
-
-    if (isset($options['ComponenteTurmaDataMapper'])) {
-      $this->setComponenteTurmaDataMapper($options['ComponenteTurmaDataMapper']);
-      unset($options['ComponenteTurmaDataMapper']);
-    }
-
-    if (isset($options['RegraDataMapper'])) {
-      $this->setRegraDataMapper($options['RegraDataMapper']);
-      unset($options['RegraDataMapper']);
-    }
-
-    if (isset($options['NotaAlunoDataMapper'])) {
-      $this->setNotaAlunoDataMapper($options['NotaAlunoDataMapper']);
-      unset($options['NotaAlunoDataMapper']);
-    }
-
-    if (isset($options['NotaComponenteDataMapper'])) {
-      $this->setNotaComponenteDataMapper($options['NotaComponenteDataMapper']);
-      unset($options['NotaComponenteDataMapper']);
-    }
-
-    if (isset($options['NotaComponenteMediaDataMapper'])) {
-      $this->setNotaComponenteMediaDataMapper($options['NotaComponenteMediaDataMapper']);
-      unset($options['NotaComponenteMediaDataMapper']);
-    }
-
-    if (isset($options['FaltaAlunoDataMapper'])) {
-      $this->setFaltaAlunoDataMapper($options['FaltaAlunoDataMapper']);
-      unset($options['FaltaAlunoDataMapper']);
-    }
-
-    if (isset($options['FaltaAbstractDataMapper'])) {
-      $this->setFaltaAbstractDataMapper($options['FaltaAbstractDataMapper']);
-      unset($options['FaltaAbstractDataMapper']);
-    }
-
-    if (isset($options['ParecerDescritivoAlunoDataMapper'])) {
-      $this->setParecerDescritivoAlunoDataMapper($options['ParecerDescritivoAlunoDataMapper']);
-      unset($options['ParecerDescritivoAlunoDataMapper']);
-    }
-
-    if (isset($options['ParecerDescritivoAbstractDataMapper'])) {
-      $this->setParecerDescritivoAbstractDataMapper($options['ParecerDescritivoAbstractDataMapper']);
-      unset($options['ParecerDescritivoAbstractDataMapper']);
-    }
-
-    if (isset($options['NotaGeralAbstractDataMapper'])) {
-      $this->setNotaGeralAbstractDataMapper($options['NotaGeralAbstractDataMapper']);
-      unset($options['NotaGeralAbstractDataMapper']);
-    }
-
-    if (isset($options['NotaGeralDataMapper'])) {
-      $this->setNotaGeralDataMapper($options['NotaGeralDataMapper']);
-      unset($options['NotaGeralDataMapper']);
-    }
-
-    if (isset($options['MediaGeralDataMapper'])) {
-      $this->setMediaGeralDataMapper($options['MediaGeralDataMapper']);
-      unset($options['MediaGeralDataMapper']);
-    }
-
-    if (isset($options['componenteCurricularId'])) {
-      $this->setComponenteCurricularId($options['componenteCurricularId']);
-      unset($options['componenteCurricularId']);
-    }
-
-    $defaultOptions = array_keys($this->getOptions());
-    $passedOptions  = array_keys($options);
-
-    if (0 < count(array_diff($passedOptions, $defaultOptions))) {
-      throw new InvalidArgumentException(
-        sprintf('A classe %s não suporta as opções: %s.', get_class($this), implode(', ', $passedOptions))
-      );
-    }
-
-    $this->_options = array_merge($this->getOptions(), $options);
-
-    return $this;
-  }
-
-  /**
-   * @see CoreExt_Configurable#getOptions()
-   */
-  public function getOptions()
-  {
-    return $this->_options;
-  }
-
-  /**
-   * Setter.
-   * @param string $key
-   * @param mixed $value
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function setOption($key, $value)
-  {
-    $this->_options[$key] = $value;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @param string $key
-   * @return mixed
-   */
-  public function getOption($key)
-  {
-    return $this->_options[$key];
-  }
-
-  /**
-   * Setter.
-   * @param ComponenteCurricular_Model_ComponenteDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setComponenteDataMapper(ComponenteCurricular_Model_ComponenteDataMapper $mapper)
-  {
-    $this->_componenteDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return ComponenteCurricular_Model_ComponenteDataMapper
-   */
-  public function getComponenteDataMapper()
-  {
-    if (is_null($this->_componenteDataMapper)) {
-      require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-      $this->setComponenteDataMapper(new ComponenteCurricular_Model_ComponenteDataMapper());
-    }
-    return $this->_componenteDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param ComponenteCurricular_Model_TurmaDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setComponenteTurmaDataMapper(ComponenteCurricular_Model_TurmaDataMapper $mapper)
-  {
-    $this->_componenteTurmaDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return ComponenteCurricular_Model_TurmaDataMapper
-   */
-  public function getComponenteTurmaDataMapper()
-  {
-    if (is_null($this->_componenteTurmaDataMapper)) {
-      require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-      $this->setComponenteTurmaDataMapper(new ComponenteCurricular_Model_TurmaDataMapper());
-    }
-    return $this->_componenteTurmaDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param $id
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setComponenteCurricularId($componenteCurricularId)
-  {
-    $this->_componenteCurricularId = $componenteCurricularId;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return int
-   */
-  public function getComponenteCurricularId()
-  {
-    return $this->_componenteCurricularId;
-  }
-
-  /**
-   * Setter.
-   * @param RegraAvaliacao_Model_RegraDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setRegraDataMapper(RegraAvaliacao_Model_RegraDataMapper $mapper)
-  {
-    $this->_regraDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return RegraAvaliacao_Model_RegraDataMapper
-   */
-  public function getRegraDataMapper()
-  {
-    if (is_null($this->_regraDataMapper)) {
-      require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-      $this->setRegraDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
-    }
-    return $this->_regraDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_NotaAlunoDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setNotaAlunoDataMapper(Avaliacao_Model_NotaAlunoDataMapper $mapper)
-  {
-    $this->_notaAlunoDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_NotaAlunoDataMapper
-   */
-  public function getNotaAlunoDataMapper()
-  {
-    if (is_null($this->_notaAlunoDataMapper)) {
-      require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
-      $this->setNotaAlunoDataMapper(new Avaliacao_Model_NotaAlunoDataMapper());
-    }
-    return $this->_notaAlunoDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_NotaComponenteDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setNotaComponenteDataMapper(Avaliacao_Model_NotaComponenteDataMapper $mapper)
-  {
-    $this->_notaComponenteDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_NotaComponenteDataMapper
-   */
-  public function getNotaComponenteDataMapper()
-  {
-    if (is_null($this->_notaComponenteDataMapper)) {
-      require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-      $this->setNotaComponenteDataMapper(new Avaliacao_Model_NotaComponenteDataMapper());
-    }
-    return $this->_notaComponenteDataMapper;
-  }
-
-   /**
-   * Getter.
-   * @return Avaliacao_Model_NotaGeralDataMapper
-   */
-  public function getNotaGeralDataMapper()
-  {
-    if (is_null($this->_notaGeralDataMapper)) {
-      require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
-      $this->setNotaGeralDataMapper(new Avaliacao_Model_NotaGeralDataMapper());
-    }
-    return $this->_notaGeralDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param setNotaGeralDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setNotaGeralDataMapper(Avaliacao_Model_NotaGeralDataMapper $mapper)
-  {
-    $this->_notaGeralDataMapper = $mapper;
-    return $this;
-  }
-
-     /**
-   * Getter.
-   * @return Avaliacao_Model_NotaGeralDataMapper
-   */
-  public function getMediaGeralDataMapper()
-  {
-    if (is_null($this->_mediaGeralDataMapper)) {
-      require_once 'Avaliacao/Model/MediaGeralDataMapper.php';
-      $this->setMediaGeralDataMapper(new Avaliacao_Model_MediaGeralDataMapper());
-    }
-    return $this->_mediaGeralDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param setMediaGeralDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setMediaGeralDataMapper(Avaliacao_Model_MediaGeralDataMapper $mapper)
-  {
-    $this->_mediaGeralDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_NotaMediaComponenteDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setNotaComponenteMediaDataMapper(Avaliacao_Model_NotaComponenteMediaDataMapper $mapper)
-  {
-    $this->_notaComponenteMediaDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_NotaComponenteMediaDataMapper
-   */
-  public function getNotaComponenteMediaDataMapper()
-  {
-    if (is_null($this->_notaComponenteMediaDataMapper)) {
-      require_once 'Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-      $this->setNotaComponenteMediaDataMapper(new Avaliacao_Model_NotaComponenteMediaDataMapper());
-    }
-    return $this->_notaComponenteMediaDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_FaltaAlunoDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setFaltaAlunoDataMapper(Avaliacao_Model_FaltaAlunoDataMapper $mapper)
-  {
-    $this->_faltaAlunoDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_NotaAlunoDataMapper
-   */
-  public function getFaltaAlunoDataMapper()
-  {
-    if (is_null($this->_faltaAlunoDataMapper)) {
-      require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
-      $this->setFaltaAlunoDataMapper(new Avaliacao_Model_FaltaAlunoDataMapper());
-    }
-    return $this->_faltaAlunoDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_FaltaAbstractDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setFaltaAbstractDataMapper(Avaliacao_Model_FaltaAbstractDataMapper $mapper)
-  {
-    $this->_faltaAbstractDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_FaltaAbstractDataMapper
-   */
-  public function getFaltaAbstractDataMapper()
-  {
-    if (is_null($this->_faltaAbstractDataMapper)) {
-      switch ($this->getRegra()->get('tipoPresenca')) {
-        case RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE:
-          require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
-          $class = 'Avaliacao_Model_FaltaComponenteDataMapper';
-          break;
-        case RegraAvaliacao_Model_TipoPresenca::GERAL:
-          require_once 'Avaliacao/Model/FaltaGeralDataMapper.php';
-          $class = 'Avaliacao_Model_FaltaGeralDataMapper';
-          break;
-      }
-      $this->setFaltaAbstractDataMapper(new $class());
-    }
-
-    return $this->_faltaAbstractDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setParecerDescritivoAlunoDataMapper(Avaliacao_Model_ParecerDescritivoAlunoDataMapper $mapper)
-  {
-    $this->_parecerDescritivoAlunoDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_ParecerDescritivoAlunoDataMapper
-   */
-  public function getParecerDescritivoAlunoDataMapper()
-  {
-    if (is_null($this->_parecerDescritivoAlunoDataMapper)) {
-      require_once 'Avaliacao/Model/ParecerDescritivoAlunoDataMapper.php';
-      $this->setParecerDescritivoAlunoDataMapper(new Avaliacao_Model_ParecerDescritivoAlunoDataMapper());
-    }
-    return $this->_parecerDescritivoAlunoDataMapper;
-  }
-
-  /**
-   * Setter.
-   * @param Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  public function setParecerDescritivoAbstractDataMapper(Avaliacao_Model_ParecerDescritivoAbstractDataMapper $mapper)
-  {
-    $this->_parecerDescritivoAbstractDataMapper = $mapper;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return Avaliacao_Model_ParecerDescritivoAbstractDataMapper
-   */
-  public function getParecerDescritivoAbstractDataMapper()
-  {
-    if (is_null($this->_parecerDescritivoAbstractDataMapper)) {
-      $parecerDescritivo = $this->getRegra()->get('parecerDescritivo');
-
-      switch($parecerDescritivo) {
-        case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
-        case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
-          $filename = 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
-          $class    = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
-          break;
-        case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
-        case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
-          $filename = 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
-          $class    = 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper';
-          break;
-      }
-
-      // Se não usar parecer descritivo, retorna NULL
-      if (!isset($filename)) {
-        return NULL;
-      }
-
-      require_once $filename;
-      $this->setParecerDescritivoAbstractDataMapper(new $class());
-    }
-
-    return $this->_parecerDescritivoAbstractDataMapper;
-  }
-
-  public function setNotaGeralAbstractDataMapper(Avaliacao_Model_NotaGeralDataMapper $mapper)
-  {
-    $this->_notaGeralAbstractDataMapper = $mapper;
-    return $this;
-  }
-
-  public function getNotaGeralAbstractDataMapper()
-  {
-
-    if (is_null($this->_notaGeralAbstractDataMapper)) {
-
-      $filename = 'Avaliacao/Model/NotaGeralDataMapper.php';
-      $class    = 'Avaliacao_Model_NotaGeralDataMapper';
-
-      require_once $filename;
-
-      $this->setNotaGeralAbstractDataMapper(new $class());
-
-    }
-
-    return $this->_notaGeralAbstractDataMapper;
-  }
 
   /**
    * Retorna as instâncias de Avaliacao_Model_NotaComponente do aluno.
@@ -1164,46 +603,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
-   * Setter.
-   * @param RegraAvaliacao_Model_Regra $regra
-   * @return App_Service_Boletim Provê interface fluída
-   */
-  protected function _setRegra(RegraAvaliacao_Model_Regra $regra)
-  {
-    $this->_regra = $regra;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return RegraAvaliacao_Model_Regra
-   */
-  public function getRegra()
-  {
-    return $this->_regra;
-  }
-
-  /**
-   * Setter.
-   * @param array $componentes
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  protected function _setComponentes(array $componentes)
-  {
-    $this->_componentes = $componentes;
-    return $this;
-  }
-
-  /**
-   * Getter.
-   * @return array
-   */
-  public function getComponentes()
-  {
-    return $this->_componentes;
-  }
-
-  /**
    * Getter.
    * @return TabelaArredondamento_Model_Tabela
    */
@@ -1237,7 +636,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return FALSE;
   }
 
-  public function getQtdComponentes()
+  public function getQtdComponentes($ignorarDispensasParciais = false)
   {
     $enrollment = $this->getOption('matriculaData');
 
@@ -1249,7 +648,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         null,
         null,
         $enrollment,
-        false
+        false,
+        $ignorarDispensasParciais
     ));
 
     $disciplinesWithoutStage = Portabilis_Utils_Database::fetchPreparedQuery('
@@ -1407,7 +807,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function getSituacaoAluno()
   {
-    $situacaoNotas  = $this->getSituacaoNotas();
+    $situacaoNotas  = $this->getSituacaoNotas(true);
     $situacaoFaltas = $this->getSituacaoFaltas();
 
     $situacao        = $this->getSituacaoNotaFalta($situacaoNotas->situacao, $situacaoFaltas->situacao);
@@ -1416,6 +816,42 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     return $situacao;
   }
+
+    private function getLastStage($enrollmentId, $classroomId, $disciplineId)
+    {
+        $stages = range(1, $this->getOption('etapas'));
+        $exemptedStages = $this->getExemptedStages($enrollmentId, $disciplineId);
+
+        if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
+            $specificStagesString = App_Model_IedFinder::getEtapasComponente($classroomId, $disciplineId);
+
+            if ($specificStagesString) {
+                $stages = explode(',', $specificStagesString);
+            }
+        }
+
+        $stages = array_diff($stages, $exemptedStages);
+
+        return max($stages);
+    }
+
+    private function deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId)
+    {
+        Portabilis_Utils_Database::fetchPreparedQuery('
+            DELETE FROM modules.nota_componente_curricular_media
+            WHERE nota_aluno_id = $1
+            AND NOT EXISTS(
+                SELECT 1
+                FROM modules.nota_componente_curricular
+                WHERE nota_componente_curricular_media.nota_aluno_id = nota_componente_curricular.nota_aluno_id
+                AND nota_componente_curricular_media.componente_curricular_id = nota_componente_curricular.componente_curricular_id
+            )
+        ', [
+            'params' => [
+                $notaAlunoId,
+            ]
+        ]);
+    }
 
   /**
    * Retorna a situação das notas lançadas para os componentes curriculares cursados pelo aluno. Possui
@@ -1454,11 +890,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    *      então foi renomeado este metodo para getSituacaoNotas, para que no metódo getSituacaoComponentesCurriculares
    *      fosse retornado a situação do baseada nas notas e faltas lançadas.
    *
+   * Obs2: A opção $calcularSituacaoAluno é passada apenas ao calcular a situação geral da matrícula, pois desabilita
+   * algumas verificações que não são necessárias para essa validação, mas que podem ser úteis em outras situações, como
+   * ao calcular a situação de um componente específico
    *
    * @return stdClass|NULL Retorna NULL caso não
    * @see App_Model_MatriculaSituacao
    */
-  public function getSituacaoNotas()
+  public function getSituacaoNotas($calcularSituacaoAluno = false)
   {
     $situacao = new stdClass();
     $situacao->situacao = 0;
@@ -1470,8 +909,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadMedias()->getMediasComponentes();
     $mediasComponenentesTotal = $mediasComponentes;
-    $componentes = $this->getComponentes();
-    $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
+    if (!$calcularSituacaoAluno) {
+        $componentes = $this->getComponentes();
+        $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
+    }
 
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
@@ -1527,18 +968,25 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if(is_numeric($disciplinaDispensadaTurma)){
-      unset($componentes[$disciplinaDispensadaTurma]);
-      unset($mediasComponentes[$disciplinaDispensadaTurma]);
+        if (is_array($componentes)) {
+            unset($componentes[$disciplinaDispensadaTurma]);
+        }
+
+        unset($mediasComponentes[$disciplinaDispensadaTurma]);
     }
 
-    // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
-    // curriculares da matrícula, ainda está em andamento
-    if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
-         && $this->getRegra()->get('definirComponentePorEtapa') != "1") {
-      $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    }
+    $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno);
 
-    $totalComponentes = $this->getQtdComponentes();
+    if (!$calcularSituacaoAluno) {
+        // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
+        // curriculares da matrícula, ainda está em andamento
+        if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
+             && $this->getRegra()->get('definirComponentePorEtapa') != "1") {
+          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        }
+    } elseif($calcularSituacaoAluno && count($mediasComponenentesTotal) < $totalComponentes) {
+        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    }
 
     if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
          && $this->getRegra()->get('definirComponentePorEtapa') == "1"){
@@ -1555,18 +1003,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $etapa = $mediaComponente[0]->etapa;
       $qtdComponentes++;
       $somaMedias += $media;
-      $totalEtapas = $this->getOption('etapas');
 
-      if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
-        $etapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $id);
-
-        if ($etapaEspecifica) {
-          $totalEtapasComponente = $etapaEspecifica;
-        }
-      }
-      else{
-        $totalEtapasComponente = $totalEtapas;
-      }
+      $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
       if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
 
@@ -1574,7 +1012,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if($getCountNotaCC[0]['cc'] == 0) $etapa = 0;
 
-        if ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc'){
+        if ($etapa < $lastStage && (string)$etapa != 'Rc'){
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
@@ -1603,7 +1041,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $permiteSituacaoEmExame = FALSE;
       }
 
-      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media && $this->hasRecuperacao() && $permiteSituacaoEmExame) {
+      if ($etapa == $lastStage && $media < $this->getRegra()->media && $this->hasRecuperacao() && $permiteSituacaoEmExame) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
@@ -1615,7 +1053,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           }
         }
       }
-      elseif ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media) {
+      elseif ($etapa == $lastStage && $media < $this->getRegra()->media) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
@@ -1626,7 +1064,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
-      elseif ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc') {
+      elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
       }
       else {
@@ -1733,9 +1171,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $etapa                              = 0;
     $faltasComponentes                  = array();
 
+    $enrollmentData = $this->getOption('matriculaData');
+    $enrollmentId = $enrollmentData['cod_matricula'];
+    $classroomId = $this->getOption('ref_cod_turma');
+
     $componentes = $this->getComponentes();
 
-    $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+    $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($classroomId);
 
     // Carrega faltas lançadas (persistidas)
     $this->_loadFalta();
@@ -1773,9 +1215,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $id              = $componenteEtapa->get('componenteCurricular');
         $etapa           = $componenteEtapa->etapa;
 
-        // Etapas lançadas
-        $etapasComponentes[$etapa] = $etapa;
-
         // Usa stdClass como interface de acesso
         $faltasComponentes[$id] = new stdClass();
         $faltasComponentes[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
@@ -1799,10 +1238,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           100 - $faltasComponentes[$id]->porcentagemFalta;
 
         // Na última etapa seta situação presença como aprovado ou reprovado.
-        if ($etapa == $this->getOption('etapas') || $etapa == 'Rc') {
+        $lastStage = $this->getLastStage($enrollmentId, $classroomId, $id);
+        if ($etapa == $lastStage || $etapa == 'Rc') {
           $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
           $faltasComponentes[$id]->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                                           App_Model_MatriculaSituacao::REPROVADO;
+            // Se etapa = quantidade de etapas dessa disciplina, vamos assumir que é a última etapa
+            // já que essa variável só tem o intuito de dizer que todas etapas da disciplina estão lançadas
+            $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
+        } else {
+            $etapasComponentes[$etapa] = $etapa;
         }
 
         // Adiciona a quantidade de falta do componente ao total geral de faltas
@@ -2993,14 +2438,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
   }
 
-  public function setCurrentComponenteCurricular($componenteId){
-    $this->_currentComponenteCurricular = $componenteId;
-  }
-
-  public function getCurrentComponenteCurricular(){
-    return $this->_currentComponenteCurricular;
-  }
-
   /**
    * Insere ou atualiza as notas no boletim do aluno.
    * @return Avaliacao_Service_Boletim Provê interface fluída
@@ -3308,6 +2745,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       $matriculaId = $infosMatricula['cod_matricula'];
       $serieId = $infosMatricula['ref_ref_cod_serie'];
       $escolaId = $infosMatricula['ref_ref_cod_escola'];
+      $notaAlunoId = $this->_getNotaAluno()->id;
 
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
@@ -3318,7 +2756,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           $qtdeEtapas = $this->getOption('etapas');
 
           if($regra->get('definirComponentePorEtapa') == "1"){
-            $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id);
+            $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
 
             $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
           }
@@ -3382,12 +2820,11 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           // A média pode estar bloqueada caso tenha sido alterada manualmente.
           // Neste caso não acontece a atualização da mesma por aqui e é necessário
           // desbloqueá-la antes.
-          if ($locked) {
-            continue;
+          if (!$locked) {
+            // Salva a média
+            $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
           }
 
-          // Salva a média
-          $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
           //Atualiza a situação de acordo com o que foi inserido na média anteriormente
           $notaComponenteCurricularMedia->markOld();
           $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
@@ -3395,6 +2832,8 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
         }
       }
+
+      $this->deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId);
     }
   }
 
