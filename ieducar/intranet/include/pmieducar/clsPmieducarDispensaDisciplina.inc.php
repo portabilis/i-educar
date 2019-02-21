@@ -442,7 +442,8 @@ class clsPmieducarDispensaDisciplina
         $int_ref_cod_matricula = null,
         $int_ref_cod_serie = null,
         $int_ref_cod_escola = null,
-        $int_etapa = null
+        $int_etapa = null,
+        $ignorarDispensasParciais = false
     ) {
         $sql = "SELECT {$this->_campos_lista}, etapa
                   FROM {$this->_tabela}
@@ -468,6 +469,44 @@ class clsPmieducarDispensaDisciplina
 
         if (is_numeric($int_etapa)) {
             $filtros .= "{$whereAnd} etapa = '{$int_etapa}'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($ignorarDispensasParciais) {
+            $filtros .= "{$whereAnd}
+                (SELECT COALESCE((
+                    SELECT count(1)
+                    FROM pmieducar.curso as c
+                    INNER JOIN pmieducar.ano_letivo_modulo as anm
+                    ON anm.ref_ref_cod_escola = matricula.ref_ref_cod_escola
+                    AND anm.ref_ano = matricula.ano
+                    WHERE c.padrao_ano_escolar = 1
+                    AND matricula.ref_cod_curso = c.cod_curso
+                ),0) +
+                COALESCE((
+                    SELECT COUNT(1)
+                    FROM pmieducar.turma as t
+                    INNER JOIN pmieducar.curso as c
+                    ON t.ref_cod_curso = c.cod_curso
+                    INNER JOIN pmieducar.turma_modulo as tm
+                    ON tm.ref_cod_turma = t.cod_turma
+                    WHERE c.padrao_ano_escolar = 0
+                    AND t.cod_turma = (
+                        SELECT matricula_turma.ref_cod_turma FROM pmieducar.matricula_turma
+                        WHERE matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                        ORDER BY ativo DESC, data_enturmacao DESC
+                        LIMIT 1
+                    )
+                ),0) AS etapas
+            FROM pmieducar.matricula
+            WHERE cod_matricula = ref_cod_matricula
+            )
+             = (
+                SELECT count(1)
+                FROM pmieducar.dispensa_etapa sde
+                WHERE sde.ref_cod_dispensa = dispensa_disciplina.cod_dispensa
+            )
+            ";
             $whereAnd = ' AND ';
         }
 
