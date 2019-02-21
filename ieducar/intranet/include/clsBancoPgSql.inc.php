@@ -1,51 +1,12 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
 use iEducar\Modules\ErrorTracking\TrackerFactory;
-
-require_once __DIR__ . '/../../vendor/autoload.php';
+use Illuminate\Database\Connection;
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'Portabilis/Mailer.php';
 
-/**
- * clsBancoSQL_ abstract class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 abstract class clsBancoSQL_
 {
   /**
@@ -104,12 +65,6 @@ abstract class clsBancoSQL_
   public $arrayStrRegistro = array();
 
   /**
-   * Ponteiro interno para a tupla atual da consulta.
-   * @var int
-   */
-  public $iLinha           = 0;
-
-  /**
    * Se ocorreu erro na consulta, retorna FALSE.
    * @var int
    */
@@ -122,37 +77,10 @@ abstract class clsBancoSQL_
   public $strErro          = '';
 
   /**
-   * Ativa ou desativa funções de depuração
-   * @var bool
-   */
-  public $bDepurar         = FALSE;
-
-  /**
-   * '1' para limpar o resultado assim que chegar ao último registro.
-   * @var bool
-   */
-  public $bAuto_Limpa      = FALSE;
-
-  /**
    * Query SQL.
    * @var string
    */
   public $strStringSQL     = '';
-
-  /**
-   * @var mixed
-   */
-  var $transactionBlock    = FALSE;
-
-  /**
-   * @var array
-   */
-  var $savePoints          = array();
-
-  /**
-   * @var bool
-   */
-  var $executandoEcho      = FALSE;
 
   /**
    * Define se serão lançadas exceções como respostas a erros da extensão
@@ -379,9 +307,6 @@ abstract class clsBancoSQL_
    */
   public function Consulta($consulta, $reescrever = true)
   {
-    $cronometro = new clsCronometro();
-    $cronometro->marca('inicio');
-
     if (empty($consulta)) {
       return FALSE;
     }
@@ -389,13 +314,7 @@ abstract class clsBancoSQL_
       $this->strStringSQL = $consulta;
     }
 
-    $this->strStringSQLOriginal = $this->strStringSQL;
-
     $this->Conecta();
-
-    if ($this->bDepurar) {
-      printf("<br>Depurar: Frase de Consulta = %s<br>\n", $this->strStringSQL);
-    }
 
     // Alterações de padrão MySQL para PostgreSQL
     if ($reescrever) {
@@ -426,17 +345,11 @@ abstract class clsBancoSQL_
       }
     }
 
-    // Executa a Consulta
-    if ($this->executandoEcho) {
-      echo $this->strStringSQL."\n<br>";
-    }
-
     $start = microtime(true);
 
     $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
     $this->strErro = pg_result_error($this->bConsulta_ID);
     $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
-    $this->iLinha   = 0;
 
     $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
@@ -456,158 +369,7 @@ abstract class clsBancoSQL_
       }
     }
 
-
-    $cronometro->marca('fim');
-
-    $tempoTotal = $cronometro->getTempoTotal();
-
-    $objConfig = new clsConfig();
-    if ($tempoTotal > $objConfig->arrayConfig['intSegundosQuerySQL']) {
-      $conteudo = "<table border=\"1\" width=\"100%\">";
-      $conteudo .= "<tr><td><b>Data</b>:</td><td>" . date( "d/m/Y H:i:s", time() ) . "</td></tr>";
-      $conteudo .= "<tr><td><b>Script</b>:</td><td>{$_SERVER["PHP_SELF"]}</td></tr>";
-      $conteudo .= "<tr><td><b>Tempo da query</b>:</td><td>{$tempoTotal} segundos</td></tr>";
-      $conteudo .= "<tr><td><b>Tempo max permitido</b>:</td><td>{$objConfig->arrayConfig["intSegundosQuerySQL"]} segundos</td></tr>";
-      $conteudo .= "<tr><td><b>SQL Query Original</b>:</td><td>{$this->strStringSQLOriginal}</td></tr>";
-      $conteudo .= "<tr><td><b>SQL Query Executado</b>:</td><td>{$this->strStringSQL}</td></tr>";
-      $conteudo .= "<tr><td><b>URL get</b>:</td><td>{$_SERVER['QUERY_STRING']}</td></tr>";
-      $conteudo .= "<tr><td><b>Metodo</b>:</td><td>{$_SERVER["REQUEST_METHOD"]}</td></tr>";
-
-      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $conteudo .= "<tr><td><b>POST vars</b>:</td><td>";
-
-        foreach ($_POST as $var => $val) {
-          $conteudo .= "{$var} => {$val}<br>";
-        }
-        $conteudo .= "</td></tr>";
-      }
-      elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        $conteudo .= "<tr><td><b>GET vars</b>:</td><td>";
-
-        foreach ($_GET as $var => $val) {
-          $conteudo .= "{$var} => {$val}<br>";
-        }
-        $conteudo .= "</td></tr>";
-      }
-
-      if ($_SERVER['HTTP_REFERER']) {
-        $conteudo .= "<tr><td><b>Referrer</b>:</td><td>{$_SERVER["HTTP_REFERER"]}</td></tr>";
-      }
-
-      $conteudo .= "</table>";
-
-      (new Portabilis_Mailer)->sendMail(
-          $objConfig->arrayConfig['ArrStrEmailsAdministradores'],
-          '[INTRANET - PMI] Desempenho de query',
-          $conteudo,
-          ['mime' => 'text/html']
-      );
-    }
-
     return $this->bConsulta_ID;
-  }
-
-  /**
-   * Inicia um bloco de transação (transaction block).
-   * @return bool
-   */
-  function begin()
-  {
-    if (!$this->transactionBlock) {
-      $this->Consulta( "BEGIN" );
-      $this->transactionBlock = TRUE;
-
-      // Reseta os savePoints.
-      $this->savePoints = array();
-      return TRUE;
-    }
-
-    // Tratamento de erro informando que está dentro de um transaction block
-    return FALSE;
-  }
-
-  /**
-   * Processa umbloco de transacao (transaction block)
-   *
-    * @return bool
-   */
-  function commit()
-  {
-    if ($this->transactionBlock) {
-      $this->Consulta('COMMIT');
-      $this->transactionBlock = FALSE;
-
-      // Reseta os savePoints
-      $this->savePoints = array();
-      return TRUE;
-    }
-
-    // Tratamento de erro informando que está dentro de um transaction block
-    return FALSE;
-  }
-
-  /**
-   * Cria um novo savePoint.
-   * @param  string $strSavePointName Nome do savePoint a ser criado.
-   * @return bool
-   */
-  function savePoint($strSavePointName = FALSE)
-  {
-    if ($this->transactionBlock) {
-      if ($strSavePointName) {
-        foreach ($this->savePoints as $key => $nome) {
-          // Não podemos ter dois savepoints com o mesmo nome
-          if ($nome == $strSavePointName) {
-            return FALSE;
-          }
-        }
-
-        $this->savePoints[] = $strSavePointName;
-        $this->Consulta("SAVEPOINT $strSavePointName");
-        return TRUE;
-      }
-      else {
-        $nome = 'save_' . count($this->savePoints);
-        $this->savePoints[] = $nome;
-        $this->Consulta("SAVEPOINT $nome");
-        return TRUE;
-      }
-    }
-
-    return FALSE;
-  }
-
-  /**
-   * Cria um novo savePoint.
-   * @param  string $strSavePointName Nome do savePoint onde se deseja voltar,
-   *   se não for definido volta ao último savepoint criado
-   * @return bool
-   */
-  function rollBack($strSavePointName = FALSE)
-  {
-    if ($this->transactionBlock) {
-      if (count($this->savePoints)) {
-        if ($strSavePointName) {
-          foreach ($this->savePoints as $key => $nome) {
-            // Se achar é porque tem o savePoint
-            if ($nome == $strSavePointName) {
-              $this->savePoints = array_slice($this->savePoints, 0, $key);
-              $this->Consulta("ROLLBACK TO {$strSavePointName}");
-              return TRUE;
-            }
-          }
-        }
-        else {
-          // Se não tem um nome definido ele volta ao último savePoint
-          $lastPos = count($this->savePoints) - 1;
-          $strSavePointName = $this->savePoints[$lastPos];
-          $this->savePoints = array_slice($this->savePoints, 0, ($lastPos - 1));
-          $this->Consulta("ROLLBACK TO {$strSavePointName}");
-        }
-      }
-    }
-
-    return FALSE;
   }
 
   /**
@@ -665,26 +427,8 @@ abstract class clsBancoSQL_
 
     // Testa se está vazio e verifica se Auto_Limpa é TRUE
     $stat = is_array($this->arrayStrRegistro);
-    if ($this->bDepurar && $stat) {
-      printf("<br>Depurar: Registro : %s <br>\n", implode($this->arrayStrRegistro));
-    }
-
-    if (!$stat && $this->bAuto_Limpa)
-    {
-      $this->Libera();
-    }
 
     return $stat;
-  }
-
-  /**
-   * Setter para índice de um registro do array de resultados retornado por
-   * Consulta().
-   * @param int $Pos
-   */
-  function Procura($Pos)
-  {
-    $this->iLinha = $Pos;
   }
 
   /**
@@ -783,28 +527,6 @@ abstract class clsBancoSQL_
   }
 
   /**
-   * Retorna um único registro de uma query SELECT.
-   * @param  string $consulta
-   * @return mixed
-   */
-  function UnicaTupla($consulta)
-  {
-    $this->Consulta($consulta);
-    $this->ProximoRegistro();
-    $tupla = $this->Tupla();
-    $this->Libera();
-    return $tupla;
-  }
-
-  /**
-   * @see clsBancoSQL_#UnicaTupla()
-   */
-  function TuplaUnica($consulta)
-  {
-    return $this->UnicaTupla;
-  }
-
-  /**
    * Mostra a mensagem de erro e interrompe a execução do script.
    * @param  string $msg
    * @param  bool   $getError
@@ -831,7 +553,7 @@ abstract class clsBancoSQL_
             'request' => $_REQUEST,
         ];
 
-        $tracker->notify(new \Exception($lastError['message']), $data);
+        $tracker->notify(new Exception($lastError['message']), $data);
     }
 
     die("<script>document.location.href = '/module/Error/unexpected';</script>");
@@ -877,40 +599,40 @@ abstract class clsBancoSQL_
       return $this->bConsulta_ID;
   }
 
-  /**
-   * Lança um evento "QueryExecuted".
-   *
-   * @see \Illuminate\Database\Connection::logQuery()
-   *
-   * @param string $query
-   * @param array  $bindings
-   * @param string $time
-   *
-   * @return void
-   */
-  protected function logQuery($query, $bindings, $time)
-  {
-    if (env('APP_ENV') == 'testing') {
-        return;
+    /**
+     * Lança um evento "QueryExecuted".
+     *
+     * @see Connection::logQuery()
+     *
+     * @param string $query
+     * @param array $bindings
+     * @param string $time
+     *
+     * @return void
+     */
+    protected function logQuery($query, $bindings, $time)
+    {
+        if (env('APP_ENV') == 'testing') {
+            return;
+        }
+
+        /** @var Connection $connection */
+        $connection = app(Connection::class);
+
+        $connection->logQuery($query, $bindings, $time);
     }
 
-    /** @var \Illuminate\Database\Connection $connection */
-    $connection = app(\Illuminate\Database\Connection::class);
-
-    $connection->logQuery($query, $bindings, $time);
-  }
-
-  /**
-   * Retorna o tempo gasto na operação.
-   *
-   * @see \Illuminate\Database\Connection::getElapsedTime()
-   *
-   * @param int $start
-   *
-   * @return float
-   */
-  protected function getElapsedTime($start)
-  {
-      return round((microtime(true) - $start) * 1000, 2);
-  }
+    /**
+     * Retorna o tempo gasto na operação.
+     *
+     * @see Connection::getElapsedTime()
+     *
+     * @param int $start
+     *
+     * @return float
+     */
+    protected function getElapsedTime($start)
+    {
+        return round((microtime(true) - $start) * 1000, 2);
+    }
 }

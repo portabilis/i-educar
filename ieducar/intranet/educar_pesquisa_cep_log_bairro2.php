@@ -105,8 +105,8 @@ class miolo1 extends clsListagem
     // Filtros
     $this->campoTexto('nm_bairro', 'Bairro', $_GET['nm_bairro'], 40, 255);
     $this->campoCep('nr_cep', 'CEP', $_GET['nr_cep']);
-    $this->campoTexto('nm_logradouro', 'Logradouro', $_GET['nm_logradouro'], 50, 255);
-    $this->campoTexto('cidade', 'Cidade', $_GET['cidade'], 60, 60);
+    $this->campoTexto('nm_logradouro', 'Logradouro', $_GET['nm_logradouro'], 40, 255);
+    $this->campoTexto('cidade', 'Cidade', $_GET['cidade'], 40, 60);
 
     // uf
 
