@@ -20,82 +20,112 @@ class EducacensoRepository
 
     public function getDataForRecord00($school, $year)
     {
-        $sql = "
+        $sql = '
             SELECT
-                educacenso_cod_escola.cod_escola_inep AS inep,
-                escola.cod_escola AS cod_escola,
-                fisica_gestor.cpf AS cpf_gestor_escolar,
-                pessoa_gestor.nome AS nome_gestor_escolar,
-                escola.cargo_gestor AS cargo_gestor_escolar,
-                escola.email_gestor AS email_gestor_escolar,
-                pessoa_gestor.idpes AS idpes_gestor_escolar,
-                escola.dependencia_administrativa,
-                escola.situacao_funcionamento,
-                escola.categoria_escola_privada,
-                escola.conveniada_com_poder_publico,
-                escola.mantenedora_escola_privada[1],
-                escola.cnpj_mantenedora_principal,
-                EXTRACT(YEAR FROM modulo1.data_inicio) AS data_inicio,
-                EXTRACT(YEAR FROM modulo2.data_fim) AS data_fim,
-                escola.latitude AS latitude,
-                escola.longitude AS longitude,
-                municipio.idmun AS id_municipio,
-                municipio.cod_ibge AS inep_municipio,
-                uf.cod_ibge AS inep_uf,
-                uf.sigla_uf AS sigla_uf,
-                distrito.iddis AS id_distrito,
-                distrito.cod_ibge AS inep_distrito,
-                juridica.fantasia AS nome_escola,
-                instituicao.orgao_regional AS orgao_regional,
-                instituicao.cod_instituicao AS cod_instituicao
-            FROM pmieducar.escola
-            JOIN pmieducar.instituicao ON TRUE 
-                AND instituicao.cod_instituicao = escola.ref_cod_instituicao
-            INNER JOIN cadastro.juridica ON TRUE 
-                AND juridica.idpes = escola.ref_idpes
-            INNER JOIN pmieducar.escola_ano_letivo ON TRUE 
-                AND escola_ano_letivo.ref_cod_escola = escola.cod_escola
-            INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON TRUE 
-                AND modulo1.ref_ref_cod_escola = escola.cod_escola
-                AND modulo1.ref_ano = escola_ano_letivo.ano
-                AND modulo1.sequencial = 1
-            INNER JOIN pmieducar.ano_letivo_modulo modulo2 ON TRUE 
-                AND modulo2.ref_ref_cod_escola = escola.cod_escola
-                AND modulo2.ref_ano = escola_ano_letivo.ano
-                AND modulo2.sequencial = (
-                    SELECT MAX(sequencial)
-                    FROM pmieducar.ano_letivo_modulo
-                    WHERE ref_ano = escola_ano_letivo.ano
-                    AND ref_ref_cod_escola = escola.cod_escola
-                )
-            LEFT JOIN cadastro.pessoa pessoa_gestor ON TRUE 
-                AND pessoa_gestor.idpes = escola.ref_idpes_gestor
-            LEFT JOIN cadastro.fisica fisica_gestor ON TRUE 
-                AND fisica_gestor.idpes = escola.ref_idpes_gestor
-            LEFT JOIN modules.educacenso_cod_escola ON TRUE 
-                AND educacenso_cod_escola.cod_escola = escola.cod_escola
-            LEFT JOIN cadastro.endereco_pessoa ON TRUE 
-                AND endereco_pessoa.idpes = escola.ref_idpes
-            LEFT JOIN cadastro.endereco_externo ON TRUE 
-                AND endereco_externo.idpes = escola.ref_idpes
-            LEFT JOIN public.bairro ON TRUE 
-            AND bairro.idbai = COALESCE(endereco_pessoa.idbai, (
-                SELECT b.idbai
-                FROM public.bairro b
-                INNER JOIN cadastro.endereco_externo ee ON (UPPER(ee.bairro) = UPPER(b.nome))
-                WHERE ee.idpes = escola.ref_idpes
-                LIMIT 1
-            ))
-            LEFT JOIN public.municipio ON TRUE 
-                AND municipio.idmun = bairro.idmun
-            LEFT JOIN public.uf ON TRUE 
-                AND uf.sigla_uf = COALESCE(municipio.sigla_uf, endereco_externo.sigla_uf)
-            LEFT JOIN public.distrito ON TRUE 
-                AND distrito.idmun = bairro.idmun
-            WHERE TRUE 
-                AND escola.cod_escola = $1
-                AND escola_ano_letivo.ano = $2
-        ";
+        \'00\' AS r00s1,
+        ece.cod_escola_inep AS r00s2,
+
+      gestor_f.cpf AS r00s3,
+      gestor_p.nome AS r00s4,
+      e.cargo_gestor AS r00s5,
+      e.email_gestor AS r00s6,
+
+      e.situacao_funcionamento AS r00s7,
+
+        (SELECT min(ano_letivo_modulo.data_inicio)
+          FROM pmieducar.ano_letivo_modulo
+          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s8,
+
+        (SELECT max(ano_letivo_modulo.data_fim)
+          FROM pmieducar.ano_letivo_modulo
+          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s9,
+
+        p.nome AS r00s10,
+        e.latitude AS r00s11,
+        e.longitude AS r00s12,
+        COALESCE(ep.cep, ee.cep) AS r00s13,
+        COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) AS r00s14,
+        COALESCE(ep.numero, ee.numero) AS r00s15,
+        COALESCE(ep.complemento, ee.complemento) AS r00s16,
+        COALESCE(bairro.nome, ee.bairro) AS r00s17,
+        uf.cod_ibge AS r00s18,
+        municipio.cod_ibge AS r00s19,
+        distrito.cod_ibge AS r00s20,
+
+        (SELECT COALESCE(
+          (SELECT min(fone_pessoa.ddd)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes),
+          (SELECT min(ddd_telefone)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s21,
+
+        (SELECT COALESCE(
+          (SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes),
+          (SELECT min(telefone)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s22,
+
+
+        (SELECT COALESCE(
+          (SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 3),
+          (SELECT min(fax)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s24,
+
+        (SELECT COALESCE(
+          (SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 4),
+          (SELECT min(fax)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s25,
+
+        (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento WHERE ref_cod_escola = e.cod_escola))) AS r00s26,
+
+        i.orgao_regional AS r00s27,
+        e.dependencia_administrativa AS r00s28,
+        e.zona_localizacao AS r00s29,
+        e.categoria_escola_privada AS r00s30,
+        e.conveniada_com_poder_publico r00s31,
+        (ARRAY[1] <@ e.mantenedora_escola_privada)::INT AS r00s32,
+        (ARRAY[2] <@ e.mantenedora_escola_privada)::INT AS r00s33,
+        (ARRAY[3] <@ e.mantenedora_escola_privada)::INT AS r00s34,
+        (ARRAY[4] <@ e.mantenedora_escola_privada)::INT AS r00s35,
+        (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS r00s36,
+        e.cnpj_mantenedora_principal AS r00s37,
+        j.cnpj AS r00s38,
+        e.regulamentacao AS r00s39,
+        0 AS r00s40,
+        e.situacao_funcionamento
+
+        FROM pmieducar.escola e
+        JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
+        INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
+        INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
+        INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
+        INNER JOIN cadastro.pessoa gestor_p ON (gestor_p.idpes = e.ref_idpes_gestor)
+        INNER JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = gestor_p.idpes)
+         LEFT JOIN cadastro.endereco_externo ee ON (ee.idpes = p.idpes)
+         LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+         LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(ep.idbai, (SELECT b.idbai
+                                                                   FROM public.bairro b
+                                                                       INNER JOIN cadastro.endereco_externo ee
+                                                                           ON (UPPER(ee.bairro) = UPPER(b.nome))
+                                                                   WHERE ee.idpes = e.ref_idpes
+                                                                   LIMIT 1)))
+        LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
+        LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
+        LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
+    
+        LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+        LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+        LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+        WHERE e.cod_escola = $1';
 
         return $this->fetchPreparedQuery($sql, [
             $school, $year
