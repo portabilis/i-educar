@@ -2,8 +2,13 @@
 
 namespace App\Providers;
 
+use App\Services\CacheManager;
+use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
+use iEducar\Support\Navigation\Breadcrumb;
+use iEducar\Support\Navigation\TopMenu;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
@@ -80,7 +85,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Request::macro('getSubdomain', function () {
-            return Str::replaceFirst('.' . config('app.default_host'), '', $this->getHost());
+            $host = str_replace('-', '', $this->getHost());
+            return Str::replaceFirst('.' . config('app.default_host'), '', $host);
         });
 
         // https://laravel.com/docs/5.5/migrations#indexes
@@ -94,11 +100,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
+        $this->app->register(RepositoryServiceProvider::class);
+        $this->app->singleton(Breadcrumb::class);
+        $this->app->singleton(TopMenu::class);
+
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
+            $this->app->register(DebugbarServiceProvider::class);
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
+
+        Cache::swap(new CacheManager(app()));
     }
 }

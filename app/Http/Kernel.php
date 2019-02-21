@@ -2,6 +2,12 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Footer;
+use App\Http\Middleware\GetLegacySession;
+use App\Http\Middleware\LegacyAuthenticateSession;
+use App\Http\Middleware\Menu;
+use App\Http\Middleware\Navigation;
+use App\Http\Middleware\SetLayoutVariables;
 use App\Http\Middleware\ConnectTenantDatabase;
 use App\Http\Middleware\LoadLegacyConfig;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -21,7 +27,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-        \App\Http\Middleware\ChangeAppName::class
+        \App\Http\Middleware\ChangeAppName::class,
     ];
 
     /**
@@ -39,8 +45,10 @@ class Kernel extends HttpKernel
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ChangeAppName::class,
+            GetLegacySession::class,
             ConnectTenantDatabase::class,
             LoadLegacyConfig::class,
+            SetLayoutVariables::class,
         ],
 
         'api' => [
@@ -65,6 +73,11 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'navigation' => Navigation::class,
+        'ieducar.navigation' => Navigation::class,
+        'ieducar.setlayoutvariables' => SetLayoutVariables::class,
+        'ieducar.menu' => Menu::class,
+        'ieducar.footer' => Footer::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
@@ -84,5 +97,6 @@ class Kernel extends HttpKernel
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
+        \App\Http\Middleware\ChangeAppName::class,
     ];
 }
