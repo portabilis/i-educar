@@ -30,7 +30,6 @@ class CreateCadastroDeficienciaExcluidosTable extends Migration
             'nm_deficiencia',
             'deficiencia_educacenso',
             'desconsidera_regra_diferenciada',
-            'updated_at',
         ]);
     }
 
