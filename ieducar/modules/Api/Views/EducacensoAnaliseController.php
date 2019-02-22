@@ -88,7 +88,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $telefoneValidator = new Telefone('Telefone 1', $escola->telefone);
         if (!$telefoneValidator->isValid()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. " + implode(', ', $telefoneValidator->getMessage()) + ';',
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. <br>" . implode('<br>', $telefoneValidator->getMessage()) . ';',
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Telefone 1)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
@@ -98,7 +98,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $telefoneValidator = new Telefone('Telefone 2', $escola->telefoneContato);
         if (!$telefoneValidator->isValid()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. " + implode(', ', $telefoneValidator->getMessage()) + ';',
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. <br>" . implode('<br>', $telefoneValidator->getMessage()) . ';',
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Telefone 2)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
@@ -113,7 +113,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-
+        
         if (!$escola->cargoGestor) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
