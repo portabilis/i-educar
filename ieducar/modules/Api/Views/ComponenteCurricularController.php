@@ -69,10 +69,6 @@ class ComponenteCurricularController extends ApiCoreController
       $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento', 'updated_at');
       $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
-      foreach ($disciplinas as &$disciplina){
-        $disciplina['nome'] = Portabilis_String_Utils::toUtf8($disciplina['nome']);
-      }
-
       return array('disciplinas' => $disciplinas);
     }
   }
