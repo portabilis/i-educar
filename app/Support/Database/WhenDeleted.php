@@ -165,7 +165,7 @@ trait WhenDeleted
 
     /**
      * Retorna o SQL que cria a trigger.
-     * 
+     *
      * @param string $table
      *
      * @return string

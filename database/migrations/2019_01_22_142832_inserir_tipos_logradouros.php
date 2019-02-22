@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class InserirTiposLogradouros extends Migration
 {
@@ -13,12 +12,16 @@ class InserirTiposLogradouros extends Migration
      */
     public function up()
     {
-        DB::table('urbano.tipo_logradouro')->insert([
+        DB::table('urbano.tipo_logradouro')->updateOrInsert([
             'idtlog' => 'POVO',
-            'descricao' => 'Povoado']);
+        ], [
+            'descricao' => 'Povoado'
+        ]);
 
-        DB::table('urbano.tipo_logradouro')->insert([
+        DB::table('urbano.tipo_logradouro')->updateOrInsert([
             'idtlog' => 'LOCAL',
-            'descricao' => 'Localidade']);
+        ], [
+            'descricao' => 'Localidade'
+        ]);
     }
 }
