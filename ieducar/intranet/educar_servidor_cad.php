@@ -693,6 +693,20 @@ class indice extends clsCadastro
 
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
+    $script = <<<'JS'
+(function () {
+    $j('.ref_cod_funcao select').each(function () {
+        const $this = $j(this);
+        const value = $this.val();
+
+        if (value != '') {
+            $this.data('valor-original', value);
+        }
+    });
+})();
+JS;
+
+    Portabilis_View_Helper_Application::embedJavascript($this, $script);
   }
 
   function Novo()
