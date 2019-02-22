@@ -142,10 +142,11 @@ var lockedAverage = function ($element, callback) {
 
     dialogElm.dialog({
         width: 600,
-        title: 'Atenção: média bloqueada',
+        title: 'Atenção!',
+        modal: true,
         buttons: [
           {
-            text: 'SIM',
+            text: 'Sim',
             click: function () {
               var options = {
                 url: postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media_desbloqueia', additionalVars),
@@ -167,7 +168,7 @@ var lockedAverage = function ($element, callback) {
               dialogElm.dialog('close');
             }
           }, {
-            text: 'NÃO',
+            text: 'Não',
             click: function () {
               callback();
               dialogElm.dialog('close');
