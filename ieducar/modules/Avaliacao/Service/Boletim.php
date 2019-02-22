@@ -2462,8 +2462,14 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
             $locked = (bool) $notaComponenteCurricularMedia->bloqueada;
 
-            $notaComponenteCurricularMedia->media = $media;
-            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+            // A média pode estar bloqueada caso tenha sido alterada manualmente.
+            // Neste caso não acontece a atualização da mesma por aqui e é necessário
+            // desbloqueá-la antes.
+            if (!$locked) {
+                $notaComponenteCurricularMedia->media = $media;
+                $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+            }
+
             $notaComponenteCurricularMedia->etapa = $etapa;
 
             $notaComponenteCurricularMedia->markOld();
@@ -2478,13 +2484,8 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             ));
           }
 
-          // A média pode estar bloqueada caso tenha sido alterada manualmente.
-          // Neste caso não acontece a atualização da mesma por aqui e é necessário
-          // desbloqueá-la antes.
-          if (!$locked) {
-            // Salva a média
-            $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-          }
+          // Salva a média
+          $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
 
           //Atualiza a situação de acordo com o que foi inserido na média anteriormente
           $notaComponenteCurricularMedia->markOld();
