@@ -14,7 +14,7 @@ class CriaCampoUnidadeVinculadaOutraInstituicao extends Migration
     public function up()
     {
         Schema::table('pmieducar.escola', function (Blueprint $table) {
-            $table->integer('unidade_vinculada_outra_instituicao')->default(0)->nullable();
+            $table->integer('unidade_vinculada_outra_instituicao')->nullable();
         });
     }
 
