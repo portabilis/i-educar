@@ -20,19 +20,29 @@ class DeficienciaController extends ApiCoreController
 
     protected function getDeficiencias()
     {
+        $params = [];
+        $modified = $this->getRequest()->modified ?: null;
+
+        if ($modified) {
+            $params[] = $modified;
+            $modified = 'AND updated_at >= $1';
+        }
+
         $sql = "
             SELECT cod_deficiencia, nm_deficiencia, updated_at, null as deleted_at
             FROM cadastro.deficiencia
             WHERE desconsidera_regra_diferenciada = 'FALSE'
+            {$modified}
             
             UNION ALL
             
             SELECT cod_deficiencia, nm_deficiencia, updated_at, deleted_at
             FROM cadastro.deficiencia_excluidos
-            WHERE desconsidera_regra_diferenciada = 'FALSE' 
+            WHERE desconsidera_regra_diferenciada = 'FALSE'
+            {$modified} 
         ";
 
-        $deficiencias = $this->fetchPreparedQuery($sql);
+        $deficiencias = $this->fetchPreparedQuery($sql, $params);
 
         foreach ($deficiencias as &$deficiencia) {
             $deficiencia['nm_deficiencia'] = Portabilis_String_Utils::toUtf8($deficiencia['nm_deficiencia']);
