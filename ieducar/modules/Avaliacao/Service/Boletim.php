@@ -1170,6 +1170,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacaoFalta = $situacaoFaltas->situacao;
       }
 
+      if (is_null($situacaoNota)) {
+        $situacaoNota = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      }
+
       $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
     }
 
