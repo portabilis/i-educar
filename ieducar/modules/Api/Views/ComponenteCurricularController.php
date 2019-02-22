@@ -55,8 +55,23 @@ class ComponenteCurricularController extends ApiCoreController
 
       $instituicaoId = $this->getRequest()->instituicao_id;
       $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
+      $modified = $this->getRequest()->modified;
 
-      $areaConhecimentoId ? $where = 'AND area_conhecimento_id = '. $areaConhecimentoId : '';
+      $where = '';
+      $params = [$instituicaoId];
+
+      if ($areaConhecimentoId) {
+          $wheres[] = 'area_conhecimento_id = '. $areaConhecimentoId;
+      }
+
+      if ($modified) {
+          $params[] = $modified;
+          $wheres[] = 'componente_curricular.updated_at >= $2';
+      }
+
+      if (count($wheres)) {
+          $where = ' AND ' . implode(' AND ', $wheres);
+      }
 
       $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area, ordenamento, componente_curricular.updated_at
                 FROM modules.componente_curricular
@@ -64,7 +79,7 @@ class ComponenteCurricularController extends ApiCoreController
                 WHERE componente_curricular.instituicao_id = $1
                 ' . $where . '
                 ORDER BY nome ';
-      $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+      $disciplinas = $this->fetchPreparedQuery($sql, $params);
 
       $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento', 'updated_at');
       $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
