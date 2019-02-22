@@ -108,6 +108,18 @@ class RegraController extends ApiCoreController
         if ($this->canGetRegras()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
             $ano = $this->getRequest()->ano;
+            $modified = $this->getRequest()->modified;
+
+            $params = [
+                $instituicaoId, $ano
+            ];
+
+            $where = '';
+
+            if ($modified) {
+                $params[] = $modified;
+                $where = ' AND ra.updated_at >= $3';
+            }
 
             $sql = '
               SELECT 
@@ -141,15 +153,12 @@ class RegraController extends ApiCoreController
                   ra.updated_at
               FROM modules.regra_avaliacao ra
               WHERE true
-                  AND ra.instituicao_id = $1
+                  AND ra.instituicao_id = $1 '. $where . '
               ORDER BY 
                 COALESCE(ra.regra_diferenciada_id,0),
                 ra.id';
 
-            $_regras = $this->fetchPreparedQuery($sql, [
-                $instituicaoId, $ano
-                ]
-            );
+            $_regras = $this->fetchPreparedQuery($sql, $params);
 
             $attrs = [
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
