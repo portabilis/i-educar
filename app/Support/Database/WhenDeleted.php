@@ -78,6 +78,7 @@ trait WhenDeleted
      */
     public function getColumns($columns)
     {
+        $columns[] = 'updated_at';
         $columns[] = 'deleted_at';
 
         return implode(', ', $columns);
@@ -96,6 +97,7 @@ trait WhenDeleted
             return 'OLD.' . $column;
         }, $columns);
 
+        $columns[] = 'NOW()';
         $columns[] = 'NOW()';
 
         return implode(', ', $columns);

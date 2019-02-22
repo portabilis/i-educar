@@ -31,7 +31,7 @@ class WhenDeletedTest extends TestCase
     public function testTrait()
     {
         $from = 'schema.table';
-        $columns = ['id', 'name', 'updated_at'];
+        $columns = ['id', 'name'];
 
         $expectedFunctionName = 'when_deleted_schema_table';
         $this->assertEquals($expectedFunctionName, $this->instance->getFunctionName($from));
@@ -42,7 +42,7 @@ class WhenDeletedTest extends TestCase
         $expectedColumns = 'id, name, updated_at, deleted_at';
         $this->assertEquals($expectedColumns, $this->instance->getColumns($columns));
 
-        $expectedValueS = 'OLD.id, OLD.name, OLD.updated_at, NOW()';
+        $expectedValueS = 'OLD.id, OLD.name, NOW(), NOW()';
         $this->assertEquals($expectedValueS, $this->instance->getColumnsValues($columns));
     }
 
@@ -57,7 +57,7 @@ class WhenDeletedTest extends TestCase
             LANGUAGE plpgsql AS
             $$
             BEGIN
-                INSERT INTO some_other_table (id, name, deleted_at) VALUES (OLD.id, OLD.name, NOW());
+                INSERT INTO some_other_table (id, name, updated_at, deleted_at) VALUES (OLD.id, OLD.name, NOW(), NOW());
                 RETURN OLD;
             END;
             $$;
@@ -114,7 +114,7 @@ class WhenDeletedTest extends TestCase
             LANGUAGE plpgsql AS
             $$
             BEGIN
-                INSERT INTO other_table (id, name, deleted_at) VALUES (OLD.id, OLD.name, NOW());
+                INSERT INTO other_table (id, name, updated_at, deleted_at) VALUES (OLD.id, OLD.name, NOW(), NOW());
                 RETURN OLD;
             END;
             $$;
