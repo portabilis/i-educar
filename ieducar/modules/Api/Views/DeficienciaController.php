@@ -6,8 +6,6 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class DeficienciaController extends ApiCoreController
 {
-
-    // search options
     protected function searchOptions()
     {
         return ['namespace' => 'cadastro', 'labelAttr' => 'nm_deficiencia', 'idAttr' => 'cod_deficiencia'];
@@ -44,10 +42,6 @@ class DeficienciaController extends ApiCoreController
 
         $deficiencias = $this->fetchPreparedQuery($sql, $params);
 
-        foreach ($deficiencias as &$deficiencia) {
-            $deficiencia['nm_deficiencia'] = Portabilis_String_Utils::toUtf8($deficiencia['nm_deficiencia']);
-        }
-
         $attrs = [
             'cod_deficiencia' => 'id',
             'nm_deficiencia' => 'nome',
@@ -57,7 +51,9 @@ class DeficienciaController extends ApiCoreController
 
         $deficiencias = Portabilis_Array_Utils::filterSet($deficiencias, $attrs);
 
-        return ['deficiencias' => $deficiencias ];
+        return [
+            'deficiencias' => $deficiencias
+        ];
     }
 
     public function Gerar()
