@@ -49,14 +49,14 @@ class RegraController extends ApiCoreController
 
             foreach ($tabelas as $tabela) {
                 $_tabelas[$tabela['id']]['id'] = $tabela['id'];
-                $_tabelas[$tabela['id']]['nome'] = Portabilis_String_Utils::toUtf8($tabela['nome']);
+                $_tabelas[$tabela['id']]['nome'] = $tabela['nome'];
                 $_tabelas[$tabela['id']]['tipo_nota'] = $tabela['tipo_nota'];
                 $_tabelas[$tabela['id']]['valores'][] = [
-                    'rotulo' => Portabilis_String_Utils::toUtf8($tabela['rotulo']),
-                    'descricao' => Portabilis_String_Utils::toUtf8($tabela['descricao']),
-                    'valor_maximo' => Portabilis_String_Utils::toUtf8($tabela['valor_maximo']),
-                    'casa_decimal_exata' => Portabilis_String_Utils::toUtf8($tabela['casa_decimal_exata']),
-                    'acao' => Portabilis_String_Utils::toUtf8($tabela['acao']),
+                    'rotulo' => $tabela['rotulo'],
+                    'descricao' => $tabela['descricao'],
+                    'valor_maximo' => $tabela['valor_maximo'],
+                    'casa_decimal_exata' => $tabela['casa_decimal_exata'],
+                    'acao' => $tabela['acao'],
                 ];
                 $_tabelas[$tabela['id']]['updated_at'] = $tabela['updated_at'];
             }
