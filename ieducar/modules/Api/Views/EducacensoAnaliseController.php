@@ -3,6 +3,9 @@
 use App\Models\Educacenso\Registro00;
 use App\Services\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
+use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use Illuminate\Support\Str;
 
@@ -105,6 +108,73 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if ($escola->ddd && !$escola->telefone) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Insira o Telefone 1 quando o campo: DDD estiver preenchido;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: (DDD) / Telefone 1)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (strlen($escola->email) > 50) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Insira no máximo 50 letras ou símbolos no e-mail da escola;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Email)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!$escola->zonaLocalizacao) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se a zona/localização da escola foi informada;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Zona localização)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->localizacaoDiferenciada == 1 && $escola->zonaLocalizacao == 1) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a zona/localização da escola é urbana, portanto a localização diferenciada da escola não pode ser área de assentamento;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Localização diferenciada da escola)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!$escola->orgaoVinculado && $escola->dependenciaAdministrativa != DependenciaAdministrativaEscola::PRIVADA) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se órgão que a escola pública está vinculada foi informado;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Órgão que a escola pública está vinculada)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (
+            !$escola->cnpjEscolaPrivada &&
+            $escola->mantenedoraEscolaPrivada == MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS &&
+            $escola->regulamentacao == Regulamentacao::SIM
+        ) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a mantenedora da escola é uma Instituição sem fins lucrativos e a escola é regulamentada pelo conselho/órgão, portanto é necessário informar o CNPJ da mantenedora principal desta unidade escolar;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!$escola->esferaAdministrativa && $escola->regulamentacao == Regulamentacao::SIM) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->codigoInep) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
@@ -113,7 +183,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        
+
         if (!$escola->cargoGestor) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
