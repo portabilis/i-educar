@@ -204,6 +204,12 @@ class Registro00 implements RegistroEducacenso
      */
     public $unidadeVinculada;
 
+    public $localizacaoDiferenciada;
+
+    public $orgaoVinculado;
+
+    public $esferaAdministrativa;
+
     /**
      * @var string Campo usado na validação
      */

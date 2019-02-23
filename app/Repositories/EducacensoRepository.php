@@ -103,6 +103,11 @@ class EducacensoRepository
             0 AS "unidadeVinculada",
             e.situacao_funcionamento,
             e.mantenedora_escola_privada[1] AS "mantenedoraEscolaPrivada",
+                   
+            e.localizacao_diferenciada AS "localizacaoDiferenciada",
+            e.orgao_vinculado_escola AS "orgaoVinculado",
+            e.esfera_administrativa AS "esferaAdministrativa",
+                   
             e.cod_escola AS "idEscola",
             municipio.idmun AS "idMunicipio",
             distrito.iddis AS "idDistrito",
