@@ -3,6 +3,7 @@
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\View;
+use Tooleks\LaravelAssetVersion\Facades\Asset;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../includes/bootstrap.php';
@@ -17,7 +18,6 @@ require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
@@ -119,15 +119,16 @@ class clsBase extends clsConfig
         if (is_array($this->estilos) && count($this->estilos)) {
             $estilos = '';
             foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='/intranet/styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+                $estilos .= "<link rel=stylesheet type='text/css' href='" . Asset::get('/intranet/scripts/' . $estilo . '.js') . ".css' />";
             }
             $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
         }
 
+
         if (is_array($this->scripts) && count($this->scripts)) {
-            $estilos = '';
+            $scripts = '';
             foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
+                $scripts .= "<script type='text/javascript' src='" . Asset::get('/intranet/scripts/' . $script . '.js') . "'></script>";
             }
             $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
         }
