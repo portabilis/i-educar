@@ -12,8 +12,20 @@ class EtapasController extends ApiCoreController
         }
 
         $instituicaoId = $this->getRequest()->instituicao_id;
+        $modified = $this->getRequest()->modified;
 
-        $sql = '
+        $params = [$instituicaoId];
+
+        $whereEscolaSerieDisciplina = '';
+        $whereComponenteCurricularTurma = '';
+
+        if ($modified) {
+            $params[] = $modified;
+            $whereEscolaSerieDisciplina = ' AND esd.updated_at >= $2';
+            $whereComponenteCurricularTurma = ' AND cct.updated_at >= $2';
+        }
+
+        $sql = "
             (
                 SELECT 
                     t.cod_turma as turma_id,
@@ -30,6 +42,7 @@ class EtapasController extends ApiCoreController
                     AND esd.ativo = 1
                     AND t.ano = ANY(esd.anos_letivos)
                 WHERE TRUE 
+                    {$whereEscolaSerieDisciplina}
                     AND esd.etapas_especificas = 1
                     AND NOT EXISTS(
                         SELECT 1
@@ -38,7 +51,7 @@ class EtapasController extends ApiCoreController
                             pmieducar.instituicao AS i
                         WHERE TRUE 
                         AND cct.turma_id = t.cod_turma
-                        AND i.cod_instituicao = 1
+                        AND i.cod_instituicao = $1
                         AND i.componente_curricular_turma
                     )
             )
@@ -59,6 +72,7 @@ class EtapasController extends ApiCoreController
                     AND esd.ativo = 1
                     AND t.ano = ANY(esd.anos_letivos)
                 WHERE TRUE 
+                    {$whereEscolaSerieDisciplina}
                     AND esd.etapas_especificas = 1
                     AND NOT EXISTS(
                         SELECT 1
@@ -67,7 +81,7 @@ class EtapasController extends ApiCoreController
                             pmieducar.instituicao AS i
                         WHERE TRUE 
                         AND cct.turma_id = t.cod_turma
-                        AND i.cod_instituicao = 1
+                        AND i.cod_instituicao = $1
                         AND i.componente_curricular_turma
                     )
             )
@@ -82,6 +96,7 @@ class EtapasController extends ApiCoreController
                     null as deleted_at
                 FROM modules.componente_curricular_turma AS cct
                 WHERE TRUE 
+                    {$whereComponenteCurricularTurma}
                     AND cct.etapas_especificas = 1
                     AND EXISTS(
                         SELECT 1
@@ -101,6 +116,7 @@ class EtapasController extends ApiCoreController
                     cct.deleted_at
                 FROM modules.componente_curricular_turma_excluidos AS cct
                 WHERE TRUE 
+                    {$whereComponenteCurricularTurma}
                     AND cct.etapas_especificas = 1
                     AND EXISTS(
                         SELECT 1
@@ -109,9 +125,9 @@ class EtapasController extends ApiCoreController
                         AND i.componente_curricular_turma
                     )
             )
-        ';
+        ";
 
-        $etapas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
+        $etapas = $this->fetchPreparedQuery($sql, $params);
         $etapas = Portabilis_Array_Utils::filterSet($etapas, [
             'turma_id', 'disciplina_id', 'etapas_especificas', 'etapas_utilizadas', 'updated_at', 'deleted_at'
         ]);
