@@ -2297,6 +2297,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $notaComponenteCurricularMedia->media = $media;
       $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
       $notaComponenteCurricularMedia->bloqueada = $lock;
+      $notaComponenteCurricularMedia->situacao = null;
 
       $notaComponenteCurricularMedia->markOld();
     } catch (Exeption $e) {
@@ -2313,8 +2314,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Salva a média
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
     $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
-    // Atualiza situação matricula
-    $this->promover();
+
+    try {
+        // Atualiza situação matricula
+        $this->promover();
+    } catch (Exception $e) {
+        // Evita que uma mensagem de erro apareça caso a situação na matrícula
+        // não seja alterada.
+    }
+
     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
     $notaComponenteCurricularMedia->markOld();
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
