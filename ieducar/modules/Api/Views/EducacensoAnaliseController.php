@@ -71,7 +71,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (strlen($escola->logradouro) < 4) {
+        if (strlen($escola->logradouro) > 100) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Insira no máximo 100 letras no nome do logradouro da escola;",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Logradouro)',
