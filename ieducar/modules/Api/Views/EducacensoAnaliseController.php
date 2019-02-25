@@ -6,6 +6,7 @@ use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use Illuminate\Support\Str;
 
@@ -153,13 +154,10 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (
-            !$escola->cnpjEscolaPrivada &&
-            $escola->mantenedoraEscolaPrivada == MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS &&
-            $escola->regulamentacao == Regulamentacao::SIM
-        ) {
+        $cnpjMantenedoraPrivada = new CnpjMantenedoraPrivada($escola);
+        if (!$cnpjMantenedoraPrivada->isValid()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a mantenedora da escola é uma Instituição sem fins lucrativos e a escola é regulamentada pelo conselho/órgão, portanto é necessário informar o CNPJ da mantenedora principal desta unidade escolar;",
+                'text' => $cnpjMantenedoraPrivada->getMessage(),
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
