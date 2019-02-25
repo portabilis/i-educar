@@ -1148,7 +1148,7 @@ class AlunoController extends ApiCoreController
 
             if ($modified) {
                 $params[] = $modified;
-                $where = 'AND p.data_rev >= $1';
+                $where = 'AND greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) >= $1';
             }
 
             $sql = "
@@ -1157,7 +1157,7 @@ class AlunoController extends ApiCoreController
                 f.nome_social,
                 f.data_nasc as data_nascimento,
                 ff.caminho as foto_aluno,
-                p.data_rev::timestamp(0) as updated_at,
+                greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) as updated_at,
                 (
                     CASE WHEN a.ativo = 0 THEN
                         p.data_rev::timestamp(0)
