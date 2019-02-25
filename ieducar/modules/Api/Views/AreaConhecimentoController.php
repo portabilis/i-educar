@@ -20,10 +20,11 @@ class AreaConhecimentoController extends ApiCoreController
             $modified = $this->getRequest()->modified;
 
             $params = [$instituicaoId];
+            $where = '';
 
             if ($modified) {
                 $params[] = $modified;
-                $modified = ' AND updated_at >= $2';
+                $where = ' AND updated_at >= $2';
             }
 
             $sql = "
@@ -31,7 +32,7 @@ class AreaConhecimentoController extends ApiCoreController
                     SELECT id, nome, ordenamento_ac, updated_at, null as deleted_at
                     FROM modules.area_conhecimento
                     WHERE instituicao_id = $1
-                    {$modified}
+                    {$where}
                     
                 )
                 UNION ALL 
@@ -39,7 +40,7 @@ class AreaConhecimentoController extends ApiCoreController
                     SELECT id, nome, ordenamento_ac, updated_at, deleted_at
                     FROM modules.area_conhecimento_excluidos
                     WHERE instituicao_id = $1
-                    {$modified}
+                    {$where}
                 )
                 ORDER BY nome 
             ";
