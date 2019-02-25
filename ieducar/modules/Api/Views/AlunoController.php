@@ -1139,37 +1139,63 @@ class AlunoController extends ApiCoreController
     protected function getTodosAlunos()
     {
         if ($this->canGetTodosAlunos()) {
-            $sql = '
+
+            $modified = $this->getRequest()->modified;
+
+            $params = [];
+
+            $where = '';
+
+            if ($modified) {
+                $params[] = $modified;
+                $where = 'AND p.data_rev >= $1';
+            }
+
+            $sql = "
                 SELECT a.cod_aluno AS aluno_id,
                 p.nome as nome_aluno,
                 f.nome_social,
                 f.data_nasc as data_nascimento,
                 ff.caminho as foto_aluno,
+                p.data_rev::timestamp(0) as updated_at,
+                (
+                    CASE WHEN a.ativo = 0 THEN
+                        p.data_rev::timestamp(0)
+                    ELSE 
+                        null
+                    END 
+                ) as deleted_at,
                 COALESCE((SELECT NOT d.desconsidera_regra_diferenciada
                             FROM cadastro.fisica_deficiencia fd
                             JOIN cadastro.deficiencia d ON (d.cod_deficiencia = fd.ref_cod_deficiencia)
                             WHERE fd.ref_idpes = p.idpes AND
-                                    d.nm_deficiencia NOT ILIKE \'nenhuma\'
+                                    d.nm_deficiencia NOT ILIKE 'nenhuma'
                             ORDER BY d.desconsidera_regra_diferenciada
                             LIMIT 1), false) as utiliza_regra_diferenciada
                 FROM pmieducar.aluno a
                 INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
                 INNER JOIN cadastro.fisica f ON f.idpes = p.idpes
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
-                WHERE a.ativo = 1
+                WHERE TRUE
+                {$where}
                 ORDER BY nome_aluno ASC
-            ';
+            ";
 
-            $alunos = $this->fetchPreparedQuery($sql);
+            $alunos = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['aluno_id', 'nome_aluno', 'nome_social', 'foto_aluno', 'data_nascimento', 'utiliza_regra_diferenciada'];
-            $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+            $alunos = Portabilis_Array_Utils::filterSet($alunos, [
+                'aluno_id', 'nome_aluno', 'nome_social', 'foto_aluno',
+                'data_nascimento', 'utiliza_regra_diferenciada', 'updated_at',
+                'deleted_at'
+            ]);
 
             foreach ($alunos as &$aluno) {
                 $aluno['utiliza_regra_diferenciada'] = dbBool($aluno['utiliza_regra_diferenciada']);
             }
 
-            return ['alunos' => $alunos];
+            return [
+                'alunos' => $alunos
+            ];
         }
     }
 
