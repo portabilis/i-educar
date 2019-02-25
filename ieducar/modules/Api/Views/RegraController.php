@@ -75,31 +75,63 @@ class RegraController extends ApiCoreController
     {
         if ($this->canGetRegrasRecuperacao()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
+            $modified = $this->getRequest()->modified;
 
-            $sql = 'SELECT
-                rar.id,
-                rar.regra_avaliacao_id,
-                rar.descricao,
-                rar.etapas_recuperadas,
-                rar.media,
-                rar.nota_maxima,
-                rar.updated_at
+            $params = [$instituicaoId];
+            $where = '';
+
+            if ($modified) {
+                $params[] = $modified;
+                $where = ' AND rar.updated_at >= $2';
+            }
+
+            $sql = "
+                SELECT
+                    rar.id,
+                    rar.regra_avaliacao_id,
+                    rar.descricao,
+                    rar.etapas_recuperadas,
+                    rar.media,
+                    rar.nota_maxima,
+                    rar.updated_at,
+                    null as deleted_at
                 FROM modules.regra_avaliacao_recuperacao rar
                 INNER JOIN modules.regra_avaliacao ra
                     ON rar.regra_avaliacao_id = ra.id
                 WHERE ra.instituicao_id = $1
-                ';
+                {$where}
+                
+                UNION ALL
+                
+                SELECT
+                    rar.id,
+                    rar.regra_avaliacao_id,
+                    rar.descricao,
+                    rar.etapas_recuperadas,
+                    rar.media,
+                    rar.nota_maxima,
+                    rar.updated_at,
+                    rar.deleted_at
+                FROM modules.regra_avaliacao_recuperacao_excluidos rar
+                INNER JOIN modules.regra_avaliacao ra
+                    ON rar.regra_avaliacao_id = ra.id
+                WHERE ra.instituicao_id = $1
+                {$where}
+            ";
 
-            $regrasRecuperacao = $this->fetchPreparedQuery($sql, [$instituicaoId]);
-            $attrs = ['id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas', 'media', 'nota_maxima', 'updated_at'];
-            $regrasRecuperacao = Portabilis_Array_Utils::filterSet($regrasRecuperacao, $attrs);
+            $regrasRecuperacao = $this->fetchPreparedQuery($sql, $params);
+            $regrasRecuperacao = Portabilis_Array_Utils::filterSet($regrasRecuperacao, [
+                'id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas',
+                'media', 'nota_maxima', 'updated_at', 'deleted_at'
+            ]);
 
             foreach ($regrasRecuperacao as &$regra) {
-                $regra['descricao'] = Portabilis_String_Utils::toUtf8($regra['descricao']);
                 $regra['etapas_recuperadas'] = explode(';', $regra['etapas_recuperadas']);
             }
 
-            return ['regras-recuperacao' => $regrasRecuperacao];
+            return [
+                'regras-recuperacao' => $regrasRecuperacao
+            ];
         }
     }
 
