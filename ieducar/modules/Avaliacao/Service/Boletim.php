@@ -2475,6 +2475,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             }
 
             $notaComponenteCurricularMedia->etapa = $etapa;
+            $notaComponenteCurricularMedia->situacao = null;
 
             $notaComponenteCurricularMedia->markOld();
           } catch (Exception $e) {
