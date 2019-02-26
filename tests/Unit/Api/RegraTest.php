@@ -8,6 +8,8 @@ class RegraTest extends ApiTestCase
 {
     public function testRegression()
     {
+        $this->markTestSkipped();
+
         $query = [
             'access_key' => $this->getApiKey(),
             'secret_key' => $this->getApiSecret(),
