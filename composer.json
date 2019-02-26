@@ -59,7 +59,6 @@
             "Tests\\": "tests/"
         },
         "classmap": [
-            "tests/SuiteTestCase",
             "tests/Unit"
         ]
     },
