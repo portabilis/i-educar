@@ -24,7 +24,7 @@ class CreatePmieducarEscolaSerieDisciplinaExcluidosTable extends Migration
             $table->integer('ativo');
             $table->integer('carga_horaria')->nullable();
             $table->integer('etapas_especificas')->nullable();
-            $table->varchar('etapas_utilizadas')->nullable();
+            $table->string('etapas_utilizadas')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
