@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 require_once 'includes/bootstrap.php';
 require_once 'include/clsBancoPgSql.inc.php';
 
@@ -9,14 +11,13 @@ class clsBanco extends clsBancoSQL_
     {
         parent::__construct($strDataBase);
 
-        global $coreExt;
-        $config = $coreExt['Config']->app->database;
+        $connection = DB::connection()->getConfig();
 
-        $this->setHost($config->hostname);
-        $this->setDbname($config->dbname);
-        $this->setPassword($config->password);
-        $this->setUser($config->username);
-        $this->setPort($config->port);
+        $this->setHost($connection['host']);
+        $this->setDbname($connection['database']);
+        $this->setPassword($connection['password']);
+        $this->setUser($connection['username']);
+        $this->setPort($connection['port']);
     }
 
     /**
