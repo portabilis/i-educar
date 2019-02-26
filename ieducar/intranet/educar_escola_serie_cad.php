@@ -187,11 +187,23 @@ class indice extends clsCadastro
             $this->ref_cod_serie, $anoLetivoSelected);
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
+            $instituicao_desabilitado = true;
+            $escola_desabilitado = true;
+            $curso_desabilitado = true;
+            $serie_desabilitado = true;
+            $escola_serie_desabilitado = true;
+
             $this->campoOculto('ref_cod_instituicao_', $this->ref_cod_instituicao);
             $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
             $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);
             $this->campoOculto('ref_cod_serie_', $this->ref_cod_serie);
         }
+
+        $obrigatorio = true;
+        $get_escola = true;
+        $get_curso = true;
+        $get_serie = false;
+        $get_escola_serie = true;
 
         include 'include/pmieducar/educar_campo_lista.php';
 
