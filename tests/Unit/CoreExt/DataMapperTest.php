@@ -53,6 +53,8 @@ class CoreExt_DataMapperTest extends UnitBaseTest
 
   protected function setUp()
   {
+      parent::setUp();
+
     $this->_db = $this->getDbMock();
   }
 

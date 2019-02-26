@@ -204,6 +204,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   protected function setUp()
   {
+      parent::setUp();
+
     // Armazena valores de configuração para serem usados nas diferentes
     // instâncias de objetos legados e novos
     $this->_setConfigOptions('usuario', array('cod_usuario' => 1))
