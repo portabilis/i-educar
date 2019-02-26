@@ -18,4 +18,9 @@ abstract class TestCase extends BaseTestCase
     {
         DB::statement('SET session_replication_role = DEFAULT;');
     }
+
+    public function getHtmlCodeFromFile($fileName)
+    {
+        return  file_get_contents(__DIR__ . '/Unit/assets/' . $fileName);
+    }
 }
