@@ -333,7 +333,7 @@ class indice extends clsCadastro
 
         $this->campoQuebra();
 
-        $scripts = ['scripts/matricula_turma.js'];
+        $scripts = ['intranet/scripts/matricula_turma.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
