@@ -386,6 +386,7 @@ $j(document).ready(function() {
             $j('#mantenedora_escola_privada').closest('tr').hide();
         }
 
+        habilitarCampoUnidadeVinculada();
         mostrarCamposDaUnidadeVinculada();
         obrigarCamposDaUnidadeVinculada();
         mostrarObrigarCnpjMantenedora();
@@ -453,6 +454,14 @@ $j(document).ready(function() {
     }
   }
 
+  function habilitarCampoUnidadeVinculada() {
+    if ($j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+      $j("#unidade_vinculada_outra_instituicao").prop('disabled', false);
+    } else {
+      $j("#unidade_vinculada_outra_instituicao").prop('disabled', true);
+    }
+  }
+
   function obrigarCamposDaUnidadeVinculada() {
     if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA) {
       $j('#inep_escola_sede').makeRequired();
@@ -491,6 +500,7 @@ $j(document).ready(function() {
     function(){
       verificaCamposDepAdm();
       obrigaCampoRegulamentacao();
+      habilitarCampoUnidadeVinculada();
     }
   );
 

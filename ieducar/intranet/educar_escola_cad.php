@@ -8,6 +8,7 @@ use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\SituacaoFuncionamento;
+use iEducar\Modules\Educacenso\Validator\Telefone;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -2431,58 +2432,14 @@ class indice extends clsCadastro
             return true;
         }
 
-        if (!$this->validaQuantidadeDeDigitosDoTelefone($telefone, $nomeCampo)) {
-            return false;
-        }
-
-        if (!$this->validaPrimeiroDigitoDoTelefone($telefone, $nomeCampo)) {
-            return false;
-        }
-
-        if (!$this->validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)) {
+        $telefoneValidator = new Telefone($nomeCampo, $telefone);
+        if (!$telefoneValidator->isValid()) {
+            $this->mensagem = implode('<br>', $telefoneValidator->getMessage());
             return false;
         }
 
         return true;
     }
-
-    protected function validaQuantidadeDeDigitosDoTelefone($telefone, $nomeCampo)
-    {
-        $quantidadeDeDigitos = strlen($telefone);
-
-        if ($quantidadeDeDigitos < 8 || $quantidadeDeDigitos > 9) {
-            $this->mensagem = "O campo: {$nomeCampo} deve possuir de 8 a 9 números.";
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function validaPrimeiroDigitoDoTelefone($telefone, $nomeCampo)
-    {
-        $quantidadeDeDigitos = strlen($telefone);
-        $primeiroDigito = substr($telefone, 0, 1);
-
-        if ($quantidadeDeDigitos == 9 && $primeiroDigito != 9) {
-            $this->mensagem = "No campo: {$nomeCampo} o primeiro dígito deve ser o número 9.";
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function validaDigitosSequenciaisDoTelefone($telefone, $nomeCampo)
-    {
-        $possuiTodosOsDigitosRepetidos = preg_match('/^(.)\1*$/', $telefone);
-
-        if ($possuiTodosOsDigitosRepetidos) {
-            $this->mensagem = "Os números do campo: {$nomeCampo} não podem ser todos repetidos.";
-            return false;
-        }
-
-        return true;
-    }
-
 
     protected function validaDigitosInepEscola($inep, $nomeCampo)
     {
