@@ -64,13 +64,8 @@ addOnConfirm();
 
     function msgDialogModal() {
 
-        if (checkedDesenturmados() && checkedEnturmados()){
-            return ['Enturmação das matriculas.',
-                    'Desenturmação das matriculas.'];
-        } else if (checkedEnturmados()) {
-            return ['Enturmação das matriculas.']
-        } else if (checkedDesenturmados()) {
-            return ['Desenturmação das matriculas.']
+        if (checkedDesenturmados() || checkedEnturmados()){
+            return ['Ao salvar a enturmação/desenturmação do(s) aluno(s) nesta turma, o histórico de enturmação do(s) mesmo(s) também será atualizado. Você gostaria de prosseguir com a ação?'];
         } else {
             return ['Nenhuma ação realizada'];
         }
@@ -78,21 +73,24 @@ addOnConfirm();
 
     function confirm() {
         $j('#campo_modal_confirm').dialog({
-            title: 'Confirmar operação',
+            title: 'Atenção!',
             resizable: false,
             height: "auto",
-            width: 400,
+            width: 600,
             modal: true,
             buttons: {
-                "confirmar": function() {
-                    $j( this ).dialog( "close" );
-                    $j('p#msgDialogModal').remove();
-                    acao();
-                },
-                'Cancelar': function() {
-                    $j( this ).dialog( "close" );
-                    $j('p#msgDialogModal').remove();
-                }
+              "Confirmar": function() {
+                  $j( this ).dialog( "close" );
+                  $j('p#msgDialogModal').remove();
+                  acao();
+              },
+              'Cancelar': function() {
+                  $j( this ).dialog( "close" );
+                  $j('p#msgDialogModal').remove();
+              }
+            },
+            open: function(event, ui) {
+                $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
             }
         });
 
@@ -100,7 +98,7 @@ addOnConfirm();
         this.dialogContainer = $j('#campo_modal_confirm');
 
         for (var i = 0; msg.length > i; i++) {
-            this.dialogContainer.after("<p id='msgDialogModal'>" + msg[i] + "</p>");
+            this.dialogContainer.after('<p style="margin:16px" id="msgDialogModal">' + msg[i] + '</p>');
         }
 
     }
