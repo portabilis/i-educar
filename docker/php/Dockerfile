@@ -22,6 +22,7 @@ ENV XDEBUG_IDEKEY xdebug
 ENV XDEBUG_REMOTE_HOST 127.0.0.1
 ENV XDEBUG_REMOTE_PORT 9000
 ENV XDEBUG_REMOTE_ENABLE 0
+ENV XDEBUG_AUTOSTART 0
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
@@ -45,8 +46,9 @@ RUN apt-get install -y unzip
 
 RUN ln -s /application/artisan /usr/local/bin/artisan
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_PROCESS_TIMEOUT 900
-
 RUN mkdir -p /usr/share/man/man7
 RUN apt-get install -y postgresql-client
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_PROCESS_TIMEOUT 900
+ENV COMPOSER_DISABLE_XDEBUG_WARN=1
