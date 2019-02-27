@@ -31,26 +31,51 @@ class SelectOptions
         return self::getDefaultOption() + Period::getDescriptiveValues();
     }
 
+    /**
+     * Retorna as opções disponíveis referentes à situação de funcionamento da escola
+     *
+     * @return array
+     */
     public static function situacoesFuncionamentoEscola()
     {
         return self::getDefaultOption() + SituacaoFuncionamento::getDescriptiveValues();
     }
 
+    /**
+     * Retorna as opções disponíveis referentes às dependências administrativas da escola
+     *
+     * @return array
+     */
     public static function dependenciasAdministrativasEscola()
     {
         return self::getDefaultOption() + DependenciaAdministrativaEscola::getDescriptiveValues();
     }
 
+    /**
+     * Retorna as opções disponíveis referentes às esferas administrativas da escola
+     *
+     * @return array
+     */
     public static function esferasAdministrativasEscola()
     {
         return self::getDefaultOption() + EsferaAdministrativa::getDescriptiveValues();
     }
 
+    /**
+     * Retorna as opções disponíveis referentes à localização diferenciada da escola
+     *
+     * @return array
+     */
     public static function localizacoesDiferenciadasEscola()
     {
         return self::getDefaultOption() + LocalizacaoDiferenciadaEscola::getDescriptiveValues();
     }
 
+    /**
+     * Retorna as opções disponíveis referentes às instituições quais a escola pode ser vinculada
+     *
+     * @return array
+     */
     public static function unidadesVinculadasEscola()
     {
         return self::getDefaultOption() + UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
