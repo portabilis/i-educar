@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Cache;
-
-require_once( "include/pmieducar/geral.inc.php" );
+require_once('include/pmieducar/geral.inc.php');
 require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma
@@ -2190,38 +2188,20 @@ class clsPmieducarTurma
 
     public static function verificaDisciplinaDispensada($turmaId, $componenteId)
     {
-        $key = "clsPmieducarTurma::verificaDisciplinaDispensada({$turmaId}, {$componenteId})";
+        $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
 
-        if (Cache::store('array')->has($key)) {
-            return Cache::store('array')->get($key);
-        }
-
-        $sql = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
-
-        $params = array('params' => $turmaId, 'return_only' => 'first-field');
+        $params = ['params' => $turmaId, 'return_only' => 'first-field'];
         $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
 
-        $isDependency = $disciplina_dispensada == $componenteId;
-
-        Cache::store('array')->put($key, $isDependency, 1);
-
-        return $isDependency;
+        return $disciplina_dispensada == $componenteId;
     }
 
     public static function getDisciplinaDispensada($turmaId)
     {
-        $key = "clsPmieducarTurma::getDisciplinaDispensada({$turmaId})";
+        $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
 
-        if ($value = Cache::get($key)) {
-            return $value === $key ? false : $value;
-        }
-
-        $sql = "SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1";
-
-        $params = array('params' => $turmaId, 'return_only' => 'first-field');
+        $params = ['params' => $turmaId, 'return_only' => 'first-field'];
         $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
-
-        Cache::put($key, $disciplina_dispensada ?: $key, 1);
 
         return $disciplina_dispensada;
     }
