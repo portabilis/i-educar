@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\unit\Intranet;
+namespace Tests\Unit\Intranet;
 
 use clsCampos;
-use Tests\SuiteTestCase\TestCase;
+use Tests\TestCase;
 
 class ClsCamposTest extends TestCase
 {
