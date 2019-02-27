@@ -24,7 +24,7 @@ services:
       XDEBUG_IDEKEY: xdebug
       XDEBUG_REMOTE_HOST: 127.0.0.1
       XDEBUG_REMOTE_PORT: 9000
-      XDEBUG_REMOTE_ENABLE: 1
+      XDEBUG_REMOTE_ENABLE: 0
     working_dir: /application
     volumes:
       - ./:/application
