@@ -2,37 +2,62 @@
 
 namespace App\Models;
 
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Fisica.
- *
- * @package namespace App\Entities;
- */
-class Individual extends EloquentBaseModel implements Transformable
+class Individual extends Model
 {
-    use TransformableTrait;
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
 
-    /**
-     * @var string
-     */
-    protected $table = 'cadastro.fisica';
+    public function person()
+    {
+        return $this->belongsTo(Person::class);
+    }
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'idpes';
+    public function mother()
+    {
+        return $this->belongsTo(Individual::class, 'mother_individual_id', 'id');
+    }
 
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'idpes', 'data_cad', 'operacao', 'origem_gravacao', 'idsis_cad',
-    ];
+    public function father()
+    {
+        return $this->belongsTo(Individual::class, 'father_individual_id', 'id');
+    }
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public function guardian()
+    {
+        return $this->belongsTo(Individual::class, 'guardian_individual_id', 'id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function religion()
+    {
+        return $this->belongsTo(Religion::class);
+    }
+
+    public function whoUpdated()
+    {
+        return $this->belongsTo(Individual::class, 'who_updated', 'id');
+    }
+
+    public function whoCreated()
+    {
+        return $this->belongsTo(Individual::class, 'who_created', 'id');
+    }
+
+    public function whoDeleted()
+    {
+        return $this->belongsTo(Individual::class, 'who_deleted', 'id');
+    }
 }

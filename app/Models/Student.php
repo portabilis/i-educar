@@ -6,25 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    /**
-     * @var string
-     */
-    protected $table = 'pmieducar.aluno';
+    public function individual()
+    {
+        return $this->belongsTo(Individual::class);
+    }
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_aluno';
+    public function religion()
+    {
+        return $this->belongsTo(Religion::class);
+    }
 
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'ref_idpes', 'data_cadastro',
-    ];
+    public function whoCreated()
+    {
+        return $this->belongsTo(Individual::class, 'who_created', 'id');
+    }
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public function whoDeleted()
+    {
+        return $this->belongsTo(Individual::class, 'who_deleted', 'id');
+    }
 }
