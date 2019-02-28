@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Models\Submenu::class, function (Faker $faker) {
+$factory->define(\App\Models\LegacySubmenu::class, function (Faker $faker) {
     return [
         'nm_submenu' => $faker->words(2, true),
         'ref_cod_menu_menu' => function() {

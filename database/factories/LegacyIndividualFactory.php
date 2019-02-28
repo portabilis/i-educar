@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\Individual;
-use App\Models\Person;
+use App\Models\LegacyIndividual;
+use App\Models\LegacyPerson;
 use Faker\Generator as Faker;
 
-$factory->define(Individual::class, function (Faker $faker) {
+$factory->define(LegacyIndividual::class, function (Faker $faker) {
     return [
-        'idpes' => factory(Person::class)->create(),
+        'idpes' => factory(LegacyPerson::class)->create(),
         'data_cad' => now(),
         'operacao' => $faker->randomElement(['I', 'A', 'E']),
         'origem_gravacao' => $faker->randomElement(['M', 'U', 'C', 'O']),

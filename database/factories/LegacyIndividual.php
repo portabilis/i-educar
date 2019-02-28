@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Models\Individual::class, function (Faker $faker) {
+$factory->define(\App\Models\LegacyIndividual::class, function (Faker $faker) {
     return [
         'idpes' => function() {
             return factory(\App\Models\Person::class)->create()->idpes;

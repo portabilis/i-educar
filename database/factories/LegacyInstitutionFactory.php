@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Institution;
+use App\Models\LegacyInstitution;
 use Faker\Generator as Faker;
 
-$factory->define(Institution::class, function (Faker $faker) {
+$factory->define(LegacyInstitution::class, function (Faker $faker) {
     return [
         'ref_usuario_cad' => 1,
         'ref_idtlog' => 'AV',
@@ -18,12 +18,12 @@ $factory->define(Institution::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(Institution::class, 'unique', function () {
+$factory->state(LegacyInstitution::class, 'unique', function () {
 
-    $institution = Institution::query()->first();
+    $institution = LegacyInstitution::query()->first();
 
     if (empty($institution)) {
-        $institution = factory(Institution::class)->create();
+        $institution = factory(LegacyInstitution::class)->create();
     }
 
     return [

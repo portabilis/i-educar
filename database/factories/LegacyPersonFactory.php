@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Person;
+use App\Models\LegacyPerson;
 use Faker\Generator as Faker;
 
-$factory->define(Person::class, function (Faker $faker) {
+$factory->define(LegacyPerson::class, function (Faker $faker) {
     return [
         'nome' => $faker->name,
         'data_cad' => now(),
