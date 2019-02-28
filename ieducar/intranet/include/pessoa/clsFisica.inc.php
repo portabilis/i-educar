@@ -39,7 +39,7 @@ class clsFisica
     public $ref_cod_sistema;
     public $cpf;
     public $ref_cod_religiao;
-    public $sus;
+    public $sus = false;
     public $nis_pis_pasep;
     public $ocupacao;
     public $empresa;
@@ -560,7 +560,7 @@ class clsFisica
             if ($this->sus) {
                 $set .= "$gruda sus = '{$this->sus}'";
                 $gruda = ', ';
-            } else {
+            } elseif ($this->sus !== false) {
                 $set .= "$gruda sus = NULL";
                 $gruda = ', ';
             }

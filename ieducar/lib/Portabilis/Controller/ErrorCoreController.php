@@ -35,7 +35,7 @@ class Portabilis_Controller_ErrorCoreController extends Core_Controller_Page_Vie
         $html .= $form->getAppendedOutput();
         $html .= $viewBase->MakeFootHtml();
 
-        echo $html;
+        return view('legacy.body', ['body' => $html])->render();
     }
 
     protected function loadAssets()

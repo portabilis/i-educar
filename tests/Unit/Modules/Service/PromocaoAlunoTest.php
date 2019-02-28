@@ -77,15 +77,9 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             ['matricula', 1]
         ]));
 
-    $regra = $this->getCleanMock('RegraAvaliacao_Model_Regra');
-
-    $regra->expects($this->once())
-        ->method('get')
-        ->will($this->returnValue(0));
-
     $service->expects($this->any())
-        ->method('getRegra')
-        ->will($this->returnValue($regra));
+        ->method('getRegraAvaliacaoTipoProgressao')
+        ->will($this->returnValue(0));
 
     $this->expectException('CoreExt_Service_Exception');
     $service->promover();
@@ -103,10 +97,9 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
     // Mock para RegraAvaliacao_Model_Regra
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
     $service->expects($this->any())
-            ->method('getRegra')
-            ->will($this->returnValue($regra));
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::CONTINUADA));
 
     $service->expects($this->once())
             ->method('getSituacaoAluno')
@@ -138,9 +131,9 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
 
     $service = $this->setExcludedMethods(array('promover'))
                     ->getCleanMock('Avaliacao_Service_Boletim');
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA);
-    $service->method('getRegra')
-            ->will($this->returnValue($regra));
+
+    $service->method('getRegraAvaliacaoTipoProgressao')
+            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA));
 
     $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
@@ -175,9 +168,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA);
-    $service->method('getRegra')
-            ->will($this->returnValue($regra));
+    $service->method('getRegraAvaliacaoTipoProgressao')
+            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA));
 
     $service->method('getOption')
             ->will($this->returnValueMap([
@@ -212,9 +204,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA);
-    $service->method('getRegra')
-            ->will($this->returnValue($regra));
+    $service->method('getRegraAvaliacaoTipoProgressao')
+            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA));
 
     $service->method('getOption')
             ->will($this->returnValueMap([
@@ -247,9 +238,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
-    $service->method('getRegra')
-            ->will($this->returnValue($regra));
+    $service->method('getRegraAvaliacaoTipoProgressao')
+            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL));
 
     $service->method('getOption')
             ->will($this->returnValueMap([
@@ -282,9 +272,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
-    $service->method('getRegra')
-            ->will($this->returnValue($regra));
+    $service->method('getRegraAvaliacaoTipoProgressao')
+            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL));
 
     $service->method('getOption')
             ->will($this->returnValueMap([
@@ -356,9 +345,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $regra = $this->_setUpRegraAvaliacaoMock(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
-    $service->method('getRegra')
-            ->will($this->returnValue($regra));
+    $service->method('getRegraAvaliacaoTipoProgressao')
+            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::CONTINUADA));
 
     $service->method('getOption')
             ->will($this->returnValueMap([

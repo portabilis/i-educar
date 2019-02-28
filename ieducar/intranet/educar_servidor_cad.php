@@ -1032,6 +1032,12 @@ class indice extends clsCadastro
     }
   }
 
+  function excluiFuncoes()
+  {
+      $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
+      $obj_servidor_funcao->excluirTodos();
+  }
+
   function excluiFuncoesRemovidas($funcoes)
   {
     $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
