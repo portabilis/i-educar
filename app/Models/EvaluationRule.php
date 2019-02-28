@@ -17,13 +17,14 @@ class EvaluationRule extends Model
     protected $primaryKey = 'id';
 
     /**
+     * @var array
+     */
+    protected $fillable = [
+        'instituicao_id', 'nome', 'formula_media_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [];
 }

@@ -1585,9 +1585,14 @@ function nextMatricula(){
   selectNextOption($j('#ref_cod_matricula'));
 }
 
+function nextEtapa(){
+  selectNextOption($j('#etapa'));
+}
+
 function showNextSelectionButton() {
   var $ccField        = $j('#ref_cod_componente_curricular');
   var $matriculaField = $j('#ref_cod_matricula');
+  var $etapaField = $j('#etapa');
 
   if ($ccField.val() != '') {
     $j("<a href='#'>Pr&#243;ximo componente curricular</a>").bind('click', nextComponenteCurricular)
@@ -1597,6 +1602,12 @@ function showNextSelectionButton() {
 
   if ($matriculaField.val() != '') {
     $j("<a href='#'>Pr&#243;xima matr&#237;cula</a>").bind('click', nextMatricula)
+                                .attr('style', 'text-decoration: underline')
+                                .appendTo($navActions);
+  }
+
+  if ($etapaField.val() != '') {
+    $j("<a href='#'>Próxima etapa</a>").bind('click', nextEtapa)
                                 .attr('style', 'text-decoration: underline')
                                 .appendTo($navActions);
   }

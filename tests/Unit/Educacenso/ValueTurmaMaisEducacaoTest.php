@@ -7,7 +7,7 @@ use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
-use Tests\SuiteTestCase\TestCase;
+use Tests\TestCase;
 
 class ValueTurmaMaisEducacaoTest extends TestCase
 {
