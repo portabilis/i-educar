@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DisciplineScore extends Model
+class LegacyAverageFormula extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'modules.nota_componente_curricular';
+    protected $table = 'modules.formula_media';
 
     /**
      * @var string
@@ -20,7 +20,7 @@ class DisciplineScore extends Model
      * @var array
      */
     protected $fillable = [
-        'nota_aluno_id', 'componente_curricular_id', 'etapa',
+        'instituicao_id', 'nome', 'formula_media',
     ];
 
     /**

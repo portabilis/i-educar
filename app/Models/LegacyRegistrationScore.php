@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class RegistrationScore extends Pivot
+class LegacyRegistrationScore extends Pivot
 {
     /**
      * @var string

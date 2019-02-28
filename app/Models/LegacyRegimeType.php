@@ -4,23 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class KnowledgeArea extends Model
+class LegacyRegimeType extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'modules.area_conhecimento';
+    protected $table = 'pmieducar.tipo_regime';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'cod_tipo_regime';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome',
+        'ref_usuario_cad', 'nm_tipo', 'data_cadastro', 'ativo', 'ref_cod_instituicao',
     ];
 
     /**

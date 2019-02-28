@@ -4,23 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EducationType extends Model
+class LegacyDisciplineScore extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'pmieducar.tipo_ensino';
+    protected $table = 'modules.nota_componente_curricular';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_tipo_ensino';
+    protected $primaryKey = 'id';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'nm_tipo', 'data_cadastro', 'ref_cod_instituicao',
+        'nota_aluno_id', 'componente_curricular_id', 'etapa',
     ];
 
     /**

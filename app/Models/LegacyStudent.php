@@ -4,23 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EducationLevel extends Model
+class LegacyStudent extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'pmieducar.nivel_ensino';
+    protected $table = 'pmieducar.aluno';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_nivel_ensino';
+    protected $primaryKey = 'cod_aluno';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'nm_nivel', 'data_cadastro', 'ref_cod_instituicao',
+        'ref_idpes', 'data_cadastro',
     ];
 
     /**

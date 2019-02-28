@@ -4,23 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RegimeType extends Model
+class LegacyDiscipline extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'pmieducar.tipo_regime';
+    protected $table = 'modules.componente_curricular';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_tipo_regime';
+    protected $primaryKey = 'id';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'nm_tipo', 'data_cadastro', 'ativo', 'ref_cod_instituicao',
+        'instituicao_id', 'area_conhecimento_id', 'nome', 'abreviatura', 'tipo_base',
     ];
 
     /**

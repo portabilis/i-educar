@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SchoolClass extends Model
+class LegacySchoolClass extends Model
 {
     /**
      * @var string

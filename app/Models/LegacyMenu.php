@@ -10,19 +10,19 @@ use Prettus\Repository\Traits\TransformableTrait;
  *
  * @package namespace App\Entities;
  */
-class SystemMenu extends EloquentBaseModel implements Transformable
+class LegacyMenu extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'pmicontrolesis.menu';
+    protected $table = 'portal.menu_menu';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_menu';
+    protected $primaryKey = 'cod_menu_menu';
 
     /**
      * @var bool
@@ -35,4 +35,12 @@ class SystemMenu extends EloquentBaseModel implements Transformable
      * @var array
      */
     protected $fillable = [];
+
+    /**
+     * @return Submenu[]
+     */
+    public function submenus()
+    {
+        return $this->hasMany(Submenu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
+    }
 }

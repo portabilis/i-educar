@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EvaluationRule extends Model
+class LegacyEvaluationRule extends Model
 {
     /**
      * @var string

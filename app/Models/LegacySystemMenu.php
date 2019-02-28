@@ -6,23 +6,23 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class UserType.
+ * Class Menu.
  *
  * @package namespace App\Entities;
  */
-class UserType extends EloquentBaseModel implements Transformable
+class LegacySystemMenu extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'pmieducar.tipo_usuario';
+    protected $table = 'pmicontrolesis.menu';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_tipo_usuario';
+    protected $primaryKey = 'cod_menu';
 
     /**
      * @var bool
@@ -35,13 +35,4 @@ class UserType extends EloquentBaseModel implements Transformable
      * @var array
      */
     protected $fillable = [];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function users()
-    {
-        return $this->hasMany(User::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
-    }
-
 }

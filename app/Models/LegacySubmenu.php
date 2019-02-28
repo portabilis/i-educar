@@ -10,7 +10,7 @@ use Prettus\Repository\Traits\TransformableTrait;
  *
  * @package namespace App\Entities;
  */
-class Submenu extends EloquentBaseModel implements Transformable
+class LegacySubmenu extends EloquentBaseModel implements Transformable
 {
     const SUPER_USER_MENU_ID = 0;
 

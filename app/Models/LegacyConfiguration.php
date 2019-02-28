@@ -6,23 +6,23 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Funcionario.
+ * Class Pessoa.
  *
  * @package namespace App\Entities;
  */
-class Employee extends EloquentBaseModel implements Transformable
+class LegacyConfiguration extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'portal.funcionario';
+    protected $table = 'pmieducar.configuracoes_gerais';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'ref_cod_pessoa_fj';
+    protected $primaryKey = 'ref_cod_instituicao';
 
     /**
      * @var bool

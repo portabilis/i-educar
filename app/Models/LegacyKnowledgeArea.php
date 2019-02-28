@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AverageFormula extends Model
+class LegacyKnowledgeArea extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'modules.formula_media';
+    protected $table = 'modules.area_conhecimento';
 
     /**
      * @var string
@@ -20,7 +20,7 @@ class AverageFormula extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media',
+        'instituicao_id', 'nome',
     ];
 
     /**

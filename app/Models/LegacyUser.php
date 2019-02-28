@@ -6,23 +6,23 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Pessoa.
+ * Class User.
  *
  * @package namespace App\Entities;
  */
-class Configuration extends EloquentBaseModel implements Transformable
+class LegacyUser extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'pmieducar.configuracoes_gerais';
+    protected $table = 'pmieducar.usuario';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'ref_cod_instituicao';
+    protected $primaryKey = 'cod_usuario';
 
     /**
      * @var bool
@@ -36,4 +36,11 @@ class Configuration extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [];
 
+    /**
+     * @return UserType
+     */
+    public function type()
+    {
+        return $this->belongsTo(UserType::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
+    }
 }

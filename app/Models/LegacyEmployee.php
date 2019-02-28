@@ -6,23 +6,23 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Menu.
+ * Class Funcionario.
  *
  * @package namespace App\Entities;
  */
-class Menu extends EloquentBaseModel implements Transformable
+class LegacyEmployee extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
     /**
      * @var string
      */
-    protected $table = 'portal.menu_menu';
+    protected $table = 'portal.funcionario';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_menu_menu';
+    protected $primaryKey = 'ref_cod_pessoa_fj';
 
     /**
      * @var bool
@@ -36,11 +36,4 @@ class Menu extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [];
 
-    /**
-     * @return Submenu[]
-     */
-    public function submenus()
-    {
-        return $this->hasMany(Submenu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
-    }
 }
