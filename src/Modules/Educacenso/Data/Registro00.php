@@ -41,6 +41,7 @@ class Registro00 extends AbstractRegistro
         $this->model->numero = $this->convertStringToCenso($this->model->numero);
         $this->model->complemento = $this->convertStringToCenso($this->model->complemento);
         $this->model->bairro = $this->convertStringToCenso($this->model->bairro);
+        $this->model->email = strtoupper($this->model->email);
         $this->model->orgaoRegional = ($this->model->orgaoRegional ? str_pad($this->model->orgaoRegional, 5, "0", STR_PAD_LEFT) : null);
         $this->model->cnpjEscolaPrivada = $this->cnpjToCenso($this->model->cnpjEscolaPrivada);
         $this->model->cnpjMantenedoraPrincipal = $this->cnpjToCenso($this->model->cnpjMantenedoraPrincipal);
