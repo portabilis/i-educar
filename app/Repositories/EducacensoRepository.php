@@ -27,31 +27,21 @@ class EducacensoRepository
             SELECT
             '00' AS registro,
             ece.cod_escola_inep AS "codigoInep",
-            gestor_f.cpf AS "cpfGestor",
-            gestor_p.nome AS "nomeGestor",
-            e.cargo_gestor AS "cargoGestor",
-            e.email_gestor AS "emailGestor",
             e.situacao_funcionamento AS "situacaoFuncionamento",
             (SELECT min(ano_letivo_modulo.data_inicio)
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "inicioAnoLetivo",
-    
             (SELECT max(ano_letivo_modulo.data_fim)
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
-    
             p.nome AS nome,
-            e.latitude AS latitude,
-            e.longitude AS logitude,
             COALESCE(ep.cep, ee.cep) AS cep,
+            municipio.cod_ibge AS "codigoIbgeMunicipio",
+            distrito.cod_ibge AS "codigoIbgeDistrito",
             COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) AS logradouro,
             COALESCE(ep.numero, ee.numero) AS numero,
             COALESCE(ep.complemento, ee.complemento) AS complemento,
             COALESCE(bairro.nome, ee.bairro) AS bairro,
-            uf.cod_ibge AS "codigoIbgeEstado",
-            municipio.cod_ibge AS "codigoIbgeMunicipio",
-            distrito.cod_ibge AS "codigoIbgeDistrito",
-    
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.ddd)
                     FROM cadastro.fone_pessoa
@@ -59,7 +49,6 @@ class EducacensoRepository
               (SELECT min(ddd_telefone)
                 FROM pmieducar.escola_complemento
                 WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS ddd,
-    
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.fone)
                     FROM cadastro.fone_pessoa
@@ -67,66 +56,49 @@ class EducacensoRepository
               (SELECT min(telefone)
                 FROM pmieducar.escola_complemento
                 WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS telefone,
-    
-    
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.fone)
                     FROM cadastro.fone_pessoa
                     WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 3),
               (SELECT min(fax)
                 FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS "telefoneContato",
-    
-            (SELECT COALESCE(
-              (SELECT min(fone_pessoa.fone)
-                    FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 4),
-              (SELECT min(fax)
-                FROM pmieducar.escola_complemento
-                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS fax,
-    
+                WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS "telefoneOutro",
             (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento WHERE ref_cod_escola = e.cod_escola))) AS email,
-    
             i.orgao_regional AS "orgaoRegional",
-            e.dependencia_administrativa AS "dependenciaAdministrativa",
             e.zona_localizacao AS "zonaLocalizacao",
-            e.categoria_escola_privada AS "categoriaEscolaPrivada",
-            e.conveniada_com_poder_publico AS "conveniadaPoderPublico",
+            e.localizacao_diferenciada AS "localizacaoDiferenciada",
+            e.dependencia_administrativa AS "dependenciaAdministrativa",
+            (ARRAY[1] <@ e.orgao_vinculado_escola)::INT AS "orgaoOutro",
+            (ARRAY[2] <@ e.orgao_vinculado_escola)::INT AS "orgaoEducacao",
+            (ARRAY[3] <@ e.orgao_vinculado_escola)::INT AS "orgaoSaude",
+            (ARRAY[4] <@ e.orgao_vinculado_escola)::INT AS "orgaoSeguranca",
             (ARRAY[1] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraEmpresa",
             (ARRAY[2] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSindicato",
             (ARRAY[3] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOng",
             (ARRAY[4] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraInstituicoes",
             (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSistemaS",
-            (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
+            (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",  
+            e.categoria_escola_privada AS "categoriaEscolaPrivada",
+            e.conveniada_com_poder_publico AS "conveniadaPoderPublico",
             e.cnpj_mantenedora_principal AS "cnpjMantenedoraPrincipal",
             j.cnpj AS "cnpjEscolaPrivada",
             e.regulamentacao AS "regulamentacao",
-            0 AS "unidadeVinculada",
-            e.situacao_funcionamento,
-            e.mantenedora_escola_privada[1] AS "mantenedoraEscolaPrivada",
-            e.orgao_vinculado_escola AS "orgaoVinculado",
-            (ARRAY[1] <@ e.orgao_vinculado_escola)::INT AS "orgaoOutro",
-            (ARRAY[2] <@ e.orgao_vinculado_escola)::INT AS "orgaoEducacao",
-            (ARRAY[3] <@ e.orgao_vinculado_escola)::INT AS "orgaoSaude",
-            (ARRAY[4] <@ e.orgao_vinculado_escola)::INT AS "orgaoSeguranca",
-                   
             CASE WHEN e.esfera_administrativa = 1 THEN 1 ELSE 0 END AS "esferaFederal",
             CASE WHEN e.esfera_administrativa = 2 THEN 1 ELSE 0 END AS "esferaEstadual",
             CASE WHEN e.esfera_administrativa = 3 THEN 1 ELSE 0 END AS "esferaMunicipal",
-                   
             e.unidade_vinculada_outra_instituicao AS "unidadeVinculada",
             e.inep_escola_sede AS "inepEscolaSede",
             e.codigo_ies AS "codigoIes",
-                   
-            e.localizacao_diferenciada AS "localizacaoDiferenciada",
            
-            e.esfera_administrativa AS "esferaAdministrativa",
-                   
+            e.mantenedora_escola_privada[1] AS "mantenedoraEscolaPrivada",
+            e.orgao_vinculado_escola AS "orgaoVinculado",
+            e.esfera_administrativa AS "esferaAdministrativa",       
             e.cod_escola AS "idEscola",
             municipio.idmun AS "idMunicipio",
             distrito.iddis AS "idDistrito",
             i.cod_instituicao AS "idInstituicao",
             uf.sigla_uf AS "siglaUf"
+            
             FROM pmieducar.escola e
             JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
             INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
