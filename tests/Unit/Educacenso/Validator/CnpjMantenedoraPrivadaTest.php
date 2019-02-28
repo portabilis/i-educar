@@ -13,7 +13,7 @@ class CnpjMantenedoraPrivadaTest extends TestCase
     public function testCnpjMantenedoraPreenchido()
     {
         $registro = $this->getFakeRegistro();
-        $registro->cnpjMantenedoraPrinical = '123456';
+        $registro->cnpjMantenedoraPrincipal = '123456';
         $validator = new CnpjMantenedoraPrivada($registro);
 
         $this->assertTrue($validator->isValid());
