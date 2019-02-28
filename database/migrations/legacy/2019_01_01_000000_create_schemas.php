@@ -16,7 +16,6 @@ class CreateSchemas extends Migration
         DB::unprepared(
             '
                 CREATE SCHEMA acesso;
-                CREATE SCHEMA alimentos;
                 CREATE SCHEMA cadastro;
                 CREATE SCHEMA consistenciacao;
                 CREATE SCHEMA conv_functions;
@@ -45,7 +44,6 @@ class CreateSchemas extends Migration
         DB::unprepared(
             '
                 DROP SCHEMA acesso;
-                DROP SCHEMA alimentos;
                 DROP SCHEMA cadastro;
                 DROP SCHEMA consistenciacao;
                 DROP SCHEMA conv_functions;
