@@ -77,7 +77,7 @@ class EducacensoRepository
             (ARRAY[3] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOng",
             (ARRAY[4] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraInstituicoes",
             (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSistemaS",
-            (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",  
+            (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",  
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
             e.conveniada_com_poder_publico AS "conveniadaPoderPublico",
             e.cnpj_mantenedora_principal AS "cnpjMantenedoraPrincipal",
