@@ -97,15 +97,29 @@ class EducacensoRepository
             (ARRAY[3] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOng",
             (ARRAY[4] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraInstituicoes",
             (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSistemaS",
-            e.cnpj_mantenedora_principal AS "cnpjMantenedoraPrinical",
+            (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
+            e.cnpj_mantenedora_principal AS "cnpjMantenedoraPrincipal",
             j.cnpj AS "cnpjEscolaPrivada",
             e.regulamentacao AS "regulamentacao",
             0 AS "unidadeVinculada",
             e.situacao_funcionamento,
             e.mantenedora_escola_privada[1] AS "mantenedoraEscolaPrivada",
+            e.orgao_vinculado_escola AS "orgaoVinculado",
+            (ARRAY[1] <@ e.orgao_vinculado_escola)::INT AS "orgaoOutro",
+            (ARRAY[2] <@ e.orgao_vinculado_escola)::INT AS "orgaoEducacao",
+            (ARRAY[3] <@ e.orgao_vinculado_escola)::INT AS "orgaoSaude",
+            (ARRAY[4] <@ e.orgao_vinculado_escola)::INT AS "orgaoSeguranca",
+                   
+            (ARRAY[1] <@ e.esfera_administrativa)::INT AS "esferaFederal",
+            (ARRAY[2] <@ e.esfera_administrativa)::INT AS "esferaEstadual",
+            (ARRAY[3] <@ e.esfera_administrativa)::INT AS "esferaMunicipal",
+                   
+            e.unidade_vinculada_outra_instituicao AS "unidadeVinculada",
+            e.inep_escola_sede AS "inepEscolaSede",
+            e.codigo_ies AS "codigoIes",
                    
             e.localizacao_diferenciada AS "localizacaoDiferenciada",
-            e.orgao_vinculado_escola AS "orgaoVinculado",
+           
             e.esfera_administrativa AS "esferaAdministrativa",
                    
             e.cod_escola AS "idEscola",

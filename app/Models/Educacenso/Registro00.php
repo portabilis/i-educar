@@ -185,9 +185,29 @@ class Registro00 implements RegistroEducacenso
     public $mantenedoraSistemaS;
 
     /**
+     * @var string Campo 31
+     */
+    public $mantenedoraOscip;
+
+    /**
      * @var string Campo 37
      */
-    public $cnpjMantenedoraPrinical;
+    public $cnpjMantenedoraPrincipal;
+
+    /**
+     * @var string Campo 37
+     */
+    public $esferaFederal;
+
+    /**
+     * @var string Campo 38
+     */
+    public $esferaEstadual;
+
+    /**
+     * @var string Campo 39
+     */
+    public $esferaMunicipal;
 
     /**
      * @var string Campo 38
@@ -200,13 +220,41 @@ class Registro00 implements RegistroEducacenso
     public $regulamentacao;
 
     /**
+     * @var string Campo 22
+     */
+    public $orgaoEducacao;
+
+    /**
+     * @var string Campo 23
+     */
+    public $orgaoSeguranca;
+
+    /**
+     * @var string Campo 24
+     */
+    public $orgaoSaude;
+
+    /**
+     * @var string Campo 25
+     */
+    public $orgaoOutro;
+
+    /**
      * @var string Campo 40
      */
     public $unidadeVinculada;
 
-    public $localizacaoDiferenciada;
+    /**
+     * @var string Campo 41
+     */
+    public $inepEscolaSede;
 
-    public $orgaoVinculado;
+    /**
+     * @var string Campo 42
+     */
+    public $codigoIes;
+
+    public $localizacaoDiferenciada;
 
     public $esferaAdministrativa;
 
@@ -214,6 +262,11 @@ class Registro00 implements RegistroEducacenso
      * @var string Campo usado na validação
      */
     public $mantenedoraEscolaPrivada;
+
+    /**
+     * @var string Campo usado na validação
+     */
+    public $orgaoVinculado;
 
     /**
      * @var integer Campo usado na validação
