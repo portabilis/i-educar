@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\SchoolClassService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -92,14 +94,11 @@ class indice extends clsCadastro
         7 => 'S&aacute;bado'
     ];
     public $nao_informar_educacenso;
+    public $ano_letivo;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
-
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_turma = $_GET['cod_turma'];
 
@@ -825,12 +824,29 @@ class indice extends clsCadastro
         );
     }
 
+    /**
+     * @see SchoolClassService::isAvailableName()
+     *
+     * @param int      $ano
+     * @param int      $curso
+     * @param int      $serie
+     * @param int      $escola
+     * @param string   $nome
+     * @param int|null $id
+     *
+     * @return bool
+     */
+    public function nomeEstaDisponivel($ano, $curso, $serie, $escola, $nome, $id = null)
+    {
+        $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
+
+        $service = new SchoolClassService();
+
+        return $service->isAvailableName($nome, $curso, $serie, $escola, $ano, $id);
+    }
+
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         if (!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id)) {
             return false;
         }
@@ -843,12 +859,17 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma)) {
+            return false;
+        }
+
         $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
         $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
         $this->visivel = isset($this->visivel);
 
         $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
+
         $this->cod_turma = $cadastrou = $objTurma->cadastra();
 
         if (!$cadastrou) {
@@ -883,15 +904,15 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         if (!$this->verificaModulos()) {
             return false;
         }
 
         if (!$this->verificaCamposCenso()) {
+            return false;
+        }
+
+        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma, $this->cod_turma)) {
             return false;
         }
 
@@ -1205,10 +1226,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj = new clsPmieducarTurma(
             $this->cod_turma,
             $this->pessoa_logada,

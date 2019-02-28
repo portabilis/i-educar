@@ -1,4 +1,4 @@
-CREATE FUNCTION modules.audita_nota_componente_curricular() RETURNS trigger
+CREATE OR REPLACE FUNCTION modules.audita_nota_componente_curricular() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
     BEGIN

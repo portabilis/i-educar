@@ -1,4 +1,4 @@
-CREATE FUNCTION pmieducar.audita_matricula() RETURNS trigger
+CREATE OR REPLACE FUNCTION pmieducar.audita_matricula() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
     BEGIN

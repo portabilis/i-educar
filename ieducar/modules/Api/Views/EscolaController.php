@@ -34,7 +34,7 @@ class EscolaController extends ApiCoreController
     protected function createUpdateOrDestroyEducacensoEscola($escolaId)
     {
         $dataMapper = $this->getDataMapperFor('educacenso', 'escola');
-        
+
         $result = $this->deleteEntityOf($dataMapper, $escolaId);
         if (!empty($this->getRequest()->escola_inep_id)) {
             $data = [
@@ -165,16 +165,17 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasAnoEscola($ano, $escola)
     {
-        $sql = 'SELECT data_inicio,
-                   data_fim
-              FROM pmieducar.ano_letivo_modulo
-             WHERE ref_ano = $1
-               AND ref_ref_cod_escola = $2
-          ORDER BY sequencial';
+        $sql = 'SELECT sequencial AS etapa,
+                       data_inicio,
+                       data_fim
+                  FROM pmieducar.ano_letivo_modulo
+                 WHERE ref_ano = $1
+                   AND ref_ref_cod_escola = $2
+              ORDER BY sequencial';
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql, [$ano, $escola]);
-        $attrs = ['data_inicio', 'data_fim'];
+        $attrs = ['etapa', 'data_inicio', 'data_fim'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs);
 
         return ['etapas' => $etapas];
@@ -203,16 +204,20 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasTurma($ano, $escola, $turma)
     {
-        $sql_etapas = 'SELECT tm.data_inicio,
-                   tm.data_fim
-              FROM pmieducar.turma_modulo tm
-              INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
-            WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and tm.ref_cod_turma = $3
-          ORDER BY tm.ref_cod_turma';
+        $sql_etapas = 'SELECT tm.sequencial AS etapa,
+                              tm.data_inicio,
+                              tm.data_fim
+                         FROM pmieducar.turma_modulo AS tm
+                   INNER JOIN pmieducar.turma AS t
+                           ON tm.ref_cod_turma = t.cod_turma
+                        WHERE t.ano = $1
+                          AND t.ref_ref_cod_escola = $2
+                          AND tm.ref_cod_turma = $3
+                     ORDER BY tm.ref_cod_turma, tm.sequencial';
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql_etapas, [$ano, $escola, $turma]);
-        $attrs_etapas= ['data_inicio', 'data_fim'];
+        $attrs_etapas= ['etapa', 'data_inicio', 'data_fim'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs_etapas);
 
         return ['etapas' => $etapas];
@@ -466,6 +471,9 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasMultipleSearch()
     {
+        $cod_usuario = $this->getSession()->id_pessoa;
+        $permissao = new clsPermissoes();
+        $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
 
         $sql = 'SELECT cod_escola as id,
@@ -479,6 +487,14 @@ class EscolaController extends ApiCoreController
           where escola.ativo = 1
             and curso.ativo = 1
             and escola_curso.ativo = 1';
+
+        if (is_numeric($cod_usuario) && $nivel == App_Model_NivelTipoUsuario::ESCOLA) {
+            $escolas = $this->getEscolasUsuarios($cod_usuario);
+            if (! empty($escolas['escolas'])) {
+                $escolas = implode(", ", $escolas['escolas']);
+                $sql .= " and escola.cod_escola in ({$escolas})";
+            }
+        }
 
         if (is_numeric($cursoId)) {
             $sql .= ' and curso.cod_curso = $1';
@@ -518,9 +534,11 @@ class EscolaController extends ApiCoreController
         return $dependenciaAdministrativa;
     }
 
-    protected function getEscolasUsuarios()
+    protected function getEscolasUsuarios($ref_cod_usuario = null)
     {
-        $ref_cod_usuario = $this->getRequest()->id;
+        if (!$ref_cod_usuario) {
+            $ref_cod_usuario = $this->getRequest()->id;
+        }
 
         if (!$ref_cod_usuario) {
             return null;

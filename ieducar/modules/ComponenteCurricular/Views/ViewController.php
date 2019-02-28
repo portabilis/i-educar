@@ -27,12 +27,6 @@ class ViewController extends Core_Controller_Page_ViewController
         @session_start();
         $pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
-
-        $obj_permissao = new clsPermissoes();
-
-        if ($obj_permissao->permissao_cadastra(946, $pessoa_logada, 7)) {
-            $this->addBotao('Configurar anos escolares', 'ano?cid=' . $_GET['id']);
-        }
     }
 
     protected function _preRender()

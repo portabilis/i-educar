@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Cache;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -303,6 +305,10 @@ class indice extends clsCadastro
       $detalheAtual = $configuracoes->detalhe();
       $auditoria = new clsModulesAuditoriaGeral("configuracoes_gerais", $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
+
+      // Reseta o cache de configurações
+      Cache::invalidateByTags(['configurations']);
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header( "Location: index.php" );
       die();

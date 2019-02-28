@@ -877,6 +877,12 @@ class indice extends clsCadastro
             $dataAnoLetivoInicio = $obj->pegaDataAnoLetivoInicio($this->ref_cod_turma);
             $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim($this->ref_cod_turma);
 
+            if (empty($dataAnoLetivoTermino)) {
+                $this->mensagem = 'Não está definida a data de término do ano letivo.';
+
+                return false;
+            }
+
             if ($dataTransferencia && $dataMatriculaObj <= $dataTransferencia) {
                 $this->mensagem .= sprintf(
                     'Não é possível matricular o aluno. O mesmo possui enturmação com data de saída anterior à data informada. Favor alterar a data de matrícula para ser superior a %s.',

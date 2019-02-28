@@ -1189,7 +1189,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     public function generate(CoreExt_Controller_Page_Interface $instance)
     {
-        header('Content-type: application/json');
+        header('Content-Type: application/json');
         $instance->Gerar();
     }
 
