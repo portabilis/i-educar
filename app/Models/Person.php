@@ -22,4 +22,14 @@ class Person extends Model
     {
         return $this->belongsTo(Individual::class, 'who_updated', 'id');
     }
+
+    public function getTypeDescriptionAttribute()
+    {
+        return (new PersonType)->getDescriptiveValues()[(int) $this->type];
+    }
+
+    public function getRegistryOriginDescriptionAttribute()
+    {
+        return (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin];
+    }
 }

@@ -25,4 +25,19 @@ class Student extends Model
     {
         return $this->belongsTo(Individual::class, 'who_deleted', 'id');
     }
+
+    public function getGuardianTypeDescriptionAttribute()
+    {
+        return (new GuardianType)->getDescriptiveValues()[(int) $this->guardian_type];
+    }
+
+    public function getTransportationProviderDescriptionAttribute()
+    {
+        return (new TransportationProvider)->getDescriptiveValues()[(int) $this->transportation_provider];
+    }
+
+    public function getTransportationVehicleTypeDescriptionAttribute()
+    {
+        return (new TransportationVehicleType)->getDescriptiveValues()[(int) $this->transportation_vehicle_type];
+    }
 }

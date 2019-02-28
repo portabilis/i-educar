@@ -60,4 +60,24 @@ class Individual extends Model
     {
         return $this->belongsTo(Individual::class, 'who_deleted', 'id');
     }
+
+    public function getGenderDescriptionAttribute()
+    {
+        return (new Gender)->getDescriptiveValues()[(int) $this->gender];
+    }
+
+    public function getNationalityDescriptionAttribute()
+    {
+        return (new Nationality)->getDescriptiveValues()[(int) $this->nationality];
+    }
+
+    public function getRegistryOriginDescriptionAttribute()
+    {
+        return (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin];
+    }
+
+    public function getLocalizationZoneDescriptionAttribute()
+    {
+        return (new LocalizationZone)->getDescriptiveValues()[(int) $this->localization_zone];
+    }
 }
