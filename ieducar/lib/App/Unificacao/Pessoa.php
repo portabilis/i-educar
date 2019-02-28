@@ -97,14 +97,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'alimentos.cliente',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'alimentos.pessoa',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'cadastro.aviso_nome',
             'coluna' => 'idpes'
         ],
@@ -447,14 +439,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'urbano.cep_logradouro_bairro',
             'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'alimentos.unidade_atendida',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'alimentos.fornecedor',
-            'coluna' => 'idpes'
         ],
         [
             'tabela' => 'cadastro.funcionario',
