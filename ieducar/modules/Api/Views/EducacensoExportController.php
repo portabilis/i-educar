@@ -307,7 +307,7 @@ class EducacensoExportController extends ApiCoreController
             $escola->bairro,
             $escola->ddd,
             $escola->telefone,
-            $escola->telefoneContato,
+            $escola->telefoneOutro,
             $escola->email,
             $escola->orgaoRegional,
             $escola->zonaLocalizacao,
