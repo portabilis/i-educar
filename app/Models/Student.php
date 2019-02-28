@@ -16,14 +16,14 @@ class Student extends Model
         return $this->belongsTo(Religion::class);
     }
 
-    public function whoCreated()
+    public function createdBy()
     {
-        return $this->belongsTo(Individual::class, 'who_created', 'id');
+        return $this->belongsTo(Individual::class, 'created_by', 'id');
     }
 
-    public function whoDeleted()
+    public function deletedBy()
     {
-        return $this->belongsTo(Individual::class, 'who_deleted', 'id');
+        return $this->belongsTo(Individual::class, 'deleted_by', 'id');
     }
 
     public function getGuardianTypeDescriptionAttribute()

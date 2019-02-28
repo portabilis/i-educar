@@ -16,14 +16,14 @@ class City extends Model
         return $this->belongsTo(self::class, 'parent_id', 'id');
     }
 
-    public function whoUpdated()
+    public function updatedBy()
     {
-        return $this->belongsTo(Individual::class, 'who_updated', 'id');
+        return $this->belongsTo(Individual::class, 'updated_by', 'id');
     }
 
-    public function whoCreated()
+    public function createdBy()
     {
-        return $this->belongsTo(Individual::class, 'who_created', 'id');
+        return $this->belongsTo(Individual::class, 'created_by', 'id');
     }
 
     public function getRegistryOriginDescriptionAttribute()

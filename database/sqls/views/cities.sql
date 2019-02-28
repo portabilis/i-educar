@@ -10,8 +10,8 @@ SELECT
     -- geom,
     -- tipo,
     idmun_pai AS parent_id,
-    idpes_rev AS who_updated,
-    idpes_cad AS who_created,
+    idpes_rev AS updated_by,
+    idpes_cad AS created_by,
     data_rev::timestamp(0) AS updated_at,
     data_cad::timestamp(0) AS created_at,
     (CASE origem_gravacao

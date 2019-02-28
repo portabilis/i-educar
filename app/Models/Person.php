@@ -13,14 +13,14 @@ class Person extends Model
         return $this->hasOne(Individual::class);
     }
 
-    public function whoCreated()
+    public function createdBy()
     {
-        return $this->belongsTo(Individual::class, 'who_created', 'id');
+        return $this->belongsTo(Individual::class, 'created_by', 'id');
     }
 
-    public function whoUpdated()
+    public function updatedBy()
     {
-        return $this->belongsTo(Individual::class, 'who_updated', 'id');
+        return $this->belongsTo(Individual::class, 'updated_by', 'id');
     }
 
     public function getTypeDescriptionAttribute()

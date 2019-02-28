@@ -2,8 +2,8 @@ CREATE OR REPLACE VIEW students AS
 SELECT
     a.cod_aluno AS id,
     a.ref_cod_religiao AS religion_id,
-    a.ref_usuario_exc AS who_deleted,
-    a.ref_usuario_cad AS who_created,
+    a.ref_usuario_exc AS deleted_by,
+    a.ref_usuario_cad AS created_by,
     a.ref_idpes AS individual_id,
     a.data_cadastro::timestamp(0) AS created_at,
     (CASE

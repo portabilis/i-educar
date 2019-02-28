@@ -1,8 +1,8 @@
 CREATE OR REPLACE VIEW religions AS
 SELECT
     cod_religiao AS id,
-    ref_usuario_exc AS who_deleted,
-    ref_usuario_cad AS who_created,
+    ref_usuario_exc AS deleted_by,
+    ref_usuario_cad AS created_by,
     nm_religiao AS name,
     data_cadastro::timestamp(0) AS created_at,
     (CASE

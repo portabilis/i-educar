@@ -2,14 +2,14 @@ CREATE OR REPLACE VIEW persons AS
 SELECT
     idpes AS id,
     nome AS name,
-    idpes_cad AS who_created,
+    idpes_cad AS created_by,
     data_cad::timestamp(0) AS created_at,
     url,
     (CASE tipo
         WHEN 'F' THEN 1 -- física
         WHEN 'J' THEN 2 -- juridica
     END) AS type,
-    idpes_rev AS who_updated,
+    idpes_rev AS updated_by,
     data_rev AS updated_at,
     email,
     -- situacao,

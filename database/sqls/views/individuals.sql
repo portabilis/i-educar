@@ -28,7 +28,7 @@ SELECT
     nome_conjuge AS spouse_name,
     nome_responsavel AS guardian_name,
     -- justificativa_provisorio,
-    idpes_rev AS who_updated,
+    idpes_rev AS updated_by,
     data_rev::timestamp(0) AS updated_at,
     (CASE origem_gravacao
         WHEN 'M' THEN 1 -- migração
@@ -36,7 +36,7 @@ SELECT
         WHEN 'U' THEN 3 -- unificação
         WHEN 'O' THEN 4 -- outro
     END) AS registry_origin,
-    idpes_cad AS who_created,
+    idpes_cad AS created_by,
     data_cad::timestamp(0) AS created_at,
     -- operacao,
     -- idsis_rev,
@@ -58,7 +58,7 @@ SELECT
         WHEN ativo = 0 THEN data_exclusao
         ELSE NULL
     END)::timestamp(0) AS deleted_at,
-    ref_usuario_exc AS who_deleted,
+    ref_usuario_exc AS deleted_by,
     zona_localizacao_censo AS localization_zone,
     tipo_trabalho AS job_type,
     local_trabalho AS job_location,
