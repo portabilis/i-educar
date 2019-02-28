@@ -333,8 +333,12 @@ class EducacensoExportController extends ApiCoreController
             $escola->cnpjMantenedoraPrincipal,
             $escola->cnpjEscolaPrivada,
             $escola->regulamentacao,
-            $escola->esferaAdministrativa,
+            $escola->esferaFederal,
+            $escola->esferaEstadual,
+            $escola->esferaMunicipal,
             $escola->unidadeVinculada,
+            $escola->inepEscolaSede,
+            $escola->codigoIes,
         ];
 
         return ArrayToCenso::format($data);
