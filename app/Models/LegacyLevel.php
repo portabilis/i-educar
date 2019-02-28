@@ -34,7 +34,7 @@ class LegacyLevel extends Model
     public function evaluationRules()
     {
         return $this->belongsToMany(
-            EvaluationRule::class,
+            LegacyEvaluationRule::class,
             'modules.regra_avaliacao_serie_ano',
             'serie_id',
             'regra_avaliacao_id'

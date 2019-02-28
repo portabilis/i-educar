@@ -37,10 +37,10 @@ class LegacyUser extends EloquentBaseModel implements Transformable
     protected $fillable = [];
 
     /**
-     * @return UserType
+     * @return LegacyUserType
      */
     public function type()
     {
-        return $this->belongsTo(UserType::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
+        return $this->belongsTo(LegacyUserType::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
     }
 }

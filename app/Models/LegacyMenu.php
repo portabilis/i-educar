@@ -37,10 +37,10 @@ class LegacyMenu extends EloquentBaseModel implements Transformable
     protected $fillable = [];
 
     /**
-     * @return Submenu[]
+     * @return LegacySubmenu[]
      */
     public function submenus()
     {
-        return $this->hasMany(Submenu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
+        return $this->hasMany(LegacySubmenu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
     }
 }

@@ -39,20 +39,20 @@ class LegacySubmenu extends EloquentBaseModel implements Transformable
     protected $fillable = [];
 
     /**
-     * @return Menu
+     * @return LegacyMenu
      */
     public function menu()
     {
-        return $this->belongsTo(Menu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
+        return $this->belongsTo(LegacyMenu::class, 'ref_cod_menu_menu', 'cod_menu_menu');
     }
 
     /**
-     * @return UserType[]
+     * @return LegacyUserType[]
      */
     public function typeUsers()
     {
         return $this->belongsToMany(
-            UserType::class,
+            LegacyUserType::class,
             'pmieducar.menu_tipo_usuario',
             'ref_cod_menu_submenu',
             'ref_cod_tipo_usuario'
