@@ -272,7 +272,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$escola->cnpjMantenedoraPrinical) {
+            if (!$escola->cnpjMantenedoraPrincipal) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar o CNPJ da mantenedora principal desta unidade escolar.",
                     'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)',
