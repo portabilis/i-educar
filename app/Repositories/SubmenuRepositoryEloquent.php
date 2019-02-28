@@ -5,8 +5,7 @@ namespace App\Repositories;
 use iEducar\Support\Repositories\SubmenuRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Models\Submenu;
-use App\Validators\SubmenuValidator;
+use App\Models\LegacySubmenu;
 
 /**
  * Class SubmenuRepositoryEloquent.
@@ -22,10 +21,10 @@ class SubmenuRepositoryEloquent extends BaseRepository implements SubmenuReposit
      */
     public function model()
     {
-        return Submenu::class;
+        return LegacySubmenu::class;
     }
 
-    
+
 
     /**
      * Boot up the repository, pushing criteria
@@ -34,5 +33,5 @@ class SubmenuRepositoryEloquent extends BaseRepository implements SubmenuReposit
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
+
 }

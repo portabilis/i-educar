@@ -5,8 +5,7 @@ namespace App\Repositories;
 use iEducar\Support\Repositories\UserTypeRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Models\UserType;
-use App\Validators\UserTypeValidator;
+use App\Models\LegacyUserType;
 
 /**
  * Class UserTypeRepositoryEloquent.
@@ -22,7 +21,7 @@ class UserTypeRepositoryEloquent extends BaseRepository implements UserTypeRepos
      */
     public function model()
     {
-        return UserType::class;
+        return LegacyUserType::class;
     }
 
     /**
@@ -32,5 +31,5 @@ class UserTypeRepositoryEloquent extends BaseRepository implements UserTypeRepos
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
+
 }

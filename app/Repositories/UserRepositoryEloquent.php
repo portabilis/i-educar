@@ -5,8 +5,7 @@ namespace App\Repositories;
 use iEducar\Support\Repositories\UserRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Models\User;
-use App\Validators\UserValidator;
+use App\Models\LegacyUser;
 
 /**
  * Class UserRepositoryEloquent.
@@ -22,7 +21,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      */
     public function model()
     {
-        return User::class;
+        return LegacyUser::class;
     }
 
     /**

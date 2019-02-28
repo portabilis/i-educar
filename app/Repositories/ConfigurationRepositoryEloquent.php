@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Configuration;
+use App\Models\LegacyConfiguration;
 use iEducar\Support\Repositories\ConfigurationRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -21,7 +21,7 @@ class ConfigurationRepositoryEloquent extends BaseRepository implements Configur
      */
     public function model()
     {
-        return Configuration::class;
+        return LegacyConfiguration::class;
     }
 
     /**
