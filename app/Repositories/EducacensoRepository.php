@@ -110,9 +110,9 @@ class EducacensoRepository
             (ARRAY[3] <@ e.orgao_vinculado_escola)::INT AS "orgaoSaude",
             (ARRAY[4] <@ e.orgao_vinculado_escola)::INT AS "orgaoSeguranca",
                    
-            (ARRAY[1] <@ e.esfera_administrativa)::INT AS "esferaFederal",
-            (ARRAY[2] <@ e.esfera_administrativa)::INT AS "esferaEstadual",
-            (ARRAY[3] <@ e.esfera_administrativa)::INT AS "esferaMunicipal",
+            CASE WHEN e.esfera_administrativa = 1 THEN 1 ELSE 0 END AS "esferaFederal",
+            CASE WHEN e.esfera_administrativa = 2 THEN 1 ELSE 0 END AS "esferaEstadual",
+            CASE WHEN e.esfera_administrativa = 3 THEN 1 ELSE 0 END AS "esferaMunicipal",
                    
             e.unidade_vinculada_outra_instituicao AS "unidadeVinculada",
             e.inep_escola_sede AS "inepEscolaSede",
