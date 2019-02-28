@@ -42,11 +42,11 @@ class FilaUnicaController extends ApiCoreController
                        endereco_pessoa.andar,
                        endereco_pessoa.apartamento,
                        endereco_pessoa.observacoes
-                  FROM pmieducar.aluno
-                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-                 INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
-                 INNER JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
-                  LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = aluno.ref_idpes)
+                  FROM cadastro.pessoa
+                 INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
+                 INNER JOIN cadastro.documento ON (documento.idpes = pessoa.idpes)
+                  LEFT JOIN pmieducar.aluno ON (pessoa.idpes = aluno.ref_idpes)
+                  LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
                   LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
                   LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
                   LEFT JOIN urbano.tipo_logradouro ON (tipo_logradouro.idtlog = logradouro.idtlog)
