@@ -2,6 +2,8 @@
 
 namespace iEducar\Modules\Educacenso;
 
+use Portabilis_String_Utils;
+
 trait Formatters
 {
     public function cpfToCenso($cpf)
