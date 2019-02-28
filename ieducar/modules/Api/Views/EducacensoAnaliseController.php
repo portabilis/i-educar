@@ -98,8 +98,8 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        $telefoneValidator = new Telefone('Telefone 2', $escola->telefoneContato);
-        if (!$telefoneValidator->isValid()) {
+        $telefoneValidator = new Telefone('Telefone 2', $escola->telefoneOutro);
+        if ($escola->telefoneOutro && !$telefoneValidator->isValid()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. <br>" . implode('<br>', $telefoneValidator->getMessage()) . ';',
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Telefone 2)',
@@ -181,15 +181,6 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola->cargoGestor) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados gerais > Campo: Cargo do gestor escolar)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true
-            ];
-        }
-
         if ($escola->inicioAnoLetivo != $anoAtual && $escola->inicioAnoLetivo != $anoAnterior) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data inicial da primeira etapa foi cadastrada corretamente.",
@@ -204,15 +195,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data final da última etapa foi cadastrada corretamente.",
                 'path' => '(Escola > Cadastros > Escolas > Editar ano letivo > Ok > Seção: Etapas do ano letivo)',
                 'linkPath' => "/intranet/educar_ano_letivo_modulo_cad.php?ref_cod_escola={$codEscola}&ano={$anoAtual}",
-                'fail' => true
-            ];
-        }
-
-        if (!$escola->codigoIbgeEstado) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código da UF informada, foi cadastrado conforme a 'Tabela de UF'.",
-                'path' => '(Endereçamento > Cadastros > Estados > Editar > Campo: Código INEP)',
-                'linkPath' => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}",
                 'fail' => true
             ];
         }
