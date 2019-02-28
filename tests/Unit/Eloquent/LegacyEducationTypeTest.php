@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\RegimeType;
+use App\Models\LegacyEducationType;
 use Tests\EloquentTestCase;
 
-class RegimeTypeTest extends EloquentTestCase
+class LegacyEducationTypeTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return RegimeType::class;
+        return LegacyEducationType::class;
     }
 }

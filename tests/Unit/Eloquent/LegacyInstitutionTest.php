@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\RegistrationScore;
+use App\Models\LegacyInstitution;
 use Tests\EloquentTestCase;
 
-class RegistrationScoreTest extends EloquentTestCase
+class LegacyInstitutionTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return RegistrationScore::class;
+        return LegacyInstitution::class;
     }
 }

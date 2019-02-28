@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\Individual;
+use App\Models\LegacyDisciplineScore;
 use Tests\EloquentTestCase;
 
-class IndividualTest extends EloquentTestCase
+class LegacyDisciplineScoreTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return Individual::class;
+        return LegacyDisciplineScore::class;
     }
 }

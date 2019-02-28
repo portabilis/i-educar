@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\KnowledgeArea;
+use App\Models\LegacyRegistrationScore;
 use Tests\EloquentTestCase;
 
-class KnowledgeAreaTest extends EloquentTestCase
+class LegacyRegistrationScoreTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return KnowledgeArea::class;
+        return LegacyRegistrationScore::class;
     }
 }

@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\EducationLevel;
+use App\Models\LegacyAverageFormula;
 use Tests\EloquentTestCase;
 
-class EducationLevelTest extends EloquentTestCase
+class LegacyAverageFormulaTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return EducationLevel::class;
+        return LegacyAverageFormula::class;
     }
 }

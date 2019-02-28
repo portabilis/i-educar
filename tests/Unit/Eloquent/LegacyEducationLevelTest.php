@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\Registration;
+use App\Models\LegacyEducationLevel;
 use Tests\EloquentTestCase;
 
-class RegistrationTest extends EloquentTestCase
+class LegacyEducationLevelTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return Registration::class;
+        return LegacyEducationLevel::class;
     }
 }

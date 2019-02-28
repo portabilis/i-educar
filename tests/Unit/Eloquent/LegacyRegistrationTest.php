@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\EvaluationRule;
+use App\Models\LegacyRegistration;
 use Tests\EloquentTestCase;
 
-class EvaluationRuleTest extends EloquentTestCase
+class LegacyRegistrationTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return EvaluationRule::class;
+        return LegacyRegistration::class;
     }
 }

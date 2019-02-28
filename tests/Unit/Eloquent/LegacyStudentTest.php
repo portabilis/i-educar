@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\App\Models;
 
-use App\Models\Person;
+use App\Models\LegacyStudent;
 use Tests\EloquentTestCase;
 
-class PersonTest extends EloquentTestCase
+class LegacyStudentTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return Person::class;
+        return LegacyStudent::class;
     }
 }
