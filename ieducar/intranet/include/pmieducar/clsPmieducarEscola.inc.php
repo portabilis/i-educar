@@ -1558,6 +1558,9 @@ class clsPmieducarEscola
       if (is_numeric($this->localizacao_diferenciada)) {
         $set .= "{$gruda}localizacao_diferenciada = '{$this->localizacao_diferenciada}'";
         $gruda = ", ";
+      }else {
+        $set .= "{$gruda}localizacao_diferenciada = null";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->materiais_didaticos_especificos)) {
@@ -1734,7 +1737,7 @@ class clsPmieducarEscola
       if (is_numeric($this->esfera_administrativa)) {
         $gruda = ", ";
         $set .= "{$gruda}esfera_administrativa = '{$this->esfera_administrativa}'";
-      } elseif (is_null($this->esfera_administrativa) || $this->esfera_administrativa = '') {
+      } elseif (is_null($this->esfera_administrativa) || $this->esfera_administrativa == '') {
         $gruda = ", ";
         $set .= "{$gruda}esfera_administrativa = NULL ";
       }

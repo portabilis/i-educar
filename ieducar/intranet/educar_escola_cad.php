@@ -5,9 +5,9 @@ use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
-use iEducar\Modules\Educacenso\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -527,7 +527,7 @@ class indice extends clsCadastro
                 $this->campoLista("ref_cod_escola_rede_ensino", "Rede Ensino", $opcoes, $this->ref_cod_escola_rede_ensino, "", false, "", $script);
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
-                $zonas = $zonas->getEnums();
+                $zonas = [null => 'Selecione'] + $zonas->getEnums();
 
                 $options = array(
                     'label' => 'Zona localização',
@@ -636,7 +636,7 @@ class indice extends clsCadastro
                 $opcoes = array("" => "Selecione");
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
-                $zonas = $zonas->getEnums();
+                $zonas = [null => 'Selecione'] + $zonas->getEnums();
 
                 $options = array(
                     'label' => 'Zona localização',
@@ -756,16 +756,11 @@ class indice extends clsCadastro
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
-            $resources = array(1 => 'Em atividade',
-                2 => 'Paralisada',
-                3 => 'Extinta');
+            $resources = SelectOptions::situacoesFuncionamentoEscola();
             $options = array('label' => 'Situação de funcionamento', 'resources' => $resources, 'value' => $this->situacao_funcionamento);
             $this->inputsHelper()->select('situacao_funcionamento', $options);
 
-            $resources = array(3 => 'Municipal',
-                1 => 'Federal',
-                2 => 'Estadual',
-                4 => 'Privada');
+            $resources = SelectOptions::dependenciasAdministrativasEscola();
             $options = array('label' => 'Dependência administrativa', 'resources' => $resources, 'value' => $this->dependencia_administrativa);
             $this->inputsHelper()->select('dependencia_administrativa', $options);
 
@@ -826,7 +821,7 @@ class indice extends clsCadastro
 
             $this->inputsHelper()->text('email_gestor', $options);
 
-            $resources = [null => 'Selecione'] + EsferaAdministrativa::getDescriptiveValues();
+            $resources = SelectOptions::esferasAdministrativasEscola();
             $options = [
                 'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
                 'resources' => $resources,
@@ -1265,7 +1260,7 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
-            $resources = LocalizacaoDiferenciadaEscola::getDescriptiveValues();
+            $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
@@ -1329,7 +1324,7 @@ class indice extends clsCadastro
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
             
-            $resources = UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
+            $resources = SelectOptions::unidadesVinculadasEscola();
             $options = [
                 'label' => 'Unidade vinculada à Escola de Educação Básica ou Unidade Ofertante de Educação Superior',
                 'resources' => $resources,
