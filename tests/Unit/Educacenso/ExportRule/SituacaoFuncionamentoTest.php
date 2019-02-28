@@ -3,10 +3,8 @@
 namespace Tests\Unit\Educacenso\ExportRule;
 
 use App\Models\Educacenso\Registro00;
-use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
-use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
-use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento as SituacaoFuncionamentoModel;
+use iEducar\Modules\Educacenso\SituacaoFuncionamento as SituacaoFuncionamentoModel;
 use Tests\TestCase;
 
 class SituacaoFuncionamentoTest extends TestCase
