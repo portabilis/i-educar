@@ -17,203 +17,217 @@ class Registro00 implements RegistroEducacenso
     /**
      * @var string Campo 3
      */
-    public $cpfGestor;
+    public $situacaoFuncionamento;
 
     /**
      * @var string Campo 4
      */
-    public $nomeGestor;
+    public $inicioAnoLetivo;
 
     /**
      * @var string Campo 5
      */
-    public $cargoGestor;
+    public $fimAnoLetivo;
 
     /**
      * @var string Campo 6
      */
-    public $emailGestor;
+    public $nome;
 
     /**
      * @var string Campo 7
      */
-    public $situacaoFuncionamento;
+    public $cep;
 
     /**
      * @var string Campo 8
      */
-    public $inicioAnoLetivo;
+    public $codigoIbgeMunicipio;
 
     /**
      * @var string Campo 9
      */
-    public $fimAnoLetivo;
+    public $codigoIbgeDistrito;
 
     /**
      * @var string Campo 10
      */
-    public $nome;
+    public $logradouro;
 
     /**
      * @var string Campo 11
      */
-    public $latitude;
+    public $numero;
 
     /**
      * @var string Campo 12
      */
-    public $longitude;
+    public $complemento;
 
     /**
      * @var string Campo 13
      */
-    public $cep;
+    public $bairro;
 
     /**
      * @var string Campo 14
      */
-    public $logradouro;
+    public $ddd;
 
     /**
      * @var string Campo 15
      */
-    public $numero;
+    public $telefone;
 
     /**
      * @var string Campo 16
      */
-    public $complemento;
+    public $telefoneOutro;
 
     /**
      * @var string Campo 17
      */
-    public $bairro;
+    public $email;
 
     /**
      * @var string Campo 18
      */
-    public $codigoIbgeEstado;
+    public $orgaoRegional;
 
     /**
      * @var string Campo 19
      */
-    public $codigoIbgeMunicipio;
+    public $zonaLocalizacao;
 
     /**
      * @var string Campo 20
      */
-    public $codigoIbgeDistrito;
+    public $localizacaoDiferenciada;
 
     /**
      * @var string Campo 21
      */
-    public $ddd;
+    public $dependenciaAdministrativa;
 
     /**
      * @var string Campo 22
      */
-    public $telefone;
+    public $orgaoEducacao;
 
     /**
      * @var string Campo 23
      */
-    public $telefoneOutro;
+    public $orgaoSeguranca;
 
     /**
      * @var string Campo 24
      */
-    public $telefoneContato;
+    public $orgaoSaude;
 
     /**
      * @var string Campo 25
      */
-    public $fax;
+    public $orgaoOutro;
 
     /**
      * @var string Campo 26
      */
-    public $email;
+    public $mantenedoraEmpresa;
 
     /**
      * @var string Campo 27
      */
-    public $orgaoRegional;
+    public $mantenedoraSindicato;
 
     /**
      * @var string Campo 28
      */
-    public $dependenciaAdministrativa;
+    public $mantenedoraOng;
 
     /**
      * @var string Campo 29
      */
-    public $zonaLocalizacao;
+    public $mantenedoraInstituicoes;
 
     /**
      * @var string Campo 30
      */
-    public $categoriaEscolaPrivada;
+    public $mantenedoraSistemaS;
 
     /**
      * @var string Campo 31
      */
-    public $conveniadaPoderPublico;
+    public $mantenedoraOscip;
 
     /**
      * @var string Campo 32
      */
-    public $mantenedoraEmpresa;
+    public $categoriaEscolaPrivada;
 
     /**
      * @var string Campo 33
      */
-    public $mantenedoraSindicato;
+    public $conveniadaPoderPublico;
 
     /**
      * @var string Campo 34
      */
-    public $mantenedoraOng;
+    public $cnpjMantenedoraPrincipal;
 
     /**
      * @var string Campo 35
      */
-    public $mantenedoraInstituicoes;
+    public $cnpjEscolaPrivada;
 
     /**
      * @var string Campo 36
      */
-    public $mantenedoraSistemaS;
+    public $regulamentacao;
 
     /**
      * @var string Campo 37
      */
-    public $cnpjMantenedoraPrinical;
+    public $esferaFederal;
 
     /**
      * @var string Campo 38
      */
-    public $cnpjEscolaPrivada;
+    public $esferaEstadual;
 
     /**
      * @var string Campo 39
      */
-    public $regulamentacao;
+    public $esferaMunicipal;
 
     /**
      * @var string Campo 40
      */
     public $unidadeVinculada;
 
-    public $localizacaoDiferenciada;
+    /**
+     * @var string Campo 41
+     */
+    public $inepEscolaSede;
 
-    public $orgaoVinculado;
+    /**
+     * @var string Campo 42
+     */
+    public $codigoIes;
 
+    /**
+     * @var string Campo usado na validação
+     */
     public $esferaAdministrativa;
 
     /**
      * @var string Campo usado na validação
      */
     public $mantenedoraEscolaPrivada;
+
+    /**
+     * @var string Campo usado na validação
+     */
+    public $orgaoVinculado;
 
     /**
      * @var integer Campo usado na validação
