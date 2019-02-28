@@ -3,7 +3,7 @@
 namespace Tests\Unit\Reports;
 
 use iEducar\Modules\Reports\QueryFactory\QueryFactory;
-use Tests\SuiteTestCase\TestCase;
+use Tests\TestCase;
 
 class QueryFactoryTest extends TestCase
 {
@@ -11,14 +11,18 @@ class QueryFactoryTest extends TestCase
 
     protected function setUp() :void
     {
+        parent::setUp();
+
         if (!self::$pdo) {
-            self::$pdo = self::getPdoConection();
+            self::$pdo = $this->getConnection()->getPdo();
             self::tearDownAfterClass();
         }
     }
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
+
         self::$pdo->exec(
             "DELETE FROM pmieducar.usuario WHERE cod_usuario IN (-1,-2);\n".
             'SET session_replication_role = DEFAULT;'
