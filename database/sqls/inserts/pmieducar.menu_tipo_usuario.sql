@@ -27,7 +27,6 @@ INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 755, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 756, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 757, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 758, 1, 1, 1);
-INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 335, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 829, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 568, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 569, 1, 1, 1);

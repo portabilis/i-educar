@@ -21,7 +21,6 @@ class CreateSchemas extends Migration
                 CREATE SCHEMA modules;
                 CREATE SCHEMA pmicontrolesis;
                 CREATE SCHEMA pmieducar;
-                CREATE SCHEMA pmiotopic;
                 CREATE SCHEMA portal;
                 CREATE SCHEMA relatorio;
                 CREATE SCHEMA urbano;
@@ -44,7 +43,6 @@ class CreateSchemas extends Migration
                 DROP SCHEMA modules;
                 DROP SCHEMA pmicontrolesis;
                 DROP SCHEMA pmieducar;
-                DROP SCHEMA pmiotopic;
                 DROP SCHEMA portal;
                 DROP SCHEMA relatorio;
                 DROP SCHEMA urbano;
