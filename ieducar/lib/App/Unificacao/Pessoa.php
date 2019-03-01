@@ -572,10 +572,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
 
     protected $chavesDeletarDuplicados = [
         [
-            'tabela' => 'consistenciacao.historico_campo',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'cadastro.pessoa_fonetico',
             'coluna' => 'idpes'
         ]

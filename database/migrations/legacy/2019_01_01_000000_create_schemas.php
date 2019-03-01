@@ -17,7 +17,6 @@ class CreateSchemas extends Migration
             '
                 CREATE SCHEMA acesso;
                 CREATE SCHEMA cadastro;
-                CREATE SCHEMA consistenciacao;
                 CREATE SCHEMA conv_functions;
                 CREATE SCHEMA historico;
                 CREATE SCHEMA modules;
@@ -45,7 +44,6 @@ class CreateSchemas extends Migration
             '
                 DROP SCHEMA acesso;
                 DROP SCHEMA cadastro;
-                DROP SCHEMA consistenciacao;
                 DROP SCHEMA conv_functions;
                 DROP SCHEMA historico;
                 DROP SCHEMA modules;
