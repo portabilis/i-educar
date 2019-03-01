@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 class Student extends Model
 {
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
+
     public function individual()
     {
         return $this->belongsTo(Individual::class);
@@ -14,6 +18,11 @@ class Student extends Model
     public function religion()
     {
         return $this->belongsTo(Religion::class);
+    }
+
+    public function census()
+    {
+        return $this->hasOne(CensusStudent::class);
     }
 
     public function createdBy()
