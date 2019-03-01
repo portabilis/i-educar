@@ -89,7 +89,7 @@ class EducacensoAnaliseController extends ApiCoreController
         }
 
         $telefoneValidator = new Telefone('Telefone 1', $escola->telefone);
-        if (!$telefoneValidator->isValid()) {
+        if ($escola->telefone && !$telefoneValidator->isValid()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. <br>" . implode('<br>', $telefoneValidator->getMessage()) . ';',
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Telefone 1)',
