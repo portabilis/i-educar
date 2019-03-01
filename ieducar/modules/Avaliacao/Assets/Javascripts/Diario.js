@@ -144,6 +144,9 @@ var lockedAverage = function ($element, callback) {
         width: 600,
         title: 'Atenção!',
         modal: true,
+        open: function(event, ui) {
+          $j('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
+        },
         buttons: [
           {
             text: 'Sim',
