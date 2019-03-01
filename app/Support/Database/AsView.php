@@ -9,13 +9,16 @@ trait AsView
     /**
      * Create a view from SQL file.
      *
-     * @param string $view
+     * @param string      $view
+     * @param string|null $version
      *
      * @return void
      */
-    public function createView($view)
+    public function createView($view, $version = null)
     {
-        $view = str_replace('.', '_', $view);
+        if ($version) {
+            $view = "{$view}-{$version}";
+        }
 
         DB::unprepared(
             file_get_contents(database_path("sqls/views/{$view}.sql"))
