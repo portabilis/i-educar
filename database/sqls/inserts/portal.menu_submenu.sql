@@ -2,7 +2,6 @@ INSERT INTO portal.menu_submenu VALUES (0, 1, 0, 'Super usuário', '', '', 3);
 INSERT INTO portal.menu_submenu VALUES (155, 23, 2, 'Minha agenda', 'agenda.php', '', 2);
 INSERT INTO portal.menu_submenu VALUES (157, 23, 2, 'Minhas conexões', 'conexoes_lst.php', 'Minhas Conexões', 2);
 INSERT INTO portal.menu_submenu VALUES (475, 23, 2, 'Preferências', 'opcao_menu_lst.php', '', 2);
-INSERT INTO portal.menu_submenu VALUES (335, 38, 2, 'Super usuário ', 'otopic_su_lst.php', '', 3);
 INSERT INTO portal.menu_submenu VALUES (569, 55, 2, 'Material didático', 'educar_material_didatico_lst.php', '', 3);
 INSERT INTO portal.menu_submenu VALUES (21235, 69, 2, 'Empresas do transporte', 'transporte_empresa_lst.php', NULL, 3);
 INSERT INTO portal.menu_submenu VALUES (21236, 69, 2, 'Motoristas do transporte', 'transporte_motorista_lst.php', NULL, 3);

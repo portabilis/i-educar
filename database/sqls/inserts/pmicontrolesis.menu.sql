@@ -13,7 +13,6 @@ INSERT INTO pmicontrolesis.menu VALUES (21124, NULL, NULL, 'Movimentações', 2,
 INSERT INTO pmicontrolesis.menu VALUES (999920, NULL, NULL, 'Lançamentos', 3, NULL, '_self', 1, 15, NULL, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (15858, NULL, NULL, 'Cadastros', 1, NULL, '_self', 1, 16, 1, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (999921, NULL, NULL, 'Processos', 4, NULL, '_self', 1, 15, NULL, NULL);
-INSERT INTO pmicontrolesis.menu VALUES (4624, 335, NULL, 'Super usuário', 4, 'otopic_su_lst.php', '_self', 1, 7, 1, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (9998851, 9998851, 999910, 'Auditoria geral', 0, 'educar_auditoria_geral_lst.php', '_self', 1, 18, 192, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (21125, NULL, NULL, 'Administrativo', 4, NULL, '_self', 1, 15, 1, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (21126, NULL, NULL, 'Relatórios', 5, NULL, '_self', 1, 15, 1, NULL);
