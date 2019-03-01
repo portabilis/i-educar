@@ -254,4 +254,14 @@ class Registro00 implements RegistroEducacenso
      */
     public $siglaUf;
 
+    /**
+     * @var string Campo usado na validação
+     */
+    public $anoInicioAnoLetivo;
+
+    /**
+     * @var string Campo usado na validação
+     */
+    public $anoFimAnoLetivo;
+
 }
