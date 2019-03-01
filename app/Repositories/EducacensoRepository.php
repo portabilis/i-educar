@@ -34,7 +34,7 @@ class EducacensoRepository
             (SELECT max(ano_letivo_modulo.data_fim)
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
-            p.nome AS nome,
+            j.fantasia AS nome,
             COALESCE(ep.cep, ee.cep) AS cep,
             municipio.cod_ibge AS "codigoIbgeMunicipio",
             distrito.cod_ibge AS "codigoIbgeDistrito",
@@ -97,7 +97,13 @@ class EducacensoRepository
             municipio.idmun AS "idMunicipio",
             distrito.iddis AS "idDistrito",
             i.cod_instituicao AS "idInstituicao",
-            uf.sigla_uf AS "siglaUf"
+            uf.sigla_uf AS "siglaUf",
+            (SELECT EXTRACT(YEAR FROM min(ano_letivo_modulo.data_inicio))
+              FROM pmieducar.ano_letivo_modulo
+              WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "anoInicioAnoLetivo",
+            (SELECT EXTRACT(YEAR FROM max(ano_letivo_modulo.data_fim))
+              FROM pmieducar.ano_letivo_modulo
+              WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "anoFimAnoLetivo"         
             
             FROM pmieducar.escola e
             JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao

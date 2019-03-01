@@ -4,6 +4,7 @@ use App\Models\Educacenso\Registro00;
 use App\Services\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
@@ -43,8 +44,6 @@ class EducacensoAnaliseController extends ApiCoreController
         $codEscola = $escola->idEscola;
 
         $codInstituicao = $escola->idInstituicao;
-        $codMunicipio = $escola->idMunicipio;
-        $siglaUF = $escola->siglaUf;
         $codDistrito = $escola->idDistrito;
         $anoAtual = $ano;
         $anoAnterior = $anoAtual-1;
@@ -89,7 +88,7 @@ class EducacensoAnaliseController extends ApiCoreController
         }
 
         $telefoneValidator = new Telefone('Telefone 1', $escola->telefone);
-        if (!$telefoneValidator->isValid()) {
+        if ($escola->telefone && !$telefoneValidator->isValid()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. <br>" . implode('<br>', $telefoneValidator->getMessage()) . ';',
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Telefone 1)',
@@ -163,7 +162,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola->esferaAdministrativa && $escola->regulamentacao == Regulamentacao::SIM) {
+        if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
@@ -181,7 +180,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->inicioAnoLetivo != $anoAtual && $escola->inicioAnoLetivo != $anoAnterior) {
+        if ($escola->anoInicioAnoLetivo != $anoAtual && $escola->anoInicioAnoLetivo != $anoAnterior) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data inicial da primeira etapa foi cadastrada corretamente.",
                 'path' => '(Escola > Cadastros > Escolas > Editar ano letivo > Ok > Seção: Etapas do ano letivo)',
@@ -190,7 +189,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->fimAnoLetivo != $anoAtual && $escola->fimAnoLetivo != $anoPosterior) {
+        if ($escola->anoFimAnoLetivo != $anoAtual && $escola->anoFimAnoLetivo != $anoPosterior) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data final da última etapa foi cadastrada corretamente.",
                 'path' => '(Escola > Cadastros > Escolas > Editar ano letivo > Ok > Seção: Etapas do ano letivo)',
@@ -226,7 +225,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->dependenciaAdministrativa == 4 && $escola->situacaoFuncionamento == 1) {
+        if ($escola->dependenciaAdministrativa == MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS && $escola->situacaoFuncionamento == Regulamentacao::SIM) {
             if (!$escola->categoriaEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual a categoria desta unidade escolar.",
@@ -248,16 +247,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$escola->mantenedoraEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de mantenedora desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada;)',
-                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                    'fail' => true
-                ];
-            }
-
-            if (!$escola->cnpjMantenedoraPrincipal) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar o CNPJ da mantenedora principal desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Mantenedora da escola privada)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
