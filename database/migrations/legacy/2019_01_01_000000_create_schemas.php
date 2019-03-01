@@ -26,7 +26,6 @@ class CreateSchemas extends Migration
                 CREATE SCHEMA pmiotopic;
                 CREATE SCHEMA portal;
                 CREATE SCHEMA relatorio;
-                CREATE SCHEMA serieciasc;
                 CREATE SCHEMA urbano;
             '
         );
@@ -52,7 +51,6 @@ class CreateSchemas extends Migration
                 DROP SCHEMA pmiotopic;
                 DROP SCHEMA portal;
                 DROP SCHEMA relatorio;
-                DROP SCHEMA serieciasc;
                 DROP SCHEMA urbano;
             '
         );
