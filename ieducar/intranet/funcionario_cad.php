@@ -149,19 +149,6 @@ class indice extends clsCadastro
             $this->ref_cod_setor_new = $detFunc["ref_cod_setor_new"];
         }
 
-        if( $this->ref_cod_setor_new )
-        {
-            $objSetor = new clsSetor();
-            $parentes = $objSetor->getNiveis( $this->ref_cod_setor_new );
-            for( $i = 0; $i < 5; $i++ )
-            {
-                if( isset( $parentes[$i] ) && $parentes[$i] )
-                {
-                    $nmvar = "setor_{$i}";
-                    $this->$nmvar = $parentes[$i];
-                }
-            }
-        }
          //--------------------------------------------------------------------
         if( $_GET["ref_pessoa"] )
         {
@@ -195,8 +182,7 @@ class indice extends clsCadastro
 
         $this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
 
-        $obj_setor = new clsSetor();
-        $lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);
+        $lst_setor = [];
 
         $opcoes = array("" => "Selecione");
 
@@ -208,7 +194,7 @@ class indice extends clsCadastro
         }
         $this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )", NULL, NULL, NULL, NULL, FALSE);
 
-        $lst_setor = $obj_setor->lista($this->setor_0);
+        $lst_setor = [];
 
         $opcoes = array("" => "Selecione");
 
@@ -227,7 +213,7 @@ class indice extends clsCadastro
 
         $opcoes = array("" => "Selecione");
 
-        $lst_setor = $obj_setor->lista($this->setor_1);
+        $lst_setor = [];
 
         if( is_array($lst_setor) && count($lst_setor) )
         {
@@ -244,7 +230,7 @@ class indice extends clsCadastro
 
         $opcoes = array("" => "Selecione");
 
-        $lst_setor = $obj_setor->lista($this->setor_2);
+        $lst_setor = [];
 
         if( is_array($lst_setor) && count($lst_setor) )
         {
@@ -261,7 +247,7 @@ class indice extends clsCadastro
 
         $opcoes = array("" => "Selecione");
 
-        $lst_setor = $obj_setor->lista($this->setor_3);
+        $lst_setor = [];
 
         if( is_array($lst_setor) && count($lst_setor) )
         {
