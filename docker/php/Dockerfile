@@ -50,3 +50,6 @@ ENV COMPOSER_PROCESS_TIMEOUT 900
 
 RUN mkdir -p /usr/share/man/man7
 RUN apt-get install -y postgresql-client
+
+RUN apt-get install -y libpng-dev
+RUN docker-php-ext-install gd
