@@ -146,7 +146,7 @@ class EscolaController extends ApiCoreController
                 select distinct 
                     ref_cod_escola as escola_id,
                     ano as ano, 
-                    m.nm_tipo as nome
+                    m.nm_tipo as descricao
                 from pmieducar.escola_ano_letivo eal
                 inner join pmieducar.ano_letivo_modulo alm
                     on true 
@@ -169,7 +169,7 @@ class EscolaController extends ApiCoreController
 
             $anosLetivos = $this->fetchPreparedQuery($sql, [$ano]);
 
-            $attrs = ['escola_id', 'ano', 'nome'];
+            $attrs = ['escola_id', 'ano', 'descricao'];
             $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
 
             foreach ($anosLetivos as $index => $anoLetivo) {
@@ -201,7 +201,7 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasTurmasAnoEscola($ano, $escola)
     {
-        $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id, m.nm_tipo as nome
+        $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id, m.nm_tipo as descricao
               FROM pmieducar.turma_modulo tm
               INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
               INNER JOIN pmieducar.curso c on (c.cod_curso = t.ref_cod_curso)
@@ -211,7 +211,7 @@ class EscolaController extends ApiCoreController
           ORDER BY tm.ref_cod_turma';
 
         $turmas = $this->fetchPreparedQuery($sql_turmas, [$ano, $escola]);
-        $attrs_turmas = ['turma_id', 'nome'];
+        $attrs_turmas = ['turma_id', 'descricao'];
         $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs_turmas);
 
         foreach ($turmas as $key => $turma) {
