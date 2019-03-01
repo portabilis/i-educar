@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Models\LegacyUser;
-use App\Services\CacheManager;
 use App\Services\MenuService;
 use Closure;
 use Illuminate\Support\Facades\Cache;
