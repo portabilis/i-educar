@@ -35,3 +35,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.fo
     Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
 
 });
+
+Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
+    Route::get('students', 'StudentsController@export');
+});
