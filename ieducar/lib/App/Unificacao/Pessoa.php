@@ -217,18 +217,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'historico.documento',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.documento',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.documento',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'historico.endereco_externo',
             'coluna' => 'idpes'
         ],
