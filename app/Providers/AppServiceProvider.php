@@ -16,6 +16,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\DuskServiceProvider;
+use Laravel\Dusk\ElementResolver;
 use Laravel\Telescope\TelescopeServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -55,6 +56,22 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Add custom methods in ElementResolver class used by Laravel Dusk.
+     *
+     * @return void
+     */
+    private function customElementResolver()
+    {
+        ElementResolver::macro('findByText', function ($text, $tag) {
+            foreach ($this->all($tag) as $element) {
+                if (Str::contains($element->getText(), $text)) {
+                    return $element;
+                }
+            }
+        });
+    }
+
+    /**
      * Load migrations from other repositories or packages.
      *
      * @return void
@@ -78,6 +95,7 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
             $this->registerRoutesForFakeAuth();
             $this->customBrowserForFakeAuth();
+            $this->customElementResolver();
         }
 
         if ($this->app->runningInConsole()) {
