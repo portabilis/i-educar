@@ -59,7 +59,7 @@ class EducacensoRepository
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.fone)
                     FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 3),
+                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 2),
               (SELECT min(fax)
                 FROM pmieducar.escola_complemento
                 WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS "telefoneOutro",

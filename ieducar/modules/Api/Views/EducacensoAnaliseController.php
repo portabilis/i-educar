@@ -119,7 +119,7 @@ class EducacensoAnaliseController extends ApiCoreController
         if (strlen($escola->email) > 50) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Insira no máximo 50 letras ou símbolos no e-mail da escola;",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Email)',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: E-mail)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
