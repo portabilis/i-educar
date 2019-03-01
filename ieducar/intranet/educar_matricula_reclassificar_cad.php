@@ -226,11 +226,14 @@ class indice extends clsCadastro
                 echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
             }
 
-            $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0]->get('id');
+            $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
 
-            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+            if (!is_null($notaAluno)) {
+                $notaAlunoId = $notaAluno->get('id');
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+            }
 
             //window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
             echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
