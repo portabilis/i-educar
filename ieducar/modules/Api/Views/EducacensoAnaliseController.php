@@ -43,8 +43,6 @@ class EducacensoAnaliseController extends ApiCoreController
         $codEscola = $escola->idEscola;
 
         $codInstituicao = $escola->idInstituicao;
-        $codMunicipio = $escola->idMunicipio;
-        $siglaUF = $escola->siglaUf;
         $codDistrito = $escola->idDistrito;
         $anoAtual = $ano;
         $anoAnterior = $anoAtual-1;
