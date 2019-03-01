@@ -762,38 +762,6 @@ function preencheLink( itensArray )
 	(personalizado para cada pagina)
 */
 
-function otopic_qtd_topicos( cod_grupo, cod_reuniao )
-{
-	// define qual a funcao que devera ser executada quando o xml for carregado
-	DOM_execute_when_xmlhttpChange = function() { otopic_recarrega_pagina(); };
-
-	strURL = "xml_otopic_qtdtopicos.php?&cr=" + cod_reuniao;
-	DOM_loadXMLDoc( strURL );
-}
-
-function otopic_recarrega_pagina()
-{
-	var valores = [];
-	for( i = 0; i < DOM_itensArray.length; i++ )
-	{
-		objXML = DOM_itensArray[i].firstChild;
-		valores[i] = objXML.data;
-	}
-
-	// verifica se o numero de topicos eh diferente
-	if( document.getElementById( "qtd_topicos" ).value != valores[0] )
-	{
-		if( confirm( 'Um novo tópico foi inserido para essa reunião. Você gostaia de atualizar a pagina ?' ) )
-		{
-			document.location.href = document.location.href;
-		}
-	}
-	else
-	{
-		//alert( 'mesma qtd ' + valores[0] );
-	}
-}
-
 function odes_renda( )
 {
 	// define qual a funcao que devera ser executada quando o xml for carregado
