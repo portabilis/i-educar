@@ -57,7 +57,4 @@ public_uf_xml.php
 urbano_cep_logradouro_bairro_xml.php
 public_logradouro_xml.php
 xml_acervo_geral.php
-xml_diaria_sugestao.php
 xml_escola.php
-xml_oprot_setor.php
-xml_oprot_setor_not_in.php
