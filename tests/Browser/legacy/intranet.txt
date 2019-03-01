@@ -5,7 +5,6 @@ add_fotos_evento.php
 add_noticias.php
 adicionar_documentos_cad.php
 adicionar_documentos_det.php
-administracao_estrutura.php
 agenda.php
 agenda_admin_cad.php
 agenda_admin_det.php
