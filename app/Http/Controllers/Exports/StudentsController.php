@@ -3,77 +3,92 @@
 namespace App\Http\Controllers\Exports;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StudentsExport as Request;
 use App\Models\Student;
-use Illuminate\Http\Request;
 
 class StudentsController extends Controller
 {
     public function export(Request $request)
     {
-        $params = $request->all();
-        $params = $this->translateParams($params);
-
+        dd($request->all());
         $query = Student::select();
 
-        if ($params['cod_aluno'] ?? null) {
-            $query->where('id', $params['cod_aluno']);
+        if ($id = $request->query('cod_aluno')) {
+            $query->where('id', $id);
         }
 
-        if ($params['aluno_estado_id'] ?? null) {
-            $query->where('registry_code', $params['aluno_estado_id']);
+        if ($inepCode = $request->query('cod_inep')) {
+            $query->whereHas('census', function ($query) use ($inepCode) {
+                $query->where('inep_code', $inepCode);
+            });
         }
 
-        $students = $query->get()->all();
-
-        //...
-    }
-
-    protected function translateParams(array $params): array
-    {
-        $newParams = [];
-
-        foreach ($params as $k => $v) {
-            if (is_null($v)) {
-                continue;
-            }
-
-            switch ($k) {
-                case 'cod_aluno':
-                case 'cod_inep':
-                case 'ref_cod_escola':
-                case 'ref_cod_curso':
-                case 'ref_cod_serie':
-                    $newParams[$k] = (int) $v;
-
-                    break;
-                case 'aluno_estado_id':
-                    if (preg_match('/^[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{1}$/', $v) === 1) {
-                        $newParams[$k] = $v;
-                    }
-
-                    break;
-                case 'nome_aluno':
-                case 'nome_pai':
-                case 'nome_mae':
-                case 'nome_responsavel':
-                    $newParams[$k] = trim($v);
-
-                    break;
-                case 'data_nascimento':
-                    if (preg_match('/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/', $v) === 1) {
-                        $newParams[$k] = $v;
-                    }
-
-                    break;
-                case 'ano':
-                    if (preg_match('/^[0-9]{4}$/', $v) === 1) {
-                        $newParams[$k] = (int) $v;
-                    }
-
-                    break;
-            }
+        if ($registryCode = $request->query('aluno_estado_id')) {
+            $query->where('registry_code', $registryCode);
         }
 
-        return $newParams;
+        $birthdate = $request->query('data_nascimento');
+        $studentName = $request->query('nome_aluno');
+        $fatherName = $request->query('nome_pai');
+        $motherName = $request->query('nome_mae');
+        $guardianName = $request->query('nome_responsavel');
+
+        if (
+            $birthdate ||
+            $studentName ||
+            $fatherName ||
+            $motherName ||
+            $guardianName
+        ) {
+            $query->whereHas('individual', function ($query) use ($birthdate, $studentName, $fatherName, $motherName, $guardianName) {
+                if ($birthdate) {
+                    list($day, $month, $year) = explode('/', $birthdate);
+                    $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
+
+                    $query->where('birthdate', $birthdate);
+                }
+
+                if ($studentName) {
+                    $query->whereHas('person', function ($query) use ($studentName) {
+                        $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $studentName . '%\')');
+                    });
+                }
+
+                if ($motherName) {
+                    $query->whereHas('mother', function ($query) use ($motherName) {
+                        $query->whereHas('person', function ($query) use ($motherName) {
+                            $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $motherName . '%\')');
+                        });
+                    });
+                }
+
+                if ($fatherName) {
+                    $query->whereHas('father', function ($query) use ($fatherName) {
+                        $query->whereHas('person', function ($query) use ($fatherName) {
+                            $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $fatherName . '%\')');
+                        });
+                    });
+                }
+
+                if ($guardianName) {
+                    $query->whereHas('guardian', function ($query) use ($guardianName) {
+                        $query->whereHas('person', function ($query) use ($guardianName) {
+                            $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $guardianName . '%\')');
+                        });
+                    });
+                }
+            });
+        }
+
+        $students = $query->get();
+
+        foreach ($students as $student) {
+            dump($student->id);
+            dump($student->individual->person->name);
+            dump($student->individual->mother->person->name);
+            dump('---');
+        }
+
+        die();
     }
 }
