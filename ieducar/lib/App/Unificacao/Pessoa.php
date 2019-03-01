@@ -473,10 +473,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes_destino'
         ],
         [
-            'tabela' => 'pmidrh.setor',
-            'coluna' => 'ref_idpes_resp'
-        ],
-        [
             'tabela' => 'pmieducar.escola',
             'coluna' => 'ref_idpes'
         ],

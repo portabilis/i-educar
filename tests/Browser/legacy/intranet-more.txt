@@ -25,9 +25,6 @@ visualizarfoto.php
 otopic_membros_cad.php
 otopic_meus_grupos_det.php
 otopic_reunioes_imprime.php
-pmidrh_holerite_det.php
-pmidrh_holerite_habilita.php
-pmidrh_holerite_lst.php
 suspenso.php
 transporte_itinerario_del.php
 tutormenu_cad.php
