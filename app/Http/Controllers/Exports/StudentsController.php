@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Exports;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentsExport as Request;
 use App\Models\Student;
+use App\Models\RegistrationStatus;
 
 class StudentsController extends Controller
 {
     public function export(Request $request)
     {
-        dd($request->all());
         $query = Student::select();
 
         if ($id = $request->query('cod_aluno')) {
@@ -80,14 +80,42 @@ class StudentsController extends Controller
             });
         }
 
+        $year = $request->query('ano');
+        $schoolId = $request->query('ref_cod_escola');
+        $courseId = $request->query('ref_cod_curso');
+        $levelId = $request->query('ref_cod_serie');
+
+        if (
+            $year ||
+            $schoolId ||
+            $courseId ||
+            $levelId
+        ) {
+            $query->whereHas('registrations', function ($query) use ($year, $schoolId, $courseId, $levelId) {
+                $query->whereNull('deleted_at')
+                    ->where('status', RegistrationStatus::ONGOING);
+
+                if ($year) {
+                    $query->where('year', $year);
+                }
+
+                if ($schoolId) {
+                    $query->where('school_id', $schoolId);
+                }
+
+                if ($courseId) {
+                    $query->where('course_id', $courseId);
+                }
+
+                if ($levelId) {
+                    $query->where('level_id', $levelId);
+                }
+            });
+        }
+
         $students = $query->get();
 
-        foreach ($students as $student) {
-            dump($student->id);
-            dump($student->individual->person->name);
-            dump($student->individual->mother->person->name);
-            dump('---');
-        }
+        dd($students);
 
         die();
     }
