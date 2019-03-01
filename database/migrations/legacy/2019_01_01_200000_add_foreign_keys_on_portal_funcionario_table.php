@@ -25,12 +25,6 @@ class AddForeignKeysOnPortalFuncionarioTable extends Migration
                ->on('cadastro.fisica')
                ->onUpdate('restrict')
                ->onDelete('restrict');
-
-            $table->foreign('ref_cod_setor_new')
-               ->references('cod_setor')
-               ->on('pmidrh.setor')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
         });
     }
 
@@ -44,7 +38,6 @@ class AddForeignKeysOnPortalFuncionarioTable extends Migration
         Schema::table('portal.funcionario', function (Blueprint $table) {
             $table->dropForeign(['ref_ref_cod_pessoa_fj']);
             $table->dropForeign(['ref_cod_pessoa_fj']);
-            $table->dropForeign(['ref_cod_setor_new']);
         });
     }
 }
