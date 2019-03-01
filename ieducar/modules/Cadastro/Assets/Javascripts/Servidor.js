@@ -29,7 +29,7 @@ function confirmaEnvio() {
 
   if (dialogElm.length < 1) {
     $j('body')
-      .append('<div id="' + dialogId + '">As alocações do servidor serão atualizadas de acordo com as alterações na função. Deseja prosseguir?</div>');
+      .append('<div id="' + dialogId + '">Se deseja alterar a função de alguma alocação, adicione uma nova função ao cadastro do servidor; caso contrário, estará atualizando também todas as alocações marcadas com esta função. Deseja prosseguir mesmo assim?</div>');
 
     dialogElm = $j('#' + dialogId);
   }
