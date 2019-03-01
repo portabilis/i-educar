@@ -34,7 +34,7 @@ class EducacensoRepository
             (SELECT max(ano_letivo_modulo.data_fim)
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
-            p.nome AS nome,
+            p.fantasia AS nome,
             COALESCE(ep.cep, ee.cep) AS cep,
             municipio.cod_ibge AS "codigoIbgeMunicipio",
             distrito.cod_ibge AS "codigoIbgeDistrito",
