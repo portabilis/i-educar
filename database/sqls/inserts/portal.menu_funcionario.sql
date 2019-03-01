@@ -1,6 +1,5 @@
 INSERT INTO portal.menu_funcionario VALUES (1, 0, 0, 0);
 INSERT INTO portal.menu_funcionario VALUES (1, 0, 0, 21246);
-INSERT INTO portal.menu_funcionario VALUES (1, 0, 0, 335);
 INSERT INTO portal.menu_funcionario VALUES (1, 0, 0, 41);
 INSERT INTO portal.menu_funcionario VALUES (1, 0, 0, 43);
 INSERT INTO portal.menu_funcionario VALUES (1, 0, 0, 753);
