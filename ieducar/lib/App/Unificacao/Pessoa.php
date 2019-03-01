@@ -401,22 +401,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes'
         ],
         [
-            'tabela' => 'pmiotopic.grupopessoa',
-            'coluna' => 'ref_idpes'
-        ],
-        [
-            'tabela' => 'pmiotopic.topico',
-            'coluna' => 'ref_idpes_cad'
-        ],
-        [
-            'tabela' => 'pmiotopic.topico',
-            'coluna' => 'ref_idpes_exc'
-        ],
-        [
-            'tabela' => 'pmiotopic.notas',
-            'coluna' => 'ref_idpes'
-        ],
-        [
             'tabela' => 'public.distrito',
             'coluna' => 'idpes_rev'
         ],
@@ -485,10 +469,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes_secretario_escolar'
         ],
         [
-            'tabela' => 'pmiotopic.participante',
-            'coluna' => 'ref_ref_idpes'
-        ],
-        [
             'tabela' => 'cadastro.endereco_externo',
             'coluna' => 'idpes_rev'
         ],
@@ -543,14 +523,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'pmieducar.candidato_fila_unica',
             'coluna' => 'ref_cod_pessoa_exc'
-        ],
-        [
-            'tabela' => 'pmiotopic.funcionario_su',
-            'coluna' => 'ref_ref_cod_pessoa_fj'
-        ],
-        [
-            'tabela' => 'pmiotopic.grupomoderador',
-            'coluna' => 'ref_ref_cod_pessoa_fj'
         ],
         [
             'tabela' => 'portal.acesso',
