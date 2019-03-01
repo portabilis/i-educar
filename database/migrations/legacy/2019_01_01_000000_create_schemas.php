@@ -19,7 +19,6 @@ class CreateSchemas extends Migration
                 CREATE SCHEMA cadastro;
                 CREATE SCHEMA historico;
                 CREATE SCHEMA modules;
-                CREATE SCHEMA pmiacoes;
                 CREATE SCHEMA pmicontrolesis;
                 CREATE SCHEMA pmidrh;
                 CREATE SCHEMA pmieducar;
@@ -44,7 +43,6 @@ class CreateSchemas extends Migration
                 DROP SCHEMA cadastro;
                 DROP SCHEMA historico;
                 DROP SCHEMA modules;
-                DROP SCHEMA pmiacoes;
                 DROP SCHEMA pmicontrolesis;
                 DROP SCHEMA pmidrh;
                 DROP SCHEMA pmieducar;
