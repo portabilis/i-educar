@@ -22,9 +22,6 @@ s3_config.php
 upload.php
 upload_just_pdf.php
 visualizarfoto.php
-otopic_membros_cad.php
-otopic_meus_grupos_det.php
-otopic_reunioes_imprime.php
 suspenso.php
 transporte_itinerario_del.php
 tutormenu_cad.php
@@ -32,7 +29,6 @@ educar_matricula_historico_lst.php
 educar_servidor_nivel_cad.php
 educar_servidor_vinculo_turma_det.php
 educar_subniveis_cad.php
-otopic_membro_det.php
 acesso_indevido_det.php
 educar_arruma_nota_avaliacao.php
 educar_falta_nota_aluno_det.php
