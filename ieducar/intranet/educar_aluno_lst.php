@@ -249,7 +249,13 @@ class indice extends clsListagem
             $this->nome_acao = 'Novo';
         }
 
+        $this->array_botao_script = ['dataExport("formcadastro", "students")'];
+        $this->array_botao = ['Exportar para planilha'];
         $this->largura = '100%';
+
+        $script = ['/intranet/scripts/exporter.js'];
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }
