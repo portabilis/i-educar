@@ -25,6 +25,11 @@ class Student extends Model
         return $this->hasOne(CensusStudent::class);
     }
 
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(Individual::class, 'created_by', 'id');
