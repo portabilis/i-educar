@@ -7,7 +7,7 @@
     const queryString = new URLSearchParams(data).toString()
     const url = `/exports/${resource}?${queryString}`
 
-    window.location = `/exports/${resource}?${queryString}`
+    window.location = url
   }
 
   window.dataExport = dataExport
