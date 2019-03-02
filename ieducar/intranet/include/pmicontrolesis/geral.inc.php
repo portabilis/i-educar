@@ -6,7 +6,6 @@ require_once 'include/Geral.inc.php';
 require_once 'include/pmicontrolesis/clsMenuSuspenso.inc.php';
 require_once 'include/pmicontrolesis/clsTutormenu.inc.php';
 require_once 'include/pmicontrolesis/clsPmicontrolesisItinerario.inc.php';
-require_once 'include/pmicontrolesis/clsPmicontrolesisTelefones.inc.php';
 require_once 'include/pmicontrolesis/clsPmicontrolesisSistema.inc.php';
 require_once 'include/pmicontrolesis/clsPmicontrolesisArtigo.inc.php';
 require_once 'include/pmicontrolesis/clsPmicontrolesisTopoPortal.inc.php';
