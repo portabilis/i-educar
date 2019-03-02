@@ -1,7 +1,6 @@
 DocumentacaoPadrao.php
 acesso_indevido_lst.php
 add_fotos.php
-add_fotos_evento.php
 add_noticias.php
 adicionar_documentos_cad.php
 adicionar_documentos_det.php

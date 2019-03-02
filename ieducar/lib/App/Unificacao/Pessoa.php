@@ -329,10 +329,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'pmicontrolesis.foto_evento',
-            'coluna' => 'ref_ref_cod_pessoa_fj'
-        ],
-        [
             'tabela' => 'pmieducar.candidato_reserva_vaga',
             'coluna' => 'ref_cod_pessoa_cad'
         ],
