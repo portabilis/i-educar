@@ -29,9 +29,9 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, Shoul
     public function map($student): array
     {
         $row = [];
-        $fatherName = $student->individual->father->person->name ?? $student->father_name ?? null;
-        $motherName = $student->individual->mother->person->name ?? $student->mother_name ?? null;
-        $guardianName = $student->individual->guardian->person->name ?? null;
+        $fatherName = $student->individual->father_name;
+        $motherName = $student->individual->mother_name;
+        $guardianName = $student->individual->guardian_name;
         $fatherAndMotherName = sprintf('%s, %s', $fatherName, $motherName);
 
         $fatherDocument = $student->individual->father->cpf ?? null;
@@ -67,7 +67,7 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, Shoul
 
         $row[] = $student->id;
         $row[] = $student->census->inep_code ?? null;
-        $row[] = $student->individual->social_name ?? $student->individual->person->name;
+        $row[] = $student->individual->real_name;
         $row[] = $motherName;
         $row[] = $guardianName;
         $row[] = $guardianDocument;

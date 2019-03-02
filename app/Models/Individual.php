@@ -84,4 +84,40 @@ class Individual extends Model
     {
         return (new LocalizationZone)->getDescriptiveValues()[(int) $this->localization_zone];
     }
+
+    public function getRealNameAttribute()
+    {
+        if (!empty($this->social_name)) {
+            return $this->social_name;
+        }
+
+        return $this->person->name;
+    }
+
+    public function getMotherNameAttribute($value)
+    {
+        if ($this->mother) {
+            return $this->mother->real_name;
+        }
+
+        return $value;
+    }
+
+    public function getFatherNameAttribute($value)
+    {
+        if ($this->father) {
+            return $this->father->real_name;
+        }
+
+        return $value;
+    }
+
+    public function getGuardianNameAttribute($value)
+    {
+        if ($this->guardian) {
+            return $this->guardian->real_name;
+        }
+
+        return $value;
+    }
 }

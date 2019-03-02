@@ -40,6 +40,27 @@ class Student extends Model
         return $this->belongsTo(Individual::class, 'deleted_by', 'id');
     }
 
+    public function getGuardianTypeAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
+
+        if ($this->individual->father) {
+            return GuardianType::FATHER;
+        }
+
+        if ($this->individual->mother) {
+            return GuardianType::MOTHER;
+        }
+
+        if ($this->individual->guardian) {
+            return GuardianType::OTHER;
+        }
+
+        return null;
+    }
+
     public function getGuardianTypeDescriptionAttribute()
     {
         return (new GuardianType)->getDescriptiveValues()[(int) $this->guardian_type];
