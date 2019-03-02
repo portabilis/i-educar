@@ -131,7 +131,7 @@ var lockedAverage = function ($element, callback) {
 
     if (dialogElm.length < 1) {
       $j('body')
-        .append('<div id="' + dialogElmId + '" style="display: none;">A média deste aluno/etapa/componente está bloqueada pois foi alterada manualmente. Você gostaria de desbloqueá-la e permitir sua atualização automática?</div>')
+        .append('<div id="' + dialogElmId + '" style="display: none;">A média final deste aluno/etapa/componente está bloqueada pois foi alterada manualmente. Você gostaria de desbloqueá-la e permitir sua atualização automática?</div>')
 
       dialogElm = $j('#' + dialogElmId);
     }
