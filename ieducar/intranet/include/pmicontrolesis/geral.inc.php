@@ -5,7 +5,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/pmicontrolesis/clsMenuSuspenso.inc.php';
 require_once 'include/pmicontrolesis/clsTutormenu.inc.php';
-require_once 'include/pmicontrolesis/clsPmicontrolesisPortais.inc.php';
 require_once 'include/pmicontrolesis/clsPmicontrolesisServicos.inc.php';
 require_once 'include/pmicontrolesis/clsPmicontrolesisItinerario.inc.php';
 require_once 'include/pmicontrolesis/clsPmicontrolesisTelefones.inc.php';
