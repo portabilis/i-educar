@@ -2,121 +2,48 @@
 
 namespace App\Http\Controllers\Exports;
 
+use App\Exports\StudentsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentsExport as Request;
-use App\Models\Student;
-use App\Models\RegistrationStatus;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentsController extends Controller
 {
     public function export(Request $request)
     {
-        $query = Student::select();
+        $params = $this->translateParams($request->all());
+        $export = new StudentsExport($params);
 
-        if ($id = $request->query('cod_aluno')) {
-            $query->where('id', $id);
+        return Excel::download($export, 'alunos.xlsx');
+    }
+
+    protected function translateParams($params)
+    {
+        $paramMap = [
+            'cod_aluno' => 'id',
+            'cod_inep' => 'inep_code',
+            'aluno_estado_id' => 'registry_code',
+            'nome_aluno' => 'student_name',
+            'data_nascimento' => 'birthdate',
+            'nome_pai' => 'father_name',
+            'nome_mae' => 'mother_name',
+            'nome_responsavel' => 'guardian_name',
+            'ano' => 'year',
+            'ref_cod_escola' => 'school_id',
+            'ref_cod_curso' => 'course_id',
+            'ref_cod_serie' => 'level_id',
+        ];
+
+        $newParams = [];
+
+        foreach ($params as $k => $v) {
+            if (!in_array($k, array_keys($paramMap))) {
+                continue;
+            }
+
+            $newParams[$paramMap[$k]] = $v;
         }
 
-        if ($inepCode = $request->query('cod_inep')) {
-            $query->whereHas('census', function ($query) use ($inepCode) {
-                $query->where('inep_code', $inepCode);
-            });
-        }
-
-        if ($registryCode = $request->query('aluno_estado_id')) {
-            $query->where('registry_code', $registryCode);
-        }
-
-        $birthdate = $request->query('data_nascimento');
-        $studentName = $request->query('nome_aluno');
-        $fatherName = $request->query('nome_pai');
-        $motherName = $request->query('nome_mae');
-        $guardianName = $request->query('nome_responsavel');
-
-        if (
-            $birthdate ||
-            $studentName ||
-            $fatherName ||
-            $motherName ||
-            $guardianName
-        ) {
-            $query->whereHas('individual', function ($query) use ($birthdate, $studentName, $fatherName, $motherName, $guardianName) {
-                if ($birthdate) {
-                    list($day, $month, $year) = explode('/', $birthdate);
-                    $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
-
-                    $query->where('birthdate', $birthdate);
-                }
-
-                if ($studentName) {
-                    $query->whereHas('person', function ($query) use ($studentName) {
-                        $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $studentName . '%\')');
-                    });
-                }
-
-                if ($motherName) {
-                    $query->whereHas('mother', function ($query) use ($motherName) {
-                        $query->whereHas('person', function ($query) use ($motherName) {
-                            $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $motherName . '%\')');
-                        });
-                    });
-                }
-
-                if ($fatherName) {
-                    $query->whereHas('father', function ($query) use ($fatherName) {
-                        $query->whereHas('person', function ($query) use ($fatherName) {
-                            $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $fatherName . '%\')');
-                        });
-                    });
-                }
-
-                if ($guardianName) {
-                    $query->whereHas('guardian', function ($query) use ($guardianName) {
-                        $query->whereHas('person', function ($query) use ($guardianName) {
-                            $query->whereRaw('unaccent(name) ILIKE unaccent(\'%' . $guardianName . '%\')');
-                        });
-                    });
-                }
-            });
-        }
-
-        $year = $request->query('ano');
-        $schoolId = $request->query('ref_cod_escola');
-        $courseId = $request->query('ref_cod_curso');
-        $levelId = $request->query('ref_cod_serie');
-
-        if (
-            $year ||
-            $schoolId ||
-            $courseId ||
-            $levelId
-        ) {
-            $query->whereHas('registrations', function ($query) use ($year, $schoolId, $courseId, $levelId) {
-                $query->whereNull('deleted_at')
-                    ->where('status', RegistrationStatus::ONGOING);
-
-                if ($year) {
-                    $query->where('year', $year);
-                }
-
-                if ($schoolId) {
-                    $query->where('school_id', $schoolId);
-                }
-
-                if ($courseId) {
-                    $query->where('course_id', $courseId);
-                }
-
-                if ($levelId) {
-                    $query->where('level_id', $levelId);
-                }
-            });
-        }
-
-        $students = $query->get();
-
-        dd($students);
-
-        die();
+        return $newParams;
     }
 }
