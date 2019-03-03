@@ -1511,17 +1511,3 @@ function getPDFouvidoriaOrdemDone()
 	//alert('Arquivo Conclu?o');
 	document.location.href = link;
 }
-
-function fecha_notificacao( id_notificacao )
-{
-	DOM_execute_when_xmlhttpChange = function()
-	{
-		if( DOM_itensArray[0].firstChild.data == 0 )
-		{
-			alert( 'Erro de permiss?. A notifica?o n? foi deletada.' );
-			document.getElementById('notificacao_' + id_notificacao).style.display='block';
-		}
-	}
-	DOM_loadXMLDoc('deleta_notificacao.php?cod_not=' + id_notificacao);
-	document.getElementById('notificacao_' + id_notificacao).style.display='none';
-}
