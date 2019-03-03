@@ -1,6 +1,5 @@
 DocumentacaoPadrao.php
 acesso_indevido_lst.php
-add_fotos.php
 adicionar_documentos_cad.php
 adicionar_documentos_det.php
 agenda.php
@@ -372,12 +371,6 @@ educar_usuario_lst.php
 empresas_cad.php
 empresas_det.php
 empresas_lst.php
-fotos_cad.php
-fotos_det.php
-fotos_galeria_cad.php
-fotos_galeria_det.php
-fotos_galeria_lst.php
-fotos_lst.php
 funcionario_cad.php
 funcionario_det.php
 funcionario_lst.php
