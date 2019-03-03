@@ -388,9 +388,6 @@ imagem_cad.php
 imagem_det.php
 imagem_lst.php
 index.php
-jornal_cad.php
-jornal_det.php
-jornal_lst.php
 licitacoes_cad.php
 licitacoes_det.php
 licitacoes_edital_cad.php
