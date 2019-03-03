@@ -20,7 +20,6 @@ pesquisa_imagens.php
 s3_config.php
 upload.php
 upload_just_pdf.php
-visualizarfoto.php
 suspenso.php
 transporte_itinerario_del.php
 tutormenu_cad.php
