@@ -3,7 +3,6 @@ agenda_calendario.php
 clsCalendario.inc.php
 clsConfigItajai.inc.php
 cron.agenda.php
-cron.mailler.php
 download.php
 educar_calendario_pesquisas.php
 educar_limpa_sessao_curso_disciplina_servidor.php
