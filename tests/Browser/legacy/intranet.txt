@@ -15,9 +15,6 @@ atendidos_lst.php
 banner_cad.php
 banner_det.php
 banner_lst.php
-concursos_cad.php
-concursos_det.php
-concursos_lst.php
 conexoes_lst.php
 conexoes_todos_lst.php
 educar_abandono_cad.php
