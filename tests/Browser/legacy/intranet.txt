@@ -393,9 +393,6 @@ pesquisa_cep_lst.php
 pesquisa_funcionario_lst.php
 pesquisa_pessoa_cad.php
 pesquisa_pessoa_lst.php
-portal_acesso_cad.php
-portal_acesso_det.php
-portal_acesso_lst.php
 public_bairro_cad.php
 public_bairro_det.php
 public_bairro_lst.php
