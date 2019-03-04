@@ -106,7 +106,7 @@ class clsBase extends clsConfig
         }
 
         if (is_array($this->scripts) && count($this->scripts)) {
-            $estilos = '';
+            $scripts = '';
             foreach ($this->scripts as $script) {
                 $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . '\' ></script>';
             }
