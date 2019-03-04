@@ -30,7 +30,6 @@ class clsBase extends clsConfig
     public $bodyscript = null;
     public $processoAp;
     public $refresh = false;
-    public $convidado = false;
     public $renderMenu = true;
     public $renderMenuSuspenso = true;
     public $renderBanner = true;
@@ -332,16 +331,14 @@ class clsBase extends clsConfig
     {
         @session_start();
         if (@$_SESSION['marcado'] != 'private') {
-            if (!$this->convidado) {
-                $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
-                $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                $id_pessoa = $_SESSION['id_pessoa'];
+            $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
+            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $id_pessoa = $_SESSION['id_pessoa'];
 
-                $logAcesso = new clsLogAcesso(false, $ip, $ip_de_rede, $id_pessoa);
-                $logAcesso->cadastra();
+            $logAcesso = new clsLogAcesso(false, $ip, $ip_de_rede, $id_pessoa);
+            $logAcesso->cadastra();
 
-                $_SESSION['marcado'] = 'private';
-            }
+            $_SESSION['marcado'] = 'private';
         }
         session_write_close();
     }
@@ -352,16 +349,9 @@ class clsBase extends clsConfig
 
         $saida_geral = '';
 
-        if ($this->convidado) {
-            @session_start();
-            $_SESSION['convidado'] = true;
-            $_SESSION['id_pessoa'] = '0';
-            session_write_close();
-        }
-
         $controlador = new clsControlador();
 
-        if ($controlador->Logado() && $liberado || $this->convidado) {
+        if ($controlador->Logado() && $liberado) {
             $this->mostraSupenso();
 
             $this->Formular();
