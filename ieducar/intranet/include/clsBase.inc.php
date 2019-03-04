@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\View;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../includes/bootstrap.php';
-require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsControlador.inc.php';
@@ -367,8 +366,6 @@ class clsBase extends clsConfig
     function MakeAll()
     {
         try {
-            $cronometro = new clsCronometro();
-            $cronometro->marca('inicio');
             $liberado = TRUE;
 
             $saida_geral = '';

@@ -399,7 +399,7 @@ class clsControlador
         if ($configuracoes['linkedin_url']) {
             $socialMedia .= '<a target="_blank" href="' . $configuracoes['linkedin_url'] . '"><img src="/intranet/imagens/icon-social-linkedin.png"></a> ';
         }
-        
+
         if ($configuracoes['twitter_url']) {
             $socialMedia .= '<a target="_blank" href="' . $configuracoes['twitter_url'] . '"><img src="/intranet/imagens/icon-social-twitter.png"></a> ';
         }
