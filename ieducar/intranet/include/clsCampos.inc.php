@@ -1045,7 +1045,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $expressao ? $expressao : ($obrigatorio ? '/[^ ]/' : ''),
             $valor,
             $descricao,
-            $descricao2
+            null
         ];
     }
 
@@ -1176,6 +1176,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $start_md = null
     ) {
         $retorno = '';
+        $style = '';
 
         if (!$array_campos) {
             $arr_campos = $this->campos;
