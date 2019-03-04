@@ -2985,7 +2985,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<span class=\"form\"> $valor</span>";
     }
 
-    public function getCampoCheck($nome, $id = '', $valor, $desc = '', $script = false, $disable = false)
+    public function getCampoCheck($nome, $id = '', $valor, $desc = '', $script = false, $disabled = false)
     {
         $id = $id ? $id : $nome;
 
