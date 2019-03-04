@@ -3078,7 +3078,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoCep(
         $nome,
-        $id = '',
+        $id,
         $valor,
         $class,
         $tamanhovisivel,
@@ -3092,9 +3092,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        $id = $id ? $id : $nome;
-
-        return $retorno .= "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>$descricao\n";
+        return "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>$descricao\n";
     }
 
     /**
