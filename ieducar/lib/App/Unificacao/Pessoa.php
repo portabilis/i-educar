@@ -341,6 +341,10 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_cod_pessoa_exc'
         ],
         [
+            'tabela' => 'portal.acesso',
+            'coluna' => 'cod_pessoa'
+        ],
+        [
             'tabela' => 'portal.agenda_compromisso',
             'coluna' => 'ref_ref_cod_pessoa_cad'
         ],
