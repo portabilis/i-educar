@@ -25,7 +25,7 @@ if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
 
 class clsBase extends clsConfig
 {
-    public $titulo = 'Prefeitura Cobra Tecnologia';
+    public $titulo = 'Prefeitura Municipal';
     public $clsForm = [];
     public $bodyscript = null;
     public $processoAp;
