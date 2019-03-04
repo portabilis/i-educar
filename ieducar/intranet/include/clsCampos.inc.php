@@ -2903,6 +2903,8 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         reset($valor);
 
+        $adicionador_indice = null;
+
         while (list($chave, $texto) = each($valor)) {
             if (substr($texto, 0, 9) == 'optgroup:') {
                 // optgroup
