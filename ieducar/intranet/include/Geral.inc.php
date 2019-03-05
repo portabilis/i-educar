@@ -20,7 +20,6 @@ require_once 'include/pessoa/clsBairro.inc.php';
 require_once 'include/pessoa/clsMunicipio.inc.php';
 require_once 'include/pessoa/clsUf.inc.php';
 require_once 'include/pessoa/clsPais.inc.php';
-require_once 'include/pessoa/clsVila.inc.php';
 require_once 'include/pessoa/clsTipoLogradouro.inc.php';
 require_once 'include/pessoa/clsFuncionario.inc.php';
 require_once 'include/pessoa/clsEscolaridade.inc.php';
