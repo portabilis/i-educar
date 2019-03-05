@@ -165,11 +165,6 @@ class clsBase extends clsConfig
 
     public function verificaPermissao()
     {
-        return $this->VerificaPermicao();
-    }
-
-    public function VerificaPermicao()
-    {
         if ($this->processoAp) {
             $permite = true;
 
@@ -345,21 +340,18 @@ class clsBase extends clsConfig
 
     public function MakeAll()
     {
-        $liberado = true;
-
         $saida_geral = '';
 
         $controlador = new clsControlador();
 
-        if ($controlador->Logado() && $liberado) {
+        if ($controlador->Logado()) {
             $this->mostraSupenso();
-
             $this->Formular();
-            $this->VerificaPermicao();
+            $this->verificaPermissao();
             $this->CadastraAcesso();
-            $saida_geral = '';
 
             app(TopMenu::class)->current($this->processoAp, request()->getRequestUri());
+
             View::share('title', $this->titulo);
 
             if ($this->renderMenu) {
@@ -369,7 +361,7 @@ class clsBase extends clsConfig
                     $saida_geral .= $form->RenderHTML();
                 }
             }
-        } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
+        } elseif (empty($_POST['login']) || empty($_POST['senha'])) {
             $force = !empty($_GET['force']) ? true : false;
 
             if (!$force) {
@@ -394,26 +386,6 @@ class clsBase extends clsConfig
         }
 
         echo view($view, ['body' => $saida_geral])->render();
-    }
-
-    public function setAlertaProgramacao($string)
-    {
-        if (is_string($string) && $string) {
-            $this->prog_alert = $string;
-        }
-    }
-
-    protected function checkUserExpirations()
-    {
-        $user = Portabilis_Utils_User::load('current_user');
-        $uri = $_SERVER['REQUEST_URI'];
-        $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
-
-        if ($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1') {
-            header('Location: /intranet/logof.php');
-        } elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha') {
-            header('Location: /module/Usuario/AlterarSenha');
-        }
     }
 
     protected function db()
