@@ -34,10 +34,6 @@ class AddForeignKeysOnCadastroFuncionarioTable extends Migration
                ->on('cadastro.pessoa')
                ->onDelete('set null');
 
-            $table->foreign('idset')
-               ->references('idset')
-               ->on('setor');
-
             $table->foreign('idins')
                ->references('idins')
                ->on('acesso.instituicao');
@@ -60,7 +56,6 @@ class AddForeignKeysOnCadastroFuncionarioTable extends Migration
             $table->dropForeign(['idsis_cad']);
             $table->dropForeign(['idpes_rev']);
             $table->dropForeign(['idpes_cad']);
-            $table->dropForeign(['idset']);
             $table->dropForeign(['idins']);
             $table->dropForeign(['idpes']);
         });
