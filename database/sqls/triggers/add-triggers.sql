@@ -120,5 +120,3 @@ CREATE TRIGGER trigger_audita_matricula_turma AFTER INSERT OR DELETE OR UPDATE O
 CREATE TRIGGER trigger_updated_at_matricula BEFORE UPDATE ON pmieducar.matricula FOR EACH ROW EXECUTE PROCEDURE pmieducar.updated_at_matricula();
 CREATE TRIGGER trigger_updated_at_matricula_turma BEFORE UPDATE ON pmieducar.matricula_turma FOR EACH ROW EXECUTE PROCEDURE pmieducar.updated_at_matricula_turma();
 CREATE TRIGGER update_escola_serie_disciplina_updated_at BEFORE UPDATE ON pmieducar.escola_serie_disciplina FOR EACH ROW EXECUTE PROCEDURE public.update_updated_at();
-CREATE TRIGGER trg_aft_logradouro_fonetiza AFTER INSERT OR UPDATE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE public.fcn_aft_logradouro_fonetiza();
-CREATE TRIGGER trg_bef_logradouro_fonetiza BEFORE DELETE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_logradouro_fonetiza();

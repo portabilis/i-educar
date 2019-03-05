@@ -120,5 +120,3 @@ DROP TRIGGER trigger_audita_matricula_turma ON pmieducar.matricula_turma;
 DROP TRIGGER trigger_updated_at_matricula ON pmieducar.matricula;
 DROP TRIGGER trigger_updated_at_matricula_turma ON pmieducar.matricula_turma;
 DROP TRIGGER update_escola_serie_disciplina_updated_at ON pmieducar.escola_serie_disciplina;
-DROP TRIGGER trg_aft_logradouro_fonetiza ON public.logradouro;
-DROP TRIGGER trg_bef_logradouro_fonetiza ON public.logradouro;
