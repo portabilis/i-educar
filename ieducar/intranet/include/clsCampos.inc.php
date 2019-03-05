@@ -1045,7 +1045,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $expressao ? $expressao : ($obrigatorio ? '/[^ ]/' : ''),
             $valor,
             $descricao,
-            $descricao2
+            null
         ];
     }
 
@@ -1176,6 +1176,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $start_md = null
     ) {
         $retorno = '';
+        $style = '';
 
         if (!$array_campos) {
             $arr_campos = $this->campos;
@@ -2902,6 +2903,8 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         reset($valor);
 
+        $adicionador_indice = null;
+
         while (list($chave, $texto) = each($valor)) {
             if (substr($texto, 0, 9) == 'optgroup:') {
                 // optgroup
@@ -2982,7 +2985,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<span class=\"form\"> $valor</span>";
     }
 
-    public function getCampoCheck($nome, $id = '', $valor, $desc = '', $script = false, $disable = false)
+    public function getCampoCheck($nome, $id = '', $valor, $desc = '', $script = false, $disabled = false)
     {
         $id = $id ? $id : $nome;
 
@@ -3075,7 +3078,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoCep(
         $nome,
-        $id = '',
+        $id,
         $valor,
         $class,
         $tamanhovisivel,
@@ -3089,9 +3092,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        $id = $id ? $id : $nome;
-
-        return $retorno .= "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>$descricao\n";
+        return "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>$descricao\n";
     }
 
     /**
@@ -3136,8 +3137,4 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         return $retorno;
     }
-}
-
-class clsCampo
-{
 }
