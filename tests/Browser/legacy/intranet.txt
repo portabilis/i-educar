@@ -12,9 +12,6 @@ agenda_responsavel.php
 atendidos_cad.php
 atendidos_det.php
 atendidos_lst.php
-banner_cad.php
-banner_det.php
-banner_lst.php
 conexoes_lst.php
 conexoes_todos_lst.php
 educar_abandono_cad.php
