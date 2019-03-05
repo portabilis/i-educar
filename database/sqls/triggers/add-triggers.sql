@@ -5,7 +5,6 @@ CREATE TRIGGER trg_aft_fisica_cpf_provisorio AFTER INSERT OR UPDATE ON cadastro.
 CREATE TRIGGER trg_aft_fisica_provisorio AFTER INSERT OR UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica_provisorio();
 CREATE TRIGGER trg_aft_ins_endereco_externo AFTER INSERT OR UPDATE ON cadastro.endereco_externo FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_externo();
 CREATE TRIGGER trg_aft_ins_endereco_pessoa AFTER INSERT OR UPDATE ON cadastro.endereco_pessoa FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_pessoa();
-CREATE TRIGGER trg_bef_ins_fisica BEFORE INSERT ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_ins_fisica();
 CREATE TRIGGER trg_bef_ins_juridica BEFORE INSERT ON cadastro.juridica FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_ins_juridica();
 CREATE TRIGGER trg_bef_pessoa_fonetiza BEFORE DELETE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_pessoa_fonetiza();
 CREATE TRIGGER impede_duplicacao_falta_aluno BEFORE INSERT OR UPDATE ON modules.falta_aluno FOR EACH ROW EXECUTE PROCEDURE modules.impede_duplicacao_falta_aluno();

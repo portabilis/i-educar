@@ -5,7 +5,6 @@ DROP TRIGGER trg_aft_fisica_cpf_provisorio ON cadastro.fisica_cpf;
 DROP TRIGGER trg_aft_fisica_provisorio ON cadastro.fisica;
 DROP TRIGGER trg_aft_ins_endereco_externo ON cadastro.endereco_externo;
 DROP TRIGGER trg_aft_ins_endereco_pessoa ON cadastro.endereco_pessoa;
-DROP TRIGGER trg_bef_ins_fisica ON cadastro.fisica;
 DROP TRIGGER trg_bef_ins_juridica ON cadastro.juridica;
 DROP TRIGGER trg_bef_pessoa_fonetiza ON cadastro.pessoa;
 DROP TRIGGER impede_duplicacao_falta_aluno ON modules.falta_aluno;
