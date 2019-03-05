@@ -28,7 +28,6 @@ require_once 'include/pessoa/clsOcupacao.inc.php';
 require_once 'include/pessoa/clsFisica.inc.php';
 require_once 'include/pessoa/clsOrgaoEmissorRg.inc.php';
 require_once 'include/pessoa/clsDocumento.inc.php';
-require_once 'include/pessoa/clsRegiao.inc.php';
 require_once 'include/pessoa/clsEscolaridade.inc.php';
 require_once 'include/pessoa/clsCadastroEscolaridade.inc.php';
 require_once 'include/pessoa/clsCadastroDeficiencia.inc.php';
