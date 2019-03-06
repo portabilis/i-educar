@@ -3,8 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Footer;
-use App\Http\Middleware\GetLegacySession;
-use App\Http\Middleware\LegacyAuthenticateSession;
+use App\Http\Middleware\StartLegacySession;
 use App\Http\Middleware\Menu;
 use App\Http\Middleware\Navigation;
 use App\Http\Middleware\SetLayoutVariables;
@@ -39,13 +38,13 @@ class Kernel extends HttpKernel
         'web' => [
             // \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            // \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             // \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ChangeAppName::class,
-            GetLegacySession::class,
+            StartLegacySession::class,
             ConnectTenantDatabase::class,
             LoadLegacyConfig::class,
             SetLayoutVariables::class,
