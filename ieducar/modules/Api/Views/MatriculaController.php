@@ -236,15 +236,18 @@ class MatriculaController extends ApiCoreController
                 $escola = 0;
             }
 
-            $sql = 'SELECT ref_cod_aluno AS aluno_id,
-                     cod_matricula AS matricula_id,
-                     aprovado AS situacao,
-                     ativo AS ativo,
-                     coalesce(updated_at::varchar, \'\') AS data_atualizacao,
-                     turno_id
-              FROM pmieducar.matricula
-              WHERE ano = $1
-                AND CASE WHEN $2 = 0 THEN TRUE ELSE ref_ref_cod_escola = $2 END';
+            $sql = 'SELECT m.ref_cod_aluno AS aluno_id,
+                     m.cod_matricula AS matricula_id,
+                     m.aprovado AS situacao,
+                     m.ativo AS ativo,
+                     coalesce(m.updated_at::varchar, \'\') AS data_atualizacao,
+                     m.turno_id
+              FROM pmieducar.matricula m
+              INNER JOIN pmieducar.aluno a
+              ON a.cod_aluno = m.ref_cod_aluno
+              WHERE m.ano = $1
+                AND a.ativo = 1
+                AND CASE WHEN $2 = 0 THEN TRUE ELSE m.ref_ref_cod_escola = $2 END';
 
             $params = [$ano, $escola];
             $matriculas = $this->fetchPreparedQuery($sql, $params, false);
