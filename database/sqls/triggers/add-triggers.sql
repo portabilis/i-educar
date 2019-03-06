@@ -5,10 +5,6 @@ CREATE TRIGGER trg_aft_fisica_cpf_provisorio AFTER INSERT OR UPDATE ON cadastro.
 CREATE TRIGGER trg_aft_fisica_provisorio AFTER INSERT OR UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica_provisorio();
 CREATE TRIGGER trg_aft_ins_endereco_externo AFTER INSERT OR UPDATE ON cadastro.endereco_externo FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_externo();
 CREATE TRIGGER trg_aft_ins_endereco_pessoa AFTER INSERT OR UPDATE ON cadastro.endereco_pessoa FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_pessoa();
-CREATE TRIGGER trg_aft_pessoa_fonetiza AFTER INSERT OR UPDATE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE public.fcn_aft_pessoa_fonetiza();
-CREATE TRIGGER trg_bef_ins_fisica BEFORE INSERT ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_ins_fisica();
-CREATE TRIGGER trg_bef_ins_juridica BEFORE INSERT ON cadastro.juridica FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_ins_juridica();
-CREATE TRIGGER trg_bef_pessoa_fonetiza BEFORE DELETE ON cadastro.pessoa FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_pessoa_fonetiza();
 CREATE TRIGGER impede_duplicacao_falta_aluno BEFORE INSERT OR UPDATE ON modules.falta_aluno FOR EACH ROW EXECUTE PROCEDURE modules.impede_duplicacao_falta_aluno();
 CREATE TRIGGER impede_duplicacao_nota_aluno BEFORE INSERT OR UPDATE ON modules.nota_aluno FOR EACH ROW EXECUTE PROCEDURE modules.impede_duplicacao_nota_aluno();
 CREATE TRIGGER impede_duplicacao_parecer_aluno BEFORE INSERT OR UPDATE ON modules.parecer_aluno FOR EACH ROW EXECUTE PROCEDURE modules.impede_duplicacao_parecer_aluno();
@@ -120,5 +116,3 @@ CREATE TRIGGER trigger_audita_matricula_turma AFTER INSERT OR DELETE OR UPDATE O
 CREATE TRIGGER trigger_updated_at_matricula BEFORE UPDATE ON pmieducar.matricula FOR EACH ROW EXECUTE PROCEDURE pmieducar.updated_at_matricula();
 CREATE TRIGGER trigger_updated_at_matricula_turma BEFORE UPDATE ON pmieducar.matricula_turma FOR EACH ROW EXECUTE PROCEDURE pmieducar.updated_at_matricula_turma();
 CREATE TRIGGER update_escola_serie_disciplina_updated_at BEFORE UPDATE ON pmieducar.escola_serie_disciplina FOR EACH ROW EXECUTE PROCEDURE public.update_updated_at();
-CREATE TRIGGER trg_aft_logradouro_fonetiza AFTER INSERT OR UPDATE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE public.fcn_aft_logradouro_fonetiza();
-CREATE TRIGGER trg_bef_logradouro_fonetiza BEFORE DELETE ON public.logradouro FOR EACH ROW EXECUTE PROCEDURE public.fcn_bef_logradouro_fonetiza();
