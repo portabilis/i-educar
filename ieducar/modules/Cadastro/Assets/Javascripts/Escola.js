@@ -420,7 +420,6 @@ $j(document).ready(function() {
       verificaCamposDepAdm();
       habilitaCampoOrgaoVinculadoEscola();
       obrigaCampoOrgaoVinculadoEscola();
-      mostrarObrigarCnpjMantenedora();
     }
   );
 
@@ -507,7 +506,6 @@ $j(document).ready(function() {
   $j('#regulamentacao').change(
     function(){
       habilitaCampoEsferaAdministrativa();
-      mostrarObrigarCnpjMantenedora();
     }
   );
 
