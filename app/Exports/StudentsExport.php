@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Repositories\StudentRepositoryEloquent;
 use App\Models\GuardianType;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -11,19 +11,16 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class StudentsExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize
 {
-    protected $repository;
+    protected $collection;
 
-    protected $params;
-
-    public function __construct(array $params)
+    public function __construct(Collection $collection)
     {
-        $this->repository = new StudentRepositoryEloquent;
-        $this->params = $params;
+        $this->collection = $collection;
     }
 
     public function collection()
     {
-        return $this->repository->list($this->params);
+        return $this->collection;
     }
 
     public function map($student): array
