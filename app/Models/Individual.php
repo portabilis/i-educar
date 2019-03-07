@@ -10,6 +10,13 @@ class Individual extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $casts = [
+        'gender' => 'integer',
+        'nationality' => 'integer',
+        'registry_origin' => 'integer',
+        'localization_zone' => 'integer',
+    ];
+
     public function student()
     {
         return $this->hasOne(Student::class);
@@ -67,22 +74,22 @@ class Individual extends Model
 
     public function getGenderDescriptionAttribute()
     {
-        return (new Gender)->getDescriptiveValues()[(int) $this->gender];
+        return (new Gender)->getDescriptiveValues()[$this->gender];
     }
 
     public function getNationalityDescriptionAttribute()
     {
-        return (new Nationality)->getDescriptiveValues()[(int) $this->nationality];
+        return (new Nationality)->getDescriptiveValues()[$this->nationality];
     }
 
     public function getRegistryOriginDescriptionAttribute()
     {
-        return (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin];
+        return (new RegistryOrigin)->getDescriptiveValues()[$this->registry_origin];
     }
 
     public function getLocalizationZoneDescriptionAttribute()
     {
-        return (new LocalizationZone)->getDescriptiveValues()[(int) $this->localization_zone];
+        return (new LocalizationZone)->getDescriptiveValues()[$this->localization_zone];
     }
 
     public function getRealNameAttribute()
