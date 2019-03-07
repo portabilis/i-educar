@@ -5,7 +5,6 @@ SELECT
     ref_ref_cod_escola AS school_id,
     ref_cod_curso AS course_id,
     ref_ref_cod_serie AS level_id,
-    turno_id AS shift_id,
     ref_cod_abandono_tipo AS abandonment_id,
     ref_cod_reserva_vaga AS reservation_id,
     turno_pre_matricula AS reservation_shift_id,
