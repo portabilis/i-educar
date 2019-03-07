@@ -84,6 +84,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             'http_errors' => false
         ]);
 
+        $templateName = $report->templateName();
         $params = $report->args;
 
         if ($report->useJson()) {
@@ -95,7 +96,6 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
             $params += $this->connection;
         }
 
-        $templateName = $report->templateName();
         $url = $this->sourcePath;
         $data = $report->getJsonData();
 

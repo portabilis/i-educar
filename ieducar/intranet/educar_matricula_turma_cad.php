@@ -134,7 +134,7 @@ class indice extends clsCadastro
     return $enturmacao->cadastra();
   }
 
-  public function validaDataEnturmacao($matriculaId, $turmaDestinoId)
+  public function validaDataEnturmacao($matriculaId, $turmaDestinoId, $transferir = false)
   {
     $dataObj = new \DateTime($this->data_enturmacao . ' 23:59:59');
     $matriculaObj = new clsPmieducarMatricula();
@@ -142,8 +142,13 @@ class indice extends clsCadastro
     $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio($turmaDestinoId);
     $dataAnoLetivoFim = $matriculaObj->pegaDataAnoLetivoFim($turmaDestinoId);
     $exclusaoEnturmacao = $enturmacaoObj->getDataExclusaoUltimaEnturmacao($matriculaId);
+    $maiorDataEnturmacao = $enturmacaoObj->getMaiorDataEnturmacao($matriculaId);
     $dataSaidaDaTurma = !empty($exclusaoEnturmacao)
         ? new \DateTime($exclusaoEnturmacao)
+        : null;
+
+    $maiorDataEnturmacao = !empty($maiorDataEnturmacao)
+        ? new \DateTime($maiorDataEnturmacao)
         : null;
 
     if ($dataObj > $dataAnoLetivoFim) {
@@ -151,7 +156,10 @@ class indice extends clsCadastro
         return false;
     }
 
-    if ($dataSaidaDaTurma !== null && $dataObj < $dataSaidaDaTurma) {
+    if ($transferir && !empty($maiorDataEnturmacao) && $dataObj < $maiorDataEnturmacao ) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data de entrada da última enturmação.';
+        return false;
+    } elseif ($dataSaidaDaTurma !== null && $dataObj < $dataSaidaDaTurma) {
         $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data de saída da última enturmação.';
         return false;
     } elseif ($dataObj < $dataAnoLetivoInicio) {
@@ -163,7 +171,7 @@ class indice extends clsCadastro
   }
 
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
-    if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+    if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId, true)) {
         return false;
     }
 
@@ -261,6 +269,7 @@ class indice extends clsCadastro
     $lst_ativo = $objMatriculaTurma->lista($matriculaId, $ultima_turma, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $sequencial);
 
     $ativo = $lst_ativo[0]['ativo'];
+    $data_exclusao = $lst_ativo[0]['data_exclusao'];
 
     $dataBaseRemanejamento = $this->getDataBaseRemanejamento(
         $objMatriculaTurma->getInstituicao()
@@ -276,7 +285,7 @@ class indice extends clsCadastro
             $this->pessoa_logada,
             $this->pessoa_logada,
             NULL,
-            NULL,
+            $data_exclusao,
             $ativo,
             NULL,
             $sequencial,

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
+
 class LegacyFakeAuthController
 {
     /**
@@ -11,8 +13,10 @@ class LegacyFakeAuthController
      */
     public function doFakeLogin()
     {
-        if (empty($_SESSION)) {
+        try {
             session_start();
+        } catch (Throwable $throwable) {
+
         }
 
         $_SESSION['itj_controle'] = 'logado';
@@ -32,8 +36,10 @@ class LegacyFakeAuthController
      */
     public function doFakeLogout()
     {
-        if (empty($_SESSION)) {
+        try {
             session_start();
+        } catch (Throwable $throwable) {
+
         }
 
         $_SESSION = [];

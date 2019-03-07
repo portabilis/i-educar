@@ -129,6 +129,7 @@ class indice extends clsCadastro
         $this->campoOculto('ref_ref_cod_escola', $this->ref_ref_cod_escola);
         $this->campoOculto('ref_ref_cod_serie', $this->ref_ref_cod_serie);
         $this->campoOculto('ref_cod_curso', $this->ref_cod_curso);
+        $this->campoOculto('campo_modal_confirm', null);
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -331,6 +332,9 @@ class indice extends clsCadastro
         }
 
         $this->campoQuebra();
+
+        $scripts = ['intranet/scripts/matricula_turma.js'];
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Novo()
@@ -471,47 +475,3 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 
 ?>
-
-<script type="text/javascript">
-
-    function fixUpCheckBoxes() {
-        $j('input[name^=check_desenturma]').each(function (index, element) {
-            element.id = 'check_desenturma[]';
-            element.checked = false;
-        });
-    }
-
-    fixUpCheckBoxes();
-
-    function marcarCheck(idValue) {
-        var contaForm = document.formcadastro.elements.length;
-        var campo = document.formcadastro;
-        var i;
-        for (i = 0; i < contaForm; i++) {
-            if (campo.elements[i].id == idValue) {
-                campo.elements[i].checked = campo.CheckTodos.checked;
-            }
-        }
-    }
-
-    function fixUpCheckBoxesDois() {
-        $j('input[name^=ref_cod_matricula]').each(function (index, element) {
-            element.id = 'ref_cod_matricula[]';
-            element.checked = true;
-        });
-    }
-
-    fixUpCheckBoxesDois();
-
-    function marcarCheckDois(idValueDois) {
-        var contaFormDois = document.formcadastro.elements.length;
-        var campoDois = document.formcadastro;
-        var i;
-        for (i = 0; i < contaFormDois; i++) {
-            if (campoDois.elements[i].id == idValueDois) {
-                campoDois.elements[i].checked = campoDois.CheckTodosDois.checked;
-            }
-        }
-    }
-    
-</script>

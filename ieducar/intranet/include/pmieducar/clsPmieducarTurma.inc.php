@@ -75,6 +75,7 @@ class clsPmieducarTurma
 
     public $listarNaoInformarEducacenso = true;
     public $codUsuario;
+    public $tipo_boletim_diferenciado = false;
     // propriedades padrao
 
     /**
@@ -836,6 +837,9 @@ class clsPmieducarTurma
 
             if (is_numeric($this->tipo_boletim_diferenciado)) {
                 $set .= "{$gruda}tipo_boletim_diferenciado = '{$this->tipo_boletim_diferenciado}'";
+                $gruda = ', ';
+            } elseif ($this->tipo_boletim_diferenciado !== false) {
+                $set .= "{$gruda}tipo_boletim_diferenciado = NULL";
                 $gruda = ', ';
             }
 
