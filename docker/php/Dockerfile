@@ -22,6 +22,7 @@ ENV XDEBUG_IDEKEY xdebug
 ENV XDEBUG_REMOTE_HOST 127.0.0.1
 ENV XDEBUG_REMOTE_PORT 9000
 ENV XDEBUG_REMOTE_ENABLE 0
+ENV XDEBUG_AUTOSTART 0
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
@@ -34,7 +35,7 @@ RUN apt-get install -y openjdk-8-jre
 RUN docker-php-ext-install bcmath
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN php -r "unlink('composer-setup.php');"
 
@@ -45,11 +46,12 @@ RUN apt-get install -y unzip
 
 RUN ln -s /application/artisan /usr/local/bin/artisan
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_PROCESS_TIMEOUT 900
-
 RUN mkdir -p /usr/share/man/man7
 RUN apt-get install -y postgresql-client
 
 RUN apt-get install -y libpng-dev
 RUN docker-php-ext-install gd
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_PROCESS_TIMEOUT 900
+ENV COMPOSER_DISABLE_XDEBUG_WARN=1

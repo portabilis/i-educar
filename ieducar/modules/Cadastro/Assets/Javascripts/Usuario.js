@@ -45,10 +45,12 @@ $j(document).ready(function(){
   $escolas.trigger('chosen:updated');
 
   var handleGetEscolas = function(dataResponse) {
-    $j.each(dataResponse['escolas'], function(id, value) {
-      $escolas.children("[value=" + value + "]").attr('selected', '');
-    });
-    $escolas.trigger('chosen:updated');
+    setTimeout(function() {
+      $j.each(dataResponse['escolas'], function(id, value) {
+        $escolas.children("[value=" + value + "]").attr('selected', '');
+      });
+      $escolas.trigger('chosen:updated');
+    }, 100);
   }
 
   var getEscolas = function() {

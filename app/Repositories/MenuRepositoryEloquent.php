@@ -3,15 +3,10 @@
 namespace App\Repositories;
 
 use iEducar\Support\Repositories\MenuRepository;
-use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use App\Models\LegacyMenu;
+use Prettus\Repository\Eloquent\BaseRepository;
 
-/**
- * Class MenuRepositoryEloquent.
- *
- * @package namespace App\Repositories;
- */
 class MenuRepositoryEloquent extends BaseRepository implements MenuRepository
 {
     /**
@@ -26,6 +21,10 @@ class MenuRepositoryEloquent extends BaseRepository implements MenuRepository
 
     /**
      * Boot up the repository, pushing criteria
+     *
+     * @return void
+     *
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function boot()
     {

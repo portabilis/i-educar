@@ -4,14 +4,9 @@ namespace App\Repositories;
 
 use App\Models\LegacyConfiguration;
 use iEducar\Support\Repositories\ConfigurationRepository;
-use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Prettus\Repository\Eloquent\BaseRepository;
 
-/**
- * Class MenuRepositoryEloquent.
- *
- * @package namespace App\Repositories;
- */
 class ConfigurationRepositoryEloquent extends BaseRepository implements ConfigurationRepository
 {
     /**
@@ -26,6 +21,10 @@ class ConfigurationRepositoryEloquent extends BaseRepository implements Configur
 
     /**
      * Boot up the repository, pushing criteria
+     *
+     * @return void
+     *
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function boot()
     {

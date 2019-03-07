@@ -1,12 +1,23 @@
 matrix:
+
   include:
+
     - language: php
+
+      sudo: required
+
+      dist: xenial
+
       php:
         - 7.1
         - 7.2
+
       addons:
         postgresql: 9.5
+        chrome: stable
+
       env:
+        - APP_URL=http://localhost:8000
         - APP_ENV=testing
         - DB_CONNECTION=pgsql
         - DB_HOST=localhost
@@ -20,5 +31,12 @@ matrix:
       cache:
         directories:
           - $HOME/.composer/cache
+
       before_script:
         - composer new-install
+        - vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+        - php artisan serve > /dev/null 2>&1 &
+
+      script:
+        - vendor/bin/phpunit
+        - php artisan dusk
