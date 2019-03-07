@@ -94,11 +94,11 @@ class Individual extends Model
 
     public function getRealNameAttribute()
     {
-        if (!empty($this->social_name)) {
-            return $this->social_name;
+        if (empty($this->social_name)) {
+            return $this->person->name;
         }
 
-        return $this->person->name;
+        return $this->social_name;
     }
 
     public function getMotherNameAttribute($value)
