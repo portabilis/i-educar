@@ -268,7 +268,8 @@ class MatriculaController extends ApiCoreController
                                             matricula_turma.remanejado AND
                                             matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
                                        ELSE FALSE
-                                   END AS apresentar_fora_da_data
+                                   END AS apresentar_fora_da_data,
+                                   matricula_turma.turno_id
                               FROM matricula
                         INNER JOIN pmieducar.escola
                                 ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -289,7 +290,8 @@ class MatriculaController extends ApiCoreController
                             'data_entrada',
                             'data_saida',
                             'data_atualizacao',
-                            'apresentar_fora_da_data'
+                            'apresentar_fora_da_data',
+                            'turno_id'
                         ];
                         $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
                         $matriculas[$key]['enturmacoes'] = $enturmacoes;
