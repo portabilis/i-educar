@@ -32,7 +32,6 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, Shoul
         $fatherName = $student->individual->father_name;
         $motherName = $student->individual->mother_name;
         $guardianName = $student->individual->guardian_name;
-        $fatherAndMotherName = sprintf('%s, %s', $fatherName, $motherName);
 
         $fatherDocument = $student->individual->father->cpf ?? null;
         $motherDocument = $student->individual->mother->cpf ?? null;
@@ -50,8 +49,16 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, Shoul
                 break;
 
             case GuardianType::BOTH:
-                $guardianName = $fatherAndMotherName;
+                $names = [];
                 $documents = [];
+
+                if (!is_null($fatherName)) {
+                    $names[] = $fatherName;
+                }
+
+                if (!is_null($motherName)) {
+                    $names[] = $motherName;
+                }
 
                 if (!is_null($fatherDocument)) {
                     $documents[] = $fatherDocument;
@@ -61,6 +68,7 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, Shoul
                     $documents[] = $motherDocument;
                 }
 
+                $guardianName = join(', ', $names);
                 $guardianDocument = join(', ', $documents);
                 break;
         }
