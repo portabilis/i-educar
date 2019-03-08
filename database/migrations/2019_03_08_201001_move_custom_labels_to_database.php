@@ -18,7 +18,7 @@ class MoveCustomLabelsToDatabase extends Migration
             'matricula.detalhe.enturmar' => 'Enturmar',
             'matricula.detalhe.solicitar_transferencia' => 'Solicitar transferência',
             'historico.cadastro.curso_detalhe' => '',
-            'historico.cadastro.serie' => 'S&eacute;rie',
+            'historico.cadastro.serie' => 'Série',
             'turma.detalhe.sigla' => 'Sigla',
             'report.termo_assinatura_secretario'  => 'Secretário(a)',
             'report.termo_assinatura_diretor' => 'Gestor(a) da unidade escolar',
