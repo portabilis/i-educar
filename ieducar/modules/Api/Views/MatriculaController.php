@@ -240,8 +240,7 @@ class MatriculaController extends ApiCoreController
                      m.cod_matricula AS matricula_id,
                      m.aprovado AS situacao,
                      m.ativo AS ativo,
-                     coalesce(m.updated_at::varchar, \'\') AS data_atualizacao,
-                     m.turno_id
+                     coalesce(m.updated_at::varchar, \'\') AS data_atualizacao
               FROM pmieducar.matricula m
               INNER JOIN pmieducar.aluno a
               ON a.cod_aluno = m.ref_cod_aluno
