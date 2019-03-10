@@ -427,26 +427,6 @@ class clsBase extends clsConfig
         echo view($view, ['body' => $saida_geral])->render();
     }
 
-    function setAlertaProgramacao($string)
-    {
-        if (is_string($string) && $string) {
-            $this->prog_alert = $string;
-        }
-    }
-
-    protected function checkUserExpirations()
-    {
-        $user = Portabilis_Utils_User::load('current_user');
-        $uri = $_SERVER['REQUEST_URI'];
-        $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
-
-        if ($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1')
-            header("Location: /intranet/logof.php");
-
-        elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
-            header("Location: /module/Usuario/AlterarSenha");
-    }
-
     protected function db()
     {
         return Portabilis_Utils_Database::db();
