@@ -1,27 +1,7 @@
 <?php
 
-/*
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- */
-
 use App\Exceptions\RedirectException;
+use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
@@ -30,18 +10,8 @@ require_once 'Portabilis/Mailer.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/Utils/ReCaptcha.php';
 
-/**
- * clsControlador class.
- *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Core
- * @since    Classe disponível desde a versão 1.0.0
- * @version  $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/intranet/include/clsControlador.inc.php 662 2009-11-17T18:28:48.404882Z eriksen  $
- */
 class clsControlador
 {
-
   /**
    * @var boolean
    */
@@ -52,21 +22,12 @@ class clsControlador
    */
   public $erroMsg;
 
-
   /**
    * Construtor.
    */
   public function __construct()
   {
-
-    /*
-      Desabilitado esta linha para usar o valor setado no php.ini > session.cookie_lifetime
-      @session_set_cookie_params(200);
-    */
-
-    @session_start();
-
-    if ('logado' == $_SESSION['itj_controle']) {
+    if ('logado' == Session::get('itj_controle')) {
       $this->logado = TRUE;
     }
     else {
@@ -77,29 +38,28 @@ class clsControlador
     if (isset($_GET['mudamenu']) && isset($_GET['categoria']) && isset($_GET['acao']))
     {
       if ($_GET['acao']) {
-        $_SESSION['menu_opt'][$_GET['categoria']] = 1;
-        $_SESSION['menu_atual'] = $_GET['categoria'];
+        Session::put([
+          'menu_opt.' . $_GET['categoria'] => 1,
+          'menu_atual.' => $_GET['categoria'],
+        ]);
       }
       else {
-        // Está apagando variável session com o índice dado por $_GET
-        unset($_SESSION['menu_opt'][$_GET['categoria']]);
-        if ($_SESSION['menu_atual'] == $_GET['categoria']) {
-          unset($_SESSION['menu_atual']);
+        Session::forget('menu_opt.' . $_GET['categoria']);
+
+        if (Session::get('menu_atual') == $_GET['categoria']) {
+          Session::forget('menu_atual');
         }
       }
 
       $db = new clsBanco();
-      if (isset($_SESSION['id_pessoa'])) {
-        $db->Consulta("UPDATE funcionario SET opcao_menu = '" . serialize( $_SESSION['menu_opt'] ) . "' WHERE ref_cod_pessoa_fj = '" . $_SESSION['id_pessoa'] . "'");
+      if (Session::get('id_pessoa')) {
+        $db->Consulta("UPDATE funcionario SET opcao_menu = '" . serialize( Session::get('menu_opt') ) . "' WHERE ref_cod_pessoa_fj = '" . Session::get('id_pessoa') . "'");
       }
     }
-
-    session_write_close();
 
     $this->_maximoTentativasFalhas = 7;
     $this->messenger = new Portabilis_Messenger();
   }
-
 
   /**
    * Retorna TRUE para usuário logado
@@ -109,23 +69,6 @@ class clsControlador
   {
     return $this->logado;
   }
-
-
-  /**
-   * Executa o login do usuário.
-   */
-  public function obriga_Login()
-  {
-    if (! $this->logado)
-      $validateUserCredentials = false;
-
-    elseif ($_POST['login'] && $_POST['senha']) {
-      $validateUserCredentials = true;
-    }
-
-    $this->logar($validateUserCredentials);
-  }
-
 
   // novo metodo login, logica quebrada em metodos menores
   public function Logar($validateUserCredentials) {
@@ -140,7 +83,6 @@ class clsControlador
 
     $this->renderLoginPage();
   }
-
 
   // valida se o usuário e senha informados, existem no banco de dados.
   protected function validateUserCredentials($username, $password) {
@@ -171,18 +113,17 @@ class clsControlador
     return false;
   }
 
-
   public function startLoginSession($user, $redirectTo = '') {
     // unsetting login attempts here, because when the password is recovered the login attempts should be reseted.
     $this->unsetTentativasLogin();
 
-    session([
-        'itj_controle' => 'logado',
-        'id_pessoa' => $user['id'],
-        'pessoa_setor' => $user['ref_cod_setor_new'],
-        'menu_opt' => unserialize($user['opcao_menu']),
-        'tipo_menu' => $user['tipo_menu'],
-        'nivel' => $user['nivel'],
+    Session::put([
+      'itj_controle' => 'logado',
+      'id_pessoa' => $user['id'],
+      'pessoa_setor' => $user['ref_cod_setor_new'],
+      'menu_opt' => unserialize($user['opcao_menu']),
+      'tipo_menu' => $user['tipo_menu'],
+      'nivel' => $user['nivel'],
     ]);
 
     Portabilis_Utils_User::logAccessFor($user['id'], $this->getClientIP());
@@ -201,7 +142,6 @@ class clsControlador
     }
   }
 
-
   public function canStartLoginSession($user) {
     if (! $this->messenger->hasMsgWithType("error")) {
       $this->checkForSuspended($user);
@@ -214,7 +154,6 @@ class clsControlador
 
     return ! $this->messenger->hasMsgWithType("error");
   }
-
 
   // renderiza o template de login, com as mensagens adicionadas durante validações
   protected function renderLoginPage() {
@@ -234,9 +173,9 @@ class clsControlador
         $msgCriarConta  = 'Não possui uma conta? <a target="_BLANK" href="'. $configuracoes["url_cadastro_usuario"] .'">Crie sua conta agora</a>.';
     }
 
-    $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
-                                     is_numeric($_SESSION['tentativas_login_falhas']) &&
-                                     $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
+    $requiresHumanAccessValidation = Session::get('tentativas_login_falhas')
+      && is_numeric(Session::get('tentativas_login_falhas'))
+      && Session::get('tentativas_login_falhas') >= $this->_maximoTentativasFalhas;
 
     if ($requiresHumanAccessValidation) {
         $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
@@ -267,27 +206,25 @@ class clsControlador
         $templateText = str_replace("<!-- #&SUSPENSO&# -->", $msgSuspensao, $templateText);
     }
 
+    Session::save();
+
     fclose($templateFile);
     die($templateText);
   }
 
-
   protected function destroyLoginSession($addMsg = false) {
-    $tentativasLoginFalhas = $_SESSION['tentativas_login_falhas'];
+    $tentativasLoginFalhas = Session::get('tentativas_login_falhas');
 
     @session_start();
     $_SESSION = array();
     @session_destroy();
 
     //mantem tentativas_login_falhas, até que senha senha informada corretamente
-    @session_start();
-    $_SESSION['tentativas_login_falhas'] = $tentativasLoginFalhas;
-    @session_write_close();
+    Session::put('tentativas_login_falhas', $tentativasLoginFalhas);
 
     if ($addMsg)
       $this->messenger->append("Usuário deslogado com sucesso.", "success");
   }
-
 
   protected function getClientIP() {
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
@@ -300,7 +237,6 @@ class clsControlador
 
     return $ip;
   }
-
 
   protected function validateHumanAccess() {
     $result = false;
@@ -316,30 +252,22 @@ class clsControlador
     return $result;
   }
 
-
   protected function atingiuTentativasLogin() {
-    return isset($_SESSION['tentativas_login_falhas']) &&
-                 is_numeric($_SESSION['tentativas_login_falhas']) &&
-                 $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
+    return Session::get('tentativas_login_falhas')
+      && is_numeric(Session::get('tentativas_login_falhas'))
+      && Session::get('tentativas_login_falhas') >= $this->_maximoTentativasFalhas;
   }
-
 
   protected function incrementTentativasLogin() {
-    @session_start();
-    if (! isset($_SESSION['tentativas_login_falhas']) or ! is_numeric($_SESSION['tentativas_login_falhas']))
-      $_SESSION['tentativas_login_falhas'] = 1;
+    if (! Session::get('tentativas_login_falhas') or ! is_numeric(Session::get('tentativas_login_falhas')))
+        Session::put('tentativas_login_falhas', 1);
     else
-      $_SESSION['tentativas_login_falhas'] += 1;
-    @session_write_close();
+      Session::put('tentativas_login_falhas', Session::get('tentativas_login_falhas') + 1);
   }
-
 
   protected function unsetTentativasLogin() {
-    @session_start();
-    unset($_SESSION['tentativas_login_falhas']);
-    @session_write_close();
+    Session::forget('tentativas_login_falhas');
   }
-
 
   protected function checkForDisabledAccount($user) {
     if ($user['ativo'] != '1') {
@@ -368,7 +296,6 @@ class clsControlador
     }
   }
 
-
   protected function checkForExpiredAccount($user) {
     if($user['expired_account']) {
 
@@ -379,7 +306,6 @@ class clsControlador
                               "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
     }
   }
-
 
   protected function checkForMultipleAccess($user) {
     // considera como acesso multiplo, acesso em diferentes IPs em menos de $tempoMultiploAcesso minutos

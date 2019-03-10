@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -38,7 +39,9 @@ class StartLegacySession
      */
     private function mergeLegacySession()
     {
-        session($_SESSION);
+        Session::put($_SESSION);
+
+        $_SESSION = Session::all();
     }
 
     /**
@@ -67,6 +70,7 @@ class StartLegacySession
      */
     public function terminate($request, $response)
     {
+        $this->startLegacySession();
         $this->mergeLegacySession();
         $this->writeLegacySession();
     }
