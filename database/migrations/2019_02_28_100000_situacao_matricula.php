@@ -16,34 +16,24 @@ class SituacaoMatricula extends Migration
             '
                 CREATE TABLE IF NOT EXISTS relatorio.situacao_matricula (
                     cod_situacao integer NOT NULL,
-                    descricao character varying(50) NOT NULL
+                    descricao character varying(50) NOT NULL,
+                    PRIMARY KEY(cod_situacao)
                 );
             '
         );
 
-        DB::unprepared(
-            '
-                ALTER TABLE ONLY relatorio.situacao_matricula
-                    ADD CONSTRAINT situacao_matricula_pkey PRIMARY KEY (cod_situacao);
-            '
-        );
-
-        DB::unprepared(
-            '
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (1, \'Aprovado\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (2, \'Reprovado\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (15, \'Falecido\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (4, \'Transferido\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (6, \'Abandono\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (13, \'Aprovado pelo conselho\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (9, \'Exceto Transferidos/Abandono\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (10, \'Todas\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (14, \'Reprovado por faltas\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (12, \'Ap. Depen.\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (5, \'Reclassificado\');
-                INSERT INTO relatorio.situacao_matricula (cod_situacao, descricao) VALUES (3, \'Cursando\');
-            '
-        );
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 1], ['descricao' => 'Aprovado']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 2], ['descricao' => 'Reprovado']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 15], ['descricao' => 'Falecido']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 4], ['descricao' => 'Transferido']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 6], ['descricao' => 'Abandono']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 13], ['descricao' => 'Aprovado pelo conselho']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 9], ['descricao' => 'Exceto Transferidos/Abandono']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 10], ['descricao' => 'Todas']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 14], ['descricao' => 'Reprovado por faltas']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 12], ['descricao' => 'Ap. Depen.']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 5], ['descricao' => 'Reclassificado']);
+        DB::table('relatorio.situacao_matricula')->updateOrInsert(['cod_situacao' => 3], ['descricao' => 'Cursando']);
     }
 
     /**
@@ -53,7 +43,6 @@ class SituacaoMatricula extends Migration
      */
     public function down()
     {
-        DB::unprepared('ALTER TABLE relatorio.situacao_matricula DROP CONSTRAINT situacao_matricula_pkey;');
         DB::unprepared('DROP TABLE relatorio.situacao_matricula CASCADE;');
     }
 }
