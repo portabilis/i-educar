@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 class Portabilis_Utils_User
 {
     public static $_currentUserId;
@@ -8,18 +10,11 @@ class Portabilis_Utils_User
 
     public static function currentUserId()
     {
-        if (!isset(self::$_currentUserId)) {
-            @session_start();
-            self::$_currentUserId = $_SESSION['id_pessoa'];
-            session_write_close();
+        if (empty(self::$_currentUserId)) {
+            self::$_currentUserId = Session::get('id_pessoa');
         }
 
         return self::$_currentUserId;
-    }
-
-    public static function redirectToLogoff()
-    {
-        header('Location: /intranet/logof.php');
     }
 
     public static function loggedIn()
