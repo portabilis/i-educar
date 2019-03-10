@@ -7,7 +7,6 @@ use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -200,7 +199,6 @@ class LegacyController extends Controller
     {
         ob_start();
 
-        $this->startLegacySession();
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
         $this->loadLegacyBootstrapFile();
@@ -213,20 +211,6 @@ class LegacyController extends Controller
         return new Response(
             $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
         );
-    }
-
-    /**
-     * Start session.
-     *
-     * @return void
-     */
-    private function startLegacySession()
-    {
-        try {
-            session_start();
-        } catch (Exception $e) {
-
-        }
     }
 
     /**
