@@ -21,6 +21,8 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
+use App\Exceptions\RedirectException;
+
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'Portabilis/Messenger.php';
@@ -174,15 +176,14 @@ class clsControlador
     // unsetting login attempts here, because when the password is recovered the login attempts should be reseted.
     $this->unsetTentativasLogin();
 
-    @session_start();
-    $_SESSION = array();
-    $_SESSION['itj_controle'] = 'logado';
-    $_SESSION['id_pessoa'] = $user['id'];
-    $_SESSION['pessoa_setor'] = $user['ref_cod_setor_new'];
-    $_SESSION['menu_opt'] = unserialize($user['opcao_menu']);
-    $_SESSION['tipo_menu'] = $user['tipo_menu'];
-    $_SESSION['nivel'] = $user['nivel'];
-    @session_write_close();
+    session([
+        'itj_controle' => 'logado',
+        'id_pessoa' => $user['id'],
+        'pessoa_setor' => $user['ref_cod_setor_new'],
+        'menu_opt' => unserialize($user['opcao_menu']),
+        'tipo_menu' => $user['tipo_menu'],
+        'nivel' => $user['nivel'],
+    ]);
 
     Portabilis_Utils_User::logAccessFor($user['id'], $this->getClientIP());
     Portabilis_Utils_User::destroyStatusTokenFor($user['id'], 'redefinir_senha');
@@ -192,11 +193,11 @@ class clsControlador
 
     // solicita email para recuperação de senha, caso usuário ainda não tenha informado.
     if (!filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
-        header("Location: /module/Usuario/AlterarEmail");
+        throw new RedirectException('/module/Usuario/AlterarEmail');
     } elseif ($user['expired_password']) {
-        header("Location: /module/Usuario/AlterarSenha");
+        throw new RedirectException('/module/Usuario/AlterarSenha');
     } elseif (!empty($redirectTo)) {
-        header("Location: $redirectTo");
+        throw new RedirectException($redirectTo);
     }
   }
 
