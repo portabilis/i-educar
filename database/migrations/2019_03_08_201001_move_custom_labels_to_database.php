@@ -39,6 +39,10 @@ class MoveCustomLabelsToDatabase extends Migration
             ->where('active_on_ieducar', 1)
             ->first();
 
+        if (empty($setting)) {
+            return;
+        }
+
         $customLabels = json_decode($setting->custom_labels, true);
         $customLabels = is_array($customLabels) ? array_filter($customLabels) : [];
 
