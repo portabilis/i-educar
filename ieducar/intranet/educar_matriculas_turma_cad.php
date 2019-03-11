@@ -18,8 +18,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    public $pessoa_logada;
-
     public $ref_cod_matricula;
 
     public $ref_usuario_exc;
@@ -54,10 +52,6 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
         $this->ano = $_GET['ano'];
 

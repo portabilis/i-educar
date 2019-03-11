@@ -37,10 +37,6 @@ class indice extends clsDetalhe
 
     public function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Matriculas Turma - Detalhe';
 
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
