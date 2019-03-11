@@ -411,14 +411,10 @@ class indice extends clsDetalhe
         $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
+        $this->breadcrumb('Matrícula', [
             'educar_index.php' => 'Escola',
-            '' => 'Matrícula'
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
-
+        
         // js
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
