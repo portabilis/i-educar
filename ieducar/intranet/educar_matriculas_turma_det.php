@@ -204,13 +204,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = 'educar_matriculas_turma_lst.php';
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
+        $this->breadcrumb('Detalhe das matrículas da turma', [
             'educar_index.php' => 'Escola',
-            '' => 'Detalhe das matr&iacute;culas da turma'
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 

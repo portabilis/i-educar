@@ -98,13 +98,9 @@ class indice extends clsCadastro
 
             $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-            $localizacao = new LocalizacaoSistema();
-            $localizacao->entradaCaminhos([
-                $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
+            $this->breadcrumb("{$nomeMenu} matrículas da turma", [
                 'educar_index.php' => 'Escola',
-                '' => "{$nomeMenu} matr&iacute;culas da turma"
             ]);
-            $this->enviaLocalizacao($localizacao->montar());
 
             return $retorno;
         }

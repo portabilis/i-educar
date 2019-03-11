@@ -171,13 +171,9 @@ class indice extends clsListagem
         $this->addPaginador2('educar_matriculas_turma_lst.php', $total, $_GET, $this->nome, $this->limite);
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
+        $this->breadcrumb('Listagem de turmas para enturmações', [
             'educar_index.php' => 'Escola',
-            '' => 'Listagem de turmas para enturma&ccedil;&otilde;es'
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
