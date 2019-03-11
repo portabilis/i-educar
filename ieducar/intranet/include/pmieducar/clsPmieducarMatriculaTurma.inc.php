@@ -487,6 +487,10 @@ class clsPmieducarMatriculaTurma
     $int_turma_turno_id = FALSE, $int_ano_turma = FALSE, $dependencia = NULL,
     $apenasTurmasMultiSeriadas = FALSE, $apenasTurmasUnificadas = FALSE)
   {
+    $nome = '';
+    $tab_aluno = '';
+    $where_nm_aluno = '';
+
     if ($bool_get_nome_aluno === true) {
       $nome = " ,(SELECT (nome)
                         FROM cadastro.pessoa
