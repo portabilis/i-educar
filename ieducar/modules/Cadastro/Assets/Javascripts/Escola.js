@@ -458,10 +458,16 @@ $j(document).ready(function() {
   }
 
   function habilitarCampoUnidadeVinculada() {
-    if ($j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+    escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
+    
+    if (escolaEmAtividade) {
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', false);
+      if (obrigarCamposCenso) {
+        $j("#unidade_vinculada_outra_instituicao").makeRequired();
+      }
     } else {
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', true);
+      $j("#unidade_vinculada_outra_instituicao").makeUnrequired();
     }
   }
 
@@ -489,10 +495,11 @@ $j(document).ready(function() {
     dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
     mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
     escolaRegulamentada = $j('#regulamentacao').val() == 1;
+    emAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
 
     $j('#cnpj_mantenedora_principal').makeUnrequired();
 
-    if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada) {
+    if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada && emAtividade) {
       $j('#cnpj_mantenedora_principal').makeRequired();
     }
   }
