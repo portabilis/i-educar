@@ -381,17 +381,19 @@ $j(document).ready(function() {
             $j('#conveniada_com_poder_publico').prop('disabled', false);
             $j('#mantenedora_escola_privada').prop('disabled', false);
             $j("#mantenedora_escola_privada").trigger("chosen:updated");
+            $j('#cnpj_mantenedora_principal').prop('disabled', false);
         }else{
             $j('#categoria_escola_privada').prop('disabled', true);
             $j('#conveniada_com_poder_publico').prop('disabled', true);
             $j('#mantenedora_escola_privada').prop('disabled', true);
             $j("#mantenedora_escola_privada").trigger("chosen:updated");
+            $j('#cnpj_mantenedora_principal').prop('disabled', true);
         }
 
         habilitarCampoUnidadeVinculada();
         mostrarCamposDaUnidadeVinculada();
         obrigarCamposDaUnidadeVinculada();
-        mostrarObrigarCnpjMantenedora();
+        obrigarCnpjMantenedora();
       });
 
   // fix checkboxs
@@ -479,20 +481,18 @@ $j(document).ready(function() {
 
   $j('#mantenedora_escola_privada').change(
     function (){
-      mostrarObrigarCnpjMantenedora();
+      obrigarCnpjMantenedora();
     }
   );
 
-  function mostrarObrigarCnpjMantenedora() {
+  function obrigarCnpjMantenedora() {
     dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
     mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
     escolaRegulamentada = $j('#regulamentacao').val() == 1;
 
-    $j('#cnpj_mantenedora_principal').prop('disabled', true);
     $j('#cnpj_mantenedora_principal').makeUnrequired();
 
     if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada) {
-      $j('#cnpj_mantenedora_principal').prop('disabled', false);
       $j('#cnpj_mantenedora_principal').makeRequired();
     }
   }
