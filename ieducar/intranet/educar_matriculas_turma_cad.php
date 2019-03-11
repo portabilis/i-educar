@@ -324,7 +324,6 @@ class indice extends clsCadastro
             foreach ($opcoes as $key => $aluno) {
                 $this->campoRotulo($key, '', '<table  style="font-size:11px; font-family: arial, verdana, lucida, helvetica, sans-serif;" border="0px"><tr><td width="258px">' . $aluno . '</td><td><input value="$key" type="checkbox" name="ref_cod_matricula[' . $key . ']" id="ref_cod_matricula[]"></td></tr></table>', '');
             }
-
         } elseif ($alunosEnturmados) {
             $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na série já se encontram enturmados.');
         } else {
@@ -368,7 +367,6 @@ class indice extends clsCadastro
         $bloquearEnturmacaoSeNaoHouverVagas = $dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas'];
 
         if ($vagasDisponiveis < $totalAlunosParaEnturmar && $bloquearEnturmacaoSeNaoHouverVagas) {
-
             if ($vagasDisponiveis > 0) {
                 $this->mensagem = 'Cadastro não realizado. Há apenas ' . $vagasDisponiveis . ' vagas restantes para esta turma.';
             } else {
@@ -396,7 +394,8 @@ class indice extends clsCadastro
             }
 
             $ultimaDataSaida = $enturmacao->getDataSaidaEnturmacaoAnterior(
-                $matricula, $enturmacao->buscaSequencialMax()
+                $matricula,
+                $enturmacao->buscaSequencialMax()
             );
 
             $permiteEnturmar = empty($ultimaDataSaida) || $this->data_enturmacao >= $ultimaDataSaida;
@@ -473,5 +472,3 @@ $miolo = new indice();
 
 $pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>
