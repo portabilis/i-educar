@@ -40,7 +40,7 @@ class MoveCustomLabelsToDatabase extends Migration
             ->first();
 
         $customLabels = json_decode($setting->custom_labels, true);
-        $customLabels = array_filter($customLabels);
+        $customLabels = is_array($customLabels) ? array_filter($customLabels) : [];
 
         $newCustomLabels = array_merge($this->getDefaultCustomLabels(), $customLabels);
         $newCustomLabels = json_encode($newCustomLabels);
