@@ -1,15 +1,15 @@
 <?php
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsListagem.inc.php');
-require_once('include/clsBanco.inc.php');
-require_once('include/pmieducar/geral.inc.php');
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsListagem.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Matr&iacute;culas Turmas");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Matrículas Turmas");
         $this->processoAp = '659';
         $this->addEstilo('localizacaoSistema');
     }
@@ -81,13 +81,18 @@ class indice extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
+        $this->offset = 0;
+
+        if (isset($_GET["pagina_{$this->nome}"])) {
+            $this->offset = $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite;
+        }
 
         $obj_turma = new clsPmieducarTurma();
         $obj_turma->setOrderby('nm_turma ASC');
         $obj_turma->setLimite($this->limite, $this->offset);
-        if (!$this->ano) {
-            $this->ano = date(Y);
+
+        if (empty($this->ano)) {
+            $this->ano = date('Y');
         }
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
@@ -137,14 +142,9 @@ class indice extends clsListagem
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                if (class_exists('clsPmieducarEscola')) {
-                    $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $registro['nm_escola'] = $det_ref_cod_escola['nome'];
-                } else {
-                    $registro['ref_ref_cod_escola'] = 'Erro na gera&ccedil;&atilde;o';
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-                }
+                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+                $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
                 $lista_busca = [
                     "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['ano']}</a>",
