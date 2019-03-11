@@ -377,19 +377,23 @@ $j(document).ready(function() {
       });
 
       if($j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA && $j('#situacao_funcionamento').val() == '1'){
-            $j('#categoria_escola_privada').closest('tr').show();
-            $j('#conveniada_com_poder_publico').closest('tr').show();
-            $j('#mantenedora_escola_privada').closest('tr').show();
+            $j('#categoria_escola_privada').prop('disabled', false);
+            $j('#conveniada_com_poder_publico').prop('disabled', false);
+            $j('#mantenedora_escola_privada').prop('disabled', false);
+            $j("#mantenedora_escola_privada").trigger("chosen:updated");
+            $j('#cnpj_mantenedora_principal').prop('disabled', false);
         }else{
-            $j('#categoria_escola_privada').closest('tr').hide();
-            $j('#conveniada_com_poder_publico').closest('tr').hide();
-            $j('#mantenedora_escola_privada').closest('tr').hide();
+            $j('#categoria_escola_privada').prop('disabled', true);
+            $j('#conveniada_com_poder_publico').prop('disabled', true);
+            $j('#mantenedora_escola_privada').prop('disabled', true);
+            $j("#mantenedora_escola_privada").trigger("chosen:updated");
+            $j('#cnpj_mantenedora_principal').prop('disabled', true);
         }
 
         habilitarCampoUnidadeVinculada();
         mostrarCamposDaUnidadeVinculada();
         obrigarCamposDaUnidadeVinculada();
-        mostrarObrigarCnpjMantenedora();
+        obrigarCnpjMantenedora();
       });
 
   // fix checkboxs
@@ -436,17 +440,17 @@ $j(document).ready(function() {
 
   function mostrarCamposDaUnidadeVinculada() {
     if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA) {
-      $j('#inep_escola_sede').closest('tr').show();
-      $j('#codigo_ies').closest('tr').hide();
+      $j('#inep_escola_sede').prop('disabled', false);
+      $j('#codigo_ies').prop('disabled', true);
       $j('#codigo_ies').val('');
       $j('#codigo_ies_id').val('');
     } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR) {
-      $j('#codigo_ies').closest('tr').show();
-      $j('#inep_escola_sede').closest('tr').hide();
+      $j('#codigo_ies').prop('disabled', false);
+      $j('#inep_escola_sede').prop('disabled', true);
       $j('#inep_escola_sede').val('');
     } else {
-      $j('#inep_escola_sede').closest('tr').hide();
-      $j('#codigo_ies').closest('tr').hide();
+      $j('#inep_escola_sede').prop('disabled', true);
+      $j('#codigo_ies').prop('disabled', true);
       $j('#inep_escola_sede').val('');
       $j('#codigo_ies').val('');
       $j('#codigo_ies_id').val('');
@@ -454,18 +458,24 @@ $j(document).ready(function() {
   }
 
   function habilitarCampoUnidadeVinculada() {
-    if ($j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+    escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
+    
+    if (escolaEmAtividade) {
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', false);
+      if (obrigarCamposCenso) {
+        $j("#unidade_vinculada_outra_instituicao").makeRequired();
+      }
     } else {
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', true);
+      $j("#unidade_vinculada_outra_instituicao").makeUnrequired();
     }
   }
 
   function obrigarCamposDaUnidadeVinculada() {
-    if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA) {
+    if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA && obrigarCamposCenso) {
       $j('#inep_escola_sede').makeRequired();
       $j('#codigo_ies').makeUnrequired();
-    } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR) {
+    } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR && obrigarCamposCenso) {
       $j('#codigo_ies').makeRequired();
       $j('#inep_escola_sede').makeUnrequired();
     } else {
@@ -477,20 +487,19 @@ $j(document).ready(function() {
 
   $j('#mantenedora_escola_privada').change(
     function (){
-      mostrarObrigarCnpjMantenedora();
+      obrigarCnpjMantenedora();
     }
   );
 
-  function mostrarObrigarCnpjMantenedora() {
+  function obrigarCnpjMantenedora() {
     dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
     mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
     escolaRegulamentada = $j('#regulamentacao').val() == 1;
+    emAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
 
-    $j('#cnpj_mantenedora_principal').closest('tr').hide();
     $j('#cnpj_mantenedora_principal').makeUnrequired();
 
-    if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada) {
-      $j('#cnpj_mantenedora_principal').closest('tr').show();
+    if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada && emAtividade) {
       $j('#cnpj_mantenedora_principal').makeRequired();
     }
   }
