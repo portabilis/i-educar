@@ -34,29 +34,6 @@ class clsControlador
       $this->logado = FALSE;
     }
 
-    // Controle dos menus
-    if (isset($_GET['mudamenu']) && isset($_GET['categoria']) && isset($_GET['acao']))
-    {
-      if ($_GET['acao']) {
-        Session::put([
-          'menu_opt.' . $_GET['categoria'] => 1,
-          'menu_atual.' => $_GET['categoria'],
-        ]);
-      }
-      else {
-        Session::forget('menu_opt.' . $_GET['categoria']);
-
-        if (Session::get('menu_atual') == $_GET['categoria']) {
-          Session::forget('menu_atual');
-        }
-      }
-
-      $db = new clsBanco();
-      if (Session::get('id_pessoa')) {
-        $db->Consulta("UPDATE funcionario SET opcao_menu = '" . serialize( Session::get('menu_opt') ) . "' WHERE ref_cod_pessoa_fj = '" . Session::get('id_pessoa') . "'");
-      }
-    }
-
     $this->_maximoTentativasFalhas = 7;
     $this->messenger = new Portabilis_Messenger();
   }
@@ -121,7 +98,6 @@ class clsControlador
       'itj_controle' => 'logado',
       'id_pessoa' => $user['id'],
       'pessoa_setor' => $user['ref_cod_setor_new'],
-      'menu_opt' => unserialize($user['opcao_menu']),
       'tipo_menu' => $user['tipo_menu'],
       'nivel' => $user['nivel'],
     ]);

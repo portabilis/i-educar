@@ -17,7 +17,6 @@ class LegacyFakeAuthController
             'itj_controle' => 'logado',
             'id_pessoa' => '1',
             'pessoa_setor' => null,
-            'menu_opt' => false,
             'tipo_menu' => '1',
             'nivel' => '1',
         ]);
