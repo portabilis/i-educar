@@ -56,10 +56,6 @@ class indice extends clsDetalhe
         $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Matrícula - Detalhe';
         $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
@@ -436,21 +432,8 @@ class indice extends clsDetalhe
     // Verificar se pode cancelar matricula
     public function permissao_cancelar()
     {
-        @session_start();
-
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         $acesso = new clsPermissoes();
 
-        session_write_close();
-
-        /**
-         * @param Processo
-         * @param Usuário logado
-         * @param Nível de acesso
-         * @param Redirecionar página
-         * @param Super Usuário
-         * @param Verifica usuário biblioteca
-         */
         return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
     }
 

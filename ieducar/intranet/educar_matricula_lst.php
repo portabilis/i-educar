@@ -17,13 +17,6 @@ class clsIndexBase extends clsBase
 class indice extends clsListagem
 {
     /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-
-    /**
      * Titulo no topo da pagina
      *
      * @var int
@@ -78,10 +71,6 @@ class indice extends clsListagem
 
     public function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Matr&iacute;cula - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
