@@ -55,6 +55,10 @@ class LegacyController extends Controller
      */
     private function configureErrorsAndExceptions()
     {
+        if (config('legacy.display_errors')) {
+            return;
+        }
+
         ini_set('display_errors', 'off');
 
         error_reporting(0);
