@@ -497,6 +497,9 @@ class clsPmieducarMatriculaTurma
       $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno";
     }
 
+    $from = '';
+    $where = '';
+
     if ( $bool_escola_andamento) {
       if ($pegar_ano_em_andamento) {
         $from = ", pmieducar.escola_ano_letivo eal ";

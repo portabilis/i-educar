@@ -55,7 +55,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
-        $this->ano = $_GET['ano'];
+        $this->ano = $_GET['ano'] ?? null;
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -194,7 +194,7 @@ class indice extends clsCadastro
         // Inlui o aluno
         $this->campoQuebra();
 
-        if ($_POST['matriculas_turma']) {
+        if (!empty($_POST['matriculas_turma'])) {
             $this->matriculas_turma = unserialize(urldecode($_POST['matriculas_turma']));
         }
 
@@ -238,7 +238,7 @@ class indice extends clsCadastro
             }
         }
 
-        if ($_POST['ref_cod_matricula']) {
+        if (!empty($_POST['ref_cod_matricula'])) {
             $obj_matriculas_turma = new clsPmieducarMatriculaTurma(
                 $_POST['ref_cod_matricula'],
                 $this->ref_cod_turma
