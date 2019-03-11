@@ -462,10 +462,10 @@ $j(document).ready(function() {
   }
 
   function obrigarCamposDaUnidadeVinculada() {
-    if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA) {
+    if ($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.EDUCACAO_BASICA && obrigarCamposCenso) {
       $j('#inep_escola_sede').makeRequired();
       $j('#codigo_ies').makeUnrequired();
-    } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR) {
+    } else if($j('#unidade_vinculada_outra_instituicao').val() == UNIDADE_VINCULADA.ENSINO_SUPERIOR && obrigarCamposCenso) {
       $j('#codigo_ies').makeRequired();
       $j('#inep_escola_sede').makeUnrequired();
     } else {
