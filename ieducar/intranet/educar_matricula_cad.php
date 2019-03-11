@@ -23,28 +23,51 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
     public $pessoa_logada;
+
     public $cod_matricula;
+
     public $ref_cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $aprovado;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ano;
+
     public $data_matricula;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_cod_escola;
+
     public $ref_cod_turma;
+
     public $semestre;
+
     public $is_padrao;
+
     public $dependencia;
+
     public $ref_cod_candidato_reserva_vaga;
+
     public $ref_cod_candidato_fila_unica;
+
     public $ref_cod_turma_copiar_enturmacoes;
 
     public function Inicializar()
@@ -442,7 +465,6 @@ class indice extends clsCadastro
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                     if (($mesmoCursoAno || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas === 0) && !$cursoDeAtividadeComplementar) {
-
                         require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
                         require_once 'include/pessoa/clsJuridica.inc.php';
 
@@ -1093,7 +1115,6 @@ class indice extends clsCadastro
         $obj_transferencia->edita();
     }
 
-
     public function desativaEnturmacoesMatricula($matriculaId)
     {
         $result = true;
@@ -1130,10 +1151,9 @@ class indice extends clsCadastro
                 $detEnturmacao = $detEnturmacao['data_enturmacao'];
                 $enturmacao->data_enturmacao = $detEnturmacao;
 
-                if ($result && ! $enturmacao->edita()){
+                if ($result && ! $enturmacao->edita()) {
                     $result = false;
                 }
-
             }
         }
 
@@ -1515,14 +1535,8 @@ class indice extends clsCadastro
     }
 }
 
-// Instancia objeto de página
 $pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteúdo à página
 $pagina->addForm($miolo);
-
-// Gera o código HTML
 $pagina->MakeAll();
