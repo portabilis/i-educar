@@ -39,15 +39,24 @@ class indice extends clsListagem
     public $offset;
 
     public $ref_cod_turma;
+
     public $ref_ref_cod_serie;
+
     public $ref_cod_escola;
+
     public $ref_ref_cod_escola;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
+    public $ref_cod_serie;
+
+    public $ano;
 
     public function Gerar()
     {
-        $this->titulo = 'Matr&iacute;culas Turma - Listagem';
+        $this->titulo = 'Matrículas Turma - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -56,7 +65,7 @@ class indice extends clsListagem
         $lista_busca = [
             'Ano',
             'Turma',
-            'S&eacute;rie',
+            'Série',
             'Curso',
             'Escola'
         ];
@@ -172,13 +181,10 @@ class indice extends clsListagem
     }
 }
 
-// cria uma extensao da classe base
 $pagina = new clsIndexBase();
-// cria o conteudo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
+
 $pagina->addForm($miolo);
-// gera o html
 $pagina->MakeAll();
 ?>
 

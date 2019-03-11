@@ -25,19 +25,26 @@ class indice extends clsDetalhe
     public $titulo;
 
     public $ref_cod_matricula;
+
     public $ref_cod_turma;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
 
     public $ref_cod_serie;
+
     public $ref_cod_escola;
 
     public function Gerar()
     {
-        $this->titulo = 'Matriculas Turma - Detalhe';
+        $this->titulo = 'Matrículas Turma - Detalhe';
 
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
 
@@ -207,11 +214,8 @@ class indice extends clsDetalhe
     }
 }
 
-// cria uma extensao da classe base
 $pagina = new clsIndexBase();
-// cria o conteudo
 $miolo = new indice();
-// adiciona o conteudo na clsBase
+
 $pagina->addForm($miolo);
-// gera o html
 $pagina->MakeAll();

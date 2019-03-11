@@ -50,6 +50,8 @@ class indice extends clsCadastro
 
     public $check_desenturma;
 
+    public $ano;
+
     public function Inicializar()
     {
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
