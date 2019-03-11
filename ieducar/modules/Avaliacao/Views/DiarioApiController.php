@@ -342,10 +342,6 @@ class DiarioApiController extends ApiCoreController
     {
         return $this->canPost() &&
         $this->validatesIsNumeric('att_value');
-        // $this->validatesRegraAvaliacaoHasNota() &&
-        // $this->validatesRegraAvaliacaoHasFormulaRecuperacao() &&
-        // $this->validatesRegraAvaliacaoHasFormulaRecuperacaoWithTypeRecuperacao() &&
-        // $this->validatesPreviousNotasHasBeenSet();
     }
 
     protected function canPostFalta()
@@ -445,6 +441,7 @@ class DiarioApiController extends ApiCoreController
             $this->trySaveServiceBoletim();
             $this->messenger->append('Nota geral da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
+
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
@@ -459,7 +456,7 @@ class DiarioApiController extends ApiCoreController
             $componenteCurricular = $this->getRequest()->componente_curricular_id;
             $etapa = $this->getRequest()->etapa;
 
-            $this->serviceBoletim()->updateMediaComponente($mediaLancada, $componenteCurricular, $etapa);
+            $this->serviceBoletim()->updateMediaComponente($mediaLancada, $componenteCurricular, $etapa, true);
             $this->messenger->append('Média da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
             $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
             $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
@@ -468,6 +465,18 @@ class DiarioApiController extends ApiCoreController
             $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
         } else {
             $this->messenger->append('Usuário não possui permissão para alterar a média do aluno.', 'error');
+        }
+    }
+
+    protected function postMediaDesbloqueia() {
+        if ($this->canPostMedia()) {
+            $componenteCurricular = $this->getRequest()->componente_curricular_id;
+
+            if ($this->serviceBoletim()->unlockMediaComponente($componenteCurricular)) {
+                $this->messenger->append('Média desbloqueada com sucesso.', 'success');
+            } else {
+                $this->messenger->append('Ocorreu um erro ao desbloquear a média. Tente novamente.', 'error');
+            }
         }
     }
 
@@ -1076,6 +1085,7 @@ class DiarioApiController extends ApiCoreController
             $componente['nota_geral_etapa'] = $this->getNotaGeral($etapa);
             $componente['media'] = $this->getMediaAtual($componente['id']);
             $componente['media_arredondada'] = $this->getMediaArredondadaAtual($componente['id']);
+            $componente['media_bloqueada'] = $this->getMediaBloqueada($componente['id']);
 
             if (!empty($componente['nota_necessaria_exame'])) {
                 $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
@@ -1235,6 +1245,23 @@ class DiarioApiController extends ApiCoreController
         // $media = round($media,1);
 
         return str_replace(',', '.', $media);
+    }
+
+    protected function getMediaBloqueada($componenteCurricularId = null)
+    {
+        // defaults
+        if (is_null($componenteCurricularId)) {
+            $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+        }
+
+        // validacao
+        if (!is_numeric($componenteCurricularId)) {
+            throw new Exception('Não foi possivel obter a média atual, pois não foi recebido o id do componente curricular.');
+        }
+
+        $bloqueada = (bool) $this->serviceBoletim()->getMediaComponente($componenteCurricularId)->bloqueada;
+
+        return $bloqueada;
     }
 
     protected function getNotaRecuperacaoParalelaAtual($etapa = null, $componenteCurricularId = null)
@@ -1718,6 +1745,8 @@ class DiarioApiController extends ApiCoreController
             $this->postNotaGeral();
         } elseif ($this->isRequestFor('post', 'media')) {
             $this->postMedia();
+        } elseif ($this->isRequestFor('post', 'media_desbloqueia')) {
+            $this->postMediaDesbloqueia();
         } elseif ($this->isRequestFor('delete', 'media')) {
             $this->deleteMedia();
         } elseif ($this->isRequestFor('post', 'situacao')) {
