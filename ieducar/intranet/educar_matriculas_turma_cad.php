@@ -350,7 +350,7 @@ class indice extends clsCadastro
         $objEnturmacoes = new clsPmieducarMatriculaTurma();
         $objEscolaSerie = new clsPmieducarEscolaSerie();
 
-        $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
+        $totalAlunosParaEnturmar = is_array($this->ref_cod_matricula) ? count($this->ref_cod_matricula) : 0;
         $dadosTurma = $objTurma->lista($this->ref_cod_turma);
         $maxAlunos = $dadosTurma[0]['max_aluno'];
         $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
@@ -366,6 +366,10 @@ class indice extends clsCadastro
             }
 
             return false;
+        }
+
+        if (!is_array($this->ref_cod_matricula)) {
+            $this->simpleRedirect('educar_matriculas_turma_lst.php');
         }
 
         foreach ($this->ref_cod_matricula as $matricula => $campo) {
