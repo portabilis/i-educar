@@ -4,8 +4,58 @@ $j('#btn_enviar').on('click', () => {
     return false;
   }
 
-  acao();
+  let block = false;
+
+  $j('.ref_cod_funcao select').each(function () {
+    const $this = $j(this);
+    const original = $this.data('valor-original');
+    const value = $this.val();
+
+    if (original != '' && original != value) {
+      block = true;
+    }
+  });
+
+  if (block) {
+    confirmaEnvio();
+  } else {
+    acao();
+  }
 });
+
+function confirmaEnvio() {
+  const dialogId = 'dialog-confirma';
+  let dialogElm = $j('#' + dialogId);
+
+  if (dialogElm.length < 1) {
+    $j('body')
+      .append('<div id="' + dialogId + '">Se deseja alterar a função de alguma alocação, adicione uma nova função ao cadastro do servidor; caso contrário, estará atualizando também todas as alocações marcadas com esta função. Deseja prosseguir mesmo assim?</div>');
+
+    dialogElm = $j('#' + dialogId);
+  }
+
+  if (dialogElm.is(':ui-dialog')) {
+    dialogElm.dialog('destroy');
+  }
+
+  dialogElm.dialog({
+    width: 600,
+    title: 'Atenção!',
+    buttons: [
+      {
+        text: 'Sim',
+        click: () => {
+          acao();
+        }
+      }, {
+        text: 'Não',
+        click: () => {
+          dialogElm.dialog('close');
+        }
+      }
+    ]
+  });
+}
 
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 

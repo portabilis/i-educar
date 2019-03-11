@@ -366,91 +366,65 @@ class clsBase extends clsConfig
 
     function MakeAll()
     {
-        try {
-            $cronometro = new clsCronometro();
-            $cronometro->marca('inicio');
-            $liberado = TRUE;
+        $cronometro = new clsCronometro();
+        $cronometro->marca('inicio');
+        $liberado = TRUE;
 
+        $saida_geral = '';
+
+        if ($this->convidado) {
+            @session_start();
+            $_SESSION['convidado'] = TRUE;
+            $_SESSION['id_pessoa'] = '0';
+            session_write_close();
+        }
+
+        $controlador = new clsControlador();
+
+        if ($controlador->Logado() && $liberado || $this->convidado) {
+            $this->mostraSupenso();
+
+            $this->Formular();
+            $this->VerificaPermicao();
+            $this->CadastraAcesso();
             $saida_geral = '';
 
-            if ($this->convidado) {
-                @session_start();
-                $_SESSION['convidado'] = TRUE;
-                $_SESSION['id_pessoa'] = '0';
-                session_write_close();
-            }
+            app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
+            View::share('title', $this->titulo);
 
-            $controlador = new clsControlador();
-
-            if ($controlador->Logado() && $liberado || $this->convidado) {
-                $this->mostraSupenso();
-
-                $this->Formular();
-                $this->VerificaPermicao();
-                $this->CadastraAcesso();
-                $saida_geral = '';
-
-                app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
-                View::share('title', $this->titulo);
-
-                if ($this->renderMenu) {
-                    $saida_geral .= $this->MakeBody();
-                } else {
-                    foreach ($this->clsForm as $form) {
-                        $saida_geral .= $form->RenderHTML();
-                    }
-                }
-
-            } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
-                $force = !empty($_GET['force']) ? true : false;
-
-                if (!$force) {
-                    $this->mostraSupenso();
-                }
-
-                $saida_geral .= $this->MakeHeadHtml();
-                $controlador->Logar(false);
-                $saida_geral .= $this->MakeFootHtml();
+            if ($this->renderMenu) {
+                $saida_geral .= $this->MakeBody();
             } else {
-                $controlador->Logar(true);
-                $referer = $_SERVER['HTTP_REFERER'];
-
-                header("Location: " . $referer, true, 302);
-                die();
+                foreach ($this->clsForm as $form) {
+                    $saida_geral .= $form->RenderHTML();
+                }
             }
 
-            $view = 'legacy.body';
+        } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
+            $force = !empty($_GET['force']) ? true : false;
 
-            if (!$this->renderMenu || !$this->renderMenuSuspenso) {
-                $view = 'legacy.blank';
+            if (!$force) {
+                $this->mostraSupenso();
             }
 
-            echo view($view, ['body' => $saida_geral])->render();
+            $saida_geral .= $this->MakeHeadHtml();
+            $controlador->Logar(false);
+            $saida_geral .= $this->MakeFootHtml();
+        } else {
+            $controlador->Logar(true);
+            $referer = $_SERVER['HTTP_REFERER'];
 
-        } catch (Exception $e) {
-
-            if ($GLOBALS['coreExt']['Config']->modules->error->track) {
-                $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
-                $tracker->notify($e);
-            }
-
-            if (config('app.debug')) {
-                throw new \Exception($e->getMessage(), 0, $e);
-            }
-
-            $lastError = error_get_last();
-
-            @session_start();
-            $_SESSION['last_error_message'] = $e->getMessage();
-            $_SESSION['last_php_error_message'] = $lastError['message'];
-            $_SESSION['last_php_error_line'] = $lastError['line'];
-            $_SESSION['last_php_error_file'] = $lastError['file'];
-            @session_write_close();
-
-            error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
-
-            die("<script>document.location.href = '/module/Error/unexpected';</script>");
+            header("Location: " . $referer, true, 302);
+            die();
         }
+
+        $view = 'legacy.body';
+
+        if (!$this->renderMenu || !$this->renderMenuSuspenso) {
+            $view = 'legacy.blank';
+        }
+
+        echo view($view, ['body' => $saida_geral])->render();
     }
 
     function setAlertaProgramacao($string)
