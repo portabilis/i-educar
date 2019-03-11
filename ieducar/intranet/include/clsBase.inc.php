@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\RedirectException;
 use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
@@ -412,10 +413,8 @@ class clsBase extends clsConfig
             $saida_geral .= $this->MakeFootHtml();
         } else {
             $controlador->Logar(true);
-            $referer = $_SERVER['HTTP_REFERER'];
 
-            header("Location: " . $referer, true, 302);
-            die();
+            throw new RedirectException($_SERVER['HTTP_REFERER']);
         }
 
         $view = 'legacy.body';
