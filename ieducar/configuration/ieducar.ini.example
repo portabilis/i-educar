@@ -136,7 +136,7 @@ report.show_error_details = true
 report.default_factory = Portabilis_Report_ReportFactoryPHPJasper
 
 ; Define o diretório dos arquivos fontes dos relatórios
-report.source_path = /application/ieducar/modules/Reports/ReportSources/
+report.source_path = /var/www/ieducar/ieducar/modules/Reports/ReportSources/
 
 ; Configurações usadas pelo modulo de tratamento de erros ocorridos na aplicação.
 modules.error.link_to_support = https://forum.ieducar.org/
