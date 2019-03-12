@@ -30,6 +30,8 @@ class ComponentesSerieController extends ApiCoreController
         $componentesInseridos = $updateInfo['insert'];
         $componentesExcluidos = $updateInfo['delete'];
 
+        $valido = $this->validaAtualizacao($serieId, $updateInfo);
+
         if ($obj->atualizaComponentesDaSerie()) {
             if ($componentesExcluidos) {
                 $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
@@ -43,6 +45,11 @@ class ComponentesSerieController extends ApiCoreController
         }
 
         return ['msgErro' => 'Erro ao alterar componentes da série.'];
+    }
+
+    public function validaAtualizacao($serieId, $updateInfo)
+    {
+        //...
     }
 
     public function atualizaEscolasSerieDisciplina()
