@@ -8,26 +8,13 @@ class CustomLabel
 
     protected $defaults;
 
-    protected $custom;
-
-    public function __construct($defaultsPath)
+    public function __construct()
     {
-        $raw = @file_get_contents($defaultsPath);
-
-        if ($raw === false) {
-            throw new Exception('Não foi possível encontrar o arquivo de chaves padrão no caminho "' . $defaultsPath . '"');
-        }
-
-        $this->defaults = json_decode($raw, true);
-        $this->custom = $this->queryCustom();
+        $this->defaults = $this->getFromDatabase();
     }
 
     public function customize($key)
     {
-        if (!empty($this->custom[$key])) {
-            return $this->custom[$key];
-        }
-
         if (!empty($this->defaults[$key])) {
             return $this->defaults[$key];
         }
@@ -40,12 +27,7 @@ class CustomLabel
         return $this->defaults;
     }
 
-    public function getCustom()
-    {
-        return $this->custom;
-    }
-
-    protected function queryCustom()
+    protected function getFromDatabase()
     {
         $configs = new clsPmieducarConfiguracoesGerais();
         $detalhe = $configs->detalhe();
@@ -53,10 +35,10 @@ class CustomLabel
         return $detalhe['custom_labels'];
     }
 
-    public static function getInstance($path)
+    public static function getInstance()
     {
         if (is_null(self::$instance)) {
-            self::$instance = new CustomLabel($path);
+            self::$instance = new CustomLabel();
         }
 
         return self::$instance;
@@ -65,7 +47,5 @@ class CustomLabel
 
 function _cl($key)
 {
-    $path = PROJECT_ROOT . DS . 'configuration' . DS . 'custom_labels.json';
-
-    return CustomLabel::getInstance($path)->customize($key);
+    return CustomLabel::getInstance()->customize($key);
 }
