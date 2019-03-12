@@ -59,6 +59,10 @@ const MANTENEDORA_ESCOLA_PRIVADA = {
   OSCIP : 6
 }
 
+const LOCAL_FUNCIONAMENTO = {
+    PREDIO_ESCOLAR: 3
+}
+
 $escolaInepIdField.closest('tr').hide();
 
 var submitForm = function(){
@@ -148,24 +152,9 @@ $j('#marcar_todas_dependencias').click(
 
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
-$j('#local_funcionamento').change(
-  function(){
-      var disabled = this.value != 3;
-      $j('#condicao').prop("disabled",disabled);
-      $j('#codigo_inep_escola_compartilhada').prop("disabled",disabled);
-      $j('#codigo_inep_escola_compartilhada2').prop("disabled",disabled);
-      $j('#codigo_inep_escola_compartilhada3').prop("disabled",disabled);
-      $j('#codigo_inep_escola_compartilhada4').prop("disabled",disabled);
-      $j('#codigo_inep_escola_compartilhada5').prop("disabled",disabled);
-      $j('#codigo_inep_escola_compartilhada6').prop("disabled",disabled);
-      $j('#condicao').makeUnrequired();
-      $j('#dependencia_numero_salas_existente').makeUnrequired();
-      if (!disabled && obrigarCamposCenso) {
-        $j('#condicao').makeRequired();
-        $j('#dependencia_numero_salas_existente').makeRequired();
-      }
-  }
-).trigger('change');
+$j('#local_funcionamento').on('change', function () {
+    changeLocalFuncionamento()
+});
 
 $j('#educacao_indigena').change(
   function(){
@@ -252,6 +241,23 @@ function habilitaCampoEsferaAdministrativa() {
   }
 }
 
+function changeLocalFuncionamento(){
+    var disabled = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) == -1;
+    $j('#condicao').prop("disabled",disabled);
+    $j('#codigo_inep_escola_compartilhada').prop("disabled",disabled);
+    $j('#codigo_inep_escola_compartilhada2').prop("disabled",disabled);
+    $j('#codigo_inep_escola_compartilhada3').prop("disabled",disabled);
+    $j('#codigo_inep_escola_compartilhada4').prop("disabled",disabled);
+    $j('#codigo_inep_escola_compartilhada5').prop("disabled",disabled);
+    $j('#codigo_inep_escola_compartilhada6').prop("disabled",disabled);
+    $j('#condicao').makeUnrequired();
+    $j('#dependencia_numero_salas_existente').makeUnrequired();
+    if (!disabled && obrigarCamposCenso) {
+        $j('#condicao').makeRequired();
+        $j('#dependencia_numero_salas_existente').makeRequired();
+    }
+}
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
@@ -324,6 +330,7 @@ $j(document).ready(function() {
         }else
           return false;
       });
+      changeLocalFuncionamento();
     });
 
   // DEPENDENCIAS
@@ -358,6 +365,7 @@ $j(document).ready(function() {
         }else
           return false;
       });
+
     });
 
   // Dados educacionais

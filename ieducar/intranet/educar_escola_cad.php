@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -966,7 +967,7 @@ class indice extends clsCadastro
 
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
-            $disabled = $this->local_funcionamento != 3;
+            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento);
             $resources = array(NULL => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
@@ -2250,7 +2251,7 @@ class indice extends clsCadastro
 
     protected function validaOcupacaoPredio()
     {
-        if ($this->local_funcionamento == 3 && empty($this->condicao)) {
+        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
@@ -2259,7 +2260,7 @@ class indice extends clsCadastro
 
     protected function validaSalasExistentes()
     {
-        if ($this->local_funcionamento == 3 && ((int) $this->dependencia_numero_salas_existente) <= 0) {
+        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && ((int) $this->dependencia_numero_salas_existente) <= 0) {
             $this->mensagem = 'O campo: Número de salas de aula existentes na escola, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
