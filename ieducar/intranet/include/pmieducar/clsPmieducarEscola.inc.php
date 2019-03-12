@@ -533,9 +533,9 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->local_funcionamento)) {
+      if (is_string($this->local_funcionamento)) {
         $campos .= "{$gruda}local_funcionamento";
-        $valores .= "{$gruda}'{$this->local_funcionamento}'";
+        $valores .= "{$gruda}'{{$this->local_funcionamento}}'";
         $gruda = ", ";
       }
 
@@ -1252,8 +1252,8 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->local_funcionamento)) {
-        $set .= "{$gruda}local_funcionamento = '{$this->local_funcionamento}'";
+      if (is_string($this->local_funcionamento)) {
+        $set .= "{$gruda}local_funcionamento = '{{$this->local_funcionamento}}'";
         $gruda = ", ";
       }
 

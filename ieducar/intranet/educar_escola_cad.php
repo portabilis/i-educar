@@ -386,6 +386,10 @@ class indice extends clsCadastro
             $this->cnpj_mantenedora_principal = int2CNPJ($this->cnpj_mantenedora_principal);
         }
 
+        if (is_string($this->local_funcionamento)) {
+            $this->local_funcionamento = explode(',', str_replace(array('{', "}"), '', $this->local_funcionamento));
+        }
+
         if (is_string($this->abastecimento_agua)) {
             $this->abastecimento_agua = explode(',', str_replace(array('{', "}"), '', $this->abastecimento_agua));
         }
@@ -1391,6 +1395,7 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
@@ -1459,7 +1464,7 @@ class indice extends clsCadastro
                     $obj->ref_idpes_gestor = $this->gestor_id;
                     $obj->cargo_gestor = $this->cargo_gestor;
                     $obj->email_gestor = $this->email_gestor;
-                    $obj->local_funcionamento = $this->local_funcionamento;
+                    $obj->local_funcionamento = $local_funcionamento;
                     $obj->condicao = $this->condicao;
                     $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
                     $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
@@ -1638,7 +1643,7 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
@@ -1807,6 +1812,7 @@ class indice extends clsCadastro
 
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
@@ -1844,9 +1850,7 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
@@ -1957,7 +1961,7 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
