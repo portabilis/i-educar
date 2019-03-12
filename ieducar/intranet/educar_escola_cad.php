@@ -947,7 +947,8 @@ class indice extends clsCadastro
 
             $this->campoOculto("incluir_curso", "");
             $this->campoQuebra();
-            
+
+            $helperOptions = array('objectName' => 'local_funcionamento');
             $options = [
                 'label' => 'Local de funcionamento',
                 'options' => [
@@ -957,7 +958,7 @@ class indice extends clsCadastro
                 'size' => 70,
                 'required' => $obrigarCamposCenso
             ];
-            $this->inputsHelper()->multipleSearchCustom('local_funcionamento', $options);
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
