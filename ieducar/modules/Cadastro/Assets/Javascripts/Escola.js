@@ -466,6 +466,7 @@ $j(document).ready(function() {
         $j("#unidade_vinculada_outra_instituicao").makeRequired();
       }
     } else {
+      $j("#unidade_vinculada_outra_instituicao").val('');
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', true);
       $j("#unidade_vinculada_outra_instituicao").makeUnrequired();
     }
