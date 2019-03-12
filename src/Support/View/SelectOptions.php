@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\View;
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Transport\Period;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -79,5 +80,10 @@ class SelectOptions
     public static function unidadesVinculadasEscola()
     {
         return self::getDefaultOption() + UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
+    }
+
+    public static function locaisFuncionamentoEscola()
+    {
+        return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
     }
 }

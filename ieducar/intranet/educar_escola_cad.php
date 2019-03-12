@@ -947,24 +947,21 @@ class indice extends clsCadastro
 
             $this->campoOculto("incluir_curso", "");
             $this->campoQuebra();
-
-            $resources = array(NULL => 'Selecione',
-                3 => 'Prédio escolar',
-                4 => 'Templo/Igreja',
-                5 => 'Sala de empresa',
-                6 => 'Casa do professor',
-                7 => 'Salas em outra escola',
-                8 => 'Galpão/rancho/paiol/barracão',
-                9 => 'Unidade de atendimento socioeducativa',
-                10 => 'Unidade prisional',
-                11 => 'Outros');
+            
+            $options = [
+                'label' => 'Local de funcionamento',
+                'options' => [
+                    'values' => $this->local_funcionamento,
+                    'all_values' => SelectOptions::locaisFuncionamentoEscola(),
+                ],
+                'size' => 70,
+                'required' => $obrigarCamposCenso
+            ];
+            $this->inputsHelper()->multipleSearchCustom('local_funcionamento', $options);
 
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
             $disabled = $this->local_funcionamento != 3;
-            $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->select('local_funcionamento', $options);
-
             $resources = array(NULL => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
