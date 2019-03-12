@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\Modules\Educacenso;
+namespace iEducar\Modules\Educacenso\Model;
 
 class MantenedoraDaEscolaPrivada
 {

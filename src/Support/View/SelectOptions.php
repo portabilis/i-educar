@@ -3,11 +3,11 @@
 namespace iEducar\Support\View;
 
 use iEducar\Modules\Transport\Period;
-use iEducar\Modules\Educacenso\SituacaoFuncionamento;
+use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
-use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
-use iEducar\Modules\Educacenso\UnidadeVinculadaComOutraInstituicao;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 
 class SelectOptions
 {
