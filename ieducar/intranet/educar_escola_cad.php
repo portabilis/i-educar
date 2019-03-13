@@ -2266,7 +2266,8 @@ class indice extends clsCadastro
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
-                $this->inepEscolaSedeDiferenteDaEscolaPrincipal();
+                $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
+                $this->validaEscolaCompartilhaPredio();
     }
 
     protected function validaOcupacaoPredio()
@@ -2494,6 +2495,31 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
         }
 
+    }
+
+    protected function validaEscolaCompartilhaPredio()
+    {
+        $arrayCampos = [
+            $this->codigo_inep_escola_compartilhada,
+            $this->codigo_inep_escola_compartilhada2,
+            $this->codigo_inep_escola_compartilhada3,
+            $this->codigo_inep_escola_compartilhada4,
+            $this->codigo_inep_escola_compartilhada5,
+            $this->codigo_inep_escola_compartilhada6,
+        ];
+
+        if (in_array($this->escola_inep_id, $arrayCampos)) {
+            $this->mensagem = "O campo: Código da escola que compartilha o prédio 1, 2, 3, 4, 5 ou 6, deve ser diferente do Código INEP da escola atual.";
+            return false;
+        }
+
+        $arrayCamposSemNulos = array_filter($arrayCampos);
+        if (count(array_unique($arrayCamposSemNulos)) < count($arrayCamposSemNulos)) {
+            $this->mensagem = "Os códigos Inep's das escolas compartilhadas devem ser diferentes entre si.";
+            return false;
+        }
+
+        return true;
     }
 }
 
