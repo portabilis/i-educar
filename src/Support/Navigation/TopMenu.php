@@ -2,8 +2,7 @@
 
 namespace iEducar\Support\Navigation;
 
-use App\Models\Menu;
-use App\Models\User;
+use App\Models\LegacyUser;
 use App\Services\MenuService;
 use iEducar\Support\Repositories\MenuRepository;
 use iEducar\Support\Repositories\SubmenuRepository;
@@ -78,7 +77,7 @@ class TopMenu
      */
     public function getTopMenuArray($userId)
     {
-        $user = User::find($userId);
+        $user = LegacyUser::find($userId);
 
         if (empty($user)) {
             return [];
@@ -91,7 +90,7 @@ class TopMenu
         if ($cache->has($cacheKey)) {
             return $cache->get($cacheKey);
         }
-        
+
         if (empty($this->currentMenu)) {
             return [];
         }
