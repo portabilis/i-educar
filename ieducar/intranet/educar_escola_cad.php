@@ -110,6 +110,7 @@ class indice extends clsCadastro
     public $tipo_piso;
     public $medidor_energia;
     public $agua_consumida;
+    public $agua_potavel_consumo;
     public $abastecimento_agua;
     public $abastecimento_energia;
     public $esgoto_sanitario;
@@ -1018,6 +1019,20 @@ class indice extends clsCadastro
             $options = array('label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('agua_consumida', $options);
 
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
+                'label' => 'Fornecimento de água potável para consumo',
+                'resources' => $resources,
+                'value' => $this->agua_potavel_consumo,
+                'required' => $obrigarCamposCenso,
+                'size' => 70
+            ];
+            $this->inputsHelper()->select('agua_potavel_consumo', $options);
+
             $helperOptions = array('objectName' => 'abastecimento_agua');
             $options = array('label' => 'Abastecimento de água',
                 'size' => 50,
@@ -1477,6 +1492,7 @@ class indice extends clsCadastro
                     $obj->tipo_piso = $this->tipo_piso;
                     $obj->medidor_energia = $this->medidor_energia;
                     $obj->agua_consumida = $this->agua_consumida;
+                    $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
                     $obj->abastecimento_agua = $abastecimento_agua;
                     $obj->abastecimento_energia = $abastecimento_energia;
                     $obj->esgoto_sanitario = $esgoto_sanitario;
@@ -1656,6 +1672,7 @@ class indice extends clsCadastro
             $obj->tipo_piso = $this->tipo_piso;
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
@@ -1864,6 +1881,7 @@ class indice extends clsCadastro
             $obj->tipo_piso = $this->tipo_piso;
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
@@ -1975,6 +1993,7 @@ class indice extends clsCadastro
             $obj->tipo_piso = $this->tipo_piso;
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
