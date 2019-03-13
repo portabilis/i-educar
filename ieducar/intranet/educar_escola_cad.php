@@ -1031,14 +1031,14 @@ class indice extends clsCadastro
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'abastecimento_energia');
-            $options = array('label' => 'Abastecimento de energia elétrica',
+            $options = array('label' => 'Fonte de energia elétrica',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->abastecimento_energia,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Gerador',
-                        3 => 'Outros (Ex.: Energia eólica, solar, etc.)',
-                        4 => 'Inexistente')));
+                        2 => 'Gerador movido a combustível fóssil',
+                        3 => 'Fontes de energia renováveis ou alternativas (gerador a biocombustível e/ou biodigestores, eólica, solar, outras)',
+                        4 => 'Não há energia elétrica')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'esgoto_sanitario');
@@ -1429,7 +1429,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
             return false;
         }
 
@@ -1820,7 +1820,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
             return false;
         }
 
