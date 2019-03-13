@@ -1027,7 +1027,7 @@ class indice extends clsCadastro
                         2 => 'Poço artesiano',
                         3 => 'Cacimba/cisterna/poço',
                         4 => 'Fonte/rio/igarapé/riacho/córrego',
-                        5 => 'Inexistente')));
+                        5 => 'Não há abastecimento de água')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'abastecimento_energia');
@@ -1424,7 +1424,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
             return false;
         }
 
@@ -1815,7 +1815,7 @@ class indice extends clsCadastro
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
             return false;
         }
 
