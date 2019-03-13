@@ -1042,13 +1042,14 @@ class indice extends clsCadastro
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'esgoto_sanitario');
-            $options = array('label' => 'Esgoto sanitário',
+            $options = array('label' => 'Esgotamento sanitário',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->esgoto_sanitario,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Fossa',
-                        3 => 'Inexistente')));
+                        2 => 'Fossa séptica',
+                        4 => 'Fossa rudimentar/comum',
+                        3 => 'Não há esgotamento sanitário')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'destinacao_lixo');
@@ -1434,7 +1435,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
@@ -1825,7 +1826,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
