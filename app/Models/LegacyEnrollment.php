@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * LegacyEnrollment
  *
+ * @property DateTime           $date
  * @property LegacyRegistration $registration
  * @property LegacySchoolClass  $schoolClass
  */
@@ -36,9 +38,24 @@ class LegacyEnrollment extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $dates = [
+        'data_enturmacao'
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return DateTime
+     */
+    public function getDateAttribute()
+    {
+        return $this->data_enturmacao;
+    }
 
     /**
      * Relação com a matrícula.
