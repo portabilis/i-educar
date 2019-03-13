@@ -6,6 +6,7 @@ use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -114,6 +115,7 @@ class indice extends clsCadastro
     public $abastecimento_energia;
     public $esgoto_sanitario;
     public $destinacao_lixo;
+    public $tratamento_lixo;
     public $dependencia_sala_diretoria;
     public $dependencia_sala_professores;
     public $dependencia_sala_secretaria;
@@ -400,6 +402,10 @@ class indice extends clsCadastro
 
         if (is_string($this->destinacao_lixo)) {
             $this->destinacao_lixo = explode(',', str_replace(array('{', "}"), '', $this->destinacao_lixo));
+        }
+
+        if (is_string($this->tratamento_lixo)) {
+            $this->tratamento_lixo = explode(',', str_replace(array('{', "}"), '', $this->tratamento_lixo));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
@@ -1064,6 +1070,18 @@ class indice extends clsCadastro
                         6 => 'Outros')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'tratamento_lixo'];
+            $options = [
+                'label' => 'Tratamento do lixo/resíduos que a escola realiza',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->tratamento_lixo,
+                    'all_values' => TratamentoLixo::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $dicaCamposCheckbox = "Os campos abaixo que não forem marcados, serão informados no Educacenso como Não";
             $options = array('label' => 'Marcar todos', 'hint' => $dicaCamposCheckbox);
             $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
@@ -1397,6 +1415,7 @@ class indice extends clsCadastro
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
+        $tratamento_lixo = implode(',', $this->tratamento_lixo);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1435,6 +1454,11 @@ class indice extends clsCadastro
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento estiver selecionada</b>';
             return false;
         }
 
@@ -1481,6 +1505,7 @@ class indice extends clsCadastro
                     $obj->abastecimento_energia = $abastecimento_energia;
                     $obj->esgoto_sanitario = $esgoto_sanitario;
                     $obj->destinacao_lixo = $destinacao_lixo;
+                    $obj->tratamento_lixo = $tratamento_lixo;
                     $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
                     $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
                     $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
@@ -1660,6 +1685,7 @@ class indice extends clsCadastro
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
+            $obj->tratamento_lixo = $tratamento_lixo;
             $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
             $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
             $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
@@ -1813,6 +1839,7 @@ class indice extends clsCadastro
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
+        $tratamento_lixo = implode(',', $this->tratamento_lixo);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
@@ -1826,6 +1853,11 @@ class indice extends clsCadastro
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento estiver selecionada</b>';
             return false;
         }
 
@@ -1868,6 +1900,7 @@ class indice extends clsCadastro
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
+            $obj->tratamento_lixo = $tratamento_lixo;
             $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
             $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
             $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
@@ -1979,6 +2012,7 @@ class indice extends clsCadastro
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
+            $obj->tratamento_lixo = $tratamento_lixo;
             $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
             $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
             $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
