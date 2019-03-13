@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * LegacySchool
+ *
+ * @property LegacyInstitution $institution
+ */
 class LegacySchool extends Model
 {
     /**
