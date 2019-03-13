@@ -244,6 +244,7 @@ function habilitaCampoEsferaAdministrativa() {
 function changeLocalFuncionamento(){
     var disabled = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) == -1;
     $j('#condicao').prop("disabled",disabled);
+    $j('#predio_compartilhado_outra_escola').prop("disabled",disabled);
     $j('#codigo_inep_escola_compartilhada').prop("disabled",disabled);
     $j('#codigo_inep_escola_compartilhada2').prop("disabled",disabled);
     $j('#codigo_inep_escola_compartilhada3').prop("disabled",disabled);
@@ -251,9 +252,11 @@ function changeLocalFuncionamento(){
     $j('#codigo_inep_escola_compartilhada5').prop("disabled",disabled);
     $j('#codigo_inep_escola_compartilhada6').prop("disabled",disabled);
     $j('#condicao').makeUnrequired();
+    $j('#predio_compartilhado_outra_escola').makeUnrequired();
     $j('#dependencia_numero_salas_existente').makeUnrequired();
     if (!disabled && obrigarCamposCenso) {
         $j('#condicao').makeRequired();
+        $j('#predio_compartilhado_outra_escola').makeRequired();
         $j('#dependencia_numero_salas_existente').makeRequired();
     }
 }
