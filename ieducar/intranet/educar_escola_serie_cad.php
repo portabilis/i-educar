@@ -29,6 +29,7 @@
  */
 
 use App\Services\SchoolLevelsService;
+use Illuminate\Support\Arr;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -284,10 +285,25 @@ class indice extends clsCadastro
             $registros = $obj->lista($this->ref_cod_serie, $this->ref_cod_escola, null, 1);
 
             if ($registros) {
+                $registros = array_map(function ($item) {
+                    foreach ($item as $k => $v) {
+                        if (is_numeric($k)) {
+                            unset($item[$k]);
+                        }
+                    }
+
+                    $item['anos_letivos'] = json_decode($item['anos_letivos']);
+                    $item['carga_horaria'] = floatval($item['carga_horaria']);
+
+                    return $item;
+                }, $registros);
+
+                $this->campoOculto('componentes_sombra', json_encode($registros));
+
                 foreach ($registros as $campo) {
                     $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
-                    $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = floatval($campo['carga_horaria']);
-                    $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = json_decode($campo['anos_letivos']) ?: [];
+                    $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = $campo['carga_horaria'];
+                    $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = $campo['anos_letivos'] ?: [];
 
                     if ($this->definirComponentePorEtapa) {
                         $this->escola_serie_disciplina_etapa_especifica[$campo['ref_cod_disciplina']] = intval($campo['etapas_especificas']);
@@ -551,8 +567,12 @@ class indice extends clsCadastro
             1
         );
 
-        $obj->excluirNaoSelecionados($this->disciplinas);
+        $sombra = json_decode(urldecode($this->componentes_sombra), true);
+        $disciplinas = $this->montaDisciplinas();
+        $analise = $this->analisaAlteracoes($sombra, $disciplinas);
+        dd($analise);
 
+        $obj->excluirNaoSelecionados($this->disciplinas);
 
         if ($editou) {
             if ($this->disciplinas) {
@@ -675,6 +695,64 @@ class indice extends clsCadastro
         }
 
         return array_combine($anosLetivosDisponiveis, $anosLetivosDisponiveis);
+    }
+
+    private function montaDisciplinas()
+    {
+        $disciplinas = [];
+
+        foreach ($this->disciplinas as $componenteId) {
+            if (isset($this->usar_componente[$componenteId])) {
+                $carga_horaria = null;
+            } else {
+                $carga_horaria = $this->carga_horaria[$componenteId];
+            }
+
+            $anosLetivos = $this->componente_anos_letivos[$componenteId] ?: [];
+            $anosLetivos = array_map(function ($ano) {
+                return (int) $ano;
+            }, $anosLetivos);
+
+            $disciplinas[] = [
+                'ref_ref_cod_serie' => $this->ref_cod_serie,
+                'ref_ref_cod_escola' => $this->ref_cod_escola,
+                'ref_ref_cod_disciplina' => $componenteId,
+                'carga_horaria' => $carga_horaria,
+                'etapas_especificas' => $this->etapas_especificas[$componenteId],
+                'etapas_utilizadas' => $this->etapas_utilizadas[$componenteId],
+                'anos_letivos' => $anosLetivos
+            ];
+        }
+
+        return $disciplinas;
+    }
+
+    private function analisaAlteracoes($originais, $novos)
+    {
+        $remover = [];
+        $inserir = [];
+        $atualizar = [];
+
+        foreach ($novos as $novo) {
+            $original = Arr::where($originais, function ($v, $k) use ($novo) {
+                return (int) $v['ref_cod_disciplina'] === (int) $novo['ref_ref_cod_disciplina'];
+            });
+
+            //$original = $pegaOriginal($novo['ref_ref_cod_disciplina']);
+
+            if (is_null($original)) {
+                $inserir[] = $novo;
+
+                continue;
+            }
+
+            $novo['anos_letivos_acrescentar'] = array_diff($novo['anos_letivos'], $original['anos_letivos']);
+            $novo['anos_letivos_remover'] = array_diff($original['anos_letivos'], $novo['anos_letivos']);
+
+            $atualizar[] = $novo;
+        }
+
+        return compact('remover', 'inserir', 'atualizar');
     }
 }
 
