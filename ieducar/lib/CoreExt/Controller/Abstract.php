@@ -1,5 +1,7 @@
 <?php
 
+use App\Exceptions\RedirectException;
+
 require_once 'CoreExt/Controller/Interface.php';
 
 abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interface
@@ -201,6 +203,8 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      * @param int    $code
      *
      * @return void
+     *
+     * @throws RedirectException
      */
     public function simpleRedirect(string $url, int $code = 302)
     {
@@ -216,10 +220,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $code = 302;
         }
 
-        header($codes[$code]);
-        header('Location: ' . $url);
-
-        die();
+        throw new RedirectException($url, $code);
     }
 
     /**
@@ -229,12 +230,13 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      * @param string $url
      *
      * @return void
+     *
+     * @throws RedirectException
      */
     public function redirectIf($condition, $url)
     {
         if ($condition) {
-            header('Location: ' . $url);
-            die();
+            throw new RedirectException($url);
         }
     }
 }
