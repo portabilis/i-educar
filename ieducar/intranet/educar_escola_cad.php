@@ -1057,12 +1057,11 @@ class indice extends clsCadastro
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->destinacao_lixo,
-                    'all_values' => array(1 => 'Coleta periódica',
+                    'all_values' => array(1 => 'Serviço de coleta',
                         2 => 'Queima',
-                        3 => 'Joga em outra área',
-                        4 => 'Recicla',
-                        5 => 'Enterra',
-                        6 => 'Outros')));
+                        5 => 'Leva a uma destinação final licenciada pelo poder público',
+                        7 => 'Enterra',
+                        3 => 'Descarta em outra área',)));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $dicaCamposCheckbox = "Os campos abaixo que não forem marcados, serão informados no Educacenso como Não";
