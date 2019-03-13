@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolClass extends Model
 {
@@ -26,10 +27,21 @@ class LegacySchoolClass extends Model
         'max_aluno',
         'data_cadastro',
         'ref_cod_turma_tipo',
+        'ref_ref_cod_escola',
     ];
 
     /**
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * Relacionamento com a escola.
+     *
+     * @return BelongsTo
+     */
+    public function school()
+    {
+        return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');
+    }
 }

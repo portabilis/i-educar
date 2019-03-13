@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacyUser;
 use Faker\Generator as Faker;
@@ -14,5 +14,6 @@ $factory->define(LegacySchoolClass::class, function (Faker $faker) {
         'max_aluno' => $faker->numberBetween(10, 25),
         'data_cadastro' => now(),
         'ref_cod_turma_tipo' => factory(LegacySchoolClassType::class)->state('unique')->make(),
+        'ref_ref_cod_escola' => factory(LegacySchool::class)->create(),
     ];
 });
