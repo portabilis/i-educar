@@ -1,11 +1,12 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
-use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
-use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -96,6 +97,7 @@ class indice extends clsCadastro
     public $email_gestor;
     public $local_funcionamento;
     public $condicao;
+    public $predio_compartilhado_outra_escola;
     public $codigo_inep_escola_compartilhada;
     public $codigo_inep_escola_compartilhada2;
     public $codigo_inep_escola_compartilhada3;
@@ -384,6 +386,10 @@ class indice extends clsCadastro
 
         if ($this->cnpj_mantenedora_principal) {
             $this->cnpj_mantenedora_principal = int2CNPJ($this->cnpj_mantenedora_principal);
+        }
+
+        if (is_string($this->local_funcionamento)) {
+            $this->local_funcionamento = explode(',', str_replace(array('{', "}"), '', $this->local_funcionamento));
         }
 
         if (is_string($this->abastecimento_agua)) {
@@ -948,29 +954,42 @@ class indice extends clsCadastro
             $this->campoOculto("incluir_curso", "");
             $this->campoQuebra();
 
-            $resources = array(NULL => 'Selecione',
-                3 => 'Prédio escolar',
-                4 => 'Templo/Igreja',
-                5 => 'Sala de empresa',
-                6 => 'Casa do professor',
-                7 => 'Salas em outra escola',
-                8 => 'Galpão/rancho/paiol/barracão',
-                9 => 'Unidade de atendimento socioeducativa',
-                10 => 'Unidade prisional',
-                11 => 'Outros');
+            $helperOptions = array('objectName' => 'local_funcionamento');
+            $options = [
+                'label' => 'Local de funcionamento',
+                'options' => [
+                    'values' => $this->local_funcionamento,
+                    'all_values' => SelectOptions::locaisFuncionamentoEscola(),
+                ],
+                'size' => 70,
+                'required' => $obrigarCamposCenso
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
-            $disabled = $this->local_funcionamento != 3;
-            $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->select('local_funcionamento', $options);
-
+            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento);
             $resources = array(NULL => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
                 3 => 'Cedido');
             $options = array('disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('condicao', $options);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim',
+            ];
+            $options = [
+                'disabled' => $disabled,
+                'label' => 'Prédio compartilhado com outra escola',
+                'resources' => $resources,
+                'value' => $this->predio_compartilhado_outra_escola,
+                'size' => 70,
+                'required' => false
+            ];
+            $this->inputsHelper()->select('predio_compartilhado_outra_escola', $options);
 
             $this->geraCamposCodigoInepEscolaCompartilhada();
 
@@ -1393,6 +1412,7 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
@@ -1461,8 +1481,9 @@ class indice extends clsCadastro
                     $obj->ref_idpes_gestor = $this->gestor_id;
                     $obj->cargo_gestor = $this->cargo_gestor;
                     $obj->email_gestor = $this->email_gestor;
-                    $obj->local_funcionamento = $this->local_funcionamento;
+                    $obj->local_funcionamento = $local_funcionamento;
                     $obj->condicao = $this->condicao;
+                    $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
                     $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
                     $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
                     $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -1640,8 +1661,9 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -1809,6 +1831,7 @@ class indice extends clsCadastro
 
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
@@ -1846,10 +1869,9 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -1959,8 +1981,9 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -2243,12 +2266,13 @@ class indice extends clsCadastro
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
-                $this->inepEscolaSedeDiferenteDaEscolaPrincipal();
+                $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
+                $this->validaEscolaCompartilhaPredio();
     }
 
     protected function validaOcupacaoPredio()
     {
-        if ($this->local_funcionamento == 3 && empty($this->condicao)) {
+        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
@@ -2257,7 +2281,7 @@ class indice extends clsCadastro
 
     protected function validaSalasExistentes()
     {
-        if ($this->local_funcionamento == 3 && ((int) $this->dependencia_numero_salas_existente) <= 0) {
+        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && ((int) $this->dependencia_numero_salas_existente) <= 0) {
             $this->mensagem = 'O campo: Número de salas de aula existentes na escola, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
@@ -2471,6 +2495,31 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
         }
 
+    }
+
+    protected function validaEscolaCompartilhaPredio()
+    {
+        $arrayCampos = [
+            $this->codigo_inep_escola_compartilhada,
+            $this->codigo_inep_escola_compartilhada2,
+            $this->codigo_inep_escola_compartilhada3,
+            $this->codigo_inep_escola_compartilhada4,
+            $this->codigo_inep_escola_compartilhada5,
+            $this->codigo_inep_escola_compartilhada6,
+        ];
+
+        if (in_array($this->escola_inep_id, $arrayCampos)) {
+            $this->mensagem = "O campo: Código da escola que compartilha o prédio 1, 2, 3, 4, 5 ou 6, deve ser diferente do Código INEP da escola atual.";
+            return false;
+        }
+
+        $arrayCamposSemNulos = array_filter($arrayCampos);
+        if (count(array_unique($arrayCamposSemNulos)) < count($arrayCamposSemNulos)) {
+            $this->mensagem = "Os códigos Inep's das escolas compartilhadas devem ser diferentes entre si.";
+            return false;
+        }
+
+        return true;
     }
 }
 
