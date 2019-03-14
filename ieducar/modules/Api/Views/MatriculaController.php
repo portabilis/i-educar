@@ -287,9 +287,10 @@ class MatriculaController extends ApiCoreController
 
                     $params = [];
                     $params[] = $matriculas[$key]['matricula_id'];
+                    $params[] = $ano;
 
                     if ($updatedAt) {
-                        $sql .= ' AND matricula_turma.updated_at >= $2';
+                        $sql .= ' AND matricula_turma.updated_at >= $3';
                         $params[] = $updatedAt;
                     }
 
