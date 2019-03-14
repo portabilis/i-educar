@@ -127,14 +127,14 @@ function limpa_acentos( $str_nome )
 
 function transforma_minusculo($str_nome)
 {
-  $nome = strtolower($str_nome);
+  $nome = mb_strtolower($str_nome);
   $arrayNome = explode(" ", $nome);
   $nome = '';
 
   foreach ($arrayNome as $parte) {
     if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' &&
       $parte != 'das' && $parte != 'e') {
-      $nome .= strtoupper(substr($parte, 0, 1)) . substr($parte, 1) . ' ';
+      $nome .= mb_strtoupper(mb_substr($parte, 0, 1)) . mb_substr($parte, 1) . ' ';
     }
     else {
       $nome .= $parte . ' ';

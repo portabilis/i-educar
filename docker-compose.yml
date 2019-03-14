@@ -9,9 +9,9 @@ services:
       - php
     ports:
       - 80
-    working_dir: /application
+    working_dir: /var/www/ieducar
     volumes:
-      - ./:/application
+      - ./:/var/www/ieducar
 
   php:
     container_name: ieducar-php
@@ -26,9 +26,9 @@ services:
       XDEBUG_REMOTE_PORT: 9000
       XDEBUG_REMOTE_ENABLE: 0
       XDEBUG_AUTOSTART: 0
-    working_dir: /application
+    working_dir: /var/www/ieducar
     volumes:
-      - ./:/application
+      - ./:/var/www/ieducar
 
   postgres:
     container_name: ieducar-postgres
