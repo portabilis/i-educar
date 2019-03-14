@@ -1,12 +1,13 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
-use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
-use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
+use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -97,6 +98,7 @@ class indice extends clsCadastro
     public $email_gestor;
     public $local_funcionamento;
     public $condicao;
+    public $predio_compartilhado_outra_escola;
     public $codigo_inep_escola_compartilhada;
     public $codigo_inep_escola_compartilhada2;
     public $codigo_inep_escola_compartilhada3;
@@ -111,6 +113,7 @@ class indice extends clsCadastro
     public $tipo_piso;
     public $medidor_energia;
     public $agua_consumida;
+    public $agua_potavel_consumo;
     public $abastecimento_agua;
     public $abastecimento_energia;
     public $esgoto_sanitario;
@@ -386,6 +389,10 @@ class indice extends clsCadastro
 
         if ($this->cnpj_mantenedora_principal) {
             $this->cnpj_mantenedora_principal = int2CNPJ($this->cnpj_mantenedora_principal);
+        }
+
+        if (is_string($this->local_funcionamento)) {
+            $this->local_funcionamento = explode(',', str_replace(array('{', "}"), '', $this->local_funcionamento));
         }
 
         if (is_string($this->abastecimento_agua)) {
@@ -954,29 +961,42 @@ class indice extends clsCadastro
             $this->campoOculto("incluir_curso", "");
             $this->campoQuebra();
 
-            $resources = array(NULL => 'Selecione',
-                3 => 'Prédio escolar',
-                4 => 'Templo/Igreja',
-                5 => 'Sala de empresa',
-                6 => 'Casa do professor',
-                7 => 'Salas em outra escola',
-                8 => 'Galpão/rancho/paiol/barracão',
-                9 => 'Unidade de atendimento socioeducativa',
-                10 => 'Unidade prisional',
-                11 => 'Outros');
+            $helperOptions = array('objectName' => 'local_funcionamento');
+            $options = [
+                'label' => 'Local de funcionamento',
+                'options' => [
+                    'values' => $this->local_funcionamento,
+                    'all_values' => SelectOptions::locaisFuncionamentoEscola(),
+                ],
+                'size' => 70,
+                'required' => $obrigarCamposCenso
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
-            $disabled = $this->local_funcionamento != 3;
-            $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->select('local_funcionamento', $options);
-
+            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento);
             $resources = array(NULL => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
                 3 => 'Cedido');
             $options = array('disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('condicao', $options);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim',
+            ];
+            $options = [
+                'disabled' => $disabled,
+                'label' => 'Prédio compartilhado com outra escola',
+                'resources' => $resources,
+                'value' => $this->predio_compartilhado_outra_escola,
+                'size' => 70,
+                'required' => false
+            ];
+            $this->inputsHelper()->select('predio_compartilhado_outra_escola', $options);
 
             $this->geraCamposCodigoInepEscolaCompartilhada();
 
@@ -1024,6 +1044,20 @@ class indice extends clsCadastro
             $options = array('label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('agua_consumida', $options);
 
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
+                'label' => 'Fornecimento de água potável para consumo',
+                'resources' => $resources,
+                'value' => $this->agua_potavel_consumo,
+                'required' => $obrigarCamposCenso,
+                'size' => 70
+            ];
+            $this->inputsHelper()->select('agua_potavel_consumo', $options);
+
             $helperOptions = array('objectName' => 'abastecimento_agua');
             $options = array('label' => 'Abastecimento de água',
                 'size' => 50,
@@ -1033,28 +1067,29 @@ class indice extends clsCadastro
                         2 => 'Poço artesiano',
                         3 => 'Cacimba/cisterna/poço',
                         4 => 'Fonte/rio/igarapé/riacho/córrego',
-                        5 => 'Inexistente')));
+                        5 => 'Não há abastecimento de água')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'abastecimento_energia');
-            $options = array('label' => 'Abastecimento de energia elétrica',
+            $options = array('label' => 'Fonte de energia elétrica',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->abastecimento_energia,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Gerador',
-                        3 => 'Outros (Ex.: Energia eólica, solar, etc.)',
-                        4 => 'Inexistente')));
+                        2 => 'Gerador movido a combustível fóssil',
+                        3 => 'Fontes de energia renováveis ou alternativas (gerador a biocombustível e/ou biodigestores, eólica, solar, outras)',
+                        4 => 'Não há energia elétrica')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'esgoto_sanitario');
-            $options = array('label' => 'Esgoto sanitário',
+            $options = array('label' => 'Esgotamento sanitário',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->esgoto_sanitario,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Fossa',
-                        3 => 'Inexistente')));
+                        2 => 'Fossa séptica',
+                        4 => 'Fossa rudimentar/comum',
+                        3 => 'Não há esgotamento sanitário')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'destinacao_lixo');
@@ -1062,12 +1097,11 @@ class indice extends clsCadastro
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->destinacao_lixo,
-                    'all_values' => array(1 => 'Coleta periódica',
+                    'all_values' => array(1 => 'Serviço de coleta',
                         2 => 'Queima',
-                        3 => 'Joga em outra área',
-                        4 => 'Recicla',
-                        5 => 'Enterra',
-                        6 => 'Outros')));
+                        5 => 'Leva a uma destinação final licenciada pelo poder público',
+                        7 => 'Enterra',
+                        3 => 'Descarta em outra área',)));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = ['objectName' => 'tratamento_lixo'];
@@ -1411,6 +1445,7 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
@@ -1443,17 +1478,17 @@ class indice extends clsCadastro
         }
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
@@ -1485,8 +1520,9 @@ class indice extends clsCadastro
                     $obj->ref_idpes_gestor = $this->gestor_id;
                     $obj->cargo_gestor = $this->cargo_gestor;
                     $obj->email_gestor = $this->email_gestor;
-                    $obj->local_funcionamento = $this->local_funcionamento;
+                    $obj->local_funcionamento = $local_funcionamento;
                     $obj->condicao = $this->condicao;
+                    $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
                     $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
                     $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
                     $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -1501,6 +1537,7 @@ class indice extends clsCadastro
                     $obj->tipo_piso = $this->tipo_piso;
                     $obj->medidor_energia = $this->medidor_energia;
                     $obj->agua_consumida = $this->agua_consumida;
+                    $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
                     $obj->abastecimento_agua = $abastecimento_agua;
                     $obj->abastecimento_energia = $abastecimento_energia;
                     $obj->esgoto_sanitario = $esgoto_sanitario;
@@ -1665,8 +1702,9 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -1681,6 +1719,7 @@ class indice extends clsCadastro
             $obj->tipo_piso = $this->tipo_piso;
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
@@ -1835,6 +1874,7 @@ class indice extends clsCadastro
 
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
@@ -1842,17 +1882,17 @@ class indice extends clsCadastro
         $tratamento_lixo = implode(',', $this->tratamento_lixo);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
@@ -1878,10 +1918,9 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -1896,6 +1935,7 @@ class indice extends clsCadastro
             $obj->tipo_piso = $this->tipo_piso;
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
@@ -1992,8 +2032,9 @@ class indice extends clsCadastro
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
@@ -2008,6 +2049,7 @@ class indice extends clsCadastro
             $obj->tipo_piso = $this->tipo_piso;
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
@@ -2277,12 +2319,13 @@ class indice extends clsCadastro
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
-                $this->inepEscolaSedeDiferenteDaEscolaPrincipal();
+                $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
+                $this->validaEscolaCompartilhaPredio();
     }
 
     protected function validaOcupacaoPredio()
     {
-        if ($this->local_funcionamento == 3 && empty($this->condicao)) {
+        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
@@ -2291,7 +2334,7 @@ class indice extends clsCadastro
 
     protected function validaSalasExistentes()
     {
-        if ($this->local_funcionamento == 3 && ((int) $this->dependencia_numero_salas_existente) <= 0) {
+        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && ((int) $this->dependencia_numero_salas_existente) <= 0) {
             $this->mensagem = 'O campo: Número de salas de aula existentes na escola, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
@@ -2505,6 +2548,31 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
         }
 
+    }
+
+    protected function validaEscolaCompartilhaPredio()
+    {
+        $arrayCampos = [
+            $this->codigo_inep_escola_compartilhada,
+            $this->codigo_inep_escola_compartilhada2,
+            $this->codigo_inep_escola_compartilhada3,
+            $this->codigo_inep_escola_compartilhada4,
+            $this->codigo_inep_escola_compartilhada5,
+            $this->codigo_inep_escola_compartilhada6,
+        ];
+
+        if (in_array($this->escola_inep_id, $arrayCampos)) {
+            $this->mensagem = "O campo: Código da escola que compartilha o prédio 1, 2, 3, 4, 5 ou 6, deve ser diferente do Código INEP da escola atual.";
+            return false;
+        }
+
+        $arrayCamposSemNulos = array_filter($arrayCampos);
+        if (count(array_unique($arrayCamposSemNulos)) < count($arrayCamposSemNulos)) {
+            $this->mensagem = "Os códigos Inep's das escolas compartilhadas devem ser diferentes entre si.";
+            return false;
+        }
+
+        return true;
     }
 }
 

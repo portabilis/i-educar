@@ -69,6 +69,7 @@ class clsPmieducarEscola
   var $email_gestor;
   var $local_funcionamento;
   var $condicao;
+  var $predio_compartilhado_outra_escola;
   var $codigo_inep_escola_compartilhada;
   var $codigo_inep_escola_compartilhada2;
   var $codigo_inep_escola_compartilhada3;
@@ -88,6 +89,7 @@ class clsPmieducarEscola
   var $destinacao_lixo;
   var $tratamento_lixo;
   var $agua_consumida;
+  var $agua_potavel_consumo = false;
   var $dependencia_sala_diretoria;
   var $dependencia_sala_professores;
   var $dependencia_sala_secretaria;
@@ -235,7 +237,7 @@ class clsPmieducarEscola
 
     $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.zona_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
           e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
-          e.condicao, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo, e.tratamento_lixo,
+          e.condicao, e.predio_compartilhado_outra_escola, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.agua_potavel_consumo, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo, e.tratamento_lixo,
           e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
           e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora,
           e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio,
@@ -534,15 +536,21 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->local_funcionamento)) {
+      if (is_string($this->local_funcionamento)) {
         $campos .= "{$gruda}local_funcionamento";
-        $valores .= "{$gruda}'{$this->local_funcionamento}'";
+        $valores .= "{$gruda}'{{$this->local_funcionamento}}'";
         $gruda = ", ";
       }
 
       if (is_numeric($this->condicao)) {
         $campos .= "{$gruda}condicao";
         $valores .= "{$gruda}'{$this->condicao}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->predio_compartilhado_outra_escola)) {
+        $campos .= "{$gruda}predio_compartilhado_outra_escola";
+        $valores .= "{$gruda}'{$this->predio_compartilhado_outra_escola}'";
         $gruda = ", ";
       }
 
@@ -627,6 +635,12 @@ class clsPmieducarEscola
       if (is_numeric($this->agua_consumida)) {
         $campos .= "{$gruda}agua_consumida";
         $valores .= "{$gruda}'{$this->agua_consumida}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_potavel_consumo)) {
+        $campos .= "{$gruda}agua_potavel_consumo";
+        $valores .= "{$gruda}'{$this->agua_potavel_consumo}'";
         $gruda = ", ";
       }
 
@@ -1081,7 +1095,7 @@ class clsPmieducarEscola
       return $recordId;
     }
     else {
-      echo "<br><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
+      echo "<Hbr><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
     }
 
     return FALSE;
@@ -1259,14 +1273,19 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->local_funcionamento)) {
-        $set .= "{$gruda}local_funcionamento = '{$this->local_funcionamento}'";
+      if (is_string($this->local_funcionamento)) {
+        $set .= "{$gruda}local_funcionamento = '{{$this->local_funcionamento}}'";
         $gruda = ", ";
       }
 
       if (is_numeric($this->condicao)) {
         $set .= "{$gruda}condicao = '{$this->condicao}'";
         $gruda = ", ";
+      }
+
+      if (is_numeric($this->predio_compartilhado_outra_escola)) {
+         $set .= "{$gruda}predio_compartilhado_outra_escola = '{$this->predio_compartilhado_outra_escola}'";
+         $gruda = ", ";
       }
 
       if (is_numeric($this->codigo_inep_escola_compartilhada)) {
@@ -1349,6 +1368,14 @@ class clsPmieducarEscola
 
       if (is_numeric($this->agua_consumida)) {
         $set .= "{$gruda}agua_consumida = '{$this->agua_consumida}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->agua_potavel_consumo)) {
+        $set .= "{$gruda}agua_potavel_consumo = '{$this->agua_potavel_consumo}'";
+        $gruda = ", ";
+      } elseif ($this->agua_potavel_consumo !== false) {
+        $set .= "{$gruda}agua_potavel_consumo = NULL";
         $gruda = ", ";
       }
 

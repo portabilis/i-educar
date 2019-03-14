@@ -3,8 +3,8 @@
 use App\Models\Educacenso\Registro00;
 use App\Services\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
-use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
-use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
