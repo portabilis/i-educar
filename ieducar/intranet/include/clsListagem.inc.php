@@ -646,7 +646,9 @@ class clsListagem extends clsCampos
 
     if (is_array($this->array_botao_script) && count($this->array_botao_script)) {
       for ($i = 0; $i < count($this->array_botao); $i++) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='". $this->array_botao_script[$i]."' value='".$this->array_botao[$i]."'>&nbsp;\n";
+          $btnTemplate = '&nbsp;<input type=\'button\' class=\'botaolistagem\' onclick=\'%s\' value=\'%s\' id=\'%s\'>&nbsp;';
+          $retorno .= sprintf($btnTemplate, $this->array_botao_script[$i], $this->array_botao[$i], $this->array_botao_id[$i] ?? '');
+        //$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='". $this->array_botao_script[$i]."' value='".$this->array_botao[$i]."'>&nbsp;\n";
       }
     }
     elseif (is_array($this->array_botao)) {
