@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * LegacyEnrollment
  *
  * @property DateTime           $date
+ * @property string             $studentName
  * @property LegacyRegistration $registration
  * @property LegacySchoolClass  $schoolClass
  */
@@ -55,6 +56,14 @@ class LegacyEnrollment extends Model
     public function getDateAttribute()
     {
         return $this->data_enturmacao;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStudentNameAttribute()
+    {
+        return $this->registration->student->person->nome;
     }
 
     /**

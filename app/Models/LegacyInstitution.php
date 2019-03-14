@@ -42,6 +42,11 @@ class LegacyInstitution extends Model
      */
     public $timestamps = false;
 
+    public function getNameAttribute()
+    {
+        return $this->nm_instituicao;
+    }
+
     /**
      * @return DateTime
      */

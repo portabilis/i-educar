@@ -48,4 +48,12 @@ class LegacySchool extends Model
     {
         return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function person()
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
+    }
 }
