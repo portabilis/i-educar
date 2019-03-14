@@ -114,30 +114,107 @@ function setDefaultFaltaIfEmpty(matricula_id, componente_curricular_id) {
   }
 }
 
+var lockedAverage = function ($element, callback) {
+  var matriculaId = $element.data('matricula_id');
+  var ccId = $element.data('componente_curricular_id');
+  var campoSituacao = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
+  var bloqueado = campoSituacao.data('media_bloqueada');
+
+  if (bloqueado) {
+    var additionalVars = {
+      matricula_id: matriculaId,
+      componente_curricular_id: ccId
+    };
+
+    var dialogElmId = 'media-bloqueada';
+    var dialogElm = $j('#' + dialogElmId);
+
+    if (dialogElm.length < 1) {
+      $j('body')
+        .append('<div id="' + dialogElmId + '" style="display: none;">A média final deste aluno/etapa/componente está bloqueada pois foi alterada manualmente. Você gostaria de desbloqueá-la e permitir sua atualização automática?</div>')
+
+      dialogElm = $j('#' + dialogElmId);
+    }
+
+    if (dialogElm.is(':ui-dialog')) {
+      dialogElm.dialog('destroy');
+    }
+
+    dialogElm.dialog({
+        width: 600,
+        title: 'Atenção!',
+        modal: true,
+        open: function(event, ui) {
+          $j('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
+        },
+        buttons: [
+          {
+            text: 'Sim',
+            click: function () {
+              var options = {
+                url: postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media_desbloqueia', additionalVars),
+                dataType: 'json',
+                success: function (dataResponse) {
+                  if (dataResponse.any_error_msg === false) {
+                    campoSituacao.data('media_bloqueada', false);
+                    callback();
+                  } else {
+                    alert(dataResponse.msgs[0].msg);
+                  }
+                },
+                error: function () {
+                  alert('Não foi possível desbloquear a média. Tente novamente!');
+                }
+              };
+
+              $j.ajax(options);
+              dialogElm.dialog('close');
+            }
+          }, {
+            text: 'Não',
+            click: function () {
+              callback();
+              dialogElm.dialog('close');
+            }
+          }
+        ]
+      })
+  } else {
+    callback();
+  }
+};
 
 var changeNota = function(event) {
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
-  changeResource($element, postNota, deleteNota);
+  lockedAverage($element, function () {
+    changeResource($element, postNota, deleteNota);
+  });
 };
 
 
 var changeNotaExame = function(event) {
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
-  changeResource($element, postNotaExame, deleteNotaExame);
+  lockedAverage($element, function () {
+    changeResource($element, postNotaExame, deleteNotaExame);
+  });
 };
 
 var changeNotaRecuperacaoParalela = function(event){
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
-  changeResource($element, postNotaRecuperacaoParalela, deleteNotaRecuperacaoParalela);
+  lockedAverage($element, function () {
+    changeResource($element, postNotaRecuperacaoParalela, deleteNotaRecuperacaoParalela);
+  });
 }
 
 var changeNotaRecuperacaoEspecifica = function(event){
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
-  changeResource($element, postNotaRecuperacaoEspecifica, deleteNotaRecuperacaoEspecifica);
+  lockedAverage($element, function () {
+    changeResource($element, postNotaRecuperacaoEspecifica, deleteNotaRecuperacaoEspecifica);
+  });
 }
 
 var changeFalta = function(event) {
@@ -179,24 +256,31 @@ var changeParecer = function(event) {
 
 var changeNotaGeralEtapa = function(event) {
   var $element = $j(this);
-  // setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
-  changeResource($element, postNotaGeral, deleteNotaGeral);
 
-  var $fieldsNotaGeral = $j('.nota-geral-etapa');
+  lockedAverage($element, function () {
+    changeResource($element, postNotaGeral, deleteNotaGeral);
 
-  $fieldsNotaGeral.val($element.val());
-  $fieldsNotaGeral.data('old_value', $element.val());
+    var $fieldsNotaGeral = $j('.nota-geral-etapa');
 
+    $fieldsNotaGeral.val($element.val());
+    $fieldsNotaGeral.data('old_value', $element.val());
+  });
 };
-var changeMedia = function(event){
+
+var changeMedia = function(event) {
   var $element = $j(this);
+  var matriculaId = $element.data('matricula_id');
+  var ccId = $element.data('componente_curricular_id');
+  var $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
 
   changeResource($element, postMedia, deleteMedia);
 
   $element.data('old_value', $element.val());
+
+  $situacaoField.data('media_bloqueada', true);
 };
 
-var changeSituacao = function(event){
+var changeSituacao = function(event) {
   var $element = $j(this);
 
   if($element.val() != 0){
@@ -418,7 +502,6 @@ function getEtapaParecer(regra) {
 
   return etapaParecer;
 }
-
 
 function postParecer($parecerFieldElement) {
   var regra = $parecerFieldElement.closest('tr').data('regra');
@@ -1199,6 +1282,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
   var ultimaEtapa = regra.quantidade_etapas == $j('#etapa').val();
   var definirComponentesEtapa = regra.definir_componente_por_etapa;
   var ultimaEtapaComponente = cc.ultima_etapa ==  $j('#etapa').val();
+  var mediaBloqueada = cc.media_bloqueada;
 
   var $emptyTd = $j('<td/>').addClass('center');
 
@@ -1206,6 +1290,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
                                 .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
                                 .data('matricula_id', matriculaId)
                                 .data('componente_curricular_id', cc.id)
+                                .data('media_bloqueada', mediaBloqueada)
                                 .addClass('center')
                                 .html(cc.situacao)
                                 .appendTo($targetElement);
@@ -1585,9 +1670,14 @@ function nextMatricula(){
   selectNextOption($j('#ref_cod_matricula'));
 }
 
+function nextEtapa(){
+  selectNextOption($j('#etapa'));
+}
+
 function showNextSelectionButton() {
   var $ccField        = $j('#ref_cod_componente_curricular');
   var $matriculaField = $j('#ref_cod_matricula');
+  var $etapaField = $j('#etapa');
 
   if ($ccField.val() != '') {
     $j("<a href='#'>Pr&#243;ximo componente curricular</a>").bind('click', nextComponenteCurricular)
@@ -1597,6 +1687,12 @@ function showNextSelectionButton() {
 
   if ($matriculaField.val() != '') {
     $j("<a href='#'>Pr&#243;xima matr&#237;cula</a>").bind('click', nextMatricula)
+                                .attr('style', 'text-decoration: underline')
+                                .appendTo($navActions);
+  }
+
+  if ($etapaField.val() != '') {
+    $j("<a href='#'>Próxima etapa</a>").bind('click', nextEtapa)
                                 .attr('style', 'text-decoration: underline')
                                 .appendTo($navActions);
   }

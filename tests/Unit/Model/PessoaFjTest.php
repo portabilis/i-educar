@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Model;
 
-use Tests\SuiteTestCase\TestCase;
+use Tests\TestCase;
 
 class PessoaFjTest extends TestCase
 {
     public function testGetById()
     {
-        $pdo = $this->getConnection()->getConnection();
+        $pdo = $this->getConnection()->getPdo();
         $pdo->exec(
             'INSERT INTO cadastro.pessoa (nome, data_cad, tipo, situacao, origem_gravacao, operacao, idsis_cad) VALUES (\'Fulano\', now(), \'F\', \'P\', \'U\', \'I\', 17)'
         );
@@ -18,7 +18,7 @@ class PessoaFjTest extends TestCase
         $pessoaFj->idpes = $id;
         $pessoa = $pessoaFj->detalhe();
 
-        $this->getConnection()->getConnection()->exec(
+        $pdo->exec(
             "DELETE FROM cadastro.pessoa WHERE idpes = $id;"
         );
 

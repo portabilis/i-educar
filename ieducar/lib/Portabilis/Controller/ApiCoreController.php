@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Support\Exceptions\Exception as iEducarException;
+
 require_once 'include/clsBanco.inc.php';
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'CoreExt/Exception.php';
@@ -254,12 +256,25 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     public function generate(CoreExt_Controller_Page_Interface $instance)
     {
-        header('Content-type: application/json; charset=UTF-8');
+        header('Content-Type: application/json; charset=UTF-8');
 
         try {
             if ($this->canAcceptRequest()) {
                 $instance->Gerar();
             }
+        } catch (iEducarException $exception) {
+
+            // Todos os erros do i-Educar serão pegos neste catch para
+            // futuramente movermos para um Exception Handler
+
+            $this->messenger->append($exception->getMessage(), 'error', true);
+
+            $this->appendResponse('error', [
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+                'extra' => $exception->getExtraInfo(),
+            ]);
+
         } catch (Exception $e) {
             $this->messenger->append('Exception: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
         }
@@ -267,6 +282,13 @@ class ApiCoreController extends Core_Controller_Page_EditController
         echo $this->prepareResponse();
     }
 
+    /**
+     * @return bool|void
+     *
+     * @throws CoreExt_Exception
+     * @throws iEducarException
+     * @throws Exception
+     */
     public function Gerar()
     {
         throw new CoreExt_Exception('The method \'Gerar\' must be overwritten!');
