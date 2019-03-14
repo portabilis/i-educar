@@ -1046,28 +1046,29 @@ class indice extends clsCadastro
                         2 => 'Poço artesiano',
                         3 => 'Cacimba/cisterna/poço',
                         4 => 'Fonte/rio/igarapé/riacho/córrego',
-                        5 => 'Inexistente')));
+                        5 => 'Não há abastecimento de água')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'abastecimento_energia');
-            $options = array('label' => 'Abastecimento de energia elétrica',
+            $options = array('label' => 'Fonte de energia elétrica',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->abastecimento_energia,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Gerador',
-                        3 => 'Outros (Ex.: Energia eólica, solar, etc.)',
-                        4 => 'Inexistente')));
+                        2 => 'Gerador movido a combustível fóssil',
+                        3 => 'Fontes de energia renováveis ou alternativas (gerador a biocombustível e/ou biodigestores, eólica, solar, outras)',
+                        4 => 'Não há energia elétrica')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'esgoto_sanitario');
-            $options = array('label' => 'Esgoto sanitário',
+            $options = array('label' => 'Esgotamento sanitário',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->esgoto_sanitario,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Fossa',
-                        3 => 'Inexistente')));
+                        2 => 'Fossa séptica',
+                        4 => 'Fossa rudimentar/comum',
+                        3 => 'Não há esgotamento sanitário')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'destinacao_lixo');
@@ -1075,12 +1076,11 @@ class indice extends clsCadastro
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->destinacao_lixo,
-                    'all_values' => array(1 => 'Coleta periódica',
+                    'all_values' => array(1 => 'Serviço de coleta',
                         2 => 'Queima',
-                        3 => 'Joga em outra área',
-                        4 => 'Recicla',
-                        5 => 'Enterra',
-                        6 => 'Outros')));
+                        5 => 'Leva a uma destinação final licenciada pelo poder público',
+                        7 => 'Enterra',
+                        3 => 'Descarta em outra área',)));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $dicaCamposCheckbox = "Os campos abaixo que não forem marcados, serão informados no Educacenso como Não";
@@ -1444,17 +1444,17 @@ class indice extends clsCadastro
         }
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
@@ -1838,17 +1838,17 @@ class indice extends clsCadastro
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
