@@ -343,7 +343,7 @@ class EducacensoExportController extends ApiCoreController
             $escola->codigoIes,
         ];
 
-        return ArrayToCenso::format($data);
+        return ArrayToCenso::format($data) . PHP_EOL;
     }
 
     protected function exportaDadosRegistro10($escolaId, $ano)
