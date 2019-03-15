@@ -72,13 +72,16 @@ class TopMenu
     }
 
     /**
-     * @param User $user
+     * @param int $userId
+     *
+     * @return array
      */
     public function getTopMenuArray($userId)
     {
         $user = User::find($userId);
+
         if (empty($user)) {
-            return;
+            return [];
         }
 
         $cacheKey = $this->getCacheKey();
@@ -89,15 +92,15 @@ class TopMenu
             return $cache->get($cacheKey);
         }
         
-        if (!$this->currentMenu) {
-            return;
+        if (empty($this->currentMenu)) {
+            return [];
         }
 
         $submenuArray = $this->getSubmenuArray()->pluck('cod_menu_submenu')->all();
         $tutorMenuId = $this->getTutorMenuId($submenuArray);
 
-        if (!$tutorMenuId) {
-            return;
+        if (empty($tutorMenuId)) {
+            return [];
         }
 
         $submenuArrayByUser = $this->menuService->getSubmenusByUser($user);
@@ -118,18 +121,23 @@ class TopMenu
      */
     private function getSubmenuArray()
     {
-        return $this->submenuRepository->findWhere(['ref_cod_menu_menu' => $this->currentMenu->id()],
-            ['cod_menu_submenu']);
+        return $this->submenuRepository->findWhere(['ref_cod_menu_menu' => $this->currentMenu->id()], ['cod_menu_submenu']);
     }
 
     /**
-     * @param $submenuArray
-     * @return integer
+     * @param array $submenuArray
+     *
+     * @return int|null
      */
     private function getTutorMenuId($submenuArray)
     {
-        return $this->systemMenuRepository->findWhereIn('ref_cod_menu_submenu',
-            $submenuArray)->first()->ref_cod_tutormenu;
+        $menu = $this->systemMenuRepository->findWhereIn('ref_cod_menu_submenu', $submenuArray)->first();
+
+        if ($menu) {
+            return $menu->ref_cod_tutormenu;
+        }
+
+        return null;
     }
 
     /**
