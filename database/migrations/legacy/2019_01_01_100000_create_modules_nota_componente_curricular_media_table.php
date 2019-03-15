@@ -23,7 +23,8 @@ class CreateModulesNotaComponenteCurricularMediaTable extends Migration
                     media numeric(8,4) DEFAULT 0,
                     media_arredondada character varying(10) DEFAULT 0,
                     etapa character varying(2) NOT NULL,
-                    situacao integer
+                    situacao integer,
+	                bloqueada bool NOT NULL DEFAULT false
                 );
                 
                 ALTER TABLE ONLY modules.nota_componente_curricular_media
