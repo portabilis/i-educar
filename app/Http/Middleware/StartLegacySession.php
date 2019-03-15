@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -41,7 +42,11 @@ class StartLegacySession
     {
         Session::put($_SESSION);
 
-        $_SESSION = Session::all();
+        $data = array_filter(Session::all(), function ($key) {
+            return ! Str::startsWith($key, '_') && $key != 'errors';
+        }, ARRAY_FILTER_USE_KEY);
+
+        $_SESSION = $data;
     }
 
     /**
