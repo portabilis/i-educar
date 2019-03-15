@@ -1099,8 +1099,8 @@ class indice extends clsCadastro
                 'options' => array('values' => $this->destinacao_lixo,
                     'all_values' => array(1 => 'Serviço de coleta',
                         2 => 'Queima',
-                        5 => 'Leva a uma destinação final licenciada pelo poder público',
                         7 => 'Enterra',
+                        5 => 'Leva a uma destinação final licenciada pelo poder público',
                         3 => 'Descarta em outra área',)));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
@@ -1488,12 +1488,12 @@ class indice extends clsCadastro
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento estiver selecionada</b>';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
             return false;
         }
 
@@ -1892,12 +1892,12 @@ class indice extends clsCadastro
         }
 
         if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
             return false;
         }
 
         if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento estiver selecionada</b>';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
             return false;
         }
 
