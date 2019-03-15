@@ -83,12 +83,12 @@ class clsPmieducarEscola
   var $num_pavimentos;
   var $tipo_piso;
   var $medidor_energia;
-  var $abastecimento_agua;
-  var $abastecimento_energia;
-  var $esgoto_sanitario;
-  var $destinacao_lixo;
-  var $tratamento_lixo;
-  var $agua_consumida;
+  var $abastecimento_agua = false;
+  var $abastecimento_energia = false;
+  var $esgoto_sanitario = false;
+  var $destinacao_lixo = false;
+  var $tratamento_lixo = false;
+  var $agua_consumida = false;
   var $agua_potavel_consumo = false;
   var $dependencia_sala_diretoria;
   var $dependencia_sala_professores;
@@ -1382,26 +1382,41 @@ class clsPmieducarEscola
       if (is_string($this->abastecimento_agua)) {
         $set .= "{$gruda}abastecimento_agua = '{{$this->abastecimento_agua}}'";
         $gruda = ", ";
+      } elseif ($this->abastecimento_agua !== false) {
+          $set .= "{$gruda}abastecimento_agua = NULL";
+          $gruda = ", ";
       }
 
       if (is_string($this->abastecimento_energia)) {
         $set .= "{$gruda}abastecimento_energia = '{{$this->abastecimento_energia}}'";
         $gruda = ", ";
+      } elseif ($this->abastecimento_energia !== false) {
+          $set .= "{$gruda}abastecimento_energia = NULL";
+          $gruda = ", ";
       }
 
       if (is_string($this->esgoto_sanitario)) {
         $set .= "{$gruda}esgoto_sanitario = '{{$this->esgoto_sanitario}}'";
         $gruda = ", ";
+      } elseif ($this->esgoto_sanitario !== false) {
+          $set .= "{$gruda}esgoto_sanitario = NULL";
+          $gruda = ", ";
       }
 
       if (is_string($this->destinacao_lixo)) {
         $set .= "{$gruda}destinacao_lixo = '{{$this->destinacao_lixo}}'";
         $gruda = ", ";
+      } elseif ($this->destinacao_lixo !== false) {
+          $set .= "{$gruda}destinacao_lixo = NULL";
+          $gruda = ", ";
       }
 
       if (is_string($this->tratamento_lixo)) {
         $set .= "{$gruda}tratamento_lixo = '{{$this->tratamento_lixo}}'";
         $gruda = ", ";
+      } elseif ($this->tratamento_lixo !== false) {
+          $set .= "{$gruda}tratamento_lixo = NULL";
+          $gruda = ", ";
       }
 
       if (is_numeric($this->dependencia_sala_diretoria)) {
