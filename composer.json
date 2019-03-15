@@ -83,13 +83,13 @@
             "@composer install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
-            "@php artisan legacy:database --ansi",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
         "update-install": [
             "@composer install",
             "@set-permissions",
+            "@php artisan update --ansi",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --force --ansi"
         ],

@@ -35,7 +35,6 @@ class LegacyConfig
      * @return array
      * @throws Exception
      */
-
     private function loadConfig($legacyConfigPath, $enviroment, $tenant)
     {
         $configFile = $legacyConfigPath . $enviroment . '.ini';

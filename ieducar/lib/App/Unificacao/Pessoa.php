@@ -97,14 +97,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'alimentos.cliente',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'alimentos.pessoa',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'cadastro.aviso_nome',
             'coluna' => 'idpes'
         ],
@@ -201,186 +193,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'historico.cep_logradouro_bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.cep_logradouro_bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.cep_logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.cep_logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.documento',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.documento',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.documento',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.endereco_externo',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.endereco_externo',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.endereco_externo',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.endereco_pessoa',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.endereco_pessoa',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.endereco_pessoa',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.fisica',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.fisica',
-            'coluna' => 'idpes_mae'
-        ],
-        [
-            'tabela' => 'historico.fisica',
-            'coluna' => 'idpes_pai'
-        ],
-        [
-            'tabela' => 'historico.fisica',
-            'coluna' => 'idpes_responsavel'
-        ],
-        [
-            'tabela' => 'historico.fisica',
-            'coluna' => 'idpes_con'
-        ],
-        [
-            'tabela' => 'historico.fisica',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.fisica',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.pessoa',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.pessoa',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.pessoa',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.fisica_cpf',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.fisica_cpf',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.fisica_cpf',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.fone_pessoa',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.fone_pessoa',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.fone_pessoa',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.funcionario',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.funcionario',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.funcionario',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.juridica',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'historico.juridica',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.juridica',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.socio',
-            'coluna' => 'idpes_juridica'
-        ],
-        [
-            'tabela' => 'historico.socio',
-            'coluna' => 'idpes_fisica'
-        ],
-        [
-            'tabela' => 'historico.socio',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.socio',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'historico.municipio',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'historico.municipio',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'modules.motorista',
             'coluna' => 'ref_idpes'
         ],
@@ -409,22 +221,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes'
         ],
         [
-            'tabela' => 'pmiotopic.grupopessoa',
-            'coluna' => 'ref_idpes'
-        ],
-        [
-            'tabela' => 'pmiotopic.topico',
-            'coluna' => 'ref_idpes_cad'
-        ],
-        [
-            'tabela' => 'pmiotopic.topico',
-            'coluna' => 'ref_idpes_exc'
-        ],
-        [
-            'tabela' => 'pmiotopic.notas',
-            'coluna' => 'ref_idpes'
-        ],
-        [
             'tabela' => 'public.distrito',
             'coluna' => 'idpes_rev'
         ],
@@ -447,14 +243,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'urbano.cep_logradouro_bairro',
             'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'alimentos.unidade_atendida',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'alimentos.fornecedor',
-            'coluna' => 'idpes'
         ],
         [
             'tabela' => 'cadastro.funcionario',
@@ -489,10 +277,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes_destino'
         ],
         [
-            'tabela' => 'pmidrh.setor',
-            'coluna' => 'ref_idpes_resp'
-        ],
-        [
             'tabela' => 'pmieducar.escola',
             'coluna' => 'ref_idpes'
         ],
@@ -505,10 +289,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes_secretario_escolar'
         ],
         [
-            'tabela' => 'pmiotopic.participante',
-            'coluna' => 'ref_ref_idpes'
-        ],
-        [
             'tabela' => 'cadastro.endereco_externo',
             'coluna' => 'idpes_rev'
         ],
@@ -547,10 +327,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'public.municipio',
             'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'pmicontrolesis.foto_evento',
-            'coluna' => 'ref_ref_cod_pessoa_fj'
         ],
         [
             'tabela' => 'pmieducar.candidato_reserva_vaga',
@@ -563,14 +339,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'pmieducar.candidato_fila_unica',
             'coluna' => 'ref_cod_pessoa_exc'
-        ],
-        [
-            'tabela' => 'pmiotopic.funcionario_su',
-            'coluna' => 'ref_ref_cod_pessoa_fj'
-        ],
-        [
-            'tabela' => 'pmiotopic.grupomoderador',
-            'coluna' => 'ref_ref_cod_pessoa_fj'
         ],
         [
             'tabela' => 'portal.acesso',
@@ -587,10 +355,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
     ];
 
     protected $chavesDeletarDuplicados = [
-        [
-            'tabela' => 'consistenciacao.historico_campo',
-            'coluna' => 'idpes'
-        ],
         [
             'tabela' => 'cadastro.pessoa_fonetico',
             'coluna' => 'idpes'
