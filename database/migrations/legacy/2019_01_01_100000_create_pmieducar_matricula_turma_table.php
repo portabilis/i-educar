@@ -35,7 +35,8 @@ class CreatePmieducarMatriculaTurmaTable extends Migration
                     updated_at timestamp without time zone,
                     falecido boolean,
                     etapa_educacenso smallint,
-                    turma_unificada smallint
+                    turma_unificada smallint,
+	                turno_id int4 NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.matricula_turma
