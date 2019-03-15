@@ -3,7 +3,7 @@
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
-class CorrigeViewSituacao extends Migration
+class CreateRelatorioViewSituacaoView extends Migration
 {
     use AsView;
 
@@ -14,7 +14,7 @@ class CorrigeViewSituacao extends Migration
      */
     public function up()
     {
-        $this->createView('relatorio.view_situacao', '2019-02-28');
+        $this->createView('relatorio.view_situacao');
     }
 
     /**
@@ -25,6 +25,5 @@ class CorrigeViewSituacao extends Migration
     public function down()
     {
         $this->dropView('relatorio.view_situacao');
-        $this->createView('relatorio.view_situacao', '2019-01-01');
     }
 }
