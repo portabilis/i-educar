@@ -145,3 +145,5 @@ INSERT INTO urbano.tipo_logradouro VALUES ('PCA', 'Praça');
 INSERT INTO urbano.tipo_logradouro VALUES ('PCAES', 'Praça Esportes');
 INSERT INTO urbano.tipo_logradouro VALUES ('SITIO', 'Sítio');
 INSERT INTO urbano.tipo_logradouro VALUES ('ASSEN', 'Assentamento');
+INSERT INTO urbano.tipo_logradouro VALUES ('POVO', 'Povoado');
+INSERT INTO urbano.tipo_logradouro VALUES ('LOCAL', 'Localidade');
