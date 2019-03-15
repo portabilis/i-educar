@@ -27,7 +27,8 @@ class CreatePmieducarHistoricoDisciplinasTable extends Migration
                     import numeric(1,0),
                     ordenamento integer,
                     carga_horaria_disciplina integer,
-                    dependencia boolean DEFAULT false
+                    dependencia boolean DEFAULT false,
+                    tipo_base int4 NOT NULL DEFAULT 1
                 );
                 
                 ALTER TABLE ONLY pmieducar.historico_disciplinas
