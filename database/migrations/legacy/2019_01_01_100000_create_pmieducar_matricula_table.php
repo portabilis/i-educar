@@ -53,8 +53,7 @@ class CreatePmieducarMatriculaTable extends Migration
                     dependencia boolean DEFAULT false,
                     updated_at timestamp without time zone,
                     saida_escola boolean DEFAULT false,
-                    data_saida_escola date,
-                    turno_id integer
+                    data_saida_escola date
                 );
                 
                 ALTER TABLE ONLY pmieducar.matricula
