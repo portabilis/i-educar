@@ -31,36 +31,14 @@ class EnrollmentServiceTest extends TestCase
 
     /**
      * @return void
-     */
-    public function testGetMaxActiveSequence()
-    {
-        $enrollment = factory(LegacyEnrollment::class)->create();
-
-        $result = $this->service->getMaxActiveSequence($enrollment->ref_cod_matricula, $enrollment->ref_cod_turma);
-
-        $this->assertEquals(1, $result);
-
-        factory(LegacyEnrollment::class)->create([
-            'ref_cod_matricula' => $enrollment->ref_cod_matricula,
-            'ref_cod_turma' => $enrollment->ref_cod_turma,
-            'sequencial' => $enrollment->sequencial + 1,
-        ]);
-
-        $result = $this->service->getMaxActiveSequence($enrollment->ref_cod_matricula, $enrollment->ref_cod_turma);
-
-        $this->assertEquals(2, $result);
-    }
-
-    /**
-     * @return void
+     *
+     * @throws \Throwable
      */
     public function testCancelEnrollment()
     {
         $enrollment = factory(LegacyEnrollment::class)->create();
 
-        $result = $this->service->cancelEnrollment(
-            $enrollment->ref_cod_matricula, $enrollment->ref_cod_turma, now()
-        );
+        $result = $this->service->cancelEnrollment($enrollment->id, now());
 
         $this->assertTrue($result);
         $this->assertDatabaseHas($enrollment->getTable(), [
@@ -68,5 +46,23 @@ class EnrollmentServiceTest extends TestCase
             'ref_cod_turma' => $enrollment->ref_cod_turma,
             'ativo' => 0,
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetBySchoolClass()
+    {
+        $enrollment = factory(LegacyEnrollment::class)->create();
+
+        factory(LegacyEnrollment::class, 4)->create([
+            'ref_cod_turma' => $enrollment->schoolClass->id
+        ]);
+
+        $enrollments = $this->service->getBySchoolClass(
+            $enrollment->schoolClass->id, $enrollment->schoolClass->year
+        );
+
+        $this->assertEquals(5, $enrollments->count());
     }
 }
