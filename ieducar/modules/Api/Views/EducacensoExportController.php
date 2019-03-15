@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
 use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
@@ -295,6 +296,7 @@ class EducacensoExportController extends ApiCoreController
 
         $escola = SituacaoFuncionamento::handle($escola);
         $escola = DependenciaAdministrativa::handle($escola);
+        $escola = Regulamentacao::handle($escola);
 
         $data = [
             $escola->registro,
