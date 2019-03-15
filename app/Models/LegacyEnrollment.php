@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * LegacyEnrollment
  *
+ * @property int                $id
  * @property DateTime           $date
  * @property string             $studentName
  * @property LegacyRegistration $registration
@@ -24,7 +25,7 @@ class LegacyEnrollment extends Model
     /**
      * @var string
      */
-    protected $primaryKey = 'ref_cod_matricula';
+    protected $primaryKey = 'id';
 
     /**
      * @var array

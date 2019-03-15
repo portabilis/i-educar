@@ -30,6 +30,13 @@ class LegacyCourse extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'padrao_ano_escolar' => 'boolean',
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
@@ -48,5 +55,13 @@ class LegacyCourse extends Model
     public function getNameAttribute()
     {
         return $this->nm_curso;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsStandardCalendarAttribute()
+    {
+        return $this->padrao_ano_escolar;
     }
 }
