@@ -2,14 +2,7 @@
 
 namespace Tests\Unit\Services;
 
-use App\Models\Menu;
-use App\Models\Submenu;
-use App\Models\User;
 use App\Services\CacheManager;
-use App\Services\MenuService;
-use iEducar\Support\Repositories\MenuRepository;
-use iEducar\Support\Repositories\UserRepository;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
@@ -18,6 +11,7 @@ class CacheManagerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
         Cache::swap(new CacheManager(app()));
         Cache::flush();
     }
