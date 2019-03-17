@@ -1,13 +1,12 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace Tests\Unit\Services;
 
 use App\Models\Menu;
 use App\Models\Submenu;
 use App\Models\User;
 use App\Services\MenuService;
 use iEducar\Support\Repositories\MenuRepository;
-use iEducar\Support\Repositories\UserRepository;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -40,7 +39,7 @@ class MenuServiceTest extends TestCase
         $result = $this->service->getByUser($user);
         $this->assertEmpty($result);
     }
-    
+
     public function testCommonUserShouldReturnByPermission()
     {
         $user = factory(User::class)->create();
@@ -67,5 +66,4 @@ class MenuServiceTest extends TestCase
         $this->assertTrue($result->contains($activeSubmenu->menu));
         $this->assertFalse($result->contains($inactiveSubmenu->menu));
     }
-
 }
