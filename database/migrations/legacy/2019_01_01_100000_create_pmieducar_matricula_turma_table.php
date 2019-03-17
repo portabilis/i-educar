@@ -36,13 +36,15 @@ class CreatePmieducarMatriculaTurmaTable extends Migration
                     falecido boolean,
                     etapa_educacenso smallint,
                     turma_unificada smallint,
-	                turno_id int4 NULL
+	                turno_id int4 NULL,
+	                id serial NOT NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.matricula_turma
-                    ADD CONSTRAINT matricula_turma_pkey PRIMARY KEY (ref_cod_matricula, ref_cod_turma, sequencial);
+                    ADD CONSTRAINT matricula_turma_pkey PRIMARY KEY (id);
                     
                 CREATE INDEX i_matricula_turma_ref_cod_turma ON pmieducar.matricula_turma USING btree (ref_cod_turma);
+                CREATE UNIQUE INDEX matricula_turma_uindex_matricula_turma_sequencial ON pmieducar.matricula_turma USING btree (ref_cod_matricula, ref_cod_turma, sequencial);
             '
         );
     }
