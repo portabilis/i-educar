@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../includes/bootstrap.php';
-
 $bucket = $GLOBALS['coreExt']['Config']->app->aws->bucketname;
 $directory = $GLOBALS['coreExt']['Config']->app->database->dbname . '/';
 $key = $GLOBALS['coreExt']['Config']->app->aws->awsacesskey;

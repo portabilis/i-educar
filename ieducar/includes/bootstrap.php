@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 $app = require_once __DIR__ . '/../../bootstrap/app.php';
 
@@ -31,7 +32,7 @@ $devEnv = ['development', 'local', 'testing', 'dusk'];
 if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
     $coreExt['Config']->changeEnviroment($tenantEnv);
 } else if (!in_array($env, $devEnv)){
-    $coreExt['Config']->app->ambiente_inexistente = true;
+    throw new NotFoundHttpException();
 }
 
 chdir(base_path('ieducar/intranet'));
