@@ -9,23 +9,16 @@ if ($app instanceof Application) {
     (new LoadEnvironmentVariables())->bootstrap($app);
 }
 
-if (!defined('DS')) {
-    define('DS', DIRECTORY_SEPARATOR);
-}
-
 if (getenv('CORE_EXT_CONFIGURATION_ENV')) {
     define('CORE_EXT_CONFIGURATION_ENV', getenv('CORE_EXT_CONFIGURATION_ENV'));
 } else {
     define('CORE_EXT_CONFIGURATION_ENV', 'production');
 }
 
-define('PROJECT_ROOT', dirname(__DIR__));
-define('APP_ROOT', PROJECT_ROOT . DS . 'intranet');
-
-$configFile = PROJECT_ROOT . '/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini';
+$configFile = base_path('ieducar/configuration/' . CORE_EXT_CONFIGURATION_ENV . '.ini');
 
 if (!file_exists($configFile)) {
-    $configFile = PROJECT_ROOT . '/configuration/ieducar.ini';
+    $configFile = base_path('ieducar/configuration/ieducar.ini');
 }
 
 global $coreExt;
@@ -45,4 +38,4 @@ if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
     $coreExt['Config']->app->ambiente_inexistente = true;
 }
 
-chdir(PROJECT_ROOT . DS . 'intranet');
+chdir(base_path('ieducar/intranet'));
