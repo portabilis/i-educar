@@ -6,71 +6,78 @@ require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
 
 class ClsBancoTest extends TestCase
 {
-  public function testDoCountFromObj()
-  {
-    $db = new clsBanco();
-    $db->Conecta();
+    public function testDoCountFromObj()
+    {
+        $db = new clsBanco();
+        $db->Conecta();
 
-    $obj = new clsPmieducarClienteSuspensao();
-    $this->assertNotEquals(TRUE, is_null($db->doCountFromObj($obj)));
-  }
+        $obj = new clsPmieducarClienteSuspensao();
 
-  public function testConexao()
-  {
-    $db = new clsBanco();
-    $db->Conecta();
+        $this->assertNotEquals(true, is_null($db->doCountFromObj($obj)));
+    }
 
-    $this->assertTrue((bool) $db->bLink_ID);
-  }
+    public function testConexao()
+    {
+        $db = new clsBanco();
+        $db->Conecta();
 
-  public function testFormatacaoDeValoresBooleanos()
-  {
-    $data = array(
-      'id' => 1,
-      'hasChild' => TRUE
-    );
+        $this->assertTrue((bool) $db->bLink_ID);
+    }
 
-    $db = new clsBanco();
-    $formatted = $db->formatValues($data);
-    $this->assertSame('t', $formatted['hasChild']);
+    public function testFormatacaoDeValoresBooleanos()
+    {
+        $data = [
+            'id' => 1,
+            'hasChild' => true
+        ];
 
-    $data['hasChild'] = FALSE;
-    $formatted = $db->formatValues($data);
-    $this->assertSame('f', $formatted['hasChild']);
-  }
+        $db = new clsBanco();
 
-  public function testOpcaoDeLancamentoDeExcecaoEFalsePorPadrao()
-  {
-    $db = new clsBanco();
-    $this->assertFalse($db->getThrowException());
-  }
+        $formatted = $db->formatValues($data);
+        $this->assertSame('t', $formatted['hasChild']);
 
-  public function testConfiguracaoDeOpcaoDeLancamentoDeExcecao()
-  {
-    $db = new clsBanco();
-    $db->setThrowException(TRUE);
-    $this->assertTrue($db->getThrowException());
-  }
+        $data['hasChild'] = false;
+        $formatted = $db->formatValues($data);
 
-  public function testFetchTipoArrayDeResultadosDeUmaQuery()
-  {
-    $db = new clsBanco();
+        $this->assertSame('f', $formatted['hasChild']);
+    }
 
-    $db->Consulta("SELECT spcname FROM pg_tablespace");
-    $row = $db->ProximoRegistro();
-    $row = $db->Tupla();
-    $this->assertNotNull($row[0]);
-    $this->assertNotNull($row['spcname']);
-  }
+    public function testOpcaoDeLancamentoDeExcecaoEFalsePorPadrao()
+    {
+        $db = new clsBanco();
 
-  public function testFetchTipoAssocDeResultadosDeUmaQuery()
-  {
-    $db = new clsBanco(array('fetchMode' => clsBanco::FETCH_ASSOC));
+        $this->assertFalse($db->getThrowException());
+    }
 
-    $db->Consulta("SELECT spcname FROM pg_tablespace");
-    $row = $db->ProximoRegistro();
-    $row = $db->Tupla();
-    $this->assertFalse(array_key_exists(0, $row));
-    $this->assertNotNull($row['spcname']);
-  }
+    public function testConfiguracaoDeOpcaoDeLancamentoDeExcecao()
+    {
+        $db = new clsBanco();
+        $db->setThrowException(true);
+
+        $this->assertTrue($db->getThrowException());
+    }
+
+    public function testFetchTipoArrayDeResultadosDeUmaQuery()
+    {
+        $db = new clsBanco();
+        $db->Consulta('SELECT spcname FROM pg_tablespace');
+
+        $row = $db->ProximoRegistro();
+        $row = $db->Tupla();
+
+        $this->assertNotNull($row[0]);
+        $this->assertNotNull($row['spcname']);
+    }
+
+    public function testFetchTipoAssocDeResultadosDeUmaQuery()
+    {
+        $db = new clsBanco(['fetchMode' => clsBanco::FETCH_ASSOC]);
+        $db->Consulta('SELECT spcname FROM pg_tablespace');
+
+        $row = $db->ProximoRegistro();
+        $row = $db->Tupla();
+
+        $this->assertFalse(array_key_exists(0, $row));
+        $this->assertNotNull($row['spcname']);
+    }
 }
