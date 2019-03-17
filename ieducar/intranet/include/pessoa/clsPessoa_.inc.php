@@ -205,12 +205,12 @@ class clsPessoa_
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $nome = strtolower($tupla['nome']);
+            $nome = mb_strtolower($tupla['nome']);
             $arrayNome = explode(' ', $nome);
             $nome ='';
             foreach ($arrayNome as $parte) {
                 if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
-                    $nome .= strtoupper(substr($parte, 0, 1)).substr($parte, 1).' ';
+                    $nome .= mb_strtoupper(mb_substr($parte, 0, 1)).mb_substr($parte, 1).' ';
                 } else {
                     $nome .= $parte.' ';
                 }
@@ -296,15 +296,15 @@ class clsPessoa_
             $db->Consulta("SELECT idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, situacao, origem_gravacao, email FROM cadastro.pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                $nome = strtolower($tupla['nome']);
+                $nome = mb_strtolower($tupla['nome']);
                 $arrayNome = explode(' ', $nome);
                 $arrNovoNome = [];
                 foreach ($arrayNome as $parte) {
                     if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
                         if ($parte != 's.a' && $parte != 'ltda') {
-                            $arrNovoNome[] = strtoupper(substr($parte, 0, 1)).substr($parte, 1);
+                            $arrNovoNome[] = mb_strtoupper(mb_substr($parte, 0, 1)).mb_substr($parte, 1);
                         } else {
-                            $arrNovoNome[] = strtoupper($parte);
+                            $arrNovoNome[] = mb_strtoupper($parte);
                         }
                     } else {
                         $arrNovoNome[] = $parte;
