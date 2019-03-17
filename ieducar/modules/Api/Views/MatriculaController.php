@@ -230,6 +230,7 @@ class MatriculaController extends ApiCoreController
     {
         $ano = $this->getRequest()->ano;
         $escola = $this->getRequest()->escola;
+        $updatedAt = $this->getRequest()->data_atualizacao;
 
         if ($this->canGetMovimentacaoEnturmacao()) {
             if (!$escola) {
@@ -256,7 +257,9 @@ class MatriculaController extends ApiCoreController
                 $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
                 foreach ($matriculas as $key => $matricula) {
-                    $sql = 'SELECT matricula_turma.ref_cod_turma AS turma_id,
+                    $sql = 'SELECT 
+                                   matricula_turma.id,
+                                   matricula_turma.ref_cod_turma AS turma_id,
                                    matricula_turma.sequencial AS sequencial,
                                    matricula_turma.sequencial_fechamento AS sequencial_fechamento,
                                    COALESCE(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
@@ -282,11 +285,20 @@ class MatriculaController extends ApiCoreController
                                 ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                              WHERE cod_matricula = $1';
 
-                    $params = [$matriculas[$key]['matricula_id'], $ano];
+                    $params = [];
+                    $params[] = $matriculas[$key]['matricula_id'];
+                    $params[] = $ano;
+
+                    if ($updatedAt) {
+                        $sql .= ' AND matricula_turma.updated_at >= $3';
+                        $params[] = $updatedAt;
+                    }
+
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
                     if (is_array($enturmacoes) && count($enturmacoes) > 0) {
                         $attrs = [
+                            'id',
                             'turma_id',
                             'sequencial',
                             'sequencial_fechamento',
@@ -647,6 +659,47 @@ class MatriculaController extends ApiCoreController
         return ['dispensas' => $dispensas];
     }
 
+    protected function getEnturmacoesExcluidas()
+    {
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
+        $deletedAt = $this->getRequest()->deleted_at;
+
+        if ($this->canGetEnturmacoesExcluidas()) {
+            if (!$escola) {
+                $escola = 0;
+            }
+
+            $sql = 'SELECT id, deleted_at 
+                    FROM pmieducar.matricula_turma_excluidos
+                    JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma_excluidos.ref_cod_matricula
+                    WHERE matricula.ano = $1
+                    AND CASE WHEN $2 = 0 THEN TRUE ELSE ref_ref_cod_escola = $2 END';
+
+            $params = [$ano, $escola];
+
+            if ($deletedAt) {
+                $sql .= ' AND matricula_turma_excluidos.deleted_at >= $3';
+                $params[] = $deletedAt;
+            }
+
+            $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
+
+            $attrs = [
+                'id',
+                'deleted_at',
+            ];
+            $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
+
+            return ['enturmacoes' => $enturmacoes];
+        }
+    }
+
+    protected function canGetEnturmacoesExcluidas()
+    {
+        return $this->validatesPresenceOf('ano');
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'matricula')) {
@@ -677,6 +730,8 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->getMatriculasDependencia());
         } elseif ($this->isRequestFor('get', 'dispensa-disciplina')) {
             $this->appendResponse($this->getDispensaDisciplina());
+        } elseif ($this->isRequestFor('get', 'enturmacoes-excluidas')) {
+            $this->appendResponse($this->getEnturmacoesExcluidas());
         } else {
             $this->notImplementedOperationError();
         }
