@@ -94,14 +94,14 @@
             "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "@php -r \"file_exists('ieducar/configuration/ieducar.ini') || copy('ieducar/configuration/ieducar.ini.example', 'ieducar/configuration/ieducar.ini');\""
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php -r \"file_exists('ieducar/configuration/ieducar.ini') || copy('ieducar/configuration/ieducar.ini.example', 'ieducar/configuration/ieducar.ini');\"",
             "@php artisan package:discover --ansi"
         ]
     },
