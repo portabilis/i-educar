@@ -43,7 +43,6 @@ yarn-error.log
 /deploy
 Vagrantfile
 deploy/.ruby-version
-ieducar/configuration/ieducar.ini
 ieducar/modules/Reports
 ieducar/intranet/filaunica
 ieducar/intranet/reservavaga
