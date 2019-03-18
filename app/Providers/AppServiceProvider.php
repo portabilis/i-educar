@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Exception;
+use CoreExt_Config_Ini;
 use App\Services\CacheManager;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
@@ -86,9 +88,37 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Load legacy bootstrap application.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    private function loadLegacyBootstrap()
+    {
+        $env = $this->app->environment();
+
+        $configFile = base_path('ieducar/configuration/' . $env . '.ini');
+
+        if (!file_exists($configFile)) {
+            $configFile = base_path('ieducar/configuration/ieducar.ini');
+        }
+
+        global $coreExt;
+
+        $coreExt = [];
+        $coreExt['Config'] = new CoreExt_Config_Ini($configFile, $env);
+
+        setlocale(LC_ALL, 'en_US.UTF-8');
+        date_default_timezone_set($coreExt['Config']->app->locale->timezone);
+    }
+
+    /**
      * Bootstrap any application services.
      *
      * @return void
+     *
+     * @throws Exception
      */
     public function boot()
     {
@@ -101,6 +131,8 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->loadLegacyMigrations();
         }
+
+        $this->loadLegacyBootstrap();
 
         Request::macro('getSubdomain', function () {
             $host = str_replace('-', '', $this->getHost());
