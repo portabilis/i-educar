@@ -178,12 +178,13 @@ class LegacyController extends Controller
 
         $env = env('APP_ENV', 'production');
 
-        $tenantEnv = $_SERVER['HTTP_HOST'] ?? null;
-        $devEnv = ['development', 'local', 'testing', 'dusk'];
+        $tenantEnv = $this->request->getHost();
 
         if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
             $coreExt['Config']->changeEnviroment($tenantEnv);
-        } else if (!in_array($env, $devEnv)){
+        }
+
+        if (!in_array($env, ['development', 'local', 'testing', 'dusk'])){
             throw new NotFoundHttpException();
         }
     }
