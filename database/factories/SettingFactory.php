@@ -23,7 +23,7 @@ $factory->define(Setting::class, function (Faker $faker) {
     }
 
     return [
-        'key' => $faker->toLower(),
+        'key' => $faker->unique()->word,
         'value' => $value,
         'type' => $faker->randomElement(['string', 'integer', 'float', 'boolean']),
         'description' => $faker->words(3, true),

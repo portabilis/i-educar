@@ -36,6 +36,10 @@ class Setting extends Model
                 return (float) $value;
 
             case self::TYPE_BOOLEAN:
+                if (in_array($value, ['false', 'null'], true)) {
+                    return false;
+                }
+
                 return (boolean) $value;
         }
 
