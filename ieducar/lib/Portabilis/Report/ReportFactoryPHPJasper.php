@@ -1,7 +1,6 @@
 <?php
 
 require_once 'lib/Portabilis/Report/ReportFactory.php';
-require_once 'vendor/autoload.php';
 
 use JasperPHP\JasperPHP;
 

@@ -4,7 +4,6 @@ use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\View;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsControlador.inc.php';
