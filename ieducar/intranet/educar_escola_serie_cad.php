@@ -775,12 +775,6 @@ class indice extends clsCadastro
     {
         $erros = [];
 
-        if ($analise['inserir']) {
-            foreach ($analise['inserir'] as $novo) {
-
-            }
-        }
-
         if ($analise['remover']) {
             foreach ($analise['remover'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery("
