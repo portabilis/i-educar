@@ -144,6 +144,23 @@ class EditController extends Core_Controller_Page_EditController
       $tipoFormula->getEnums(), $this->getEntity()->get('tipoFormula'));
   }
 
+    /**
+     * Apaga um registro no banco de dados e redireciona para a página indicada
+     * pela opção "delete_success".
+     *
+     * @see clsCadastro::Excluir()
+     */
+    public function Excluir()
+    {
+        try {
+            parent::Excluir();
+        } catch (Throwable $throwable) {
+            return false;
+        }
+
+        return true;
+    }
+
 
   /**
    * Implementa uma rotina de criação ou atualização de registro padrão para
