@@ -101,7 +101,6 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php -r \"file_exists('ieducar/configuration/ieducar.ini') || copy('ieducar/configuration/ieducar.ini.example', 'ieducar/configuration/ieducar.ini');\"",
             "@php artisan package:discover --ansi"
         ]
     },

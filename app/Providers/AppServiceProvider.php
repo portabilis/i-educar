@@ -96,18 +96,10 @@ class AppServiceProvider extends ServiceProvider
      */
     private function loadLegacyBootstrap()
     {
-        $env = $this->app->environment();
-
-        $configFile = base_path('ieducar/configuration/' . $env . '.ini');
-
-        if (!file_exists($configFile)) {
-            $configFile = base_path('ieducar/configuration/ieducar.ini');
-        }
-
         global $coreExt;
 
         $coreExt = [];
-        $coreExt['Config'] = new CoreExt_Config_Ini($configFile, $env);
+        $coreExt['Config'] = json_decode(json_encode(config('legacy')));
 
         setlocale(LC_ALL, 'en_US.UTF-8');
         date_default_timezone_set($coreExt['Config']->app->locale->timezone);

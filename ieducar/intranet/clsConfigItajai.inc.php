@@ -87,27 +87,21 @@ class clsConfig
     $this->_instituicao = $config->template->vars->instituicao . ' - ';
 
     // E-mails dos administradores para envio de relatórios de performance
-    $emails = $config->admin->reports->emails->toArray();
-    $this->arrayConfig['ArrStrEmailsAdministradores'] = $emails;
+    $emails = $config->admin->reports->emails;
+    $this->arrayConfig['ArrStrEmailsAdministradores'] = [$emails];
 
     // Diretório dos templates de e-mail
     $this->arrayConfig['strDirTemplates'] = "templates/";
 
     // Quantidade de segundos para relatar uma query SQL
-    $segundosSQL = $config->get($config->admin->reports->sql_tempo,
-      self::CLS_CONFIG_SQL_TEMPO);
-    $segundosSQL = $segundosSQL > 0 ?
-      $segundosSQL : self::CLS_CONFIG_SQL_TEMPO;
+    $segundosSQL = $config->admin->reports->sql_tempo ?? self::CLS_CONFIG_SQL_TEMPO;
 
-    $this->arrayConfig['intSegundosQuerySQL'] = $segundosSQL;
+    $this->arrayConfig['intSegundosQuerySQL'] = $segundosSQL > 0 ? $segundosSQL : self::CLS_CONFIG_SQL_TEMPO;
 
     // Quantidade de segundos para relatar o tempo de carregamento de página
-    $segundosPagina = $config->get($config->admin->reports->pagina_tempo,
-      self::CLS_CONFIG_PAGINA_TEMPO);
-    $segundosPagina = $segundosPagina > 0 ?
-      $segundosPagina : self::CLS_CONFIG_PAGINA_TEMPO;
+    $segundosPagina = $config->admin->reports->pagina_tempo ?? self::CLS_CONFIG_PAGINA_TEMPO;
 
-    $this->arrayConfig['intSegundosProcessaPagina'] = $segundosPagina;
+    $this->arrayConfig['intSegundosProcessaPagina'] = $segundosPagina > 0 ? $segundosPagina : self::CLS_CONFIG_PAGINA_TEMPO;
   }
 
 
