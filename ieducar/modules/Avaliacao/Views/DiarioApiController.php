@@ -21,9 +21,6 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Object/Utils.php';
 
-//todo: Mover pra algum outro lugar
-require_once __DIR__ . '/../../../vendor/autoload.php';
-
 class DiarioApiController extends ApiCoreController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
