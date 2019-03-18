@@ -166,30 +166,6 @@ class LegacyController extends Controller
     }
 
     /**
-     * Load legacy bootstrap.
-     *
-     * @return void
-     *
-     * @throws NotFoundHttpException
-     */
-    private function loadLegacyBootstrap()
-    {
-        global $coreExt;
-
-        $env = env('APP_ENV', 'production');
-
-        $tenantEnv = $this->request->getHost();
-
-        if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
-            $coreExt['Config']->changeEnviroment($tenantEnv);
-        }
-
-        if (!in_array($env, ['development', 'local', 'testing', 'dusk'])){
-            throw new NotFoundHttpException();
-        }
-    }
-
-    /**
      * Change directory.
      *
      * @return void
@@ -216,7 +192,6 @@ class LegacyController extends Controller
         $this->startLegacySession();
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
-        $this->loadLegacyBootstrap();
         $this->changeDirectory();
 
         try {
