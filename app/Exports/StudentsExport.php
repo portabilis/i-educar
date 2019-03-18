@@ -5,11 +5,13 @@ namespace App\Exports;
 use App\Models\GuardianType;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class StudentsExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize
+class StudentsExport implements FromCollection, ShouldAutoSize, WithColumnFormatting, WithHeadings, WithMapping
 {
     protected $collection;
 
@@ -89,6 +91,14 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, Shoul
             'Nome da mãe',
             'Nome do responsável',
             'CPF do responsável',
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'B' => NumberFormat::FORMAT_TEXT,
+            'F' => NumberFormat::FORMAT_TEXT,
         ];
     }
 }
