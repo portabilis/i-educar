@@ -79,8 +79,9 @@ class clsConfig
    */
   private function setArrayConfig()
   {
+    require_once __DIR__ . '/../includes/bootstrap.php';
+    
     global $coreExt;
-    $config = $coreExt['Config'];
 
     $config = $coreExt['Config']->app;
 

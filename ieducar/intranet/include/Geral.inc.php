@@ -1,6 +1,5 @@
 <?php
 
-require_once 'includes/bootstrap.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'include/pessoa/clsPessoa_.inc.php';
 require_once 'include/pessoa/clsPessoaFj.inc.php';

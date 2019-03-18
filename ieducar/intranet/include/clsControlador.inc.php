@@ -178,7 +178,7 @@ class clsControlador
     protected function renderLoginPage()
     {
         $this->destroyLoginSession();
-        require_once __DIR__ . '/../../includes/bootstrap.php';
+
         $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
         $templateName = (trim($parceiro) == '' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/' . trim($parceiro));
         $templateFile = fopen($templateName, 'r');

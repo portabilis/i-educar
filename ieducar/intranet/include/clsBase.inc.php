@@ -5,7 +5,6 @@ use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\View;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../includes/bootstrap.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsControlador.inc.php';
@@ -18,10 +17,6 @@ require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-
-if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
-    header('Location: /404.html');
-}
 
 class clsBase extends clsConfig
 {
