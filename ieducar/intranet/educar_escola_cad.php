@@ -6,6 +6,7 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Model\SalasFuncionais;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Validator\Telefone;
@@ -119,6 +120,7 @@ class indice extends clsCadastro
     public $esgoto_sanitario;
     public $destinacao_lixo;
     public $tratamento_lixo;
+    public $salas_funcionais;
     public $dependencia_sala_diretoria;
     public $dependencia_sala_professores;
     public $dependencia_sala_secretaria;
@@ -413,6 +415,10 @@ class indice extends clsCadastro
 
         if (is_string($this->tratamento_lixo)) {
             $this->tratamento_lixo = explode(',', str_replace(array('{', "}"), '', $this->tratamento_lixo));
+        }
+
+        if (is_string($this->salas_funcionais)) {
+            $this->salas_funcionais = explode(',', str_replace(array('{', "}"), '', $this->salas_funcionais));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
@@ -1120,6 +1126,18 @@ class indice extends clsCadastro
             $options = array('label' => 'Marcar todos', 'hint' => $dicaCamposCheckbox);
             $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
 
+            $helperOptions = ['objectName' => 'salas_funcionais'];
+            $options = [
+                'label' => 'Salas Funcionais',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->salas_funcionais,
+                    'all_values' => SalasFuncionais::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Sala de diretoria', 'value' => $this->dependencia_sala_diretoria);
             $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);
 
@@ -1451,6 +1469,7 @@ class indice extends clsCadastro
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
         $tratamento_lixo = implode(',', $this->tratamento_lixo);
+        $salas_funcionais = implode(',', $this->salas_funcionais);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1543,6 +1562,7 @@ class indice extends clsCadastro
                     $obj->esgoto_sanitario = $esgoto_sanitario;
                     $obj->destinacao_lixo = $destinacao_lixo;
                     $obj->tratamento_lixo = $tratamento_lixo;
+                    $obj->salas_funcionais = $salas_funcionais;
                     $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
                     $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
                     $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
@@ -1725,6 +1745,7 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->salas_funcionais = $salas_funcionais;
             $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
             $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
             $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
@@ -1880,6 +1901,7 @@ class indice extends clsCadastro
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
         $tratamento_lixo = implode(',', $this->tratamento_lixo);
+        $salas_funcionais = implode(',', $this->salas_funcionais);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
@@ -1941,6 +1963,7 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->salas_funcionais = $salas_funcionais;
             $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
             $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
             $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
@@ -2055,6 +2078,7 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->salas_funcionais = $salas_funcionais;
             $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
             $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
             $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
