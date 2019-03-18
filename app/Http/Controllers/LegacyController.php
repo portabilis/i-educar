@@ -166,6 +166,39 @@ class LegacyController extends Controller
     }
 
     /**
+     * Load legacy bootstrap.
+     *
+     * @return void
+     *
+     * @throws NotFoundHttpException
+     */
+    private function loadLegacyBootstrap()
+    {
+        global $coreExt;
+
+        $env = env('APP_ENV', 'production');
+
+        $tenantEnv = $_SERVER['HTTP_HOST'] ?? null;
+        $devEnv = ['development', 'local', 'testing', 'dusk'];
+
+        if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
+            $coreExt['Config']->changeEnviroment($tenantEnv);
+        } else if (!in_array($env, $devEnv)){
+            throw new NotFoundHttpException();
+        }
+    }
+
+    /**
+     * Change directory.
+     *
+     * @return void
+     */
+    private function changeDirectory()
+    {
+        chdir(base_path('ieducar/intranet'));
+    }
+
+    /**
      * Start session, configure errors and exceptions and load necessary files
      * to run legacy code.
      *
@@ -182,21 +215,8 @@ class LegacyController extends Controller
         $this->startLegacySession();
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
-
-        global $coreExt;
-
-        $env = env('APP_ENV', 'production');
-
-        $tenantEnv = $_SERVER['HTTP_HOST'] ?? null;
-        $devEnv = ['development', 'local', 'testing', 'dusk'];
-
-        if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
-            $coreExt['Config']->changeEnviroment($tenantEnv);
-        } else if (!in_array($env, $devEnv)){
-            throw new NotFoundHttpException();
-        }
-
-        chdir(base_path('ieducar/intranet'));
+        $this->loadLegacyBootstrap();
+        $this->changeDirectory();
 
         try {
             $this->loadLegacyFile($filename);
