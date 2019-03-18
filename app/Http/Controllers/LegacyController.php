@@ -40,16 +40,6 @@ class LegacyController extends Controller
     }
 
     /**
-     * Return i-Educar original bootstrap file.
-     *
-     * @return string
-     */
-    private function getLegacyBootstrapFile()
-    {
-        return $this->getLegacyPath() . '/includes/bootstrap.php';
-    }
-
-    /**
      * Define which errors and exceptions are shown.
      *
      * @return void
@@ -67,26 +57,6 @@ class LegacyController extends Controller
         restore_error_handler();
 
         restore_exception_handler();
-    }
-
-    /**
-     * Load bootstrap file, if not found, throw a HttpException with HTTP error
-     * code 500 Server Internal Error.
-     *
-     * @return void
-     *
-     * @throws HttpException
-     * @throws Exception
-     */
-    private function loadLegacyBootstrapFile()
-    {
-        $filename = $this->getLegacyBootstrapFile();
-
-        if (false === file_exists($filename)) {
-            throw new HttpException(500, 'Legacy bootstrap file not found.');
-        }
-
-        $this->loadFileOrAbort($filename);
     }
 
     /**
@@ -212,7 +182,21 @@ class LegacyController extends Controller
         $this->startLegacySession();
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
-        $this->loadLegacyBootstrapFile();
+
+        global $coreExt;
+
+        $env = env('APP_ENV', 'production');
+
+        $tenantEnv = $_SERVER['HTTP_HOST'] ?? null;
+        $devEnv = ['development', 'local', 'testing', 'dusk'];
+
+        if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
+            $coreExt['Config']->changeEnviroment($tenantEnv);
+        } else if (!in_array($env, $devEnv)){
+            throw new NotFoundHttpException();
+        }
+
+        chdir(base_path('ieducar/intranet'));
 
         try {
             $this->loadLegacyFile($filename);
