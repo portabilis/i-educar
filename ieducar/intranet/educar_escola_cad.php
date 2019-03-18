@@ -129,7 +129,6 @@ class indice extends clsCadastro
     public $dependencia_sala_aee;
     public $dependencia_quadra_coberta;
     public $dependencia_quadra_descoberta;
-    public $dependencia_cozinha;
     public $dependencia_biblioteca;
     public $dependencia_sala_leitura;
     public $dependencia_parque_infantil;
@@ -140,9 +139,6 @@ class indice extends clsCadastro
     public $dependencia_banheiro_deficiente;
     public $dependencia_banheiro_chuveiro;
     public $dependencia_vias_deficiente;
-    public $dependencia_refeitorio;
-    public $dependencia_dispensa;
-    public $dependencia_aumoxarifado;
     public $dependencia_auditorio;
     public $dependencia_patio_coberto;
     public $dependencia_patio_descoberto;
@@ -1162,9 +1158,6 @@ class indice extends clsCadastro
             $options = array('label' => 'Quadra de esportes descoberta', 'value' => $this->dependencia_quadra_descoberta);
             $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
 
-            $options = array('label' => 'Cozinha', 'value' => $this->dependencia_cozinha);
-            $this->inputsHelper()->checkbox('dependencia_cozinha', $options);
-
             $options = array('label' => 'Biblioteca', 'value' => $this->dependencia_biblioteca);
             $this->inputsHelper()->checkbox('dependencia_biblioteca', $options);
 
@@ -1194,15 +1187,6 @@ class indice extends clsCadastro
 
             $options = array('label' => 'Banheiro com chuveiro', 'value' => $this->dependencia_banheiro_chuveiro);
             $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
-
-            $options = array('label' => 'Refeitório', 'value' => $this->dependencia_refeitorio);
-            $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
-
-            $options = array('label' => 'Despensa', 'value' => $this->dependencia_dispensa);
-            $this->inputsHelper()->checkbox('dependencia_dispensa', $options);
-
-            $options = array('label' => 'Almoxarifado', 'value' => $this->dependencia_aumoxarifado);
-            $this->inputsHelper()->checkbox('dependencia_aumoxarifado', $options);
 
             $options = array('label' => 'Auditório', 'value' => $this->dependencia_auditorio);
             $this->inputsHelper()->checkbox('dependencia_auditorio', $options);
@@ -1571,7 +1555,6 @@ class indice extends clsCadastro
                     $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
                     $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
                     $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-                    $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
                     $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
                     $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
                     $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
@@ -1582,9 +1565,6 @@ class indice extends clsCadastro
                     $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
                     $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
                     $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-                    $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-                    $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-                    $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
                     $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
                     $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
                     $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
@@ -1754,7 +1734,6 @@ class indice extends clsCadastro
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
             $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
             $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
             $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
@@ -1765,9 +1744,6 @@ class indice extends clsCadastro
             $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-            $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-            $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
             $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
             $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
             $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
@@ -1972,7 +1948,6 @@ class indice extends clsCadastro
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
             $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
             $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
             $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
@@ -1983,9 +1958,6 @@ class indice extends clsCadastro
             $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-            $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-            $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
             $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
             $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
             $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
@@ -2087,7 +2059,6 @@ class indice extends clsCadastro
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
             $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
             $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
             $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
@@ -2098,9 +2069,6 @@ class indice extends clsCadastro
             $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-            $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-            $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
             $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
             $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
             $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
