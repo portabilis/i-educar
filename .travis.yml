@@ -11,6 +11,7 @@ matrix:
       php:
         - 7.1
         - 7.2
+        - 7.3
 
       addons:
         postgresql: 9.5
