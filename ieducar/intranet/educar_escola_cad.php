@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -123,6 +124,7 @@ class indice extends clsCadastro
     public $tratamento_lixo;
     public $salas_funcionais;
     public $salas_gerais;
+    public $banheiros;
     public $dependencia_laboratorio_informatica;
     public $dependencia_laboratorio_ciencias;
     public $dependencia_sala_aee;
@@ -417,6 +419,10 @@ class indice extends clsCadastro
 
         if (is_string($this->salas_gerais)) {
             $this->salas_gerais = explode(',', str_replace(array('{', "}"), '', $this->salas_gerais));
+        }
+
+        if (is_string($this->banheiros)) {
+            $this->banheiros = explode(',', str_replace(array('{', "}"), '', $this->banheiros));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
@@ -1148,6 +1154,18 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'banheiros'];
+            $options = [
+                'label' => 'Banheiros',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->banheiros,
+                    'all_values' => Banheiros::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Laboratório de informática', 'value' => $this->dependencia_laboratorio_informatica);
             $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
 
@@ -1454,6 +1472,7 @@ class indice extends clsCadastro
         $tratamento_lixo = implode(',', $this->tratamento_lixo);
         $salas_funcionais = implode(',', $this->salas_funcionais);
         $salas_gerais = implode(',', $this->salas_gerais);
+        $banheiros = implode(',', $this->banheiros);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1548,6 +1567,7 @@ class indice extends clsCadastro
                     $obj->tratamento_lixo = $tratamento_lixo;
                     $obj->salas_funcionais = $salas_funcionais;
                     $obj->salas_gerais = $salas_gerais;
+                    $obj->banheiros = $banheiros;
                     $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
                     $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
                     $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
@@ -1723,6 +1743,7 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
+            $obj->banheiros = $banheiros;
             $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
             $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
@@ -1871,6 +1892,7 @@ class indice extends clsCadastro
         $tratamento_lixo = implode(',', $this->tratamento_lixo);
         $salas_funcionais = implode(',', $this->salas_funcionais);
         $salas_gerais = implode(',', $this->salas_gerais);
+        $banheiros = implode(',', $this->banheiros);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
@@ -1934,6 +1956,7 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
+            $obj->banheiros = $banheiros;
             $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
             $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
@@ -2041,6 +2064,7 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
+            $obj->banheiros = $banheiros;
             $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
             $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
