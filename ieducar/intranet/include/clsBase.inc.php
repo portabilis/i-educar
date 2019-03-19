@@ -417,7 +417,7 @@ class clsBase extends clsConfig
 
             throw new HttpResponseException(
                 new RedirectResponse($_SERVER['HTTP_REFERER'])
-            )
+            );
         }
 
         $view = 'legacy.body';
