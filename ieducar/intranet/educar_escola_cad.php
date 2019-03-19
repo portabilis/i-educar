@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
@@ -131,14 +132,9 @@ class indice extends clsCadastro
     public $laboratorios;
     public $salas_atividades;
     public $dormitorios;
-    public $dependencia_quadra_coberta;
-    public $dependencia_quadra_descoberta;
-    public $dependencia_parque_infantil;
+    public $areas_externas;
     public $dependencia_bercario;
     public $dependencia_vias_deficiente;
-    public $dependencia_patio_coberto;
-    public $dependencia_patio_descoberto;
-    public $dependencia_area_verde;
     public $dependencia_lavanderia;
     public $dependencia_nenhuma_relacionada;
     public $dependencia_numero_salas_existente;
@@ -430,6 +426,10 @@ class indice extends clsCadastro
 
         if (is_string($this->dormitorios)) {
             $this->dormitorios = explode(',', str_replace(array('{', "}"), '', $this->dormitorios));
+        }
+
+        if (is_string($this->areas_externas)) {
+            $this->areas_externas = explode(',', str_replace(array('{', "}"), '', $this->areas_externas));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
@@ -1209,29 +1209,23 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Quadra de esportes coberta', 'value' => $this->dependencia_quadra_coberta);
-            $this->inputsHelper()->checkbox('dependencia_quadra_coberta', $options);
-
-            $options = array('label' => 'Quadra de esportes descoberta', 'value' => $this->dependencia_quadra_descoberta);
-            $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
-
-            $options = array('label' => 'Parque infantil', 'value' => $this->dependencia_parque_infantil);
-            $this->inputsHelper()->checkbox('dependencia_parque_infantil', $options);
+            $helperOptions = ['objectName' => 'areas_externas'];
+            $options = [
+                'label' => 'Áreas Externas',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->areas_externas,
+                    'all_values' => AreasExternas::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $options = array('label' => 'Berçário', 'value' => $this->dependencia_bercario);
             $this->inputsHelper()->checkbox('dependencia_bercario', $options);
 
             $options = array('label' => 'Dependências e vias adequadas a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_vias_deficiente);
             $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
-
-            $options = array('label' => 'Pátio coberto', 'value' => $this->dependencia_patio_coberto);
-            $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
-
-            $options = array('label' => 'Pátio descoberto', 'value' => $this->dependencia_patio_descoberto);
-            $this->inputsHelper()->checkbox('dependencia_patio_descoberto', $options);
-
-            $options = array('label' => 'Área verde', 'value' => $this->dependencia_area_verde);
-            $this->inputsHelper()->checkbox('dependencia_area_verde', $options);
 
             $options = array('label' => 'Lavanderia', 'value' => $this->dependencia_lavanderia);
             $this->inputsHelper()->checkbox('dependencia_lavanderia', $options);
@@ -1482,6 +1476,7 @@ class indice extends clsCadastro
         $laboratorios = implode(',', $this->laboratorios);
         $salas_atividades = implode(',', $this->salas_atividades);
         $dormitorios = implode(',', $this->dormitorios);
+        $areas_externas = implode(',', $this->areas_externas);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1580,14 +1575,9 @@ class indice extends clsCadastro
                     $obj->laboratorios = $laboratorios;
                     $obj->salas_atividades = $salas_atividades;
                     $obj->dormitorios = $dormitorios;
-                    $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-                    $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-                    $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+                    $obj->areas_externas = $areas_externas;
                     $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
                     $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-                    $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-                    $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-                    $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
                     $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
                     $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
                     $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
@@ -1748,14 +1738,9 @@ class indice extends clsCadastro
             $obj->laboratorios = $laboratorios;
             $obj->salas_atividades = $salas_atividades;
             $obj->dormitorios = $dormitorios;
-            $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+            $obj->areas_externas = $areas_externas;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-            $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
             $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
@@ -1889,6 +1874,7 @@ class indice extends clsCadastro
         $laboratorios = implode(',', $this->laboratorios);
         $salas_atividades = implode(',', $this->salas_atividades);
         $dormitorios = implode(',', $this->dormitorios);
+        $areas_externas = implode(',', $this->areas_externas);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
@@ -1956,14 +1942,9 @@ class indice extends clsCadastro
             $obj->laboratorios = $laboratorios;
             $obj->salas_atividades = $salas_atividades;
             $obj->dormitorios = $dormitorios;
-            $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+            $obj->areas_externas = $areas_externas;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-            $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
             $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
@@ -2056,14 +2037,9 @@ class indice extends clsCadastro
             $obj->laboratorios = $laboratorios;
             $obj->salas_atividades = $salas_atividades;
             $obj->dormitorios = $dormitorios;
-            $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+            $obj->areas_externas = $areas_externas;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-            $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
             $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
             $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
