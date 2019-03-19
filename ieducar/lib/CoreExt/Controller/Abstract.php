@@ -1,6 +1,7 @@
 <?php
 
-use App\Exceptions\RedirectException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 
 require_once 'CoreExt/Controller/Interface.php';
 
@@ -204,7 +205,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      *
      * @return void
      *
-     * @throws RedirectException
+     * @throws HttpResponseException
      */
     public function simpleRedirect(string $url, int $code = 302)
     {
@@ -220,7 +221,9 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $code = 302;
         }
 
-        throw new RedirectException($url, $code);
+        throw new HttpResponseException(
+            new RedirectResponse($url, $code)
+        );
     }
 
     /**
@@ -231,12 +234,14 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      *
      * @return void
      *
-     * @throws RedirectException
+     * @throws HttpResponseException
      */
     public function redirectIf($condition, $url)
     {
         if ($condition) {
-            throw new RedirectException($url);
+            throw new HttpResponseException(
+                new RedirectResponse($url)
+            );
         }
     }
 }
