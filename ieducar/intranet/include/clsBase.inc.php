@@ -1,7 +1,8 @@
 <?php
 
-use App\Exceptions\RedirectException;
 use iEducar\Support\Navigation\TopMenu;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
@@ -414,7 +415,9 @@ class clsBase extends clsConfig
         } else {
             $controlador->Logar(true);
 
-            throw new RedirectException($_SERVER['HTTP_REFERER']);
+            throw new HttpResponseException(
+                new RedirectResponse($_SERVER['HTTP_REFERER'])
+            );
         }
 
         $view = 'legacy.body';
