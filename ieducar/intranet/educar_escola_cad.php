@@ -1,11 +1,15 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\Banheiros;
+use iEducar\Modules\Educacenso\Model\Dormitorios;
+use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Model\SalasAtividades;
 use iEducar\Modules\Educacenso\Model\SalasFuncionais;
 use iEducar\Modules\Educacenso\Model\SalasGerais;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
@@ -123,24 +127,17 @@ class indice extends clsCadastro
     public $tratamento_lixo;
     public $salas_funcionais;
     public $salas_gerais;
-    public $dependencia_laboratorio_informatica;
-    public $dependencia_laboratorio_ciencias;
-    public $dependencia_sala_aee;
+    public $banheiros;
+    public $laboratorios;
+    public $salas_atividades;
+    public $dormitorios;
     public $dependencia_quadra_coberta;
     public $dependencia_quadra_descoberta;
-    public $dependencia_sala_leitura;
     public $dependencia_parque_infantil;
     public $dependencia_bercario;
-    public $dependencia_banheiro_fora;
-    public $dependencia_banheiro_dentro;
-    public $dependencia_banheiro_infantil;
-    public $dependencia_banheiro_deficiente;
-    public $dependencia_banheiro_chuveiro;
     public $dependencia_vias_deficiente;
     public $dependencia_patio_coberto;
     public $dependencia_patio_descoberto;
-    public $dependencia_alojamento_aluno;
-    public $dependencia_alojamento_professor;
     public $dependencia_area_verde;
     public $dependencia_lavanderia;
     public $dependencia_nenhuma_relacionada;
@@ -417,6 +414,22 @@ class indice extends clsCadastro
 
         if (is_string($this->salas_gerais)) {
             $this->salas_gerais = explode(',', str_replace(array('{', "}"), '', $this->salas_gerais));
+        }
+
+        if (is_string($this->banheiros)) {
+            $this->banheiros = explode(',', str_replace(array('{', "}"), '', $this->banheiros));
+        }
+
+        if (is_string($this->laboratorios)) {
+            $this->laboratorios = explode(',', str_replace(array('{', "}"), '', $this->laboratorios));
+        }
+
+        if (is_string($this->salas_atividades)) {
+            $this->salas_atividades = explode(',', str_replace(array('{', "}"), '', $this->salas_atividades));
+        }
+
+        if (is_string($this->dormitorios)) {
+            $this->dormitorios = explode(',', str_replace(array('{', "}"), '', $this->dormitorios));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
@@ -1148,14 +1161,53 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Laboratório de informática', 'value' => $this->dependencia_laboratorio_informatica);
-            $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
+            $helperOptions = ['objectName' => 'banheiros'];
+            $options = [
+                'label' => 'Banheiros',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->banheiros,
+                    'all_values' => Banheiros::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Laboratório de ciências', 'value' => $this->dependencia_laboratorio_ciencias);
-            $this->inputsHelper()->checkbox('dependencia_laboratorio_ciencias', $options);
+            $helperOptions = ['objectName' => 'laboratorios'];
+            $options = [
+                'label' => 'Laboratorios',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->laboratorios,
+                    'all_values' => Laboratorios::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Sala de recursos multifuncionais para atendimento educacional especializado - AEE', 'value' => $this->dependencia_sala_aee);
-            $this->inputsHelper()->checkbox('dependencia_sala_aee', $options);
+            $helperOptions = ['objectName' => 'salas_atividades'];
+            $options = [
+                'label' => 'Salas de atividades',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->salas_atividades,
+                    'all_values' => SalasAtividades::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'dormitorios'];
+            $options = [
+                'label' => 'Dormitórios',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->dormitorios,
+                    'all_values' => Dormitorios::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $options = array('label' => 'Quadra de esportes coberta', 'value' => $this->dependencia_quadra_coberta);
             $this->inputsHelper()->checkbox('dependencia_quadra_coberta', $options);
@@ -1163,48 +1215,20 @@ class indice extends clsCadastro
             $options = array('label' => 'Quadra de esportes descoberta', 'value' => $this->dependencia_quadra_descoberta);
             $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
 
-            $options = array('label' => 'Sala de leitura', 'value' => $this->dependencia_sala_leitura);
-            $this->inputsHelper()->checkbox('dependencia_sala_leitura', $options);
-
             $options = array('label' => 'Parque infantil', 'value' => $this->dependencia_parque_infantil);
             $this->inputsHelper()->checkbox('dependencia_parque_infantil', $options);
 
             $options = array('label' => 'Berçário', 'value' => $this->dependencia_bercario);
             $this->inputsHelper()->checkbox('dependencia_bercario', $options);
 
-            $options = array('label' => 'Banheiro fora do prédio', 'value' => $this->dependencia_banheiro_fora);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_fora', $options);
-
-            $options = array('label' => 'Banheiro dentro do prédio', 'value' => $this->dependencia_banheiro_dentro);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_dentro', $options);
-
-            $options = array('label' => 'Banheiro adequado à Educação infantil', 'value' => $this->dependencia_banheiro_infantil);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_infantil', $options);
-
-            $options = array('label' => 'Banheiro adequado a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_banheiro_deficiente);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_deficiente', $options);
-
             $options = array('label' => 'Dependências e vias adequadas a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_vias_deficiente);
             $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
-
-            $options = array('label' => 'Banheiro com chuveiro', 'value' => $this->dependencia_banheiro_chuveiro);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
 
             $options = array('label' => 'Pátio coberto', 'value' => $this->dependencia_patio_coberto);
             $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
 
             $options = array('label' => 'Pátio descoberto', 'value' => $this->dependencia_patio_descoberto);
             $this->inputsHelper()->checkbox('dependencia_patio_descoberto', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Lage',
-                2 => 'Telhado',
-                3 => 'Outras');
-            $options = array('label' => 'Alojamento de aluno', 'value' => $this->dependencia_alojamento_aluno);
-            $this->inputsHelper()->checkbox('dependencia_alojamento_aluno', $options);
-
-            $options = array('label' => 'Alojamento de professor', 'value' => $this->dependencia_alojamento_professor);
-            $this->inputsHelper()->checkbox('dependencia_alojamento_professor', $options);
 
             $options = array('label' => 'Área verde', 'value' => $this->dependencia_area_verde);
             $this->inputsHelper()->checkbox('dependencia_area_verde', $options);
@@ -1454,6 +1478,10 @@ class indice extends clsCadastro
         $tratamento_lixo = implode(',', $this->tratamento_lixo);
         $salas_funcionais = implode(',', $this->salas_funcionais);
         $salas_gerais = implode(',', $this->salas_gerais);
+        $banheiros = implode(',', $this->banheiros);
+        $laboratorios = implode(',', $this->laboratorios);
+        $salas_atividades = implode(',', $this->salas_atividades);
+        $dormitorios = implode(',', $this->dormitorios);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1548,24 +1576,17 @@ class indice extends clsCadastro
                     $obj->tratamento_lixo = $tratamento_lixo;
                     $obj->salas_funcionais = $salas_funcionais;
                     $obj->salas_gerais = $salas_gerais;
-                    $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-                    $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-                    $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+                    $obj->banheiros = $banheiros;
+                    $obj->laboratorios = $laboratorios;
+                    $obj->salas_atividades = $salas_atividades;
+                    $obj->dormitorios = $dormitorios;
                     $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
                     $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-                    $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
                     $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
                     $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
                     $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
                     $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
                     $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-                    $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-                    $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
                     $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
                     $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
                     $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
@@ -1723,24 +1744,17 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-            $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+            $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
+            $obj->salas_atividades = $salas_atividades;
+            $obj->dormitorios = $dormitorios;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
             $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
             $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
             $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
             $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
@@ -1871,6 +1885,10 @@ class indice extends clsCadastro
         $tratamento_lixo = implode(',', $this->tratamento_lixo);
         $salas_funcionais = implode(',', $this->salas_funcionais);
         $salas_gerais = implode(',', $this->salas_gerais);
+        $banheiros = implode(',', $this->banheiros);
+        $laboratorios = implode(',', $this->laboratorios);
+        $salas_atividades = implode(',', $this->salas_atividades);
+        $dormitorios = implode(',', $this->dormitorios);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
@@ -1934,24 +1952,17 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-            $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+            $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
+            $obj->salas_atividades = $salas_atividades;
+            $obj->dormitorios = $dormitorios;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
             $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
             $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
             $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
             $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
@@ -2041,24 +2052,17 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-            $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+            $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
+            $obj->salas_atividades = $salas_atividades;
+            $obj->dormitorios = $dormitorios;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
             $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
             $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
             $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
             $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
