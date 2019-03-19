@@ -127,8 +127,6 @@ class indice extends clsCadastro
     public $salas_gerais;
     public $banheiros;
     public $laboratorios;
-    public $dependencia_laboratorio_informatica;
-    public $dependencia_laboratorio_ciencias;
     public $dependencia_sala_aee;
     public $dependencia_quadra_coberta;
     public $dependencia_quadra_descoberta;
@@ -1179,12 +1177,6 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Laboratório de informática', 'value' => $this->dependencia_laboratorio_informatica);
-            $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
-
-            $options = array('label' => 'Laboratório de ciências', 'value' => $this->dependencia_laboratorio_ciencias);
-            $this->inputsHelper()->checkbox('dependencia_laboratorio_ciencias', $options);
-
             $options = array('label' => 'Sala de recursos multifuncionais para atendimento educacional especializado - AEE', 'value' => $this->dependencia_sala_aee);
             $this->inputsHelper()->checkbox('dependencia_sala_aee', $options);
 
@@ -1568,8 +1560,6 @@ class indice extends clsCadastro
                     $obj->salas_gerais = $salas_gerais;
                     $obj->banheiros = $banheiros;
                     $obj->laboratorios = $laboratorios;
-                    $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-                    $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
                     $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
                     $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
                     $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
@@ -1740,8 +1730,6 @@ class indice extends clsCadastro
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
             $obj->laboratorios = $laboratorios;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
@@ -1950,8 +1938,6 @@ class indice extends clsCadastro
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
             $obj->laboratorios = $laboratorios;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
@@ -2054,8 +2040,6 @@ class indice extends clsCadastro
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
             $obj->laboratorios = $laboratorios;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
             $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
             $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
