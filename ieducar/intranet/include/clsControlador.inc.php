@@ -1,6 +1,8 @@
 <?php
 
 use App\Exceptions\RedirectException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBanco.inc.php';
@@ -110,11 +112,17 @@ class clsControlador
 
     // solicita email para recuperação de senha, caso usuário ainda não tenha informado.
     if (!filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
-        throw new RedirectException('/module/Usuario/AlterarEmail');
+        throw new HttpResponseException(
+            new RedirectResponse('/module/Usuario/AlterarEmail')
+        );
     } elseif ($user['expired_password']) {
-        throw new RedirectException('/module/Usuario/AlterarSenha');
+        throw new HttpResponseException(
+            new RedirectResponse('/module/Usuario/AlterarSenha')
+        );
     } elseif (!empty($redirectTo)) {
-        throw new RedirectException($redirectTo);
+        throw new HttpResponseException(
+            new RedirectResponse($redirectTo)
+        );
     }
   }
 
