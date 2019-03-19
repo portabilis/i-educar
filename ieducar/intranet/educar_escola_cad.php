@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SalasAtividades;
 use iEducar\Modules\Educacenso\Model\SalasFuncionais;
@@ -133,6 +134,7 @@ class indice extends clsCadastro
     public $salas_atividades;
     public $dormitorios;
     public $areas_externas;
+    public $recursos_acessibilidade;
     public $dependencia_bercario;
     public $dependencia_vias_deficiente;
     public $dependencia_lavanderia;
@@ -430,6 +432,10 @@ class indice extends clsCadastro
 
         if (is_string($this->areas_externas)) {
             $this->areas_externas = explode(',', str_replace(array('{', "}"), '', $this->areas_externas));
+        }
+
+        if (is_string($this->recursos_acessibilidade)) {
+            $this->recursos_acessibilidade = explode(',', str_replace(array('{', "}"), '', $this->recursos_acessibilidade));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
@@ -1221,6 +1227,18 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'recursos_acessibilidade'];
+            $options = [
+                'label' => 'Recursos de acessibilidade',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->recursos_acessibilidade,
+                    'all_values' => RecursosAcessibilidade::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Berçário', 'value' => $this->dependencia_bercario);
             $this->inputsHelper()->checkbox('dependencia_bercario', $options);
 
@@ -1477,6 +1495,7 @@ class indice extends clsCadastro
         $salas_atividades = implode(',', $this->salas_atividades);
         $dormitorios = implode(',', $this->dormitorios);
         $areas_externas = implode(',', $this->areas_externas);
+        $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1520,6 +1539,11 @@ class indice extends clsCadastro
 
         if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
             return false;
         }
 
@@ -1576,6 +1600,7 @@ class indice extends clsCadastro
                     $obj->salas_atividades = $salas_atividades;
                     $obj->dormitorios = $dormitorios;
                     $obj->areas_externas = $areas_externas;
+                    $obj->recursos_acessibilidade = $recursos_acessibilidade;
                     $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
                     $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
                     $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
@@ -1739,6 +1764,7 @@ class indice extends clsCadastro
             $obj->salas_atividades = $salas_atividades;
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
+            $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
@@ -1875,6 +1901,7 @@ class indice extends clsCadastro
         $salas_atividades = implode(',', $this->salas_atividades);
         $dormitorios = implode(',', $this->dormitorios);
         $areas_externas = implode(',', $this->areas_externas);
+        $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
@@ -1893,6 +1920,11 @@ class indice extends clsCadastro
 
         if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
             return false;
         }
 
@@ -1943,6 +1975,7 @@ class indice extends clsCadastro
             $obj->salas_atividades = $salas_atividades;
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
+            $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
@@ -2038,6 +2071,7 @@ class indice extends clsCadastro
             $obj->salas_atividades = $salas_atividades;
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
+            $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
             $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
