@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Throwable;
-use App\Exceptions\RedirectException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -118,7 +117,7 @@ class LegacyController extends Controller
      *
      * @return void
      *
-     * @throws RedirectException
+     * @throws HttpResponseException
      * @throws HttpException
      * @throws Exception
      */
@@ -127,10 +126,11 @@ class LegacyController extends Controller
         try {
             require_once $filename;
             return;
-        } catch (RedirectException $exception) {
+        } catch (HttpResponseException $exception) {
 
-            // Para evitar a utilização de `header` e `die` é lançada uma
-            // exceção com a URL para onde a aplicação deve ser redirecionada.
+            // Para evitar encerrar a aplicação com `die` ou `exit`, é lançada
+            // uma exceção do tipo `HttpResponseException` com uma `Response`
+            // interna que será a resposta devolvida pela aplicação.
 
             throw $exception;
 
@@ -201,8 +201,9 @@ class LegacyController extends Controller
      *
      * @param string $filename
      *
-     * @return RedirectResponse|Response
+     * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     private function requireFileFromLegacy($filename)
@@ -212,16 +213,7 @@ class LegacyController extends Controller
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
         $this->loadLegacyBootstrapFile();
-
-        try {
-            $this->loadLegacyFile($filename);
-        } catch (RedirectException $exception) {
-            ob_end_clean();
-
-            return new RedirectResponse(
-                $exception->getUrl(), $exception->getCode()
-            );
-        }
+        $this->loadLegacyFile($filename);
 
         $content = ob_get_contents();
 
@@ -252,8 +244,9 @@ class LegacyController extends Controller
      *
      * @param string $uri
      *
-     * @return RedirectResponse|Response
+     * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function intranet($uri)
@@ -264,8 +257,9 @@ class LegacyController extends Controller
     /**
      * Load module route file and generate a response.
      *
-     * @return RedirectResponse|Response
+     * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function module()
@@ -278,8 +272,9 @@ class LegacyController extends Controller
      *
      * @param string $uri
      *
-     * @return RedirectResponse|Response
+     * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function modules($uri)

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace Tests\Unit\Services;
 
 use App\Services\CacheManager;
 use Illuminate\Support\Facades\Cache;
@@ -11,6 +11,7 @@ class CacheManagerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
         Cache::swap(new CacheManager(app()));
         Cache::flush();
     }

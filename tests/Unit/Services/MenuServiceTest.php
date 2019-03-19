@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace Tests\Unit\Services;
 
 use App\Models\LegacyMenu;
 use App\Models\LegacySubmenu;
@@ -66,5 +66,4 @@ class MenuServiceTest extends TestCase
         $this->assertTrue($result->contains($activeSubmenu->menu));
         $this->assertFalse($result->contains($inactiveSubmenu->menu));
     }
-
 }
