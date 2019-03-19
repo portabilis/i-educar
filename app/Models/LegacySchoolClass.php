@@ -82,7 +82,8 @@ class LegacySchoolClass extends Model
      */
     public function getVacanciesAttribute()
     {
-        $vacancies = $this->max_alunos - $this->enrollments()->where('ativo', 1)->count();
+        $enrollments = $this->enrollments()->where('ativo', 1)->count();
+        $vacancies = $this->max_aluno - $enrollments;
 
         return $vacancies > 0 ? $vacancies : 0;
     }
