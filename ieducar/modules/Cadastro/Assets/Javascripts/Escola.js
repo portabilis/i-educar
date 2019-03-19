@@ -137,19 +137,6 @@ $j(document.formcadastro).removeAttr('onsubmit');
 // bind events
 $submitButton.click(submitForm);
 
-$j('#marcar_todas_dependencias').click(
-    function(){
-        var check = $j('#marcar_todas_dependencias').is(':checked');
-        $arrayCheckDependencias.each(
-            function(idElement){
-                $j( '#' + idElement).prop("checked",check);
-                var on = check ? 'on' : '';
-                $j( '#' + idElement).val(on);
-            }
-        );
-    }
-);
-
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 $j('#local_funcionamento').on('change', function () {
@@ -282,13 +269,12 @@ if (!$j('#cnpj').is(':visible')){
 
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
   $j('#local_funcionamento').closest('tr').attr('id','tlocal_funcionamento');
-  $j('#marcar_todas_dependencias').closest('tr').attr('id','tmarcar_todas_dependencias');
   $j('#televisoes').closest('tr').attr('id','ttelevisoes');
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
-  linha_inicial_dependencia = $j('#tmarcar_todas_dependencias').index()-1;
+  linha_inicial_dependencia = $j('#tr_salas_gerais').index()-1;
   linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
