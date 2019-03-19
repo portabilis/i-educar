@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Educacenso\Model\Banheiros;
+use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -125,6 +126,7 @@ class indice extends clsCadastro
     public $salas_funcionais;
     public $salas_gerais;
     public $banheiros;
+    public $laboratorios;
     public $dependencia_laboratorio_informatica;
     public $dependencia_laboratorio_ciencias;
     public $dependencia_sala_aee;
@@ -418,6 +420,10 @@ class indice extends clsCadastro
 
         if (is_string($this->banheiros)) {
             $this->banheiros = explode(',', str_replace(array('{', "}"), '', $this->banheiros));
+        }
+
+        if (is_string($this->laboratorios)) {
+            $this->laboratorios = explode(',', str_replace(array('{', "}"), '', $this->laboratorios));
         }
 
         if (is_string($this->mantenedora_escola_privada)) {
@@ -1161,6 +1167,18 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'laboratorios'];
+            $options = [
+                'label' => 'Laboratorios',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->laboratorios,
+                    'all_values' => Laboratorios::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Laboratório de informática', 'value' => $this->dependencia_laboratorio_informatica);
             $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
 
@@ -1453,6 +1471,7 @@ class indice extends clsCadastro
         $salas_funcionais = implode(',', $this->salas_funcionais);
         $salas_gerais = implode(',', $this->salas_gerais);
         $banheiros = implode(',', $this->banheiros);
+        $laboratorios = implode(',', $this->laboratorios);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1548,6 +1567,7 @@ class indice extends clsCadastro
                     $obj->salas_funcionais = $salas_funcionais;
                     $obj->salas_gerais = $salas_gerais;
                     $obj->banheiros = $banheiros;
+                    $obj->laboratorios = $laboratorios;
                     $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
                     $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
                     $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
@@ -1719,6 +1739,7 @@ class indice extends clsCadastro
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
             $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
             $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
@@ -1863,6 +1884,7 @@ class indice extends clsCadastro
         $salas_funcionais = implode(',', $this->salas_funcionais);
         $salas_gerais = implode(',', $this->salas_gerais);
         $banheiros = implode(',', $this->banheiros);
+        $laboratorios = implode(',', $this->laboratorios);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
@@ -1927,6 +1949,7 @@ class indice extends clsCadastro
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
             $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
             $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
@@ -2030,6 +2053,7 @@ class indice extends clsCadastro
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
             $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
             $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
             $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
