@@ -135,7 +135,6 @@ class indice extends clsCadastro
     public $dormitorios;
     public $areas_externas;
     public $recursos_acessibilidade;
-    public $dependencia_nenhuma_relacionada;
     public $dependencia_numero_salas_existente;
     public $dependencia_numero_salas_utilizadas;
     public $total_funcionario;
@@ -1232,13 +1231,6 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $resources = array(null => 'Selecione',
-                1 => 'Sim',
-                2 => 'Não',
-                3 => 'Parcial');
-            $options = array('label' => 'Nenhuma das relacionadas', 'value' => $this->dependencia_nenhuma_relacionada);
-            $this->inputsHelper()->checkbox('dependencia_nenhuma_relacionada', $options);
-
             $options = array('label' => 'Número de salas de aula existentes na escola', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
             $this->inputsHelper()->integer('dependencia_numero_salas_existente', $options);
 
@@ -1585,7 +1577,6 @@ class indice extends clsCadastro
                     $obj->dormitorios = $dormitorios;
                     $obj->areas_externas = $areas_externas;
                     $obj->recursos_acessibilidade = $recursos_acessibilidade;
-                    $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
                     $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
                     $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
                     $obj->total_funcionario = $this->total_funcionario;
@@ -1746,7 +1737,6 @@ class indice extends clsCadastro
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
             $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
             $obj->total_funcionario = $this->total_funcionario;
@@ -1954,7 +1944,6 @@ class indice extends clsCadastro
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
             $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
             $obj->total_funcionario = $this->total_funcionario;
@@ -2049,7 +2038,6 @@ class indice extends clsCadastro
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
             $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
-            $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
             $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
             $obj->total_funcionario = $this->total_funcionario;
