@@ -135,6 +135,7 @@ class indice extends clsCadastro
     public $dormitorios;
     public $areas_externas;
     public $recursos_acessibilidade;
+    public $possui_dependencias;
     public $dependencia_numero_salas_existente;
     public $dependencia_numero_salas_utilizadas;
     public $total_funcionario;
@@ -1134,6 +1135,21 @@ class indice extends clsCadastro
                 ]
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
+                'label' => 'Possui dependências',
+                'label_hint' => 'Se preenchido com: Não, nenhuma dependência será exportada para o Censo escolar',
+                'resources' => $resources,
+                'value' => $this->possui_dependencias,
+                'required' => $obrigarCamposCenso,
+                'size' => 40
+            ];
+            $this->inputsHelper()->select('possui_dependencias', $options);
 
             $helperOptions = ['objectName' => 'salas_gerais'];
             $options = [
