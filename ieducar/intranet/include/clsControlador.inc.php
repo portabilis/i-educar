@@ -3,6 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBanco.inc.php';
@@ -103,6 +104,8 @@ class clsControlador
       'tipo_menu' => $user['tipo_menu'],
       'nivel' => $user['nivel'],
     ]);
+
+    Auth::loginUsingId(Session::get('id_pessoa'));
 
     Portabilis_Utils_User::logAccessFor($user['id'], $this->getClientIP());
     Portabilis_Utils_User::destroyStatusTokenFor($user['id'], 'redefinir_senha');
