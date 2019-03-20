@@ -62,6 +62,7 @@ class clsPmieducarMatriculaTurma
   var $etapa_educacenso;
   var $turma_unificada;
   var $remanejado;
+  var $turno_id;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -130,7 +131,7 @@ class clsPmieducarMatriculaTurma
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, mt.turno_id, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -337,6 +338,12 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
+      if(is_numeric($this->turno_id)){
+        $campos .= "{$gruda}turno_id";
+        $valores .= "{$gruda}'{$this->turno_id}'";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
       $detalhe = $this->detalhe();
@@ -438,13 +445,21 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
+      if (is_string($this->turno_id) && $this->turno_id == 0) {
+        $set .= "{$gruda}turno_id = NULL";
+        $gruda = ", ";
+      } elseif (is_string($this->turno_id) && !empty($this->turno_id)) {
+        $set .= "{$gruda}turno_id = '{$this->turno_id}'";
+        $gruda = ", ";
+      }
+
       if ($set) {
         $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
 
         $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
         $auditoria->alteracao($detalheAntigo, $this->detalhe());
-        
+
         return TRUE;
       }
     }
@@ -1462,6 +1477,25 @@ class clsPmieducarMatriculaTurma
     ");
   }
 
+
+  public function getMaiorDataEnturmacao(int $codMatricula)
+  {
+    $db = new clsBanco();
+
+    return $db->CampoUnico("
+        select
+            to_char(data_enturmacao, 'YYYY-MM-DD')
+        from
+            pmieducar.matricula_turma
+        where true
+            and ref_cod_matricula = $codMatricula
+            and data_enturmacao is not null
+        order by
+            data_enturmacao desc
+        limit 1
+    ");
+  }
+
  function getUltimaEnturmacao($ref_matricula){
     if (is_numeric($ref_matricula)){
       $db = new clsBanco();
@@ -1534,7 +1568,7 @@ class clsPmieducarMatriculaTurma
   }
 
   function marcaAlunoAbandono($data = null){
-    $data = implode( '-', array_reverse( explode( '/', $data ) ) );
+    $data =  $data ? implode( '-', array_reverse( explode( '/', $data ) ) ) : date('Y-m-d');
     if ($this->ref_cod_matricula && $this->sequencial){
         $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = true, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
@@ -1542,7 +1576,7 @@ class clsPmieducarMatriculaTurma
   }
 
   function marcaAlunoFalecido($data = null){
-    $data = implode( '-', array_reverse( explode( '/', $data ) ) );
+    $data =  $data ? implode( '-', array_reverse( explode( '/', $data ) ) ) : date('Y-m-d');
     if ($this->ref_cod_matricula && $this->sequencial){
         $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = false, reclassificado = false, falecido = true, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");

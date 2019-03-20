@@ -38,6 +38,9 @@ return [
 
     'path' => env('LEGACY_PATH', 'ieducar'),
 
+
+    'env' => env('LEGACY_ENV', 'development'),
+
     /*
     |--------------------------------------------------------------------------
     | Migrations
@@ -51,4 +54,6 @@ return [
     'migrations' => [
         database_path('migrations/extras'),
     ],
+
+    'env' => env('LEGACY_ENV', 'local'),
 ];

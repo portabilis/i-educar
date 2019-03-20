@@ -42,6 +42,7 @@ class clsPessoa_
     public function cadastra()
     {
         if ($this->nome && $this->tipo) {
+            $this->nome = $this->cleanUpName($this->nome);
             $this->nome = str_replace('\'', '\'\'', $this->nome);
             $campos = '';
             $valores = '';
@@ -88,6 +89,7 @@ class clsPessoa_
                 $gruda = ', ';
             }
             if ($this->nome || $this->nome==='') {
+                $this->nome = $this->cleanUpName($this->nome);
                 $this->nome = str_replace('\'', '\'\'', $this->nome);
                 $set .= "$gruda nome = '$this->nome' ";
                 $gruda = ', ';
@@ -203,12 +205,12 @@ class clsPessoa_
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $nome = strtolower($tupla['nome']);
+            $nome = mb_strtolower($tupla['nome']);
             $arrayNome = explode(' ', $nome);
             $nome ='';
             foreach ($arrayNome as $parte) {
                 if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
-                    $nome .= strtoupper(substr($parte, 0, 1)).substr($parte, 1).' ';
+                    $nome .= mb_strtoupper(mb_substr($parte, 0, 1)).mb_substr($parte, 1).' ';
                 } else {
                     $nome .= $parte.' ';
                 }
@@ -294,15 +296,15 @@ class clsPessoa_
             $db->Consulta("SELECT idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, situacao, origem_gravacao, email FROM cadastro.pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                $nome = strtolower($tupla['nome']);
+                $nome = mb_strtolower($tupla['nome']);
                 $arrayNome = explode(' ', $nome);
                 $arrNovoNome = [];
                 foreach ($arrayNome as $parte) {
                     if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
                         if ($parte != 's.a' && $parte != 'ltda') {
-                            $arrNovoNome[] = strtoupper(substr($parte, 0, 1)).substr($parte, 1);
+                            $arrNovoNome[] = mb_strtoupper(mb_substr($parte, 0, 1)).mb_substr($parte, 1);
                         } else {
-                            $arrNovoNome[] = strtoupper($parte);
+                            $arrNovoNome[] = mb_strtoupper($parte);
                         }
                     } else {
                         $arrNovoNome[] = $parte;
@@ -317,5 +319,12 @@ class clsPessoa_
         }
 
         return false;
+    }
+
+    protected function cleanUpName($name)
+    {
+        $name = preg_replace('/\s+/', ' ', $name);
+
+        return trim($name);
     }
 }

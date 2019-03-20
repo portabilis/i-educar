@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Support\View\SelectOptions;
+
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
@@ -86,7 +88,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
         $this->inputsHelper()->integer('id', $options);
 
         // Pessoa
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('pessoa')), 'required' => true];
+        $options = ['label' => $this->_getLabel('pessoa'), 'required' => true];
         $this->inputsHelper()->simpleSearchPessoa('nome', $options);
 
         // Montar o inputsHelper->select \/
@@ -101,7 +103,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
         // Rota
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('rota')),
+            'label' => $this->_getLabel('rota'),
             'required' => true,
             'resources' => $rota_resources
         ];
@@ -109,39 +111,28 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
         // Ponto de Embarque
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ponto')),
+            'label' => $this->_getLabel('ponto'),
             'required' => false,
             'resources' => ['' => 'Selecione uma rota acima']
         ];
         $this->inputsHelper()->select('ponto', $options);
 
         // Destino
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('destino')), 'required' => false];
+        $options = ['label' => $this->_getLabel('destino'), 'required' => false];
         $this->inputsHelper()->simpleSearchPessoaj('destino', $options);
 
         // observacoes
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')),
+            'label' => $this->_getLabel('observacao'),
             'required' => false,
             'size' => 50,
             'max_length' => 255
         ];
         $this->inputsHelper()->textArea('observacao', $options);
 
-        // turno
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('turno')), 'required' => false];
         $this->inputsHelper()->select('turno', [
             'required' => false,
-            'resources' => [
-                0 => 'Selecione',
-                1 => 'Matutino',
-                2 => 'Vespertino',
-                3 => 'Noturno',
-                4 => 'Integral',
-                5 => 'Matutino e vespertino',
-                6 => 'Matutino e noturno',
-                7 => 'Vespertino e noturno'
-            ]
+            'resources' => SelectOptions::transportPeriods(),
         ]);
 
         $this->loadResourceAssets($this->getDispatcher());

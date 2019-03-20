@@ -1,6 +1,8 @@
 <?php
 
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
+use iEducar\Support\Exceptions\Error;
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Service/Boletim.php';
@@ -184,6 +186,12 @@ class DiarioController extends ApiCoreController
         return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
     }
 
+    /**
+     * @return bool
+     *
+     * @throws CoreExt_Exception
+     * @throws MissingStagesException
+     */
     protected function postNotas()
     {
         if (! $this->canPostNotas()) {
@@ -223,14 +231,32 @@ class DiarioController extends ApiCoreController
 
                     $regra = $serviceBoletim->getRegra();
 
-                    if ($valorNota > $regra->notaMaximaGeral) {
+                    if ($etapa == 'Rc' && $valorNota > $regra->notaMaximaExameFinal) {
+                        $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
+                        $this->appendResponse('error', [
+                            'code' => Error::EXAM_SCORE_GREATER_THAN_MAX_ALLOWED,
+                            'message' => "A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.",
+                        ]);
+
+                        return false;
+                    }
+
+                    if ($etapa != 'Rc' && $valorNota > $regra->notaMaximaGeral) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.", 'error');
+                        $this->appendResponse('error', [
+                            'code' => Error::SCORE_GREATER_THAN_MAX_ALLOWED,
+                            'message' => "A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.",
+                        ]);
 
                         return false;
                     }
 
                     if ($valorNota < $regra->notaMinimaGeral) {
                         $this->messenger->append("A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}.", 'error');
+                        $this->appendResponse('error', [
+                            'code' => Error::SCORE_LESSER_THAN_MIN_ALLOWED,
+                            'message' => "A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}.",
+                        ]);
 
                         return false;
                     }
@@ -247,24 +273,9 @@ class DiarioController extends ApiCoreController
 
                     $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
-                    try {
-                        $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
-                            $etapa, $componenteCurricularId
-                        );
-                    } catch (MissingStagesException $exception) {
-                        $this->messenger->append($exception->getMessage(), 'error');
-                        $this->appendResponse('error', [
-                            'code' => $exception->getCode(),
-                            'message' => $exception->getMessage(),
-                            'extra' => $exception->getExtraInfo(),
-                        ]);
-
-                        return false;
-                    } catch (Exception $e) {
-                        $this->messenger->append($e->getMessage(), 'error');
-
-                        return false;
-                    }
+                    $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
+                        $etapa, $componenteCurricularId
+                    );
 
                     $serviceBoletim->addNota($nota);
 
@@ -409,6 +420,10 @@ class DiarioController extends ApiCoreController
         }
     }
 
+    /**
+     * @throws CoreExt_Exception
+     * @throws EvaluationRuleNotAllowGeneralAbsence
+     */
     protected function postFaltasGeral()
     {
         if ($this->canPostFaltasPorComponente()) {
@@ -420,19 +435,21 @@ class DiarioController extends ApiCoreController
                     $faltas = $faltaTurmaAluno['valor'];
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
-                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
-                        }
-
-                        $falta = new Avaliacao_Model_FaltaGeral([
-                            'quantidade' => $faltas,
-                            'etapa' => $etapa,
-                        ]);
-
-                        $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                        $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
+                    if (empty($matriculaId)) {
+                        continue;
                     }
+
+                    if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
+                        throw new EvaluationRuleNotAllowGeneralAbsence($turmaId);
+                    }
+
+                    $falta = new Avaliacao_Model_FaltaGeral([
+                        'quantidade' => $faltas,
+                        'etapa' => $etapa,
+                    ]);
+
+                    $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+                    $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
                 }
             }
 

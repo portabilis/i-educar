@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use App\Services\SchoolLevelsService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -103,6 +105,11 @@ class indice extends clsCadastro
     var $anos_letivos;
     var $componente_anos_letivos;
 
+    /**
+     * @var SchoolLevelsService
+     */
+    private $escolaSerieService;
+
     function Inicializar()
     {
         $retorno = 'Novo';
@@ -114,7 +121,7 @@ class indice extends clsCadastro
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $this->definirComponentePorEtapa = $this->_checkPermitirDefinirComponentesEtapa();
+        $this->escolaSerieService = app(SchoolLevelsService::class);
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7, 'educar_escola_serie_lst.php');
@@ -162,6 +169,22 @@ class indice extends clsCadastro
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
+
+        $regrasAvaliacao = $this->escolaSerieService->getEvaluationRules($this->ref_cod_serie);
+        $anosLetivos = [];
+        foreach ($regrasAvaliacao as $regraAvaliacao) {
+            $anosLetivos[$regraAvaliacao->pivot->ano_letivo] = $regraAvaliacao->pivot->ano_letivo;
+        }
+
+        arsort($anosLetivos);
+        $anoLetivoSelected = max($anosLetivos);
+
+        if (request('ano_letivo')) {
+            $anoLetivoSelected = request('ano_letivo');
+        }
+
+        $this->definirComponentePorEtapa = $this->escolaSerieService->levelAllowDefineDisciplinePerStage(
+            $this->ref_cod_serie, $anoLetivoSelected);
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $instituicao_desabilitado = true;
@@ -277,7 +300,7 @@ class indice extends clsCadastro
         $opcoes = array('' => 'Selecione');
 
         // Editar
-        $disciplinas = 'Nenhuma série selecionada';
+        $disciplinas = 'Nenhum ano letivo selecionado';
 
         if ($this->ref_cod_serie) {
             $disciplinas = '';
@@ -373,6 +396,19 @@ class indice extends clsCadastro
             } else {
                 $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
             }
+
+            $this->campoLista(
+                'ano_letivo',
+                'Ano letivo',
+                $anosLetivos,
+                $anoLetivoSelected,
+                '',
+                false,
+                'Usado para recuperar a regra de avalição que será usada para verificações dos campos abaixo',
+                '',
+                false,
+                false
+            );
         }
 
         $this->campoRotulo("disciplinas_", "Componentes curriculares", "<div id='disciplinas'>$disciplinas</div>");
@@ -609,22 +645,6 @@ class indice extends clsCadastro
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao excluir clsPmieducarEscolaSerie\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_escola_ ) && is_numeric( $this->ref_cod_serie_ ) && is_numeric( $this->pessoa_logada ) )\n-->";
         return false;
-    }
-
-    private function _checkPermitirDefinirComponentesEtapa()
-    {
-        if (isset($this->ref_cod_serie)) {
-            $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
-            $det_serie = $obj_serie->detalhe();
-            $regra_avaliacao_id = $det_serie["regra_avaliacao_id"];
-
-            if (isset($regra_avaliacao_id)) {
-                $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
-                $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
-            }
-        }
-
-        return ($regra_avaliacao->definirComponentePorEtapa == 1);
     }
 
     public function __construct()

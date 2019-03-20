@@ -34,7 +34,7 @@ class EscolaController extends ApiCoreController
     protected function createUpdateOrDestroyEducacensoEscola($escolaId)
     {
         $dataMapper = $this->getDataMapperFor('educacenso', 'escola');
-        
+
         $result = $this->deleteEntityOf($dataMapper, $escolaId);
         if (!empty($this->getRequest()->escola_inep_id)) {
             $data = [
@@ -142,16 +142,34 @@ class EscolaController extends ApiCoreController
         if ($this->canGetEtapasPorEscola()) {
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
 
-            $sql = 'SELECT ref_cod_escola as escola_id,
-                     ano as ano
-                FROM pmieducar.escola_ano_letivo
-               WHERE (CASE WHEN $1 = 0 THEN true ELSE ano = $1 END)
-                 AND andamento = 1
-               ORDER BY ref_cod_escola, ano';
+            $sql = '
+                select distinct 
+                    ref_cod_escola as escola_id,
+                    ano as ano, 
+                    m.nm_tipo as descricao
+                from pmieducar.escola_ano_letivo eal
+                inner join pmieducar.ano_letivo_modulo alm
+                    on true 
+                    and alm.ref_ano = eal.ano 
+                    and alm.ref_ref_cod_escola = eal.ref_cod_escola
+                inner join pmieducar.modulo m 
+                    on true 
+                    and m.cod_modulo = alm.ref_cod_modulo
+                where true 
+                    and (
+                        case when $1 = 0 then 
+                            true 
+                        else 
+                            ano = $1 
+                        end
+                    )
+                and andamento = 1
+                order by ref_cod_escola, ano
+            ';
 
             $anosLetivos = $this->fetchPreparedQuery($sql, [$ano]);
 
-            $attrs = ['escola_id', 'ano'];
+            $attrs = ['escola_id', 'ano', 'descricao'];
             $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
 
             foreach ($anosLetivos as $index => $anoLetivo) {
@@ -165,16 +183,17 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasAnoEscola($ano, $escola)
     {
-        $sql = 'SELECT data_inicio,
-                   data_fim
-              FROM pmieducar.ano_letivo_modulo
-             WHERE ref_ano = $1
-               AND ref_ref_cod_escola = $2
-          ORDER BY sequencial';
+        $sql = 'SELECT sequencial AS etapa,
+                       data_inicio,
+                       data_fim
+                  FROM pmieducar.ano_letivo_modulo
+                 WHERE ref_ano = $1
+                   AND ref_ref_cod_escola = $2
+              ORDER BY sequencial';
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql, [$ano, $escola]);
-        $attrs = ['data_inicio', 'data_fim'];
+        $attrs = ['etapa', 'data_inicio', 'data_fim'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs);
 
         return ['etapas' => $etapas];
@@ -182,16 +201,17 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasTurmasAnoEscola($ano, $escola)
     {
-        $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id
+        $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id, m.nm_tipo as descricao
               FROM pmieducar.turma_modulo tm
               INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
               INNER JOIN pmieducar.curso c on (c.cod_curso = t.ref_cod_curso)
+              inner join pmieducar.modulo m 
+              on m.cod_modulo = tm.ref_cod_modulo
             WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and c.padrao_ano_escolar = 0 and t.ativo = 1
           ORDER BY tm.ref_cod_turma';
 
-        $turmas = [];
         $turmas = $this->fetchPreparedQuery($sql_turmas, [$ano, $escola]);
-        $attrs_turmas = ['turma_id'];
+        $attrs_turmas = ['turma_id', 'descricao'];
         $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs_turmas);
 
         foreach ($turmas as $key => $turma) {
@@ -203,16 +223,20 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasTurma($ano, $escola, $turma)
     {
-        $sql_etapas = 'SELECT tm.data_inicio,
-                   tm.data_fim
-              FROM pmieducar.turma_modulo tm
-              INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
-            WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and tm.ref_cod_turma = $3
-          ORDER BY tm.ref_cod_turma';
+        $sql_etapas = 'SELECT tm.sequencial AS etapa,
+                              tm.data_inicio,
+                              tm.data_fim
+                         FROM pmieducar.turma_modulo AS tm
+                   INNER JOIN pmieducar.turma AS t
+                           ON tm.ref_cod_turma = t.cod_turma
+                        WHERE t.ano = $1
+                          AND t.ref_ref_cod_escola = $2
+                          AND tm.ref_cod_turma = $3
+                     ORDER BY tm.ref_cod_turma, tm.sequencial';
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql_etapas, [$ano, $escola, $turma]);
-        $attrs_etapas= ['data_inicio', 'data_fim'];
+        $attrs_etapas= ['etapa', 'data_inicio', 'data_fim'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs_etapas);
 
         return ['etapas' => $etapas];
@@ -466,6 +490,9 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasMultipleSearch()
     {
+        $cod_usuario = $this->getSession()->id_pessoa;
+        $permissao = new clsPermissoes();
+        $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
 
         $sql = 'SELECT cod_escola as id,
@@ -479,6 +506,14 @@ class EscolaController extends ApiCoreController
           where escola.ativo = 1
             and curso.ativo = 1
             and escola_curso.ativo = 1';
+
+        if (is_numeric($cod_usuario) && $nivel == App_Model_NivelTipoUsuario::ESCOLA) {
+            $escolas = $this->getEscolasUsuarios($cod_usuario);
+            if (! empty($escolas['escolas'])) {
+                $escolas = implode(", ", $escolas['escolas']);
+                $sql .= " and escola.cod_escola in ({$escolas})";
+            }
+        }
 
         if (is_numeric($cursoId)) {
             $sql .= ' and curso.cod_curso = $1';
@@ -518,9 +553,11 @@ class EscolaController extends ApiCoreController
         return $dependenciaAdministrativa;
     }
 
-    protected function getEscolasUsuarios()
+    protected function getEscolasUsuarios($ref_cod_usuario = null)
     {
-        $ref_cod_usuario = $this->getRequest()->id;
+        if (!$ref_cod_usuario) {
+            $ref_cod_usuario = $this->getRequest()->id;
+        }
 
         if (!$ref_cod_usuario) {
             return null;

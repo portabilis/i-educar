@@ -173,7 +173,8 @@ return [
         App\Providers\EventServiceProvider::class,
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        Tooleks\LaravelAssetVersion\Providers\AssetServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class
     ],
 
     /*
@@ -223,7 +224,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Asset' => Tooleks\LaravelAssetVersion\Facades\Asset::class,
     ],
 
     'trackerror' => env('APP_TRACK_ERROR', false),
+
+    'default_host' => env('APP_DEFAULT_HOST', 'ieducar.com.br'),
 ];

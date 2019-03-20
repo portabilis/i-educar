@@ -507,7 +507,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     public function breadcrumb($currentPage, $breadcrumbs = [])
     {
         $breadcrumb = new Breadcrumb();
-        $breadcrumb = $breadcrumb->makeBreadcrumb($currentPage, $breadcrumbs);
-        $this->locale = $breadcrumb;
+        $breadcrumb->makeBreadcrumb($currentPage, $breadcrumbs);
     }
 }

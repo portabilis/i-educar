@@ -309,3 +309,14 @@ submitButton.click(function(){
     }
   });
 })(jQuery);
+
+$j('#ano_letivo').change(function() {
+  var url = new URL(window.location.href);
+  var query_string = url.search;
+  var search_params = new URLSearchParams(query_string);
+
+  search_params.set('ano_letivo', $j(this).val());
+  url.search = search_params.toString();
+
+  window.location.href = url.toString();
+});

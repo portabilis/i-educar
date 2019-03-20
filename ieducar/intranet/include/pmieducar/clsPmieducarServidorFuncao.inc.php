@@ -216,27 +216,43 @@ class clsPmieducarServidorFuncao
      */
     function edita()
     {
-        if( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_cod_funcao ) )
-        {
+        $set = [];
 
-            $db = new clsBanco();
-            $set = "";
-
-            if (is_string($this->matricula)) {
-                $set  .= "{$gruda}matricula = '{$this->matricula}'";
-                $gruda = ', ';
-            }elseif(is_null($this->matricula)){
-                $set  .= "{$gruda}matricula = 'NULL'";
-                $gruda = ', ';
-            }
-
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_funcao = '{$this->ref_cod_funcao}'" );
-                return true;
-            }
+        if (empty($this->matricula)) {
+            $set[] = 'matricula = NULL';
+        } elseif (is_string($this->matricula)) {
+            $set[] = 'matricula = ' . $this->matricula;
         }
-        return false;
+
+        if (is_numeric($this->ref_cod_funcao)) {
+            $set[] = 'ref_cod_funcao = ' . $this->ref_cod_funcao;
+        }
+
+        $where = [];
+
+        if (is_numeric($this->cod_servidor_funcao)) {
+            $where[] = 'cod_servidor_funcao = ' . $this->cod_servidor_funcao;
+        } elseif (is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_cod_funcao)) {
+            $where[] = 'ref_ref_cod_instituicao = ' . $this->ref_ref_cod_instituicao;
+            $where[] = 'ref_cod_servidor = ' . $this->ref_cod_servidor;
+            $where[] = 'ref_cod_funcao = ' . $this->ref_cod_funcao;
+        }
+
+        if (empty($set) || empty($where)) {
+            return false;
+        }
+
+        $db = new clsBanco();
+        $sql = sprintf(
+            'UPDATE %s SET %s WHERE %s;',
+            $this->_tabela,
+            join(', ', $set),
+            join(' AND ', $where)
+        );
+
+        $db->Consulta($sql);
+
+        return true;
     }
 
     /**
@@ -354,21 +370,36 @@ class clsPmieducarServidorFuncao
      */
     function existe()
     {
-        if(is_numeric($this->cod_servidor_funcao)){
-            $sql = sprintf(
-        "SELECT 1 FROM %s WHERE cod_servidor_funcao = '%d'",
-        $this->_tabela, $this->cod_servidor_funcao
-      );
-        } elseif( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_cod_funcao ) )
-        {
+        $sql = '';
 
-            $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_funcao = '{$this->ref_cod_funcao}'" );
-            if( $db->ProximoRegistro() )
-            {
-                return true;
-            }
+        if (is_numeric($this->cod_servidor_funcao)) {
+            $sql = sprintf(
+                "SELECT 1 FROM %s WHERE cod_servidor_funcao = '%d'",
+                $this->_tabela,
+                $this->cod_servidor_funcao
+            );
+        } elseif (is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_cod_funcao)) {
+            $sql = sprintf(
+                "SELECT 1 FROM %s WHERE ref_ref_cod_instituicao = '%d' AND ref_cod_servidor = '%d' AND ref_cod_funcao = '%d'",
+                $this->_tabela,
+                $this->ref_ref_cod_instituicao,
+                $this->ref_cod_servidor,
+                $this->ref_cod_funcao
+            );
         }
+
+        if ($sql === '') {
+            return false;
+        }
+
+        $db = new clsBanco();
+
+        $db->Consulta($sql);
+
+        if ($db->ProximoRegistro()) {
+            return true;
+        }
+
         return false;
     }
 
