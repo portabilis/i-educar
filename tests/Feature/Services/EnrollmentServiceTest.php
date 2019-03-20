@@ -46,7 +46,7 @@ class EnrollmentServiceTest extends TestCase
     {
         $enrollment = factory(LegacyEnrollment::class)->create();
 
-        $result = $this->service->cancelEnrollment($enrollment->id, Carbon::now());
+        $result = $this->service->cancelEnrollment($enrollment, Carbon::now());
 
         $this->assertTrue($result);
         $this->assertDatabaseHas($enrollment->getTable(), [
@@ -70,7 +70,7 @@ class EnrollmentServiceTest extends TestCase
 
         $enrollment = factory(LegacyEnrollment::class)->create();
 
-        $this->service->cancelEnrollment($enrollment->id, Carbon::now()->subDay(1));
+        $this->service->cancelEnrollment($enrollment, Carbon::now()->subDay(1));
     }
 
     /**
@@ -141,7 +141,7 @@ class EnrollmentServiceTest extends TestCase
 
         $enrollment = factory(LegacyEnrollment::class)->create();
 
-        $this->service->cancelEnrollment($enrollment->id, Carbon::now());
+        $this->service->cancelEnrollment($enrollment, Carbon::now());
 
         $this->service->enroll(
             $enrollment->registration, $enrollment->schoolClass, Carbon::now()->subDay(1)

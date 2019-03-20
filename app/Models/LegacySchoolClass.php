@@ -13,19 +13,19 @@ use Illuminate\Support\Facades\DB;
 /**
  * LegacySchoolClass
  *
- * @property int              $id
- * @property string           $name
- * @property int              $year
- * @property int              $school_id
- * @property int              $course_id
- * @property int              $grade_id
- * @property int              $vacancies
- * @property DateTime         $begin_academic_year
- * @property DateTime         $end_academic_year
- * @property LegacyCourse     $course
- * @property LegacyLevel      $grade
- * @property LegacySchool     $school
- * @property LegacyEnrollment $enrollments
+ * @property int                $id
+ * @property string             $name
+ * @property int                $year
+ * @property int                $school_id
+ * @property int                $course_id
+ * @property int                $grade_id
+ * @property int                $vacancies
+ * @property DateTime           $begin_academic_year
+ * @property DateTime           $end_academic_year
+ * @property LegacyCourse       $course
+ * @property LegacyLevel        $grade
+ * @property LegacySchool       $school
+ * @property LegacyEnrollment[] $enrollments
  */
 class LegacySchoolClass extends Model
 {
@@ -214,7 +214,7 @@ class LegacySchoolClass extends Model
      */
     public function getActiveEnrollments()
     {
-        return self::query()
+        return $this->enrollments()
             ->with([
                 'registration' => function ($query) {
                     /** @var Builder $query */
@@ -223,7 +223,6 @@ class LegacySchoolClass extends Model
                     $query->with('student.person');
                 }
             ])
-            ->where('ref_cod_turma', $this->id)
             ->where('ativo', 1)
             ->orderBy('sequencial_fechamento')
             ->get();

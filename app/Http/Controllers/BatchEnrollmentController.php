@@ -100,19 +100,19 @@ class BatchEnrollmentController extends Controller
         EnrollmentService $enrollmentService
     ) {
         $date = Carbon::createFromFormat('d/m/Y', $request->input('date'));
-        $items = $request->input('enrollments', []);
+        $enrollmentsIds = $request->input('enrollments', []);
 
         $fails = new MessageBag();
         $success = new MessageBag();
 
         $enrollments = $schoolClass->getActiveEnrollments();
 
-        foreach ($items as $enrollment) {
+        foreach ($enrollmentService->findAll($enrollmentsIds) as $enrollment) {
             try {
                 $enrollmentService->cancelEnrollment($enrollment, $date);
-                $success->add($enrollment, 'Aluno desenturmado.');
+                $success->add($enrollment->id, 'Aluno desenturmado.');
             } catch (Throwable $throwable) {
-                $fails->add($enrollment, $throwable->getMessage());
+                $fails->add($enrollment->id, $throwable->getMessage());
             }
         }
 
@@ -153,7 +153,7 @@ class BatchEnrollmentController extends Controller
         RegistrationService $registrationService
     ) {
         $date = Carbon::createFromFormat('d/m/Y', $request->input('date'));
-        $items = $request->input('registrations', []);
+        $registrationsIds = $request->input('registrations', []);
 
         $fails = new MessageBag();
         $success = new MessageBag();
@@ -164,7 +164,7 @@ class BatchEnrollmentController extends Controller
             return $registration->student->person->name;
         });
 
-        foreach ($registrationService->findAll($items) as $registration) {
+        foreach ($registrationService->findAll($registrationsIds) as $registration) {
             try {
                 $enrollmentService->enroll($registration, $schoolClass, $date);
                 $success->add($registration->id, 'Aluno enturmado.');

@@ -13,6 +13,7 @@ use App\Models\LegacyUser;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 use Throwable;
 
 class EnrollmentService
@@ -48,10 +49,22 @@ class EnrollmentService
     }
 
     /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function findAll(array $ids)
+    {
+        return LegacyEnrollment::query()
+            ->whereIn('id', $ids)
+            ->get();
+    }
+
+    /**
      * Cancela uma enturmação.
      *
-     * @param int      $enrollment ID da enturmação
-     * @param DateTime $date       Data do cancelamento
+     * @param LegacyEnrollment $enrollment ID da enturmação
+     * @param DateTime         $date       Data do cancelamento
      *
      * @return bool
      *
@@ -59,10 +72,8 @@ class EnrollmentService
      * @throws ModelNotFoundException
      * @throws Throwable
      */
-    public function cancelEnrollment($enrollment, $date)
+    public function cancelEnrollment(LegacyEnrollment $enrollment, DateTime $date)
     {
-        $enrollment = $this->find($enrollment);
-
         if ($date < $enrollment->date) {
             throw new PreviousCancellationDateException($enrollment, $date);
         }
@@ -77,7 +88,7 @@ class EnrollmentService
     /**
      * @param LegacyRegistration $registration
      * @param LegacySchoolClass  $schoolClass
-     * @param Carbon             $date
+     * @param DateTime           $date
      *
      * @return LegacyEnrollment
      *
@@ -88,7 +99,7 @@ class EnrollmentService
     public function enroll(
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass,
-        Carbon $date
+        DateTime $date
     ) {
         if (empty($schoolClass->vacancies)) {
             throw new NoVacancyException($schoolClass);
