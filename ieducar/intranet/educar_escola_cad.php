@@ -2046,8 +2046,6 @@ class indice extends clsCadastro
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
-            $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -2273,7 +2271,6 @@ class indice extends clsCadastro
         }
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
-                $this->validaSalasExistentes() &&
                 $this->validaPossuiBandaLarga() &&
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
@@ -2286,15 +2283,6 @@ class indice extends clsCadastro
     {
         if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
-            return FALSE;
-        }
-        return TRUE;
-    }
-
-    protected function validaSalasExistentes()
-    {
-        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && ((int) $this->dependencia_numero_salas_existente) <= 0) {
-            $this->mensagem = 'O campo: Número de salas de aula existentes na escola, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
         return TRUE;
