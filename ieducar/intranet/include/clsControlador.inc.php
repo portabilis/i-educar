@@ -1,8 +1,8 @@
 <?php
 
-use App\Exceptions\RedirectException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBanco.inc.php';
@@ -190,10 +190,11 @@ class clsControlador
         $templateText = str_replace("<!-- #&SUSPENSO&# -->", $msgSuspensao, $templateText);
     }
 
-    Session::save();
-
     fclose($templateFile);
-    die($templateText);
+
+    throw new HttpResponseException(
+      new Response($templateText)
+    );
   }
 
   protected function destroyLoginSession($addMsg = false) {
