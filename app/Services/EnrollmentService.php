@@ -9,7 +9,7 @@ use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyUser;
+use App\User;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,14 +19,14 @@ use Throwable;
 class EnrollmentService
 {
     /**
-     * @var LegacyUser
+     * @var User
      */
     private $user;
 
     /**
-     * @param LegacyUser $user
+     * @param User $user
      */
-    public function __construct(LegacyUser $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -37,7 +38,15 @@ class LegacyUser extends EloquentBaseModel implements Transformable
     protected $fillable = [];
 
     /**
-     * @return LegacyUserType
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_usuario;
+    }
+
+    /**
+     * @return BelongsTo
      */
     public function type()
     {

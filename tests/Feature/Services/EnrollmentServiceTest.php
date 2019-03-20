@@ -9,6 +9,7 @@ use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyUser;
 use App\Services\EnrollmentService;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -31,6 +32,8 @@ class EnrollmentServiceTest extends TestCase
         parent::setUp();
 
         $user = factory(LegacyUser::class)->state('unique')->make();
+
+        $user = User::find($user->id);
 
         $this->service = new EnrollmentService($user);
     }
