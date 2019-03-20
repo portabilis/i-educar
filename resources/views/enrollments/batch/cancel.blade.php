@@ -54,7 +54,7 @@
         @if($success->count() == 1)
             <div class="alert-success">Foi desenturmado 1 aluno.</div>
         @elseif($success->count())
-            <div class="alert-success">Foram desenturmados {{ $success->count() }} aluno.</div>
+            <div class="alert-success">Foram desenturmados {{ $success->count() }} alunos.</div>
         @endif
 
         @if($fails->count() == 1)
