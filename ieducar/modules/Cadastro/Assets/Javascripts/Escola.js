@@ -1,35 +1,6 @@
 var $submitButton      = $j('#btn_enviar');
 var $escolaInepIdField = $j('#escola_inep_id');
 var $escolaIdField     = $j('#cod_escola');
-var $arrayCheckDependencias = ['dependencia_sala_diretoria',
-                               'dependencia_sala_professores',
-                               'dependencia_sala_secretaria',
-                               'dependencia_laboratorio_informatica',
-                               'dependencia_laboratorio_ciencias',
-                               'dependencia_sala_aee',
-                               'dependencia_quadra_coberta',
-                               'dependencia_quadra_descoberta',
-                               'dependencia_cozinha',
-                               'dependencia_biblioteca',
-                               'dependencia_sala_leitura',
-                               'dependencia_parque_infantil',
-                               'dependencia_bercario',
-                               'dependencia_banheiro_fora',
-                               'dependencia_banheiro_dentro',
-                               'dependencia_banheiro_infantil',
-                               'dependencia_banheiro_deficiente',
-                               'dependencia_banheiro_chuveiro',
-                               'dependencia_vias_deficiente',
-                               'dependencia_refeitorio',
-                               'dependencia_dispensa',
-                               'dependencia_aumoxarifado',
-                               'dependencia_auditorio',
-                               'dependencia_patio_coberto',
-                               'dependencia_patio_descoberto',
-                               'dependencia_alojamento_aluno',
-                               'dependencia_alojamento_professor',
-                               'dependencia_area_verde',
-                               'dependencia_lavanderia'];
 
 const DEPENDENCIA_ADMINISTRATIVA = {
   FEDERAL: 1,
@@ -429,15 +400,6 @@ $j(document).ready(function() {
       $j('#mantenedora_escola_privada').makeRequired();
     }
   }
-
-  $j('#dependencia_numero_salas_existente').on('change', () => {
-    if ($j('#dependencia_numero_salas_existente').val() && ! parseInt($j('#dependencia_numero_salas_existente').val()) > 0) {
-      messageUtils.error('O campo: Número de salas de aula existentes na escola, deve ser preenchido com um número maior que zero.');
-      $j('#dependencia_numero_salas_existente').val('').focus().addClass('error');
-    } else {
-      $j('#dependencia_numero_salas_existente').removeClass('error');
-    }
-  });
 
   $j('#dependencia_administrativa').change(
     function (){
