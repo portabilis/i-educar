@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use DateTime;
 use Throwable;
 use App\Exceptions\Enrollment\PreviousCancellationDateException;
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolClass;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Builder;
@@ -90,6 +93,29 @@ class EnrollmentService
             ->where('ref_cod_turma', $schoolClass)
             ->where('ativo', 1)
             ->orderBy('sequencial_fechamento')
+            ->get();
+    }
+
+    public function getRegistrationsNotEnrolled($schoolClass)
+    {
+        $schoolClass = LegacySchoolClass::findOrFail($schoolClass);
+
+        return LegacyRegistration::query()
+            ->with('student.person', 'lastEnrollment')
+            ->where('ref_cod_curso', $schoolClass->course_id)
+            ->where('ref_ref_cod_serie', $schoolClass->grade_id)
+            ->where('ref_ref_cod_escola', $schoolClass->school_id)
+            ->where('ativo', 1)
+            ->where('ultima_matricula', 1)
+            ->where('ano', $schoolClass->year)
+            ->whereIn('aprovado', [1, 2, 3])
+            ->whereDoesntHave('enrollments', function (Builder $query) use ($schoolClass) {
+                $query->where('ativo', 1);
+                $query->whereHas('schoolClass', function (Builder $query) use ($schoolClass) {
+                    $query->where('ref_ref_cod_escola', $schoolClass->school_id);
+                    $query->where('ativo', 1);
+                });
+            })
             ->get();
     }
 }

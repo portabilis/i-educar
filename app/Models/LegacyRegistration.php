@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacyRegistration extends Model
 {
@@ -25,9 +27,24 @@ class LegacyRegistration extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $dates = [
+        'data_matricula'
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_matricula;
+    }
 
     /**
      * Relação com o aluno.
@@ -37,5 +54,25 @@ class LegacyRegistration extends Model
     public function student()
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function enrollments()
+    {
+        return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function lastEnrollment()
+    {
+        $hasOne = $this->hasOne(LegacyEnrollment::class, 'ref_cod_matricula');
+
+        $hasOne->getQuery()->orderByDesc('sequencial');
+
+        return $hasOne;
     }
 }

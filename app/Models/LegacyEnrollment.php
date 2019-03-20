@@ -43,7 +43,7 @@ class LegacyEnrollment extends Model
      * @var array
      */
     protected $dates = [
-        'data_enturmacao'
+        'data_enturmacao', 'data_exclusao'
     ];
 
     /**

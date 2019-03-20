@@ -17,7 +17,11 @@ Route::redirect('/', 'intranet/index.php');
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer']], function () {
 
-    Route::get('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@index');
+    Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll');
+    Route::post('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@enroll')
+        ->name('enrollments.batch.enroll');
+
+    Route::get('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelEnrollments');
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
         ->name('enrollments.batch.cancel');
 

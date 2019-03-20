@@ -80,6 +80,22 @@ class LegacySchoolClass extends Model
     /**
      * @return int
      */
+    public function getCourseIdAttribute()
+    {
+        return $this->ref_cod_curso;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGradeIdAttribute()
+    {
+        return $this->ref_ref_cod_serie;
+    }
+
+    /**
+     * @return int
+     */
     public function getVacanciesAttribute()
     {
         $enrollments = $this->enrollments()->where('ativo', 1)->count();

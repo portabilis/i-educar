@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchEnrollmentRequest;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Services\EnrollmentService;
 use Carbon\Carbon;
@@ -49,7 +51,7 @@ class BatchEnrollmentController extends Controller
      *
      * @return View
      */
-    public function index(
+    public function indexCancelEnrollments(
         LegacySchoolClass $schoolClass,
         EnrollmentService $enrollmentService
     ) {
@@ -94,5 +96,29 @@ class BatchEnrollmentController extends Controller
         }
 
         return $this->view($schoolClass, $enrollments, $fails, $success);
+    }
+
+    /**
+     * @param LegacySchoolClass $schoolClass
+     * @param EnrollmentService $enrollmentService
+     *
+     * @return View
+     */
+    public function indexEnroll(
+        LegacySchoolClass $schoolClass,
+        EnrollmentService $enrollmentService
+    ) {
+        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass->id);
+
+        $registrations = $registrations->sortBy(function ($registration) {
+            return $registration->student->person->name;
+        });
+
+        return view('enrollments.batch.enroll', [
+            'registrations' => $registrations,
+            'schoolClass' => $schoolClass,
+            'fails' => $fails ?? new MessageBag(),
+            'success' => $success ?? new MessageBag(),
+        ]);
     }
 }
