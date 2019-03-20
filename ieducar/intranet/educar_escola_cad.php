@@ -1501,6 +1501,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaCampoPossuiDependencias()) {
+            return false;
+        }
+
         if (!$this->validaCamposCenso()) {
             return false;
         }
@@ -1854,6 +1858,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaLatitudeLongitude()) {
+            return false;
+        }
+
+        if (!$this->validaCampoPossuiDependencias()) {
             return false;
         }
 
@@ -2536,6 +2544,32 @@ class indice extends clsCadastro
         $arrayCamposSemNulos = array_filter($arrayCampos);
         if (count(array_unique($arrayCamposSemNulos)) < count($arrayCamposSemNulos)) {
             $this->mensagem = "Os códigos Inep's das escolas compartilhadas devem ser diferentes entre si.";
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaCampoPossuiDependencias()
+    {
+        if ($this->possui_dependencias != 1) {
+            return true;
+        }
+
+        $arrayCampos = array_filter(
+            [
+                $this->salas_gerais,
+                $this->salas_funcionais,
+                $this->banheiros,
+                $this->laboratorios,
+                $this->salas_atividades,
+                $this->dormitorios,
+                $this->areas_externas,
+            ]
+        );
+
+        if (count($arrayCampos) == 0) {
+            $this->mensagem = 'Preencha pelo menos um dos campos de Salas gerais à Áreas externas';
             return false;
         }
 
