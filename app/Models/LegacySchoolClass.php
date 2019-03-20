@@ -11,7 +11,19 @@ use Illuminate\Support\Facades\DB;
 /**
  * LegacySchoolClass
  *
- * @property LegacySchool $school
+ * @property int              $id
+ * @property string           $name
+ * @property int              $year
+ * @property int              $school_id
+ * @property int              $course_id
+ * @property int              $grade_id
+ * @property int              $vacancies
+ * @property DateTime         $begin_academic_year
+ * @property DateTime         $end_academic_year
+ * @property LegacyCourse     $course
+ * @property LegacyLevel      $grade
+ * @property LegacySchool     $school
+ * @property LegacyEnrollment $enrollments
  */
 class LegacySchoolClass extends Model
 {
@@ -98,7 +110,12 @@ class LegacySchoolClass extends Model
      */
     public function getVacanciesAttribute()
     {
-        $enrollments = $this->enrollments()->where('ativo', 1)->count();
+        $enrollments = $this->enrollments()
+            ->where('ativo', 1)
+            ->whereHas('registration', function ($query) {
+                $query->where('dependencia', false);
+            })->count();
+
         $vacancies = $this->max_aluno - $enrollments;
 
         return $vacancies > 0 ? $vacancies : 0;
@@ -118,7 +135,7 @@ class LegacySchoolClass extends Model
                 ->orderBy('sequencial')
                 ->first();
 
-            return (new DateTime($stage->data_inicio))->format('d/m/Y');
+            return new DateTime($stage->data_inicio);
         }
 
         $stage = DB::table('pmieducar.turma_modulo')
@@ -126,7 +143,7 @@ class LegacySchoolClass extends Model
             ->orderBy('sequencial')
             ->first();
 
-        return (new DateTime($stage->data_inicio))->format('d/m/Y');
+        return new DateTime($stage->data_inicio);
     }
 
     /**
@@ -143,7 +160,7 @@ class LegacySchoolClass extends Model
                 ->orderByDesc('sequencial')
                 ->first();
 
-            return (new DateTime($stage->data_fim))->format('d/m/Y');
+            return new DateTime($stage->data_fim);
         }
 
         $stage = DB::table('pmieducar.turma_modulo')
@@ -151,7 +168,7 @@ class LegacySchoolClass extends Model
             ->orderByDesc('sequencial')
             ->first();
 
-        return (new DateTime($stage->data_fim))->format('d/m/Y');
+        return new DateTime($stage->data_fim);
     }
 
     /**

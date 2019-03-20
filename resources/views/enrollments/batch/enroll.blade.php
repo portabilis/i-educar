@@ -41,7 +41,7 @@
                 </tr>
                 <tr id="tr_ano">
                     <td class="formmdtd" valign="top"><span class="form">Período de enturmação:</span></td>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year }} à {{ $schoolClass->end_academic_year }}</span></td>
+                    <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
                 </tr>
             </tbody>
         </table>
@@ -68,7 +68,7 @@
         @endif
 
         <p>
-            <div><span class="text-muted">A data da enturmação deve ser entre:</span> <strong>{{ $schoolClass->begin_academic_year }}</strong> e <strong>{{ $schoolClass->end_academic_year }}</strong><span class="text-muted">, maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span></div>
+            <div><span class="text-muted">A data da enturmação deve ser entre:</span> <strong>{{ $schoolClass->begin_academic_year->format('d/m/Y') }}</strong> e <strong>{{ $schoolClass->end_academic_year->format('d/m/Y') }}</strong><span class="text-muted">, maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span></div>
         </p>
 
         <div class="form-row">
