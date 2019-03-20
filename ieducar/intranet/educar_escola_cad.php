@@ -136,8 +136,6 @@ class indice extends clsCadastro
     public $areas_externas;
     public $recursos_acessibilidade;
     public $possui_dependencias;
-    public $dependencia_numero_salas_existente;
-    public $dependencia_numero_salas_utilizadas;
     public $total_funcionario;
     public $atendimento_aee;
     public $atividade_complementar;
@@ -1247,12 +1245,6 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Número de salas de aula existentes na escola', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
-            $this->inputsHelper()->integer('dependencia_numero_salas_existente', $options);
-
-            $options = array('label' => 'Número de salas utilizadas como sala de aula - Dentro e fora do prédio', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('dependencia_numero_salas_utilizadas', $options);
-
             $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('televisoes', $options);
 
@@ -1597,8 +1589,6 @@ class indice extends clsCadastro
                     $obj->dormitorios = $dormitorios;
                     $obj->areas_externas = $areas_externas;
                     $obj->recursos_acessibilidade = $recursos_acessibilidade;
-                    $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-                    $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
                     $obj->total_funcionario = $this->total_funcionario;
                     $obj->atendimento_aee = $this->atendimento_aee;
                     $obj->atividade_complementar = $this->atividade_complementar;
@@ -1757,8 +1747,6 @@ class indice extends clsCadastro
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-            $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -1968,8 +1956,6 @@ class indice extends clsCadastro
             $obj->dormitorios = $dormitorios;
             $obj->areas_externas = $areas_externas;
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-            $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -2062,8 +2048,6 @@ class indice extends clsCadastro
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
             $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
-            $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-            $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
