@@ -88,7 +88,7 @@
         <table class="table-default">
             <thead>
             <tr>
-                <th width="25"><label><input type="checkbox"></label></th>
+                <th width="25"><label><input class="enrollment-check-master" type="checkbox"></label></th>
                 <th width="100">Matrícula</th>
                 <th>Nome</th>
                 <th>Data da enturmação</th>
@@ -103,6 +103,7 @@
                                 <input type="checkbox"
                                        name="enrollments[{{ $enrollment->id }}]"
                                        value="{{ $enrollment->id }}"
+                                       class="enrollment-check"
                                        {{ old('enrollments.' . $enrollment->id) ? 'checked' : '' }}
                                        {{ $success->first($enrollment->id) ? 'disabled' : '' }} />
                             </label>
@@ -113,6 +114,13 @@
                         <td>{{ $success->first($enrollment->id) }} {{ $fails->first($enrollment->id) }}</td>
                     </tr>
                 @endforeach
+                @if($enrollments->isEmpty())
+                    <tr>
+                        <td>
+                        </td>
+                        <td colspan="4">Esta turma não possui nenhum aluno enturmado.</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
 
@@ -120,7 +128,7 @@
 
         <div style="text-align: center">
             <button class="btn-green" type="submit">Desenturmar</button>
-            <button class="btn" type="button">Selecionar Todos</button>
+            <button class="btn enrollment-btn-check" type="button">Selecionar Todos</button>
             <button class="btn" type="button">Cancelar</button>
         </div>
 
@@ -232,5 +240,26 @@
             border-color: #cddce6 !important;
         }
     </style>
+
+    <script>
+        $j(document).ready(function () {
+            $j('.enrollment-check-master').change(function () {
+                if ($j(this).prop('checked')) {
+                    $j('.enrollment-check').prop('checked', true);
+                } else {
+                    $j('.enrollment-check').prop('checked', false);
+                }
+            });
+            $j('.enrollment-check').change(function () {
+                if ($j(this).prop('checked') === false) {
+                    $j('.enrollment-check-master').prop('checked', false);
+                }
+            });
+            $j('.enrollment-btn-check').click(function () {
+                $j('.enrollment-check-master').prop('checked', true);
+                $j('.enrollment-check').prop('checked', true);
+            });
+        });
+    </script>
 
 @endsection
