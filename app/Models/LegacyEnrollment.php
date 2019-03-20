@@ -60,6 +60,14 @@ class LegacyEnrollment extends Model
     }
 
     /**
+     * @return DateTime
+     */
+    public function getDateDepartedAttribute()
+    {
+        return $this->data_exclusao;
+    }
+
+    /**
      * @return string
      */
     public function getStudentNameAttribute()

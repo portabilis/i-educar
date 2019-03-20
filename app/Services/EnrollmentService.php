@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
+use App\Exceptions\Enrollment\NoVacancyException;
+use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Support\Facades\Session;
 use Throwable;
 use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Models\LegacyRegistration;
@@ -74,6 +78,47 @@ class EnrollmentService
     }
 
     /**
+     * @param LegacyRegistration $registration
+     * @param LegacySchoolClass  $schoolClass
+     * @param Carbon             $date
+     *
+     * @return LegacyEnrollment
+     */
+    public function enroll(
+        LegacyRegistration $registration,
+        LegacySchoolClass $schoolClass,
+        Carbon $date
+    ) {
+        if (empty($schoolClass->vacancies)) {
+            throw new NoVacancyException($schoolClass);
+        }
+
+        $existsActiveEnrollment = $registration->enrollments()
+            ->where('ativo', 1)
+            ->where('ref_cod_turma', $schoolClass->id)
+            ->count();
+
+        if ($existsActiveEnrollment) {
+            throw new ExistsActiveEnrollmentException($registration);
+        }
+
+        if ($registration->lastEnrollment && $registration->lastEnrollment->date_departed > $date) {
+            throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
+        }
+
+        /** @var LegacyEnrollment $enrollment */
+        $enrollment = $registration->enrollments()->create([
+            'ref_cod_turma' => $schoolClass->id,
+            'sequencial' => $registration->enrollments()->max('sequencial') + 1,
+            'ref_usuario_cad' => Session::get('id_pessoa'),
+            'data_cadastro' => Carbon::now(),
+            'data_enturmacao' => $date,
+        ]);
+
+        return $enrollment;
+    }
+
+    /**
      * @param int $schoolClass
      * @param int $academicYear
      *
@@ -96,6 +141,11 @@ class EnrollmentService
             ->get();
     }
 
+    /**
+     * @param int $schoolClass
+     *
+     * @return Builder[]|Collection
+     */
     public function getRegistrationsNotEnrolled($schoolClass)
     {
         $schoolClass = LegacySchoolClass::findOrFail($schoolClass);

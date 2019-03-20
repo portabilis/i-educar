@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchEnrollmentRequest;
-use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Services\EnrollmentService;
+use App\Services\RegistrationService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\MessageBag;
@@ -119,6 +119,49 @@ class BatchEnrollmentController extends Controller
             'schoolClass' => $schoolClass,
             'fails' => $fails ?? new MessageBag(),
             'success' => $success ?? new MessageBag(),
+        ]);
+    }
+
+    /**
+     * @param BatchEnrollmentRequest $request
+     * @param LegacySchoolClass      $schoolClass
+     * @param EnrollmentService      $enrollmentService
+     * @param RegistrationService    $registrationService
+     *
+     * @return View
+     */
+    public function enroll(
+        BatchEnrollmentRequest $request,
+        LegacySchoolClass $schoolClass,
+        EnrollmentService $enrollmentService,
+        RegistrationService $registrationService
+    ) {
+        $date = Carbon::createFromFormat('d/m/Y', $request->input('date'));
+        $items = $request->input('registrations', []);
+
+        $fails = new MessageBag();
+        $success = new MessageBag();
+
+        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass->id);
+
+        $registrations = $registrations->sortBy(function ($registration) {
+            return $registration->student->person->name;
+        });
+
+        foreach ($registrationService->findAll($items) as $registration) {
+            try {
+                $enrollmentService->enroll($registration, $schoolClass, $date);
+                $success->add($registration->id, 'Aluno enturmado.');
+            } catch (Throwable $throwable) {
+                $fails->add($registration->id, $throwable->getMessage());
+            }
+        }
+
+        return view('enrollments.batch.enroll', [
+            'registrations' => $registrations,
+            'schoolClass' => $schoolClass,
+            'fails' => $fails,
+            'success' => $success,
         ]);
     }
 }

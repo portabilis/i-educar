@@ -127,7 +127,7 @@
                     <tr>
                         <td>
                         </td>
-                        <td colspan="4">Esta turma não possui nenhum aluno enturmado.</td>
+                        <td colspan="5">Esta turma não possui nenhum matrícula disponível para enturmação.</td>
                     </tr>
                 @endif
             </tbody>
