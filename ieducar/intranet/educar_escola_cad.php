@@ -2296,7 +2296,9 @@ class indice extends clsCadastro
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
                 $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
-                $this->validaEscolaCompartilhaPredio();
+                $this->validaEscolaCompartilhaPredio() &&
+                $this->validaSalasUtilizadasDentroEscola() &&
+                $this->validaSalasUtilizadasForaEscola();
     }
 
     protected function validaOcupacaoPredio()
@@ -2562,6 +2564,30 @@ class indice extends clsCadastro
 
         if (count($arrayCampos) == 0) {
             $this->mensagem = 'Preencha pelo menos um dos campos de Salas gerais à Áreas externas';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasUtilizadasDentroEscola()
+    {
+        if ($this->local_funcionamento != LocalFuncionamento::PREDIO_ESCOLAR) {
+            return true;
+        }
+
+        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> deve ser preenchido quando o campo: <b>Local de funcionamento</b> for: <b>Prédio escolar</b> e o campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não for preenchido';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasUtilizadasForaEscola()
+    {
+        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> deve ser preenchido quando o campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não for preenchido';
             return false;
         }
 
