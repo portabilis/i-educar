@@ -18,8 +18,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    public $pessoa_logada;
-
     public $ref_cod_matricula;
 
     public $ref_usuario_exc;
@@ -52,12 +50,10 @@ class indice extends clsCadastro
 
     public $check_desenturma;
 
+    public $ano;
+
     public function Inicializar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
         $this->ano = $_GET['ano'];
 
@@ -102,13 +98,9 @@ class indice extends clsCadastro
 
             $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-            $localizacao = new LocalizacaoSistema();
-            $localizacao->entradaCaminhos([
-                $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
+            $this->breadcrumb("{$nomeMenu} matrículas da turma", [
                 'educar_index.php' => 'Escola',
-                '' => "{$nomeMenu} matr&iacute;culas da turma"
             ]);
-            $this->enviaLocalizacao($localizacao->montar());
 
             return $retorno;
         }
@@ -138,7 +130,7 @@ class indice extends clsCadastro
             $obj_cod_instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $nm_instituicao = $obj_cod_instituicao_det['nm_instituicao'];
-            $this->campoRotulo('nm_instituicao', 'Institui&ccedil;&atilde;o', $nm_instituicao);
+            $this->campoRotulo('nm_instituicao', 'Instituição', $nm_instituicao);
         }
 
         if ($nivel_usuario == 1 || $nivel_usuario == 2) {
@@ -161,7 +153,7 @@ class indice extends clsCadastro
             $obj_ref_cod_serie = new clsPmieducarSerie($this->ref_ref_cod_serie);
             $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
             $nm_serie = $det_ref_cod_serie['nm_serie'];
-            $this->campoRotulo('nm_serie', 'S&eacute;rie', $nm_serie);
+            $this->campoRotulo('nm_serie', 'Série', $nm_serie);
 
             // busca o ano em q a escola esta em andamento
             $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
@@ -182,7 +174,7 @@ class indice extends clsCadastro
                 $det_ano_letivo = array_shift($lst_ano_letivo);
                 $ano_letivo = $det_ano_letivo['ano'];
             } else {
-                $this->mensagem = 'N&acirc;o foi possÃ­vel encontrar o ano letivo em andamento da escola.';
+                $this->mensagem = 'Não foi possível encontrar o ano letivo em andamento da escola.';
 
                 return false;
             }
@@ -260,7 +252,7 @@ class indice extends clsCadastro
         }
 
         if ($this->matriculas_turma) {
-            $this->campoRotulo('tituloUm', 'Matr&iacute;culas', '<b>&nbsp;Alunos j&aacute; matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para desenturmar</b><label style=\'display: block; width: 350px; margin-left: 256px;\'>&nbsp;&nbsp;&nbsp;<input type=\'checkbox\' name=\'CheckTodos\' onClick=\'marcarCheck(' . '"check_desenturma[]"' . ');\'/>Marcar todos</label>');
+            $this->campoRotulo('tituloUm', 'Matrículas', '<b>&nbsp;Alunos já matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para desenturmar</b><label style=\'display: block; width: 350px; margin-left: 256px;\'>&nbsp;&nbsp;&nbsp;<input type=\'checkbox\' name=\'CheckTodos\' onClick=\'marcarCheck(' . '"check_desenturma[]"' . ');\'/>Marcar todos</label>');
             foreach ($this->matriculas_turma as $matricula => $campo) {
                 $obj_matricula = new clsPmieducarMatricula($matricula);
                 $det_matricula = $obj_matricula->detalhe();
@@ -324,7 +316,6 @@ class indice extends clsCadastro
             foreach ($opcoes as $key => $aluno) {
                 $this->campoRotulo($key, '', '<table  style="font-size:11px; font-family: arial, verdana, lucida, helvetica, sans-serif;" border="0px"><tr><td width="258px">' . $aluno . '</td><td><input value="$key" type="checkbox" name="ref_cod_matricula[' . $key . ']" id="ref_cod_matricula[]"></td></tr></table>', '');
             }
-
         } elseif ($alunosEnturmados) {
             $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na série já se encontram enturmados.');
         } else {
@@ -368,7 +359,6 @@ class indice extends clsCadastro
         $bloquearEnturmacaoSeNaoHouverVagas = $dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas'];
 
         if ($vagasDisponiveis < $totalAlunosParaEnturmar && $bloquearEnturmacaoSeNaoHouverVagas) {
-
             if ($vagasDisponiveis > 0) {
                 $this->mensagem = 'Cadastro não realizado. Há apenas ' . $vagasDisponiveis . ' vagas restantes para esta turma.';
             } else {
@@ -396,7 +386,8 @@ class indice extends clsCadastro
             }
 
             $ultimaDataSaida = $enturmacao->getDataSaidaEnturmacaoAnterior(
-                $matricula, $enturmacao->buscaSequencialMax()
+                $matricula,
+                $enturmacao->buscaSequencialMax()
             );
 
             $permiteEnturmar = empty($ultimaDataSaida) || $this->data_enturmacao >= $ultimaDataSaida;
@@ -473,5 +464,3 @@ $miolo = new indice();
 
 $pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>
