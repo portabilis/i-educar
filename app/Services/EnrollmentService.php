@@ -122,23 +122,22 @@ class EnrollmentService
     }
 
     /**
-     * @param int $schoolClass
-     * @param int $academicYear
+     * @param LegacySchoolClass $schoolClass
      *
      * @return Collection
      */
-    public function getBySchoolClass($schoolClass, $academicYear)
+    public function getBySchoolClass($schoolClass)
     {
         return LegacyEnrollment::query()
             ->with([
-                'registration' => function ($query) use ($academicYear) {
+                'registration' => function ($query) use ($schoolClass) {
                     /** @var Builder $query */
-                    $query->where('ano', $academicYear);
+                    $query->where('ano', $schoolClass->year);
                     $query->whereIn('aprovado', [1, 2, 3]);
                     $query->with('student.person');
                 }
             ])
-            ->where('ref_cod_turma', $schoolClass)
+            ->where('ref_cod_turma', $schoolClass->id)
             ->where('ativo', 1)
             ->orderBy('sequencial_fechamento')
             ->get();

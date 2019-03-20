@@ -83,9 +83,7 @@ class BatchEnrollmentController extends Controller
         LegacySchoolClass $schoolClass,
         EnrollmentService $enrollmentService
     ) {
-        $enrollments = $enrollmentService->getBySchoolClass(
-            $schoolClass->id, $schoolClass->year
-        );
+        $enrollments = $enrollmentService->getBySchoolClass($schoolClass);
 
         return $this->viewCancelEnrollments($schoolClass, $enrollments);
     }
@@ -110,9 +108,7 @@ class BatchEnrollmentController extends Controller
         $fails = new MessageBag();
         $success = new MessageBag();
 
-        $enrollments = $enrollmentService->getBySchoolClass(
-            $schoolClass->id, $schoolClass->year
-        );
+        $enrollments = $enrollmentService->getBySchoolClass($schoolClass);
 
         foreach ($items as $enrollment) {
             try {

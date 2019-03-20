@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Services;
 
+use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
+use App\Exceptions\Enrollment\NoVacancyException;
+use App\Exceptions\Enrollment\PreviousCancellationDateException;
+use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyUser;
 use App\Services\EnrollmentService;
@@ -32,6 +36,8 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
+     * Cancelamento de enturmação com sucesso.
+     *
      * @return void
      *
      * @throws Throwable
@@ -40,7 +46,7 @@ class EnrollmentServiceTest extends TestCase
     {
         $enrollment = factory(LegacyEnrollment::class)->create();
 
-        $result = $this->service->cancelEnrollment($enrollment->id, now());
+        $result = $this->service->cancelEnrollment($enrollment->id, Carbon::now());
 
         $this->assertTrue($result);
         $this->assertDatabaseHas($enrollment->getTable(), [
@@ -51,6 +57,25 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
+     * Erro ao cancelar uma enturmação devido a data de saída ser menor que a
+     * data de enturmação.
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testPreviousCancellationDateException()
+    {
+        $this->expectException(PreviousCancellationDateException::class);
+
+        $enrollment = factory(LegacyEnrollment::class)->create();
+
+        $this->service->cancelEnrollment($enrollment->id, Carbon::now()->subDay(1));
+    }
+
+    /**
+     * Enturmação feita com sucesso.
+     *
      * @return void
      */
     public function testEnroll()
@@ -70,6 +95,62 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
+     * Sem vagas na turma.
+     *
+     * @return void
+     */
+    public function testNoVacancyException()
+    {
+        $this->expectException(NoVacancyException::class);
+
+        $enrollment = factory(LegacyEnrollment::class)->make();
+
+        $enrollment->schoolClass->max_aluno = 0;
+
+        $this->service->enroll(
+            $enrollment->registration, $enrollment->schoolClass, Carbon::now()
+        );
+    }
+
+    /**
+     * Existe uma outra enturmação ativa para a matrícula na turma.
+     *
+     * @return void
+     */
+    public function testExistsActiveEnrollmentException()
+    {
+        $this->expectException(ExistsActiveEnrollmentException::class);
+
+        $enrollment = factory(LegacyEnrollment::class)->create();
+
+        $this->service->enroll(
+            $enrollment->registration, $enrollment->schoolClass, Carbon::now()
+        );
+    }
+
+    /**
+     * A data de enturmação é anterior a data de matrícula.
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testPreviousEnrollDateException()
+    {
+        $this->expectException(PreviousEnrollDateException::class);
+
+        $enrollment = factory(LegacyEnrollment::class)->create();
+
+        $this->service->cancelEnrollment($enrollment->id, Carbon::now());
+
+        $this->service->enroll(
+            $enrollment->registration, $enrollment->schoolClass, Carbon::now()->subDay(1)
+        );
+    }
+
+    /**
+     * Retorna enturmações de uma turma.
+     *
      * @return void
      */
     public function testGetBySchoolClass()
@@ -80,9 +161,7 @@ class EnrollmentServiceTest extends TestCase
             'ref_cod_turma' => $enrollment->schoolClass->id
         ]);
 
-        $enrollments = $this->service->getBySchoolClass(
-            $enrollment->schoolClass->id, $enrollment->schoolClass->year
-        );
+        $enrollments = $this->service->getBySchoolClass($enrollment->schoolClass);
 
         $this->assertEquals(5, $enrollments->count());
     }
