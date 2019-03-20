@@ -129,6 +129,7 @@
         <div style="text-align: center">
             <button class="btn-green" type="submit">Desenturmar</button>
             <button class="btn enrollment-btn-check" type="button">Selecionar Todos</button>
+            <button class="btn" type="button">Enturmar em lote</button>
             <button class="btn" type="button">Cancelar</button>
         </div>
 

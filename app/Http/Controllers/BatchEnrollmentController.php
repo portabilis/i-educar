@@ -16,7 +16,7 @@ use Throwable;
 class BatchEnrollmentController extends Controller
 {
     /**
-     * Renderiza a view.
+     * Renderiza a view da desenturmação em lote.
      *
      * @param LegacySchoolClass $schoolClass
      * @param Collection        $enrollments
@@ -25,7 +25,7 @@ class BatchEnrollmentController extends Controller
      *
      * @return View
      */
-    public function view(
+    public function viewCancelEnrollments(
         LegacySchoolClass $schoolClass,
         Collection $enrollments,
         MessageBag $fails = null,
@@ -38,6 +38,34 @@ class BatchEnrollmentController extends Controller
         return view('enrollments.batch.cancel', [
             'schoolClass' => $schoolClass,
             'enrollments' => $enrollments,
+            'fails' => $fails ?? new MessageBag(),
+            'success' => $success ?? new MessageBag(),
+        ]);
+    }
+
+    /**
+     * Renderiza a view da enturmação em lote.
+     *
+     * @param LegacySchoolClass $schoolClass
+     * @param Collection        $registrations
+     * @param MessageBag        $fails
+     * @param MessageBag        $success
+     *
+     * @return View
+     */
+    public function viewEnroll(
+        LegacySchoolClass $schoolClass,
+        Collection $registrations,
+        MessageBag $fails = null,
+        MessageBag $success = null
+    ) {
+        $this->breadcrumb('Enturmar em lote', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
+        return view('enrollments.batch.enroll', [
+            'schoolClass' => $schoolClass,
+            'registrations' => $registrations,
             'fails' => $fails ?? new MessageBag(),
             'success' => $success ?? new MessageBag(),
         ]);
@@ -59,7 +87,7 @@ class BatchEnrollmentController extends Controller
             $schoolClass->id, $schoolClass->year
         );
 
-        return $this->view($schoolClass, $enrollments);
+        return $this->viewCancelEnrollments($schoolClass, $enrollments);
     }
 
     /**
@@ -95,7 +123,7 @@ class BatchEnrollmentController extends Controller
             }
         }
 
-        return $this->view($schoolClass, $enrollments, $fails, $success);
+        return $this->viewCancelEnrollments($schoolClass, $enrollments, $fails, $success);
     }
 
     /**
@@ -114,12 +142,7 @@ class BatchEnrollmentController extends Controller
             return $registration->student->person->name;
         });
 
-        return view('enrollments.batch.enroll', [
-            'registrations' => $registrations,
-            'schoolClass' => $schoolClass,
-            'fails' => $fails ?? new MessageBag(),
-            'success' => $success ?? new MessageBag(),
-        ]);
+        return $this->viewEnroll($schoolClass, $registrations);
     }
 
     /**
@@ -157,11 +180,6 @@ class BatchEnrollmentController extends Controller
             }
         }
 
-        return view('enrollments.batch.enroll', [
-            'registrations' => $registrations,
-            'schoolClass' => $schoolClass,
-            'fails' => $fails,
-            'success' => $success,
-        ]);
+        return $this->viewEnroll($schoolClass, $registrations, $fails, $success);
     }
 }

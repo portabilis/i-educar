@@ -5,7 +5,7 @@
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
                 <tr>
-                    <td class="formdktd" colspan="2" height="24"><b>Desenturmar em lote</b></td>
+                    <td class="formdktd" colspan="2" height="24"><b>Enturmar em lote</b></td>
                 </tr>
                 <tr id="tr_nm_instituicao">
                     <td class="formmdtd" valign="top"><span class="form">Instituição:</span></td>
@@ -138,6 +138,7 @@
         <div style="text-align: center">
             <button class="btn-green" type="submit">Enturmar</button>
             <button class="btn registration-btn-check" type="button">Selecionar Todos</button>
+            <button class="btn" type="button">Desenturmar em lote</button>
             <button class="btn" type="button">Cancelar</button>
         </div>
 

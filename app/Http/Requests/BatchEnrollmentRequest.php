@@ -34,7 +34,7 @@ class BatchEnrollmentRequest extends FormRequest
             'date.required' => 'A data de enturmação é obrigatória.',
             'date.date_format' => 'A data de enturmação deve ser uma data válida.',
             'registrations.required' => 'Ao menos uma matrícula deve ser selecionada.',
-            'registrations.max' => 'Há somente :size vagas na turma, você tentou enturmar ' . count($this->registrations ?? []) . ' alunos.',
+            'registrations.max' => 'Há somente :max vagas na turma, você tentou enturmar ' . count($this->registrations ?? []) . ' alunos.',
         ];
     }
 }
