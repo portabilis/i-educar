@@ -137,6 +137,7 @@ class indice extends clsCadastro
     public $recursos_acessibilidade;
     public $possui_dependencias;
     public $numero_salas_utilizadas_dentro_predio;
+    public $numero_salas_utilizadas_fora_predio;
     public $total_funcionario;
     public $atendimento_aee;
     public $atividade_complementar;
@@ -1249,6 +1250,9 @@ class indice extends clsCadastro
             $options = array('label' => 'Número de salas de aula utilizadas na escola dentro do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_dentro_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
             $this->inputsHelper()->integer('numero_salas_utilizadas_dentro_predio', $options);
 
+            $options = array('label' => 'Número de salas de aula utilizadas na escola fora do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_fora_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $this->inputsHelper()->integer('numero_salas_utilizadas_fora_predio', $options);
+
             $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('televisoes', $options);
 
@@ -1595,6 +1599,7 @@ class indice extends clsCadastro
                     $obj->recursos_acessibilidade = $recursos_acessibilidade;
                     $obj->possui_dependencias = $this->possui_dependencias;
                     $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+                    $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
                     $obj->total_funcionario = $this->total_funcionario;
                     $obj->atendimento_aee = $this->atendimento_aee;
                     $obj->atividade_complementar = $this->atividade_complementar;
@@ -1755,6 +1760,7 @@ class indice extends clsCadastro
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->possui_dependencias = $this->possui_dependencias;
             $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -1966,6 +1972,7 @@ class indice extends clsCadastro
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->possui_dependencias = $this->possui_dependencias;
             $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -2058,6 +2065,7 @@ class indice extends clsCadastro
             $obj->recursos_acessibilidade = $recursos_acessibilidade;
             $obj->possui_dependencias = $this->possui_dependencias;
             $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
