@@ -136,7 +136,7 @@ class BatchEnrollmentController extends Controller
         LegacySchoolClass $schoolClass,
         EnrollmentService $enrollmentService
     ) {
-        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass->id);
+        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass);
 
         $registrations = $registrations->sortBy(function ($registration) {
             return $registration->student->person->name;
@@ -165,7 +165,7 @@ class BatchEnrollmentController extends Controller
         $fails = new MessageBag();
         $success = new MessageBag();
 
-        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass->id);
+        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass);
 
         $registrations = $registrations->sortBy(function ($registration) {
             return $registration->student->person->name;

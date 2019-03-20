@@ -5,8 +5,10 @@ namespace Tests\Feature\Services;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyUser;
 use App\Services\EnrollmentService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use Throwable;
 
 class EnrollmentServiceTest extends TestCase
 {
@@ -32,7 +34,7 @@ class EnrollmentServiceTest extends TestCase
     /**
      * @return void
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function testCancelEnrollment()
     {
@@ -45,6 +47,25 @@ class EnrollmentServiceTest extends TestCase
             'ref_cod_matricula' => $enrollment->ref_cod_matricula,
             'ref_cod_turma' => $enrollment->ref_cod_turma,
             'ativo' => 0,
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testEnroll()
+    {
+        $enrollment = factory(LegacyEnrollment::class)->make();
+
+        $result = $this->service->enroll(
+            $enrollment->registration, $enrollment->schoolClass, Carbon::now()
+        );
+
+        $this->assertInstanceOf(LegacyEnrollment::class, $result);
+        $this->assertDatabaseHas($enrollment->getTable(), [
+            'ref_cod_matricula' => $enrollment->registration_id,
+            'ref_cod_turma' => $enrollment->school_class_id,
+            'ativo' => 1,
         ]);
     }
 

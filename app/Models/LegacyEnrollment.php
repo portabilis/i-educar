@@ -10,8 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * LegacyEnrollment
  *
  * @property int                $id
- * @property DateTime           $date
+ * @property int                $registration_id
+ * @property int                $school_class_id
  * @property string             $studentName
+ * @property DateTime           $date
  * @property LegacyRegistration $registration
  * @property LegacySchoolClass  $schoolClass
  */
@@ -65,6 +67,16 @@ class LegacyEnrollment extends Model
     public function getDateDepartedAttribute()
     {
         return $this->data_exclusao;
+    }
+
+    public function getSchoolClassIdAttribute()
+    {
+        return $this->ref_cod_turma;
+    }
+
+    public function getRegistrationIdAttribute()
+    {
+        return $this->ref_cod_matricula;
     }
 
     /**

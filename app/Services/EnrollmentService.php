@@ -5,18 +5,17 @@ namespace App\Services;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Exceptions\Enrollment\NoVacancyException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
-use Carbon\Carbon;
-use DateTime;
-use Illuminate\Support\Facades\Session;
-use Throwable;
 use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyUser;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Throwable;
 
 class EnrollmentService
 {
@@ -38,7 +37,7 @@ class EnrollmentService
      *
 `     * @param int $enrollment ID da enturmação
      *
-     * @return LegacyEnrollment
+     * @return LegacyEnrollment $enrollment
      *
      * @throws ModelNotFoundException
      */
@@ -83,6 +82,10 @@ class EnrollmentService
      * @param Carbon             $date
      *
      * @return LegacyEnrollment
+     *
+     * @throws NoVacancyException
+     * @throws ExistsActiveEnrollmentException
+     * @throws PreviousEnrollDateException
      */
     public function enroll(
         LegacyRegistration $registration,
@@ -110,7 +113,7 @@ class EnrollmentService
         $enrollment = $registration->enrollments()->create([
             'ref_cod_turma' => $schoolClass->id,
             'sequencial' => $registration->enrollments()->max('sequencial') + 1,
-            'ref_usuario_cad' => Session::get('id_pessoa'),
+            'ref_usuario_cad' => $this->user->getKey(),
             'data_cadastro' => Carbon::now(),
             'data_enturmacao' => $date,
         ]);
@@ -142,14 +145,12 @@ class EnrollmentService
     }
 
     /**
-     * @param int $schoolClass
+     * @param LegacySchoolClass $schoolClass
      *
-     * @return Builder[]|Collection
+     * @return Collection
      */
     public function getRegistrationsNotEnrolled($schoolClass)
     {
-        $schoolClass = LegacySchoolClass::findOrFail($schoolClass);
-
         return LegacyRegistration::query()
             ->with('student.person', 'lastEnrollment')
             ->where('ref_cod_curso', $schoolClass->course_id)
