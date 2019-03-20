@@ -12,8 +12,6 @@ use App\Models\LegacyEnrollment;
 use App\Models\LegacyUser;
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
@@ -119,53 +117,5 @@ class EnrollmentService
         ]);
 
         return $enrollment;
-    }
-
-    /**
-     * @param LegacySchoolClass $schoolClass
-     *
-     * @return Collection
-     */
-    public function getBySchoolClass($schoolClass)
-    {
-        return LegacyEnrollment::query()
-            ->with([
-                'registration' => function ($query) use ($schoolClass) {
-                    /** @var Builder $query */
-                    $query->where('ano', $schoolClass->year);
-                    $query->whereIn('aprovado', [1, 2, 3]);
-                    $query->with('student.person');
-                }
-            ])
-            ->where('ref_cod_turma', $schoolClass->id)
-            ->where('ativo', 1)
-            ->orderBy('sequencial_fechamento')
-            ->get();
-    }
-
-    /**
-     * @param LegacySchoolClass $schoolClass
-     *
-     * @return Collection
-     */
-    public function getRegistrationsNotEnrolled($schoolClass)
-    {
-        return LegacyRegistration::query()
-            ->with('student.person', 'lastEnrollment')
-            ->where('ref_cod_curso', $schoolClass->course_id)
-            ->where('ref_ref_cod_serie', $schoolClass->grade_id)
-            ->where('ref_ref_cod_escola', $schoolClass->school_id)
-            ->where('ativo', 1)
-            ->where('ultima_matricula', 1)
-            ->where('ano', $schoolClass->year)
-            ->whereIn('aprovado', [1, 2, 3])
-            ->whereDoesntHave('enrollments', function (Builder $query) use ($schoolClass) {
-                $query->where('ativo', 1);
-                $query->whereHas('schoolClass', function (Builder $query) use ($schoolClass) {
-                    $query->where('ref_ref_cod_escola', $schoolClass->school_id);
-                    $query->where('ativo', 1);
-                });
-            })
-            ->get();
     }
 }

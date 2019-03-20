@@ -147,22 +147,4 @@ class EnrollmentServiceTest extends TestCase
             $enrollment->registration, $enrollment->schoolClass, Carbon::now()->subDay(1)
         );
     }
-
-    /**
-     * Retorna enturmações de uma turma.
-     *
-     * @return void
-     */
-    public function testGetBySchoolClass()
-    {
-        $enrollment = factory(LegacyEnrollment::class)->create();
-
-        factory(LegacyEnrollment::class, 4)->create([
-            'ref_cod_turma' => $enrollment->schoolClass->id
-        ]);
-
-        $enrollments = $this->service->getBySchoolClass($enrollment->schoolClass);
-
-        $this->assertEquals(5, $enrollments->count());
-    }
 }

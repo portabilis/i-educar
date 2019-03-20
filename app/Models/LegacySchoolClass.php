@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -206,4 +208,25 @@ class LegacySchoolClass extends Model
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_turma', 'cod_turma');
     }
+
+    /**
+     * @return Collection
+     */
+    public function getActiveEnrollments()
+    {
+        return self::query()
+            ->with([
+                'registration' => function ($query) {
+                    /** @var Builder $query */
+                    $query->where('ano', $this->year);
+                    $query->whereIn('aprovado', [1, 2, 3]);
+                    $query->with('student.person');
+                }
+            ])
+            ->where('ref_cod_turma', $this->id)
+            ->where('ativo', 1)
+            ->orderBy('sequencial_fechamento')
+            ->get();
+    }
+
 }

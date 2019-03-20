@@ -80,12 +80,9 @@ class BatchEnrollmentController extends Controller
      * @return View
      */
     public function indexCancelEnrollments(
-        LegacySchoolClass $schoolClass,
-        EnrollmentService $enrollmentService
+        LegacySchoolClass $schoolClass
     ) {
-        $enrollments = $enrollmentService->getBySchoolClass($schoolClass);
-
-        return $this->viewCancelEnrollments($schoolClass, $enrollments);
+        return $this->viewCancelEnrollments($schoolClass, $schoolClass->getActiveEnrollments());
     }
 
     /**
@@ -108,7 +105,7 @@ class BatchEnrollmentController extends Controller
         $fails = new MessageBag();
         $success = new MessageBag();
 
-        $enrollments = $enrollmentService->getBySchoolClass($schoolClass);
+        $enrollments = $schoolClass->getActiveEnrollments();
 
         foreach ($items as $enrollment) {
             try {
@@ -123,16 +120,16 @@ class BatchEnrollmentController extends Controller
     }
 
     /**
-     * @param LegacySchoolClass $schoolClass
-     * @param EnrollmentService $enrollmentService
+     * @param LegacySchoolClass   $schoolClass
+     * @param RegistrationService $registrationService
      *
      * @return View
      */
     public function indexEnroll(
         LegacySchoolClass $schoolClass,
-        EnrollmentService $enrollmentService
+        RegistrationService $registrationService
     ) {
-        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass);
+        $registrations = $registrationService->getRegistrationsNotEnrolled($schoolClass);
 
         $registrations = $registrations->sortBy(function ($registration) {
             return $registration->student->person->name;
@@ -161,7 +158,7 @@ class BatchEnrollmentController extends Controller
         $fails = new MessageBag();
         $success = new MessageBag();
 
-        $registrations = $enrollmentService->getRegistrationsNotEnrolled($schoolClass);
+        $registrations = $registrationService->getRegistrationsNotEnrolled($schoolClass);
 
         $registrations = $registrations->sortBy(function ($registration) {
             return $registration->student->person->name;
