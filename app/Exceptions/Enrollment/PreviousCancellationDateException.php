@@ -9,8 +9,8 @@ use App\Models\LegacyEnrollment;
 class PreviousCancellationDateException extends RuntimeException
 {
     /**
-     * Exceção lançada quando a data de cancelamento da enturmação é anterior a
-     * própria data de enturmação.
+     * A data de cancelamento da enturmação é anterior a própria data de
+     * enturmação.
      *
      * @param LegacyEnrollment $enrollment
      * @param DateTime         $cancellationDate
