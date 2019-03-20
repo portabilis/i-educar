@@ -1,8 +1,9 @@
 <?php
 
-use App\Exceptions\RedirectException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBanco.inc.php';
@@ -104,6 +105,8 @@ class clsControlador
       'nivel' => $user['nivel'],
     ]);
 
+    Auth::loginUsingId(Session::get('id_pessoa'));
+
     Portabilis_Utils_User::logAccessFor($user['id'], $this->getClientIP());
     Portabilis_Utils_User::destroyStatusTokenFor($user['id'], 'redefinir_senha');
 
@@ -190,10 +193,11 @@ class clsControlador
         $templateText = str_replace("<!-- #&SUSPENSO&# -->", $msgSuspensao, $templateText);
     }
 
-    Session::save();
-
     fclose($templateFile);
-    die($templateText);
+
+    throw new HttpResponseException(
+      new Response($templateText)
+    );
   }
 
   protected function destroyLoginSession($addMsg = false) {
