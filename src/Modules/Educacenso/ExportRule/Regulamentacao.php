@@ -21,6 +21,18 @@ class Regulamentacao implements EducacensoExportRule
             $registro00->esferaMunicipal = null;
         }
 
+        if ($registro00->esferaFederal == 0) {
+            $registro00->esferaFederal = null;
+        }
+
+        if ($registro00->esferaEstadual == 0) {
+            $registro00->esferaEstadual = null;
+        }
+
+        if ($registro00->esferaMunicipal == 0) {
+            $registro00->esferaMunicipal = null;
+        }
+
         return $registro00;
     }
 }
