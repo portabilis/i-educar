@@ -1167,7 +1167,7 @@ class indice extends clsCadastro
 
             $helperOptions = ['objectName' => 'salas_funcionais'];
             $options = [
-                'label' => 'Salas Funcionais',
+                'label' => 'Salas funcionais',
                 'size' => 50,
                 'required' => false,
                 'options' => [
@@ -1191,7 +1191,7 @@ class indice extends clsCadastro
 
             $helperOptions = ['objectName' => 'laboratorios'];
             $options = [
-                'label' => 'Laboratorios',
+                'label' => 'Laboratórios',
                 'size' => 50,
                 'required' => false,
                 'options' => [
@@ -1227,7 +1227,7 @@ class indice extends clsCadastro
 
             $helperOptions = ['objectName' => 'areas_externas'];
             $options = [
-                'label' => 'Áreas Externas',
+                'label' => 'Áreas externas',
                 'size' => 50,
                 'required' => false,
                 'options' => [

@@ -13,7 +13,7 @@ class SalasFuncionais
     {
         return [
             self::COZINHA => 'Cozinha',
-            self::REFEITORIO => 'Refeitorio',
+            self::REFEITORIO => 'Refeitório',
             self::DESPENSA => 'Despensa',
             self::ALMOXARIFADO => 'Almoxarifado',
         ];
