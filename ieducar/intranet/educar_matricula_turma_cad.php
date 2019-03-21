@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\SchoolClass\AvailableTimeService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -99,6 +101,13 @@ class indice extends clsCadastro
 
   function novaEnturmacao($matriculaId, $turmaDestinoId, $turnoId = null) {
     if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+        return false;
+    }
+
+    $availableTimeService = new AvailableTimeService();
+
+    if ($this->validarCamposObrigatoriosCenso() && !$availableTimeService->isAvailable($matriculaId, $turmaDestinoId)) {
+        $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
         return false;
     }
 

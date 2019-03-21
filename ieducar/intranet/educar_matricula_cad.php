@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\SchoolClass\AvailableTimeService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -69,6 +71,7 @@ class indice extends clsCadastro
     public $ref_cod_candidato_fila_unica;
 
     public $ref_cod_turma_copiar_enturmacoes;
+    private $availableTimeService;
 
     public function Inicializar()
     {
@@ -312,7 +315,14 @@ class indice extends clsCadastro
             return false;
         }
 
+        $mensagemErro = null;
+        $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
+
         foreach ($enturmacoesParaCopiar as $enturmar) {
+            if ($validarCamposEducacenso && !$this->availableTimeService()->isAvailable($enturmar['ref_cod_matricula'], $this->ref_cod_turma)) {
+                $mensagemErro = Portabilis_String_Utils::toLatin1('O aluno já está matriculado em uma turma com esse horário.');
+            }
+
             $dadosDaMatricula = $this->getMatricula($enturmar['ref_cod_matricula']);
 
             $matricula = $this->addMatricula(
@@ -324,6 +334,11 @@ class indice extends clsCadastro
             );
 
             $this->addEnturmacao($matricula, $this->ref_cod_turma, $enturmar['sequencial'], $enturmar['ativo']);
+        }
+
+        if (!is_null($mensagemErro)) {
+            $this->mensagem = $mensagemErro;
+            return false;
         }
 
         header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
@@ -492,6 +507,13 @@ class indice extends clsCadastro
                         return false;
                     }
                 }
+            }
+
+            $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
+
+            if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($enturmar['ref_cod_matricula'], $this->ref_cod_turma)) {
+                $this->mensagem = Portabilis_String_Utils::toLatin1('O aluno já está matriculado em uma turma com esse horário.');
+                return false;
             }
 
             $serie = new clsPmieducarSerie($this->ref_cod_serie);
@@ -1514,6 +1536,14 @@ class indice extends clsCadastro
         );
 
         return count($lst_mt);
+    }
+
+    private function availableTimeService() {
+        if (!$this->availableTimeService instanceof AvailableTimeService) {
+            $this->availableTimeService = new AvailableTimeService();
+        }
+
+        return $this->availableTimeService;
     }
 }
 
