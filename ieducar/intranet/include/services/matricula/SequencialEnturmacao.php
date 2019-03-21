@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolClass;
+
 require_once 'include/pmieducar/geral.inc.php';
 
 class SequencialEnturmacao
@@ -9,12 +12,25 @@ class SequencialEnturmacao
     public $dataEnturmacao;
     public $sequencial;
 
+    /**
+     * @var LegacyRegistration
+     */
+    private $registration;
+
+    /**
+     * @var LegacySchoolClass
+     */
+    private $schoolClass;
+
     public function __construct($refCodMatricula, $refCodTurma, $dataEnturmacao, $sequencial)
     {
         $this->refCodMatricula = $refCodMatricula;
         $this->refCodTurma = $refCodTurma;
         $this->dataEnturmacao = $dataEnturmacao;
         $this->sequencial = $sequencial;
+
+        $this->registration = LegacyRegistration::findOrFail($refCodMatricula);
+        $this->schoolClass = LegacySchoolClass::findOrFail($refCodTurma);
     }
 
     public function ordenaSequencialNovaMatricula()
@@ -271,15 +287,12 @@ class SequencialEnturmacao
         return dbBool($dependencia);
     }
 
+    /**
+     * @return DateTime
+     */
     public function existeDataBaseRemanejamento()
     {
-        $getInstituicao = new clsPmieducarMatriculaTurma($this->refCodMatricula);
-        $getInstituicao = $getInstituicao->getInstituicao();
-        $instituicao = new clsPmieducarInstituicao($getInstituicao);
-        $instituicao = $instituicao->detalhe();
-        $data_base_remanejamento = $instituicao['data_base_remanejamento'];
-
-        return $data_base_remanejamento;
+        return $this->schoolClass->school->institution->relocation_date;
     }
 
     public function existeMatriculaTurma()
