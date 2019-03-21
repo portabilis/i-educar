@@ -1,5 +1,10 @@
 <?php
 
+// TODO
+// Esta classe será removida nas próximas atualizações do i-Educar. Deve ser
+// utilizado o serviço `EnrollmentService` para fazer a enturmação e/ou
+// desenturmação de alunos.
+
 use App\Services\EnrollmentService;
 
 require_once 'include/clsBase.inc.php';

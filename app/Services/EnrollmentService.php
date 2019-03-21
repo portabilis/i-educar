@@ -52,7 +52,7 @@ class EnrollmentService
     /**
      * Retorna a enturmação.
      *
-`     * @param int $enrollment ID da enturmação
+     * @param int $enrollment ID da enturmação
      *
      * @return LegacyEnrollment $enrollment
      *
