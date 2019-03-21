@@ -132,7 +132,7 @@ class EnrollmentService
             throw new ExistsActiveEnrollmentException($registration);
         }
 
-        if ($registration->lastEnrollment && $registration->lastEnrollment->date_departed > $date) {
+        if ($registration->lastEnrollment && $registration->lastEnrollment->date_departed->format('Y-m-d') > $date->format('Y-m-d')) {
             throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
         }
 
