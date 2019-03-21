@@ -9,13 +9,16 @@ require_once 'include/funcoes.inc.php';
 class FilaUnicaController extends ApiCoreController
 {
 
-    protected function getDadosAlunoByCertidao()
+    protected function getDadosAluno()
     {
         $tipoCertidao = $this->getRequest()->tipo_certidao;
         $numNovaCeridao = $this->getRequest()->certidao_nascimento;
         $numTermo = $this->getRequest()->num_termo ? $this->getRequest()->num_termo : 0;
         $numLivro = $this->getRequest()->num_livro ? $this->getRequest()->num_livro : 0;
         $numFolha = $this->getRequest()->num_folha ? $this->getRequest()->num_folha : 0;
+        $id = $this->getRequest()->id ? $this->getRequest()->id : 0;
+        $byCertidao = $this->getRequest()->by_certidao ? $this->getRequest()->by_certidao == '1' : false;
+        $byId = $this->getRequest()->by_id ? $this->getRequest()->by_id == '1' : false;
 
         $sql = "SELECT cod_aluno,
                        pessoa.nome,
@@ -52,12 +55,21 @@ class FilaUnicaController extends ApiCoreController
                   LEFT JOIN urbano.tipo_logradouro ON (tipo_logradouro.idtlog = logradouro.idtlog)
                   LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
                   LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
-                 WHERE CASE WHEN {$tipoCertidao} != 1
+                  WHERE
+                 ";
+        if ($byCertidao) {
+            $sql .= "  CASE WHEN {$tipoCertidao} != 1
                                  THEN num_termo = '{$numTermo}'
                                   AND num_livro = '{$numLivro}'
                                   AND num_folha = '{$numFolha}'
                             ELSE certidao_nascimento = '{$numNovaCeridao}'
-                        END";
+                        END  ";
+
+        }
+
+        if ($byId) {
+            $sql .= "  cod_aluno = {$id} ";
+        }
 
         $attrs = [
             'cod_aluno',
@@ -197,6 +209,41 @@ class FilaUnicaController extends ApiCoreController
 
             $responsaveis = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
 
+            if (!count($responsaveis)) {
+                $sql = "SELECT pessoa.idpes,
+                        CASE
+                            WHEN fisica_aluno.idpes_pai = pessoa.idpes THEN '1'
+                            WHEN fisica_aluno.idpes_mae = pessoa.idpes THEN '2'
+                            ELSE '3' END as vinculo_familiar,
+                           pessoa.nome,
+                           fisica.cpf,
+                           fisica.tipo_trabalho,
+                           fisica.local_trabalho,
+                           documento.declaracao_trabalho_autonomo,
+                           to_char(fisica.horario_inicial_trabalho, 'HH24:MI') AS horario_inicial_trabalho,
+                           to_char(fisica.horario_final_trabalho, 'HH24:MI') AS horario_final_trabalho,
+                           fpr.ddd AS ddd_telefone,
+                           fpr.fone AS telefone,
+                           fpc.ddd AS ddd_telefone_celular,
+                           fpc.fone AS telefone_celular
+                      FROM cadastro.fisica
+                      INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
+                      JOIN cadastro.fisica fisica_aluno
+                        ON pessoa.idpes = fisica_aluno.idpes_pai
+                        OR pessoa.idpes = fisica_aluno.idpes_mae
+                        OR pessoa.idpes = fisica_aluno.idpes_responsavel
+                      JOIN pmieducar.aluno ON (aluno.ref_idpes = fisica_aluno.idpes)
+                      LEFT JOIN cadastro.documento ON (documento.idpes = fisica.idpes)
+                      LEFT JOIN cadastro.fone_pessoa fpr ON (fpr.idpes = fisica.idpes
+                                                             AND fpr.tipo = 1)
+                      LEFT JOIN cadastro.fone_pessoa fpc ON (fpc.idpes = fisica.idpes
+                                                             AND fpc.tipo = 2)
+
+                     WHERE aluno.cod_aluno = {$aluno} ";
+
+                $responsaveis = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
+            }
+
             return ['responsaveis' => $responsaveis];
         }
 
@@ -236,8 +283,8 @@ class FilaUnicaController extends ApiCoreController
 
     public function Gerar()
     {
-        if ($this->isRequestFor('get', 'get-aluno-by-certidao')) {
-            $this->appendResponse($this->getDadosAlunoByCertidao());
+        if ($this->isRequestFor('get', 'get-aluno')) {
+            $this->appendResponse($this->getDadosAluno());
         } elseif ($this->isRequestFor('get', 'matricula-andamento')) {
             $this->appendResponse($this->getMatriculaAlunoAndamento());
         } elseif ($this->isRequestFor('get', 'solicitacao-andamento')) {
