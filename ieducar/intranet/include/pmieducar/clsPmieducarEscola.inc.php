@@ -97,6 +97,8 @@ class clsPmieducarEscola
   var $salas_atividades = false;
   var $dormitorios = false;
   var $areas_externas = false;
+  var $recursos_acessibilidade = false;
+  var $possui_dependencias = false;
   var $dependencia_sala_diretoria;
   var $dependencia_sala_professores;
   var $dependencia_sala_secretaria;
@@ -245,7 +247,7 @@ class clsPmieducarEscola
     $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.zona_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
           e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
           e.condicao, e.predio_compartilhado_outra_escola, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.agua_potavel_consumo, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo, e.tratamento_lixo,
-          e.salas_gerais, e.salas_funcionais, e.banheiros, e.laboratorios, e.salas_atividades, e.dormitorios, e.areas_externas, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
+          e.salas_gerais, e.salas_funcionais, e.banheiros, e.laboratorios, e.salas_atividades, e.dormitorios, e.areas_externas, e.recursos_acessibilidade, e.possui_dependencias, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
           e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora,
           e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio,
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
@@ -720,6 +722,18 @@ class clsPmieducarEscola
       if (is_string($this->areas_externas)) {
         $campos .= "{$gruda}areas_externas";
         $valores .= "{$gruda}'{{$this->areas_externas}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->recursos_acessibilidade)) {
+        $campos .= "{$gruda}recursos_acessibilidade";
+        $valores .= "{$gruda}'{{$this->recursos_acessibilidade}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->possui_dependencias)) {
+        $campos .= "{$gruda}possui_dependencias";
+        $valores .= "{$gruda}'{$this->possui_dependencias}'";
         $gruda = ", ";
       }
 
@@ -1521,6 +1535,22 @@ class clsPmieducarEscola
         $gruda = ", ";
       } elseif ($this->areas_externas !== false) {
         $set .= "{$gruda}areas_externas = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->recursos_acessibilidade)) {
+        $set .= "{$gruda}recursos_acessibilidade = '{{$this->recursos_acessibilidade}}'";
+        $gruda = ", ";
+      } elseif ($this->recursos_acessibilidade !== false) {
+        $set .= "{$gruda}recursos_acessibilidade = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->possui_dependencias)) {
+        $set .= "{$gruda}possui_dependencias = '{$this->possui_dependencias}'";
+        $gruda = ", ";
+      } elseif ($this->possui_dependencias !== false) {
+        $set .= "{$gruda}possui_dependencias = NULL";
         $gruda = ", ";
       }
 
