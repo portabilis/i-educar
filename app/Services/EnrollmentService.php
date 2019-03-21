@@ -119,7 +119,7 @@ class EnrollmentService
         LegacySchoolClass $schoolClass,
         DateTime $date
     ) {
-        if (empty($schoolClass->vacancies)) {
+        if ($schoolClass->denyEnrollmentsWhenNoVacancy() && empty($schoolClass->vacancies)) {
             throw new NoVacancyException($schoolClass);
         }
 

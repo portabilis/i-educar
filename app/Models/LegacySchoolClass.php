@@ -130,6 +130,9 @@ class LegacySchoolClass extends Model
      */
     public function getBeginAcademicYearAttribute()
     {
+        // TODO
+        // Transformar em uma relação.
+
         if ($this->course->is_standard_calendar) {
             $stage = DB::table('pmieducar.ano_letivo_modulo')
                 ->where('ref_ano', $this->year)
@@ -155,6 +158,9 @@ class LegacySchoolClass extends Model
      */
     public function getEndAcademicYearAttribute()
     {
+        // TODO
+        // Transformar em uma relação.
+
         if ($this->course->is_standard_calendar) {
             $stage = DB::table('pmieducar.ano_letivo_modulo')
                 ->where('ref_ano', $this->year)
@@ -228,4 +234,25 @@ class LegacySchoolClass extends Model
             ->get();
     }
 
+    /**
+     * Indica se bloqueia enturmações quando não houver vagas.
+     *
+     * @return bool
+     */
+    public function denyEnrollmentsWhenNoVacancy()
+    {
+        // TODO
+        // Transformar em uma relação.
+
+        $schoolGrade = DB::table('pmieducar.escola_serie')
+            ->where('ref_cod_escola', $this->school_id)
+            ->where('ref_cod_serie', $this->grade_id)
+            ->first();
+
+        if (empty($schoolGrade)) {
+            return true;
+        }
+
+        return (boolean) $schoolGrade->bloquear_enturmacao_sem_vagas;
+    }
 }

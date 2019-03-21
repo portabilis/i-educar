@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class BatchEnrollmentRequest extends FormRequest
 {
@@ -13,16 +14,21 @@ class BatchEnrollmentRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'date' => [
                 'required',
                 'date_format:d/m/Y',
             ],
             'registrations' => [
                 'required',
-                'max:' . $this->schoolClass->vacancies
             ]
         ];
+
+        if ($this->schoolClass->denyEnrollmentsWhenNoVacancy()) {
+            $rules['registrations'][] = 'max:' . $this->schoolClass->vacancies;
+        }
+
+        return $rules;
     }
 
     /**
