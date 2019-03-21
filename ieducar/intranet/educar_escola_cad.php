@@ -138,6 +138,8 @@ class indice extends clsCadastro
     public $possui_dependencias;
     public $numero_salas_utilizadas_dentro_predio;
     public $numero_salas_utilizadas_fora_predio;
+    public $numero_salas_climatizadas;
+    public $numero_salas_acessibilidade;
     public $total_funcionario;
     public $atendimento_aee;
     public $atividade_complementar;
@@ -1253,6 +1255,12 @@ class indice extends clsCadastro
             $options = array('label' => 'Número de salas de aula utilizadas na escola fora do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_fora_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
             $this->inputsHelper()->integer('numero_salas_utilizadas_fora_predio', $options);
 
+            $options = array('label' => 'Número de salas de aula climatizadas', 'resources' => $resources, 'value' => $this->numero_salas_climatizadas, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $this->inputsHelper()->integer('numero_salas_climatizadas', $options);
+
+            $options = array('label' => 'Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida', 'resources' => $resources, 'value' => $this->numero_salas_acessibilidade, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $this->inputsHelper()->integer('numero_salas_acessibilidade', $options);
+
             $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('televisoes', $options);
 
@@ -1600,6 +1608,8 @@ class indice extends clsCadastro
                     $obj->possui_dependencias = $this->possui_dependencias;
                     $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
                     $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+                    $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+                    $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
                     $obj->total_funcionario = $this->total_funcionario;
                     $obj->atendimento_aee = $this->atendimento_aee;
                     $obj->atividade_complementar = $this->atividade_complementar;
@@ -1761,6 +1771,8 @@ class indice extends clsCadastro
             $obj->possui_dependencias = $this->possui_dependencias;
             $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
             $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -1973,6 +1985,8 @@ class indice extends clsCadastro
             $obj->possui_dependencias = $this->possui_dependencias;
             $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
             $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -2066,6 +2080,8 @@ class indice extends clsCadastro
             $obj->possui_dependencias = $this->possui_dependencias;
             $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
             $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -2298,7 +2314,9 @@ class indice extends clsCadastro
                 $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
                 $this->validaEscolaCompartilhaPredio() &&
                 $this->validaSalasUtilizadasDentroEscola() &&
-                $this->validaSalasUtilizadasForaEscola();
+                $this->validaSalasUtilizadasForaEscola() &&
+                $this->validaSalasClimatizadas() &&
+                $this->validaSalasAcessibilidade();
     }
 
     protected function validaOcupacaoPredio()
@@ -2588,6 +2606,38 @@ class indice extends clsCadastro
     {
         if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
             $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> deve ser preenchido quando o campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não for preenchido';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasClimatizadas()
+    {
+        if ($this->numero_salas_climatizadas == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula climatizadas</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
+        if ((int)$this->numero_salas_climatizadas > $totalSalas) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula climatizadas</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasAcessibilidade()
+    {
+        if ($this->numero_salas_acessibilidade == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
+        if ((int)$this->numero_salas_climatizadas > $totalSalas) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
             return false;
         }
 

@@ -331,6 +331,7 @@ $j(document).ready(function() {
         }else
           return false;
       });
+      habilitaCamposNumeroSalas();
     });
 
   // EQUIPAMENTOS
@@ -617,3 +618,15 @@ if ( document.getElementById('ref_cod_instituicao') )
 
     }
 }
+
+function habilitaCamposNumeroSalas() {
+    let disabled = $j('#numero_salas_utilizadas_dentro_predio').val() == '' &&
+        $j('#numero_salas_utilizadas_fora_predio').val() == '';
+
+    $j('#numero_salas_climatizadas').prop('disabled', disabled);
+    $j('#numero_salas_acessibilidade').prop('disabled', disabled);
+}
+
+$j('#numero_salas_utilizadas_dentro_predio,#numero_salas_utilizadas_fora_predio').blur(function () {
+    habilitaCamposNumeroSalas();
+});
