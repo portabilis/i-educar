@@ -8,6 +8,7 @@ use App\Models\LegacySchoolClass;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
 use Carbon\Carbon;
+use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\MessageBag;
 use Illuminate\View\View;
@@ -34,6 +35,8 @@ class BatchEnrollmentController extends Controller
         $this->breadcrumb('Desenturmar em lote', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
+        $this->topMenu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
 
         return view('enrollments.batch.cancel', [
             'schoolClass' => $schoolClass,
@@ -62,6 +65,8 @@ class BatchEnrollmentController extends Controller
         $this->breadcrumb('Enturmar em lote', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
+        $this->topMenu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
 
         return view('enrollments.batch.enroll', [
             'schoolClass' => $schoolClass,

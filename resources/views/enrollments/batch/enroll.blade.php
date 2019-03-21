@@ -138,8 +138,8 @@
         <div style="text-align: center">
             <button class="btn-green" type="submit">Enturmar</button>
             <button class="btn registration-btn-check" type="button">Selecionar Todos</button>
-            <button class="btn" type="button">Desenturmar em lote</button>
-            <button class="btn" type="button">Cancelar</button>
+            <a href="{{ route('enrollments.batch.cancel.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Desenturmar em lote</a>
+            <a href="{{ url('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
         </div>
 
     </form>
@@ -248,6 +248,12 @@
             font-family: "Open Sans", sans-serif;
             cursor: pointer;
             border-color: #cddce6 !important;
+        }
+        a.btn {
+            border: 1px solid #cddce6;
+        }
+        a.btn:hover {
+            text-decoration: none;
         }
     </style>
 
