@@ -303,25 +303,4 @@ class SequencialEnturmacao
                                       END)");
         }
     }
-
-    public function excluirSequencial()
-    {
-        if ($this->excluirSequencial) {
-            $sequencial = $this->sequencial;
-            $matricula = $this->refCodMatricula;
-
-            $sqlDelete = "DELETE FROM pmieducar.matricula_turma
-                      WHERE ref_cod_matricula = {$this->refCodMatricula}
-                        AND sequencial = {$this->sequencial}";
-
-            $sqlUpdate = "UPDATE pmieducar.matricula_turma
-                       SET sequencial = sequencial - 1
-                     WHERE ref_cod_matricula = {$this->refCodMatricula}
-                       AND sequencial > {$this->sequencial}";
-
-            $db = new clsBanco();
-            $db->Consulta($sqlDelete);
-            $db->Consulta($sqlUpdate);
-        }
-    }
 }
