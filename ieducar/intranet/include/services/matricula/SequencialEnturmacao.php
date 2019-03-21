@@ -72,7 +72,12 @@ class SequencialEnturmacao
 
         $this->subtraiSequencialPosterior($sequencialFechamento);
 
-        return $sequencialExcluiAluno;
+        // FIXME
+        // A implentação anterior retornava uma variável indefinida, ver
+        // impactos ao corrigir esta implementação para retornar o sequencial
+        // correto.
+
+        return null;
     }
 
     private function sequencialAlunoAposData()
