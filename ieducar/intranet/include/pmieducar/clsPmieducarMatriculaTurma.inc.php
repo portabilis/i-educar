@@ -574,28 +574,16 @@ class clsPmieducarMatriculaTurma
                 mt.ativo = 1
                 OR
                 (
-                    NOT EXISTS
-                    (
-                        SELECT 1
-                        FROM pmieducar.matricula_turma
-                        JOIN pmieducar.matricula
-                        ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
-                        WHERE matricula_turma.ativo = 1
-                        AND matricula.ref_cod_aluno = m.ref_cod_aluno
-                        AND matricula_turma.ref_cod_turma = mt.ref_cod_turma
+                    i.data_base_remanejamento IS NOT NULL
+                    AND mt.data_exclusao::date > i.data_base_remanejamento
+                    AND (
+                        mt.transferido
+                        OR mt.remanejado
+                        OR mt.reclassificado
+                        OR mt.abandono
+                        OR mt.falecido
                     )
-                    AND
-                    (
-                        i.data_base_remanejamento IS NOT NULL
-                        AND mt.data_exclusao::date > i.data_base_remanejamento
-                        AND (
-                            mt.transferido
-                            OR mt.remanejado
-                            OR mt.reclassificado
-                            OR mt.abandono
-                            OR mt.falecido
-                        )
-                    )
+
                 )
             )
         ";
