@@ -135,6 +135,7 @@ class indice extends clsCadastro
     public $dormitorios;
     public $areas_externas;
     public $recursos_acessibilidade;
+    public $possui_dependencias;
     public $dependencia_numero_salas_existente;
     public $dependencia_numero_salas_utilizadas;
     public $total_funcionario;
@@ -1135,6 +1136,21 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
+                'label' => 'Possui dependências',
+                'label_hint' => 'Se preenchido com: Não, nenhuma dependência será exportada para o Censo escolar',
+                'resources' => $resources,
+                'value' => $this->possui_dependencias,
+                'required' => $obrigarCamposCenso,
+                'size' => 40
+            ];
+            $this->inputsHelper()->select('possui_dependencias', $options);
+
             $helperOptions = ['objectName' => 'salas_gerais'];
             $options = [
                 'label' => 'Salas gerais',
@@ -1482,6 +1498,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaDadosTelefones()) {
+            return false;
+        }
+
+        if (!$this->validaCampoPossuiDependencias()) {
             return false;
         }
 
@@ -1838,6 +1858,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaLatitudeLongitude()) {
+            return false;
+        }
+
+        if (!$this->validaCampoPossuiDependencias()) {
             return false;
         }
 
@@ -2520,6 +2544,32 @@ class indice extends clsCadastro
         $arrayCamposSemNulos = array_filter($arrayCampos);
         if (count(array_unique($arrayCamposSemNulos)) < count($arrayCamposSemNulos)) {
             $this->mensagem = "Os códigos Inep's das escolas compartilhadas devem ser diferentes entre si.";
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaCampoPossuiDependencias()
+    {
+        if ($this->possui_dependencias != 1) {
+            return true;
+        }
+
+        $arrayCampos = array_filter(
+            [
+                $this->salas_gerais,
+                $this->salas_funcionais,
+                $this->banheiros,
+                $this->laboratorios,
+                $this->salas_atividades,
+                $this->dormitorios,
+                $this->areas_externas,
+            ]
+        );
+
+        if (count($arrayCampos) == 0) {
+            $this->mensagem = 'Preencha pelo menos um dos campos de Salas gerais à Áreas externas';
             return false;
         }
 
