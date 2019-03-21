@@ -2,8 +2,7 @@
 
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
-
-require_once 'include/pmieducar/geral.inc.php';
+use Illuminate\Support\Facades\DB;
 
 class SequencialEnturmacao
 {
@@ -78,8 +77,7 @@ class SequencialEnturmacao
 
     private function sequencialAlunoAposData()
     {
-        $db = new clsBanco();
-        $sql = "  SELECT MAX(sequencial_fechamento)+1
+        $sql = "  SELECT MAX(sequencial_fechamento)+1 as sequencial
                   FROM pmieducar.matricula_turma
                  INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
                  INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
@@ -95,11 +93,12 @@ class SequencialEnturmacao
                                                    WHERE matricula.cod_matricula = {$this->refCodMatricula})
                             ELSE TRUE
                         END)";
+
         if (!$this->matriculaDependencia()) {
             $sql .= ' AND matricula.dependencia = FALSE';
         }
 
-        $novoSequencial = $db->CampoUnico($sql);
+        $novoSequencial = DB::selectOne($sql)->sequencial;
 
         $novoSequencial = $novoSequencial ? $novoSequencial : 1;
 
@@ -108,8 +107,7 @@ class SequencialEnturmacao
 
     private function sequencialAlunoAntesData()
     {
-        $db = new clsBanco();
-        $sql = "SELECT MAX(sequencial_fechamento) + 1
+        $sql = "SELECT MAX(sequencial_fechamento) + 1 as sequencial
                 FROM pmieducar.matricula_turma
                INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
                INNER JOIN pmieducar.escola ON (matricula.ref_ref_cod_escola = escola.cod_escola)
@@ -129,7 +127,7 @@ class SequencialEnturmacao
             $sql .= ' AND matricula.dependencia = FALSE';
         }
 
-        $novoSequencial = $db->CampoUnico($sql);
+        $novoSequencial = DB::selectOne($sql)->sequencial;
 
         $novoSequencial = $novoSequencial ? $novoSequencial : 1;
 
@@ -138,7 +136,6 @@ class SequencialEnturmacao
 
     private function sequencialAlunoOrdemAlfabetica()
     {
-        $db = new clsBanco();
         $sql =
             "SELECT sequencial_fechamento, pessoa.nome
        FROM pmieducar.matricula_turma
@@ -156,23 +153,23 @@ class SequencialEnturmacao
         AND matricula_turma.ref_cod_turma = $this->refCodTurma
       ORDER BY sequencial_fechamento";
 
-        $db->Consulta($sql);
+        $students = DB::select($sql);
 
         $alunos = [];
-        while ($db->ProximoRegistro()) {
-            $aluno = $db->Tupla();
-            $sequencial = $aluno['sequencial_fechamento'];
-            $alunos[$sequencial] = strtoupper($aluno['nome']);
+
+        foreach ($students as $student) {
+            $sequencial = $student->sequencial_fechamento;
+            $alunos[$sequencial] = strtoupper($student->nome);
         }
 
-        $matricula = new clsPmieducarMatricula($this->refCodMatricula);
-        $matricula = $matricula->detalhe();
+        $nome = $this->registration->student->person->name;
 
-        $alunos['novo-aluno'] = limpa_acentos(strtoupper($matricula['nome']));
+        $alunos['novo-aluno'] = limpa_acentos(strtoupper($nome));
 
         asort($alunos);
 
         $novoSequencial = 0;
+
         foreach ($alunos as $sequencial => $nome) {
             if ($sequencial == 'novo-aluno') {
                 $novoSequencial++;
@@ -186,45 +183,44 @@ class SequencialEnturmacao
 
     private function somaSequencialPosterior($sequencial)
     {
-        $sql =
-            "UPDATE pmieducar.matricula_turma
-        SET sequencial_fechamento = sequencial_fechamento + 1
-      WHERE ref_cod_turma = $this->refCodTurma
-        AND sequencial_fechamento >= $sequencial";
-
-        $db = new clsBanco();
-        $db->Consulta($sql);
+        DB::update(
+            '
+                UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento = sequencial_fechamento + 1
+                WHERE ref_cod_turma = ?
+                AND sequencial_fechamento >= ?
+            ', [
+                $this->refCodTurma, $sequencial
+            ]
+        );
     }
 
     private function subtraiSequencialPosterior($sequencial)
     {
-        $sql =
-            "UPDATE pmieducar.matricula_turma
-        SET sequencial_fechamento = sequencial_fechamento - 1
-      WHERE ref_cod_turma = $this->refCodTurma
-        AND sequencial_fechamento > $sequencial";
-
-        $db = new clsBanco();
-        $db->Consulta($sql);
+        DB::update(
+            '
+                UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento = sequencial_fechamento - 1
+                WHERE ref_cod_turma = ?
+                AND sequencial_fechamento > ?
+            ', [
+                $this->refCodTurma, $sequencial
+            ]
+        );
     }
 
     private function enturmarPorUltimo()
     {
         $enturmarPorUltimo = false;
 
-        $turma = new clsPmieducarTurma($this->refCodTurma);
-        $turma = $turma->detalhe();
+        $institution = $this->schoolClass->school->institution;
 
-        $instituicao = new clsPmieducarInstituicao($turma['ref_cod_instituicao']);
-        $instituicao = $instituicao->detalhe();
-        $dataFechamento = $instituicao['data_fechamento'];
+        $dataFechamento = $institution->data_fechamento;
 
         $possuiDataFechamento = is_string($dataFechamento);
 
         if ($possuiDataFechamento) {
-            $objMatricula = new clsPmieducarMatricula($this->refCodMatricula);
-            $detMatricula = $objMatricula->detalhe();
-            $ano = $detMatricula['ano'];
+            $ano = $this->registration->year;
 
             $dataFechamento = explode('-', $dataFechamento);
 
@@ -235,7 +231,7 @@ class SequencialEnturmacao
             }
         }
 
-        $dataBaseTransferencia = $instituicao['data_base_transferencia'];
+        $dataBaseTransferencia = $institution->data_base_transferencia;
 
         if ($dataBaseTransferencia && $this->existeMatriculaTransferidaAno()) {
             if (strtotime($dataBaseTransferencia) < strtotime($this->dataEnturmacao)) {
@@ -243,7 +239,7 @@ class SequencialEnturmacao
             }
         }
 
-        $dataBaseRemanejamento = $instituicao['data_base_remanejamento'];
+        $dataBaseRemanejamento = $institution->data_base_remanejamento;
 
         if ($dataBaseRemanejamento) {
             if (strtotime($dataBaseRemanejamento) < strtotime($this->dataEnturmacao)) {
@@ -256,35 +252,21 @@ class SequencialEnturmacao
 
     private function existeMatriculaTransferidaAno()
     {
-        if (is_numeric($this->refCodMatricula)) {
-            $db = new clsBanco();
+        $codAluno = $this->registration->ref_cod_aluno;
 
-            $codAluno = $db->CampoUnico("SELECT ref_cod_aluno FROM pmieducar.matricula WHERE cod_matricula = {$this->refCodMatricula}");
-            $ano = $this->getAnoMatricula();
-            if ($codAluno) {
-                return $db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE ref_cod_aluno = {$codAluno} AND ano = {$ano} AND
-          aprovado = 4") == 1 ? true : false;
-            }
-        }
+        $ano = $this->getAnoMatricula();
+
+        return (bool) DB::selectOne("SELECT 1 FROM pmieducar.matricula WHERE ref_cod_aluno = {$codAluno} AND ano = {$ano} AND aprovado = 4");
     }
 
     public function getAnoMatricula()
     {
-        if (is_numeric($this->refCodMatricula)) {
-            $db = new clsBanco();
-
-            return $db->CampoUnico("SELECT ano FROM pmieducar.matricula WHERE cod_matricula = {$this->refCodMatricula}");
-        }
+        return $this->registration->year;
     }
 
     public function matriculaDependencia()
     {
-        $db = new clsBanco();
-        $dependencia = $db->CampoUnico("SELECT dependencia
-                                      FROM pmieducar.matricula
-                                     WHERE matricula.cod_matricula = {$this->refCodMatricula}");
-
-        return dbBool($dependencia);
+        return $this->registration->is_dependency;
     }
 
     /**
@@ -297,23 +279,35 @@ class SequencialEnturmacao
 
     public function existeMatriculaTurma()
     {
-        if (is_numeric($this->refCodMatricula)) {
-            $db = new clsBanco();
+        $result = DB::selectOne(
+            '
+                SELECT sequencial_fechamento
+                FROM pmieducar.matricula_turma
+                INNER JOIN pmieducar.matricula 
+                ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                WHERE matricula.ativo = 1
+                AND ref_cod_matricula = ?
+                AND ref_cod_turma = ?
+                AND (
+                    CASE 
+                        WHEN matricula_turma.ativo = 1 THEN TRUE
+                        WHEN matricula_turma.transferido THEN TRUE
+                        WHEN matricula_turma.remanejado THEN TRUE
+                        WHEN matricula.dependencia THEN TRUE
+                        WHEN matricula_turma.abandono THEN TRUE
+                        WHEN matricula_turma.reclassificado THEN TRUE
+                        ELSE FALSE
+                    END
+                )
+            ', [
+                $this->refCodMatricula, $this->refCodTurma
+            ]
+        );
 
-            return $db->CampoUnico("SELECT sequencial_fechamento
-                                FROM pmieducar.matricula_turma
-                               INNER JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
-                               WHERE matricula.ativo = 1
-                                 AND ref_cod_matricula = {$this->refCodMatricula}
-                                 AND ref_cod_turma = {$this->refCodTurma}
-                                 AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
-                                           WHEN matricula_turma.transferido THEN TRUE
-                                           WHEN matricula_turma.remanejado THEN TRUE
-                                           WHEN matricula.dependencia THEN TRUE
-                                           WHEN matricula_turma.abandono THEN TRUE
-                                           WHEN matricula_turma.reclassificado THEN TRUE
-                                           ELSE FALSE
-                                      END)");
+        if (empty($result)) {
+            return null;
         }
+
+        return $result->sequencial_fechamento;
     }
 }
