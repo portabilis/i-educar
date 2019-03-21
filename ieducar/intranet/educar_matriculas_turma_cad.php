@@ -94,7 +94,7 @@ class indice extends clsCadastro
             $existe_entrumacao = $db->CampoUnico("select * from matricula_turma where ref_cod_turma = $this->ref_cod_turma");
 
             if ($retorno == 'Editar' and $existe_entrumacao) {
-                $this->url_copiar_enturmacoes = sprintf('educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=%d', $this->ref_cod_turma);
+                $this->url_copiar_enturmacoes = sprintf('%d', $this->ref_cod_turma);
                 $this->nome_url_copiar_enturmacoes = 'Copiar enturmações';
             }
 

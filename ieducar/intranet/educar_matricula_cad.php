@@ -88,7 +88,7 @@ class indice extends clsCadastro
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
             $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
-            $url = 'educar_matriculas_turma_cad.php?ref_cod_turma=' . $this->ref_cod_turma_copiar_enturmacoes;
+            $url = route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma_copiar_enturmacoes]);
         } else {
             $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
         }
