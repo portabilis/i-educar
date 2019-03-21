@@ -1145,7 +1145,7 @@ class indice extends clsCadastro
             ];
             $options = [
                 'label' => 'Possui dependências',
-                'label_hint' => 'Se preenchido com: Não, nenhuma dependência será exportada para o Censo escolar',
+                'label_hint' => 'Preencha com: Sim, para exportar os campos de dependências no arquivo do Censo escolar',
                 'resources' => $resources,
                 'value' => $this->possui_dependencias,
                 'required' => $obrigarCamposCenso,

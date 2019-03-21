@@ -1575,7 +1575,7 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_string($this->possui_dependencias)) {
+      if (is_numeric($this->possui_dependencias)) {
         $set .= "{$gruda}possui_dependencias = '{$this->possui_dependencias}'";
         $gruda = ", ";
       } elseif ($this->possui_dependencias !== false) {
