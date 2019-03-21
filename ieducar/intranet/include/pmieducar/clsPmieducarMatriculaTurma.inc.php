@@ -329,7 +329,7 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
-      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
+      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
       $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialNovaMatricula();
 
       if(is_numeric($this->sequencial_fechamento)){
@@ -437,9 +437,13 @@ class clsPmieducarMatriculaTurma
       }
 
       if ($this->removerSequencial){
-        $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
+        $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
         $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
       }
+
+      // FIXME
+      // Este trecho de código não é utilizado na atualização do registro, ou
+      // seja, não serve para nada. Verificar o impacto ao corrigi-lo.
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";

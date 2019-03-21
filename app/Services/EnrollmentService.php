@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+use SequencialEnturmacao;
 use Throwable;
 
 class EnrollmentService
@@ -29,6 +30,23 @@ class EnrollmentService
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param LegacyRegistration $registration
+     * @param LegacySchoolClass $schoolClass
+     * @param DateTime $date
+     *
+     * @return null
+     */
+    private function getSequenceSchoolClass(
+        LegacyRegistration $registration,
+        LegacySchoolClass $schoolClass,
+        DateTime $date
+    ) {
+        $enrollmentSequence = new SequencialEnturmacao($registration->id, $schoolClass->id, $date->format('Y-m-d'));
+
+        return $enrollmentSequence->ordenaSequencialNovaMatricula();
     }
 
     /**
@@ -118,10 +136,13 @@ class EnrollmentService
             throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
         }
 
+        $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);
+
         /** @var LegacyEnrollment $enrollment */
         $enrollment = $registration->enrollments()->create([
             'ref_cod_turma' => $schoolClass->id,
             'sequencial' => $registration->enrollments()->max('sequencial') + 1,
+            'sequencial_fechamento' => $sequenceInSchoolClass,
             'ref_usuario_cad' => $this->user->getKey(),
             'data_cadastro' => Carbon::now(),
             'data_enturmacao' => $date,

@@ -39,6 +39,7 @@ class LegacyEnrollment extends Model
         'ref_usuario_cad',
         'data_cadastro',
         'data_enturmacao',
+        'sequencial_fechamento',
     ];
 
     /**
@@ -69,11 +70,17 @@ class LegacyEnrollment extends Model
         return $this->data_exclusao;
     }
 
+    /**
+     * @return int
+     */
     public function getSchoolClassIdAttribute()
     {
         return $this->ref_cod_turma;
     }
 
+    /**
+     * @return int
+     */
     public function getRegistrationIdAttribute()
     {
         return $this->ref_cod_matricula;

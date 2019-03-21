@@ -9,7 +9,6 @@ class SequencialEnturmacao
     public $refCodMatricula;
     public $refCodTurma;
     public $dataEnturmacao;
-    public $sequencial;
 
     /**
      * @var LegacyRegistration
@@ -21,12 +20,11 @@ class SequencialEnturmacao
      */
     private $schoolClass;
 
-    public function __construct($refCodMatricula, $refCodTurma, $dataEnturmacao, $sequencial)
+    public function __construct($refCodMatricula, $refCodTurma, $dataEnturmacao)
     {
         $this->refCodMatricula = $refCodMatricula;
         $this->refCodTurma = $refCodTurma;
         $this->dataEnturmacao = $dataEnturmacao;
-        $this->sequencial = $sequencial;
 
         $this->registration = LegacyRegistration::findOrFail($refCodMatricula);
         $this->schoolClass = LegacySchoolClass::findOrFail($refCodTurma);

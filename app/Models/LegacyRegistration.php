@@ -53,6 +53,22 @@ class LegacyRegistration extends Model
     }
 
     /**
+     * @return boolean
+     */
+    public function getIsDependencyAttribute()
+    {
+        return $this->dependencia;
+    }
+
+    /**
+     * @return int
+     */
+    public function getYearAttribute()
+    {
+        return $this->ano;
+    }
+
+    /**
      * Relação com o aluno.
      *
      * @return BelongsTo
