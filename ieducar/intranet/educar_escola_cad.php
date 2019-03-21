@@ -2590,6 +2590,11 @@ class indice extends clsCadastro
 
     protected function validaSalasUtilizadasDentroEscola()
     {
+        if ($this->numero_salas_utilizadas_dentro_predio == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não pode ser preenchido com 0';
+            return false;
+        }
+
         if ($this->local_funcionamento != LocalFuncionamento::PREDIO_ESCOLAR) {
             return true;
         }
@@ -2604,6 +2609,11 @@ class indice extends clsCadastro
 
     protected function validaSalasUtilizadasForaEscola()
     {
+        if ($this->numero_salas_utilizadas_fora_predio == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não pode ser preenchido com 0';
+            return false;
+        }
+
         if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
             $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> deve ser preenchido quando o campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não for preenchido';
             return false;
@@ -2636,7 +2646,7 @@ class indice extends clsCadastro
         }
 
         $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
-        if ((int)$this->numero_salas_climatizadas > $totalSalas) {
+        if ((int)$this->numero_salas_acessibilidade > $totalSalas) {
             $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
             return false;
         }
