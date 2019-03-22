@@ -44,7 +44,7 @@ RUN docker-php-ext-install zip
 
 RUN apt-get install -y unzip
 
-RUN ln -s /application/artisan /usr/local/bin/artisan
+RUN ln -s /var/www/ieducar/artisan /usr/local/bin/artisan
 
 RUN mkdir -p /usr/share/man/man7
 RUN apt-get install -y postgresql-client
