@@ -320,7 +320,7 @@ class indice extends clsCadastro
 
         foreach ($enturmacoesParaCopiar as $enturmar) {
             if ($validarCamposEducacenso && !$this->availableTimeService()->isAvailable($enturmar['ref_cod_matricula'], $this->ref_cod_turma)) {
-                $mensagemErro = Portabilis_String_Utils::toLatin1('O aluno já está matriculado em uma turma com esse horário.');
+                $mensagemErro = 'O aluno já está matriculado em uma turma com esse horário.';
             }
 
             $dadosDaMatricula = $this->getMatricula($enturmar['ref_cod_matricula']);
@@ -512,7 +512,7 @@ class indice extends clsCadastro
             $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
 
             if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($enturmar['ref_cod_matricula'], $this->ref_cod_turma)) {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('O aluno já está matriculado em uma turma com esse horário.');
+                $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
                 return false;
             }
 
@@ -1539,7 +1539,7 @@ class indice extends clsCadastro
     }
 
     private function availableTimeService() {
-        if (!$this->availableTimeService instanceof AvailableTimeService) {
+        if (empty($this->availableTimeService)) {
             $this->availableTimeService = new AvailableTimeService();
         }
 

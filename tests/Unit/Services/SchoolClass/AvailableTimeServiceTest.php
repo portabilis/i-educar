@@ -8,6 +8,7 @@ use App\Models\Registration;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AvailableTimeServiceTest extends TestCase
 {
@@ -31,7 +32,7 @@ class AvailableTimeServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function testNaoExisteOutrasEnturmacoesRetornaVerdadeiro()
+    public function testWithoutOthersEnrollmentsReturnsTrue()
     {
         $schoolClass = factory(SchoolClass::class)->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
         $registration = factory(Registration::class)->create();
@@ -39,7 +40,7 @@ class AvailableTimeServiceTest extends TestCase
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
 
-    public function testOutrasEnturmacoesMesmoDiaHorariodiferenteRetornaVerdadeiro()
+    public function testWithEnrollmentsSameDayDifferentTimeReturnsTrue()
     {
         $schoolClass = factory(SchoolClass::class, 'morning')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
         $otherSchoolClass = factory(SchoolClass::class, 'afternoon')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
@@ -53,7 +54,7 @@ class AvailableTimeServiceTest extends TestCase
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
 
-    public function testNaoOutrasEnturmacoesMesmoDiaMesmoHorarioRetornaFalso()
+    public function testWithEnrollmentsSameDaySameTimeReturnsFalse()
     {
         $schoolClass = factory(SchoolClass::class, 'morning')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
         $otherSchoolClass = factory(SchoolClass::class, 'morning')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
@@ -66,7 +67,7 @@ class AvailableTimeServiceTest extends TestCase
         $this->assertFalse($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
 
-    public function testNaoOutrasEnturmacoesOutroDiaMesmoHorarioRetornaVerdadeiro()
+    public function testWithEnrollmentsDifferentDaySameTimeReturnsFalse()
     {
         $schoolClass = factory(SchoolClass::class, 'morning')->create([
             'tipo_mediacao_didatico_pedagogico' => 1 ,
@@ -80,5 +81,13 @@ class AvailableTimeServiceTest extends TestCase
         ]);
 
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    public function testShouldLaunchExceptionWhenPassInvalidSchoolClassId()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        $registration = factory(Registration::class)->create();
+
+        $this->service->isAvailable($registration->ref_cod_aluno, -1);
     }
 }

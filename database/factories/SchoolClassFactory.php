@@ -1,8 +1,9 @@
 <?php
 
 use Faker\Generator as Faker;
+use App\Models\SchoolClass;
 
-$factory->define(\App\Models\SchoolClass::class, function (Faker $faker) {
+$factory->define(SchoolClass::class, function (Faker $faker) {
     return [
         'ref_usuario_cad' => 1,
         'nm_turma' => $faker->words(3, true),
@@ -13,8 +14,8 @@ $factory->define(\App\Models\SchoolClass::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(\App\Models\SchoolClass::class, 'morning', function (Faker $faker) use ($factory) {
-    $schollClass = $factory->raw(\App\Models\SchoolClass::class);
+$factory->defineAs(SchoolClass::class, 'morning', function (Faker $faker) use ($factory) {
+    $schollClass = $factory->raw(SchoolClass::class);
 
     return array_merge($schollClass, [
         'hora_inicial' => '07:45',
@@ -22,8 +23,8 @@ $factory->defineAs(\App\Models\SchoolClass::class, 'morning', function (Faker $f
     ]);
 });
 
-$factory->defineAs(\App\Models\SchoolClass::class, 'afternoon', function (Faker $faker) use ($factory) {
-    $schollClass = $factory->raw(\App\Models\SchoolClass::class);
+$factory->defineAs(SchoolClass::class, 'afternoon', function (Faker $faker) use ($factory) {
+    $schollClass = $factory->raw(SchoolClass::class);
 
     return array_merge($schollClass, [
         'hora_inicial' => '13:15',

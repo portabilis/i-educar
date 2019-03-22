@@ -42,7 +42,7 @@ class SchoolClass extends Model
             $value = explode(',', str_replace(['{', '}'], '', $value));
         }
 
-        return $value;
+        return (array) $value;
     }
 
     /**

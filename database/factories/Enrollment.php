@@ -1,8 +1,9 @@
 <?php
 
 use Faker\Generator as Faker;
+use App\Models\Enrollment;
 
-$factory->define(\App\Models\Enrollment::class, function (Faker $faker) {
+$factory->define(Enrollment::class, function (Faker $faker) {
     return [
         'ref_cod_matricula' => factory(\App\Models\Registration::class)->create(),
         'ref_cod_turma' => factory(\App\Models\SchoolClass::class)->create(),
