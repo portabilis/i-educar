@@ -1,4 +1,26 @@
 $j(document).ready(function(){
+  const recordsFirstStep = [
+    '00',
+    '10',
+    '20',
+    '30',
+    '40',
+    '50',
+    '51',
+    '60',
+    '70',
+    '80'
+  ];
+
+  const recordsFirstStepNotActive = [
+    '00'
+  ];
+
+  const recordsSecondStep = [
+    '89',
+    '90',
+    '91'
+  ];
 
   let currentDateString = () => new Date().toLocaleString('pt-BR');
 
@@ -65,15 +87,41 @@ $j(document).ready(function(){
           clickClose: false,
           showClose: false
         });
-        analisaRegistro89();
+        analyseRecords(recordsSecondStep);
       } else {
         $j("#modal_load").modal({
           escapeClose: false,
           clickClose: false,
           showClose: false
         });
-        analisaRegistro00();
+
+        analyseRecords($j('#escola_em_andamento').val() == '1' ? recordsFirstStep : recordsFirstStepNotActive);
       }
+    }
+
+    let analyseRecords = (records) => {
+      let record = records.shift();
+      $j("#registro_load").text(`Analisando registro ${record}`);
+      let urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `registro-${record}`, {
+        escola: $j("#ref_cod_escola").val(),
+        ano: $j("#ano").val(),
+        data_ini: $j("#data_ini").val(),
+        data_fim: $j("#data_fim").val()
+      });
+
+      let options = {
+        url: urlForGetAnaliseRegistro,
+        dataType: 'json',
+        success: (successData) => {
+          montaHtmlRegistro(successData);
+          if (records.length === 0) {
+            finishAnalysis();
+          } else {
+            analyseRecords(records);
+          }
+        }
+      };
+      getResources(options);
     }
 
     function isValidDate(s) {
@@ -212,273 +260,5 @@ $j(document).ready(function(){
       form.submit();
     }
 
-    var analisaRegistro00 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-00', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro00
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro00 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 10");
-      analisaRegistro10();
-    };
-
-    var analisaRegistro10 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-10', {
-          escola : $j("#ref_cod_escola").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro10
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro10 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 20");
-      analisaRegistro20();
-    };
-
-    var analisaRegistro20 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-20', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro20
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro20 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 30");
-      analisaRegistro30();
-    };
-
-    var analisaRegistro30 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-30', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro30
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro30 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 40");
-      analisaRegistro40();
-    };
-
-    var analisaRegistro40 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-40', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro40
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro40 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 50");
-      analisaRegistro50();
-    };
-
-    var analisaRegistro50 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-50', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro50
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro50 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 51");
-      analisaRegistro51();
-    };
-
-    var analisaRegistro51 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-51', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro51
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro51 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 60");
-      analisaRegistro60();
-    };
-
-    var analisaRegistro60 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-60', {
-          escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro60
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro60 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 70");
-      analisaRegistro70();
-    };
-
-    var analisaRegistro70 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-70', {
-          escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro70
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro70 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 80");
-      analisaRegistro80();
-    };
-
-    var analisaRegistro80 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-80', {
-          escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro80
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro80 = function(response) {
-      montaHtmlRegistro(response);
-      finishAnalysis();
-    };
-
-    var analisaRegistro89 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-89', {
-          escola   : $j("#ref_cod_escola").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-
-          success  : handleGetAnaliseRegistro89
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro89 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 90");
-      analisaRegistro90();
-    };
-
-    var analisaRegistro90 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-90', {
-          escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro90
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro90 = function(response) {
-      montaHtmlRegistro(response);
-      $j("#registro_load").text("Analisando registro 91");
-      analisaRegistro91();
-    };
-
-    var analisaRegistro91 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-91', {
-          escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro91
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro91 = function(response) {
-      montaHtmlRegistro(response);
-      finishAnalysis();
-    };
   iniciaAnalise();
 });
