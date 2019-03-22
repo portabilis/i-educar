@@ -10,7 +10,7 @@ class GenderSelectOptions
     {
         $options = GenderSelectOptions::getDescriptiveValues();
 
-        return array_merge(['' => "Selecione"], $options);
+        return array_merge(['' => "Sexo"], $options);
     }
 
     public static function getDescriptiveValues()
