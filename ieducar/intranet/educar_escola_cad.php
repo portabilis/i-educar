@@ -181,6 +181,35 @@ class indice extends clsCadastro
     public $com_cnpj;
     public $isEnderecoExterno = 0;
     public $esfera_administrativa;
+    public $qtd_secretario_escolar;
+    public $qtd_auxiliar_administrativo;
+    public $qtd_apoio_pedagogico;
+    public $qtd_coordenador_turno;
+    public $qtd_tecnicos;
+    public $qtd_bibliotecarios;
+    public $qtd_segurancas;
+    public $qtd_auxiliar_servicos_gerais;
+    public $qtd_nutricionistas;
+    public $qtd_profissionais_preparacao;
+    public $qtd_bombeiro;
+    public $qtd_psicologo;
+    public $qtd_fonoaudiologo;
+
+    private $inputsRecursos = [
+        'qtd_secretario_escolar' => 'Secretário(a) escolar',
+        'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
+        'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: (pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
+        'qtd_coordenador_turno' => 'Coordenador(a) de turno/disciplina',
+        'qtd_tecnicos' => 'Técnicos(as), monitores(as) ou auxiliares de laboratório(s)',
+        'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
+        'qtd_segurancas' => 'Seguranças, guarda ou segurança patrimonial',
+        'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), horticultor(a), jardineiro(a)',
+        'qtd_nutricionistas' => 'Nutricionista',
+        'qtd_profissionais_preparacao' => 'Profissionais de preparação e segurança alimentar, cozinheiro(a), merendeira e auxiliar de cozinha',
+        'qtd_bombeiro' => 'Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), Enfermeiro(a), Técnico(a) de enfermagem e socorrista',
+        'qtd_psicologo' => 'Psicólogo(a) Escolar',
+        'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
+    ];
 
     public function Inicializar()
     {
@@ -1316,8 +1345,10 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
-            $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('total_funcionario', $options);
+            foreach ($this->inputsRecursos as $key => $label) {
+                $options = array('label' => $label, 'value' => $this->{$key}, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+                $this->inputsHelper()->integer($key, $options);
+            }
 
             $resources = array(NULL => 'Selecione',
                 0 => 'Não oferece',
@@ -1412,7 +1443,7 @@ class indice extends clsCadastro
                 'value' => $this->proposta_pedagogica,
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
-            
+
             $resources = SelectOptions::unidadesVinculadasEscola();
             $options = [
                 'label' => 'Unidade vinculada à Escola de Educação Básica ou Unidade Ofertante de Educação Superior',
@@ -1649,6 +1680,9 @@ class indice extends clsCadastro
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
                     $obj->esfera_administrativa = $this->esfera_administrativa;
+                    foreach ($this->inputsRecursos as $key => $value) {
+                        $obj->{$key} = $this->{$key};
+                    }
 
                     $cod_escola = $cadastrou1 = $obj->cadastra();
 
@@ -1812,6 +1846,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $cod_escola = $cadastrou = $obj->cadastra();
 
@@ -2026,6 +2063,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $editou = $obj->edita();
 
@@ -2121,6 +2161,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $this->cod_escola = $editou = $obj->cadastra();
 
@@ -2303,7 +2346,7 @@ class indice extends clsCadastro
     protected function validaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {
-            return TRUE;
+            return true;
         }
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
@@ -2316,7 +2359,8 @@ class indice extends clsCadastro
                 $this->validaSalasUtilizadasDentroEscola() &&
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
-                $this->validaSalasAcessibilidade();
+                $this->validaSalasAcessibilidade() &&
+                $this->validaRecursos();
     }
 
     protected function validaOcupacaoPredio()
@@ -2652,6 +2696,18 @@ class indice extends clsCadastro
         }
 
         return true;
+    }
+
+    protected function validaRecursos()
+    {
+        foreach ($this->inputsRecursos as $key => $inputRecurso) {
+            if ((int) $this->{$key} > 0) {
+                return true;
+            }
+        }
+
+        $this->mensagem = 'Preencha pelo menos um dos campos de Quantidade de profissionais da aba Recursos.';
+        return false;
     }
 }
 
