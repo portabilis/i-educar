@@ -142,16 +142,34 @@ class EscolaController extends ApiCoreController
         if ($this->canGetEtapasPorEscola()) {
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
 
-            $sql = 'SELECT ref_cod_escola as escola_id,
-                     ano as ano
-                FROM pmieducar.escola_ano_letivo
-               WHERE (CASE WHEN $1 = 0 THEN true ELSE ano = $1 END)
-                 AND andamento = 1
-               ORDER BY ref_cod_escola, ano';
+            $sql = '
+                select distinct 
+                    ref_cod_escola as escola_id,
+                    ano as ano, 
+                    m.nm_tipo as descricao
+                from pmieducar.escola_ano_letivo eal
+                inner join pmieducar.ano_letivo_modulo alm
+                    on true 
+                    and alm.ref_ano = eal.ano 
+                    and alm.ref_ref_cod_escola = eal.ref_cod_escola
+                inner join pmieducar.modulo m 
+                    on true 
+                    and m.cod_modulo = alm.ref_cod_modulo
+                where true 
+                    and (
+                        case when $1 = 0 then 
+                            true 
+                        else 
+                            ano = $1 
+                        end
+                    )
+                and andamento = 1
+                order by ref_cod_escola, ano
+            ';
 
             $anosLetivos = $this->fetchPreparedQuery($sql, [$ano]);
 
-            $attrs = ['escola_id', 'ano'];
+            $attrs = ['escola_id', 'ano', 'descricao'];
             $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
 
             foreach ($anosLetivos as $index => $anoLetivo) {
@@ -183,16 +201,17 @@ class EscolaController extends ApiCoreController
 
     private function getEtapasTurmasAnoEscola($ano, $escola)
     {
-        $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id
+        $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id, m.nm_tipo as descricao
               FROM pmieducar.turma_modulo tm
               INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
               INNER JOIN pmieducar.curso c on (c.cod_curso = t.ref_cod_curso)
+              inner join pmieducar.modulo m 
+              on m.cod_modulo = tm.ref_cod_modulo
             WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and c.padrao_ano_escolar = 0 and t.ativo = 1
           ORDER BY tm.ref_cod_turma';
 
-        $turmas = [];
         $turmas = $this->fetchPreparedQuery($sql_turmas, [$ano, $escola]);
-        $attrs_turmas = ['turma_id'];
+        $attrs_turmas = ['turma_id', 'descricao'];
         $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs_turmas);
 
         foreach ($turmas as $key => $turma) {
