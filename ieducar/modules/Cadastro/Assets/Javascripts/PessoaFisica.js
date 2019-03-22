@@ -127,16 +127,12 @@ var checkTipoCertidaoCivil = function() {
   $certidaoCasamentoField.makeUnrequired();
   $j('#uf_emissao_certidao_civil').makeUnrequired();
   $j('#data_emissao_certidao_civil').makeUnrequired();
-  $j('#cartorio_cert_civil_inep_id').makeUnrequired();
-  $j('#cartorio_cert_civil_inep').makeUnrequired();
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
     if (obrigarCamposCenso) {
       $j('#uf_emissao_certidao_civil').makeRequired();
       $j('#data_emissao_certidao_civil').makeRequired();
-      $j('#cartorio_cert_civil_inep_id').makeRequired();
-      $j('#cartorio_cert_civil_inep').makeRequired();
       $certidaoCivilFields.makeRequired();
     }
     $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
