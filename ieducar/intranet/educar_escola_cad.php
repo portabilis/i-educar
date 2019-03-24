@@ -129,6 +129,7 @@ class indice extends clsCadastro
     public $tratamento_lixo;
     public $alimentacao_escolar_alunos;
     public $compartilha_espacos_atividades_integracao;
+    public $usa_espacos_equipamentos_atividades_regulares;
     public $salas_funcionais;
     public $salas_gerais;
     public $banheiros;
@@ -1173,6 +1174,20 @@ class indice extends clsCadastro
                 1 => 'Sim'
             ];
             $options = [
+                'label' => 'Escola usa espaços e equipamentos do entorno escolar para atividades regulares com os alunos(as)',
+                'resources' => $resources,
+                'value' => $this->usa_espacos_equipamentos_atividades_regulares,
+                'required' => false,
+                'size' => 70
+            ];
+            $this->inputsHelper()->select('usa_espacos_equipamentos_atividades_regulares', $options);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
                 'label' => 'Possui dependências',
                 'label_hint' => 'Preencha com: Sim, para exportar os campos de dependências no arquivo do Censo escolar',
                 'resources' => $resources,
@@ -1628,6 +1643,7 @@ class indice extends clsCadastro
                     $obj->tratamento_lixo = $tratamento_lixo;
                     $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
                     $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+                    $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
                     $obj->salas_funcionais = $salas_funcionais;
                     $obj->salas_gerais = $salas_gerais;
                     $obj->banheiros = $banheiros;
@@ -1793,6 +1809,7 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
             $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -2009,6 +2026,7 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
             $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -2106,6 +2124,7 @@ class indice extends clsCadastro
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
             $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
