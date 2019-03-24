@@ -54,5 +54,4 @@ public_bairro_xml.php
 public_distrito_xml.php
 public_municipio_xml.php
 public_uf_xml.php
-urbano_cep_logradouro_bairro_xml.php
 public_logradouro_xml.php
