@@ -4,7 +4,6 @@ use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\View;
 
-require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsControlador.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
@@ -17,7 +16,7 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-class clsBase extends clsConfig
+class clsBase
 {
     public $titulo = 'Prefeitura Municipal';
     public $clsForm = [];
@@ -33,6 +32,12 @@ class clsBase extends clsConfig
     public $script_footer;
     public $prog_alert;
     public $configuracoes;
+    public $_instituicao;
+
+    public function __construct()
+    {
+        $this->_instituicao = config('legacy.app.template.vars.instituicao');
+    }
 
     protected function setupConfigs()
     {
@@ -59,7 +64,7 @@ class clsBase extends clsConfig
     public function OpenTpl($template)
     {
         $prefix = 'nvp_';
-        $file = $this->arrayConfig['strDirTemplates'] . $prefix . $template . '.tpl';
+        $file = 'templates/' . $prefix . $template . '.tpl';
 
         ob_start();
         include $file;

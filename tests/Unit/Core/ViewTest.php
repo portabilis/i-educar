@@ -1,6 +1,5 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -30,6 +29,8 @@ use PHPUnit\Framework\TestCase;
  * @version   $Id$
  */
 
+use Tests\TestCase;
+
 require_once __DIR__.'/_stub/View.php';
 require_once __DIR__.'/Controller/_stub/Page/Abstract.php';
 
@@ -43,7 +44,7 @@ require_once __DIR__.'/Controller/_stub/Page/Abstract.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-class Core_ViewTest extends PHPUnit\Framework\TestCase
+class Core_ViewTest extends TestCase
 {
   protected $_pageController = NULL;
   protected $_view = NULL;
@@ -57,13 +58,14 @@ class Core_ViewTest extends PHPUnit\Framework\TestCase
 
   protected function setUp()
   {
+    parent::setUp();
+
     $this->_view = new Core_ViewStub($this->_pageController);
   }
 
   public function testTituloConfiguradoComValorDeConfiguracaoGlobal()
   {
-    global $coreExt;
-    $instituicao = $coreExt['Config']->app->template->vars->instituicao;
+    $instituicao = config('legacy.app.template.vars.instituicao');
 
     $this->_view->MakeAll();
     $this->assertEquals($instituicao . ' | foo', $this->_view->getTitulo());
