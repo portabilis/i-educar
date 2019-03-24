@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Services;
 
-use App\Models\Menu;
-use App\Models\Submenu;
-use App\Models\User;
+use App\Models\LegacyMenu;
+use App\Models\LegacySubmenu;
+use App\Models\LegacyUser;
 use App\Services\MenuService;
 use iEducar\Support\Repositories\MenuRepository;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -29,21 +29,21 @@ class MenuServiceTest extends TestCase
         parent::setUp();
         $this->service = app(MenuService::class);
         $this->repository = app(MenuRepository::class);
-        Menu::query()->truncate();
-        Submenu::query()->truncate();
+        LegacyMenu::query()->truncate();
+        LegacySubmenu::query()->truncate();
     }
 
     public function testWithoutPermissionUserShouldReturnEmpty()
     {
-        $user = factory(User::class)->create();
+        $user = factory(LegacyUser::class)->create();
         $result = $this->service->getByUser($user);
         $this->assertEmpty($result);
     }
 
     public function testCommonUserShouldReturnByPermission()
     {
-        $user = factory(User::class)->create();
-        $submenu = factory(Submenu::class)->create();
+        $user = factory(LegacyUser::class)->create();
+        $submenu = factory(LegacySubmenu::class)->create();
         $submenu->typeUsers()->attach($user->type->cod_tipo_usuario);
 
         $result = $this->service->getByUser($user);
@@ -53,12 +53,12 @@ class MenuServiceTest extends TestCase
 
     public function testReturnOnlyActives()
     {
-        $user = factory(User::class)->create();
-        $activeSubmenu = factory(Submenu::class)->create();
+        $user = factory(LegacyUser::class)->create();
+        $activeSubmenu = factory(LegacySubmenu::class)->create();
         $activeSubmenu->typeUsers()->attach($user->type->cod_tipo_usuario);
 
-        $inactiveSubmenu = factory(Submenu::class)->create([
-            'ref_cod_menu_menu' => factory(Menu::class)->create(['ativo' => false])
+        $inactiveSubmenu = factory(LegacySubmenu::class)->create([
+            'ref_cod_menu_menu' => factory(LegacyMenu::class)->create(['ativo' => false])
         ]);
         $inactiveSubmenu->typeUsers()->attach($user->type->cod_tipo_usuario);
 

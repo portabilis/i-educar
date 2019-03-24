@@ -2,37 +2,34 @@
 
 namespace App\Models;
 
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Pessoa.
- *
- * @package namespace App\Entities;
- */
-class Person extends EloquentBaseModel implements Transformable
+class Person extends Model
 {
-    use TransformableTrait;
+    protected $table = 'persons';
 
-    /**
-     * @var string
-     */
-    protected $table = 'cadastro.pessoa';
+    public function individual()
+    {
+        return $this->hasOne(Individual::class);
+    }
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'idpes';
+    public function createdBy()
+    {
+        return $this->belongsTo(Individual::class, 'created_by', 'id');
+    }
 
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao', 'idsis_cad',
-    ];
+    public function updatedBy()
+    {
+        return $this->belongsTo(Individual::class, 'updated_by', 'id');
+    }
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public function getTypeDescriptionAttribute()
+    {
+        return (new PersonType)->getDescriptiveValues()[(int) $this->type];
+    }
+
+    public function getRegistryOriginDescriptionAttribute()
+    {
+        return (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin];
+    }
 }
