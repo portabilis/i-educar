@@ -127,6 +127,7 @@ class indice extends clsCadastro
     public $esgoto_sanitario;
     public $destinacao_lixo;
     public $tratamento_lixo;
+    public $alimentacao_escolar_alunos;
     public $salas_funcionais;
     public $salas_gerais;
     public $banheiros;
@@ -403,7 +404,6 @@ class indice extends clsCadastro
         if (is_string($this->tratamento_lixo)) {
             $this->tratamento_lixo = explode(',', str_replace(array('{', "}"), '', $this->tratamento_lixo));
         }
-
 
         if (is_string($this->salas_funcionais)) {
             $this->salas_funcionais = explode(',', str_replace(array('{', "}"), '', $this->salas_funcionais));
@@ -1144,6 +1144,20 @@ class indice extends clsCadastro
                 1 => 'Sim'
             ];
             $options = [
+                'label' => 'Alimentação escolar para os alunos(as)',
+                'resources' => $resources,
+                'value' => $this->alimentacao_escolar_alunos,
+                'required' => $obrigarCamposCenso,
+                'size' => 70
+            ];
+            $this->inputsHelper()->select('alimentacao_escolar_alunos', $options);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
                 'label' => 'Possui dependências',
                 'label_hint' => 'Preencha com: Sim, para exportar os campos de dependências no arquivo do Censo escolar',
                 'resources' => $resources,
@@ -1597,6 +1611,7 @@ class indice extends clsCadastro
                     $obj->esgoto_sanitario = $esgoto_sanitario;
                     $obj->destinacao_lixo = $destinacao_lixo;
                     $obj->tratamento_lixo = $tratamento_lixo;
+                    $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
                     $obj->salas_funcionais = $salas_funcionais;
                     $obj->salas_gerais = $salas_gerais;
                     $obj->banheiros = $banheiros;
@@ -1760,6 +1775,7 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -1974,6 +1990,7 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -2069,6 +2086,7 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
