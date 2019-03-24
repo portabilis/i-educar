@@ -1,7 +1,6 @@
 S3.php
 agenda_calendario.php
 clsCalendario.inc.php
-clsConfigItajai.inc.php
 cron.agenda.php
 download.php
 educar_calendario_pesquisas.php

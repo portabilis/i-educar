@@ -66,13 +66,12 @@ class clsIndexBase extends clsBase
  * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
-class indice extends clsConfig
+class indice
 {
   var $pessoa_logada;
   var $titulo;
   var $limite;
   var $offset;
-
   var $cod_calendario_ano_letivo;
   var $ref_cod_escola;
   var $ref_cod_curso;

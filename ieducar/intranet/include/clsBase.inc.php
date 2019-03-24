@@ -4,7 +4,6 @@ use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Support\Facades\View;
 
-require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsControlador.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
@@ -17,7 +16,7 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-class clsBase extends clsConfig
+class clsBase
 {
     public $titulo = 'Prefeitura Municipal';
     public $clsForm = [];
