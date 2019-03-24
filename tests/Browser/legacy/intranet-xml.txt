@@ -56,5 +56,3 @@ public_municipio_xml.php
 public_uf_xml.php
 urbano_cep_logradouro_bairro_xml.php
 public_logradouro_xml.php
-xml_acervo_geral.php
-xml_escola.php
