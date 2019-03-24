@@ -33,6 +33,12 @@ class clsBase extends clsConfig
     public $script_footer;
     public $prog_alert;
     public $configuracoes;
+    public $_instituicao;
+
+    public function __construct()
+    {
+        $this->_instituicao = config('legacy.app.template.vars.instituicao');
+    }
 
     protected function setupConfigs()
     {
@@ -59,7 +65,7 @@ class clsBase extends clsConfig
     public function OpenTpl($template)
     {
         $prefix = 'nvp_';
-        $file = $this->arrayConfig['strDirTemplates'] . $prefix . $template . '.tpl';
+        $file = 'templates/' . $prefix . $template . '.tpl';
 
         ob_start();
         include $file;
