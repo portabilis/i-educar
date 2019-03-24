@@ -91,6 +91,7 @@ class clsPmieducarEscola
   var $agua_consumida = false;
   var $agua_potavel_consumo = false;
   var $alimentacao_escolar_alunos = false;
+  var $compartilha_espacos_atividades_integracao = false;
   var $salas_funcionais = false;
   var $salas_gerais = false;
   var $banheiros = false;
@@ -252,7 +253,7 @@ class clsPmieducarEscola
     $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.zona_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
           e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
           e.condicao, e.predio_compartilhado_outra_escola, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.agua_potavel_consumo, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo, e.tratamento_lixo,
-          e.alimentacao_escolar_alunos,
+          e.alimentacao_escolar_alunos, e.compartilha_espacos_atividades_integracao,
           e.salas_gerais, e.salas_funcionais, e.banheiros, e.laboratorios, e.salas_atividades, e.dormitorios, e.areas_externas, e.recursos_acessibilidade, e.possui_dependencias, e.numero_salas_utilizadas_dentro_predio,
           e.numero_salas_utilizadas_fora_predio, e.numero_salas_climatizadas, e.numero_salas_acessibilidade, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
           e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora,
@@ -693,6 +694,12 @@ class clsPmieducarEscola
       if (is_numeric($this->alimentacao_escolar_alunos)) {
           $campos .= "{$gruda}alimentacao_escolar_alunos";
           $valores .= "{$gruda}'{$this->alimentacao_escolar_alunos}'";
+          $gruda = ", ";
+      }
+
+      if (is_numeric($this->compartilha_espacos_atividades_integracao)) {
+          $campos .= "{$gruda}compartilha_espacos_atividades_integracao";
+          $valores .= "{$gruda}'{$this->compartilha_espacos_atividades_integracao}'";
           $gruda = ", ";
       }
 
@@ -1525,6 +1532,14 @@ class clsPmieducarEscola
       } elseif ($this->alimentacao_escolar_alunos !== false) {
         $set .= "{$gruda}alimentacao_escolar_alunos = NULL";
         $gruda = ", ";
+      }
+
+      if (is_numeric($this->compartilha_espacos_atividades_integracao)) {
+          $set .= "{$gruda}compartilha_espacos_atividades_integracao = {$this->compartilha_espacos_atividades_integracao}";
+          $gruda = ", ";
+      } elseif ($this->compartilha_espacos_atividades_integracao !== false) {
+          $set .= "{$gruda}compartilha_espacos_atividades_integracao = NULL";
+          $gruda = ", ";
       }
 
       if (is_string($this->salas_funcionais)) {

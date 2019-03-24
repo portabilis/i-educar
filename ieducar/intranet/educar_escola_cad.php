@@ -128,6 +128,7 @@ class indice extends clsCadastro
     public $destinacao_lixo;
     public $tratamento_lixo;
     public $alimentacao_escolar_alunos;
+    public $compartilha_espacos_atividades_integracao;
     public $salas_funcionais;
     public $salas_gerais;
     public $banheiros;
@@ -1158,6 +1159,20 @@ class indice extends clsCadastro
                 1 => 'Sim'
             ];
             $options = [
+                'label' => 'Escola compartilha espaços para atividades de integração escola-comunidade',
+                'resources' => $resources,
+                'value' => $this->compartilha_espacos_atividades_integracao,
+                'required' => false,
+                'size' => 70
+            ];
+            $this->inputsHelper()->select('compartilha_espacos_atividades_integracao', $options);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
                 'label' => 'Possui dependências',
                 'label_hint' => 'Preencha com: Sim, para exportar os campos de dependências no arquivo do Censo escolar',
                 'resources' => $resources,
@@ -1612,6 +1627,7 @@ class indice extends clsCadastro
                     $obj->destinacao_lixo = $destinacao_lixo;
                     $obj->tratamento_lixo = $tratamento_lixo;
                     $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+                    $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
                     $obj->salas_funcionais = $salas_funcionais;
                     $obj->salas_gerais = $salas_gerais;
                     $obj->banheiros = $banheiros;
@@ -1776,6 +1792,7 @@ class indice extends clsCadastro
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -1991,6 +2008,7 @@ class indice extends clsCadastro
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -2087,6 +2105,7 @@ class indice extends clsCadastro
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
             $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
