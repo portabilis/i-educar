@@ -1212,17 +1212,6 @@ function trocaCampo(campo){
 	}
 }
 
-function BuscaEscola(campo){
-	/// define qual a funcao que devera ser executada quando o xml for carregado
-	DOM_execute_when_xmlhttpChange = function() { atualizaEscola(campo); };
-
-	var campo_ = document.getElementById('ref_cod_instituicao');
-	var valor = campo_.options[campo_.selectedIndex].value;
-
-	strURL = "xml_escola.php?cod_instituicao="+valor;
-	DOM_loadXMLDoc( strURL );
-}
-
 function atualizaEscola(campo){
 	document.getElementById(campo).options.length=1;
 	var length = 1;
