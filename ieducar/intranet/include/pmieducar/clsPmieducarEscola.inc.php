@@ -177,6 +177,19 @@ class clsPmieducarEscola
   var $codigo_ies;
   var $codUsuario;
   var $esfera_administrativa;
+    public $qtd_secretario_escolar;
+    public $qtd_auxiliar_administrativo;
+    public $qtd_apoio_pedagogico;
+    public $qtd_coordenador_turno;
+    public $qtd_tecnicos;
+    public $qtd_bibliotecarios;
+    public $qtd_segurancas;
+    public $qtd_auxiliar_servicos_gerais;
+    public $qtd_nutricionistas;
+    public $qtd_profissionais_preparacao;
+    public $qtd_bombeiro;
+    public $qtd_psicologo;
+    public $qtd_fonoaudiologo;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -258,11 +271,24 @@ class clsPmieducarEscola
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
-          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
-          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
-          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
-          e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4,
+          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som,
+          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao,
+          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal,
+          e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies,
+            e.qtd_secretario_escolar,
+            e.qtd_auxiliar_administrativo,
+            e.qtd_apoio_pedagogico,
+            e.qtd_coordenador_turno,
+            e.qtd_tecnicos,
+            e.qtd_bibliotecarios,
+            e.qtd_segurancas,
+            e.qtd_auxiliar_servicos_gerais,
+            e.qtd_nutricionistas,
+            e.qtd_profissionais_preparacao,
+            e.qtd_bombeiro,
+            e.qtd_psicologo,
+            e.qtd_fonoaudiologo
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -394,6 +420,59 @@ class clsPmieducarEscola
     if (is_numeric($ativo)) {
       $this->ativo = $ativo;
     }
+
+    if (is_numeric($qtd_secretario_escolar)) {
+        $this->qtd_secretario_escolar = $qtd_secretario_escolar;
+    }
+
+    if (is_numeric($qtd_auxiliar_administrativo)) {
+        $this->qtd_auxiliar_administrativo = $qtd_auxiliar_administrativo;
+    }
+
+    if (is_numeric($qtd_apoio_pedagogico)) {
+        $this->qtd_apoio_pedagogico = $qtd_apoio_pedagogico;
+    }
+
+    if (is_numeric($qtd_coordenador_turno)) {
+        $this->qtd_coordenador_turno = $qtd_coordenador_turno;
+    }
+
+    if (is_numeric($qtd_tecnicos)) {
+        $this->qtd_tecnicos = $qtd_tecnicos;
+    }
+
+    if (is_numeric($qtd_bibliotecarios)) {
+        $this->qtd_bibliotecarios = $qtd_bibliotecarios;
+    }
+
+    if (is_numeric($qtd_segurancas)) {
+        $this->qtd_segurancas = $qtd_segurancas;
+    }
+
+    if (is_numeric($qtd_auxiliar_servicos_gerais)) {
+        $this->qtd_auxiliar_servicos_gerais = $qtd_auxiliar_servicos_gerais;
+    }
+
+    if (is_numeric($qtd_nutricionistas)) {
+        $this->qtd_nutricionistas = $qtd_nutricionistas;
+    }
+
+    if (is_numeric($qtd_profissionais_preparacao)) {
+        $this->qtd_profissionais_preparacao = $qtd_profissionais_preparacao;
+    }
+
+    if (is_numeric($qtd_bombeiro)) {
+        $this->qtd_bombeiro = $qtd_bombeiro;
+    }
+
+    if (is_numeric($qtd_psicologo)) {
+        $this->qtd_psicologo = $qtd_psicologo;
+    }
+
+    if (is_numeric($qtd_fonoaudiologo)) {
+        $this->qtd_fonoaudiologo = $qtd_fonoaudiologo;
+    }
+
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = $bloquear_lancamento_diario_anos_letivos_encerrados;
     $this->utiliza_regra_diferenciada = $utiliza_regra_diferenciada;
@@ -1173,6 +1252,85 @@ class clsPmieducarEscola
         $valores .= "{$gruda}'{$this->esfera_administrativa}'";
         $gruda = ", ";
       }
+
+
+    if (is_numeric($this->qtd_secretario_escolar)) {
+        $campos .= "{$gruda}qtd_secretario_escolar";
+        $valores .= "{$gruda}$this->qtd_secretario_escolar";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_auxiliar_administrativo)) {
+        $campos .= "{$gruda}qtd_auxiliar_administrativo";
+        $valores .= "{$gruda}$this->qtd_auxiliar_administrativo";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_apoio_pedagogico)) {
+        $campos .= "{$gruda}qtd_apoio_pedagogico";
+        $valores .= "{$gruda}$this->qtd_apoio_pedagogico";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_coordenador_turno)) {
+        $campos .= "{$gruda}qtd_coordenador_turno";
+        $valores .= "{$gruda}$this->qtd_coordenador_turno";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_tecnicos)) {
+        $campos .= "{$gruda}qtd_tecnicos";
+        $valores .= "{$gruda}$this->qtd_tecnicos";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_bibliotecarios)) {
+        $campos .= "{$gruda}qtd_bibliotecarios";
+        $valores .= "{$gruda}$this->qtd_bibliotecarios";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_segurancas)) {
+        $campos .= "{$gruda}qtd_segurancas";
+        $valores .= "{$gruda}$this->qtd_segurancas";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_auxiliar_servicos_gerais)) {
+        $campos .= "{$gruda}qtd_auxiliar_servicos_gerais";
+        $valores .= "{$gruda}$this->qtd_auxiliar_servicos_gerais";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_nutricionistas)) {
+        $campos .= "{$gruda}qtd_nutricionistas";
+        $valores .= "{$gruda}$this->qtd_nutricionistas";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_profissionais_preparacao)) {
+        $campos .= "{$gruda}qtd_profissionais_preparacao";
+        $valores .= "{$gruda}$this->qtd_profissionais_preparacao";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_bombeiro)) {
+        $campos .= "{$gruda}qtd_bombeiro";
+        $valores .= "{$gruda}$this->qtd_bombeiro";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_psicologo)) {
+        $campos .= "{$gruda}qtd_psicologo";
+        $valores .= "{$gruda}$this->qtd_psicologo";
+        $gruda = ', ';
+    }
+
+    if (is_numeric($this->qtd_fonoaudiologo)) {
+        $campos .= "{$gruda}qtd_fonoaudiologo";
+        $valores .= "{$gruda}$this->qtd_fonoaudiologo";
+        $gruda = ', ';
+    }
 
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
@@ -1990,6 +2148,110 @@ class clsPmieducarEscola
       } elseif (is_null($this->esfera_administrativa) || $this->esfera_administrativa == '') {
         $gruda = ", ";
         $set .= "{$gruda}esfera_administrativa = NULL ";
+      }
+
+      if (is_numeric($this->qtd_secretario_escolar) && $this->qtd_secretario_escolar > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_secretario_escolar = '{$this->qtd_secretario_escolar}'";
+      } elseif (is_null($this->qtd_secretario_escolar) || $this->qtd_secretario_escolar == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_secretario_escolar = NULL ";
+      }
+
+      if (is_numeric($this->qtd_auxiliar_administrativo) && $this->qtd_auxiliar_administrativo > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_auxiliar_administrativo = '{$this->qtd_auxiliar_administrativo}'";
+      } elseif (is_null($this->qtd_auxiliar_administrativo) || $this->qtd_auxiliar_administrativo == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_auxiliar_administrativo = NULL ";
+      }
+
+      if (is_numeric($this->qtd_apoio_pedagogico) && $this->qtd_apoio_pedagogico > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_apoio_pedagogico = '{$this->qtd_apoio_pedagogico}'";
+      } elseif (is_null($this->qtd_apoio_pedagogico) || $this->qtd_apoio_pedagogico == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_apoio_pedagogico = NULL ";
+      }
+
+      if (is_numeric($this->qtd_coordenador_turno) && $this->qtd_coordenador_turno > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_coordenador_turno = '{$this->qtd_coordenador_turno}'";
+      } elseif (is_null($this->qtd_coordenador_turno) || $this->qtd_coordenador_turno == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_coordenador_turno = NULL ";
+      }
+
+      if (is_numeric($this->qtd_tecnicos) && $this->qtd_tecnicos > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_tecnicos = '{$this->qtd_tecnicos}'";
+      } elseif (is_null($this->qtd_tecnicos) || $this->qtd_tecnicos == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_tecnicos = NULL ";
+      }
+
+      if (is_numeric($this->qtd_bibliotecarios) && $this->qtd_bibliotecarios > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_bibliotecarios = '{$this->qtd_bibliotecarios}'";
+      } elseif (is_null($this->qtd_bibliotecarios) || $this->qtd_bibliotecarios == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_bibliotecarios = NULL ";
+      }
+
+      if (is_numeric($this->qtd_segurancas) && $this->qtd_segurancas > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_segurancas = '{$this->qtd_segurancas}'";
+      } elseif (is_null($this->qtd_segurancas) || $this->qtd_segurancas == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_segurancas = NULL ";
+      }
+
+      if (is_numeric($this->qtd_auxiliar_servicos_gerais) && $this->qtd_auxiliar_servicos_gerais > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_auxiliar_servicos_gerais = '{$this->qtd_auxiliar_servicos_gerais}'";
+      } elseif (is_null($this->qtd_auxiliar_servicos_gerais) || $this->qtd_auxiliar_servicos_gerais == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_auxiliar_servicos_gerais = NULL ";
+      }
+
+      if (is_numeric($this->qtd_nutricionistas) && $this->qtd_nutricionistas > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_nutricionistas = '{$this->qtd_nutricionistas}'";
+      } elseif (is_null($this->qtd_nutricionistas) || $this->qtd_nutricionistas == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_nutricionistas = NULL ";
+      }
+
+      if (is_numeric($this->qtd_profissionais_preparacao) && $this->qtd_profissionais_preparacao > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_profissionais_preparacao = '{$this->qtd_profissionais_preparacao}'";
+      } elseif (is_null($this->qtd_profissionais_preparacao) || $this->qtd_profissionais_preparacao == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_profissionais_preparacao = NULL ";
+      }
+
+      if (is_numeric($this->qtd_bombeiro) && $this->qtd_bombeiro > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_bombeiro = '{$this->qtd_bombeiro}'";
+      } elseif (is_null($this->qtd_bombeiro) || $this->qtd_bombeiro == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_bombeiro = NULL ";
+      }
+
+      if (is_numeric($this->qtd_psicologo) && $this->qtd_psicologo > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_psicologo = '{$this->qtd_psicologo}'";
+      } elseif (is_null($this->qtd_psicologo) || $this->qtd_psicologo == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_psicologo = NULL ";
+      }
+
+      if (is_numeric($this->qtd_fonoaudiologo) && $this->qtd_fonoaudiologo > 0) {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_fonoaudiologo = '{$this->qtd_fonoaudiologo}'";
+      } elseif (is_null($this->qtd_fonoaudiologo) || $this->qtd_fonoaudiologo == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}qtd_fonoaudiologo = NULL ";
       }
 
       if ($set) {
