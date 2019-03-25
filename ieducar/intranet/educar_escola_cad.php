@@ -11,6 +11,7 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
+use iEducar\Modules\Educacenso\Model\RedeLocal;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SalasAtividades;
 use iEducar\Modules\Educacenso\Model\SalasFuncionais;
@@ -158,6 +159,7 @@ class indice extends clsCadastro
     public $codigo_lingua_indigena;
     public $equipamentos;
     public $uso_internet;
+    public $rede_local;
     public $televisoes;
     public $videocassetes;
     public $dvds;
@@ -457,6 +459,10 @@ class indice extends clsCadastro
 
         if (is_string($this->uso_internet)) {
             $this->uso_internet = explode(',', str_replace(array('{', "}"), '', $this->uso_internet));
+        }
+
+        if (is_string($this->rede_local)) {
+            $this->rede_local = explode(',', str_replace(array('{', "}"), '', $this->rede_local));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1396,6 +1402,18 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
+            $helperOptions = ['objectName' => 'rede_local'];
+            $options = [
+                'label' => 'Rede local de interligação de computadores',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->rede_local,
+                    'all_values' => RedeLocal::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
 
@@ -1578,6 +1596,7 @@ class indice extends clsCadastro
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
         $equipamentos = implode(',', $this->equipamentos);
         $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1688,6 +1707,7 @@ class indice extends clsCadastro
                     $obj->proposta_pedagogica = $this->proposta_pedagogica;
                     $obj->equipamentos = $equipamentos;
                     $obj->uso_internet = $uso_internet;
+                    $obj->rede_local = $rede_local;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1856,6 +1876,7 @@ class indice extends clsCadastro
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -1981,6 +2002,7 @@ class indice extends clsCadastro
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
         $equipamentos = implode(',', $this->equipamentos);
         $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
@@ -2056,6 +2078,7 @@ class indice extends clsCadastro
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2156,6 +2179,7 @@ class indice extends clsCadastro
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2774,6 +2798,11 @@ class indice extends clsCadastro
 
         if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
             return false;
         }
 

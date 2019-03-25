@@ -38,6 +38,10 @@ const USO_INTERNET = {
     NAO_POSSUI: 1
 };
 
+const EQUIPAMENTOS = {
+    COMPUTADORES: 1
+};
+
 $escolaInepIdField.closest('tr').hide();
 
 var submitForm = function(){
@@ -335,7 +339,6 @@ $j(document).ready(function() {
           return false;
       });
       habilitaCamposNumeroSalas();
-      habilitaCampoAcessoInternet();
     });
 
   // EQUIPAMENTOS
@@ -353,7 +356,8 @@ $j(document).ready(function() {
         }else
           return false;
       });
-
+      habilitaCampoAcessoInternet();
+      habilitaCampoRedeLocal();
     });
 
   // Dados educacionais
@@ -642,4 +646,21 @@ function habilitaCampoAcessoInternet() {
 
 $j('#uso_internet').on('change', function () {
     habilitaCampoAcessoInternet()
+});
+
+function habilitaCampoRedeLocal() {
+    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
+    $j('#rede_local').prop('disabled', disabled);
+
+    if (disabled) {
+        makeUnrequired('rede_local');
+    } else {
+        makeRequired('rede_local');
+    }
+
+    $j("#rede_local").trigger("chosen:updated");
+}
+
+$j('#equipamentos').on('change', function () {
+    habilitaCampoRedeLocal()
 });
