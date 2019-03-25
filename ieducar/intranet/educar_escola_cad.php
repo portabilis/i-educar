@@ -4,6 +4,7 @@ use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
+use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
@@ -160,6 +161,7 @@ class indice extends clsCadastro
     public $equipamentos;
     public $uso_internet;
     public $rede_local;
+    public $equipamentos_acesso_internet;
     public $televisoes;
     public $videocassetes;
     public $dvds;
@@ -463,6 +465,10 @@ class indice extends clsCadastro
 
         if (is_string($this->rede_local)) {
             $this->rede_local = explode(',', str_replace(array('{', "}"), '', $this->rede_local));
+        }
+
+        if (is_string($this->equipamentos_acesso_internet)) {
+            $this->equipamentos_acesso_internet = explode(',', str_replace(array('{', "}"), '', $this->equipamentos_acesso_internet));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1414,6 +1420,18 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'equipamentos_acesso_internet'];
+            $options = [
+                'label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->equipamentos_acesso_internet,
+                    'all_values' => EquipamentosAcessoInternet::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
 
@@ -1597,6 +1615,7 @@ class indice extends clsCadastro
         $equipamentos = implode(',', $this->equipamentos);
         $uso_internet = implode(',', $this->uso_internet);
         $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1708,6 +1727,7 @@ class indice extends clsCadastro
                     $obj->equipamentos = $equipamentos;
                     $obj->uso_internet = $uso_internet;
                     $obj->rede_local = $rede_local;
+                    $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1877,6 +1897,7 @@ class indice extends clsCadastro
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2003,6 +2024,7 @@ class indice extends clsCadastro
         $equipamentos = implode(',', $this->equipamentos);
         $uso_internet = implode(',', $this->uso_internet);
         $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
@@ -2079,6 +2101,7 @@ class indice extends clsCadastro
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2180,6 +2203,7 @@ class indice extends clsCadastro
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
