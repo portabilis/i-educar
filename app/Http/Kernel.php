@@ -36,11 +36,11 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ChangeAppName::class,
+            \App\Http\Middleware\StartLegacySession::class,
             \App\Http\Middleware\ConnectTenantDatabase::class,
             \App\Http\Middleware\LoadLegacyConfig::class,
             \App\Http\Middleware\SetLayoutVariables::class,
-            \App\Http\Middleware\ChangeAppName::class,
-            \App\Http\Middleware\StartLegacySession::class,
         ],
 
         'api' => [
