@@ -34,6 +34,10 @@ const LOCAL_FUNCIONAMENTO = {
     PREDIO_ESCOLAR: 3
 }
 
+const USO_INTERNET = {
+    NAO_POSSUI: 1
+};
+
 $escolaInepIdField.closest('tr').hide();
 
 var submitForm = function(){
@@ -331,6 +335,7 @@ $j(document).ready(function() {
           return false;
       });
       habilitaCamposNumeroSalas();
+      habilitaCampoAcessoInternet();
     });
 
   // EQUIPAMENTOS
@@ -628,4 +633,13 @@ function habilitaCamposNumeroSalas() {
 
 $j('#numero_salas_utilizadas_dentro_predio,#numero_salas_utilizadas_fora_predio').blur(function () {
     habilitaCamposNumeroSalas();
+});
+
+function habilitaCampoAcessoInternet() {
+    let disabled = $j.inArray(USO_INTERNET.NAO_POSSUI.toString(), $j('#uso_internet').val()) != -1;
+    $j('#acesso_internet').prop('disabled', disabled);
+}
+
+$j('#uso_internet').on('change', function () {
+    habilitaCampoAcessoInternet()
 });

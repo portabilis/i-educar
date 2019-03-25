@@ -151,6 +151,7 @@ class clsPmieducarEscola
   var $codigo_lingua_indigena;
   var $proposta_pedagogica;
   var $equipamentos = false;
+  var $uso_internet = false;
   var $televisoes;
   var $videocassetes;
   var $dvds;
@@ -264,7 +265,7 @@ class clsPmieducarEscola
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
-          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
+          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
           e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
           e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
           e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies
@@ -1056,6 +1057,12 @@ class clsPmieducarEscola
       if (is_string($this->equipamentos)) {
         $campos .= "{$gruda}equipamentos";
         $valores .= "{$gruda}'{{$this->equipamentos}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->uso_internet)) {
+        $campos .= "{$gruda}uso_internet";
+        $valores .= "{$gruda}'{{$this->uso_internet}}'";
         $gruda = ", ";
       }
 
@@ -1912,6 +1919,14 @@ class clsPmieducarEscola
         $gruda = ", ";
       } elseif ($this->equipamentos !== false) {
         $set .= "{$gruda}equipamentos = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->uso_internet)) {
+        $set .= "{$gruda}uso_internet = '{{$this->uso_internet}}'";
+        $gruda = ", ";
+      } elseif ($this->uso_internet !== false) {
+        $set .= "{$gruda}uso_internet = NULL";
         $gruda = ", ";
       }
 
