@@ -252,13 +252,12 @@ if (!$j('#cnpj').is(':visible')){
 
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
   $j('#local_funcionamento').closest('tr').attr('id','tlocal_funcionamento');
-  $j('#televisoes').closest('tr').attr('id','ttelevisoes');
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-1;
-  linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
+  linha_inicial_equipamento = $j('#tr_equipamentos').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos

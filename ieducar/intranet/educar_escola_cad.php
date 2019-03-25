@@ -3,6 +3,7 @@
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
+use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
@@ -154,6 +155,7 @@ class indice extends clsCadastro
     public $espaco_brasil_aprendizado;
     public $abre_final_semana;
     public $codigo_lingua_indigena;
+    public $equipamentos;
     public $televisoes;
     public $videocassetes;
     public $dvds;
@@ -445,6 +447,10 @@ class indice extends clsCadastro
 
         if (is_string($this->orgao_vinculado_escola)) {
             $this->orgao_vinculado_escola = explode(',', str_replace(array('{', "}"), '', $this->orgao_vinculado_escola));
+        }
+
+        if (is_string($this->equipamentos)) {
+            $this->equipamentos = explode(',', str_replace(array('{', "}"), '', $this->equipamentos));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1305,6 +1311,18 @@ class indice extends clsCadastro
             $options = array('label' => 'Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida', 'resources' => $resources, 'value' => $this->numero_salas_acessibilidade, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
             $this->inputsHelper()->integer('numero_salas_acessibilidade', $options);
 
+            $helperOptions = ['objectName' => 'equipamentos'];
+            $options = [
+                'label' => 'Equipamentos da escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->equipamentos,
+                    'all_values' => Equipamentos::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('televisoes', $options);
 
@@ -1540,6 +1558,7 @@ class indice extends clsCadastro
         $dormitorios = implode(',', $this->dormitorios);
         $areas_externas = implode(',', $this->areas_externas);
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
+        $equipamentos = implode(',', $this->equipamentos);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1669,6 +1688,7 @@ class indice extends clsCadastro
                     $obj->abre_final_semana = $this->abre_final_semana;
                     $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
                     $obj->proposta_pedagogica = $this->proposta_pedagogica;
+                    $obj->equipamentos = $equipamentos;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1835,6 +1855,7 @@ class indice extends clsCadastro
             $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -1958,6 +1979,7 @@ class indice extends clsCadastro
         $dormitorios = implode(',', $this->dormitorios);
         $areas_externas = implode(',', $this->areas_externas);
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
+        $equipamentos = implode(',', $this->equipamentos);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
@@ -2052,6 +2074,7 @@ class indice extends clsCadastro
             $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2150,6 +2173,7 @@ class indice extends clsCadastro
             $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
