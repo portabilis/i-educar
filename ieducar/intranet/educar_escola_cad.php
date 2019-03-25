@@ -2886,6 +2886,8 @@ class indice extends clsCadastro
             $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
             return false;
         }
+
+        return true;
     }
 }
 

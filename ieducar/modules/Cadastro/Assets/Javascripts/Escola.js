@@ -360,6 +360,7 @@ $j(document).ready(function() {
       habilitaCampoAcessoInternet();
       habilitaCampoEquipamentosAcessoInternet();
       habilitaCampoRedeLocal();
+      habilitaCamposQuantidadeComputadoresAlunos();
     });
 
   // Dados educacionais
@@ -677,7 +678,14 @@ function habilitaCampoRedeLocal() {
 
     $j("#rede_local").trigger("chosen:updated");
 }
+function habilitaCamposQuantidadeComputadoresAlunos() {
+    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
+
+    $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').prop('disabled', disabled);
+    $j("#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets").trigger("chosen:updated");
+}
 
 $j('#equipamentos').on('change', function () {
-    habilitaCampoRedeLocal()
+    habilitaCampoRedeLocal();
+    habilitaCamposQuantidadeComputadoresAlunos();
 });
