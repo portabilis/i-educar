@@ -648,15 +648,15 @@ function habilitaCampoAcessoInternet() {
 
 function habilitaCampoEquipamentosAcessoInternet() {
     let disabled = $j.inArray(USO_INTERNET.ALUNOS.toString(), $j('#uso_internet').val()) == -1;
+
     $j('#equipamentos_acesso_internet').prop('disabled', disabled);
+    $j("#equipamentos_acesso_internet").trigger("chosen:updated");
 
     if (disabled) {
-        makeUnrequired('equipamentos_acesso_internet');
+        $j('#equipamentos_acesso_internet').makeUnrequired();
     } else {
-        makeRequired('equipamentos_acesso_internet');
+        $j('#equipamentos_acesso_internet').makeRequired();
     }
-
-    $j("#equipamentos_acesso_internet").trigger("chosen:updated");
 }
 
 $j('#uso_internet').on('change', function () {
@@ -666,13 +666,14 @@ $j('#uso_internet').on('change', function () {
 
 function habilitaCampoRedeLocal() {
     let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
-    $j('#rede_local').prop('disabled', disabled);
 
     if (disabled) {
         makeUnrequired('rede_local');
     } else {
         makeRequired('rede_local');
     }
+
+    $j('#rede_local').prop('disabled', disabled);
 
     $j("#rede_local").trigger("chosen:updated");
 }

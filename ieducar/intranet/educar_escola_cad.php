@@ -162,6 +162,9 @@ class indice extends clsCadastro
     public $uso_internet;
     public $rede_local;
     public $equipamentos_acesso_internet;
+    public $quantidade_computadores_alunos_mesa;
+    public $quantidade_computadores_alunos_portateis;
+    public $quantidade_computadores_alunos_tablets;
     public $televisoes;
     public $videocassetes;
     public $dvds;
@@ -1412,7 +1415,7 @@ class indice extends clsCadastro
             $options = [
                 'label' => 'Rede local de interligação de computadores',
                 'size' => 50,
-                'required' => $obrigarCamposCenso,
+                'required' => false,
                 'options' => [
                     'values' => $this->rede_local,
                     'all_values' => RedeLocal::getDescriptiveValues()
@@ -1424,13 +1427,27 @@ class indice extends clsCadastro
             $options = [
                 'label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
                 'size' => 50,
-                'required' => $obrigarCamposCenso,
+                'required' => false,
                 'options' => [
                     'values' => $this->equipamentos_acesso_internet,
                     'all_values' => EquipamentosAcessoInternet::getDescriptiveValues()
                 ]
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $this->campoRotulo(
+                'quantidade_computadores_alunos',
+                '<b>Quantidade de computadores de uso dos aluno</b>'
+            );
+
+            $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_mesa', $options);
+
+            $options = array('label' => 'Computadores portáteis', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_portateis, 'required' => false, 'size' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_portateis', $options);
+
+            $options = array('label' => 'Tablets', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_tablets, 'required' => false, 'size' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_tablets', $options);
 
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
@@ -1646,7 +1663,11 @@ class indice extends clsCadastro
             }
         }
 
-        if (!$this->validaOpcoesUnicasMultipleSearch()){
+        if (!$this->validaOpcoesUnicasMultipleSearch()) {
+            return false;
+        }
+
+        if (!$this->validaQuantidadeComputadoresAlunos()) {
             return false;
         }
 
@@ -1728,6 +1749,9 @@ class indice extends clsCadastro
                     $obj->uso_internet = $uso_internet;
                     $obj->rede_local = $rede_local;
                     $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+                    $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+                    $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+                    $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1898,6 +1922,9 @@ class indice extends clsCadastro
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
             $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2030,6 +2057,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaQuantidadeComputadoresAlunos()) {
+            return false;
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
         $obj = new clsPmieducarEscola($this->cod_escola);
@@ -2102,6 +2133,9 @@ class indice extends clsCadastro
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
             $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2204,6 +2238,9 @@ class indice extends clsCadastro
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
             $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2831,6 +2868,24 @@ class indice extends clsCadastro
         }
 
         return true;
+    }
+
+    protected function validaQuantidadeComputadoresAlunos()
+    {
+        if ($this->quantidade_computadores_alunos_mesa == '0') {
+            $this->mensagem = 'O campo: <b>Computadores de mesa</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_portateis == '0') {
+            $this->mensagem = 'O campo: <b>Computadores portáteis</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_tablets == '0') {
+            $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
     }
 }
 
