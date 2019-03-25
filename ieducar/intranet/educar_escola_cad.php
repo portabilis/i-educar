@@ -1356,14 +1356,8 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('televisoes', $options);
-
             $options = array('label' => 'Quantidade de videocassetes', 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('videocassetes', $options);
-
-            $options = array('label' => 'Quantidade de DVDs', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('dvds', $options);
 
             $options = array('label' => 'Quantidade de antenas parabólicas', 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('antenas_parabolicas', $options);
@@ -1376,12 +1370,6 @@ class indice extends clsCadastro
 
             $options = array('label' => 'Quantidade de impressoras', 'resources' => $resources, 'value' => $this->impressoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('impressoras', $options);
-
-            $options = array('label' => 'Quantidade de aparelhos de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('aparelhos_de_som', $options);
-
-            $options = array('label' => 'Quantidade de data show', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('projetores_digitais', $options);
 
             $options = array('label' => 'Quantidade de FAXs', 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('faxs', $options);
@@ -1397,6 +1385,23 @@ class indice extends clsCadastro
 
             $options = array('label' => 'Quantidade de computadores de uso dos alunos', 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('computadores_alunos', $options);
+
+            $this->campoRotulo(
+                'equipamentos_aprendizagem',
+                '<b>Quantidade de equipamentos para ensino/aprendizagem</b>'
+            );
+
+            $options = array('label' => 'Aparelho de Televisão', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('televisoes', $options);
+
+            $options = array('label' => 'Aparelho de DVD/Blu-ray', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('dvds', $options);
+
+            $options = array('label' => 'Aparelho de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('aparelhos_de_som', $options);
+
+            $options = array('label' => 'Projetor Multimídia (Data show)', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('projetores_digitais', $options);
 
             $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('computadores', $options);
