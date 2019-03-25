@@ -5,6 +5,11 @@ require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma
 {
+    const TURNO_MATUTINO = 1;
+    const TURNO_VESPERTINO = 2;
+    const TURNO_NOTURNO = 3;
+    const TURNO_INTEGRAL = 4;
+    
     public $cod_turma;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -70,6 +75,7 @@ class clsPmieducarTurma
 
     public $listarNaoInformarEducacenso = true;
     public $codUsuario;
+    public $tipo_boletim_diferenciado = false;
     // propriedades padrao
 
     /**
@@ -831,6 +837,9 @@ class clsPmieducarTurma
 
             if (is_numeric($this->tipo_boletim_diferenciado)) {
                 $set .= "{$gruda}tipo_boletim_diferenciado = '{$this->tipo_boletim_diferenciado}'";
+                $gruda = ', ';
+            } elseif ($this->tipo_boletim_diferenciado !== false) {
+                $set .= "{$gruda}tipo_boletim_diferenciado = NULL";
                 $gruda = ', ';
             }
 

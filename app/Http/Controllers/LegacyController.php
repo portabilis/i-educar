@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Exception;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -55,6 +55,10 @@ class LegacyController extends Controller
      */
     private function configureErrorsAndExceptions()
     {
+        if (config('legacy.display_errors')) {
+            return;
+        }
+
         ini_set('display_errors', 'off');
 
         error_reporting(0);
@@ -113,6 +117,7 @@ class LegacyController extends Controller
      *
      * @return void
      *
+     * @throws HttpResponseException
      * @throws HttpException
      * @throws Exception
      */
@@ -121,6 +126,14 @@ class LegacyController extends Controller
         try {
             require_once $filename;
             return;
+        } catch (HttpResponseException $exception) {
+
+            // Para evitar encerrar a aplicação com `die` ou `exit`, é lançada
+            // uma exceção do tipo `HttpResponseException` com uma `Response`
+            // interna que será a resposta devolvida pela aplicação.
+
+            throw $exception;
+
         } catch (Exception $exception) {
 
             // A maioria das vezes será pega a Exception neste catch, apenas
@@ -179,7 +192,7 @@ class LegacyController extends Controller
      */
     private function getHttpStatusCode()
     {
-        return http_response_code();
+        return http_response_code() ?: Response::HTTP_OK;
     }
 
     /**
@@ -190,6 +203,7 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     private function requireFileFromLegacy($filename)
@@ -247,6 +261,7 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function intranet($uri)
@@ -259,6 +274,7 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function module()
@@ -273,6 +289,7 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function modules($uri)

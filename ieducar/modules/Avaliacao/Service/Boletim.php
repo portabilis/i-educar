@@ -1170,6 +1170,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacaoFalta = $situacaoFaltas->situacao;
       }
 
+      if (is_null($situacaoNota)) {
+        $situacaoNota = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      }
+
       $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
     }
 
@@ -2263,34 +2267,62 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
   }
 
+  public function unlockMediaComponente($componente)
+  {
+      try {
+          $media = $this->getNotaComponenteMediaDataMapper()->find(array(
+            'notaAluno' => $this->_getNotaAluno()->id,
+            'componenteCurricular' => $componente
+          ));
 
-  public function updateMediaComponente($media, $componente, $etapa){
-    $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
-      'notaAluno' => $this->_getNotaAluno()->id,
-      'componenteCurricular' => $componente,
-      'media' => $media,
-      'mediaArredondada' => $this->arredondaMedia($media),
-      'etapa' => $etapa,
-    ));
+          $media->bloqueada = 'f';
+
+          $media->markOld();
+
+          return $this->getNotaComponenteMediaDataMapper()->save($media);
+      } catch (Exception $e) {
+          return false;
+      }
+  }
+
+  public function updateMediaComponente($media, $componente, $etapa, bool $lock = false) {
+    $lock = $lock === false ? 'f' : 't';
 
     try {
-      // Se existir, marca como "old" para possibilitar a atualização
-      $this->getNotaComponenteMediaDataMapper()->find(array(
-        $notaComponenteCurricularMedia->get('notaAluno'),
-        $notaComponenteCurricularMedia->get('componenteCurricular'),
+      $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find(array(
+        'notaAluno' => $this->_getNotaAluno()->id,
+        'componenteCurricular' => $componente
       ));
 
+      $notaComponenteCurricularMedia->media = $media;
+      $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+      $notaComponenteCurricularMedia->bloqueada = $lock;
+      $notaComponenteCurricularMedia->situacao = null;
+
       $notaComponenteCurricularMedia->markOld();
-    }
-    catch (Exception $e) {
-      // Prossegue, sem problemas.
+    } catch (Exeption $e) {
+      $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
+        'notaAluno' => $this->_getNotaAluno()->id,
+        'componenteCurricular' => $componente,
+        'media' => $media,
+        'mediaArredondada' => $this->arredondaMedia($media),
+        'etapa' => $etapa,
+        'bloqueada' => $lock
+      ));
     }
 
     // Salva a média
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
     $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
-    // Atualiza situação matricula
-    $this->promover();
+
+    try {
+        // Atualiza situação matricula
+        $this->promover();
+    } catch (Exception $e) {
+        // Evita que uma mensagem de erro apareça caso a situação na matrícula
+        // não seja alterada.
+    }
+
     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
     $notaComponenteCurricularMedia->markOld();
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
@@ -2432,31 +2464,42 @@ public function alterarSituacao($novaSituacao, $matriculaId){
 
           // Calcula a média por componente curricular
           $media = $this->_calculaMedia($notas);
-
-          // Cria uma nova instância de média, já com a nota arredondada e a etapa
-          $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
-            'notaAluno' => $notaAlunoId,
-            'componenteCurricular' => $id,
-            'media' => $media,
-            'mediaArredondada' => $this->arredondaMedia($media),
-            'etapa' => $etapa
-          ));
+          $locked = false;
 
           try {
-            // Se existir, marca como "old" para possibilitar a atualização
-            $this->getNotaComponenteMediaDataMapper()->find(array(
-              $notaComponenteCurricularMedia->get('notaAluno'),
-              $notaComponenteCurricularMedia->get('componenteCurricular'),
+            $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find(array(
+              'notaAluno' => $this->_getNotaAluno()->id,
+              'componenteCurricular' => $id,
             ));
 
+            $locked = (bool) $notaComponenteCurricularMedia->bloqueada;
+
+            // A média pode estar bloqueada caso tenha sido alterada manualmente.
+            // Neste caso não acontece a atualização da mesma por aqui e é necessário
+            // desbloqueá-la antes.
+            if (!$locked) {
+                $notaComponenteCurricularMedia->media = $media;
+                $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+            }
+
+            $notaComponenteCurricularMedia->etapa = $etapa;
+            $notaComponenteCurricularMedia->situacao = null;
+
             $notaComponenteCurricularMedia->markOld();
-          }
-          catch (Exception $e) {
-            // Prossegue, sem problemas.
+          } catch (Exception $e) {
+            $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
+              'notaAluno' => $this->_getNotaAluno()->id,
+              'componenteCurricular' => $id,
+              'media' => $media,
+              'mediaArredondada' => $this->arredondaMedia($media),
+              'etapa' => $etapa,
+              'bloqueada' => 'f',
+            ));
           }
 
-        // Salva a média
+          // Salva a média
           $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+
           //Atualiza a situação de acordo com o que foi inserido na média anteriormente
           $notaComponenteCurricularMedia->markOld();
           $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
