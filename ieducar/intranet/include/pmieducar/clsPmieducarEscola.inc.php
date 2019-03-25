@@ -157,6 +157,7 @@ class clsPmieducarEscola
   var $quantidade_computadores_alunos_mesa = false;
   var $quantidade_computadores_alunos_portateis = false;
   var $quantidade_computadores_alunos_tablets = false;
+  var $lousas_digitais = false;
   var $televisoes;
   var $videocassetes;
   var $dvds;
@@ -272,7 +273,7 @@ class clsPmieducarEscola
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
           e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
           e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
-          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
+          e.lousas_digitais, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
           e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
           e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies
           ';
@@ -1099,6 +1100,12 @@ class clsPmieducarEscola
       if (is_numeric($this->quantidade_computadores_alunos_tablets)) {
         $campos .= "{$gruda}quantidade_computadores_alunos_tablets";
         $valores .= "{$gruda}'{$this->quantidade_computadores_alunos_tablets}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lousas_digitais)) {
+        $campos .= "{$gruda}lousas_digitais";
+        $valores .= "{$gruda}'{$this->lousas_digitais}'";
         $gruda = ", ";
       }
 
@@ -2003,6 +2010,14 @@ class clsPmieducarEscola
         $gruda = ", ";
       } elseif ($this->quantidade_computadores_alunos_tablets !== false) {
         $set .= "{$gruda}quantidade_computadores_alunos_tablets = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lousas_digitais)) {
+        $set .= "{$gruda}lousas_digitais = {$this->lousas_digitais}";
+        $gruda = ", ";
+      } elseif ($this->lousas_digitais !== false) {
+        $set .= "{$gruda}lousas_digitais = NULL";
         $gruda = ", ";
       }
 
