@@ -1187,62 +1187,42 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $resources = [
-                null => 'Selecione',
-                0 => 'Não',
-                1 => 'Sim'
-            ];
             $options = [
                 'label' => 'Alimentação escolar para os alunos(as)',
-                'resources' => $resources,
                 'value' => $this->alimentacao_escolar_alunos,
                 'required' => $obrigarCamposCenso,
+                'prompt' => 'Selecione',
                 'size' => 70
             ];
-            $this->inputsHelper()->select('alimentacao_escolar_alunos', $options);
+            $this->inputsHelper()->booleanSelect('alimentacao_escolar_alunos', $options);
 
-            $resources = [
-                null => 'Selecione',
-                0 => 'Não',
-                1 => 'Sim'
-            ];
             $options = [
                 'label' => 'Escola compartilha espaços para atividades de integração escola-comunidade',
-                'resources' => $resources,
                 'value' => $this->compartilha_espacos_atividades_integracao,
                 'required' => false,
+                'prompt' => 'Selecione',
                 'size' => 70
             ];
-            $this->inputsHelper()->select('compartilha_espacos_atividades_integracao', $options);
+            $this->inputsHelper()->booleanSelect('compartilha_espacos_atividades_integracao', $options);
 
-            $resources = [
-                null => 'Selecione',
-                0 => 'Não',
-                1 => 'Sim'
-            ];
             $options = [
                 'label' => 'Escola usa espaços e equipamentos do entorno escolar para atividades regulares com os alunos(as)',
-                'resources' => $resources,
                 'value' => $this->usa_espacos_equipamentos_atividades_regulares,
                 'required' => false,
+                'prompt' => 'Selecione',
                 'size' => 70
             ];
-            $this->inputsHelper()->select('usa_espacos_equipamentos_atividades_regulares', $options);
+            $this->inputsHelper()->booleanSelect('usa_espacos_equipamentos_atividades_regulares', $options);
 
-            $resources = [
-                null => 'Selecione',
-                0 => 'Não',
-                1 => 'Sim'
-            ];
             $options = [
                 'label' => 'Possui dependências',
                 'label_hint' => 'Preencha com: Sim, para exportar os campos de dependências no arquivo do Censo escolar',
-                'resources' => $resources,
                 'value' => $this->possui_dependencias,
                 'required' => $obrigarCamposCenso,
+                'prompt' => 'Selecione',
                 'size' => 40
             ];
-            $this->inputsHelper()->select('possui_dependencias', $options);
+            $this->inputsHelper()->booleanSelect('possui_dependencias', $options);
 
             $helperOptions = ['objectName' => 'salas_gerais'];
             $options = [
