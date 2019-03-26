@@ -160,9 +160,6 @@ class indice extends clsCadastro
     
     function Novo() 
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
         $this->todos_moderadores = unserialize(urldecode($this->todos_moderadores));
         if(!empty($this->todos_moderadores))
         {

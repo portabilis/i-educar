@@ -275,10 +275,6 @@ class indice extends clsCadastro
             return false;
         }
     
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->data_foto = str_replace( "%2F", "/", $this->data_foto );
 
         $db = new clsBanco();

@@ -122,10 +122,6 @@ class indice extends clsCadastro
     function Novo()
     {
 
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->data_c = str_replace("%2F", "/", $this->data_c);
 
         if (empty($this->data_c) || empty($this->id_modalidade) || empty($this->numero) || empty($this->objeto) || empty($this->hora))
@@ -163,10 +159,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->data_c = str_replace("%2F", "/", $this->data_c);
 
         if (empty($this->data_c) || empty($this->id_licitacao) || empty($this->id_modalidade) || empty($this->numero) || empty($this->objeto) || empty($this->hora))
@@ -203,10 +195,6 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         if (empty($this->id_pessoa) || empty($this->id_licitacao))
         {
             return false;

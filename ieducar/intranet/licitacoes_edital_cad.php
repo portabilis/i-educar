@@ -159,10 +159,6 @@ class indice extends clsCadastro
     {
         global $HTTP_POST_FILES;
 
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         $db = new clsBanco();
 
         if ( ! empty( $HTTP_POST_FILES['arquivo']['name'] ) )
@@ -197,10 +193,6 @@ class indice extends clsCadastro
     function Editar()
     {
         global $HTTP_POST_FILES;
-
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
 
         $db = new clsBanco();
         $db2 = new clsBanco();

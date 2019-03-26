@@ -171,9 +171,6 @@ class indice extends clsCadastro
     
     function Novo() 
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
         $this->todos_moderadores = unserialize(urldecode($this->todos_moderadores));
         if(!empty($this->todos_moderadores))
         {
@@ -198,10 +195,6 @@ class indice extends clsCadastro
 
     function Editar() 
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-        
         $this->todos_moderadores = unserialize(urldecode($this->todos_moderadores));
         if(!empty($this->todos_moderadores))
         {
@@ -252,10 +245,6 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-        
         $objGrupoPessoa = new clsGrupoPessoa(false, $this->cod_grupos, false, $this->id_pessoa);
         $objGrupoPessoa->exclui_todos();
         

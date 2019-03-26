@@ -403,9 +403,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
         $this->data_noticia = explode("%2F",$this->data_noticia);
         $this->data_noticia = "{$this->data_noticia[2]}/{$this->data_noticia[1]}/{$this->data_noticia[0]}";
 
@@ -461,9 +458,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
         $temp_num=  1;
         $db = new clsBanco();
         $db->Consulta( "SELECT caminho FROM not_vinc_portal WHERE ref_cod_not_portal={$this->id_noticia_altera} AND tipo='A'" );
@@ -519,11 +513,6 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
-
         echo $this->id_noticia_altera;
 
 
