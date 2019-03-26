@@ -53,9 +53,6 @@ class indice extends clsCadastro
 
         $cod_acao_governo = @$_GET['cod_acao_governo'];
         $this->status = @$_GET['status'];
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         if(!(int)$cod_acao_governo)
             header("Location: acoes_acao_lst.php");

@@ -61,9 +61,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_aluno_beneficio=$_GET["cod_aluno_beneficio"];
 
@@ -120,9 +118,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarAlunoBeneficio( $this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $cadastrou = $obj->cadastra();
@@ -148,9 +144,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $beneficioDetalhe = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio);
         $beneficioDetalheAntes = $beneficioDetalhe->detalhe();
@@ -176,9 +170,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, 0);
 

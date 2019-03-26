@@ -83,9 +83,7 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $this->cod_imagem = $_GET['cod_imagem'];
 
@@ -140,9 +138,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj = new clsPortalImagem(FALSE, $this->ref_cod_imagem_tipo, 'caminho',
       $this->nm_imagem, FALSE, FALSE, FALSE, FALSE, $this->pessoa_logada,

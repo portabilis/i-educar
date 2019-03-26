@@ -58,12 +58,8 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_sistema=$_GET["cod_sistema"];
-
 
         if( is_numeric( $this->cod_sistema ) )
         {
@@ -99,9 +95,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
 
 
@@ -122,9 +116,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPmicontrolesisSistema($this->cod_sistema, $this->nm_sistema, $this->ref_cod_funcionario_cad, $this->pessoa_logada, $this->data_cadastro, $this->data_exclusao, 1);
         $editou = $obj->edita();
@@ -143,9 +135,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
 
 

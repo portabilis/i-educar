@@ -53,9 +53,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_compras_modalidade=$_GET["cod_compras_modalidade"];
 
@@ -96,9 +94,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPortalComprasModalidade( $this->cod_compras_modalidade, $this->nm_modalidade );
         $cadastrou = $obj->cadastra();
@@ -117,9 +113,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPortalComprasModalidade( $this->cod_compras_modalidade, $this->nm_modalidade );
         $editou = $obj->edita();
@@ -138,9 +132,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPortalComprasModalidade($this->cod_compras_modalidade, $this->nm_modalidade);
         $excluiu = $obj->excluir();

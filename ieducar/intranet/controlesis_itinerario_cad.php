@@ -63,9 +63,6 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_itinerario=$_GET["cod_itinerario"];
 
@@ -113,9 +110,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmicontrolesisItinerario( $this->cod_itinerario, $this->pessoa_logada, $this->pessoa_logada, $this->numero, $this->itinerario, $this->retorno, $this->horarios, $this->descricao_horario, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->nome );
         $cadastrou = $obj->cadastra();
@@ -134,9 +129,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmicontrolesisItinerario($this->cod_itinerario, $this->pessoa_logada, $this->pessoa_logada, $this->numero, $this->itinerario, $this->retorno, $this->horarios, $this->descricao_horario, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->nome);
         $editou = $obj->edita();
@@ -155,9 +148,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmicontrolesisItinerario($this->cod_itinerario, $this->pessoa_logada, $this->pessoa_logada, $this->numero, $this->itinerario, $this->retorno, $this->horarios, $this->descricao_horario, $this->data_cadastro, $this->data_exclusao, 0, $this->nome);
         $excluiu = $obj->excluir();

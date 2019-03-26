@@ -68,9 +68,6 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_acontecimento=$_GET["cod_acontecimento"];
         
@@ -222,9 +219,7 @@ class indice extends clsCadastro
         {
             $this->dt_inicio = null;
         }
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         $obj = new clsPmicontrolesisAcontecimento( $this->cod_acontecimento, $this->ref_cod_tipo_acontecimento, $this->pessoa_logada, null, $this->titulo, $this->descricao, $this->dt_inicio,$this->dt_fim, $this->hr_inicio, $this->hr_fim, null, null, 1, $this->local, $this->contato, $this->link );
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
@@ -252,9 +247,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         if(empty($this->dt_fim))
         {
             $this->dt_fim = null;
@@ -292,9 +285,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         if(empty($this->dt_fim))
         {
             $this->dt_fim = null;
