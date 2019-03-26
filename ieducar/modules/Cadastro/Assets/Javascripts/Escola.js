@@ -35,7 +35,8 @@ const LOCAL_FUNCIONAMENTO = {
 }
 
 const USO_INTERNET = {
-    NAO_POSSUI: 1
+    NAO_POSSUI: 1,
+    ALUNOS: 4
 };
 
 const EQUIPAMENTOS = {
@@ -358,7 +359,9 @@ $j(document).ready(function() {
           return false;
       });
       habilitaCampoAcessoInternet();
+      habilitaCampoEquipamentosAcessoInternet();
       habilitaCampoRedeLocal();
+      habilitaCamposQuantidadeComputadoresAlunos();
     });
 
   // Dados educacionais
@@ -662,13 +665,26 @@ function habilitaCampoAcessoInternet() {
     $j('#acesso_internet').prop('disabled', disabled);
 }
 
+function habilitaCampoEquipamentosAcessoInternet() {
+    let disabled = $j.inArray(USO_INTERNET.ALUNOS.toString(), $j('#uso_internet').val()) == -1;
+
+    $j('#equipamentos_acesso_internet').prop('disabled', disabled);
+    $j("#equipamentos_acesso_internet").trigger("chosen:updated");
+
+    if (disabled) {
+        $j('#equipamentos_acesso_internet').makeUnrequired();
+    } else {
+        $j('#equipamentos_acesso_internet').makeRequired();
+    }
+}
+
 $j('#uso_internet').on('change', function () {
-    habilitaCampoAcessoInternet()
+    habilitaCampoAcessoInternet();
+    habilitaCampoEquipamentosAcessoInternet();
 });
 
 function habilitaCampoRedeLocal() {
     let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
-    $j('#rede_local').prop('disabled', disabled);
 
     if (disabled) {
         makeUnrequired('rede_local');
@@ -676,9 +692,18 @@ function habilitaCampoRedeLocal() {
         makeRequired('rede_local');
     }
 
+    $j('#rede_local').prop('disabled', disabled);
+
     $j("#rede_local").trigger("chosen:updated");
+}
+function habilitaCamposQuantidadeComputadoresAlunos() {
+    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
+
+    $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').prop('disabled', disabled);
+    $j("#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets").trigger("chosen:updated");
 }
 
 $j('#equipamentos').on('change', function () {
-    habilitaCampoRedeLocal()
+    habilitaCampoRedeLocal();
+    habilitaCamposQuantidadeComputadoresAlunos();
 });
