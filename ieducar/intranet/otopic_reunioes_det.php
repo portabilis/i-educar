@@ -290,9 +290,8 @@ class cadastro extends clsCadastro
     {
         $this->addBanner( );
 
-        @session_start();
-        $this->id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->id_pessoa = $this->pessoa_logada;
+
         $retorno = "Novo";
 
         $this->cod_reuniao = $_GET['cod_reuniao'];
