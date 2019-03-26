@@ -24,6 +24,9 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBanco.inc.php");
 require_once ("include/Geral.inc.php");
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -49,9 +52,8 @@ class clsJuridica
      */
     function __construct( $idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad =false, $idpes_rev =false )
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
+
         $objPessoa = new clsPessoa_($idpes);
         if($objPessoa->detalhe())
         {
