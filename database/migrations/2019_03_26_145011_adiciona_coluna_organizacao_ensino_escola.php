@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,9 +14,7 @@ class AdicionaColunaOrganizacaoEnsinoEscola extends Migration
      */
     public function up()
     {
-        Schema::table('pmieducar.escola', function (Blueprint $table) {
-            $table->integer('organizacao_ensino')->nullable();
-        });
+        DB::statement('ALTER TABLE pmieducar.escola ADD COLUMN organizacao_ensino integer[]');
     }
 
     /**
