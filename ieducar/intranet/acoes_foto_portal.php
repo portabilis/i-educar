@@ -116,9 +116,7 @@ class indice extends clsCadastro
     
             if(isset($_GET["excluir_foto"]) && $_GET["passo"] != 2)
             {
-                
-            //  $_SESSION["fotos"]["removidos"][$_GET["excluir_foto"]] = $_GET["excluir_foto"];
-                unset( $_SESSION["fotos"]["inserido"][$_GET["excluir_foto"]],$_GET["excluir_foto"]);    
+                unset( $_SESSION["fotos"]["inserido"][$_GET["excluir_foto"]],$_GET["excluir_foto"]);
                 header("Location: acoes_foto.php?cod_acao_governo={$this->cod_acao_governo}&passo=2");
             }
         

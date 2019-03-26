@@ -183,7 +183,6 @@ class indice extends clsListagem
       // Monta a lista
       if (is_array($lista) && count($lista)) {
           foreach ($lista as $key => $registro) {
-              // Guarda dados na $_SESSION
               $_SESSION['calendario'] = [
                   'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
                   'ref_cod_instituicao' => $this->ref_cod_instituicao,
