@@ -46,10 +46,6 @@ class indice
 
     function RenderHTML()
     {
-        @session_start();
-        $id_pessoa = $_SESSION['id_pessoa'];
-        @session_write_close();
-        
         $cod_grupo = $_GET['cod_grupo'];
         $cod_reuniao = $_GET['cod_reuniao'];
         
