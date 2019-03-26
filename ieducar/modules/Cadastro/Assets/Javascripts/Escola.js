@@ -254,7 +254,7 @@ function changePossuiDependencias() {
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 if (!$j('#cnpj').is(':visible')){
 
-  $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
+  $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Recursos</span></div></li><li><div id="tab6" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
   $j('td .formdktd b').remove();
   $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
 
@@ -266,6 +266,7 @@ if (!$j('#cnpj').is(':visible')){
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-1;
   linha_inicial_equipamento = $j('#tr_equipamentos').index()-1;
+  linha_inicial_recursos = $j('#tr_qtd_secretario_escolar').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
@@ -348,7 +349,7 @@ $j(document).ready(function() {
       $j('#tab4').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (row.id!='stop'){
-          if (index>=linha_inicial_equipamento && index < linha_inicial_dados){
+          if (index>=linha_inicial_equipamento && index < linha_inicial_recursos){
             row.show();
           }else if (index>0){
             row.hide();
@@ -365,6 +366,23 @@ $j(document).ready(function() {
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab5').toggleClass('escolaTab escolaTab-active')
+      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+        if (row.id!='stop'){
+          if (index>=linha_inicial_recursos && index < linha_inicial_dados){
+            row.show();
+          }else if (index>0){
+            row.hide();
+          }
+        }else
+          return false;
+      });
+   });
+
+  // Dados educacionais
+  $j('#tab6').click(
+    function(){
+      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
+      $j('#tab6').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (row.id!='stop'){
           if (index>=linha_inicial_dados){
@@ -457,7 +475,7 @@ $j(document).ready(function() {
 
   function habilitarCampoUnidadeVinculada() {
     escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
-    
+
     if (escolaEmAtividade) {
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', false);
       if (obrigarCamposCenso) {
