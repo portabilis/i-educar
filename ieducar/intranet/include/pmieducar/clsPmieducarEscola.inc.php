@@ -90,6 +90,9 @@ class clsPmieducarEscola
   var $tratamento_lixo = false;
   var $agua_consumida = false;
   var $agua_potavel_consumo = false;
+  var $alimentacao_escolar_alunos = false;
+  var $compartilha_espacos_atividades_integracao = false;
+  var $usa_espacos_equipamentos_atividades_regulares = false;
   var $salas_funcionais = false;
   var $salas_gerais = false;
   var $banheiros = false;
@@ -147,6 +150,9 @@ class clsPmieducarEscola
   var $abre_final_semana;
   var $codigo_lingua_indigena;
   var $proposta_pedagogica;
+  var $equipamentos = false;
+  var $uso_internet = false;
+  var $rede_local = false;
   var $televisoes;
   var $videocassetes;
   var $dvds;
@@ -264,6 +270,7 @@ class clsPmieducarEscola
     $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.zona_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
           e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
           e.condicao, e.predio_compartilhado_outra_escola, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.agua_potavel_consumo, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo, e.tratamento_lixo,
+          e.alimentacao_escolar_alunos, e.compartilha_espacos_atividades_integracao, e.usa_espacos_equipamentos_atividades_regulares,
           e.salas_gerais, e.salas_funcionais, e.banheiros, e.laboratorios, e.salas_atividades, e.dormitorios, e.areas_externas, e.recursos_acessibilidade, e.possui_dependencias, e.numero_salas_utilizadas_dentro_predio,
           e.numero_salas_utilizadas_fora_predio, e.numero_salas_climatizadas, e.numero_salas_acessibilidade, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
           e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora,
@@ -271,10 +278,10 @@ class clsPmieducarEscola
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4,
-          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som,
-          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao,
-          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal,
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
+          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
+          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
+          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
           e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies,
             e.qtd_secretario_escolar,
             e.qtd_auxiliar_administrativo,
@@ -420,59 +427,6 @@ class clsPmieducarEscola
     if (is_numeric($ativo)) {
       $this->ativo = $ativo;
     }
-
-    if (is_numeric($qtd_secretario_escolar)) {
-        $this->qtd_secretario_escolar = $qtd_secretario_escolar;
-    }
-
-    if (is_numeric($qtd_auxiliar_administrativo)) {
-        $this->qtd_auxiliar_administrativo = $qtd_auxiliar_administrativo;
-    }
-
-    if (is_numeric($qtd_apoio_pedagogico)) {
-        $this->qtd_apoio_pedagogico = $qtd_apoio_pedagogico;
-    }
-
-    if (is_numeric($qtd_coordenador_turno)) {
-        $this->qtd_coordenador_turno = $qtd_coordenador_turno;
-    }
-
-    if (is_numeric($qtd_tecnicos)) {
-        $this->qtd_tecnicos = $qtd_tecnicos;
-    }
-
-    if (is_numeric($qtd_bibliotecarios)) {
-        $this->qtd_bibliotecarios = $qtd_bibliotecarios;
-    }
-
-    if (is_numeric($qtd_segurancas)) {
-        $this->qtd_segurancas = $qtd_segurancas;
-    }
-
-    if (is_numeric($qtd_auxiliar_servicos_gerais)) {
-        $this->qtd_auxiliar_servicos_gerais = $qtd_auxiliar_servicos_gerais;
-    }
-
-    if (is_numeric($qtd_nutricionistas)) {
-        $this->qtd_nutricionistas = $qtd_nutricionistas;
-    }
-
-    if (is_numeric($qtd_profissionais_preparacao)) {
-        $this->qtd_profissionais_preparacao = $qtd_profissionais_preparacao;
-    }
-
-    if (is_numeric($qtd_bombeiro)) {
-        $this->qtd_bombeiro = $qtd_bombeiro;
-    }
-
-    if (is_numeric($qtd_psicologo)) {
-        $this->qtd_psicologo = $qtd_psicologo;
-    }
-
-    if (is_numeric($qtd_fonoaudiologo)) {
-        $this->qtd_fonoaudiologo = $qtd_fonoaudiologo;
-    }
-
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = $bloquear_lancamento_diario_anos_letivos_encerrados;
     $this->utiliza_regra_diferenciada = $utiliza_regra_diferenciada;
@@ -765,6 +719,24 @@ class clsPmieducarEscola
         $campos .= "{$gruda}tratamento_lixo";
         $valores .= "{$gruda}'{{$this->tratamento_lixo}}'";
         $gruda = ", ";
+      }
+
+      if (is_numeric($this->alimentacao_escolar_alunos)) {
+          $campos .= "{$gruda}alimentacao_escolar_alunos";
+          $valores .= "{$gruda}'{$this->alimentacao_escolar_alunos}'";
+          $gruda = ", ";
+      }
+
+      if (is_numeric($this->compartilha_espacos_atividades_integracao)) {
+          $campos .= "{$gruda}compartilha_espacos_atividades_integracao";
+          $valores .= "{$gruda}'{$this->compartilha_espacos_atividades_integracao}'";
+          $gruda = ", ";
+      }
+
+      if (is_numeric($this->usa_espacos_equipamentos_atividades_regulares)) {
+          $campos .= "{$gruda}usa_espacos_equipamentos_atividades_regulares";
+          $valores .= "{$gruda}'{$this->usa_espacos_equipamentos_atividades_regulares}'";
+          $gruda = ", ";
       }
 
       if (is_string($this->salas_funcionais)) {
@@ -1106,6 +1078,24 @@ class clsPmieducarEscola
       if (is_numeric($this->proposta_pedagogica)) {
         $campos .= "{$gruda}proposta_pedagogica";
         $valores .= "{$gruda}'{$this->proposta_pedagogica}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->equipamentos)) {
+        $campos .= "{$gruda}equipamentos";
+        $valores .= "{$gruda}'{{$this->equipamentos}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->uso_internet)) {
+        $campos .= "{$gruda}uso_internet";
+        $valores .= "{$gruda}'{{$this->uso_internet}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->rede_local)) {
+        $campos .= "{$gruda}rede_local";
+        $valores .= "{$gruda}'{{$this->rede_local}}'";
         $gruda = ", ";
       }
 
@@ -1669,6 +1659,30 @@ class clsPmieducarEscola
           $gruda = ", ";
       }
 
+      if (is_numeric($this->alimentacao_escolar_alunos)) {
+        $set .= "{$gruda}alimentacao_escolar_alunos = {$this->alimentacao_escolar_alunos}";
+        $gruda = ", ";
+      } elseif ($this->alimentacao_escolar_alunos !== false) {
+        $set .= "{$gruda}alimentacao_escolar_alunos = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->compartilha_espacos_atividades_integracao)) {
+          $set .= "{$gruda}compartilha_espacos_atividades_integracao = {$this->compartilha_espacos_atividades_integracao}";
+          $gruda = ", ";
+      } elseif ($this->compartilha_espacos_atividades_integracao !== false) {
+          $set .= "{$gruda}compartilha_espacos_atividades_integracao = NULL";
+          $gruda = ", ";
+      }
+
+      if (is_numeric($this->usa_espacos_equipamentos_atividades_regulares)) {
+          $set .= "{$gruda}usa_espacos_equipamentos_atividades_regulares = {$this->usa_espacos_equipamentos_atividades_regulares}";
+          $gruda = ", ";
+      } elseif ($this->usa_espacos_equipamentos_atividades_regulares !== false) {
+          $set .= "{$gruda}usa_espacos_equipamentos_atividades_regulares = NULL";
+          $gruda = ", ";
+      }
+
       if (is_string($this->salas_funcionais)) {
         $set .= "{$gruda}salas_funcionais = '{{$this->salas_funcionais}}'";
         $gruda = ", ";
@@ -2009,6 +2023,30 @@ class clsPmieducarEscola
 
       if (is_numeric($this->proposta_pedagogica)) {
         $set .= "{$gruda}proposta_pedagogica = '{$this->proposta_pedagogica}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->equipamentos)) {
+        $set .= "{$gruda}equipamentos = '{{$this->equipamentos}}'";
+        $gruda = ", ";
+      } elseif ($this->equipamentos !== false) {
+        $set .= "{$gruda}equipamentos = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->uso_internet)) {
+        $set .= "{$gruda}uso_internet = '{{$this->uso_internet}}'";
+        $gruda = ", ";
+      } elseif ($this->uso_internet !== false) {
+        $set .= "{$gruda}uso_internet = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->rede_local)) {
+        $set .= "{$gruda}rede_local = '{{$this->rede_local}}'";
+        $gruda = ", ";
+      } elseif ($this->rede_local !== false) {
+        $set .= "{$gruda}rede_local = NULL";
         $gruda = ", ";
       }
 
