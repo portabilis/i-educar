@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Session;
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *                                                                        *
     *   @author Prefeitura Municipal de Itajaí                               *
@@ -54,9 +57,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $id_pessoa = Session::get('id_pessoa');
         
         $retorno = "Novo";
         $this->ref_ref_pessoa_fj = $id_pessoa;

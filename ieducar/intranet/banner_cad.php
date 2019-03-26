@@ -52,10 +52,6 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $retorno = "Novo";
          
         if (@$_GET['cod_portal_banner'])
