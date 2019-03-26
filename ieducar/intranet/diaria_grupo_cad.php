@@ -79,10 +79,8 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoaFj = $_SESSION['id_pessoa'];
-        session_write_close();
-        
+        $this->pessoaFj = $this->pessoa_logada;
+
         $this->campoOculto( "pessoaFj", $this->pessoaFj );
         $this->campoOculto( "cod_diaria_grupo", $this->cod_diaria_grupo );
         
@@ -94,10 +92,8 @@ class indice extends clsCadastro
 
     function Novo() 
     {
-        @session_start();
-        $this->ref_funcionario_cadastro = $_SESSION['id_pessoa'];
-        session_write_close();
-        
+        $this->ref_funcionario_cadastro = $this->pessoa_logada;
+
         $campos = "";
         $values = "";
         $db = new clsBanco();
@@ -124,10 +120,8 @@ class indice extends clsCadastro
 
     function Editar() 
     {
-        @session_start();
-        $this->ref_funcionario_cadastro = $_SESSION['id_pessoa'];
-        session_write_close();
-        
+        $this->ref_funcionario_cadastro = $this->pessoa_logada;
+
         $set = "";
         $db = new clsBanco();
         

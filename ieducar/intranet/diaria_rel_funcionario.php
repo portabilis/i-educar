@@ -51,9 +51,8 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $this->cod_pessoa_fj = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->cod_pessoa_fj = $this->pessoa_logada;
+
         $retorno = "Novo";
         return $retorno;
     }
