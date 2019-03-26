@@ -11,12 +11,14 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
+use iEducar\Modules\Educacenso\Model\RedeLocal;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SalasAtividades;
 use iEducar\Modules\Educacenso\Model\SalasFuncionais;
 use iEducar\Modules\Educacenso\Model\SalasGerais;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -156,6 +158,8 @@ class indice extends clsCadastro
     public $abre_final_semana;
     public $codigo_lingua_indigena;
     public $equipamentos;
+    public $uso_internet;
+    public $rede_local;
     public $televisoes;
     public $videocassetes;
     public $dvds;
@@ -451,6 +455,14 @@ class indice extends clsCadastro
 
         if (is_string($this->equipamentos)) {
             $this->equipamentos = explode(',', str_replace(array('{', "}"), '', $this->equipamentos));
+        }
+
+        if (is_string($this->uso_internet)) {
+            $this->uso_internet = explode(',', str_replace(array('{', "}"), '', $this->uso_internet));
+        }
+
+        if (is_string($this->rede_local)) {
+            $this->rede_local = explode(',', str_replace(array('{', "}"), '', $this->rede_local));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1323,6 +1335,18 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'uso_internet'];
+            $options = [
+                'label' => 'Acesso à internet',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->uso_internet,
+                    'all_values' => UsoInternet::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('televisoes', $options);
 
@@ -1377,6 +1401,18 @@ class indice extends clsCadastro
                 'disabled' => !$disabled
             );
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
+
+            $helperOptions = ['objectName' => 'rede_local'];
+            $options = [
+                'label' => 'Rede local de interligação de computadores',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->rede_local,
+                    'all_values' => RedeLocal::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
@@ -1559,6 +1595,8 @@ class indice extends clsCadastro
         $areas_externas = implode(',', $this->areas_externas);
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
         $equipamentos = implode(',', $this->equipamentos);
+        $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1589,28 +1627,7 @@ class indice extends clsCadastro
             }
         }
 
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
-            return false;
-        }
-
-        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+        if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
         }
 
@@ -1689,6 +1706,8 @@ class indice extends clsCadastro
                     $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
                     $obj->proposta_pedagogica = $this->proposta_pedagogica;
                     $obj->equipamentos = $equipamentos;
+                    $obj->uso_internet = $uso_internet;
+                    $obj->rede_local = $rede_local;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1856,6 +1875,8 @@ class indice extends clsCadastro
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -1980,29 +2001,10 @@ class indice extends clsCadastro
         $areas_externas = implode(',', $this->areas_externas);
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
         $equipamentos = implode(',', $this->equipamentos);
+        $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
 
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
-            return false;
-        }
-
-        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+        if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
         }
 
@@ -2075,6 +2077,8 @@ class indice extends clsCadastro
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2174,6 +2178,8 @@ class indice extends clsCadastro
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2728,6 +2734,75 @@ class indice extends clsCadastro
         $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
         if ((int)$this->numero_salas_acessibilidade > $totalSalas) {
             $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaOpcoesUnicasMultipleSearch()
+    {
+        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
+            return false;
+        }
+        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
             return false;
         }
 
