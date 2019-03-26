@@ -1686,7 +1686,7 @@ $pagina->MakeAll();
     }
 
     function valida() {
-        if (validaHorarioInicialFinal() && validaMinutos() && validaAtividadesComplementares()) {
+        if (validaHorarioInicialFinal() && validaHoras() && validaAtividadesComplementares()) {
             if (document.getElementById('padrao_ano_escolar').value == 1) {
                 var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
                 var campoEscola = document.getElementById('ref_cod_escola').value;

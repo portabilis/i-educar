@@ -103,7 +103,7 @@ function validaHorarioInicialFinal() {
   return true;
 }
 
-function validaMinutos() {
+function validaHoras() {
   var campos = [{'id' : 'hora_inicial', 'label' : 'Hora inicial'},
                 {'id' : 'hora_final', 'label' : 'Hora final'},
                 {'id' : 'hora_inicio_intervalo', 'label' : 'Hora início intervalo'},
@@ -115,10 +115,23 @@ function validaMinutos() {
     var hora = $j('#' + campo.id).val();
     var minutos = hora.substr(3, 2);
     var minutosValidos = $j.inArray(minutos,minutosPermitidos) != -1;
-    if (minutos != '' && !minutosValidos) {
+
+    if (obrigarCamposCenso && (minutos != '' && !minutosValidos)) {
       alert('O campo ' + campo.label + ' não permite minutos diferentes de 0 ou 5.');
       retorno = false;
       return false;
+    }
+
+    if (minutos != '' && (minutos < 0 || minutos > 60)) {
+      alert('O campo ' + campo.label + ' foi preenchido com um horário inválido.');
+      retorno = false;
+      return;
+    }
+
+    if (parseInt(hora) < 0 || parseInt(hora) > 24) {
+      alert('O campo ' + campo.label + ' foi preenchido com um horário inválido.');
+      retorno = false;
+      return;
     }
   });
   return retorno;
@@ -312,11 +325,6 @@ $j(document).ready(function() {
       valida();
     }
   }
-
-  var $submitButton      = $j('#btn_enviar');
-  $submitButton.removeAttr('onclick');
-  $j(document.formcadastro).removeAttr('onsubmit');
-  $submitButton.click(submitForm);
 
   $j('#ref_cod_serie, #ano_letivo').on('change', function(){
     let escola_id = $j('#ref_cod_escola').val();
