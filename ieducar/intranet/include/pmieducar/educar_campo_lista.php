@@ -24,7 +24,10 @@
 *   02111-1307, USA.                                                     *
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-$pessoa_logada = $_SESSION['id_pessoa'];
+
+use Illuminate\Support\Facades\Session;
+
+$pessoa_logada = Session::get('id_pessoa');
 
     if(!isset($exibe_campo_lista_curso_escola))
     {

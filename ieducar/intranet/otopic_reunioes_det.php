@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
@@ -372,9 +375,7 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 $obj = new clsReuniao($_GET['cod_reuniao']);
 $detalhe = $obj->detalhe();
-@session_start();
-$id_visualiza = $_SESSION['id_pessoa'];
-session_write_close();
+$id_visualiza = Session::get('id_pessoa');
 $obj_moderador = new clsGrupoModerador($id_visualiza,$_GET['cod_grupo']);
 $detalhe_moderador = $obj_moderador->detalhe();
 
