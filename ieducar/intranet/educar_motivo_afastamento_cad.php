@@ -158,10 +158,6 @@ class indice extends clsCadastro
 
 
   public function Editar() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(633, $this->pessoa_logada, 7,
       'educar_motivo_afastamento_lst.php');
