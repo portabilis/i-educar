@@ -6,6 +6,7 @@ use iEducar\Modules\Educacenso\Model\Dormitorios;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -150,6 +151,7 @@ class indice extends clsCadastro
     public $atendimento_aee;
     public $atividade_complementar;
     public $fundamental_ciclo;
+    public $organizacao_ensino;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -492,6 +494,14 @@ class indice extends clsCadastro
 
         if (is_string($this->rede_local)) {
             $this->rede_local = explode(',', str_replace(array('{', "}"), '', $this->rede_local));
+        }
+
+        if (is_string($this->equipamentos_acesso_internet)) {
+            $this->equipamentos_acesso_internet = explode(',', str_replace(array('{', "}"), '', $this->equipamentos_acesso_internet));
+        }
+
+        if (is_string($this->organizacao_ensino)) {
+            $this->organizacao_ensino = explode(',', str_replace(array('{', "}"), '', $this->organizacao_ensino));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1461,6 +1471,18 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
+            $helperOptions = ['objectName' => 'organizacao_ensino'];
+            $options = [
+                'label' => 'Forma(s) de organização do ensino',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->organizacao_ensino,
+                    'all_values' => OrganizacaoEnsino::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
@@ -1611,6 +1633,8 @@ class indice extends clsCadastro
         $equipamentos = implode(',', $this->equipamentos);
         $uso_internet = implode(',', $this->uso_internet);
         $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
+        $organizacao_ensino = implode(',', $this->organizacao_ensino);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1711,6 +1735,7 @@ class indice extends clsCadastro
                     $obj->atendimento_aee = $this->atendimento_aee;
                     $obj->atividade_complementar = $this->atividade_complementar;
                     $obj->fundamental_ciclo = $this->fundamental_ciclo;
+                    $obj->organizacao_ensino = $organizacao_ensino;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
                     $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
@@ -1883,6 +1908,7 @@ class indice extends clsCadastro
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $this->organizacao_ensino;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2023,6 +2049,8 @@ class indice extends clsCadastro
         $equipamentos = implode(',', $this->equipamentos);
         $uso_internet = implode(',', $this->uso_internet);
         $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
+        $organizacao_ensino = implode(',', $this->organizacao_ensino);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
@@ -2088,6 +2116,7 @@ class indice extends clsCadastro
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $organizacao_ensino;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2192,6 +2221,7 @@ class indice extends clsCadastro
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $organizacao_ensino;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2846,6 +2876,57 @@ class indice extends clsCadastro
 
         $this->mensagem = 'Preencha pelo menos um dos campos de Quantidade de profissionais da aba Recursos.';
         return false;
+    }
+
+    protected function validaQuantidadeComputadoresAlunos()
+    {
+        if ($this->quantidade_computadores_alunos_mesa == '0') {
+            $this->mensagem = 'O campo: <b>Computadores de mesa</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_portateis == '0') {
+            $this->mensagem = 'O campo: <b>Computadores portáteis</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_tablets == '0') {
+            $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+
+    protected function validaQuantidadeEquipamentosEnsino()
+    {
+        if ($this->televisoes == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de Televisão</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->dvds == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de DVD/Blu-ray</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->aparelhos_de_som == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de som</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->projetores_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Projetor Multimídia (Data show)</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->lousas_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Lousa digital</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
     }
 }
 

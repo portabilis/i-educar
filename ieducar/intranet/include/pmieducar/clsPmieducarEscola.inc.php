@@ -115,6 +115,7 @@ class clsPmieducarEscola
     public $atendimento_aee;
     public $atividade_complementar;
     public $fundamental_ciclo;
+    public $organizacao_ensino = false;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -265,7 +266,7 @@ class clsPmieducarEscola
           e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio,
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
-          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
+          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
           e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
           e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
@@ -1010,6 +1011,12 @@ class clsPmieducarEscola
             if (is_numeric($this->fundamental_ciclo)) {
                 $campos .= "{$gruda}fundamental_ciclo";
                 $valores .= "{$gruda}'{$this->fundamental_ciclo}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->organizacao_ensino)) {
+                $campos .= "{$gruda}organizacao_ensino";
+                $valores .= "{$gruda}'{{$this->organizacao_ensino}}'";
                 $gruda = ', ';
             }
 
@@ -1983,6 +1990,14 @@ class clsPmieducarEscola
 
             if (is_numeric($this->fundamental_ciclo)) {
                 $set .= "{$gruda}fundamental_ciclo = '{$this->fundamental_ciclo}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->organizacao_ensino)) {
+                $set .= "{$gruda}organizacao_ensino = '{{$this->organizacao_ensino}}'";
+                $gruda = ', ';
+            } elseif ($this->organizacao_ensino !== false) {
+                $set .= "{$gruda}organizacao_ensino = NULL";
                 $gruda = ', ';
             }
 
