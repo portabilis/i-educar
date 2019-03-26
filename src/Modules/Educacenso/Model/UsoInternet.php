@@ -15,7 +15,7 @@ class UsoInternet
         return [
             self::NAO_POSSUI => 'Não possui acesso à internet',
             self::ADMINISTRATIVO => 'Para uso administrativo',
-            self::PROCESSOS_ENSINO => 'Para uso nos processos de ensino e aprendizagem;',
+            self::PROCESSOS_ENSINO => 'Para uso nos processos de ensino e aprendizagem',
             self::ALUNOS => 'Para uso dos alunos',
             self::COMUNIDADE => 'Para uso da comunidade',
         ];
