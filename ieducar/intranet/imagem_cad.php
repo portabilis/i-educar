@@ -153,10 +153,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPortalImagem($this->cod_imagem, $this->ref_cod_imagem_tipo,
       'caminho', $this->nm_imagem, FALSE, FALSE, FALSE, FALSE, $this->pessoa_logada,
       FALSE, FALSE);

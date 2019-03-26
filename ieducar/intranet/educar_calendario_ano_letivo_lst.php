@@ -42,10 +42,6 @@ class indice extends clsListagem
 
   function renderHTML()
   {
-      @session_start();
-      $this->pessoa_logada = $_SESSION['id_pessoa'];
-      session_write_close();
-
       $obj_permissoes = new clsPermissoes();
 
       $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
