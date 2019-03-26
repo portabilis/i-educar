@@ -51,8 +51,7 @@ class indice extends clsCadastro
         
         $retorno = "Novo";
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        
+
         $this->cod_acao_governo = $_GET['cod_acao_governo'];
         
         if(isset($_GET['cod_acao_governo']))
@@ -98,7 +97,6 @@ class indice extends clsCadastro
         $this->campoOculto( "cod_acao_governo", $this->cod_acao_governo );
         $i = 0;
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
 
 /**
  * 

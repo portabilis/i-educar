@@ -47,7 +47,6 @@ class indice extends clsDetalhe
     {
         $cod_acao_governo = @$_GET['cod_acao_governo'];
         @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
          $_SESSION["display"] =   $_GET["display"] ?  $_GET["display"] : $_SESSION["display"];
         $_SESSION['acao_det'] = $cod_acao_governo ;
         @session_write_close();

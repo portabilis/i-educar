@@ -56,7 +56,6 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
         @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
             unset($_SESSION['reservas']['cod_cliente']);
             unset($_SESSION['reservas']['ref_cod_biblioteca']);
         @session_write_close();
