@@ -157,6 +157,7 @@ class indice extends clsCadastro
     public $organizacao_ensino;
     public $instrumentos_pedagogicos;
     public $orgaos_colegiados;
+    public $exame_selecao_ingresso;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -1561,6 +1562,15 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $options = array(
+                'label' => 'Escola faz exame de seleção para ingresso de seus aluno(a)s',
+                'placeholder' => 'Selecione',
+                'prompt' => 'Selecione',
+                'value' => $this->exame_selecao_ingresso,
+                'required' => false,
+            );
+            $this->inputsHelper()->booleanSelect('exame_selecao_ingresso', $options);
+
             $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
@@ -1825,6 +1835,7 @@ class indice extends clsCadastro
                     $obj->organizacao_ensino = $organizacao_ensino;
                     $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
                     $obj->orgaos_colegiados = $orgaos_colegiados;
+                    $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
                     $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
@@ -2005,6 +2016,7 @@ class indice extends clsCadastro
             $obj->organizacao_ensino = $this->organizacao_ensino;
             $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
             $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2223,6 +2235,7 @@ class indice extends clsCadastro
             $obj->organizacao_ensino = $organizacao_ensino;
             $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
             $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2335,6 +2348,7 @@ class indice extends clsCadastro
             $obj->organizacao_ensino = $organizacao_ensino;
             $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
             $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
