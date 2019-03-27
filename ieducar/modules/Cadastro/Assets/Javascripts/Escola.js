@@ -155,17 +155,6 @@ $j('#lingua_ministrada').change(
   }
 );
 
-$j('#computadores').change(
-  function(){
-      var possuiComputadores = this.value > 0;
-      $j('#acesso_internet').prop('disabled', !possuiComputadores);
-      $j('#acesso_internet').makeUnrequired();
-      if (possuiComputadores && obrigarCamposCenso) {
-        $j('#acesso_internet').makeRequired();
-      }
-  }
-).trigger('change');
-
 function obrigaCampoRegulamentacao() {
   escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
 

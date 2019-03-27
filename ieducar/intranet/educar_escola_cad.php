@@ -1425,13 +1425,11 @@ class indice extends clsCadastro
             $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('computadores', $options);
 
-            $disabled = $this->computadores > 0;
             $options = array(
                 'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
                 'required' => false,
                 'prompt' => 'Selecione',
-                'disabled' => !$disabled
             );
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
@@ -2509,7 +2507,6 @@ class indice extends clsCadastro
         }
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
-                $this->validaPossuiBandaLarga() &&
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
@@ -2542,15 +2539,6 @@ class indice extends clsCadastro
         }
 
         return true;
-    }
-
-    protected function validaPossuiBandaLarga()
-    {
-        if (((int)$this->computadores) > 0 && !in_array($this->acesso_internet, array('0', '1'))) {
-            $this->mensagem = 'O campo: Possui internet banda larga, deve ser informado quando existir computadores na escola.';
-            return FALSE;
-        }
-        return TRUE;
     }
 
     protected function validaEsferaAdministrativa()
