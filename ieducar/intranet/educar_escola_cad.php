@@ -2927,7 +2927,7 @@ class indice extends clsCadastro
 
         return true;
     }
-
+    
     protected function validaRecursos()
     {
         foreach ($this->inputsRecursos as $key => $inputRecurso) {
