@@ -673,7 +673,7 @@ function habilitaCampoEquipamentosAcessoInternet() {
 
     if (disabled) {
         $j('#equipamentos_acesso_internet').makeUnrequired();
-    } else {
+    } else if(obrigarCamposCenso) {
         $j('#equipamentos_acesso_internet').makeRequired();
     }
 }
@@ -688,7 +688,7 @@ function habilitaCampoRedeLocal() {
 
     if (disabled) {
         makeUnrequired('rede_local');
-    } else {
+    } else if(obrigarCamposCenso){
         makeRequired('rede_local');
     }
 
