@@ -25,6 +25,8 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+use Illuminate\Support\Facades\Session;
+
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
@@ -182,10 +184,11 @@ class indice extends clsDetalhe
         $this->addDetalhe( array("Descrição", $descricao_holerite) );
 
         $dbpg = new clsBanco();
-        $nova_consulta = $dbpg->UnicoCampo("SELECT max(cod_visualizacao) FROM pmidrh.log_visualizacao_olerite WHERE ref_ref_cod_pessoa_fj={$_SESSION['id_pessoa']}");
+        $idPessoa = Session::get('id_pessoa');
+        $nova_consulta = $dbpg->UnicoCampo("SELECT max(cod_visualizacao) FROM pmidrh.log_visualizacao_olerite WHERE ref_ref_cod_pessoa_fj={$idPessoa}");
         $nova_consulta++;
         //$dbpg->Libera();
-        $dbpg->Consulta("INSERT INTO pmidrh.log_visualizacao_olerite (ref_ref_cod_pessoa_fj, cod_visualizacao, data_visualizacao, cod_olerite) VALUES ('{$_SESSION['id_pessoa']}', '{$nova_consulta}', now(), '{$cod_holerite}')");
+        $dbpg->Consulta("INSERT INTO pmidrh.log_visualizacao_olerite (ref_ref_cod_pessoa_fj, cod_visualizacao, data_visualizacao, cod_olerite) VALUES ('{$idPessoa}', '{$nova_consulta}', now(), '{$cod_holerite}')");
 
 
         $this->url_cancelar = "pmidrh_holerite_lst.php";

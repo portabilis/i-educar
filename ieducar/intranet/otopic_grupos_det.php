@@ -92,54 +92,6 @@ class indice extends clsDetalhe
     }
 }
 
-
-/*class Listas extends clsListagem
-{
-    function Gerar()
-    {
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
-        
-        $this->titulo = "Membros";
-        $this->addBanner(  );
-        
-        $cod_membro = $_GET['cod_membro'];
-        $cod_grupo = $_GET['cod_grupo'];
-        
-        $this->addCabecalhos( array( "Nome", "e-mail", "Ramal", "Função" ) );
-
-        // Paginador
-        $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-
-        $obj = new clsGrupoPessoa();
-        $lista = $obj->pessoasGrupo($cod_grupo,"tipo ASC",1,$iniciolimit,$limite);
-        foreach ($lista as $pessoas) 
-        {
-            $total = $pessoas['total'];
-            $obj = new clsFuncionario($pessoas['id']);
-            $detalhe = $obj->detalhe();
-            $detalhe_pessoa = $detalhe['idpes']->detalhe();
-            $funcao = $pessoas['tipo'] == 1 ? "Moderador" : "Membro";
-            $this->addLinhas( array("<a href='otopic_membro_det.php?cod_membro={$pessoas['id']}&cod_grupo={$cod_grupo}'>{$detalhe_pessoa['nome']}</a>",$detalhe_pessoa['email'],$detalhe['ramal'], $funcao) );
-                    
-        }
-                    
-
-        
-        
-        $this->acao = "go(\"otopic_membros_cad.php?cod_grupo=$cod_grupo\")";
-        $this->nome_acao = "Novo Membro";
-    
-
-        
-
-        $this->largura = "100%";
-        $this->addPaginador2( "otopic_membro_det.php?cod_membro=$cod_membro&cod_grupo=$cod_grupo", $total, $_GET, $this->nome, $limite );
-    }
-}*/
-
 $pagina = new clsIndex();
 
 $miolo = new indice();

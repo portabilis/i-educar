@@ -932,7 +932,6 @@ class indice extends clsCadastro
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
                 $this->verificaSolicitacaoTransferencia();
 
-                // TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
                 header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }

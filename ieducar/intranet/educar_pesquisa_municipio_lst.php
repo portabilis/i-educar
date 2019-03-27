@@ -82,7 +82,6 @@ class indice extends clsListagem
 
         @session_start();
         $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
-        //$_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
         session_write_close();
 
         $this->titulo = "Municipio - Listagem";
