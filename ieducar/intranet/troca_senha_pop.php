@@ -62,8 +62,7 @@ class indice extends clsCadastro
     $retorno = "Novo";
 
     @session_start();
-    $this->p_cod_pessoa_fj = @$_SESSION['id_pessoa'];
-    @session_write_close();
+    $this->p_cod_pessoa_fj = $this->pessoa_logada;
 
     $objPessoa = new clsPessoaFj();
 
@@ -108,10 +107,6 @@ class indice extends clsCadastro
 
   public function Novo()
   {
-    @session_start();
-    $pessoaFj = $_SESSION['id_pessoa'];
-    @session_write_close();
-
     $sql = "SELECT ref_cod_pessoa_fj FROM funcionario WHERE md5('{$this->f_senha}') = senha AND ref_cod_pessoa_fj = {$this->p_cod_pessoa_fj}";
     $db = new clsBanco();
     $senha_igual = $db->CampoUnico($sql);

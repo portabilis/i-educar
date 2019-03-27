@@ -46,9 +46,7 @@ class indice extends clsDetalhe
 {
     function Gerar()
     {
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $id_visualiza = $this->pessoa_logada;
         
         $cod_grupo = $_GET['cod_grupo'];
 
@@ -96,9 +94,8 @@ class Listas extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $id_visualiza = $this->pessoa_logada;
+
         $this->nome = "Form1";
 
         $this->titulo = "Tópicos Sugeridos";
@@ -198,9 +195,6 @@ class Listas2 extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
         $this->nome = "Form2";
 
         $this->titulo = "Tópicos Aguardando em Reunião";
@@ -310,9 +304,6 @@ class Listas3 extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
         $this->nome = "Form4";
 
         $this->titulo = "Tópicos Finalizados";
@@ -420,9 +411,7 @@ class lista_reunioes extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $id_visualiza =  $this->pessoa_logada;
         
         $this->nome = "Form4";
         $this->titulo = "Reuniões";

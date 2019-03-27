@@ -56,7 +56,7 @@ class miolo1 extends clsListagem
         $this->funcAcaoNome = $this->nome;
         $total = 0;
         
-        $id_pesssoa = $_SESSION['id_pessoa'];
+        $id_pesssoa = $this->pessoa_logada;
         
         $this->titulo = "Setores";
         $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet", false );

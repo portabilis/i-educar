@@ -54,9 +54,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $pessoaFj = $_SESSION['id_pessoa'];
-        session_write_close();
+        $pessoaFj = $this->pessoa_logada;
 
         $this->cod_grupo = $_GET['cod_grupo'];
         $busca_por_cpf = false;
@@ -244,9 +242,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-        $pessoaFj = $_SESSION['id_pessoa'];
-        session_write_close();
+        $pessoaFj = $this->pessoa_logada;
         $db = new clsBanco();
         $db2 = new clsBanco();
 
@@ -313,9 +309,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-        $pessoaFj = $_SESSION['id_pessoa'];
-        session_write_close();
+        $pessoaFj = $this->pessoa_logada;
 
                 
         $obj = new clsGrupoModerador($this->cod_pessoa_fj,$this->cod_grupo);
@@ -395,9 +389,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-        $pessoaFj = $_SESSION['id_pessoa'];
-        session_write_close();
+        $pessoaFj = $this->pessoa_logada;
 
         $obj = new clsGrupoPessoa($this->cod_pessoa_fj, $this->cod_grupo,false,$pessoaFj, false,$this->cod_grupo,1);
         if($obj->exclui())

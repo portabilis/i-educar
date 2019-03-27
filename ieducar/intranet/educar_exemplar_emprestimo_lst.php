@@ -88,7 +88,6 @@ class indice extends clsListagem
     function Gerar()
     {
         @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
             unset($_SESSION['emprestimo']['cod_cliente']);
             unset($_SESSION['emprestimo']['ref_cod_biblioteca']);
         session_write_close();

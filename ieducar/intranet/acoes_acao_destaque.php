@@ -51,9 +51,7 @@ class indice extends clsCadastro
     {
         
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        
+
         $this->cod_acao_governo = $_GET['cod_acao_governo'];
         if(isset($_GET['cod_acao_governo']) && isset($_GET['destaque']))
         {
@@ -68,8 +66,6 @@ class indice extends clsCadastro
             }
         }   
             
-        @session_write_close();
-        
         echo "<script>if(window.parent == window)window.location = \"acoes_acao_lst.php\"; else window.close();</script>";
         die;
         

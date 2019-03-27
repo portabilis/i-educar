@@ -49,10 +49,8 @@ class indice extends clsDetalhe
     {
         $this->titulo = "Detalhe da Reunião";
         $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet", false);
-        
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
+
+        $id_visualiza = $this->pessoa_logada;
     
         $cod_grupo = $_GET['cod_grupo'];
         $cod_reuniao = $_GET['cod_reuniao'];
@@ -290,9 +288,8 @@ class cadastro extends clsCadastro
     {
         $this->addBanner( );
 
-        @session_start();
-        $this->id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->id_pessoa = $this->pessoa_logada;
+
         $retorno = "Novo";
 
         $this->cod_reuniao = $_GET['cod_reuniao'];
