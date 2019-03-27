@@ -355,7 +355,7 @@ class clsBase extends clsConfig
             if (!$this->convidado) {
                 $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
                 $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                $id_pessoa = $_SESSION['id_pessoa'];
+                $id_pessoa = $this->pessoa_logada;
 
                 $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
                 $logAcesso->cadastra();

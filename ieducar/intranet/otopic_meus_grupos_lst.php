@@ -44,9 +44,7 @@ class indice extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $id_pesssoa = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $id_pesssoa = $this->pessoa_logada;
 
         $this->titulo = "Meus Grupos";
         

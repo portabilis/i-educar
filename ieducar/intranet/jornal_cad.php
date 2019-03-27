@@ -57,9 +57,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $this->cod_cad = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->cod_cad = $this->pessoa_logada;
         $this->ano = $_POST["ano"];
         $this->edicao = $_POST["edicao"];
         $this->data_final = $_POST["data_final"];
@@ -253,9 +251,8 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-        $id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
+        $id_pessoa = $this->pessoa_logada;
+
         global $HTTP_POST_FILES;
         $this->cod_jornal = $_GET["cod_jornal"];
         if($id_pessoa)
