@@ -800,7 +800,7 @@ class indice extends clsCadastro
                     $count = (int) $info[0]['count'] ?? 0;
 
                     if ($count < 1) {
-                        $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série)', $ano, $componente);
+                        $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série).', $ano, $componente);
                     }
                 }
             }
@@ -808,7 +808,30 @@ class indice extends clsCadastro
 
         if ($analise['remover']) {
             foreach ($analise['remover'] as $componenteId) {
-                $info = Portabilis_Utils_Database::fetchPreparedQuery("
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                    SELECT COUNT(cct.*), cc.nome
+                    FROM modules.componente_curricular_turma cct
+                    INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                    WHERE TRUE
+                        AND cct.componente_curricular_id = $1
+                        AND cct.ano_escolar_id = $2
+                        AND cct.escola_id = $3
+                    GROUP BY cc.nome
+                ', ['params' => [
+                    (int) $componenteId,
+                    $this->ref_cod_serie,
+                    $this->ref_cod_escola
+                ]]);
+
+                $count = (int) $info[0]['count'] ?? 0;
+
+                if ($count > 0) {
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
+                }
+
+                //...
+
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(ncc.*), cc.nome
                     FROM modules.nota_componente_curricular ncc
                     INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
@@ -818,8 +841,8 @@ class indice extends clsCadastro
                         AND ncc.componente_curricular_id = $1
                         AND m.ref_ref_cod_serie = $2
                         AND m.ref_ref_cod_escola = $3
-                    GROUP BY cc.nome;
-                ", ['params' => [
+                    GROUP BY cc.nome
+                ', ['params' => [
                     (int) $componenteId,
                     $this->ref_cod_serie,
                     $this->ref_cod_escola
@@ -848,7 +871,7 @@ class indice extends clsCadastro
                                 AND m.ref_ref_cod_serie = $2
                                 AND m.ano = $3
                                 AND m.ref_ref_cod_escola = $4
-                            GROUP BY cc.nome;
+                            GROUP BY cc.nome
                         ", ['params' => [
                             (int) $update['ref_cod_disciplina'],
                             $this->ref_cod_serie,
@@ -874,7 +897,7 @@ class indice extends clsCadastro
                                 AND ccae.componente_curricular_id = $1
                                 AND ccae.ano_escolar_id = $2
                                 AND $3 = ANY(ccae.anos_letivos)
-                            GROUP BY cc.nome;
+                            GROUP BY cc.nome
                         ', ['params' => [
                             (int) $update['ref_cod_disciplina'],
                             $this->ref_cod_serie,
@@ -884,7 +907,7 @@ class indice extends clsCadastro
                         $count = (int) $info[0]['count'] ?? 0;
 
                         if ($count < 1) {
-                            $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série)', $ano, $info[0]['nome']);
+                            $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série).', $ano, $info[0]['nome']);
                         }
                     }
                 }
