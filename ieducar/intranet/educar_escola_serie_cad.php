@@ -775,6 +775,37 @@ class indice extends clsCadastro
     {
         $erros = [];
 
+        if ($analise['inserir']) {
+            foreach ($analise['inserir'] as $insert) {
+                $anos = $insert['anos_letivos'] ?? [];
+                $componente = Portabilis_Utils_Database::fetchPreparedQuery(
+                    'SELECT nome FROM modules.componente_curricular WHERE id = $1',
+                    ['params' => [(int) $insert['ref_cod_disciplina']]]
+                )[0]['nome'];
+
+                foreach ($anos as $ano) {
+                    $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                        SELECT COUNT(*)
+                        FROM modules.componente_curricular_ano_escolar
+                        WHERE TRUE
+                            AND componente_curricular_id = $1
+                            AND ano_escolar_id = $2
+                            AND $3 = ANY(anos_letivos)
+                    ', ['params' => [
+                        (int) $insert['ref_cod_disciplina'],
+                        $this->ref_cod_serie,
+                        $ano
+                    ]]);
+
+                    $count = (int) $info[0]['count'] ?? 0;
+
+                    if ($count < 1) {
+                        $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série)', $ano, $componente);
+                    }
+                }
+            }
+        }
+
         if ($analise['remover']) {
             foreach ($analise['remover'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery("
