@@ -360,6 +360,7 @@ $j(document).ready(function() {
       habilitaCampoAcessoInternet();
       habilitaCampoEquipamentosAcessoInternet();
       habilitaCampoRedeLocal();
+      habilitaCamposQuantidadeComputadoresAlunos();
     });
 
   // Dados educacionais
@@ -648,15 +649,15 @@ function habilitaCampoAcessoInternet() {
 
 function habilitaCampoEquipamentosAcessoInternet() {
     let disabled = $j.inArray(USO_INTERNET.ALUNOS.toString(), $j('#uso_internet').val()) == -1;
+
     $j('#equipamentos_acesso_internet').prop('disabled', disabled);
+    $j("#equipamentos_acesso_internet").trigger("chosen:updated");
 
     if (disabled) {
-        makeUnrequired('equipamentos_acesso_internet');
+        $j('#equipamentos_acesso_internet').makeUnrequired();
     } else {
-        makeRequired('equipamentos_acesso_internet');
+        $j('#equipamentos_acesso_internet').makeRequired();
     }
-
-    $j("#equipamentos_acesso_internet").trigger("chosen:updated");
 }
 
 $j('#uso_internet').on('change', function () {
@@ -666,7 +667,6 @@ $j('#uso_internet').on('change', function () {
 
 function habilitaCampoRedeLocal() {
     let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
-    $j('#rede_local').prop('disabled', disabled);
 
     if (disabled) {
         makeUnrequired('rede_local');
@@ -674,9 +674,18 @@ function habilitaCampoRedeLocal() {
         makeRequired('rede_local');
     }
 
+    $j('#rede_local').prop('disabled', disabled);
+
     $j("#rede_local").trigger("chosen:updated");
+}
+function habilitaCamposQuantidadeComputadoresAlunos() {
+    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
+
+    $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').prop('disabled', disabled);
+    $j("#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets").trigger("chosen:updated");
 }
 
 $j('#equipamentos').on('change', function () {
-    habilitaCampoRedeLocal()
+    habilitaCampoRedeLocal();
+    habilitaCamposQuantidadeComputadoresAlunos();
 });
