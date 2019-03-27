@@ -153,6 +153,11 @@ class clsPmieducarEscola
   var $equipamentos = false;
   var $uso_internet = false;
   var $rede_local = false;
+  var $equipamentos_acesso_internet = false;
+  var $quantidade_computadores_alunos_mesa = false;
+  var $quantidade_computadores_alunos_portateis = false;
+  var $quantidade_computadores_alunos_tablets = false;
+  var $lousas_digitais = false;
   var $televisoes;
   var $videocassetes;
   var $dvds;
@@ -279,8 +284,9 @@ class clsPmieducarEscola
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
-          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
-          e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
+          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
+          e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
+          e.lousas_digitais, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
           e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
           e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies,
             e.qtd_secretario_escolar,
@@ -1096,6 +1102,36 @@ class clsPmieducarEscola
       if (is_string($this->rede_local)) {
         $campos .= "{$gruda}rede_local";
         $valores .= "{$gruda}'{{$this->rede_local}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->equipamentos_acesso_internet)) {
+        $campos .= "{$gruda}equipamentos_acesso_internet";
+        $valores .= "{$gruda}'{{$this->equipamentos_acesso_internet}}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_computadores_alunos_mesa)) {
+        $campos .= "{$gruda}quantidade_computadores_alunos_mesa";
+        $valores .= "{$gruda}'{$this->quantidade_computadores_alunos_mesa}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_computadores_alunos_portateis)) {
+        $campos .= "{$gruda}quantidade_computadores_alunos_portateis";
+        $valores .= "{$gruda}'{$this->quantidade_computadores_alunos_portateis}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_computadores_alunos_tablets)) {
+        $campos .= "{$gruda}quantidade_computadores_alunos_tablets";
+        $valores .= "{$gruda}'{$this->quantidade_computadores_alunos_tablets}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lousas_digitais)) {
+        $campos .= "{$gruda}lousas_digitais";
+        $valores .= "{$gruda}'{$this->lousas_digitais}'";
         $gruda = ", ";
       }
 
@@ -2047,6 +2083,46 @@ class clsPmieducarEscola
         $gruda = ", ";
       } elseif ($this->rede_local !== false) {
         $set .= "{$gruda}rede_local = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->equipamentos_acesso_internet)) {
+        $set .= "{$gruda}equipamentos_acesso_internet = '{{$this->equipamentos_acesso_internet}}'";
+        $gruda = ", ";
+      } elseif ($this->equipamentos_acesso_internet !== false) {
+        $set .= "{$gruda}equipamentos_acesso_internet = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_computadores_alunos_mesa)) {
+        $set .= "{$gruda}quantidade_computadores_alunos_mesa = {$this->quantidade_computadores_alunos_mesa}";
+        $gruda = ", ";
+      } elseif ($this->quantidade_computadores_alunos_mesa !== false) {
+        $set .= "{$gruda}quantidade_computadores_alunos_mesa = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_computadores_alunos_portateis)) {
+        $set .= "{$gruda}quantidade_computadores_alunos_portateis = {$this->quantidade_computadores_alunos_portateis}";
+        $gruda = ", ";
+      } elseif ($this->quantidade_computadores_alunos_portateis !== false) {
+        $set .= "{$gruda}quantidade_computadores_alunos_portateis = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->quantidade_computadores_alunos_tablets)) {
+        $set .= "{$gruda}quantidade_computadores_alunos_tablets = {$this->quantidade_computadores_alunos_tablets}";
+        $gruda = ", ";
+      } elseif ($this->quantidade_computadores_alunos_tablets !== false) {
+        $set .= "{$gruda}quantidade_computadores_alunos_tablets = NULL";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->lousas_digitais)) {
+        $set .= "{$gruda}lousas_digitais = {$this->lousas_digitais}";
+        $gruda = ", ";
+      } elseif ($this->lousas_digitais !== false) {
+        $set .= "{$gruda}lousas_digitais = NULL";
         $gruda = ", ";
       }
 
