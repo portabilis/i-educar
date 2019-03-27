@@ -105,7 +105,7 @@ class indice extends clsListagem
       $this->lst_matriculas = $_GET['lst_matriculas'] ?? Session::get('lst_matriculas');
     }
 
-    Session::put('tipo', $_GET['tipo'] ?? Session::get('tipo'))
+    Session::put('tipo', $_GET['tipo'] ?? Session::get('tipo'));
 
     $this->titulo = 'Servidores P&uacute;blicos - Listagem';
     // Passa todos os valores obtidos no GET para atributos do objeto
@@ -143,6 +143,7 @@ class indice extends clsListagem
       foreach ($lista_professor as $registro) {
         $campo1 = Session::get('campo1');
         $campo2 = Session::get('campo2');
+        $setAll = '';
         if (Session::get('tipo')) {
           if (is_string($campo1) && is_string($campo2)) {
             $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
