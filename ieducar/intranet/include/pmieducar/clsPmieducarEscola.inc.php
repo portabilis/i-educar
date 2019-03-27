@@ -1073,7 +1073,7 @@ class clsPmieducarEscola
 
             if (is_numeric($this->codigo_lingua_indigena)) {
                 $campos .= "{$gruda}codigo_lingua_indigena";
-                $valores .= "{$gruda}'{$this->codigo_lingua_indigena}'";
+                $valores .= "{$gruda}'{{$this->codigo_lingua_indigena}}'";
                 $gruda = ', ';
             }
 
@@ -2068,10 +2068,10 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->codigo_lingua_indigena)) {
-                $set .= "{$gruda}codigo_lingua_indigena = '{$this->codigo_lingua_indigena}'";
+            if (is_string($this->codigo_lingua_indigena)) {
+                $set .= "{$gruda}codigo_lingua_indigena = '{{$this->codigo_lingua_indigena}}'";
                 $gruda = ', ';
-            } else {
+            } elseif ($this->codigo_lingua_indigena !== false) {
                 $set .= "{$gruda}codigo_lingua_indigena = NULL";
                 $gruda = ', ';
             }
