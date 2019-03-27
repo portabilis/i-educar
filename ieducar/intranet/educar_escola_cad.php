@@ -5,6 +5,7 @@ use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
+use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
@@ -153,6 +154,7 @@ class indice extends clsCadastro
     public $atividade_complementar;
     public $fundamental_ciclo;
     public $organizacao_ensino;
+    public $instrumentos_pedagogicos;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -508,6 +510,10 @@ class indice extends clsCadastro
 
         if (is_string($this->organizacao_ensino)) {
             $this->organizacao_ensino = explode(',', str_replace(array('{', "}"), '', $this->organizacao_ensino));
+        }
+
+        if (is_string($this->instrumentos_pedagogicos)) {
+            $this->instrumentos_pedagogicos = explode(',', str_replace(array('{', "}"), '', $this->instrumentos_pedagogicos));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1521,6 +1527,18 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'instrumentos_pedagogicos'];
+            $options = [
+                'label' => 'Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->instrumentos_pedagogicos,
+                    'all_values' => InstrumentosPedagogicos::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
@@ -1673,6 +1691,7 @@ class indice extends clsCadastro
         $rede_local = implode(',', $this->rede_local);
         $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
         $organizacao_ensino = implode(',', $this->organizacao_ensino);
+        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1774,6 +1793,7 @@ class indice extends clsCadastro
                     $obj->atividade_complementar = $this->atividade_complementar;
                     $obj->fundamental_ciclo = $this->fundamental_ciclo;
                     $obj->organizacao_ensino = $organizacao_ensino;
+                    $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
                     $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
@@ -1952,6 +1972,7 @@ class indice extends clsCadastro
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $this->organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2099,6 +2120,7 @@ class indice extends clsCadastro
         $rede_local = implode(',', $this->rede_local);
         $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
         $organizacao_ensino = implode(',', $this->organizacao_ensino);
+        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
@@ -2165,6 +2187,7 @@ class indice extends clsCadastro
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2275,6 +2298,7 @@ class indice extends clsCadastro
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
