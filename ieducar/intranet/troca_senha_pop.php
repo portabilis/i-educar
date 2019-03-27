@@ -63,7 +63,6 @@ class indice extends clsCadastro
   {
     $retorno = "Novo";
 
-    @session_start();
     $this->p_cod_pessoa_fj = $this->pessoa_logada;
 
     $objPessoa = new clsPessoaFj();

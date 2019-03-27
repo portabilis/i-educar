@@ -124,8 +124,6 @@ class indice extends clsCadastro
           }
         }
       }
-
-      @session_write_close();
      }
 
      if ($_FILES['ico_menu']['name']) {
