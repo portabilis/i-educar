@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\LegacySchoolGradeDiscipline;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -29,7 +30,7 @@ class SchoolGradeDisciplineImport implements ToModel, WithProgressBar, WithHeadi
             // check "Etapas utilizadas" da tela de séries da escola.
             'carga_horaria' => null,
             'etapas_especificas' => empty($row['stage']) ? 0 : 1,
-            'etapas_utilizadas' => $row['stage'],
+            'etapas_utilizadas' => Str::replaceArray($row['stage'], '.', ','),
             'anos_letivos' => '{' . $row['academic_year'] . '}',
         ]);
     }
