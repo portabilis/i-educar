@@ -1442,13 +1442,13 @@ class indice extends clsCadastro
                 '<b>Quantidade de computadores de uso dos aluno</b>'
             );
 
-            $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'placeholder' => '');
+            $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('quantidade_computadores_alunos_mesa', $options);
 
-            $options = array('label' => 'Computadores portáteis', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_portateis, 'required' => false, 'size' => 4, 'placeholder' => '');
+            $options = array('label' => 'Computadores portáteis', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_portateis, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('quantidade_computadores_alunos_portateis', $options);
 
-            $options = array('label' => 'Tablets', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_tablets, 'required' => false, 'size' => 4, 'placeholder' => '');
+            $options = array('label' => 'Tablets', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_tablets, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('quantidade_computadores_alunos_tablets', $options);
 
             $this->campoRotulo(
