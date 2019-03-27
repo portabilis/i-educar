@@ -12,9 +12,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     protected function _preRender()
     {
-        @session_start();
-        $pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $pessoa_logada = $this->pessoa_logada;
 
         $obj_permissao = new clsPermissoes();
         $obj_permissao->permissao_cadastra(999613, $pessoa_logada, 7, '/intranet/educar_index.php');

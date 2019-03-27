@@ -85,8 +85,7 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
     function Inicializar()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(9998866, $_SESSION['id_pessoa'], 1,
-            'educar_index.php');
+        $obj_permissoes->permissao_cadastra(9998866, $this->pessoa_logada, 1, 'educar_index.php');
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",

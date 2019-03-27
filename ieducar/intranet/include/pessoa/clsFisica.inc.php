@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -106,9 +108,7 @@ class clsFisica
         $horario_final_trabalho = false,
         $nome_social = false
     ) {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'] ?? null;
-        session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
             $this->idpes  = $idpes;
@@ -199,8 +199,8 @@ class clsFisica
         }
 
         $this->justificativa_provisorio = $justificativa_provisorio;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : ($_SESSION['id_pessoa'] ?? null);
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : ($_SESSION['id_pessoa'] ?? null);
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
 
         $this->tabela = 'fisica';
         $this->schema = 'cadastro';

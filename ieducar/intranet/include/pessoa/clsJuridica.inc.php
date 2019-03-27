@@ -64,8 +64,8 @@ class clsJuridica
         $this->fantasia = $fantasia;
         $this->insc_estadual = $insc_estadual;
         $this->capital_social = $capital_social;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : $_SESSION['id_pessoa'];
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : $_SESSION['id_pessoa'];
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
 
 
         $this->tabela = "juridica";
