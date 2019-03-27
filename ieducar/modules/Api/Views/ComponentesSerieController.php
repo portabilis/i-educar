@@ -57,7 +57,28 @@ class ComponentesSerieController extends ApiCoreController
 
         if ($updateInfo['delete']) {
             foreach ($updateInfo['delete'] as $componenteId) {
-                $info = Portabilis_Utils_Database::fetchPreparedQuery("
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                    SELECT COUNT(cct.*), cc.nome
+                    FROM modules.componente_curricular_turma cct
+                    INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                    WHERE TRUE
+                        AND cct.componente_curricular_id = $1
+                        AND cct.ano_escolar_id = $2
+                    GROUP BY cc.nome
+                ', ['params' => [
+                    $componenteId,
+                    $serieId
+                ]]);
+
+                $count = (int) $info[0]['count'] ?? 0;
+
+                if ($count > 0) {
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
+                }
+
+                //...
+
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(ncc.*), cc.nome
                     FROM modules.nota_componente_curricular ncc
                     INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
@@ -66,8 +87,8 @@ class ComponentesSerieController extends ApiCoreController
                     WHERE TRUE
                         AND ncc.componente_curricular_id = $1
                         AND m.ref_ref_cod_serie = $2
-                    GROUP BY cc.nome;
-                ", ['params' => [
+                    GROUP BY cc.nome
+                ', ['params' => [
                     $componenteId,
                     $serieId
                 ]]);
@@ -87,7 +108,7 @@ class ComponentesSerieController extends ApiCoreController
                 }
 
                 foreach ($update['anos_letivos_removidos'] as $ano) {
-                    $info = Portabilis_Utils_Database::fetchPreparedQuery("
+                    $info = Portabilis_Utils_Database::fetchPreparedQuery('
                         SELECT COUNT(ncc.*), cc.nome
                         FROM modules.nota_componente_curricular ncc
                         INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
@@ -97,8 +118,8 @@ class ComponentesSerieController extends ApiCoreController
                             AND ncc.componente_curricular_id = $1
                             AND m.ref_ref_cod_serie = $2
                             AND m.ano = $3
-                        GROUP BY cc.nome;
-                    ", ['params' => [
+                        GROUP BY cc.nome
+                    ', ['params' => [
                         $update['id'],
                         $serieId,
                         $ano
@@ -114,7 +135,7 @@ class ComponentesSerieController extends ApiCoreController
         }
 
         if ($erros) {
-            $errosDisplay = join(' ', $erros);
+            $errosDisplay = join("\n", $erros);
 
             throw new \Exception($errosDisplay);
         }
