@@ -31,6 +31,8 @@
  * @version  $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 $desvio_diretorio = "";
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -93,11 +95,10 @@ class indice extends clsCadastro
 
   public function Gerar()
   {
-    @session_start();
     $this->campoOculto("p_cod_pessoa_fj", $this->p_cod_pessoa_fj);
     $this->cod_pessoa_fj = $this->p_cod_pessoa_fj;
 
-    if (empty($_SESSION['convidado'])) {
+    if (empty(Session::get('convidado'))) {
       $this->campoRotulo("", "<strong>Informações</strong>", "<strong>Sua senha expirará em alguns dias, por favor cadastre uma nova senha com no mínimo 8 caracteres e diferente da senha anterior</strong>");
       $this->campoSenha("f_senha", "Senha", "", TRUE, "A sua nova senha deverá conter pelo menos oito caracteres");
       $this->campoSenha("f_senha2", "Redigite a Senha", $this->f_senha2, TRUE);
