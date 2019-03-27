@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'CoreExt/Session/Storage/Abstract.php';
 
 class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
@@ -35,8 +37,8 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
     {
         $returnValue = null;
 
-        if (isset($_SESSION[$key])) {
-            $returnValue = $_SESSION[$key];
+        if (Session::has($key)) {
+            $returnValue = Session::get($key);
         }
 
         return $returnValue;
@@ -47,7 +49,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function write($key, $value)
     {
-        $_SESSION[$key] = $value;
+        Session::put($key, $value);
     }
 
     /**
@@ -55,7 +57,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function remove($key)
     {
-        unset($_SESSION[$key]);
+        Session::forget($key);
     }
 
     /**
@@ -107,7 +109,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function count()
     {
-        return count($_SESSION);
+        return count(Session::all());
     }
 
     /**
@@ -115,6 +117,6 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function getSessionData()
     {
-        return $_SESSION;
+        return Session::all();
     }
 }
