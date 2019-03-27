@@ -1709,14 +1709,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaQuantidadeComputadoresAlunos()) {
-            return false;
-        }
-
-        if (!$this->validaQuantidadeEquipamentosEnsino()) {
-            return false;
-        }
-
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
@@ -2111,14 +2103,6 @@ class indice extends clsCadastro
         $organizacao_ensino = implode(',', $this->organizacao_ensino);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()){
-            return false;
-        }
-
-        if (!$this->validaQuantidadeComputadoresAlunos()) {
-            return false;
-        }
-
-        if (!$this->validaQuantidadeEquipamentosEnsino()) {
             return false;
         }
 
@@ -2535,7 +2519,9 @@ class indice extends clsCadastro
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
                 $this->validaSalasAcessibilidade() &&
-                $this->validaRecursos();
+                $this->validaRecursos() &&
+                $this->validaQuantidadeComputadoresAlunos() &&
+                $this->validaQuantidadeEquipamentosEnsino();
     }
 
     protected function validaOcupacaoPredio()
