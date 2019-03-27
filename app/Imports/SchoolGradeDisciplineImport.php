@@ -30,7 +30,7 @@ class SchoolGradeDisciplineImport implements ToModel, WithProgressBar, WithHeadi
             // check "Etapas utilizadas" da tela de séries da escola.
             'carga_horaria' => null,
             'etapas_especificas' => empty($row['stage']) ? 0 : 1,
-            'etapas_utilizadas' => Str::replaceArray($row['stage'], '.', ','),
+            'etapas_utilizadas' => str_replace('.', ',', (string) $row['stage']),
             'anos_letivos' => '{' . $row['academic_year'] . '}',
         ]);
     }
