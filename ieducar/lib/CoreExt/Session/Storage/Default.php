@@ -7,30 +7,6 @@ require_once 'CoreExt/Session/Storage/Abstract.php';
 class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
 {
     /**
-     * @see CoreExt_Session_Storage_Abstract#_init()
-     */
-    protected function _init(array $options = [])
-    {
-        $options = array_merge([
-            'session_use_cookies' => ini_get('session.use_cookies')
-        ], $options);
-
-        parent::_init($options);
-
-        if (!is_null($this->getOption('session_name'))) {
-            session_name($this->getOption('session_name'));
-        }
-
-        if (!is_null(self::$_sessionId)) {
-            @session_id(self::$_sessionId);
-        }
-
-        if (true == $this->getOption('session_auto_start')) {
-            $this->start();
-        }
-    }
-
-    /**
      * @see CoreExt_Session_Storage_Interface#read($key)
      */
     public function read($key)
@@ -65,10 +41,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function start()
     {
-        if (!$this->isStarted() && @session_start()) {
-            self::$_sessionStarted = true;
-            self::$_sessionId = session_id();
-        }
+        //
     }
 
     /**
@@ -76,9 +49,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function destroy()
     {
-        if ($this->isStarted()) {
-            return session_destroy();
-        }
+        //
     }
 
     /**
@@ -86,10 +57,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function regenerate($destroy = false)
     {
-        if ($this->isStarted()) {
-            session_regenerate_id($destroy);
-            self::$_sessionId = session_id();
-        }
+        //
     }
 
     /**
@@ -99,9 +67,7 @@ class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
      */
     public function shutdown()
     {
-        if ($this->isStarted()) {
-            session_write_close();
-        }
+        //
     }
 
     /**
