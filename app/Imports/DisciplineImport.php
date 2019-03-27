@@ -37,6 +37,7 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
             'instituicao_id' => $row['institution_id'],
             'area_conhecimento_id' => $row['knowledge_area_id'],
             'nome' => $row['name'],
+        ], [
             'abreviatura' => $row['abbreviation'],
             'tipo_base' => $row['curriculum_base'],
             'codigo_educacenso' => $row['educacenso_discipline'],
