@@ -43,7 +43,7 @@ class clsIndex extends clsBase
     }
 }
 
-class indice
+class indice extends clsCadastro
 {
     var $agenda;
     var $editor;
@@ -67,6 +67,9 @@ class indice
         @session_start();
         $this->editor = $_SESSION['id_pessoa'];
         session_write_close();
+
+        Portabilis_View_Helper_Application::loadJavascript($this, "/intranet/scripts/agenda.js");
+        Portabilis_View_Helper_Application::loadStylesheet($this, "/intranet/styles/agenda.css");
 
         if( $_REQUEST["cod_agenda"] )
         {
