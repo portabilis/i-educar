@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
@@ -156,9 +159,11 @@ class indice extends clsListagem
             //echo $hoje."////".$holerite_data."<br>";
             //
 
-            if( $hoje - $holerite_data > 0 || $_SESSION['id_pessoa'] == 2151 || $_SESSION['id_pessoa'] == 725 || $_SESSION['id_pessoa'] == 4310)
+            $idPessoa = Session::get('id_pessoa');
+
+            if( $hoje - $holerite_data > 0 || $idPessoa == 2151 || $idPessoa == 725 || $idPessoa == 4310)
             {
-                if( !$bool_13 || ( $bool_13 && ($num_13 < $total_13 || $hoje - $holerite_data_13 > 0) ) || $_SESSION['id_pessoa'] == 2151 || $_SESSION['id_pessoa'] == 725 || $_SESSION['id_pessoa'] == 4310 )
+                if( !$bool_13 || ( $bool_13 && ($num_13 < $total_13 || $hoje - $holerite_data_13 > 0) ) || $idPessoa == 2151 || $idPessoa == 725 || $idPessoa == 4310 )
                 $this->addLinhas( array("<a href='pmidrh_holerite_det.php?cod_holerite={$cod}'>{$data_inicial}</a>", "<a href='pmidrh_holerite_det.php?cod_holerite={$cod}'>{$data_final}</a>") );
             }
             $bool_13 = false;

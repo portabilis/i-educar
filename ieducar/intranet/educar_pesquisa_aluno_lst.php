@@ -92,7 +92,6 @@ class indice extends clsListagem
     {
         @session_start();
         $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
-        //$_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
         $_SESSION["campo3"] = $_GET["campo3"] ? $_GET["campo3"] : $_SESSION["campo3"];
         $_SESSION["campo4"] = $_GET["campo4"] ? $_GET["campo4"] : $_SESSION["campo4"];
         session_write_close();
@@ -137,11 +136,9 @@ class indice extends clsListagem
 
                 if($registro["cpf_responsavel"])
                     $registro["cpf_responsavel_"] = int2CPF($registro["cpf_responsavel"]);
-            //addSel1('{$_SESSION['campo3']}','{$registro['nome_aluno']}','{$registro["nome_aluno"]}');
                     //if($registro["tipo"] == 1)
                         $script = " onclick=\"addVal1('{$_SESSION['campo3']}','{$registro['cpf_aluno']}'); addVal1('{$_SESSION['campo1']}','{$registro['cod_aluno']}');  addVal1('{$_SESSION['campo4']}','{$registro['cpf_aluno_']}'); fecha();\"";
                     //elseif($registro["tipo"] == 2)
-                        //$script = " onclick=\"addVal1('{$_SESSION['campo3']}','{$registro['cpf_aluno']}');  addVal1('{$_SESSION['campo2']}','{$registro['cod_aluno']}'); addVal1('{$_SESSION['campo4']}','{$registro['cpf_aluno_']}');  fecha();\"";
                 $obj_det = "";
                 $obj_cpf_det = "";
                 if($registro["idpes_responsavel"])

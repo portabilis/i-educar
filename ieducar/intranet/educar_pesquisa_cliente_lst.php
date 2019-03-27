@@ -89,11 +89,6 @@ class indice extends clsListagem
 
         $this->titulo = "Cliente - Listagem";
 
-        /*foreach( $_SESSION AS $var => $val ) // passa todos os valores obtidos no SESSION para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;*/
-
         $this->addCabecalhos( array(
             "Código",
             "Cliente"
