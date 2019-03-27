@@ -687,7 +687,7 @@ class indice extends clsCadastro
     function Novo()
     {
         @session_start();
-        $pessoa_logada = $_SESSION['id_pessoa'];
+        $pessoa_logada = $this->pessoa_logada;
         $parametros = new clsParametrosPesquisas();
         if ( $_SESSION["campos"] ) {
             $parametros->preencheAtributosComArray( $_SESSION['campos'] );
@@ -1004,7 +1004,7 @@ class indice extends clsCadastro
     function Editar()
     {
         @session_start();
-        $pessoaFj   = $_SESSION['id_pessoa'];
+        $pessoaFj = $this->pessoa_logada;
         $parametros = new clsParametrosPesquisas();
         if ( $this->cep_ )
             $this->cep = idFederal2int( $this->cep_ );

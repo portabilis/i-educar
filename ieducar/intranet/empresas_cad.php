@@ -89,7 +89,7 @@ class indice extends clsCadastro
     {
         $this->busca_empresa = $_POST['busca_empresa'];
         $this->cod_pessoa_fj = $_GET['idpes'];
-        $this->idpes_cad = $_SESSION['id_pessoa'];
+        $this->idpes_cad = $this->pessoa_logada;
 
         if ($this->busca_empresa) {
             $this->cnpj = $this->busca_empresa;

@@ -73,8 +73,9 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
+        $this->id_pessoa = $this->pessoa_logada;
+
         @session_start();
-        $this->id_pessoa = $_SESSION['id_pessoa'];
         unset($_SESSION['campo3']);
         session_write_close();
         $this->id_noticia_deletar = @$_POST["id_noticia_deletar"];

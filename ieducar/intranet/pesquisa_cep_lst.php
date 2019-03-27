@@ -49,7 +49,6 @@ class indice extends clsListagem
     function Gerar()
     {
         @session_start();
-        $id_pessoa  = $_SESSION['id_pessoa'];
         $this->nome = "form1";
 
         if ( $_GET["campos"] ) {

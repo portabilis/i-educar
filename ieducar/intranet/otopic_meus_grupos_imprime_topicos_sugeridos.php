@@ -46,9 +46,6 @@ class Listas extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $id_visualiza = $_SESSION['id_pessoa'];
-        @session_write_close();
         $this->nome = "Form1";
 
         $this->titulo = "Tópicos Sugeridos";

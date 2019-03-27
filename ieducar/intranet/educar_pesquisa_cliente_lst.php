@@ -82,7 +82,6 @@ class indice extends clsListagem
             $this->$campo = $valor;
         }
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
         $_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
         $this->ref_cod_biblioteca = $this->ref_cod_biblioteca ? $this->ref_cod_biblioteca : $_GET['ref_cod_biblioteca'];

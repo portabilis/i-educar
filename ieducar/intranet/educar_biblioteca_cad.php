@@ -66,7 +66,6 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         $this->tipo_biblioteca = $_SESSION['biblioteca']['tipo_biblioteca'];
         @session_write_close();
 
