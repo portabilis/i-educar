@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -211,9 +214,7 @@ class indice extends clsCadastro
         $this->campoOculto( "ref_cod_exemplar", $this->ref_cod_exemplar );
         $this->campoTextoInv("titulo_obra", "Obra", $titulo_obra, 30, 255);
 
-        @session_start();
-            $reload = $_SESSION['reload'];
-        @session_write_close();
+        $reload = Session::get('reload');
 
         if ($valor_divida && !$reload )
         {
@@ -222,9 +223,10 @@ class indice extends clsCadastro
             $this->campoOculto( "valor_multa", $this->valor_multa );
 
             $reload = 1;
-            @session_start();
-                $_SESSION['reload'] = $reload;
-            @session_write_close();
+
+            Session::put('reload', $reload);
+            Session::save();
+            Session::start();
 
             echo "<script>
                 if(!confirm('Atraso na devolução do exemplar ($dias_atraso dias)! \\n Data prevista para a entrega: $data_entrega \\n Valor total da multa: R$$valor_divida \\n Deseja adicionar a multa?'))

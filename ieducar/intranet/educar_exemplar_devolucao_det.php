@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -59,9 +62,9 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-            unset($_SESSION['reload']);
-        session_write_close();
+        Session::forget('reload');
+        Session::save();
+        Session::start();
 
         $this->titulo = "Exemplar Devolu&ccedil;&atilde;o - Detalhe";
 
