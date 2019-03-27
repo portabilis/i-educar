@@ -95,7 +95,6 @@ class indice extends clsListagem
     function Gerar()
     {
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
         $this->ref_cod_biblioteca = $_SESSION["ref_cod_biblioteca"] = $_GET["ref_cod_biblioteca"] ? $_GET["ref_cod_biblioteca"] : $_SESSION["ref_cod_biblioteca"];
         session_write_close();

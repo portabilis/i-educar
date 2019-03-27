@@ -61,9 +61,6 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_topo_portal=$_GET["cod_topo_portal"];
 
@@ -125,9 +122,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         $diretorio = "imagens/topos/";
         $arquivo1 = isset($_FILES['caminho1']) ? $_FILES['caminho1'] : FALSE;
         $arquivo2 = isset($_FILES['caminho2']) ? $_FILES['caminho2'] : FALSE;
@@ -155,13 +150,9 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
+
         $diretorio = "imagens/topos/";
         $arquivo1 = isset($_FILES['caminho1']) ? $_FILES['caminho1'] : FALSE;
         $arquivo2 = isset($_FILES['caminho2']) ? $_FILES['caminho2'] : FALSE;
@@ -203,9 +194,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         
         $obj = new clsPmicontrolesisTopoPortal($this->cod_topo_portal, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_menu_portal, $this->caminho1, $this->caminho2, $this->caminho3, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();

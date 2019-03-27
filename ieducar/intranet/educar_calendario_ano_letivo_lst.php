@@ -42,10 +42,6 @@ class indice extends clsListagem
 
   function renderHTML()
   {
-      @session_start();
-      $this->pessoa_logada = $_SESSION['id_pessoa'];
-      session_write_close();
-
       $obj_permissoes = new clsPermissoes();
 
       $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -187,7 +183,6 @@ class indice extends clsListagem
       // Monta a lista
       if (is_array($lista) && count($lista)) {
           foreach ($lista as $key => $registro) {
-              // Guarda dados na $_SESSION
               $_SESSION['calendario'] = [
                   'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
                   'ref_cod_instituicao' => $this->ref_cod_instituicao,

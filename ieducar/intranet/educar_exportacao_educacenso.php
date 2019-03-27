@@ -60,9 +60,7 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->segunda_fase = ($_REQUEST['fase2'] == 1);
 

@@ -81,18 +81,19 @@ class indice extends clsCadastro
     function Novo() 
     {
         $db = new clsBanco();
-        
+
+        $idPessoa = Session::get('id_pessoa');
         
         /*
          * INFORMAÇÕES DO BANCO DE DADOS
          */
-        $banco_matricula = $db->CampoUnico("SELECT matricula FROM portal.funcionario WHERE ref_cod_pessoa_fj='{$_SESSION['id_pessoa']}'");
+        $banco_matricula = $db->CampoUnico("SELECT matricula FROM portal.funcionario WHERE ref_cod_pessoa_fj='{$idPessoa}'");
         
-        $banco_senha = $db->CampoUnico("SELECT senha FROM portal.funcionario WHERE ref_cod_pessoa_fj='{$_SESSION['id_pessoa']}'");
+        $banco_senha = $db->CampoUnico("SELECT senha FROM portal.funcionario WHERE ref_cod_pessoa_fj='{$idPessoa}'");
         
-        $banco_data_nasc = $db->CampoUnico("SELECT data_nasc FROM cadastro.fisica WHERE idpes='{$_SESSION['id_pessoa']}'");
+        $banco_data_nasc = $db->CampoUnico("SELECT data_nasc FROM cadastro.fisica WHERE idpes='{$idPessoa}'");
         
-        $banco_cpf = $db->CampoUnico("SELECT cpf FROM cadastro.fisica_cpf WHERE idpes='{$_SESSION['id_pessoa']}'");
+        $banco_cpf = $db->CampoUnico("SELECT cpf FROM cadastro.fisica_cpf WHERE idpes='{$idPessoa}'");
         
         /*
          * COMPARA DADOS

@@ -33,9 +33,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
@@ -111,9 +109,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
         $obj->nm_deficiencia = $this->nm_deficiencia;
@@ -143,9 +139,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $deficienciaDetalhe = new clsCadastroDeficiencia($this->cod_deficiencia);
         $deficienciaDetalheAntes = $deficienciaDetalhe->detalhe();
@@ -177,9 +171,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
         $detalhe = $obj->detalhe();

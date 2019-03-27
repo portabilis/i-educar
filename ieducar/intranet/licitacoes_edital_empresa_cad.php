@@ -60,9 +60,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $this->id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->id_pessoa = $this->pessoa_logada;
 
         $retorno = "Novo";
 
@@ -117,10 +115,6 @@ class indice extends clsCadastro
     {
         global $HTTP_POST_FILES;
 
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         $db = new clsBanco();
 
         $this->cep = idFederal2int($this->cep);
@@ -148,10 +142,6 @@ class indice extends clsCadastro
     {
         global $HTTP_POST_FILES;
 
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         if( $this->senha == $this->re_senha )
         {
             $db = new clsBanco();
@@ -170,10 +160,6 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-        $this->id_pessoa = @$_SESSION['id_pessoa'];
-        session_write_close();
-
         $db = new clsBanco();
         $db->Consulta( "SELECT 1 FROM compras_editais_editais_empresas WHERE ref_cod_compras_editais_empresa = $this->cod_empresa" );
         if( ! $db->ProximoRegistro() )

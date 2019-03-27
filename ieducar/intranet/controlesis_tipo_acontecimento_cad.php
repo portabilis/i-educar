@@ -60,12 +60,8 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_tipo_acontecimento=$_GET["cod_tipo_acontecimento"];
-
 
         if( is_numeric( $this->cod_tipo_acontecimento ) )
         {
@@ -105,9 +101,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
         $arquivo = isset($_FILES['caminho']) ? $_FILES['caminho'] : FALSE;
         $diretorio = "imagens/";
         if (move_uploaded_file($arquivo['tmp_name'], $diretorio . $arquivo['name']))
@@ -131,9 +125,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         if($this->caminho['tmp_name'])
         {
@@ -167,9 +159,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         if($this->caminho['tmp_name'])
         {

@@ -47,9 +47,7 @@ class indice extends clsCadastro
     {
         $retorno = "Editar";
 
-        @session_start();
-         $this->idpes = $_SESSION['id_pessoa'];
-        @session_write_close();
+         $this->idpes = $this->pessoa_logada;
         
         if($this->idpes)
         {

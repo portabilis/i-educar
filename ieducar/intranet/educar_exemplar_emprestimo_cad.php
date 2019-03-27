@@ -68,7 +68,6 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
         @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
             $this->ref_cod_cliente = $_SESSION['emprestimo']['cod_cliente'];
             $this->ref_cod_biblioteca = $_SESSION['emprestimo']['ref_cod_biblioteca'];
         @session_write_close();
@@ -413,7 +412,6 @@ class indice extends clsCadastro
     function Novo()
     {
         @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
             $this->ref_cod_cliente = $_SESSION['emprestimo']['cod_cliente'];
         @session_write_close();
 

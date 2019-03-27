@@ -56,7 +56,6 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
         @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
             unset($_SESSION['reservas']['cod_cliente']);
             unset($_SESSION['reservas']['ref_cod_biblioteca']);
         @session_write_close();
@@ -111,9 +110,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 610, $this->pessoa_logada, 11,  "educar_reservas_lst.php" );

@@ -52,10 +52,6 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $retorno = "Novo";
          
         if (@$_GET['cod_portal_banner'])
@@ -110,10 +106,8 @@ class indice extends clsCadastro
         {
             return false;
         }
-            
-        @session_start();
-        $this->ref_ref_cod_pessoa_fj = @$_SESSION['id_pessoa'];
-        session_write_close();
+
+        $this->ref_ref_cod_pessoa_fj = $this->pessoa_logada;
         
         $db = new clsBanco();
         $db->Consulta( "INSERT INTO portal_banner ( ref_ref_cod_pessoa_fj, caminho, title, prioridade, link, lateral ) VALUES ({$this->ref_ref_cod_pessoa_fj}, '{$caminho}', '{$this->title}', {$this->prioridade}, '{$this->link}', '{$this->lateral}')" );
@@ -123,9 +117,7 @@ class indice extends clsCadastro
 
     function Editar() 
     {
-        @session_start();
-        $this->ref_ref_cod_pessoa_fj = @$_SESSION['id_pessoa'];
-        session_write_close();
+        $this->ref_ref_cod_pessoa_fj = $this->pessoa_logada;
         
         $db = new clsBanco();
         $db->Consulta( "UPDATE portal_banner SET ref_ref_cod_pessoa_fj={$this->ref_ref_cod_pessoa_fj}, title='{$this->title}', prioridade={$this->prioridade}, link='{$this->link}', lateral='{$this->lateral}' WHERE cod_portal_banner={$this->cod_portal_banner}" );

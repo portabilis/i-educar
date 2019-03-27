@@ -50,9 +50,8 @@ class indice extends clsCadastro
     
     function Inicializar()
     {
-        @session_start();
-        $this->id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->id_pessoa = $this->pessoa_logada;
+
         $retorno = "Novo";
         $this->pagina_anterior = $_SERVER["HTTP_REFERER"];
         return $retorno;

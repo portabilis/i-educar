@@ -59,9 +59,6 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_telefones=$_GET["cod_telefones"];
 
@@ -104,9 +101,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmicontrolesisTelefones( $this->cod_telefones, $this->pessoa_logada, null, $this->nome, $this->numero, null, null, 1 );
         $cadastrou = $obj->cadastra();
@@ -125,9 +120,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmicontrolesisTelefones($this->cod_telefones, null, $this->pessoa_logada, $this->nome, $this->numero, null, null, 1);
         $editou = $obj->edita();
@@ -146,9 +139,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmicontrolesisTelefones($this->cod_telefones, null, $this->pessoa_logada, $this->nome, $this->numero, null, null, 0);
         $excluiu = $obj->excluir();

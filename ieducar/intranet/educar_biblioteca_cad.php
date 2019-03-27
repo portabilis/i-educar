@@ -66,7 +66,6 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
         @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         $this->tipo_biblioteca = $_SESSION['biblioteca']['tipo_biblioteca'];
         @session_write_close();
 
@@ -263,9 +262,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
         /*if ($this->tombo_automatico == "on")
@@ -314,9 +311,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
@@ -368,9 +363,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );

@@ -87,9 +87,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->cod_servidor = $_GET['ref_cod_servidor'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];

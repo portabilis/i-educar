@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Session;
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *                                                                        *
     *   @author Prefeitura Municipal de Itajaí                               *
@@ -54,9 +57,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $id_pessoa = Session::get('id_pessoa');
         
         $retorno = "Novo";
         $this->ref_ref_pessoa_fj = $id_pessoa;
@@ -128,9 +129,7 @@ class indice extends clsCadastro
                 }
                 else 
                 {
-                    @session_start();
-                    $this->ref_ref_pessoa_fj = @$_SESSION['id_pessoa'];
-                    session_write_close();
+                    $this->ref_ref_pessoa_fj = $this->pessoa_logada;
             
                     $db = new clsBanco();
                     $db->Consulta( "INSERT INTO portal_concurso( ref_ref_cod_pessoa_fj, nm_concurso, descricao, caminho, tipo_arquivo, data_hora ) VALUES( '{$this->ref_ref_pessoa_fj}', '{$this->nm_concurso}', '{$this->descricao}', '{$this->caminho}', '{$this->tipo_arquivo}', NOW() )" );
