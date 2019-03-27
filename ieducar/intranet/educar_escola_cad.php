@@ -165,6 +165,7 @@ class indice extends clsCadastro
     public $quantidade_computadores_alunos_mesa;
     public $quantidade_computadores_alunos_portateis;
     public $quantidade_computadores_alunos_tablets;
+    public $lousas_digitais;
     public $televisoes;
     public $videocassetes;
     public $dvds;
@@ -1356,14 +1357,8 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('televisoes', $options);
-
             $options = array('label' => 'Quantidade de videocassetes', 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('videocassetes', $options);
-
-            $options = array('label' => 'Quantidade de DVDs', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('dvds', $options);
 
             $options = array('label' => 'Quantidade de antenas parabólicas', 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('antenas_parabolicas', $options);
@@ -1376,12 +1371,6 @@ class indice extends clsCadastro
 
             $options = array('label' => 'Quantidade de impressoras', 'resources' => $resources, 'value' => $this->impressoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('impressoras', $options);
-
-            $options = array('label' => 'Quantidade de aparelhos de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('aparelhos_de_som', $options);
-
-            $options = array('label' => 'Quantidade de data show', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('projetores_digitais', $options);
 
             $options = array('label' => 'Quantidade de FAXs', 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('faxs', $options);
@@ -1397,6 +1386,26 @@ class indice extends clsCadastro
 
             $options = array('label' => 'Quantidade de computadores de uso dos alunos', 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('computadores_alunos', $options);
+
+            $this->campoRotulo(
+                'equipamentos_aprendizagem',
+                '<b>Quantidade de equipamentos para ensino/aprendizagem</b>'
+            );
+
+            $options = array('label' => 'Aparelho de Televisão', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('televisoes', $options);
+
+            $options = array('label' => 'Aparelho de DVD/Blu-ray', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('dvds', $options);
+
+            $options = array('label' => 'Aparelho de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('aparelhos_de_som', $options);
+
+            $options = array('label' => 'Projetor Multimídia (Data show)', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('projetores_digitais', $options);
+
+            $options = array('label' => 'Lousa digital', 'resources' => $resources, 'value' => $this->lousas_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('lousas_digitais', $options);
 
             $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('computadores', $options);
@@ -1671,6 +1680,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaQuantidadeEquipamentosEnsino()) {
+            return false;
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
@@ -1752,6 +1765,7 @@ class indice extends clsCadastro
                     $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
                     $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
                     $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+                    $obj->lousas_digitais = $this->lousas_digitais;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1925,6 +1939,7 @@ class indice extends clsCadastro
             $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
             $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
             $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2061,6 +2076,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaQuantidadeEquipamentosEnsino()) {
+            return false;
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
         $obj = new clsPmieducarEscola($this->cod_escola);
@@ -2136,6 +2155,7 @@ class indice extends clsCadastro
             $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
             $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
             $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2241,6 +2261,7 @@ class indice extends clsCadastro
             $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
             $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
             $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2884,6 +2905,37 @@ class indice extends clsCadastro
 
         if ($this->quantidade_computadores_alunos_tablets == '0') {
             $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+
+    protected function validaQuantidadeEquipamentosEnsino()
+    {
+        if ($this->televisoes == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de Televisão</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->dvds == '0') {
+            $this->mensagem = 'O campo: <b>Projetor Multimídia (Data show)</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->aparelhos_de_som == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de som</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->projetores_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de DVD/Blu-ray</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->lousas_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Lousa digital</b> não pode ser preenchido com 0';
             return false;
         }
 
