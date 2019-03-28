@@ -829,8 +829,6 @@ class indice extends clsCadastro
                     $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
                 }
 
-                //...
-
                 $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(ncc.*), cc.nome
                     FROM modules.nota_componente_curricular ncc
@@ -888,16 +886,19 @@ class indice extends clsCadastro
                 }
 
                 if (!empty($update['anos_letivos_acrescentar'])) {
+                    $componente = Portabilis_Utils_Database::fetchPreparedQuery(
+                        'SELECT nome FROM modules.componente_curricular WHERE id = $1',
+                        ['params' => [(int) $update['ref_cod_disciplina']]]
+                    )[0]['nome'];
+
                     foreach ($update['anos_letivos_acrescentar'] as $ano) {
                         $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                            SELECT COUNT(ccae.*), cc.nome
-                            FROM modules.componente_curricular_ano_escolar ccae
-                            INNER JOIN modules.componente_curricular cc ON cc.id = ccae.componente_curricular_id
+                            SELECT COUNT(*)
+                            FROM modules.componente_curricular_ano_escolar
                             WHERE TRUE
-                                AND ccae.componente_curricular_id = $1
-                                AND ccae.ano_escolar_id = $2
-                                AND $3 = ANY(ccae.anos_letivos)
-                            GROUP BY cc.nome
+                                AND componente_curricular_id = $1
+                                AND ano_escolar_id = $2
+                                AND $3 = ANY(anos_letivos)
                         ', ['params' => [
                             (int) $update['ref_cod_disciplina'],
                             $this->ref_cod_serie,
@@ -907,7 +908,7 @@ class indice extends clsCadastro
                         $count = (int) $info[0]['count'] ?? 0;
 
                         if ($count < 1) {
-                            $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série).', $ano, $info[0]['nome']);
+                            $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série).', $ano, $componente);
                         }
                     }
                 }
