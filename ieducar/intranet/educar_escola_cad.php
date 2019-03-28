@@ -160,6 +160,7 @@ class indice extends clsCadastro
     public $orgaos_colegiados;
     public $exame_selecao_ingresso;
     public $reserva_vagas_cotas;
+    public $projeto_politico_pedagogico;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -1589,6 +1590,23 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não sei',
+                1 => 'Sim',
+                2 => 'A escola não possui projeto político pedagógico/proposta pedagógica'
+            ];
+            $options = array(
+                'resources' => $resources,
+                'label' => 'Projeto político pedagógico ou a proposta pedagógica da escola atualizado nos últimos 12 meses até a data de referência',
+                'label_hint' => '(conforme art. 12 da LDB)',
+                'placeholder' => 'Selecione',
+                'prompt' => 'Selecione',
+                'value' => $this->projeto_politico_pedagogico,
+                'required' => false,
+            );
+            $this->inputsHelper()->select('projeto_politico_pedagogico', $options);
+
             $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
@@ -1856,6 +1874,7 @@ class indice extends clsCadastro
                     $obj->orgaos_colegiados = $orgaos_colegiados;
                     $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
                     $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+                    $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
                     $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
@@ -2038,6 +2057,7 @@ class indice extends clsCadastro
             $obj->orgaos_colegiados = $orgaos_colegiados;
             $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
             $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2259,6 +2279,7 @@ class indice extends clsCadastro
             $obj->orgaos_colegiados = $orgaos_colegiados;
             $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
             $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
@@ -2373,6 +2394,7 @@ class indice extends clsCadastro
             $obj->orgaos_colegiados = $orgaos_colegiados;
             $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
             $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
