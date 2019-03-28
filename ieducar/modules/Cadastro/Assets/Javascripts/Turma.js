@@ -96,10 +96,19 @@ function mostraCursoTecnico() {
 function validaHorarioInicialFinal() {
   var horarioInicial = $j('#hora_inicial').val().replace(':', '');
   var horarioFinal = $j('#hora_final').val().replace(':', '');
+  var horarioInicialIntervalo = $j('#hora_inicio_intervalo').val().replace(':', '');
+  var horarioFinalIntervalo = $j('#hora_fim_intervalo').val().replace(':', '');
+
   if (horarioInicial > horarioFinal){
     alert('O horário inicial não pode ser maior que o horário final.');
     return false;
   }
+
+  if (horarioInicialIntervalo > horarioFinalIntervalo){
+    alert('O horário inicial não pode ser maior que o horário final.');
+    return false;
+  }
+
   return true;
 }
 
