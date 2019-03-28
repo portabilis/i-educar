@@ -276,7 +276,7 @@ class indice extends clsCadastro
 
             $this->insc_est = idFederal2int($this->insc_est);
 
-            $this->idpes_cad = $_SESSION["id_pessoa"];
+            $this->idpes_cad = $this->pessoa_logada;
 
             $objPessoa = new clsPessoa_(false, $this->razao_social, $this->idpes_cad, $this->url, "J", false, false,
                 $this->email);

@@ -29,6 +29,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -219,15 +221,11 @@ class indice extends clsCadastro
           $this->curso_formacao_continuada = explode(',',str_replace(array('{', "}"), '', $this->curso_formacao_continuada));
         }
 
-        @session_start();
-
-        if ($_SESSION['cod_servidor'] == $this->cod_servidor) {
-          $_SESSION['cursos_disciplina'] = $this->cursos_disciplina;
+        if (Session::get('cod_servidor') == $this->cod_servidor) {
+            Session::put('cursos_disciplina', $this->cursos_disciplina);
         } else {
-          unset($_SESSION['cursos_disciplina']);
+            Session::forget('cursos_disciplina');
         }
-
-        @session_write_close();
 
         $retorno = 'Editar';
       }
@@ -978,10 +976,8 @@ JS;
 
   function cadastraFuncoes()
   {
-    @session_start();
-    $cursos_disciplina = $_SESSION['cursos_disciplina'];
-    $cursos_servidor = $_SESSION['cursos_servidor'];
-    @session_write_close();
+    $cursos_disciplina = Session::get('cursos_disciplina');
+    $cursos_servidor = Session::get('cursos_servidor');
 
     $listFuncoesCadastradas = array();
 

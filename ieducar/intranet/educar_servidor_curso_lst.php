@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -105,9 +107,7 @@ class indice extends clsCadastro
       }
     }
 
-    @session_start();
-    $this->cursos_servidor = $_SESSION['cursos_servidor'];
-    @session_write_close();
+    $this->cursos_servidor = Session::get('cursos_servidor');
 
     if (!$this->cursos_servidor) {
       $obj_servidor_curso = new clsPmieducarServidorCursoMinistra();
@@ -169,10 +169,12 @@ class indice extends clsCadastro
       }
     }
 
-    @session_start();
-    $_SESSION['cursos_servidor'] = $curso_servidor;
-    $_SESSION['cod_servidor']    = $this->cod_servidor;
-    @session_write_close();
+    Session::put([
+        'cursos_servidor' => $curso_servidor,
+        'cod_servidor' => $this->cod_servidor,
+    ]);
+    Session::save();
+    Session::start();
 
     echo "<script>parent.fechaExpansivel( '{$_GET['div']}');</script>";
     die();
