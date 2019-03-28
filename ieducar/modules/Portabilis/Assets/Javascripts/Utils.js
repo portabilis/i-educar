@@ -35,6 +35,7 @@ var formUtils = {
 };
 
 function makeRequired(elementId) {
+  makeUnrequired(elementId);
   $j('<span class="campo_obrigatorio">*</span>').insertAfter($j('#tr_' + elementId + ' td:nth-child(1) span'));
   $j('#' + elementId).addClass('obrigatorio');
   $j('#' + elementId).removeClass('geral');
