@@ -627,6 +627,12 @@ $j('#numero_salas_utilizadas_dentro_predio,#numero_salas_utilizadas_fora_predio'
 function habilitaCampoAcessoInternet() {
     let disabled = $j.inArray(USO_INTERNET.NAO_POSSUI.toString(), $j('#uso_internet').val()) != -1;
     $j('#acesso_internet').prop('disabled', disabled);
+
+    if (!disabled && obrigarCamposCenso) {
+        $j('#acesso_internet').makeRequired();
+    } else {
+        $j('#acesso_internet').makeUnrequired();
+    }
 }
 
 function habilitaCampoEquipamentosAcessoInternet() {
