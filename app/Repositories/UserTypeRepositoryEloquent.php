@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\UserType;
 use iEducar\Support\Repositories\UserTypeRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
+use App\Models\LegacyUserType;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class UserTypeRepositoryEloquent extends BaseRepository implements UserTypeRepository
@@ -16,7 +16,7 @@ class UserTypeRepositoryEloquent extends BaseRepository implements UserTypeRepos
      */
     public function model()
     {
-        return UserType::class;
+        return LegacyUserType::class;
     }
 
     /**

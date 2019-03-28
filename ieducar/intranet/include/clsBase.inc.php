@@ -1,7 +1,9 @@
 <?php
 
-use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -109,7 +111,7 @@ class clsBase extends clsConfig
 
         $saida = $this->OpenTpl('htmlhead');
         $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
-        $saida = str_replace("<!-- #&USER_ID&# -->", $_SESSION['id_pessoa'], $saida);
+        $saida = str_replace("<!-- #&USER_ID&# -->", Session::get('id_pessoa'), $saida);
         $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
 
         if ($this->refresh) {
@@ -412,10 +414,10 @@ class clsBase extends clsConfig
             $saida_geral .= $this->MakeFootHtml();
         } else {
             $controlador->Logar(true);
-            $referer = $_SERVER['HTTP_REFERER'];
 
-            header("Location: " . $referer, true, 302);
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse($_SERVER['HTTP_REFERER'])
+            );
         }
 
         $view = 'legacy.body';
@@ -425,26 +427,6 @@ class clsBase extends clsConfig
         }
 
         echo view($view, ['body' => $saida_geral])->render();
-    }
-
-    function setAlertaProgramacao($string)
-    {
-        if (is_string($string) && $string) {
-            $this->prog_alert = $string;
-        }
-    }
-
-    protected function checkUserExpirations()
-    {
-        $user = Portabilis_Utils_User::load('current_user');
-        $uri = $_SERVER['REQUEST_URI'];
-        $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
-
-        if ($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1')
-            header("Location: /intranet/logof.php");
-
-        elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
-            header("Location: /module/Usuario/AlterarSenha");
     }
 
     protected function db()
