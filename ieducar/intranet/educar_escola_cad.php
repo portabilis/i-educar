@@ -1592,7 +1592,8 @@ class indice extends clsCadastro
                 'label' => 'Unidade vinculada à Escola de Educação Básica ou Unidade Ofertante de Educação Superior',
                 'resources' => $resources,
                 'value' => $this->unidade_vinculada_outra_instituicao,
-                'size' => 70
+                'size' => 70,
+                'required' => false
             ];
             $this->inputsHelper()->select('unidade_vinculada_outra_instituicao', $options);
 
