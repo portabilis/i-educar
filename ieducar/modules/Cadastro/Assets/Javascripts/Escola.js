@@ -256,7 +256,7 @@ if (!$j('#cnpj').is(':visible')){
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-1;
   linha_inicial_equipamento = $j('#tr_equipamentos').index()-1;
-  linha_inicial_recursos = $j('#tr_qtd_secretario_escolar').index()-1;
+  linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos

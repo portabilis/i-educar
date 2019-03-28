@@ -215,7 +215,7 @@ class indice extends clsCadastro
     private $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
         'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
-        'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: (pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
+        'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
         'qtd_coordenador_turno' => 'Coordenador(a) de turno/disciplina',
         'qtd_tecnicos' => 'Técnicos(as), monitores(as) ou auxiliares de laboratório(s)',
         'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
@@ -1471,8 +1471,10 @@ class indice extends clsCadastro
             $options = array('label' => 'Lousa digital', 'resources' => $resources, 'value' => $this->lousas_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('lousas_digitais', $options);
 
-            $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('total_funcionario', $options);
+            $this->campoRotulo(
+                'quantidade_profissionais',
+                '<b>Quantidade de profissionais</b>'
+            );
 
             foreach ($this->inputsRecursos as $key => $label) {
                 $options = array('label' => $label, 'value' => $this->{$key}, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -2915,16 +2917,24 @@ class indice extends clsCadastro
 
         return true;
     }
-    
+
     protected function validaRecursos()
     {
-        foreach ($this->inputsRecursos as $key => $inputRecurso) {
-            if ((int) $this->{$key} > 0) {
-                return true;
+        $algumCampoPreenchido = false;
+        foreach ($this->inputsRecursos as $key => $label) {
+            if ($this->{$key} == '0') {
+                $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
+                return false;
+            } elseif ((int) $this->{$key} > 0) {
+                $algumCampoPreenchido = true;
             }
         }
 
-        $this->mensagem = 'Preencha pelo menos um dos campos de Quantidade de profissionais da aba Recursos.';
+        if ($algumCampoPreenchido) {
+            return true;
+        }
+
+        $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção</b> Quantidade de profissionais da aba Recursos.';
         return false;
     }
 
