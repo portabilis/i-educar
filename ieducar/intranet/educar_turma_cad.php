@@ -896,7 +896,9 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         header('Location: educar_turma_lst.php');
@@ -954,7 +956,9 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
         $this->mensagem .= 'Edição efetuada com sucesso.';
         header('Location: educar_turma_lst.php');
@@ -1114,8 +1118,83 @@ class indice extends clsCadastro
         return $objTurma;
     }
 
+    protected function validaModulos()
+    {
+        $turmaId = $this->cod_turma;
+        $etapasCount = count($this->data_inicio);
+        $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
+            [$turmaId]
+        );
+
+        if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $etapasTmp = $etapasCount;
+        $params = [];
+
+        while ($etapasTmp < $etapasCountAntigo) {
+            $etapasTmp += 1;
+            $params[] = $etapasTmp;
+        }
+
+        $where = ['WHERE TRUE'];
+        $tmpWhere = [];
+
+        for ($i = 1; $i <= count($params); $i++) {
+            $tmpWhere[] = '$' . $i;
+        }
+
+        $where[] = '%s.etapa::numeric IN (' . join(',', $tmpWhere) . ')';
+        $where[] = 'mt.ref_cod_turma = $' . $i;
+        $where[] = 'm.ativo = 1';
+
+        $where = join(' AND ', $where);
+
+        $params[] = $turmaId;
+
+        $counts[] = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(fcc.*) AS count
+            FROM modules.falta_componente_curricular fcc
+            INNER JOIN modules.falta_aluno fa ON fa.id = fcc.falta_aluno_id
+            INNER JOIN pmieducar.matricula m ON m.cod_matricula = fa.matricula_id
+            INNER JOIN pmieducar.matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula ' . sprintf($where, 'fcc'),
+            $params
+        );
+
+        $counts[] = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(fg.*) AS count
+            FROM modules.falta_geral fg
+            INNER JOIN modules.falta_aluno fa ON fa.id = fg.falta_aluno_id
+            INNER JOIN pmieducar.matricula m ON m.cod_matricula = fa.matricula_id
+            INNER JOIN pmieducar.matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula ' . sprintf($where, 'fg'),
+            $params
+        );
+
+        $counts[] = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(ncc.*) AS count
+            FROM modules.nota_componente_curricular ncc
+            INNER JOIN modules.nota_aluno na ON na.id = ncc.nota_aluno_id
+            INNER JOIN pmieducar.matricula m ON m.cod_matricula = na.matricula_id
+            INNER JOIN pmieducar.matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula ' . sprintf($where, 'ncc'),
+            $params
+        );
+
+        return (int) array_sum($counts) === 0;
+    }
+
     public function atualizaModulos()
     {
+        $valido = $this->validaModulos();
+
+        if ($valido === false) {
+            $this->Inicializar();
+            $this->mensagem = 'Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.';
+
+            return false;
+        }
+
         $objModulo = new clsPmieducarTurmaModulo();
         $excluiu = $objModulo->excluirTodos($this->cod_turma);
         $modulos = $this->montaModulos();

@@ -352,6 +352,22 @@ class indice extends clsCadastro
         );
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
+            $valida = $this->validaModulos();
+
+            if ($valida === false) {
+                $_POST = [];
+
+                $etapasObj = new clsPmieducarAnoLetivoModulo();
+
+                $etapasObj->setOrderBy('sequencial ASC');
+
+                $this->etapas = $etapasObj->lista($this->ref_ano, $this->ref_ref_cod_escola);
+                $this->ref_cod_modulo = $this->etapas[0]['ref_cod_modulo'];
+                $this->mensagem = 'Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.';
+
+                return false;
+            }
+
             $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
             $excluiu = $obj->excluirTodos();
 
@@ -636,6 +652,73 @@ class indice extends clsCadastro
         }
 
         return json_encode($retorno);
+    }
+
+    protected function validaModulos()
+    {
+        $ano = $this->ref_ano;
+        $escolaId = $this->ref_ref_cod_escola;
+        $etapasCount = count($this->data_inicio);
+        $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(*) AS count FROM pmieducar.ano_letivo_modulo WHERE ref_ano = $1 AND ref_ref_cod_escola = $2',
+            [$ano, $escolaId]
+        );
+
+        if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $etapasTmp = $etapasCount;
+        $params = [];
+
+        while ($etapasTmp < $etapasCountAntigo) {
+            $etapasTmp += 1;
+            $params[] = $etapasTmp;
+        }
+
+        $where = ['WHERE TRUE'];
+        $tmpWhere = [];
+
+        for ($i = 1; $i <= count($params); $i++) {
+            $tmpWhere[] = '$' . $i;
+        }
+
+        $where[] = '%s.etapa::numeric IN (' . join(',', $tmpWhere) . ')';
+        $where[] = 'm.ref_ref_cod_escola = $' . $i;
+        $i++;
+        $where[] = 'm.ano = $' . $i;
+        $where[] = 'm.ativo = 1';
+
+        $where = join(' AND ', $where);
+
+        $params[] = $escolaId;
+        $params[] = $ano;
+
+        $counts[] = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(fcc.*) AS count
+            FROM modules.falta_componente_curricular fcc
+            INNER JOIN modules.falta_aluno fa ON fa.id = fcc.falta_aluno_id
+            INNER JOIN pmieducar.matricula m ON m.cod_matricula = fa.matricula_id ' . sprintf($where, 'fcc'),
+            $params
+        );
+
+        $counts[] = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(fg.*) AS count
+            FROM modules.falta_geral fg
+            INNER JOIN modules.falta_aluno fa ON fa.id = fg.falta_aluno_id
+            INNER JOIN pmieducar.matricula m ON m.cod_matricula = fa.matricula_id ' . sprintf($where, 'fg'),
+            $params
+        );
+
+        $counts[] = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(ncc.*) AS count
+            FROM modules.nota_componente_curricular ncc
+            INNER JOIN modules.nota_aluno na ON na.id = ncc.nota_aluno_id
+            INNER JOIN pmieducar.matricula m ON m.cod_matricula = na.matricula_id ' . sprintf($where, 'ncc'),
+            $params
+        );
+
+        return (int) array_sum($counts) === 0;
     }
 }
 
