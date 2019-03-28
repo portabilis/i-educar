@@ -24,7 +24,7 @@ $j(document).ready(function(){
             ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
              '<div id="modal_mensagem_desabilitado" style="width:400px;display:none;">'+
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">A exportação foi desabiltiada temporariamente</p>' +
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">A exportação foi desabilitada temporariamente</p>' +
              ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, os dados da escola foram validados e até o momento está tudo correto</p>' +
              '</div>'+
             '</div>';
