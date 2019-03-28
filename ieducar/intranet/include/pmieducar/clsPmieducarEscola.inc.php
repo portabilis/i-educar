@@ -155,7 +155,12 @@ class clsPmieducarEscola
   var $conveniada_com_poder_publico;
   var $mantenedora_escola_privada;
   var $cnpj_mantenedora_principal;
+  var $orgao_vinculado_escola;
+  var $unidade_vinculada_outra_instituicao;
+  var $inep_escola_sede;
+  var $codigo_ies;
   var $codUsuario;
+  var $esfera_administrativa;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -240,7 +245,7 @@ class clsPmieducarEscola
           e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
           e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
           e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
-          e.email_gestor
+          e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -459,6 +464,30 @@ class clsPmieducarEscola
       if (is_numeric($this->dependencia_administrativa)) {
         $campos .= "{$gruda}dependencia_administrativa";
         $valores .= "{$gruda}'{$this->dependencia_administrativa}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->orgao_vinculado_escola)) {
+        $campos .= "{$gruda}orgao_vinculado_escola";
+        $valores .= "{$gruda}'{{". $this->orgao_vinculado_escola . "}}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->unidade_vinculada_outra_instituicao)) {
+        $campos .= "{$gruda}unidade_vinculada_outra_instituicao";
+        $valores .= "{$gruda}{$this->unidade_vinculada_outra_instituicao}";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->inep_escola_sede)) {
+        $campos .= "{$gruda}inep_escola_sede";
+        $valores .= "{$gruda}{$this->inep_escola_sede}";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_ies)) {
+        $campos .= "{$gruda}codigo_ies";
+        $valores .= "{$gruda}{$this->codigo_ies}";
         $gruda = ", ";
       }
 
@@ -1026,6 +1055,12 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->esfera_administrativa)) {
+        $campos .= "{$gruda}esfera_administrativa";
+        $valores .= "{$gruda}'{$this->esfera_administrativa}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -1126,6 +1161,38 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_string($this->orgao_vinculado_escola)) {
+        $set .= "{$gruda}orgao_vinculado_escola = '{{$this->orgao_vinculado_escola}}'";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}orgao_vinculado_escola = null";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->unidade_vinculada_outra_instituicao)) {
+        $set .= "{$gruda}unidade_vinculada_outra_instituicao = {$this->unidade_vinculada_outra_instituicao}";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}unidade_vinculada_outra_instituicao = null";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->inep_escola_sede)) {
+        $set .= "{$gruda}inep_escola_sede = {$this->inep_escola_sede}";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}inep_escola_sede = null";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->codigo_ies)) {
+        $set .= "{$gruda}codigo_ies = {$this->codigo_ies}";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}codigo_ies = null";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->latitude)) {
         $set .= "{$gruda}latitude = '{$this->latitude}'";
         $gruda = ", ";
@@ -1144,6 +1211,9 @@ class clsPmieducarEscola
 
       if (is_numeric($this->regulamentacao)) {
         $set .= "{$gruda}regulamentacao = '{$this->regulamentacao}'";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}regulamentacao = null";
         $gruda = ", ";
       }
 
@@ -1488,6 +1558,9 @@ class clsPmieducarEscola
       if (is_numeric($this->localizacao_diferenciada)) {
         $set .= "{$gruda}localizacao_diferenciada = '{$this->localizacao_diferenciada}'";
         $gruda = ", ";
+      }else {
+        $set .= "{$gruda}localizacao_diferenciada = null";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->materiais_didaticos_especificos)) {
@@ -1659,6 +1732,14 @@ class clsPmieducarEscola
       }else{
         $set .= "{$gruda}cnpj_mantenedora_principal = NULL ";
         $gruda = ", ";
+      }
+
+      if (is_numeric($this->esfera_administrativa)) {
+        $gruda = ", ";
+        $set .= "{$gruda}esfera_administrativa = '{$this->esfera_administrativa}'";
+      } elseif (is_null($this->esfera_administrativa) || $this->esfera_administrativa == '') {
+        $gruda = ", ";
+        $set .= "{$gruda}esfera_administrativa = NULL ";
       }
 
       if ($set) {
