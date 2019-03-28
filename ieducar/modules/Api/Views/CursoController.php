@@ -36,7 +36,13 @@ class CursoController extends ApiCoreController
                     SELECT DISTINCT 
                         c.cod_curso, 
                         c.nm_curso,
-                        c.updated_at,
+                        (
+                            CASE c.updated_at >= ec.updated_at WHEN TRUE THEN
+                                c.updated_at
+                            ELSE 
+                                ec.updated_at
+                            END 
+                        ),
                         (
                             CASE c.ativo WHEN 1 THEN 
                                 NULL 
@@ -49,13 +55,12 @@ class CursoController extends ApiCoreController
                         AND ec.ref_cod_curso = c.cod_curso
                     WHERE TRUE 
                         AND c.ref_cod_instituicao = $1
-                        AND ec.ativo = 1
                         AND ec.ref_cod_escola IN ($escolaId) 
                 ";
 
                 if ($modified) {
                     $params[] = $modified;
-                    $sql .= ' AND c.updated_at >= $2';
+                    $sql .= ' AND (c.updated_at >= $2 OR ec.updated_at >= $2)';
                 }
 
                 if (!empty($ano)) {
