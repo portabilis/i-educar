@@ -109,34 +109,48 @@ class TurmaController extends ApiCoreController
             $ano = $this->getRequest()->ano;
             $instituicaoId = $this->getRequest()->instituicao_id;
             $turnoId = $this->getRequest()->turno_id;
+            $modified = $this->getRequest()->modified ?: null;
+
+            $params = [$instituicaoId, $ano];
 
             if ($turnoId) {
-                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
-                  FROM pmieducar.turma
-                  WHERE ref_cod_instituicao = $1
-                  AND ano = $2
-                  AND ativo = 1
-                  AND turma_turno_id = $3
-                  ORDER BY ref_ref_cod_escola, nm_turma';
-
-                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano, $turnoId]);
-            } else {
-                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
-                  FROM pmieducar.turma
-                  WHERE ref_cod_instituicao = $1
-                  AND ano = $2
-                  AND ativo = 1
-                  ORDER BY ref_ref_cod_escola, nm_turma';
-
-                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano]);
+                $turnoId = " AND turma_turno_id = {$turnoId} ";
             }
 
-            $attrs = ['id', 'nome', 'escola_id', 'turno_id'];
+            if ($modified) {
+                $params[] = $modified;
+                $modified = 'AND updated_at >= $3';
+            }
+
+            $sql = "
+                SELECT 
+                    cod_turma as id, 
+                    nm_turma as nome, 
+                    ano, 
+                    ref_ref_cod_escola as escola_id, 
+                    turma_turno_id as turno_id,
+                    ref_cod_curso as curso_id,
+                    ref_ref_cod_serie as serie_id,
+                    updated_at,
+                    (
+                        CASE ativo WHEN 1 THEN 
+                            NULL 
+                        ELSE 
+                            data_exclusao::timestamp(0)
+                        END
+                    ) AS deleted_at
+                FROM pmieducar.turma
+                WHERE ref_cod_instituicao = $1
+                    AND ano = $2
+                    {$turnoId}
+                    {$modified}
+                ORDER BY ref_ref_cod_escola, nm_turma
+            ";
+
+            $turmas = $this->fetchPreparedQuery($sql, $params);
+
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'serie_id', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
-
-            foreach ($turmas as &$turma) {
-                $turma['nome'] = Portabilis_String_Utils::toUtf8($turma['nome']);
-            }
 
             return ['turmas' => $turmas];
         }
