@@ -1,26 +1,22 @@
 <?php
 
-$desvio_diretorio = '';
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/RDStationAPI.class.php';
-require_once 'lib/Portabilis/String/Utils.php';
 require_once 'image_check.php';
 
 class clsIndex extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . 'Configurações  - Meus dados');
+        $this->SetTitulo($this->_instituicao . 'Configurações - Meus dados');
         $this->processoAp = '0';
     }
 }
 
 class indice extends clsCadastro
 {
-    public $pessoa_logada;
-
     public $nome;
 
     public $ddd_telefone;
@@ -41,11 +37,12 @@ class indice extends clsCadastro
 
     public $senha_old;
 
+    public $matricula;
+
     public $matricula_old;
 
     public $receber_novidades;
 
-    // Variáveis para controle da foto
     public $objPhoto;
 
     public $arquivoFoto;
@@ -92,12 +89,7 @@ class indice extends clsCadastro
         $this->url_cancelar = 'index.php';
         $this->nome_url_cancelar = 'Cancelar';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            '' => 'Meus dados'
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Meus dados', []);
 
         return $retorno;
     }
@@ -108,9 +100,11 @@ class indice extends clsCadastro
         $this->campoOculto('matricula_old', $this->matricula_old);
 
         $foto = false;
+
         if (is_numeric($this->pessoa_logada)) {
             $objFoto = new ClsCadastroFisicaFoto($this->pessoa_logada);
             $detalheFoto = $objFoto->detalhe();
+
             if (count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
             }
@@ -174,7 +168,6 @@ class indice extends clsCadastro
         $this->inputsHelper()->integer('celular', $options);
 
         $this->campoTexto('email', 'E-mail', $this->email, 50, 100, true);
-
         $this->campoSenha('senha', 'Senha', $this->senha, true);
         $this->campoSenha('senha_confirma', 'Confirmação de senha', $this->senha_confirma, true);
 
@@ -191,8 +184,10 @@ class indice extends clsCadastro
             $this->receber_novidades = 1;
         }
 
-        $options = ['label' => 'Desejo receber novidades do produto por e-mail', 'value' => $this->receber_novidades];
-        $this->inputsHelper()->checkbox('receber_novidades', $options);
+        $this->inputsHelper()->checkbox('receber_novidades', [
+            'label' => 'Desejo receber novidades do produto por e-mail',
+            'value' => $this->receber_novidades
+        ]);
     }
 
     public function Novo()
@@ -207,16 +202,19 @@ class indice extends clsCadastro
 
             return false;
         }
-        // Validação de senha
         if ($this->senha != $this->senha_confirma) {
             $this->mensagem = 'As senhas que você digitou não conferem.';
 
             return false;
-        } elseif (strlen($this->senha) < 8) {
+        }
+
+        if (strlen($this->senha) < 8) {
             $this->mensagem = 'Por favor informe uma senha mais segura, com pelo menos 8 caracteres.';
 
             return false;
-        } elseif (strrpos($this->senha, $this->matricula)) {
+        }
+
+        if (strrpos($this->senha, $this->matricula)) {
             $this->mensagem = 'A senha informada &eacute; similar a sua matricula, informe outra senha.';
 
             return false;
@@ -245,11 +243,13 @@ class indice extends clsCadastro
 
         if ($this->matricula != $this->matricula_old) {
             $existeMatricula = $funcionario->lista($this->matricula);
+
             if ($existeMatricula) {
                 $this->mensagem = 'A matrícula informada já perdence a outro usuário.';
 
                 return false;
             }
+
             $funcionario->matricula = $this->matricula;
         }
         $funcionario->ref_cod_pessoa_fj = $this->pessoa_logada;
@@ -281,18 +281,16 @@ class indice extends clsCadastro
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
 
-        $permiteRelacionamentoPosvendas =
-            ($configuracoes['permite_relacionamento_posvendas'] ?
-                'Sim' : Portabilis_String_Utils::toUtf8('Não'));
+        $permiteRelacionamentoPosvendas = $configuracoes['permite_relacionamento_posvendas'] ? 'Sim' : 'Não';
 
         $dados = [
-            'nome' => Portabilis_String_Utils::toUtf8($this->nome),
-            'empresa' => Portabilis_String_Utils::toUtf8($instituicao),
-            'cargo' => Portabilis_String_Utils::toUtf8($escola),
-            'telefone' => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
-            'celular' => ($this->celular ? "$this->ddd_celular $this->celular" : null),
-            'Assuntos de interesse' => ($this->receber_novidades ? 'Todos os assuntos relacionados ao i-Educar' : 'Nenhum'),
-            Portabilis_String_Utils::toUtf8('Permite relacionamento direto no pós-venda?') => $permiteRelacionamentoPosvendas
+            'nome' => $this->nome,
+            'empresa' => $instituicao,
+            'cargo' => $escola,
+            'telefone' => $this->telefone ? "$this->ddd_telefone $this->telefone" : null,
+            'celular' => $this->celular ? "$this->ddd_celular $this->celular" : null,
+            'Assuntos de interesse' => $this->receber_novidades ? 'Todos os assuntos relacionados ao i-Educar' : 'Nenhum',
+            'Permite relacionamento direto no pós-venda?' => $permiteRelacionamentoPosvendas,
         ];
 
         $rdStationParams = [
