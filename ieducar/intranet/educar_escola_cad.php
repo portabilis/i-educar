@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
+use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -155,6 +156,7 @@ class indice extends clsCadastro
     public $fundamental_ciclo;
     public $organizacao_ensino;
     public $instrumentos_pedagogicos;
+    public $orgaos_colegiados;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -514,6 +516,14 @@ class indice extends clsCadastro
 
         if (is_string($this->instrumentos_pedagogicos)) {
             $this->instrumentos_pedagogicos = explode(',', str_replace(array('{', "}"), '', $this->instrumentos_pedagogicos));
+        }
+
+        if (is_string($this->orgaos_colegiados)) {
+            $this->orgaos_colegiados = explode(',', str_replace(array('{', "}"), '', $this->orgaos_colegiados));
+        }
+
+        if (is_string($this->codigo_lingua_indigena)) {
+            $this->codigo_lingua_indigena = explode(',', str_replace(array('{', "}"), '', $this->codigo_lingua_indigena));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1539,6 +1549,18 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $helperOptions = ['objectName' => 'orgaos_colegiados'];
+            $options = [
+                'label' => 'Órgãos colegiados em funcionamento na escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->orgaos_colegiados,
+                    'all_values' => OrgaosColegiados::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
             $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
@@ -1554,9 +1576,12 @@ class indice extends clsCadastro
                 'size' => 70);
             $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
 
-            $options = array('label' => 'Escola indígena',
+            $options = [
+                'label' => 'Educação escolar indígena',
                 'value' => $this->educacao_indigena,
-                'required' => false);
+                'required' => false,
+                'prompt' => 'Selecione',
+            ];
             $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
             $resources = array(1 => 'Língua Portuguesa',
@@ -1570,20 +1595,23 @@ class indice extends clsCadastro
                 'size' => 70);
             $this->inputsHelper()->select('lingua_ministrada', $options);
 
-            $habilitaLiguasIndigenas = $this->lingua_ministrada == 2;
             $resources_ = Portabilis_Utils_Database::fetchPreparedQuery('SELECT * FROM modules.lingua_indigena_educacenso');
 
             foreach ($resources_ as $reg) {
                 $resources[$reg['id']] = $reg['lingua'];
             }
 
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'),
-                'resources' => $resources,
-                'value' => $this->codigo_lingua_indigena,
-                'required' => $habilitaLiguasIndigenas && $habilitaLiguaMinistrada,
-                'disabled' => !$habilitaLiguasIndigenas || !$habilitaLiguaMinistrada,
-                'size' => 70);
-            $this->inputsHelper()->select('codigo_lingua_indigena', $options);
+            $helperOptions = ['objectName' => 'codigo_lingua_indigena'];
+            $options = [
+                'label' => 'Línguas indígenas',
+                'size' => 70,
+                'required' => false,
+                'options' => [
+                    'values' => $this->codigo_lingua_indigena,
+                    'all_values' => $resources
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
                 'prompt' => 'Selecione',
@@ -1692,6 +1720,8 @@ class indice extends clsCadastro
         $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
         $organizacao_ensino = implode(',', $this->organizacao_ensino);
         $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
+        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
+        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1794,13 +1824,14 @@ class indice extends clsCadastro
                     $obj->fundamental_ciclo = $this->fundamental_ciclo;
                     $obj->organizacao_ensino = $organizacao_ensino;
                     $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+                    $obj->orgaos_colegiados = $orgaos_colegiados;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
                     $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
                     $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
                     $obj->abre_final_semana = $this->abre_final_semana;
-                    $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+                    $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
                     $obj->proposta_pedagogica = $this->proposta_pedagogica;
                     $obj->equipamentos = $equipamentos;
                     $obj->uso_internet = $uso_internet;
@@ -1973,13 +2004,14 @@ class indice extends clsCadastro
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $this->organizacao_ensino;
             $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
@@ -2121,6 +2153,8 @@ class indice extends clsCadastro
         $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
         $organizacao_ensino = implode(',', $this->organizacao_ensino);
         $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
+        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
+        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
@@ -2188,13 +2222,14 @@ class indice extends clsCadastro
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $organizacao_ensino;
             $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
@@ -2299,13 +2334,14 @@ class indice extends clsCadastro
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $organizacao_ensino;
             $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
@@ -2934,6 +2970,11 @@ class indice extends clsCadastro
 
         if (in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(OrgaosColegiados::NENHUM, $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
             return false;
         }
 
