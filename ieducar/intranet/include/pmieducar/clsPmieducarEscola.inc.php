@@ -119,6 +119,7 @@ class clsPmieducarEscola
     public $instrumentos_pedagogicos = false;
     public $orgaos_colegiados = false;
     public $exame_selecao_ingresso = false;
+    public $reserva_vagas_cotas = false;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -270,7 +271,7 @@ class clsPmieducarEscola
           e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio,
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
-          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
+          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
           e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
           e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
@@ -1039,6 +1040,12 @@ class clsPmieducarEscola
             if (is_string($this->exame_selecao_ingresso)) {
                 $campos .= "{$gruda}exame_selecao_ingresso";
                 $valores .= "{$gruda}'{$this->exame_selecao_ingresso}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->reserva_vagas_cotas)) {
+                $campos .= "{$gruda}reserva_vagas_cotas";
+                $valores .= "{$gruda}'{{$this->reserva_vagas_cotas}}'";
                 $gruda = ', ';
             }
 
@@ -2044,6 +2051,14 @@ class clsPmieducarEscola
                 $gruda = ', ';
             } elseif ($this->exame_selecao_ingresso !== false) {
                 $set .= "{$gruda}exame_selecao_ingresso = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->reserva_vagas_cotas)) {
+                $set .= "{$gruda}reserva_vagas_cotas = '{{$this->reserva_vagas_cotas}}'";
+                $gruda = ', ';
+            } elseif ($this->reserva_vagas_cotas !== false) {
+                $set .= "{$gruda}reserva_vagas_cotas = NULL";
                 $gruda = ', ';
             }
 
