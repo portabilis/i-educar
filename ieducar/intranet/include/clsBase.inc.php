@@ -409,9 +409,7 @@ class clsBase extends clsConfig
                 $this->mostraSupenso();
             }
 
-            $saida_geral .= $this->MakeHeadHtml();
             $controlador->Logar(false);
-            $saida_geral .= $this->MakeFootHtml();
         } else {
             $controlador->Logar(true);
 
