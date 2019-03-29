@@ -118,9 +118,9 @@
                         <td>
                             {{ $success->first($enrollment->id) }}
                             {{ $fails->first($enrollment->id) }}
-                            @empty($success->first($enrollment->id) && $fails->first($enrollment->id))
-                                Aluno não enturmado.
-                            @endempty
+                            @if(empty($success->first($enrollment->id)) && empty($fails->first($enrollment->id)))
+                                Aluno enturmado.
+                            @endif
                         </td>
                     </tr>
                 @endforeach

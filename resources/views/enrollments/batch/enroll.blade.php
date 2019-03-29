@@ -62,9 +62,9 @@
         @endif
 
         @if($fails->count() == 1)
-            <div class="alert-error">Não foi possivel enturmar 1 aluno.</div>
+            <div class="alert-error">Não foi possível enturmar 1 aluno.</div>
         @elseif($fails->count())
-            <div class="alert-error">Não foi possivel enturmar {{ $fails->count() }} alunos.</div>
+            <div class="alert-error">Não foi possível enturmar {{ $fails->count() }} alunos.</div>
         @endif
 
         @if($errors->any())
@@ -127,9 +127,9 @@
                         <td>
                             {{ $success->first($registration->id) }}
                             {{ $fails->first($registration->id) }}
-                            @empty($success->first($registration->id) && $fails->first($registration->id))
-                                Aluno enturmado.
-                            @endempty
+                            @if(empty($success->first($registration->id)) && empty($fails->first($registration->id)))
+                                Aluno não enturmado.
+                            @endif
                         </td>
                     </tr>
                 @endforeach
