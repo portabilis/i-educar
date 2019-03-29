@@ -42,6 +42,10 @@
 
     <h1>{{ $config->ieducar_entity_name }}</h1>
 
+    @if($errors->count())
+        <p class="error">{{ $errors->first() }}</p>
+    @endif
+
     {!! $error !!}
 
     <div id="login-form" class="box shadow">
