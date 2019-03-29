@@ -6,9 +6,10 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Funcionario.
- *
- * @package namespace App\Entities;
+ * @property string $login
+ * @property string $password
+ * @property int    $department_id
+ * @property int    $menu_type
  */
 class LegacyEmployee extends EloquentBaseModel implements Transformable
 {
@@ -30,10 +31,44 @@ class LegacyEmployee extends EloquentBaseModel implements Transformable
     public $timestamps = false;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @return string
      */
-    protected $fillable = [];
+    public function getLoginAttribute()
+    {
+        return $this->matricula;
+    }
 
+    /**
+     * @return string
+     */
+    public function getPasswordAttribute()
+    {
+        return $this->senha;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return void
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->senha = $value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDepartmentIdAttribute()
+    {
+        return $this->ref_cod_setor_new;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMenuTypeAttribute()
+    {
+        return $this->tipo_menu;
+    }
 }
