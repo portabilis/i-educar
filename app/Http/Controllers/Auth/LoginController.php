@@ -57,20 +57,6 @@ class LoginController extends Controller
     /**
      * @inheritdoc
      */
-    protected function authenticated(Request $request, $user)
-    {
-        Session::put([
-            'itj_controle' => 'logado',
-            'id_pessoa' => $user->id,
-            'pessoa_setor' => $user->employee->department_id,
-            'tipo_menu' => $user->employee->menu_type,
-            'nivel' => $user->type->level,
-        ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function showLoginForm()
     {
         return view('login', [
