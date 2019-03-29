@@ -2053,7 +2053,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->exame_selecao_ingresso)) {
+            if (is_numeric($this->exame_selecao_ingresso)) {
                 $set .= "{$gruda}exame_selecao_ingresso = '{$this->exame_selecao_ingresso}'";
                 $gruda = ', ';
             } elseif ($this->exame_selecao_ingresso !== false) {
@@ -2069,7 +2069,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->projeto_politico_pedagogico)) {
+            if (is_numeric($this->projeto_politico_pedagogico)) {
                 $set .= "{$gruda}projeto_politico_pedagogico = '{$this->projeto_politico_pedagogico}'";
                 $gruda = ', ';
             } elseif ($this->projeto_politico_pedagogico !== false) {
