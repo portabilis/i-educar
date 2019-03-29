@@ -23,6 +23,10 @@ $j(document).ready(function(){
             ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;&atilde;o realizada com sucesso.</p>' +
             ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
+             '<div id="modal_mensagem_desabilitado" style="width:400px;display:none;">'+
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">A exportação foi desabilitada temporariamente</p>' +
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, os dados da escola foram validados e até o momento está tudo correto</p>' +
+             '</div>'+
             '</div>';
 
 
@@ -89,6 +93,7 @@ $j(document).ready(function(){
       $j("#modal_gif_load").css("display", "block");
       $j("#modal_mensagem_exportacao").css("display", "block");
       $j("#modal_mensagem_sucesso").css("display", "none");
+      $j("#modal_mensagem_disabled").css("display", "none");
     }
 
     var finishAnalysis = function() {
@@ -101,9 +106,9 @@ $j(document).ready(function(){
       };
 
       $j("#modal_export").modal({
-        escapeClose: false,
-        clickClose: false,
-        showClose: false
+        escapeClose: true,
+        clickClose: true,
+        showClose: true
       });
 
       if (falhaAnalise) {
@@ -184,7 +189,8 @@ $j(document).ready(function(){
       //Realiza alterações na modal para mostrar resultado de sucesso
       $j("#modal_gif_load").css("display", "none");
       $j("#modal_mensagem_exportacao").css("display", "none");
-      $j("#modal_mensagem_sucesso").css("display", "block");
+      $j("#modal_mensagem_sucesso").css("display", "none");
+      $j("#modal_mensagem_desabilitado").css("display", "block");
 
       //Cria evento para download do arquivo de exportação
       var create = document.getElementById('download_file'), conteudo = response.conteudo;
