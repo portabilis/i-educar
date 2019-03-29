@@ -300,7 +300,7 @@ class indice extends clsCadastro
 
         $this->campoCheck('bloqueia_matricula_serie_nao_seguinte', 'Não permitir matrículas que não respeitem a sequência de enturmação', $this->bloqueia_matricula_serie_nao_seguinte);
 
-        $this->campoCheck('obrigar_campos_censo', 'Obrigar o preenchimento dos campos exigidos pelo Censo escolar', $this->obrigar_campos_censo);
+        $this->campoCheck('obrigar_campos_censo', 'Obrigar e validar o preenchimento dos campos exigidos pelo Censo escolar', $this->obrigar_campos_censo);
 
         $this->campoCheck(
             'exigir_lancamentos_anteriores',
