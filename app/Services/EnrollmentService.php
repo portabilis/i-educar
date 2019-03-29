@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\Enrollment\CancellationDateAfterAcademicYearException;
+use App\Exceptions\Enrollment\CancellationDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\EnrollDateAfterAcademicYearException;
 use App\Exceptions\Enrollment\EnrollDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
@@ -94,6 +96,14 @@ class EnrollmentService
      */
     public function cancelEnrollment(LegacyEnrollment $enrollment, DateTime $date)
     {
+        if ($date->format('Y-m-d') < $enrollment->schoolClass->begin_academic_year->format('Y-m-d')) {
+            throw new CancellationDateBeforeAcademicYearException($enrollment->schoolClass, $date);
+        }
+
+        if ($date->format('Y-m-d') > $enrollment->schoolClass->end_academic_year->format('Y-m-d')) {
+            throw new CancellationDateAfterAcademicYearException($enrollment->schoolClass, $date);
+        }
+
         if ($date < $enrollment->date) {
             throw new PreviousCancellationDateException($enrollment, $date);
         }
