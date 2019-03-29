@@ -186,7 +186,7 @@ function agenda_retrair( compId )
 	document.getElementById( "aberto_" + compId ).value = 0;
 }
 
-function excluir( compId )
+function excluir_compromisso( compId )
 {
 	if( confirm( 'Deseja realmente excluir este compromisso?\nEsta e uma operacao irreversivel!' ) )
 	{
