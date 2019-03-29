@@ -151,7 +151,6 @@ class clsControlador
     $config = (object) $configuracoes->detalhe();
 
     $view = View::make('login', [
-      'tagmanager' => $GLOBALS['coreExt']['Config']->app->gtm->id,
       'error' => $this->messenger->toHtml('p'),
       'config' => $config,
     ]);
