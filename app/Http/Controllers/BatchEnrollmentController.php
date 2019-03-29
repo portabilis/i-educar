@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Http\Requests\BatchEnrollmentRequest;
 use App\Http\Requests\CancelBatchEnrollmentRequest;
 use App\Models\LegacySchoolClass;
 use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
 use Carbon\Carbon;
-use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\MessageBag;
 use Illuminate\View\View;
@@ -165,18 +165,21 @@ class BatchEnrollmentController extends Controller
 
         $registrations = $registrationService->getRegistrationsNotEnrolled($schoolClass);
 
-        $registrations = $registrations->sortBy(function ($registration) {
-            return $registration->student->person->name;
-        });
-
         foreach ($registrationService->findAll($registrationsIds) as $registration) {
             try {
                 $enrollmentService->enroll($registration, $schoolClass, $date);
                 $success->add($registration->id, 'Aluno enturmado.');
+            } catch (ExistsActiveEnrollmentException $throwable) {
+                $registrations->push($registration);
+                $fails->add($registration->id, $throwable->getMessage());
             } catch (Throwable $throwable) {
                 $fails->add($registration->id, $throwable->getMessage());
             }
         }
+
+        $registrations = $registrations->sortBy(function ($registration) {
+            return $registration->student->person->name;
+        });
 
         return $this->viewEnroll($schoolClass, $registrations, $fails, $success);
     }

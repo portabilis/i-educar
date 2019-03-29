@@ -117,7 +117,7 @@
                         <td>{{ $registration->student->person->name }}</td>
                         @if($registration->lastEnrollment)
                             <td>
-                                {{ $registration->lastEnrollment->data_exclusao->format('d/m/Y') }}
+                                {{ $registration->lastEnrollment->data_exclusao ? $registration->lastEnrollment->data_exclusao->format('d/m/Y') : '' }}
                                 <small>({{ $registration->lastEnrollment->schoolClass->nm_turma }})</small>
                             </td>
                         @else

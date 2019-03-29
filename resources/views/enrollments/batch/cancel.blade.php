@@ -62,9 +62,9 @@
         @endif
 
         @if($fails->count() == 1)
-            <div class="alert-error">Não foi possivel desenturmar 1 aluno.</div>
+            <div class="alert-error">Não foi possível desenturmar 1 aluno.</div>
         @elseif($fails->count())
-            <div class="alert-error">Não foi possivel desenturmar {{ $fails->count() }} alunos.</div>
+            <div class="alert-error">Não foi possível desenturmar {{ $fails->count() }} alunos.</div>
         @endif
 
         @if($errors->any())
