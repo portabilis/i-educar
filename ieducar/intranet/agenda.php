@@ -399,7 +399,7 @@ class indice extends clsCadastro
                                     <div>
                                         <i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Editar
                                     </div></a>
-                                <a class=\"small\" href=\"javascript: excluir( {$cod_agenda_compromisso} );\">
+                                <a class=\"small\" href=\"javascript: excluir_compromisso( {$cod_agenda_compromisso} );\">
                                 <div>
                                         <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Excluir
                                 </div></a>";
