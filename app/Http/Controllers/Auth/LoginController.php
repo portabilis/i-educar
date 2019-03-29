@@ -75,7 +75,6 @@ class LoginController extends Controller
     {
         return view('login', [
             'config' => $this->getConfig(),
-            'error' => null,
         ]);
     }
 

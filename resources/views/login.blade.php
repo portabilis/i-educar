@@ -46,8 +46,6 @@
         <p class="error">{{ $errors->first() }}</p>
     @endif
 
-    {!! $error !!}
-
     <div id="login-form" class="box shadow">
         <h2>Acesse sua conta</h2>
         @if($config->url_cadastro_usuario)
