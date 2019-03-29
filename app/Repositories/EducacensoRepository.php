@@ -249,8 +249,10 @@ SQL;
                 escola.qtd_bombeiro as "qtdBombeiro",
                 escola.qtd_psicologo as "qtdPsicologo",
                 escola.qtd_fonoaudiologo as "qtdFonoaudiologo",
-                escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos"
-
+                escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos",
+                escola.orgaos_colegiados as "orgaosColegiados",
+                escola.exame_selecao_ingresso as "exameSelecaoIngresso",
+                escola.reserva_vagas_cotas as "reservaVagasCotas"
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON TRUE
                 AND juridica.idpes = escola.ref_idpes

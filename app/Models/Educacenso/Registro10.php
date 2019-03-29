@@ -6,7 +6,9 @@ use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
+use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
 use iEducar\Modules\Educacenso\Model\RedeLocal;
+use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 
 class Registro10 implements RegistroEducacenso
 {
@@ -548,6 +550,21 @@ class Registro10 implements RegistroEducacenso
     public $qtdFonoaudiologo;
 
     /**
+     * @var array
+     */
+    public $orgaosColegiados;
+
+    /**
+     * @var string
+     */
+    public $exameSelecaoIngresso;
+
+    /**
+     * @var array
+     */
+    public $reservaVagasCotas;
+
+    /**
      * @return bool
      */
     public function predioEscolar()
@@ -715,6 +732,22 @@ class Registro10 implements RegistroEducacenso
     public function redeLocalInexistenteEOutrosCamposPreenchidos()
     {
         return in_array(RedeLocal::NENHUMA, $this->redeLocal) && count($this->redeLocal) > 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function reservaVagasCotasInexistenteEOutrosCamposPreenchidos()
+    {
+        return in_array(ReservaVagasCotas::NAO_POSSUI, $this->reservaVagasCotas) && count($this->reservaVagasCotas) > 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function orgaosColegiadosInexistenteEOutrosCamposPreenchidos()
+    {
+        return in_array(OrgaosColegiados::NENHUM, $this->orgaosColegiados) && count($this->orgaosColegiados) > 1;
     }
 
     /**

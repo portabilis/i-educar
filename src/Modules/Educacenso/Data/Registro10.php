@@ -37,6 +37,8 @@ class Registro10 extends AbstractRegistro
         $data['equipamentos_acesso_internet'] = Portabilis_Utils_Database::pgArrayToArray($data['equipamentos_acesso_internet']);
         $data['equipamentos'] = Portabilis_Utils_Database::pgArrayToArray($data['equipamentos']);
         $data['redeLocal'] = Portabilis_Utils_Database::pgArrayToArray($data['redeLocal']);
+        $data['orgaosColegiados'] = Portabilis_Utils_Database::pgArrayToArray($data['orgaosColegiados']);
+        $data['reservaVagasCotas'] = Portabilis_Utils_Database::pgArrayToArray($data['reservaVagasCotas']);
         $data['nomeEscola'] = strtoupper($data['nomeEscola']);
 
         return $data;

@@ -293,7 +293,7 @@ class EducacensoAnaliseController extends ApiCoreController
         }
 
         $mensagem = [];
-        //ok
+
         if (empty($escola->localFuncionamento)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o local de funcionamento da escola foi informado.",
@@ -302,7 +302,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->predioEscolar() && empty($escola->condicao)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que o local de funcionamento da escola é em um prédio escolar, portanto é necessário informar qual a forma de ocupação do prédio.",
@@ -311,7 +311,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->predioEscolar() && empty($escola->predioCompartilhadoOutraEscola)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que o local de funcionamento da escola é em um prédio escolar, portanto é necessário informar se a escola compartilha o prédio com outra escola.",
@@ -321,7 +321,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        //ok
+
         if ($escola->predioCompartilhadoOutraEscola == 1 && empty($escola->codigoInepEscolaCompartilhada)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola compartilha o prédio com outra escola, portanto é necessário informar o(s) código(s) INEP(s) da(s) escola(s) compartilhada(s).",
@@ -330,7 +330,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->existeAbastecimentoAgua()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se uma das formas do abastecimento de água foi informada.",
@@ -339,7 +339,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->aguaInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
                 'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o abastecimento de água foi preenchido incorretamente.",
@@ -348,7 +348,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->existeAbastecimentoEnergia()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se uma das fontes de energia elétrica foi informada.",
@@ -357,7 +357,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->energiaInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que a fonte de energia elétrica foi preenchida incorretamente.",
@@ -366,7 +366,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->existeEsgotoSanitario()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção de esgotamento sanitário foi informada.",
@@ -375,7 +375,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->esgotoSanitarioInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o esgotamento sanitário foi preenchido incorretamente.",
@@ -384,7 +384,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->existeDestinacaoLixo()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se uma das formas da destinação do lixo foi informada.",
@@ -393,7 +393,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->existeTratamentoLixo()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção do tratamento do lixo/resíduos que a escola realiza foi informada.",
@@ -402,7 +402,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->tratamentoLixoInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção do tratamento do lixo/resíduos que a escola realiza foi informada.",
@@ -411,7 +411,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->possuiDependencias != 1) {
             $mensagem[] = [
                 'text' => "<span class='avisos-educacenso'><b>Aviso: </b> Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Nenhum campo foi preenchido referente as dependências existentes na escola, portanto todos serão registrados como <b>não</b>.</span>",
@@ -420,7 +420,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => false
             ];
         }
-        //ok
+
         if ($escola->possuiDependencias != 1 && $escola->existeDependencia()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção dos recursos de acessibilidade que a escola possui foi informada.",
@@ -429,7 +429,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->existeRecursosAcessibilidade()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o recurso de acessibilidade foi preenchido incorretamente.",
@@ -438,7 +438,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->recursosAcessibilidadeInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção do tratamento do lixo/resíduos que a escola realiza foi informada.",
@@ -447,7 +447,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ((!$numeroSalasUtilizadasForaPredio || $escola->predioEscolar()) && !$escola->numeroSalasUtilizadasDentroPredio) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o número de salas de aula utilizadas na escola dentro do prédio escolar da escola foi informado.",
@@ -456,7 +456,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->numeroSalasUtilizadasDentroPredio && !$numeroSalasUtilizadasForaPredio) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o número de salas de aula utilizadas na escola fora do prédio escolar da escola foi informado.",
@@ -465,7 +465,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (!$escola->existeUsoInternet()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção de acesso à internet foi informada.",
@@ -474,7 +474,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->usoInternetInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o acesso à internet foi preenchido incorretamente.",
@@ -483,7 +483,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->usaInternet() && empty($escola->equipamentosAcessoInternet)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o acesso à internet foi preenchido incorretamente.",
@@ -492,7 +492,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->usaInternet() && empty($escola->acessoInternet)) {
             $mensagem[] = [
                 'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a internet banda larga foi informada.",
@@ -501,7 +501,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->possuiComputadores() && empty($escola->redeLocal)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique a rede local de interligação de computadores foi informada.",
@@ -510,7 +510,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->redeLocalInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que a rede local de interligação de computadores foi preenchida incorretamente.",
@@ -519,7 +519,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->quantidadeProfissionaisPreenchida()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente à quantidade de profissionais, portanto é necessário informar pelo menos um profissional.",
@@ -528,7 +528,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (empty($escola->alimentacaoEscolarAlunos)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a alimentação escolar para os alunos(as) não foi informada.",
@@ -537,7 +537,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if (empty($escola->educacaoIndigena)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a educação escolar indígena não foi informada.",
@@ -546,7 +546,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->educacaoIndigena && !$escola->linguaMinistrada) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a língua em que o ensino é ministrado não foi informada.",
@@ -555,7 +555,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-        //ok
+
         if ($escola->linguaMinistrada == 2 && empty($escola->codigoLinguaIndigena)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a(s) língua(s) indígena(s) não foi(ram) informada(s).",
@@ -565,11 +565,28 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-
-        if (!$escola->materiaisDidaticosEspecificos) {
+        if ($escola->exameSelecaoIngresso == 1 && empty($escola->reservaVagasCotas)) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se algum material didático específico para atendimento à diversidade sócio-cultural foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Materiais didáticos específicos para atendimento à diversidade sócio-cultural)',
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a reserva de vagas por sistema de cotas para grupos específicos de alunos(as) foi informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Reserva de vagas por sistema de cotas para grupos específicos de alunos(as))',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->reservaVagasCotasInexistenteEOutrosCamposPreenchidos()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que a reserva de vagas por sistema de cotas para grupos específicos de alunos(as) foi preenchida incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Reserva de vagas por sistema de cotas para grupos específicos de alunos(as))',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->orgaosColegiadosInexistenteEOutrosCamposPreenchidos()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que os órgãos colegiados em funcionamento na escola foram preenchidos incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Órgãos colegiados em funcionamento na escola)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
