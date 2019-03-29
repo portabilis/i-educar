@@ -56,6 +56,7 @@ class indice extends clsCadastro
 
   var $ano;
   var $ref_cod_instituicao;
+  var $escola_em_andamento;
   var $segunda_fase = false;
 
   function Inicializar()
@@ -112,6 +113,7 @@ class indice extends clsCadastro
     }
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
+    $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
 
     $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
                                                  'value' => $this->data_ini,
@@ -145,6 +147,48 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
+
+$j(function() {
+
+    let checkIfSchoolIsActive = () => {
+        let schoolId = $j("#ref_cod_escola").val();
+        if (!schoolId) {
+            return false;
+        }
+
+        let urlForGetSchoolActive = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'school-is-active', {
+            school_id: schoolId
+        });
+
+        let options = {
+            url: urlForGetSchoolActive,
+            dataType: 'json',
+            success: (data) => {
+                $j('#escola_em_andamento').val(data['active'] ? '1' : '0');
+                if (!data['active']) {
+                    showNotActiveModal();
+                }
+            }
+        };
+
+        getResources(options);
+    }
+
+    $j('#ref_cod_escola').on('change', checkIfSchoolIsActive);
+
+    let createNotActiveModal = () => {
+        $j("body").append(`
+<div id="not_active_modal" class="modal" style="display:none;">
+   <p>Essa escola encontra-se paralisada ou extinta, portanto somente os dados do registro 00 serão analisados e exportados.</p>
+</div>
+        `);
+    }
+    createNotActiveModal();
+
+    let showNotActiveModal = () => {
+        $j("#not_active_modal").modal();
+    }
+});
 
 function acaoExportar() {
     document.formcadastro.target='_blank';
