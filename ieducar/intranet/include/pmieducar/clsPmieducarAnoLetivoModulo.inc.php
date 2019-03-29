@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAnoLetivoModulo
@@ -210,7 +212,7 @@ class clsPmieducarAnoLetivoModulo
                 $this->ref_ref_cod_escola,
                 $this->ref_ano,
                 null,
-                $_SESSION['id_pessoa'],
+                Session::get('id_pessoa'),
                 null,
                 null,
                 null,

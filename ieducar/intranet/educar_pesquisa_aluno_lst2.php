@@ -95,10 +95,6 @@ class indice extends clsListagem
     
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Aluno - Listagem";
         
          // passa todos os valores obtidos no GET para atributos do objeto
@@ -141,7 +137,6 @@ class indice extends clsListagem
 
                 if($registro["cpf_responsavel"])
                     $registro["cpf_responsavel_"] = int2CPF($registro["cpf_responsavel"]);
-//                      $script = " onclick=\"addVal1('{$_GET['campo3']}','{$registro['cpf_aluno']}'); addVal1('{$_GET['campo1']}','{$registro['cod_aluno']}');  addVal1('{$_SESSION['campo4']}','{$registro['cpf_aluno_']}'); fecha();\"";
                         $script = " onclick=\"addVal1('{$this->campo3}','{$registro['cpf_aluno']}'); addVal1('{$this->campo1}','{$registro['cod_aluno']}');  addVal1('{$this->campo4}','{$registro['cpf_aluno_']}'); fecha();\"";
                 $obj_det = "";
                 $obj_cpf_det = "";

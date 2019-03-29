@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -80,11 +83,11 @@ class indice extends clsListagem
         global $coreExt;
         $config = $coreExt['Config']->app->locale;
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
-        //$_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
-        session_write_close();
+        Session::put([
+            'campo1' => $_GET["campo1"] ? $_GET["campo1"] : Session::get('campo1')
+        ]);
+        Session::save();
+        Session::start();
 
         $this->titulo = "Municipio - Listagem";
 
@@ -152,7 +155,8 @@ class indice extends clsListagem
                     echo "<!--\nErro\nClasse nao existente: clsUf\n-->";
                 }
 
-                $script = " onclick=\"addSel1('{$_SESSION['campo1']}','{$registro['idmun']}','{$registro['nome']}'); fecha();\"";
+                $campo1 = Session::get('campo1');
+                $script = " onclick=\"addSel1('{$campo1}','{$registro['idmun']}','{$registro['nome']}'); fecha();\"";
                 $this->addLinhas( array(
                     "<a href=\"javascript:void(0);\" {$script}>{$registro["nome"]}</a>",
                     "<a href=\"javascript:void(0);\" {$script}>{$registro["sigla_uf"]}</a>"

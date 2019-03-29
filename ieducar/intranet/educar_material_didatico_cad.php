@@ -65,9 +65,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_material_didatico=$_GET["cod_material_didatico"];
 
@@ -174,9 +172,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->custo_unitario = str_replace(".","",$this->custo_unitario);
         $this->custo_unitario = str_replace(",",".",$this->custo_unitario);
@@ -198,9 +194,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->custo_unitario = str_replace(".","",$this->custo_unitario);
         $this->custo_unitario = str_replace(",",".",$this->custo_unitario);
@@ -222,9 +216,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarMaterialDidatico($this->cod_material_didatico, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();

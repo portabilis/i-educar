@@ -62,9 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_tipo_dispensa=$_GET["cod_tipo_dispensa"];
 
@@ -118,9 +116,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
 //      echo "null, null, {$this->pessoa_logada}, {$this->nm_tipo}, {$this->descricao}, null, null, 1, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}<br>";
         $obj = new clsPmieducarTipoDispensa( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao );
@@ -146,9 +142,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $tipoDispensaDetalhe = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa);
         $tipoDispensaDetalheAntes = $tipoDispensaDetalhe->detalhe();
@@ -174,9 +168,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarTipoDispensa( $this->cod_tipo_dispensa, $this->pessoa_logada, null, null, null, null, null, 0 );
         $tipoDispensa = $obj->detalhe();

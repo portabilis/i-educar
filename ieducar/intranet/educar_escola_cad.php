@@ -192,6 +192,7 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
 
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
@@ -1323,7 +1324,7 @@ class indice extends clsCadastro
                 'value' => $this->proposta_pedagogica,
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
-            
+
             $resources = SelectOptions::unidadesVinculadasEscola();
             $options = [
                 'label' => 'Unidade vinculada à Escola de Educação Básica ou Unidade Ofertante de Educação Superior',

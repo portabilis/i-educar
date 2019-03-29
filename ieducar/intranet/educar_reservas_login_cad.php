@@ -24,6 +24,12 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -55,11 +61,11 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            unset($_SESSION['reservas']['cod_cliente']);
-            unset($_SESSION['reservas']['ref_cod_biblioteca']);
-        @session_write_close();
+
+        Session::forget([
+            'reservas.cod_cliente',
+            'reservas.ref_cod_biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -69,27 +75,6 @@ class indice extends clsCadastro
         unset($this->login_);
         unset($this->senha_);
         unset($this->ref_cod_biblioteca);
-
-        /*$obj_biblioteca_usuario = new clsPmieducarBibliotecaUsuario();
-        $lst_biblioteca_usuario = $obj_biblioteca_usuario->lista(null, $this->pessoa_logada);
-
-        $opcoes = array( "" => "Selecione" );
-//      $bibliotecas_usuario = "biblioteca_usuario = new Array();\n";
-        if( is_array( $lst_biblioteca_usuario ) && count( $lst_biblioteca_usuario ) )
-        {
-            foreach ( $lst_biblioteca_usuario AS $biblioteca )
-            {
-                $obj_biblioteca = new clsPmieducarBiblioteca( $biblioteca['ref_cod_biblioteca'] );
-                $det_biblioteca = $obj_biblioteca->detalhe();
-//              $nm_biblioteca = $det_biblioteca['nm_biblioteca'];
-//              $requisita_senha = $det_biblioteca['requisita_senha'];
-                $opcoes["{$biblioteca['ref_cod_biblioteca']}"] = "{$det_biblioteca['nm_biblioteca']}";
-
-//              $bibliotecas_usuario .= "biblioteca_usuario[biblioteca_usuario.length] = new Array({$biblioteca["ref_cod_biblioteca"]},{$requisita_senha});\n";
-            }
-        }
-//      echo "<script>{$bibliotecas_usuario}</script>";
-        $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca);*/
 
         $get_escola     = 1;
         $escola_obrigatorio = false;
@@ -111,22 +96,23 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 610, $this->pessoa_logada, 11,  "educar_reservas_lst.php" );
 
         if ($this->ref_cod_cliente)
         {
-            @session_start();
-                $_SESSION['reservas']['cod_cliente'] = $this->ref_cod_cliente;
-                $_SESSION['reservas']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
-            @session_write_close();
-            header( "Location: educar_reservas_cad.php" );
-            die();
-            return true;
+            Session::put([
+                'reservas.cod_cliente' => $this->ref_cod_cliente,
+                'reservas.ref_cod_biblioteca' => $this->ref_cod_biblioteca,
+            ]);
+
+            throw new HttpResponseException(
+                new RedirectResponse(
+                    URL::to('intranet/educar_reservas_cad.php')
+                )
+            );
         }
         else if($this->login_ && $this->senha_)
         {
@@ -156,14 +142,16 @@ class indice extends clsCadastro
 
                         if ($this->ref_cod_biblioteca == $biblioteca_cliente)
                         {
-                            @session_start();
-                                $_SESSION['reservas']['cod_cliente'] = $cod_cliente;
-                                $_SESSION['reservas']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
-                            @session_write_close();
-                            $this->mensagem .= "Login efetuado com sucesso.<br>";
-                            header( "Location: educar_reservas_cad.php" );
-                            die();
-                            return true;
+                            Session::put([
+                                'reservas.cod_cliente' => $cod_cliente,
+                                'reservas.ref_cod_biblioteca' => $this->ref_cod_biblioteca,
+                            ]);
+
+                            throw new HttpResponseException(
+                                new RedirectResponse(
+                                    URL::to('intranet/educar_reservas_cad.php')
+                                )
+                            );
                         }
                     }
                     echo "<script> alert('Cliente não pertence a biblioteca escolhida!'); </script>";

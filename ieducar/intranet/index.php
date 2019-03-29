@@ -75,9 +75,7 @@ class indice
 
   function RenderHTML()
   {
-    @session_start();
-    $id_pessoa = $_SESSION['id_pessoa'];
-    @session_write_close();
+    $id_pessoa = Session::get('id_pessoa');
 
     if ($id_pessoa) {
       $endScript = '<script>var x = new Array();' . PHP_EOL;

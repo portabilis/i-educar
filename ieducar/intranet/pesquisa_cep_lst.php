@@ -48,24 +48,6 @@ class indice extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $id_pessoa  = $_SESSION['id_pessoa'];
-        $this->nome = "form1";
-
-        if ( $_GET["campos"] ) {
-            $campos             = str_replace( "\\", null, $_GET["campos"] );
-            $campos             = unserialize( $campos );
-            $_SESSION['campos'] = $campos;
-            unset( $_GET["campos"] );
-        }
-        else {
-            $campos             = $_SESSION['campos'];
-        }
-
-        @session_write_close();
-        $submit = false;
-
-
         $this->addCabecalhos( array( "CEP", "Logradouro", "Bairro", "Cidade" ) );
 
         // Filtros de Busca

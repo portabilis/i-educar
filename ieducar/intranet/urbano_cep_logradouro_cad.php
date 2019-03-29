@@ -78,9 +78,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $this->retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
     $this->idlog = $_GET['idlog'];
     if (is_numeric($this->idlog)) {
       $obj_cep_logradouro = new clsUrbanoCepLogradouro();
@@ -221,10 +219,6 @@ class indice extends clsCadastro
   }
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->idlog = !$this->idlog ? $_GET['idlog'] : $this->idlog;
 
     $tab_cep_aux = $this->getListCepBairro();
@@ -274,9 +268,6 @@ class indice extends clsCadastro
   }
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
     $obj = new clsUrbanoCepLogradouro($this->cep, $this->idlog, $this->nroini,
       $this->nrofin, $this->idpes_rev, $this->data_rev, $this->origem_gravacao,
       $this->idpes_cad, $this->data_cad, $this->operacao, $this->idsis_rev, $this->idsis_cad);
