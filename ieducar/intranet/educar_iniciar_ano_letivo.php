@@ -82,7 +82,7 @@ class indice extends clsCadastro
 
         if(strtolower($this->tipo_acao) == 'editar')
         {
-            $this->simpleRedirect("location: educar_ano_letivo_modulo_cad.php?ref_cod_escola={$this->ref_cod_escola}&ano={$this->ano}&referrer=educar_escola_det.php");
+            $this->simpleRedirect("educar_ano_letivo_modulo_cad.php?ref_cod_escola={$this->ref_cod_escola}&ano={$this->ano}&referrer=educar_escola_det.php");
         }
 
         /**
