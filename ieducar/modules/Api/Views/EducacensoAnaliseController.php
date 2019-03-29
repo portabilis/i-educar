@@ -448,7 +448,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
         //ok
-        if ($escola->predioEscolar() && !$escola->numeroSalasUtilizadasDentroPredio) {
+        if ((!$numeroSalasUtilizadasForaPredio || $escola->predioEscolar()) && !$escola->numeroSalasUtilizadasDentroPredio) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o número de salas de aula utilizadas na escola dentro do prédio escolar da escola foi informado.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Número de salas de aula utilizadas na escola dentro do prédio escolar)',
@@ -492,65 +492,84 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-
-        if (!$escola->existeEquipamentos()) {
+        //ok
+        if ($escola->usaInternet() && empty($escola->acessoInternet)) {
             $mensagem[] = [
-                'text' => "<span class='avisos-educacenso'><b>Aviso!</b> Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Nenhum campo foi preenchido referente a quantidade de equipamentos existentes na escola, portanto todos serão registrados como NÃO.</span>",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Equipamentos > Campos: Quantidade de equipamentos)',
+                'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a internet banda larga foi informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Possui internet banda larga)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
-                'fail' => false
+                'fail' => true
             ];
         }
-
-        if (!$escola->totalFuncionario) {
+        //ok
+        if ($escola->possuiComputadores() && empty($escola->redeLocal)) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o total de funcionários da escola foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dependências > Campo: Total de funcionários da escola)',
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique a rede local de interligação de computadores foi informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+        //ok
+        if ($escola->redeLocalInexistenteEOutrosCamposPreenchidos()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que a rede local de interligação de computadores foi preenchida incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Rede local de interligação de computadores)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+        //ok
+        if ($escola->quantidadeProfissionaisPreenchida()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente à quantidade de profissionais, portanto é necessário informar pelo menos um profissional.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Recursos > Seção: Quantidade de profissionais)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+        //ok
+        if (empty($escola->alimentacaoEscolarAlunos)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a alimentação escolar para os alunos(as) não foi informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Alimentação escolar para os alunos(as))',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+        //ok
+        if (empty($escola->educacaoIndigena)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a educação escolar indígena não foi informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Educação escolar indígena)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+        //ok
+        if ($escola->educacaoIndigena && !$escola->linguaMinistrada) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a língua em que o ensino é ministrado não foi informada.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+        //ok
+        if ($escola->linguaMinistrada == 2 && empty($escola->codigoLinguaIndigena)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a(s) língua(s) indígena(s) não foi(ram) informada(s).",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Línguas indígenas)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
         }
 
-        if ($escola->atendimentoAee < 0) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o atendimento educacional especializado - AEE foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atendimento educacional especializado - AEE)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if ($escola->atividadeComplementar < 0) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a atividade complementar foi informada.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atividade complementar)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if (!$escola->localizacaoDiferenciada) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a localização diferenciada da escola foi informada.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Localização diferenciada da escola)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
-                'fail' => true
-            ];
-        }
 
         if (!$escola->materiaisDidaticosEspecificos) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se algum material didático específico para atendimento à diversidade sócio-cultural foi informado.",
                 'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Materiais didáticos específicos para atendimento à diversidade sócio-cultural)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if ($escola->educacaoIndigena && !$escola->linguaMinistrada) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola trabalha com educação indígena, portanto obrigatoriamente é necessário informar a língua em que o ensino é ministrado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];

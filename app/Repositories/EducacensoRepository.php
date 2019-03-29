@@ -217,6 +217,7 @@ SQL;
                 escola.localizacao_diferenciada AS "localizacaoDiferenciada",
                 escola.materiais_didaticos_especificos AS "materiaisDidaticosEspecificos",
                 escola.lingua_ministrada AS "linguaMinistrada",
+                escola.codigo_lingua_indigena AS "codigoLinguaIndigena",
                 escola.educacao_indigena AS "educacaoIndigena",
                 juridica.fantasia AS "nomeEscola",
                 escola.predio_compartilhado_outra_escola as "predioCompartilhadoOutraEscola",
@@ -231,7 +232,24 @@ SQL;
                 escola.areas_externas as "areasExternas",
                 escola.recursos_acessibilidade as "recursosAcessibilidade",
                 escola.uso_internet as "usoInternet",
-                escola.equipamentos_acesso_internet as "equipamentosAcessoInternet"
+                escola.acesso_internet as "acessoInternet",
+                escola.equipamentos_acesso_internet as "equipamentosAcessoInternet",
+                escola.equipamentos as "equipamentos",
+                escola.rede_local as "redeLocal",
+                escola.qtd_secretario_escolar as "qtdSecretarioEscolar",
+                escola.qtd_auxiliar_administrativo as "qtdAuxiliarAdministrativo",
+                escola.qtd_apoio_pedagogico as "qtdApoioPedagogico",
+                escola.qtd_coordenador_turno as "qtdCoordenadorTurno",
+                escola.qtd_tecnicos as "qtdTecnicos",
+                escola.qtd_bibliotecarios as "qtdBibliotecarios",
+                escola.qtd_segurancas as "qtdSegurancas",
+                escola.qtd_auxiliar_servicos_gerais as "qtdAuxiliarServicosGerais",
+                escola.qtd_nutricionistas as "qtdNutricionistas",
+                escola.qtd_profissionais_preparacao as "qtdProfissionaisPreparacao",
+                escola.qtd_bombeiro as "qtdBombeiro",
+                escola.qtd_psicologo as "qtdPsicologo",
+                escola.qtd_fonoaudiologo as "qtdFonoaudiologo",
+                escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos"
 
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON TRUE

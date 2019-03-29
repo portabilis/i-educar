@@ -5,6 +5,8 @@ namespace App\Models\Educacenso;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
+use iEducar\Modules\Educacenso\Model\Equipamentos;
+use iEducar\Modules\Educacenso\Model\RedeLocal;
 
 class Registro10 implements RegistroEducacenso
 {
@@ -392,6 +394,11 @@ class Registro10 implements RegistroEducacenso
     /**
       * @var string
       */
+    public $codigoLinguaIndigena;
+
+    /**
+      * @var string
+      */
     public $nomeEscola;
 
     /**
@@ -457,7 +464,88 @@ class Registro10 implements RegistroEducacenso
     /**
      * @var string
      */
+    public $acessoInternet;
+
+    /**
+     * @var string
+     */
     public $equipamentosAcessoInternet;
+
+    /**
+     * @var array
+     */
+    public $equipamentos;
+
+    /**
+     * @var array
+     */
+    public $redeLocal;
+
+
+    /**
+     * @var int
+     */
+    public $qtdSecretarioEscolar;
+
+    /**
+     * @var int
+     */
+    public $qtdAuxiliarAdministrativo;
+
+    /**
+     * @var int
+     */
+    public $qtdApoioPedagogico;
+
+    /**
+     * @var int
+     */
+    public $qtdCoordenadorTurno;
+
+    /**
+     * @var int
+     */
+    public $qtdTecnicos;
+
+    /**
+     * @var int
+     */
+    public $qtdBibliotecarios;
+
+    /**
+     * @var int
+     */
+    public $qtdSegurancas;
+
+    /**
+     * @var int
+     */
+    public $qtdAuxiliarServicosGerais;
+
+    /**
+     * @var int
+     */
+    public $qtdNutricionistas;
+
+    /**
+     * @var int
+     */
+    public $qtdProfissionaisPreparacao;
+
+    /**
+     * @var int
+     */
+    public $qtdBombeiro;
+
+    /**
+     * @var int
+     */
+    public $qtdPsicologo;
+
+    /**
+     * @var int
+     */
+    public $qtdFonoaudiologo;
 
     /**
      * @return bool
@@ -611,6 +699,43 @@ class Registro10 implements RegistroEducacenso
     public function usaInternet()
     {
         return !in_array(UsoInternet::NAO_POSSUI, $this->usoInternet) && count($this->usoInternet) > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function possuiComputadores()
+    {
+        return in_array(Equipamentos::COMPUTADORES, $this->equipamentos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function redeLocalInexistenteEOutrosCamposPreenchidos()
+    {
+        return in_array(RedeLocal::NENHUMA, $this->redeLocal) && count($this->redeLocal) > 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function quantidadeProfissionaisPreenchida()
+    {
+
+        return $this->qtdSecretarioEscolar ||
+            $this->qtdAuxiliarAdministrativo ||
+            $this->qtdApoioPedagogico ||
+            $this->qtdCoordenadorTurno ||
+            $this->qtdTecnicos ||
+            $this->qtdBibliotecarios ||
+            $this->qtdSegurancas ||
+            $this->qtdAuxiliarServicosGerais ||
+            $this->qtdNutricionistas ||
+            $this->qtdProfissionaisPreparacao ||
+            $this->qtdBombeiro ||
+            $this->qtdPsicologo ||
+            $this->qtdFonoaudiologo;
     }
 
     /**
