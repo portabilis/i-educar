@@ -1133,10 +1133,12 @@ class indice extends clsCadastro
 
         $etapasTmp = $etapasCount;
         $params = [];
+        $etapas = [];
 
         while ($etapasTmp < $etapasCountAntigo) {
             $etapasTmp += 1;
             $params[] = $etapasTmp;
+            $etapas[] = $etapasTmp;
         }
 
         $where = ['WHERE TRUE'];
@@ -1181,7 +1183,43 @@ class indice extends clsCadastro
             $params
         );
 
-        return (int) array_sum($counts) === 0;
+        $sum = array_sum($counts);
+
+        if ($sum > 0) {
+            return false;
+        }
+
+        $configuracoes = (new clsPmieducarConfiguracoesGerais($this->ref_cod_instituicao))->detalhe();
+
+        if (empty($configuracoes['url_novo_educacao']) || empty($configuracoes['token_novo_educacao'])) {
+            return true;
+        }
+
+        $client = new GuzzleHttp\Client(['base_uri' => trim($configuracoes['url_novo_educacao'], '/')]);
+
+        foreach ($etapas as $etapa) {
+            try {
+                $response = $client->request('GET', '/api/v2/step_activity', [
+                    'query' => [
+                        'classroom_id' => $turmaId,
+                        'step_number' => $etapa
+                    ],
+                    'headers' => [
+                        'token' => $configuracoes['token_novo_educacao']
+                    ]
+                ]);
+
+                $body = trim((string) $response->getBody());
+
+                if ($body === 'true') {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function atualizaModulos()

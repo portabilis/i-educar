@@ -25,6 +25,8 @@ class indice extends clsCadastro
 
     public $pessoa_logada;
 
+    public $ref_cod_instituicao;
+
     public $ref_ano;
 
     public $ref_ref_cod_escola;
@@ -114,6 +116,7 @@ class indice extends clsCadastro
         $obj_escola = new clsPmieducarEscola($this->ref_ref_cod_escola);
         $det_escola = $obj_escola->detalhe();
         $ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
+        $this->ref_cod_instituicao = $ref_cod_instituicao;
 
         $obj = new clsPmieducarAnoLetivoModulo();
         $obj->setOrderBy('sequencial ASC');
@@ -121,6 +124,7 @@ class indice extends clsCadastro
         $cont = 0;
 
         if ($registros) {
+            $cor = '';
             $tabela = '<table border=0 style=\'\' cellpadding=2 width=\'100%\'>';
             $tabela .= "<tr bgcolor=$cor><td colspan='2'>Etapas do ano anterior (".($this->ref_ano - 1).')</td></tr><tr><td>';
             $tabela .= '<table cellpadding="2" cellspacing="2" border="0" align="left" width=\'300px\'>';
@@ -670,10 +674,12 @@ class indice extends clsCadastro
 
         $etapasTmp = $etapasCount;
         $params = [];
+        $etapas = [];
 
         while ($etapasTmp < $etapasCountAntigo) {
             $etapasTmp += 1;
             $params[] = $etapasTmp;
+            $etapas[] = $etapasTmp;
         }
 
         $where = ['WHERE TRUE'];
@@ -718,7 +724,43 @@ class indice extends clsCadastro
             $params
         );
 
-        return (int) array_sum($counts) === 0;
+        $sum = array_sum($counts);
+
+        if ($sum > 0) {
+            return false;
+        }
+
+        $configuracoes = (new clsPmieducarConfiguracoesGerais($this->ref_cod_instituicao))->detalhe();
+
+        if (empty($configuracoes['url_novo_educacao']) || empty($configuracoes['token_novo_educacao'])) {
+            return true;
+        }
+
+        $client = new GuzzleHttp\Client(['base_uri' => trim($configuracoes['url_novo_educacao'], '/')]);
+
+        foreach ($etapas as $etapa) {
+            try {
+                $response = $client->request('GET', '/api/v2/step_activity', [
+                    'query' => [
+                        'unity_id' => $escolaId,
+                        'step_number' => $etapa
+                    ],
+                    'headers' => [
+                        'token' => $configuracoes['token_novo_educacao']
+                    ]
+                ]);
+
+                $body = trim((string) $response->getBody());
+
+                if ($body === 'true') {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
