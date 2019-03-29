@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -69,8 +73,9 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_aluno_beneficio_lst.php" );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse('educar_aluno_beneficio_lst.php')
+            );
         }
 
         if( $registro["cod_aluno_beneficio"] )

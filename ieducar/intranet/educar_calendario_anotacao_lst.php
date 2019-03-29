@@ -25,6 +25,8 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
 require_once ("include/clsBase.inc.php");
@@ -96,8 +98,9 @@ class indice extends clsListagem
             $obj_calendario = new clsPmieducarCalendarioAnoLetivo($this->ref_cod_calendario_ano_letivo);
             if(!$obj_calendario->existe())
             {
-                header("location: educar_calendario_ano_letivo_lst.php");
-                die;
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_calendario_ano_letivo_lst.php')
+                );
             }
             $this->titulo = "Anota&ccedil;&otilde;oes Calend&aacute;rio <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
 

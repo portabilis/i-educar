@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -346,9 +350,9 @@ class indice extends clsCadastro
                     }
                 }
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_biblioteca_dados_lst.php" );
-                die();
-                return true;
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_biblioteca_dados_lst.php')
+                );
             //-----------------------FIM EDITA FERIADO------------------------//
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -381,9 +385,9 @@ class indice extends clsCadastro
                 if ( $excluiu2 )
                 {
                     $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                    header( "Location: educar_biblioteca_dados_lst.php" );
-                    die();
-                    return true;
+                    throw new HttpResponseException(
+                        new RedirectResponse('educar_biblioteca_dados_lst.php')
+                    );
                 }
             }
         }

@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -77,8 +81,9 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 620, $this->pessoa_logada, 7,  "educar_calendario_anotacao_lst.php" );
         if( !is_numeric( $this->ref_ref_cod_calendario_ano_letivo ) || !is_numeric( $this->dia ) || !is_numeric( $this->mes )){
-            header( "Location: educar_calendario_ano_letivo_lst.php" );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse('educar_calendario_ano_letivo_lst.php')
+            );
         }
         if( is_numeric( $this->cod_calendario_anotacao ))
         {
@@ -189,9 +194,9 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("calendario_anotacao", $this->pessoa_logada, $this->cod_calendario_anotacao);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}" );
-            die();
-            return true;
+            throw new HttpResponseException(
+                new RedirectResponse("educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}")
+            );
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -216,11 +221,9 @@ class indice extends clsCadastro
       $auditoria->exclusao($detalhe);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            //header( "Location: educar_calendario_anotacao_lst.php" );
-
-            header( "Location: educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}" );
-            die();
-            return true;
+            throw new HttpResponseException(
+                new RedirectResponse("educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}")
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

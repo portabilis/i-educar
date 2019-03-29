@@ -28,6 +28,9 @@
  * @version   $Id$
  */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once "include/clsBase.inc.php";
 require_once "include/clsDetalhe.inc.php";
 require_once "include/clsBanco.inc.php";
@@ -82,8 +85,9 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
-      header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-      die();
+        throw new HttpResponseException(
+            new RedirectResponse('educar_bloqueio_lancamento_faltas_notas_lst.php')
+        );
     }
 
     //Nome da etapa
