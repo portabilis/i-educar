@@ -36,11 +36,20 @@ class BatchEnrollmentRequest extends FormRequest
      */
     public function messages()
     {
+        $count = count($this->registrations ?? []);
+        $vacancies = $this->schoolClass->vacancies;
+
+        $registrationMax = [
+            '{0} Não há vagas na turma, você tentou enturmar ' . $count . ' alunos.',
+            '{1} Há somente 1 vaga na turma, você tentou enturmar ' . $count . ' alunos.',
+            '[2,*] Há :max vagas na turma, você tentou enturmar ' . $count . ' alunos.',
+        ];
+
         return [
             'date.required' => 'A data de enturmação é obrigatória.',
             'date.date_format' => 'A data de enturmação deve ser uma data válida.',
             'registrations.required' => 'Ao menos uma matrícula deve ser selecionada.',
-            'registrations.max' => 'Há somente :max vagas na turma, você tentou enturmar ' . count($this->registrations ?? []) . ' alunos.',
+            'registrations.max' => trans_choice(implode('|', $registrationMax), $vacancies),
         ];
     }
 }
