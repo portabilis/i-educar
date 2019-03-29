@@ -115,7 +115,13 @@
                         <td>{{ $enrollment->registration->cod_matricula }}</td>
                         <td>{{ $enrollment->student_name }}</td>
                         <td>{{ $enrollment->data_enturmacao->format('d/m/Y') }}</td>
-                        <td>{{ $success->first($enrollment->id) }} {{ $fails->first($enrollment->id) }}</td>
+                        <td>
+                            {{ $success->first($enrollment->id) }}
+                            {{ $fails->first($enrollment->id) }}
+                            @empty($success->first($enrollment->id) && $fails->first($enrollment->id))
+                                Aluno não enturmado.
+                            @endempty
+                        </td>
                     </tr>
                 @endforeach
                 @if($enrollments->isEmpty())

@@ -124,7 +124,13 @@
                             <td></td>
                         @endif
                         <td>{{ $registration->data_matricula->format('d/m/Y') }}</td>
-                        <td>{{ $success->first($registration->id) }} {{ $fails->first($registration->id) }}</td>
+                        <td>
+                            {{ $success->first($registration->id) }}
+                            {{ $fails->first($registration->id) }}
+                            @empty($success->first($registration->id) && $fails->first($registration->id))
+                                Aluno enturmado.
+                            @endempty
+                        </td>
                     </tr>
                 @endforeach
                 @if($registrations->isEmpty())
