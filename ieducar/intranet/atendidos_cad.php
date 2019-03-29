@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1129,8 +1132,10 @@ class indice extends clsCadastro
         $pessoaFisica->excluir();
 
         $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-        header('Location: atendidos_lst.php');
-        die();
+
+        throw new HttpResponseException(
+            new RedirectResponse('atendidos_lst.php')
+        );
     }
 
     public function afterChangePessoa($id)

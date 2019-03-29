@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -69,8 +73,10 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_acervo_autor_lst.php" );
-            die();
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_acervo_autor_lst.php')
+            );
         }
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

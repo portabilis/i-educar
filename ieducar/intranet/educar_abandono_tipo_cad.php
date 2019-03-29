@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -129,9 +133,10 @@ class indice extends clsCadastro
             $auditoria->inclusao($abandonoTipo);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_abandono_tipo_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_abandono_tipo_lst.php')
+            );
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -155,9 +160,10 @@ class indice extends clsCadastro
             $auditoria->alteracao($abandonoTipoDetalheAntes, $abandonoTipoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_abandono_tipo_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_abandono_tipo_lst.php')
+            );
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -178,9 +184,10 @@ class indice extends clsCadastro
             $auditoria->exclusao($abandonoTipo);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_abandono_tipo_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_abandono_tipo_lst.php')
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
