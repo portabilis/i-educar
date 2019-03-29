@@ -10,7 +10,7 @@
     <!-- Google Tag Manager -->
     <script>
         dataLayer = [{
-            'slug': '{{ $slug }}',
+            'slug': '{{ config('app.name') }}',
             'user_id': 0
         }];
     </script>
@@ -37,17 +37,17 @@
 <div id="main">
 
     <div>
-        <img alt="Logo" width="150px" height="150px" src="{{ $logo }}"/>
+        <img alt="Logo" width="150px" height="150px" src="{{ $config->ieducar_image ?? url('intranet/imagens/brasao-republica.png') }}"/>
     </div>
 
-    <h1>{{ $name }}</h1>
+    <h1>{{ $config->ieducar_entity_name }}</h1>
 
     {!! $error !!}
 
     <div id="login-form" class="box shadow">
         <h2>Acesse sua conta</h2>
-        @if($register)
-            <div>Não possui uma conta? <a target="_blank" href="{{ $register }}">Crie sua conta agora</a>.</div>
+        @if($config->url_cadastro_usuario)
+            <div>Não possui uma conta? <a target="_blank" href="{{ $config->url_cadastro_usuario }}">Crie sua conta agora</a>.</div>
         @endif
 
         <form action="" method="post">
@@ -61,7 +61,7 @@
             <button type="submit" class="submit">Entrar</button>
 
             <div class="remember">
-                <a href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a>
+                <a href="{{ url('module/Usuario/RedefinirSenha') }}">Esqueceu sua senha?</a>
             </div>
 
         </form>
@@ -72,16 +72,27 @@
 
 <div id="footer">
     <p>
-        {!! $footerLogin !!}
+        {!! $config->ieducar_login_footer !!}
     </p>
 
     <div class="footer-social">
 
-        {!! $footer !!}
+        {!! $config->ieducar_external_footer !!}
 
+        @if($config->facebook_url || $config->linkedin_url || $config->twitter_url)
         <div class="social-icons">
-            {!! $social !!}
+            <p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
+            @if($config->facebook_url)
+            <a target="_blank" href="{{ $config->facebook_url }}"><img src="{{ url('intranet/imagens/icon-social-facebook.png') }}"></a>
+            @endif
+            @if($config->linkedin_url)
+            <a target="_blank" href="{{ $config->linkedin_url }}"><img src="{{ url('intranet/imagens/icon-social-linkedin.png') }}"></a>
+            @endif
+            @if($config->twitter_url)
+            <a target="_blank" href="{{ $config->twitter_url }}"><img src="{{ url('intranet/imagens/icon-social-twitter.png') }}"></a>
+            @endif
         </div>
+        @endif
     </div>
 </div>
 
