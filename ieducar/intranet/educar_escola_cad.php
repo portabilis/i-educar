@@ -157,7 +157,6 @@ class indice extends clsCadastro
     public $dvds;
     public $aparelhos_de_som;
     public $projetores_digitais;
-    public $computadores;
     public $acesso_internet;
     public $ato_criacao;
     public $ato_autorizativo;
@@ -1344,9 +1343,6 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('computadores', $options);
-
             $options = array(
                 'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
@@ -1645,7 +1641,6 @@ class indice extends clsCadastro
                     $obj->dvds = $this->dvds;
                     $obj->aparelhos_de_som = $this->aparelhos_de_som;
                     $obj->projetores_digitais = $this->projetores_digitais;
-                    $obj->computadores = $this->computadores;
                     $obj->acesso_internet = $this->acesso_internet;
                     $obj->ato_criacao = $this->ato_criacao;
                     $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -1797,7 +1792,6 @@ class indice extends clsCadastro
             $obj->dvds = $this->dvds;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->computadores = $this->computadores;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -1980,7 +1974,6 @@ class indice extends clsCadastro
             $obj->dvds = $this->dvds;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->computadores = $this->computadores;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -2064,7 +2057,6 @@ class indice extends clsCadastro
             $obj->dvds = $this->dvds;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->computadores = $this->computadores;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
