@@ -2,6 +2,7 @@
 
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class SequencialEnturmacao
@@ -47,7 +48,9 @@ class SequencialEnturmacao
             return $novoSequencial;
         }
 
-        if (($instituicao) && ($instituicao > $this->dataEnturmacao)) {
+        $date = Carbon::createFromFormat('Y-m-d', $this->dataEnturmacao)->format('m-d');
+
+        if (($instituicao) && ($instituicao->format('m-d') > $date)) {
             $novoSequencial = $this->sequencialAlunoAntesData();
 
             $this->somaSequencialPosterior($novoSequencial);
@@ -245,6 +248,8 @@ class SequencialEnturmacao
         $dataBaseRemanejamento = $institution->data_base_remanejamento;
 
         if ($dataBaseRemanejamento) {
+            $dataBaseRemanejamento->year(Carbon::createFromFormat('Y-m-d', $this->dataEnturmacao)->format('Y'));
+
             if (strtotime($dataBaseRemanejamento) < strtotime($this->dataEnturmacao)) {
                 $enturmarPorUltimo = true;
             }
