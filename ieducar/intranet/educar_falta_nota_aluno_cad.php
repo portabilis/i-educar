@@ -128,8 +128,7 @@ class indice extends clsCadastro
         }
         else
         {
-            header( "Location: educar_falta_nota_aluno_lst.php" );
-            die();
+            $this->simpleRedirect('educar_falta_nota_aluno_lst');
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" : "educar_falta_nota_aluno_lst.php" ;
         $this->nome_url_cancelar = "Cancelar";
@@ -167,8 +166,7 @@ class indice extends clsCadastro
 
                 if ($ano_letivo != $ano_matricula)
                 {
-                    header( "Location: educar_falta_nota_aluno_lst.php" );
-                    die();
+                    $this->simpleRedirect('educar_falta_nota_aluno_lst');
                 }
             }
             else
@@ -893,9 +891,7 @@ class indice extends clsCadastro
             if($total)
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
             $obj_serie = new clsPmieducarSerie( $this->ref_ref_cod_serie );
             $det_serie = $obj_serie->detalhe();
@@ -1262,9 +1258,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
 
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada (Matr&iacute;cula).<br>";
@@ -1294,9 +1288,7 @@ class indice extends clsCadastro
             if($total)
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
 
             $aprovado = 3;
@@ -1606,9 +1598,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada (Matr&iacute;cula).<br>";
             echo "<!--\nErro ao editar clsPmieducarMatricula\nvalores obrigatorios\nis_numeric( $this->ref_cod_matricula ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->modulo )\n-->";
@@ -1718,9 +1708,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
             else
             {
@@ -2191,9 +2179,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada (Matr&iacute;cula).<br>";
             echo "<!--\nErro ao editar clsPmieducarMatricula\nvalores obrigatorios\nis_numeric( $this->ref_cod_matricula ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->modulo )\n-->";
@@ -2221,9 +2207,7 @@ class indice extends clsCadastro
             if($total)
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
 
             $aprovado = 3;
@@ -2591,9 +2575,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_falta_nota_aluno_det.php?ref_cod_matricula={$this->ref_cod_matricula}&ref_cod_turma={$this->ref_cod_turma}&sequencial={$this->ref_sequencial_matricula_turma}");
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada (Matr&iacute;cula).<br>";
             echo "<!--\nErro ao editar clsPmieducarMatricula\nvalores obrigatorios\nis_numeric( $this->ref_cod_matricula ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->modulo )\n-->";

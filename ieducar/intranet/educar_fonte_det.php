@@ -69,8 +69,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_fonte_lst.php" );
-            die();
+            $this->simpleRedirect('educar_fonte_lst.php');
         }
 
 

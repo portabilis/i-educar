@@ -66,8 +66,7 @@ class indice extends clsCadastro
          */
         if(!$_POST)
         {
-            header("location: educar_escola_lst.php");
-            die;
+            $this->simpleRedirect('educar_escola_lst.php');
         }
 
         foreach ($_POST as $key => $value)
@@ -78,18 +77,12 @@ class indice extends clsCadastro
          */
         if(!$this->ref_cod_escola || !$this->tipo_acao || !$this->ano)
         {
-            header("location: educar_escola_lst.php");
-            die;
+            $this->simpleRedirect('educar_escola_lst.php');
         }
 
         if(strtolower($this->tipo_acao) == 'editar')
         {
-            /**
-             * redirediona para a pagina de edicao do ano letivo
-             */
-            $referrer = @$HTTP_REFERER;
-            header("location: educar_ano_letivo_modulo_cad.php?ref_cod_escola={$this->ref_cod_escola}&ano={$this->ano}&referrer=educar_escola_det.php");
-            die;
+            $this->simpleRedirect("location: educar_ano_letivo_modulo_cad.php?ref_cod_escola={$this->ref_cod_escola}&ano={$this->ano}&referrer=educar_escola_det.php");
         }
 
         /**
@@ -101,8 +94,7 @@ class indice extends clsCadastro
 
         if(!$obj_ano_letivo->detalhe())
         {
-            header("location: educar_escola_lst.php");
-            die;
+            $this->simpleRedirect('educar_escola_lst.php');
         }
 
         /**
@@ -117,15 +109,8 @@ class indice extends clsCadastro
             $this->finalizarAnoLetivo();
         else
         {
-            header("location: educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo'");
-            die;
+            $this->simpleRedirect("educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo'");
         }
-
-        /**
-         * exibe mensagem e redireciona para detalhe da escola
-         */
-
-        die;
     }
 
     function iniciarAnoLetivo()

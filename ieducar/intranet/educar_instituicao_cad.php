@@ -359,10 +359,7 @@ class indice extends clsCadastro
             $obj_altera = new alteraAtestadoParaDeclaracao(is_null($this->altera_atestado_para_declaracao) ? false : true);
             $obj_altera->editaMenus();
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_instituicao_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_instituicao_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -414,10 +411,7 @@ class indice extends clsCadastro
             $obj_altera = new alteraAtestadoParaDeclaracao(is_null($this->altera_atestado_para_declaracao) ? false : true);
             $obj_altera->editaMenus();
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: educar_instituicao_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_instituicao_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -445,10 +439,7 @@ class indice extends clsCadastro
                 $auditoria->exclusao($instituicao);
 
                 $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-                header('Location: educar_instituicao_lst.php');
-                die();
-
-                return true;
+                $this->simpleRedirect('educar_instituicao_lst.php');
             }
 
             $this->mensagem = 'Exclusão não realizada.<br>';

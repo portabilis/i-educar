@@ -68,8 +68,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_religiao_lst.php" );
-            die();
+            $this->simpleRedirect('educar_religiao_lst.php');
         }
 
 
