@@ -82,8 +82,7 @@ class indice extends clsDetalhe
 
             if( ! $registro )
             {
-                header( "location: educar_exemplar_devolucao_lst.php" );
-                die();
+                $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
             }
 
             if( class_exists( "clsPmieducarBiblioteca" ) )

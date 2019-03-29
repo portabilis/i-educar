@@ -304,9 +304,7 @@ class indice extends clsCadastro
       Cache::invalidateByTags(['configurations']);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header( "Location: index.php" );
-      die();
-      return true;
+      $this->simpleRedirect('index.php');
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
