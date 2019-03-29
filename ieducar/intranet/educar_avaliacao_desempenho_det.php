@@ -77,10 +77,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_avaliacao_desempenho_lst.php')
-            );
-
+            $this->simpleRedirect('educar_avaliacao_desempenho_lst.php');
         }
 
         if( class_exists( "clsPmieducarInstituicao" ) )

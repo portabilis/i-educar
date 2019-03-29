@@ -135,9 +135,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($beneficio);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_aluno_beneficio_lst.php')
-            );
+            $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -162,9 +160,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($beneficioDetalheAntes, $beneficioDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_aluno_beneficio_lst.php')
-            );
+            $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -187,9 +183,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($beneficio);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_aluno_beneficio_lst.php')
-            );
+            $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

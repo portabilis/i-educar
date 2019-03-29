@@ -81,9 +81,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_acervo_editora_lst.php')
-            );
+            $this->simpleRedirect('educar_acervo_editora_lst.php');
         }
 
         if( class_exists( "clsTipoLogradouro" ) )

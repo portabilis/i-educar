@@ -86,9 +86,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_acervo_lst.php')
-            );
+            $this->simpleRedirect('educar_acervo_lst.php');
         }
 
         if( class_exists( "clsPmieducarBiblioteca" ) )

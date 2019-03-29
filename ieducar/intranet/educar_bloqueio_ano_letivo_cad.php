@@ -121,9 +121,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_bloqueio_ano_letivo_lst.php')
-            );
+            $this->simpleRedirect('educar_bloqueio_ano_letivo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -141,9 +139,7 @@ class indice extends clsCadastro
         if( $editou )
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_bloqueio_ano_letivo_lst.php')
-            );
+            $this->simpleRedirect('educar_bloqueio_ano_letivo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -161,9 +157,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_bloqueio_ano_letivo_lst.php')
-            );
+            $this->simpleRedirect('educar_bloqueio_ano_letivo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

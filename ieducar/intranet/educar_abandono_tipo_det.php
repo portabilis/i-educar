@@ -73,9 +73,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_abandono_tipo_lst.php')
-            );
+            $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }           
         if (class_exists("clsPmieducarInstituicao"))
         {

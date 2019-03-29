@@ -1677,9 +1677,7 @@ class indice extends clsCadastro
     $this->_cadastraTransporte($this->cod_aluno, $this->transporte_aluno,
       $this->transporte_responsavel, $this->pessoa_logada);
 
-      throw new HttpResponseException(
-          new RedirectResponse('educar_aluno_det.php?cod_aluno=' . $this->cod_aluno)
-      );
+      $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
   }
 
   function Editar()
@@ -1697,9 +1695,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      throw new HttpResponseException(
-              new RedirectResponse('educar_aluno_lst.php')
-      );
+      $this->simpleRedirect('educar_aluno_lst.php');
     }
 
     $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

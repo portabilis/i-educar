@@ -70,9 +70,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_bloqueio_ano_letivo_lst.php')
-            );
+            $this->simpleRedirect('educar_bloqueio_ano_letivo_lst.php');
         }
 
         if( $registro["instituicao"] )

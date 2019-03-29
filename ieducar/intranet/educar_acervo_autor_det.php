@@ -73,10 +73,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-
-            throw new HttpResponseException(
-                new RedirectResponse('educar_acervo_autor_lst.php')
-            );
+            $this->simpleRedirect('educar_acervo_autor_lst.php');
         }
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

@@ -137,9 +137,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
       $auditoria->inclusao($acervo_idioma);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_acervo_idioma_lst.php')
-            );
+            $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -164,9 +162,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_acervo_idioma_lst.php')
-            );
+            $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -190,9 +186,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            throw new HttpResponseException(
-                new RedirectResponse('educar_acervo_idioma_lst.php')
-            );
+            $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

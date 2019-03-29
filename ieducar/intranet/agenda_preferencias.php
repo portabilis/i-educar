@@ -142,10 +142,7 @@ class indice extends clsCadastro
         }
 
         $db->Consulta( "UPDATE portal.agenda SET ref_ref_cod_pessoa_exc = '{$this->pessoa_logada}', data_edicao = NOW() $set WHERE cod_agenda = '{$this->cod_agenda}'" );
-        
-        throw new HttpResponseException(
-            new RedirectResponse('agenda.php')
-        );
+        $this->simpleRedirect('agenda.php');
     }
 }
 

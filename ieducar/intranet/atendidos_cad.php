@@ -1133,9 +1133,7 @@ class indice extends clsCadastro
 
         $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
 
-        throw new HttpResponseException(
-            new RedirectResponse('atendidos_lst.php')
-        );
+        $this->simpleRedirect('atendidos_lst.php');
     }
 
     public function afterChangePessoa($id)

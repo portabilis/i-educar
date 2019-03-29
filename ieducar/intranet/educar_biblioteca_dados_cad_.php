@@ -350,9 +350,7 @@ class indice extends clsCadastro
                     }
                 }
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_biblioteca_dados_lst.php')
-                );
+                $this->simpleRedirect('educar_biblioteca_dados_lst.php');
             //-----------------------FIM EDITA FERIADO------------------------//
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -385,9 +383,7 @@ class indice extends clsCadastro
                 if ( $excluiu2 )
                 {
                     $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                    throw new HttpResponseException(
-                        new RedirectResponse('educar_biblioteca_dados_lst.php')
-                    );
+                    $this->simpleRedirect('educar_biblioteca_dados_lst.php');
                 }
             }
         }

@@ -49,11 +49,7 @@ class indice extends clsCadastro
 
         Session::put('biblioteca.tipo_biblioteca', $this->tipo_biblioteca);
 
-        throw new HttpResponseException(
-            new RedirectResponse(
-                URL::to('intranet/educar_biblioteca_cad.php')
-            )
-        );
+        $this->simpleRedirect('educar_biblioteca_cad.php');
     }
 }
 

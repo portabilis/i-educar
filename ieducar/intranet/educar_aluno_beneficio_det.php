@@ -73,9 +73,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_aluno_beneficio_lst.php')
-            );
+            $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
 
         if( $registro["cod_aluno_beneficio"] )

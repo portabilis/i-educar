@@ -72,9 +72,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_acervo_idioma_lst.php')
-            );
+            $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
         if( $registro["cod_acervo_idioma"] )

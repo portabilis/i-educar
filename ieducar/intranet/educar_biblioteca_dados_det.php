@@ -98,9 +98,7 @@ class indice extends clsDetalhe
 
         if( ! $registro || !$permitido)
         {
-            throw new HttpResponseException(
-                new RedirectResponse('educar_biblioteca_dados_lst.php')
-            );
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         }
 
         if( $registro["nm_biblioteca"] )
