@@ -370,7 +370,6 @@ class clsBase extends clsConfig
     {
         $cronometro = new clsCronometro();
         $cronometro->marca('inicio');
-        $liberado = TRUE;
 
         $saida_geral = '';
 
@@ -383,7 +382,7 @@ class clsBase extends clsConfig
 
         $controlador = new clsControlador();
 
-        if ($controlador->Logado() && $liberado || $this->convidado) {
+        if ($controlador->Logado() || $this->convidado) {
             $this->mostraSupenso();
 
             $this->Formular();
@@ -402,7 +401,7 @@ class clsBase extends clsConfig
                 }
             }
 
-        } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
+        } elseif ((empty($_POST['login'])) || (empty($_POST['senha']))) {
             $force = !empty($_GET['force']) ? true : false;
 
             if (!$force) {
