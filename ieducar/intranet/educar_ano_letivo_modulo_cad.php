@@ -673,56 +673,41 @@ class indice extends clsCadastro
         }
 
         $etapasTmp = $etapasCount;
-        $params = [];
         $etapas = [];
 
         while ($etapasTmp < $etapasCountAntigo) {
             $etapasTmp += 1;
-            $params[] = $etapasTmp;
             $etapas[] = $etapasTmp;
         }
 
-        $where = ['WHERE TRUE'];
-        $tmpWhere = [];
+        $counts = [];
 
-        for ($i = 1; $i <= count($params); $i++) {
-            $tmpWhere[] = '$' . $i;
-        }
+        $counts[] = DB::table('modules.falta_componente_curricular as fcc')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->whereIn('fcc.etapa', $etapas)
+            ->where('m.ref_ref_cod_escola', $escolaId)
+            ->where('m.ano', $ano)
+            ->where('m.ativo', 1)
+            ->count();
 
-        $where[] = '%s.etapa::numeric IN (' . join(',', $tmpWhere) . ')';
-        $where[] = 'm.ref_ref_cod_escola = $' . $i;
-        $i++;
-        $where[] = 'm.ano = $' . $i;
-        $where[] = 'm.ativo = 1';
+        $counts[] = DB::table('modules.falta_geral as fg')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->whereIn('fg.etapa', $etapas)
+            ->where('m.ref_ref_cod_escola', $escolaId)
+            ->where('m.ano', $ano)
+            ->where('m.ativo', 1)
+            ->count();
 
-        $where = join(' AND ', $where);
-
-        $params[] = $escolaId;
-        $params[] = $ano;
-
-        $counts[] = (int) Portabilis_Utils_Database::selectField(
-            'SELECT COUNT(fcc.*) AS count
-            FROM modules.falta_componente_curricular fcc
-            INNER JOIN modules.falta_aluno fa ON fa.id = fcc.falta_aluno_id
-            INNER JOIN pmieducar.matricula m ON m.cod_matricula = fa.matricula_id ' . sprintf($where, 'fcc'),
-            $params
-        );
-
-        $counts[] = (int) Portabilis_Utils_Database::selectField(
-            'SELECT COUNT(fg.*) AS count
-            FROM modules.falta_geral fg
-            INNER JOIN modules.falta_aluno fa ON fa.id = fg.falta_aluno_id
-            INNER JOIN pmieducar.matricula m ON m.cod_matricula = fa.matricula_id ' . sprintf($where, 'fg'),
-            $params
-        );
-
-        $counts[] = (int) Portabilis_Utils_Database::selectField(
-            'SELECT COUNT(ncc.*) AS count
-            FROM modules.nota_componente_curricular ncc
-            INNER JOIN modules.nota_aluno na ON na.id = ncc.nota_aluno_id
-            INNER JOIN pmieducar.matricula m ON m.cod_matricula = na.matricula_id ' . sprintf($where, 'ncc'),
-            $params
-        );
+        $counts[] = DB::table('modules.nota_componente_curricular as ncc')
+            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
+            ->whereIn('ncc.etapa', $etapas)
+            ->where('m.ref_ref_cod_escola', $escolaId)
+            ->where('m.ano', $ano)
+            ->where('m.ativo', 1)
+            ->count();
 
         $sum = array_sum($counts);
 
