@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\Enrollment\EnrollDateAfterAcademicYearException;
+use App\Exceptions\Enrollment\EnrollDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Exceptions\Enrollment\NoVacancyException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
@@ -121,6 +123,14 @@ class EnrollmentService
     ) {
         if ($schoolClass->denyEnrollmentsWhenNoVacancy() && empty($schoolClass->vacancies)) {
             throw new NoVacancyException($schoolClass);
+        }
+
+        if ($date->format('Y-m-d') < $schoolClass->begin_academic_year->format('Y-m-d')) {
+            throw new EnrollDateBeforeAcademicYearException($schoolClass, $date);
+        }
+
+        if ($date->format('Y-m-d') > $schoolClass->end_academic_year->format('Y-m-d')) {
+            throw new EnrollDateAfterAcademicYearException($schoolClass, $date);
         }
 
         $existsActiveEnrollment = $registration->enrollments()
