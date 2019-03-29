@@ -361,12 +361,8 @@ class indice extends clsCadastro
             if ($valida === false) {
                 $_POST = [];
 
-                $etapasObj = new clsPmieducarAnoLetivoModulo();
+                $this->Inicializar();
 
-                $etapasObj->setOrderBy('sequencial ASC');
-
-                $this->etapas = $etapasObj->lista($this->ref_ano, $this->ref_ref_cod_escola);
-                $this->ref_cod_modulo = $this->etapas[0]['ref_cod_modulo'];
                 $this->mensagem = 'Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.';
 
                 return false;
