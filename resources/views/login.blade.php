@@ -56,7 +56,7 @@
             <input type="text" name="login" id="login">
 
             <label for="password">Senha:</label>
-            <input type="password" name="senha" id="password">
+            <input type="password" name="password" id="password">
 
             <button type="submit" class="submit">Entrar</button>
 

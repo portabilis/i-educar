@@ -368,43 +368,23 @@ class clsBase extends clsConfig
         $cronometro = new clsCronometro();
         $cronometro->marca('inicio');
 
+        $this->mostraSupenso();
+        $this->Formular();
+        $this->VerificaPermicao();
+        $this->CadastraAcesso();
+
         $saida_geral = '';
 
-        $controlador = new clsControlador();
+        app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
 
-        if ($controlador->Logado()) {
-            $this->mostraSupenso();
+        View::share('title', $this->titulo);
 
-            $this->Formular();
-            $this->VerificaPermicao();
-            $this->CadastraAcesso();
-            $saida_geral = '';
-
-            app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
-            View::share('title', $this->titulo);
-
-            if ($this->renderMenu) {
-                $saida_geral .= $this->MakeBody();
-            } else {
-                foreach ($this->clsForm as $form) {
-                    $saida_geral .= $form->RenderHTML();
-                }
-            }
-
-        } elseif ((empty($_POST['login'])) || (empty($_POST['senha']))) {
-            $force = !empty($_GET['force']) ? true : false;
-
-            if (!$force) {
-                $this->mostraSupenso();
-            }
-
-            $controlador->Logar(false);
+        if ($this->renderMenu) {
+            $saida_geral .= $this->MakeBody();
         } else {
-            $controlador->Logar(true);
-
-            throw new HttpResponseException(
-                new RedirectResponse($_SERVER['HTTP_REFERER'])
-            );
+            foreach ($this->clsForm as $form) {
+                $saida_geral .= $form->RenderHTML();
+            }
         }
 
         $view = 'legacy.body';

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -35,5 +38,52 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Return configurations for institution.
+     *
+     * @return object
+     */
+    private function getConfig()
+    {
+        return DB::table('pmieducar.configuracoes_gerais as cg')
+            ->select('cg.*')
+            ->join('pmieducar.instituicao as i', 'cod_instituicao', '=', 'ref_cod_instituicao')
+            ->where('i.ativo', 1)
+            ->first();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        Session::put([
+            'itj_controle' => 'logado',
+            'id_pessoa' => $user->id,
+            'pessoa_setor' => $user->employee->department_id,
+            'tipo_menu' => $user->employee->menu_type,
+            'nivel' => $user->type->level,
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function showLoginForm()
+    {
+        return view('login', [
+            'config' => $this->getConfig(),
+            'error' => null,
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function username()
+    {
+        return 'login';
     }
 }

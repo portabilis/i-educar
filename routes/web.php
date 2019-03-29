@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,9 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Auth::routes(['register' => false]);
+
 Route::redirect('/', 'intranet/index.php');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass']], function () {
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass', 'auth']], function () {
 
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
