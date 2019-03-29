@@ -141,7 +141,7 @@
 
         <div style="text-align: center">
             <button class="btn-green" type="submit">Enturmar</button>
-            <button class="btn registration-btn-check" type="button">Selecionar Todos</button>
+            <a href="javascript:void(0)" class="btn registration-btn-check" >Selecionar Todos</a>
             <a href="{{ route('enrollments.batch.cancel.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Desenturmar em lote</a>
             <a href="{{ url('intranet/educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=' . $schoolClass->id) }}" class="btn">Copiar enturmações</a>
             <a href="{{ url('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
