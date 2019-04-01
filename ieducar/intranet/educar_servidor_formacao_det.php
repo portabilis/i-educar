@@ -88,8 +88,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: educar_servidor_formacao_lst.php');
-      die();
+        $this->simpleRedirect('educar_servidor_formacao_lst.php');
     }
 
     if (class_exists('clsPmieducarServidor')) {

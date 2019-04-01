@@ -463,9 +463,7 @@ class indice extends clsCadastro
             if( $cadastrou )
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_usuario_lst.php" );
-                die();
-                return true;
+                $this->simpleRedirect('educar_usuario_lst.php');
             }
         }
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -576,9 +574,7 @@ class indice extends clsCadastro
             {
 
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_usuario_lst.php" );
-                die();
-                return true;
+                $this->simpleRedirect('educar_usuario_lst.php');
             }
         }
 

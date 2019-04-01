@@ -92,8 +92,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_rota_lst.php');
-      die();
+        $this->simpleRedirect('transporte_rota_lst.php');
     }
 
     $this->addDetalhe( array("Ano", $registro['ano']) );

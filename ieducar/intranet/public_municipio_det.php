@@ -79,8 +79,7 @@ class indice extends clsDetalhe
         
         if( ! $registro )
         {
-            header( "location: public_municipio_lst.php" );
-            die();
+            $this->simpleRedirect('public_municipio_lst.php');
         }
         
         if( class_exists( "clsPais" ) )
