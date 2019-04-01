@@ -26,6 +26,9 @@
  * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version   $Id$
  */
+
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -76,27 +79,34 @@ class indice extends clsListagem
   var $identificador;
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    $_SESSION['campo1']             = $_GET['campo1'] ? $_GET['campo1'] : $_SESSION['campo1'];
-    $_SESSION['campo2']             = $_GET['campo2'] ? $_GET['campo2'] : $_SESSION['campo2'];
-    $_SESSION['professor']          = $_GET['professor'] ? $_GET['professor'] : $_SESSION['professor'];
-    $_SESSION['ref_cod_escola']     = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
-    
-    $_SESSION['identificador'] = $_GET['identificador'] ? $_GET['identificador'] : $_SESSION['identificador'];
+      Session::put([
+          'campo1' => $_GET['campo1'] ?? Session::get('campo1'),
+          'campo2' => $_GET['campo2'] ?? Session::get('campo2'),
+          'ref_cod_instituicao' => $_GET['ref_cod_instituicao'] ?? Session::get('ref_cod_instituicao'),
+          'ref_cod_escola' => $_GET['ref_cod_escola'] ?? Session::get('ref_cod_escola'),
+          'ref_cod_servidor' => $_GET['ref_cod_servidor'] ?? Session::get('ref_cod_servidor'),
+          'professor' => $_GET['professor'] ?? Session::get('professor'),
+          'identificador' => $_GET['identificador'] ?? Session::get('identificador'),
+      ]);
+
     if (!isset($_GET['tipo'])) {
-       $_SESSION['setAllField1'] = $_SESSION['setAllField2'] = $_SESSION['tipo'] = '';
+        Session::forget([
+            'setAllField1', 'setAllField2', 'tipo',
+        ]);
     }
-    $this->ref_cod_instituicao = $_SESSION['ref_cod_instituicao'] = $_GET['ref_cod_instituicao'] ? $_GET['ref_cod_instituicao'] : $_SESSION['ref_cod_instituicao'];
-    $this->ref_cod_escola      = $_SESSION['ref_cod_escola']    = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
-    $this->ref_cod_servidor    = $_SESSION['ref_cod_servidor']    = $_GET['ref_cod_servidor'] ? $_GET['ref_cod_servidor'] : $_SESSION['ref_cod_servidor'];
-    $this->professor           = $_SESSION['professor']           = $_GET['professor'] ? $_GET['professor'] : $_SESSION['professor'];
-    $this->identificador       = $_SESSION['identificador']       = $_GET['identificador'] ? $_GET['identificador'] : $_SESSION['identificador'];
-    if (isset($_GET['lst_matriculas']) && isset($_SESSION['lst_matriculas'])) {
-      $this->lst_matriculas = $_GET['lst_matriculas'] ?
-        $_GET['lst_matriculas'] : $_SESSION['lst_matriculas'];
+
+    $this->ref_cod_instituicao = Session::get('ref_cod_instituicao');
+    $this->ref_cod_escola      = Session::get('ref_cod_escola');
+    $this->ref_cod_servidor    = Session::get('ref_cod_servidor');
+    $this->professor           = Session::get('professor');
+    $this->identificador       = Session::get('identificador');
+
+    if (isset($_GET['lst_matriculas']) && Session::has('lst_matriculas')) {
+      $this->lst_matriculas = $_GET['lst_matriculas'] ?? Session::get('lst_matriculas');
     }
-    $_SESSION['tipo'] = $_GET['tipo'] ? $_GET['tipo'] : $_SESSION['tipo'];
+
+    Session::put('tipo', $_GET['tipo'] ?? Session::get('tipo'));
+
     $this->titulo = 'Servidores P&uacute;blicos - Listagem';
     // Passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET as $var => $val)  {
@@ -131,23 +141,26 @@ class indice extends clsListagem
     // monta a lista
     if (is_array($lista_professor) && count($lista_professor)) {
       foreach ($lista_professor as $registro) {
-        if ($_SESSION['tipo']) {
-          if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
+        $campo1 = Session::get('campo1');
+        $campo2 = Session::get('campo2');
+        $setAll = '';
+        if (Session::get('tipo')) {
+          if (is_string($campo1) && is_string($campo2)) {
+            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
           }
-          elseif (is_string($_SESSION['campo1'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          elseif (is_string($campo1)) {
+            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
         }
         else {
-          if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          if (is_string($campo1) && is_string($campo2)) {
+            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
-          elseif (is_string($_SESSION['campo2'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          elseif (is_string($campo2)) {
+            $script = " onclick=\"addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
-          elseif (is_string($_SESSION['campo1'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          elseif (is_string($campo1)) {
+            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
         }
         $this->addLinhas(array(
@@ -159,7 +172,9 @@ class indice extends clsListagem
     }
     $this->largura = '100%';
     $obj_permissoes = new clsPermissoes();
-    session_write_close();
+
+    Session::save();
+    Session::start();
   }
 }
 // Instancia objeto de pÃ¡gina

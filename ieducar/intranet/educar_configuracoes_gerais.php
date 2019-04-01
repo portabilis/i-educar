@@ -43,9 +43,7 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
 
@@ -72,9 +70,7 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -277,9 +273,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);

@@ -80,10 +80,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->idsetorbai = $_GET['idsetorbai'];
 
     if (is_numeric($this->idsetorbai)) {
@@ -132,10 +128,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicSetorBai(NULL, $this->nome);
 
     $cadastrou = $obj->cadastra();
@@ -158,10 +150,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $enderecamentoDetalhe = new clsPublicSetorBai($this->idsetorbai);
     $enderecamentoDetalhe->cadastrou = $this->idsetorbai;
     $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
@@ -187,10 +175,6 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicSetorBai($this->idsetorbai);
     $excluiu = $obj->excluir();
 

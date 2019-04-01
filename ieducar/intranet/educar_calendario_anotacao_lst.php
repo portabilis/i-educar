@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -85,12 +88,6 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
-
-
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
@@ -104,12 +101,13 @@ class indice extends clsListagem
             }
             $this->titulo = "Anota&ccedil;&otilde;oes Calend&aacute;rio <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
 
-            @session_start();
-            $_SESSION["calendario"]["anotacao"]["dia"] =  $this->dia;
-            $_SESSION["calendario"]["anotacao"]["mes"] =  $this->mes;
-            $_SESSION["calendario"]["anotacao"]["ano"] =  $this->ano;
-            $_SESSION["calendario"]["anotacao"]["ref_cod_calendario_ano_letivo"] =  $this->ref_cod_calendario_ano_letivo;
-            session_write_close();
+            Session::put([
+                'calendario.anotacao.dia' => $this->dia,
+                'calendario.anotacao.mes' => $this->mes,
+                'calendario.anotacao.ano' => $this->ano,
+                'calendario.anotacao.ref_cod_calendario_ano_letivo' => $this->ref_cod_calendario_ano_letivo,
+            ]);
+
         }else{
             header("location: educar_calendario_ano_letivo_lst.php");
         }
