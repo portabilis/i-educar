@@ -138,7 +138,7 @@
 
         <div style="text-align: center">
             <button class="btn-green" type="submit">Desenturmar</button>
-            <a href="javascript:void(0)" class="btn enrollment-btn-check">Selecionar Todos</a>
+            <a href="javascript:void(0)" class="btn enrollment-btn-check">Selecionar todos</a>
             <a href="{{ route('enrollments.batch.enroll.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Enturmar em lote</a>
             <a href="{{ url('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
         </div>
