@@ -86,7 +86,7 @@ class indice extends clsCadastro
                 $retorno = "Editar";
             }
             else{
-                header("location: educar_coffebreak_tipo_lst.php");
+                $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_coffebreak_tipo_det.php?cod_coffebreak_tipo={$registro["cod_coffebreak_tipo"]}" : "educar_coffebreak_tipo_lst.php";

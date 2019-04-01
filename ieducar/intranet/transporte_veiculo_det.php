@@ -88,8 +88,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_veiculo_lst.php');
-      die();
+        $this->simpleRedirect('transporte_veiculo_lst.php');
     }
 
     $this->addDetalhe( array("Código do veículo", $cod_veiculo));

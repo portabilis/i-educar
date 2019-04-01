@@ -109,7 +109,7 @@ class indice extends clsCadastro
         }
 
         if( !$permitido)
-            header( "Location: educar_biblioteca_dados_lst.php" );
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         if( is_numeric( $this->cod_biblioteca ) )
         {
 

@@ -165,9 +165,7 @@ class indice extends clsCadastro
 
 
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "location: educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}" );
-
-                return true;
+                $this->simpleRedirect("educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}");
             }
             return false;
 

@@ -82,7 +82,7 @@ class indice extends clsCadastro
             $obj = new clsPmieducarTipoUsuario($this->cod_tipo_usuario);
 
             if (!$registro = $obj->detalhe()) {
-                header('Location: educar_tipo_usuario_lst.php');
+                $this->simpleRedirect('educar_tipo_usuario_lst.php');
             }
 
             if ($registro) {

@@ -78,11 +78,11 @@ class indice extends clsCadastro
             
             $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino,null,null,null,null,null,1);
             if(!$registro = $obj->detalhe()){
-                header("Location: educar_tipo_ensino_lst.php");
+                $this->simpleRedirect('educar_tipo_ensino_lst.php');
             }
 
             if(!$registro["ativo"] )
-                header("Location: educar_tipo_ensino_lst.php");
+                $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
             if( $registro )
             {

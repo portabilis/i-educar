@@ -936,7 +936,7 @@ class indice extends clsCadastro
                 $this->verificaSolicitacaoTransferencia();
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-                header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }
 
             $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';

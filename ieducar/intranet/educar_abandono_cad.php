@@ -201,8 +201,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= "Abandono realizado com sucesso.<br>";
-                header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
-                return true;
+                $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
             $this->mensagem = "Observação não pode ser salva.<br>";

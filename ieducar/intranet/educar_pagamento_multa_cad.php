@@ -73,7 +73,7 @@ class indice extends clsCadastro
         $this->ref_cod_biblioteca = $_GET["cod_biblioteca"];
 
         if(!$this->ref_cod_cliente || !$this->ref_cod_biblioteca)
-            header("Location: educar_pagamento_multa_lst.php");
+            $this->simpleRedirect('educar_pagamento_multa_lst.php');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 622, $this->pessoa_logada, 11,  "educar_pagamento_multa_lst.php" );

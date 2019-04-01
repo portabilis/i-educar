@@ -273,12 +273,13 @@ class indice extends clsCadastro
 
             }
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            if ($voltaListagem)
-                header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            else
+            if ($voltaListagem) {
+                $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
+            } else {
                 echo "<script language='javascript' type='text/javascript'>alert('Cadastro efetuado com sucesso.');</script>";
                 echo "<script language='javascript' type='text/javascript'>window.location.href='educar_matricula_ocorrencia_disciplinar_cad.php'</script>";
-                //header( "Location: educar_matricula_ocorrencia_disciplinar_cad.php");
+            }
+
             return true;
         }
 
