@@ -33,7 +33,7 @@ class SequencialEnturmacao
 
     public function ordenaSequencialNovaMatricula()
     {
-        $instituicao = $this->existeDataBaseRemanejamento();
+        $relocationDate = $this->getRelocationDate();
         $sequencialFechamento = $this->existeMatriculaTurma();
 
         if ($sequencialFechamento) {
@@ -48,9 +48,7 @@ class SequencialEnturmacao
             return $novoSequencial;
         }
 
-        $date = Carbon::createFromFormat('Y-m-d', $this->dataEnturmacao)->format('m-d');
-
-        if (($instituicao) && ($instituicao->format('m-d') > $date)) {
+        if (isset($relocationDate) && $relocationDate > $this->dataEnturmacao) {
             $novoSequencial = $this->sequencialAlunoAntesData();
 
             $this->somaSequencialPosterior($novoSequencial);
@@ -113,6 +111,8 @@ class SequencialEnturmacao
 
     private function sequencialAlunoAntesData()
     {
+        $relocationDate = $this->getRelocationDate();
+
         $sql = "SELECT MAX(sequencial_fechamento) + 1 as sequencial
                 FROM pmieducar.matricula_turma
                INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
@@ -122,7 +122,7 @@ class SequencialEnturmacao
                INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                WHERE matricula.ativo = 1
                  AND ref_cod_turma = {$this->refCodTurma}
-                 AND matricula_turma.data_enturmacao < instituicao.data_base_remanejamento
+                 AND matricula_turma.data_enturmacao < '{$relocationDate}'
                  AND pessoa.nome < (SELECT pessoa.nome
                                       FROM pmieducar.matricula
                                      INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
@@ -245,11 +245,7 @@ class SequencialEnturmacao
             }
         }
 
-        $dataBaseRemanejamento = $institution->data_base_remanejamento;
-
-        if ($dataBaseRemanejamento) {
-            $dataBaseRemanejamento->year(Carbon::createFromFormat('Y-m-d', $this->dataEnturmacao)->format('Y'));
-
+        if ($dataBaseRemanejamento = $this->getRelocationDate()) {
             if (strtotime($dataBaseRemanejamento) < strtotime($this->dataEnturmacao)) {
                 $enturmarPorUltimo = true;
             }
@@ -277,12 +273,15 @@ class SequencialEnturmacao
         return $this->registration->is_dependency;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function existeDataBaseRemanejamento()
+    public function getRelocationDate()
     {
-        return $this->schoolClass->school->institution->relocation_date;
+        $date = $this->schoolClass->school->institution->relocation_date;
+
+        if ($date) {
+            $date = substr($this->dataEnturmacao, 0, 4) . $date->format('-m-d');
+        }
+
+        return $date;
     }
 
     public function existeMatriculaTurma()
