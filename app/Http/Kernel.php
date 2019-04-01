@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'ieducar.setlayoutvariables' => \App\Http\Middleware\SetLayoutVariables::class,
         'ieducar.menu' => \App\Http\Middleware\Menu::class,
         'ieducar.footer' => \App\Http\Middleware\Footer::class,
+        'ieducar.xssbypass' => \App\Http\Middleware\XssByPass::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 

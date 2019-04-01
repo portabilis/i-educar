@@ -29,6 +29,7 @@
  */
 
 use App\Services\SchoolLevelsService;
+use Illuminate\Support\Arr;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -119,8 +120,6 @@ class indice extends clsCadastro
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $this->escolaSerieService = app(SchoolLevelsService::class);
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7, 'educar_escola_serie_lst.php');
 
@@ -167,6 +166,8 @@ class indice extends clsCadastro
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
+
+        $this->escolaSerieService = app(SchoolLevelsService::class);
 
         $regrasAvaliacao = $this->escolaSerieService->getEvaluationRules($this->ref_cod_serie);
         $anosLetivos = [];
@@ -282,10 +283,25 @@ class indice extends clsCadastro
             $registros = $obj->lista($this->ref_cod_serie, $this->ref_cod_escola, null, 1);
 
             if ($registros) {
+                $registros = array_map(function ($item) {
+                    foreach ($item as $k => $v) {
+                        if (is_numeric($k)) {
+                            unset($item[$k]);
+                        }
+                    }
+
+                    $item['anos_letivos'] = json_decode($item['anos_letivos']);
+                    $item['carga_horaria'] = floatval($item['carga_horaria']);
+
+                    return $item;
+                }, $registros);
+
+                $this->campoOculto('componentes_sombra', json_encode($registros));
+
                 foreach ($registros as $campo) {
                     $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
-                    $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = floatval($campo['carga_horaria']);
-                    $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = json_decode($campo['anos_letivos']) ?: [];
+                    $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = $campo['carga_horaria'];
+                    $this->escola_serie_disciplina_anos_letivos[$campo['ref_cod_disciplina']] = $campo['anos_letivos'] ?: [];
 
                     if ($this->definirComponentePorEtapa) {
                         $this->escola_serie_disciplina_etapa_especifica[$campo['ref_cod_disciplina']] = intval($campo['etapas_especificas']);
@@ -545,8 +561,19 @@ class indice extends clsCadastro
             1
         );
 
-        $obj->excluirNaoSelecionados($this->disciplinas);
+        $sombra = json_decode(urldecode($this->componentes_sombra), true);
+        $disciplinas = $this->montaDisciplinas();
+        $analise = $this->analisaAlteracoes($sombra, $disciplinas);
 
+        try {
+            $this->validaAlteracoes($analise);
+        } catch (Exception $e) {
+            $this->mensagem = $e->getMessage();
+
+            return false;
+        }
+
+        $obj->excluirNaoSelecionados($this->disciplinas);
 
         if ($editou) {
             if ($this->disciplinas) {
@@ -667,6 +694,226 @@ class indice extends clsCadastro
         }
 
         return array_combine($anosLetivosDisponiveis, $anosLetivosDisponiveis);
+    }
+
+    private function montaDisciplinas()
+    {
+        $disciplinas = [];
+
+        foreach ($this->disciplinas as $componenteId) {
+            if (isset($this->usar_componente[$componenteId])) {
+                $carga_horaria = null;
+            } else {
+                $carga_horaria = $this->carga_horaria[$componenteId];
+            }
+
+            $anosLetivos = $this->componente_anos_letivos[$componenteId] ?: [];
+            $anosLetivos = array_map(function ($ano) {
+                return (int) $ano;
+            }, $anosLetivos);
+
+            $disciplinas[] = [
+                'ref_ref_cod_serie' => $this->ref_cod_serie,
+                'ref_ref_cod_escola' => $this->ref_cod_escola,
+                'ref_cod_disciplina' => $componenteId,
+                'carga_horaria' => $carga_horaria,
+                'etapas_especificas' => $this->etapas_especificas[$componenteId],
+                'etapas_utilizadas' => $this->etapas_utilizadas[$componenteId],
+                'anos_letivos' => $anosLetivos
+            ];
+        }
+
+        return $disciplinas;
+    }
+
+    private function analisaAlteracoes($originais, $novos)
+    {
+        $remover = [];
+        $inserir = [];
+        $atualizar = [];
+
+        foreach ($novos as $novo) {
+            $original = Arr::where($originais, function ($v, $k) use ($novo) {
+                return (int) $v['ref_cod_disciplina'] === (int) $novo['ref_cod_disciplina'];
+            });
+
+            if ($original) {
+                $key = array_keys($original)[0];
+                $original = $original[$key];
+            } else {
+                $original = null;
+            }
+
+            if (is_null($original)) {
+                $inserir[] = $novo;
+
+                continue;
+            }
+
+            $novo['anos_letivos_acrescentar'] = array_diff($novo['anos_letivos'], $original['anos_letivos']);
+            $novo['anos_letivos_remover'] = array_diff($original['anos_letivos'], $novo['anos_letivos']);
+
+            $atualizar[] = $novo;
+        }
+
+        $idsOriginais = Arr::pluck($originais, 'ref_cod_disciplina');
+        $idsNovos = Arr::pluck($novos, 'ref_cod_disciplina');
+        $remover = array_diff($idsOriginais, $idsNovos);
+
+        return compact('remover', 'inserir', 'atualizar');
+    }
+
+    private function validaAlteracoes($analise)
+    {
+        $erros = [];
+
+        if ($analise['inserir']) {
+            foreach ($analise['inserir'] as $insert) {
+                $anos = $insert['anos_letivos'] ?? [];
+                $componente = Portabilis_Utils_Database::fetchPreparedQuery(
+                    'SELECT nome FROM modules.componente_curricular WHERE id = $1',
+                    ['params' => [(int) $insert['ref_cod_disciplina']]]
+                )[0]['nome'];
+
+                foreach ($anos as $ano) {
+                    $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                        SELECT COUNT(*)
+                        FROM modules.componente_curricular_ano_escolar
+                        WHERE TRUE
+                            AND componente_curricular_id = $1
+                            AND ano_escolar_id = $2
+                            AND $3 = ANY(anos_letivos)
+                    ', ['params' => [
+                        (int) $insert['ref_cod_disciplina'],
+                        $this->ref_cod_serie,
+                        $ano
+                    ]]);
+
+                    $count = (int) $info[0]['count'] ?? 0;
+
+                    if ($count < 1) {
+                        $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série).', $ano, $componente);
+                    }
+                }
+            }
+        }
+
+        if ($analise['remover']) {
+            foreach ($analise['remover'] as $componenteId) {
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                    SELECT COUNT(cct.*), cc.nome
+                    FROM modules.componente_curricular_turma cct
+                    INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                    WHERE TRUE
+                        AND cct.componente_curricular_id = $1
+                        AND cct.ano_escolar_id = $2
+                        AND cct.escola_id = $3
+                    GROUP BY cc.nome
+                ', ['params' => [
+                    (int) $componenteId,
+                    $this->ref_cod_serie,
+                    $this->ref_cod_escola
+                ]]);
+
+                $count = (int) $info[0]['count'] ?? 0;
+
+                if ($count > 0) {
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
+                }
+
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                    SELECT COUNT(ncc.*), cc.nome
+                    FROM modules.nota_componente_curricular ncc
+                    INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
+                    INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
+                    INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
+                    WHERE TRUE
+                        AND ncc.componente_curricular_id = $1
+                        AND m.ref_ref_cod_serie = $2
+                        AND m.ref_ref_cod_escola = $3
+                    GROUP BY cc.nome
+                ', ['params' => [
+                    (int) $componenteId,
+                    $this->ref_cod_serie,
+                    $this->ref_cod_escola
+                ]]);
+
+                $count = (int) $info[0]['count'] ?? 0;
+
+                if ($count > 0) {
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas lançadas para este componente nesta série e escola.', $info[0]['nome']);
+                }
+            }
+        }
+
+        if ($analise['atualizar']) {
+            foreach ($analise['atualizar'] as $update) {
+                if (!empty($update['anos_letivos_remover'])) {
+                    foreach ($update['anos_letivos_remover'] as $ano) {
+                        $info = Portabilis_Utils_Database::fetchPreparedQuery("
+                            SELECT COUNT(ncc.*), cc.nome
+                            FROM modules.nota_componente_curricular ncc
+                            INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
+                            INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
+                            INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
+                            WHERE TRUE
+                                AND ncc.componente_curricular_id = $1
+                                AND m.ref_ref_cod_serie = $2
+                                AND m.ano = $3
+                                AND m.ref_ref_cod_escola = $4
+                            GROUP BY cc.nome
+                        ", ['params' => [
+                            (int) $update['ref_cod_disciplina'],
+                            $this->ref_cod_serie,
+                            $ano,
+                            $this->ref_cod_escola
+                        ]]);
+
+                        $count = (int) $info[0]['count'] ?? 0;
+
+                        if ($count > 0) {
+                            $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas lançadas para este componente nesta série, ano e escola.', $ano, $info[0]['nome']);
+                        }
+                    }
+                }
+
+                if (!empty($update['anos_letivos_acrescentar'])) {
+                    $componente = Portabilis_Utils_Database::fetchPreparedQuery(
+                        'SELECT nome FROM modules.componente_curricular WHERE id = $1',
+                        ['params' => [(int) $update['ref_cod_disciplina']]]
+                    )[0]['nome'];
+
+                    foreach ($update['anos_letivos_acrescentar'] as $ano) {
+                        $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                            SELECT COUNT(*)
+                            FROM modules.componente_curricular_ano_escolar
+                            WHERE TRUE
+                                AND componente_curricular_id = $1
+                                AND ano_escolar_id = $2
+                                AND $3 = ANY(anos_letivos)
+                        ', ['params' => [
+                            (int) $update['ref_cod_disciplina'],
+                            $this->ref_cod_serie,
+                            $ano
+                        ]]);
+
+                        $count = (int) $info[0]['count'] ?? 0;
+
+                        if ($count < 1) {
+                            $erros[] = sprintf('O ano %d de "%s" precisa estar devidamente cadastrado nesta série em Componentes da série (Escola > Cadastros > Tipos > Séries > Componentes da série).', $ano, $componente);
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($erros) {
+            $msg = join('<br>', $erros);
+
+            throw new \Exception($msg);
+        }
+
+        return true;
     }
 }
 
