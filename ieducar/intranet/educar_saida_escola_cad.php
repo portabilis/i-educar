@@ -58,9 +58,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = "Novo";
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->ref_cod_matricula=$_GET["ref_cod_matricula"];
     $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -115,9 +113,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-     $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
@@ -152,9 +148,7 @@ class indice extends clsCadastro
 
    function Excluir()
    {
-     @session_start();
-       $this->pessoa_logada = $_SESSION['id_pessoa'];
-     @session_write_close();
+     
  
      $obj_permissoes = new clsPermissoes();
      $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );

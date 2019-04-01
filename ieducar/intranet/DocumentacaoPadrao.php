@@ -71,10 +71,6 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $obj_usuario_det = $obj_usuario->detalhe();
         $this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];

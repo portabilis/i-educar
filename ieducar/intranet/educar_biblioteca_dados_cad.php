@@ -80,9 +80,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
 //      $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_biblioteca=$_GET["cod_biblioteca"];
 
@@ -272,9 +270,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 629, $this->pessoa_logada, 11,  "educar_biblioteca_dados_lst.php" );
@@ -373,9 +369,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 629, $this->pessoa_logada, 11,  "educar_biblioteca_dados_lst.php" );

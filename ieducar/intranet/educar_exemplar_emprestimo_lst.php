@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -87,11 +90,12 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            unset($_SESSION['emprestimo']['cod_cliente']);
-            unset($_SESSION['emprestimo']['ref_cod_biblioteca']);
-        session_write_close();
+        Session::forget([
+            'emprestimo.cod_cliente',
+            'emprestimo.ref_cod_biblioteca',
+        ]);
+        Session::save();
+        Session::start();
 
         $this->titulo = "Exemplar Empr&eacute;stimo - Listagem";
 
