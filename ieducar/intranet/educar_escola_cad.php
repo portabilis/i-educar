@@ -1573,6 +1573,7 @@ class indice extends clsCadastro
 
             $options = array(
                 'label' => 'Escola faz exame de seleção para ingresso de seus aluno(a)s',
+                'label_hint' => 'Avaliação por prova e /ou analise curricular',
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->exame_selecao_ingresso,
@@ -3046,7 +3047,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
             return false;
         }
 
