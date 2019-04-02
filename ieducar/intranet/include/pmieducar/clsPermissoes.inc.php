@@ -113,7 +113,9 @@ class clsPermissoes
       $ok = $this->getBiblioteca($int_idpes_usuario) == 0 ? FALSE : TRUE;
 
       if (!$ok && $nivel == 8) {
-          $this->simpleRedirect('index.php?negado=1');
+          throw new HttpResponseException(
+              new RedirectResponse('index.php?negado=1')
+          );
       }
     }
 

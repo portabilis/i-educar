@@ -131,7 +131,6 @@ class indice extends clsCadastro
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_tipo_dispensa_lst.php');
-            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
