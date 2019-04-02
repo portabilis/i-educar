@@ -56,7 +56,7 @@ a {
   display: block;
 }
 
-input#password, input#login {
+input#password, input#login, input#password-confirm {
   color: #646b71;
   margin: 5px 0 10px;
   padding: 11px;
@@ -101,21 +101,28 @@ button.submit {
   float: right;
 }
 
-.error {
+.error,
+.success {
   width: 460px;
   border-radius: 3px;
-  background-color: #ffdbdb;
-  border: solid 1px #ffb2b2;
   margin: 0 auto 20px;
   padding: 10px 50px;
   box-sizing: border-box;
   text-align: left;
-  color: #d46262;
+  color: #ff4e4e;
+  border: 1px solid #ffe5e5;
+  background-color: #ffeeee;
 }
 
 .error a {
   color: #d46262;
   font-weight: bold;
+}
+
+.success {
+  color: #157100;
+  border: 1px solid #e0f9d8;
+  background-color: #f0f9ee;
 }
 
 .remember {

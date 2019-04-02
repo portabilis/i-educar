@@ -3,8 +3,7 @@
 @section('content')
     <h2>Redefinição senha</h2>
 
-    <form action="" method="post">
-
+    <form action="{{ route('password.email') }}" method="post">
         <label for="login">Matrícula:</label>
         <input type="text" name="login" id="login">
 

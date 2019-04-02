@@ -38,10 +38,14 @@
 <div id="main">
 
     <div>
-        <img alt="Logo" width="150px" height="150px" src="{{ $config->ieducar_image ?? url('intranet/imagens/brasao-republica.png') }}"/>
+        <img alt="Logo" width="150px" height="150px" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/brasao-republica.png') }}"/>
     </div>
 
-    <h1>{{ $config->ieducar_entity_name }}</h1>
+    <h1>{{ config('legacy.config.ieducar_entity_name')}}</h1>
+
+    @if (session('status'))
+        <p class="success">{{ session('status') }}</p>
+    @endif
 
     @if($errors->count())
         <p class="error">{{ $errors->first() }}</p>
@@ -55,24 +59,24 @@
 
 <div id="footer">
     <p>
-        {!! $config->ieducar_login_footer !!}
+        {!! config('legacy.config.ieducar_login_footer') !!}
     </p>
 
     <div class="footer-social">
 
-        {!! $config->ieducar_external_footer !!}
+        {!! config('legacy.config.ieducar_external_footer') !!}
 
-        @if($config->facebook_url || $config->linkedin_url || $config->twitter_url)
+        @if(config('legacy.config.facebook_url') || config('legacy.config.linkedin_url') || config('legacy.config.twitter_url'))
             <div class="social-icons">
                 <p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
-                @if($config->facebook_url)
-                    <a target="_blank" href="{{ $config->facebook_url }}"><img src="{{ url('intranet/imagens/icon-social-facebook.png') }}"></a>
+                @if(config('legacy.config.facebook_url'))
+                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}"><img src="{{ url('intranet/imagens/icon-social-facebook.png') }}"></a>
                 @endif
-                @if($config->linkedin_url)
-                    <a target="_blank" href="{{ $config->linkedin_url }}"><img src="{{ url('intranet/imagens/icon-social-linkedin.png') }}"></a>
+                @if(config('legacy.config.linkedin_url'))
+                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}"><img src="{{ url('intranet/imagens/icon-social-linkedin.png') }}"></a>
                 @endif
-                @if($config->twitter_url)
-                    <a target="_blank" href="{{ $config->twitter_url }}"><img src="{{ url('intranet/imagens/icon-social-twitter.png') }}"></a>
+                @if(config('legacy.config.twitter_url'))
+                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}"><img src="{{ url('intranet/imagens/icon-social-twitter.png') }}"></a>
                 @endif
             </div>
         @endif
