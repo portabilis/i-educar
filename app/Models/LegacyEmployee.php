@@ -10,6 +10,8 @@ use Prettus\Repository\Traits\TransformableTrait;
  * @property string $password
  * @property int    $department_id
  * @property int    $menu_type
+ * @property string $email
+ * @property string $remember_token
  */
 class LegacyEmployee extends EloquentBaseModel implements Transformable
 {
@@ -70,5 +72,23 @@ class LegacyEmployee extends EloquentBaseModel implements Transformable
     public function getMenuTypeAttribute()
     {
         return $this->tipo_menu;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRememberTokenAttribute()
+    {
+        return $this->status_token;
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return void
+     */
+    public function setRememberTokenAttribute($token)
+    {
+        $this->status_token = $token;
     }
 }

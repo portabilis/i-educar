@@ -44,11 +44,26 @@ class User extends Authenticatable
     ];
 
     /**
+     * @var array
+     */
+    protected $touches = [
+        'employee',
+    ];
+
+    /**
      * @return int
      */
     public function getIdAttribute()
     {
         return $this->cod_usuario;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailAttribute()
+    {
+        return $this->employee->email;
     }
 
     /**
@@ -65,6 +80,24 @@ class User extends Authenticatable
     public function getPasswordAttribute()
     {
         return $this->employee->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRememberTokenAttribute()
+    {
+        return $this->employee->remember_token;
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return void
+     */
+    public function setRememberTokenAttribute($token)
+    {
+        $this->employee->remember_token = $token;
     }
 
     /**
