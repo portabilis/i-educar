@@ -17,7 +17,7 @@
         <button type="submit" class="submit">Entrar</button>
 
         <div class="remember">
-            <a href="{{ url('module/Usuario/RedefinirSenha') }}">Esqueceu sua senha?</a>
+            <a href="{{ route('password.request') }}">Esqueceu sua senha?</a>
         </div>
 
     </form>
