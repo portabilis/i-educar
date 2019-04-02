@@ -28,4 +28,9 @@ class LegacyInstitution extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function generalConfiguration()
+    {
+        return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
+    }
 }
