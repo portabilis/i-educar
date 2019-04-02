@@ -34,9 +34,6 @@ require_once "include/pmieducar/clsPmieducarCategoriaObra.inc.php";
 require_once "include/pmieducar/clsPmieducarCategoriaAcervo.inc.php";
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
-
 class clsIndexBase extends clsBase
 {
     function Formular()
