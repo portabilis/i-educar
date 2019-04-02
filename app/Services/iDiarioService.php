@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\LegacyInstitution;
+use Exception;
 use GuzzleHttp\Client;
+use RuntimeException;
 
 class iDiarioService
 {
@@ -39,7 +41,7 @@ class iDiarioService
         $configs = $institution->generalConfiguration;
 
         if (empty($configs->url_novo_educacao) || empty($configs->token_novo_educacao)) {
-            throw new \RuntimeException('É necessário configurar a URL e Token de integração com o i-Diário.');
+            throw new RuntimeException('É necessário configurar a URL e Token de integração com o i-Diário.');
         }
 
         $this->http = $http;
@@ -62,7 +64,7 @@ class iDiarioService
             if ($body === 'true') {
                 return true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -84,7 +86,7 @@ class iDiarioService
             if ($body === 'true') {
                 return true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

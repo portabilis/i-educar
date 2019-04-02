@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacyInstitution extends Model
 {
@@ -29,7 +30,10 @@ class LegacyInstitution extends Model
      */
     public $timestamps = false;
 
-    public function generalConfiguration()
+    /**
+     * @return HasOne
+     */
+    public function generalConfiguration(): HasOne
     {
         return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
     }

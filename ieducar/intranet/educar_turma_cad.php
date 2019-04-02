@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\SchoolClassService;
+use App\Services\iDiarioService;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1175,7 +1176,7 @@ class indice extends clsCadastro
         }
 
         try {
-            $iDiarioService = app(\App\Services\iDiarioService::class);
+            $iDiarioService = app(iDiarioService::class);
 
             foreach ($etapas as $etapa) {
                 if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
