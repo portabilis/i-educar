@@ -105,7 +105,7 @@ function validaHorarioInicialFinal() {
   }
 
   if (horarioInicialIntervalo > horarioFinalIntervalo){
-    alert('O horário inicial não pode ser maior que o horário final.');
+    alert('O horário inicial de intervalo não pode ser maior que o horário final de intervalo.');
     return false;
   }
 
