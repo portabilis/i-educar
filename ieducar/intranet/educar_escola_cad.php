@@ -1632,13 +1632,16 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
-            $resources = array(1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena');
+            $resources = [
+                null => 'Selecione',
+                1 => 'Língua Portuguesa',
+                2 => 'Língua Indígena'
+            ];
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
             $options = array('label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
-                'required' => $habilitaLiguaMinistrada,
+                'required' => false,
                 'disabled' => !$habilitaLiguaMinistrada,
                 'size' => 70);
             $this->inputsHelper()->select('lingua_ministrada', $options);
