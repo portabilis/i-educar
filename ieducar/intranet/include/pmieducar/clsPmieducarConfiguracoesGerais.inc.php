@@ -46,7 +46,7 @@ class clsPmieducarConfiguracoesGerais
   var $ref_cod_instituicao;
   var $permite_relacionamento_posvendas;
   var $url_novo_educacao;
-  var $token_novo_educacao;
+  var $token_novo_educacao = false;
   var $mostrar_codigo_inep_aluno;
   var $justificativa_falta_documentacao_obrigatorio;
   var $tamanho_min_rede_estadual;
@@ -243,8 +243,10 @@ class clsPmieducarConfiguracoesGerais
       $set[] = "url_novo_educacao = '{$this->url_novo_educacao}'";
     }
 
-    if (!empty($this->token_novo_educacao)) {
+    if ($this->token_novo_educacao !== false) {
       $set[] = "token_novo_educacao = '{$this->token_novo_educacao}'";
+    } else {
+      $set[] = "token_novo_educacao = NULL";
     }
 
     if (is_array($this->custom_labels)) {
