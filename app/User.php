@@ -44,13 +44,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * @var array
-     */
-    protected $touches = [
-        'employee',
-    ];
-
-    /**
      * @return int
      */
     public function getIdAttribute()
@@ -83,6 +76,17 @@ class User extends Authenticatable
     }
 
     /**
+     * @param string $password
+     *
+     * @return void
+     */
+    public function setPasswordAttribute($password)
+    {
+        $this->employee->password = $password;
+        $this->employee->save();
+    }
+
+    /**
      * @return string
      */
     public function getRememberTokenAttribute()
@@ -98,6 +102,7 @@ class User extends Authenticatable
     public function setRememberTokenAttribute($token)
     {
         $this->employee->remember_token = $token;
+        $this->employee->save();
     }
 
     /**
