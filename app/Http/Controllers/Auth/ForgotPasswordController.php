@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
@@ -32,30 +33,19 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Return configurations for institution.
+     * Send a reset link to the given user.
      *
-     * TODO
-     * Move this logic to middleware.
-     *
-     * @return object
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    private function getConfig()
+    public function sendResetLinkEmail(Request $request)
     {
-        return DB::table('pmieducar.configuracoes_gerais as cg')
-            ->select('cg.*')
-            ->join('pmieducar.instituicao as i', 'cod_instituicao', '=', 'ref_cod_instituicao')
-            ->where('i.ativo', 1)
-            ->first();
-    }
+        $response = $this->broker()->sendResetLink(
+            $request->only('login')
+        );
 
-    /**
-     * @inheritdoc
-     */
-    public function showLinkRequestForm()
-    {
-        return view('auth.passwords.email', [
-            'config' => $this->getConfig(),
-        ]);
+        return $response == Password::RESET_LINK_SENT
+            ? $this->sendResetLinkResponse($request, $response)
+            : $this->sendResetLinkFailedResponse($request, $response);
     }
-
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -36,33 +35,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-    }
-
-    /**
-     * Return configurations for institution.
-     *
-     * TODO
-     * Move this logic to middleware.
-     *
-     * @return object
-     */
-    private function getConfig()
-    {
-        return DB::table('pmieducar.configuracoes_gerais as cg')
-            ->select('cg.*')
-            ->join('pmieducar.instituicao as i', 'cod_instituicao', '=', 'ref_cod_instituicao')
-            ->where('i.ativo', 1)
-            ->first();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function showLoginForm()
-    {
-        return view('auth.login', [
-            'config' => $this->getConfig(),
-        ]);
     }
 
     /**
