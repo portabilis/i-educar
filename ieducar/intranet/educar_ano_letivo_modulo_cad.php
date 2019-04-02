@@ -49,7 +49,7 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        
+
 
         $this->ref_cod_modulo = $_GET['ref_cod_modulo'];
         $this->ref_ref_cod_escola = $_GET['ref_cod_escola'];
@@ -264,7 +264,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
 
@@ -339,7 +339,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -407,7 +407,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
 
@@ -703,34 +703,16 @@ class indice extends clsCadastro
             return false;
         }
 
-        $configuracoes = (new clsPmieducarConfiguracoesGerais($this->ref_cod_instituicao))->detalhe();
+        try {
+            $iDiarioService = app(\App\Services\iDiarioService::class);
 
-        if (empty($configuracoes['url_novo_educacao']) || empty($configuracoes['token_novo_educacao'])) {
-            return true;
-        }
-
-        $client = new GuzzleHttp\Client(['base_uri' => trim($configuracoes['url_novo_educacao'], '/')]);
-
-        foreach ($etapas as $etapa) {
-            try {
-                $response = $client->request('GET', '/api/v2/step_activity', [
-                    'query' => [
-                        'unity_id' => $escolaId,
-                        'step_number' => $etapa
-                    ],
-                    'headers' => [
-                        'token' => $configuracoes['token_novo_educacao']
-                    ]
-                ]);
-
-                $body = trim((string) $response->getBody());
-
-                if ($body === 'true') {
+            foreach ($etapas as $etapa) {
+                if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa)) {
                     return false;
                 }
-            } catch (\Exception $e) {
-                return false;
             }
+        } catch (\Exception $e) {
+            return true;
         }
 
         return true;

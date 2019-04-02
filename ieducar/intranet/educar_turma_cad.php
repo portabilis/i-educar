@@ -1174,34 +1174,16 @@ class indice extends clsCadastro
             return false;
         }
 
-        $configuracoes = (new clsPmieducarConfiguracoesGerais($this->ref_cod_instituicao))->detalhe();
+        try {
+            $iDiarioService = app(\App\Services\iDiarioService::class);
 
-        if (empty($configuracoes['url_novo_educacao']) || empty($configuracoes['token_novo_educacao'])) {
-            return true;
-        }
-
-        $client = new GuzzleHttp\Client(['base_uri' => trim($configuracoes['url_novo_educacao'], '/')]);
-
-        foreach ($etapas as $etapa) {
-            try {
-                $response = $client->request('GET', '/api/v2/step_activity', [
-                    'query' => [
-                        'classroom_id' => $turmaId,
-                        'step_number' => $etapa
-                    ],
-                    'headers' => [
-                        'token' => $configuracoes['token_novo_educacao']
-                    ]
-                ]);
-
-                $body = trim((string) $response->getBody());
-
-                if ($body === 'true') {
+            foreach ($etapas as $etapa) {
+                if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
                     return false;
                 }
-            } catch (\Exception $e) {
-                return false;
             }
+        } catch (\Exception $e) {
+            return true;
         }
 
         return true;
