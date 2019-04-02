@@ -2644,7 +2644,8 @@ class indice extends clsCadastro
                 $this->validaSalasAcessibilidade() &&
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
-                $this->validaQuantidadeEquipamentosEnsino();
+                $this->validaQuantidadeEquipamentosEnsino() &&
+                $this->validaLinguasIndigenas();
     }
 
     protected function validaOcupacaoPredio()
@@ -3117,6 +3118,16 @@ class indice extends clsCadastro
 
         if ($this->lousas_digitais == '0') {
             $this->mensagem = 'O campo: <b>Lousa digital</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaLinguasIndigenas()
+    {
+        if (count($this->codigo_lingua_indigena) > 3) {
+            $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
             return false;
         }
 
