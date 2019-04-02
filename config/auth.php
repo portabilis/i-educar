@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'legacy',
     ],
 
     /*
@@ -98,6 +98,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+        'legacy' => [
+            'provider' => 'legacy',
             'table' => 'password_resets',
             'expire' => 60,
         ],

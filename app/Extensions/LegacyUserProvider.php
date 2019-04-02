@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
+use Throwable;
 
 class LegacyUserProvider implements UserProvider
 {
@@ -39,15 +40,22 @@ class LegacyUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        return null;
+        $user = $this->retrieveById($identifier);
+
+        return $user && $user->getRememberToken() && hash_equals($user->getRememberToken(), $token)
+            ? $user : null;
     }
 
     /**
      * @inheritdoc
+     *
+     * @throws Throwable
      */
     public function updateRememberToken(Authenticatable $user, $token)
     {
-        return;
+        $user->setRememberToken($token);
+
+        $user->saveOrFail();
     }
 
     /**
