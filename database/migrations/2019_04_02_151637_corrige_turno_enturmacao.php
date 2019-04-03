@@ -18,7 +18,7 @@ class CorrigeTurnoEnturmacao extends Migration
             UPDATE pmieducar.matricula_turma
                SET turno_id = NULL
               FROM pmieducar.matricula_turma mt
-              LEFT JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
+             INNER JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
              WHERE t.turma_turno_id <> 4
                AND matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
                AND matricula_turma.sequencial = mt.sequencial
