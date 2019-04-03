@@ -164,7 +164,8 @@ class indice extends clsCadastro
                 clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
             ],
             'value' => $this->turma_turno_id,
-            'required' => false
+            'required' => false,
+            'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
         ];
         $this->inputsHelper()->select('turma_turno_id', $options);
 
