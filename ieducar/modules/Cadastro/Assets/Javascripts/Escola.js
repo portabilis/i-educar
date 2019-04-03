@@ -257,7 +257,7 @@ function habilitaCampoEsferaAdministrativa() {
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 if (!$j('#cnpj').is(':visible')){
 
-  $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
+  $j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
   $j('td .formdktd b').remove();
   $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
 
@@ -629,3 +629,44 @@ if ( document.getElementById('ref_cod_instituicao') )
 
     }
 }
+
+
+var search = function (request, response) {
+    var searchPath = '/module/Api/Pessoa?oper=get&resource=pessoa-search',
+        params = {
+            query: request.term
+        };
+
+    $j.get(searchPath, params, function (dataResponse) {
+        simpleSearch.handleSearch(dataResponse, response);
+    });
+};
+
+var handleSelect = function (event, ui) {
+    var $target = $j(event.target),
+        id = $target.attr('id'),
+        idNum = id.match(/\[(\d+)\]/),
+        $refEscola = $j('input[id="managers_individual_id[' + idNum[1] + ']"]');
+
+    $target.val(ui.item.label);
+    $refEscola.val(ui.item.value);
+
+    return false;
+};
+
+function setAutoComplete() {
+    $j.each($j('input[id^="managers_individual"]'), function (index, field) {
+        $j(field).autocomplete({
+            source: search,
+            select: handleSelect,
+            minLength: 1,
+            autoFocus: false
+        });
+    });
+};
+
+setAutoComplete();
+
+$j('#btn_add_tab_add_1').click(function () {
+    setAutoComplete();
+});

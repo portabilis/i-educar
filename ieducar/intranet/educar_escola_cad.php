@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\ManagerAccessCriteria;
+use App\Models\ManagerLinkType;
+use App\Models\ManagerRole;
+use App\Models\SchoolManager;
+use App\Services\SchoolService;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -799,12 +804,7 @@ class indice extends clsCadastro
             $options = array('label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_autorizativo', $options);
 
-            $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
-            $helperOptions = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
-            $options = array('label' => 'Gestor escolar',
-                'required' => $obrigarCamposCenso,
-                'size' => 50);
-            $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
+            $this->addSchoolManagersTable();
 
             $hiddenInputOptions = array('options' => array('value' => $this->secretario_id));
             $helperOptions = array('objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions);
@@ -812,15 +812,6 @@ class indice extends clsCadastro
                 'size' => 50,
                 'required' => false);
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
-
-            $resources = array(1 => 'Diretor',
-                2 => 'Outro cargo');
-            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
-            $this->inputsHelper()->select('cargo_gestor', $options);
-
-            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
-
-            $this->inputsHelper()->text('email_gestor', $options);
 
             $resources = SelectOptions::esferasAdministrativasEscola();
             $options = [
@@ -2473,6 +2464,92 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
         }
 
+    }
+
+    protected function addSchoolManagersTable()
+    {
+        /** @var SchoolService $schoolService */
+        $schoolService = app(SchoolService::class);
+        $managers = $schoolService->getSchoolManagers($this->cod_escola);
+
+        $rows = [];
+        foreach ($managers as $manager) {
+            $rows = $this->makeRowManagerTable($manager);
+        }
+
+        $this->campoTabelaInicio('gestores', 'Gestores',
+            [
+                'Nome do(a) gestor(a)',
+                'Cargo do(a) gestor(a)',
+                'Critério de acesso ao cargo',
+                'Especificação do critério de acesso',
+                'Tipo de vínculo',
+                'Gestor(a) principal'
+            ],
+            [
+                $rows
+            ]
+        );
+
+        $helperOptions = ['objectName' => 'managers_individual'];
+        $this->inputsHelper()->simpleSearchPessoa('nome', ['size' => 50, 'required' => false], $helperOptions);
+        $this->campoOculto('managers_individual_id', null);
+
+        $options = [
+                'resources' => [null => 'Selecione'] + ManagerRole::all()->getKeyValueArray('name'),
+                'size' => 50,
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_role_id', $options);
+
+        $options = [
+                'resources' => [null => 'Selecione'] + ManagerAccessCriteria::all()->getKeyValueArray('name'),
+                'size' => 50,
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_access_criteria_id', $options);
+
+        $options = ['size' => 50, 'required' => false];
+        $this->inputsHelper()->text('managers_access_criteria_description', $options);
+
+        $options =
+            [
+                'resources' => [null => 'Selecione'] + ManagerLinkType::all()->getKeyValueArray('name'),
+                'size' => 50,
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_link_type_id', $options);
+
+        $resources = [
+                0 => 'Não',
+                1 => 'Sim',
+            ];
+        $options =
+            [
+                'resources' => $resources,
+                'size' => 50,
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_chief', $options);
+
+        $this->campoTabelaFim();
+    }
+
+    /**
+     * @param SchoolManager $schoolManager
+     * @return array
+     */
+    protected function makeRowManagerTable($schoolManager)
+    {
+        return [
+            $schoolManager->individual->getRealNameAttribute(),
+            $schoolManager->role_id,
+            $schoolManager->access_criteria_id,
+            $schoolManager->access_criteria_description,
+            $schoolManager->link_type_id,
+            (int)$schoolManager->chief,
+            $schoolManager->individual_id,
+        ];
     }
 }
 
