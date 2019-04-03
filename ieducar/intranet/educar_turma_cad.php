@@ -916,6 +916,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->verificaTurno()) {
+            return false;
+        }
+
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $turmaDetalhe = $turmaDetalhe->detalhe();
 
@@ -1046,6 +1050,47 @@ class indice extends clsCadastro
             return false;
         }
         if (!$this->validaCampoEtapaEnsino()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function verificaTurno()
+    {
+        $turmaId = (int) $this->cod_turma;
+        $turnoId = (int) $this->turma_turno_id;
+        $count = 0;
+
+        if ($turnoId === clsPmieducarTurma::TURNO_INTEGRAL) { // Se integral não pode ter vínculos noturnos
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        } else { // Se ñ é integral não pode ter vínculos diferentes do novo turno
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        }
+
+        if ($count > 0) {
+            $this->mensagem = 'Existem enturmações ou professores atrelados a esta turma em turnos diferentes do especificado.';
+
             return false;
         }
 
