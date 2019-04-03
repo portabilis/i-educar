@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSchoolManager extends Migration
+class CreateSchoolManagers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSchoolManager extends Migration
      */
     public function up()
     {
-        Schema::create('school_manager', function (Blueprint $table) {
+        Schema::create('school_managers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('school_id')->nullable()->unsigned();
             $table->integer('role_id')->nullable()->unsigned();
@@ -37,6 +37,6 @@ class CreateSchoolManager extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_manager');
+        Schema::dropIfExists('school_managers');
     }
 }
