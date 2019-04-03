@@ -98,10 +98,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->idbai = $_GET['idbai'];
 
     if (is_numeric($this->idbai)) {
@@ -254,10 +250,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
       NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
       $this->zona_localizacao, $this->iddis);
@@ -285,11 +277,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-
     $enderecamentoDetalhe = new clsPublicBairro(null, null, $this->idbai);
     $enderecamentoDetalhe->cadastrou = $this->idbai;
     $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
@@ -319,10 +306,6 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicBairro(NULL, NULL, $this->idbai, NULL, $this->pessoa_logada);
     $excluiu = $obj->excluir();
 

@@ -42,10 +42,6 @@ class indice extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-            $id_pessoa = $_SESSION['id_pessoa'];
-        @session_write_close();
-        
         $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet",false );
         $this->addCabecalhos( array( "Nome Menu") );
 

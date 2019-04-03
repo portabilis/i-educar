@@ -1,7 +1,9 @@
 <?php
 
-use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -70,7 +72,7 @@ class clsBase extends clsConfig
             $this->setupConfigs();
         }
 
-        $nivel = !empty($_SESSION['nivel']) ? (int)$_SESSION['nivel'] : null;
+        $nivel = Session::get('nivel');
 
         if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
             header('HTTP/1.1 503 Service Temporarily Unavailable');
@@ -109,7 +111,7 @@ class clsBase extends clsConfig
 
         $saida = $this->OpenTpl('htmlhead');
         $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
-        $saida = str_replace("<!-- #&USER_ID&# -->", $_SESSION['id_pessoa'], $saida);
+        $saida = str_replace("<!-- #&USER_ID&# -->", Session::get('id_pessoa'), $saida);
         $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
 
         if ($this->refresh) {
@@ -271,7 +273,7 @@ class clsBase extends clsConfig
                         $gets .= " - $key: $val\n";
                     }
 
-                    foreach ($_SESSION as $key => $val) {
+                    foreach (Session::all() as $key => $val) {
                         $sessions .= " - $key: $val\n";
                     }
 
@@ -348,129 +350,83 @@ class clsBase extends clsConfig
      */
     function CadastraAcesso()
     {
-        @session_start();
-        if (@$_SESSION['marcado'] != "private") {
+        if (Session::get('marcado') != "private") {
             if (!$this->convidado) {
                 $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
                 $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                $id_pessoa = $_SESSION['id_pessoa'];
+                $id_pessoa = $this->pessoa_logada;
 
                 $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
                 $logAcesso->cadastra();
 
-                $_SESSION['marcado'] = "private";
+                Session::put('marcado', 'private');
+                Session::save();
+                Session::start();
             }
         }
-        session_write_close();
     }
 
     function MakeAll()
     {
-        try {
-            $cronometro = new clsCronometro();
-            $cronometro->marca('inicio');
-            $liberado = TRUE;
+        $cronometro = new clsCronometro();
+        $cronometro->marca('inicio');
+        $liberado = TRUE;
 
+        $saida_geral = '';
+
+        if ($this->convidado) {
+            Session::put([
+                'convidado' => TRUE,
+                'id_pessoa' => '0',
+            ]);
+        }
+
+        $controlador = new clsControlador();
+
+        if ($controlador->Logado() && $liberado || $this->convidado) {
+            $this->mostraSupenso();
+
+            $this->Formular();
+            $this->VerificaPermicao();
+            $this->CadastraAcesso();
             $saida_geral = '';
 
-            if ($this->convidado) {
-                @session_start();
-                $_SESSION['convidado'] = TRUE;
-                $_SESSION['id_pessoa'] = '0';
-                session_write_close();
-            }
+            app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
+            View::share('title', $this->titulo);
 
-            $controlador = new clsControlador();
-
-            if ($controlador->Logado() && $liberado || $this->convidado) {
-                $this->mostraSupenso();
-
-                $this->Formular();
-                $this->VerificaPermicao();
-                $this->CadastraAcesso();
-                $saida_geral = '';
-
-                app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
-                View::share('title', $this->titulo);
-
-                if ($this->renderMenu) {
-                    $saida_geral .= $this->MakeBody();
-                } else {
-                    foreach ($this->clsForm as $form) {
-                        $saida_geral .= $form->RenderHTML();
-                    }
-                }
-
-            } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
-                $force = !empty($_GET['force']) ? true : false;
-
-                if (!$force) {
-                    $this->mostraSupenso();
-                }
-
-                $saida_geral .= $this->MakeHeadHtml();
-                $controlador->Logar(false);
-                $saida_geral .= $this->MakeFootHtml();
+            if ($this->renderMenu) {
+                $saida_geral .= $this->MakeBody();
             } else {
-                $controlador->Logar(true);
-                $referer = $_SERVER['HTTP_REFERER'];
-
-                header("Location: " . $referer, true, 302);
-                die();
+                foreach ($this->clsForm as $form) {
+                    $saida_geral .= $form->RenderHTML();
+                }
             }
 
-            $view = 'legacy.body';
+        } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
+            $force = !empty($_GET['force']) ? true : false;
 
-            if (!$this->renderMenu || !$this->renderMenuSuspenso) {
-                $view = 'legacy.blank';
+            if (!$force) {
+                $this->mostraSupenso();
             }
 
-            echo view($view, ['body' => $saida_geral])->render();
+            $saida_geral .= $this->MakeHeadHtml();
+            $controlador->Logar(false);
+            $saida_geral .= $this->MakeFootHtml();
+        } else {
+            $controlador->Logar(true);
 
-        } catch (Exception $e) {
-
-            if ($GLOBALS['coreExt']['Config']->modules->error->track) {
-                $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
-                $tracker->notify($e);
-            }
-
-            if (config('app.debug')) {
-                throw new \Exception($e->getMessage(), 0, $e);
-            }
-
-            $lastError = error_get_last();
-
-            @session_start();
-            $_SESSION['last_error_message'] = $e->getMessage();
-            $_SESSION['last_php_error_message'] = $lastError['message'];
-            $_SESSION['last_php_error_line'] = $lastError['line'];
-            $_SESSION['last_php_error_file'] = $lastError['file'];
-            @session_write_close();
-
-            error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
-
-            die("<script>document.location.href = '/module/Error/unexpected';</script>");
+            throw new HttpResponseException(
+                new RedirectResponse($_SERVER['HTTP_REFERER'])
+            );
         }
-    }
 
-    function setAlertaProgramacao($string)
-    {
-        if (is_string($string) && $string) {
-            $this->prog_alert = $string;
+        $view = 'legacy.body';
+
+        if (!$this->renderMenu || !$this->renderMenuSuspenso) {
+            $view = 'legacy.blank';
         }
-    }
 
-    protected function checkUserExpirations()
-    {
-        $user = Portabilis_Utils_User::load('current_user');
-        $uri = $_SERVER['REQUEST_URI'];
-        $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
-
-        if ($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1')
-            header("Location: /intranet/logof.php");
-
-        elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
-            header("Location: /module/Usuario/AlterarSenha");
+        echo view($view, ['body' => $saida_geral])->render();
     }
 
     protected function db()

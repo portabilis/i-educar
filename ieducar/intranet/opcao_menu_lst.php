@@ -42,9 +42,7 @@ class indice extends clsListagem
 {
     function Gerar()
     {
-        @session_start();
-        $idpes = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $idpes = $this->pessoa_logada;
         
         $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet",false );
 

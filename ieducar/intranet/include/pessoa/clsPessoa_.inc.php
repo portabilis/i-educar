@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Session;
+
 require_once('include/clsBanco.inc.php');
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
@@ -25,16 +28,14 @@ class clsPessoa_
 
     public function __construct($int_idpes = false, $str_nome = false, $int_idpes_cad =false, $str_url = false, $int_tipo = false, $int_idpes_rev =false, $str_data_rev = false, $str_email = false)
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'] ?? null;
-        session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->idpes = $int_idpes;
         $this->nome = $str_nome;
-        $this->idpes_cad = $int_idpes_cad ? $int_idpes_cad : ($_SESSION['id_pessoa'] ?? null);
+        $this->idpes_cad = $int_idpes_cad ? $int_idpes_cad : Session::get('id_pessoa');
         $this->url = $str_url;
         $this->tipo = $int_tipo;
-        $this->idpes_rev = is_numeric($int_idpes_rev) ? $int_idpes_rev : ($_SESSION['id_pessoa'] ?? null);
+        $this->idpes_rev = is_numeric($int_idpes_rev) ? $int_idpes_rev : Session::get('id_pessoa');
         $this->data_rev = $str_data_rev;
         $this->email = $str_email;
     }
@@ -205,12 +206,12 @@ class clsPessoa_
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $nome = strtolower($tupla['nome']);
+            $nome = mb_strtolower($tupla['nome']);
             $arrayNome = explode(' ', $nome);
             $nome ='';
             foreach ($arrayNome as $parte) {
                 if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
-                    $nome .= strtoupper(substr($parte, 0, 1)).substr($parte, 1).' ';
+                    $nome .= mb_strtoupper(mb_substr($parte, 0, 1)).mb_substr($parte, 1).' ';
                 } else {
                     $nome .= $parte.' ';
                 }
@@ -296,15 +297,15 @@ class clsPessoa_
             $db->Consulta("SELECT idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, situacao, origem_gravacao, email FROM cadastro.pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                $nome = strtolower($tupla['nome']);
+                $nome = mb_strtolower($tupla['nome']);
                 $arrayNome = explode(' ', $nome);
                 $arrNovoNome = [];
                 foreach ($arrayNome as $parte) {
                     if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
                         if ($parte != 's.a' && $parte != 'ltda') {
-                            $arrNovoNome[] = strtoupper(substr($parte, 0, 1)).substr($parte, 1);
+                            $arrNovoNome[] = mb_strtoupper(mb_substr($parte, 0, 1)).mb_substr($parte, 1);
                         } else {
-                            $arrNovoNome[] = strtoupper($parte);
+                            $arrNovoNome[] = mb_strtoupper($parte);
                         }
                     } else {
                         $arrNovoNome[] = $parte;

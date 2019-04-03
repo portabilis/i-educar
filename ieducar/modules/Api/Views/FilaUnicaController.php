@@ -41,12 +41,14 @@ class FilaUnicaController extends ApiCoreController
                        endereco_pessoa.bloco,
                        endereco_pessoa.andar,
                        endereco_pessoa.apartamento,
-                       endereco_pessoa.observacoes
-                  FROM cadastro.pessoa
-                 INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-                 INNER JOIN cadastro.documento ON (documento.idpes = pessoa.idpes)
-                  LEFT JOIN pmieducar.aluno ON (pessoa.idpes = aluno.ref_idpes)
-                  LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
+                       endereco_pessoa.observacoes,
+                       fisica.sexo,
+                       fisica.ideciv
+                  FROM pmieducar.aluno
+                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                 INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
+                 INNER JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
+                  LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = aluno.ref_idpes)
                   LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
                   LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
                   LEFT JOIN urbano.tipo_logradouro ON (tipo_logradouro.idtlog = logradouro.idtlog)
@@ -84,7 +86,9 @@ class FilaUnicaController extends ApiCoreController
             'bloco',
             'andar',
             'apartamento',
-            'observacoes'
+            'observacoes',
+            'sexo',
+            'ideciv'
         ];
 
         $aluno = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
@@ -159,6 +163,9 @@ class FilaUnicaController extends ApiCoreController
             $sql = "SELECT pessoa.idpes,
                            vinculo_familiar,
                            pessoa.nome,
+                           fisica.sexo,
+                           fisica.ideciv,
+                           to_char(fisica.data_nasc, 'dd/mm/yyyy') AS data_nasc,
                            fisica.cpf,
                            fisica.tipo_trabalho,
                            fisica.local_trabalho,
@@ -183,6 +190,9 @@ class FilaUnicaController extends ApiCoreController
                 'idpes',
                 'vinculo_familiar',
                 'nome',
+                'sexo',
+                'data_nasc',
+                'ideciv',
                 'cpf',
                 'tipo_trabalho',
                 'local_trabalho',

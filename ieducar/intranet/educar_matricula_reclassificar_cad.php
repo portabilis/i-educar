@@ -79,9 +79,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_matricula=$_GET["ref_cod_matricula"];
         $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -166,9 +164,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
@@ -226,11 +222,14 @@ class indice extends clsCadastro
                 echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
             }
 
-            $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0]->get('id');
+            $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
 
-            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+            if (!is_null($notaAluno)) {
+                $notaAlunoId = $notaAluno->get('id');
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+            }
 
             //window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
             echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');

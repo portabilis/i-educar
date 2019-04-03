@@ -1665,7 +1665,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $campo_valor = $componente[3][$adicionador_indice];
             } else {
                 $adicionador_complemento_campo = '';
-                $campo_valor = $componente[3];
+                $campo_valor = $componente[3] ?? null;
             }
 
             $nome .= $adicionador_complemento_campo;

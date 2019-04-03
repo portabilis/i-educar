@@ -121,10 +121,6 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $db = new clsBanco();
         $objPessoa = new clsPessoaFisica();
 
@@ -177,10 +173,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $campos = "";
         $values = "";
         $db = new clsBanco();
@@ -235,10 +227,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $set = "";
         $db = new clsBanco();
 

@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -87,9 +89,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->cod_servidor = $_GET['ref_cod_servidor'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
@@ -109,9 +109,7 @@ class indice extends clsCadastro
       }
     }
 
-    @session_start();
-    $this->cursos_disciplina = $_SESSION['cursos_disciplina'];
-    @session_write_close();
+    $this->cursos_disciplina = Session::get('cursos_disciplina');
 
     if (!$this->cursos_disciplina) {
       $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
@@ -212,8 +210,7 @@ class indice extends clsCadastro
   {
     $cursos_disciplina = array();
 
-    @session_start();
-    $curso_servidor = $_SESSION['cursos_servidor'];
+    $curso_servidor = Session::get('cursos_servidor');
 
     if ($this->ref_cod_curso) {
       for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
@@ -236,10 +233,13 @@ class indice extends clsCadastro
       }
     }
 
-    $_SESSION['cursos_disciplina'] = $cursos_disciplina;
-    $_SESSION['cod_servidor']      = $this->cod_servidor;
-    $_SESSION['cursos_servidor']   = $curso_servidor;
-    @session_write_close();
+    Session::put([
+        'cursos_disciplina' => $cursos_disciplina,
+        'cod_servidor' => $this->cod_servidor,
+        'cursos_servidor' => $curso_servidor,
+    ]);
+    Session::save();
+    Session::start();
 
     echo "<script>parent.fechaExpansivel('{$_GET['div']}');</script>";
     die;

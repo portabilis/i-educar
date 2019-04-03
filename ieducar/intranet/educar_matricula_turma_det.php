@@ -87,10 +87,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Matricula Turma - Detalhe';
 
     foreach ($_POST as $key =>$value) {
@@ -264,8 +260,9 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('<b>Enturmação atual</b>', $selectEnturmacoes));
     }
 
-    if(!$this->possuiEnturmacaoTurmaDestino)
-      $this->addDetalhe(array('Data da enturmação', '<input onkeypress="formataData(this,event);" value="" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));
+    if(!$this->possuiEnturmacaoTurmaDestino) {
+        $this->addDetalhe(array('Data da enturmação', '<input onkeypress="formataData(this,event);" value="" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));
+    }
 
     $this->addDetalhe(array(
       '-',
@@ -329,7 +326,7 @@ class indice extends clsDetalhe
           }
 
           %s
-
+          
           document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
           document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
           document.formcadastro.data_enturmacao.value = document.getElementById("data_enturmacao").value;

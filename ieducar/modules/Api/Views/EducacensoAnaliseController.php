@@ -1,5 +1,16 @@
 <?php
 
+use App\Models\Educacenso\Registro00;
+use App\Models\School;
+use App\Repositories\EducacensoRepository;
+use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
+use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
+use iEducar\Modules\Educacenso\Validator\Telefone;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
@@ -10,68 +21,28 @@ require_once 'lib/App/Model/Educacenso.php';
  */
 class EducacensoAnaliseController extends ApiCoreController
 {
+    private function schoolIsActive()
+    {
+        $schoolId = $this->getRequest()->school_id;
+        $school = School::findOrFail($schoolId);
+        $active = !in_array($school->situacao_funcionamento, ['2', '3']);
+
+        return [
+            'active' => $active
+        ];
+    }
+
     protected function analisaEducacensoRegistro00()
     {
-        $escola = $this->getRequest()->escola;
+        $escolaId = $this->getRequest()->escola;
         $ano    = $this->getRequest()->ano;
 
-        $sql = 'SELECT educacenso_cod_escola.cod_escola_inep AS inep,
-                   escola.cod_escola AS cod_escola,
-                   fisica_gestor.cpf AS cpf_gestor_escolar,
-                   pessoa_gestor.nome AS nome_gestor_escolar,
-                   escola.cargo_gestor AS cargo_gestor_escolar,
-                   escola.email_gestor AS email_gestor_escolar,
-                   pessoa_gestor.idpes AS idpes_gestor_escolar,
-                   escola.dependencia_administrativa,
-                   escola.situacao_funcionamento,
-                   escola.categoria_escola_privada,
-                   escola.conveniada_com_poder_publico,
-                   escola.mantenedora_escola_privada[1],
-                   escola.cnpj_mantenedora_principal,
-                   EXTRACT(YEAR FROM modulo1.data_inicio) AS data_inicio,
-                   EXTRACT(YEAR FROM modulo2.data_fim) AS data_fim,
-                   escola.latitude AS latitude,
-                   escola.longitude AS longitude,
-                   municipio.idmun AS id_municipio,
-                   municipio.cod_ibge AS inep_municipio,
-                   uf.cod_ibge AS inep_uf,
-                   uf.sigla_uf AS sigla_uf,
-                   distrito.iddis AS id_distrito,
-                   distrito.cod_ibge AS inep_distrito,
-                   juridica.fantasia AS nome_escola,
-                   instituicao.orgao_regional AS orgao_regional,
-                   instituicao.cod_instituicao AS cod_instituicao
-              FROM pmieducar.escola
-              JOIN pmieducar.instituicao
-              ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-             INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
-             INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON (modulo1.ref_ref_cod_escola = escola.cod_escola
-                                                                AND modulo1.ref_ano = escola_ano_letivo.ano
-                                                                AND modulo1.sequencial = 1)
-             INNER JOIN pmieducar.ano_letivo_modulo modulo2 ON (modulo2.ref_ref_cod_escola = escola.cod_escola
-                                                                AND modulo2.ref_ano = escola_ano_letivo.ano
-                                                                AND modulo2.sequencial = (SELECT MAX(sequencial)
-                                                                                            FROM pmieducar.ano_letivo_modulo
-                                                                                           WHERE ref_ano = escola_ano_letivo.ano
-                                                                                             AND ref_ref_cod_escola = escola.cod_escola))
-              LEFT JOIN cadastro.pessoa pessoa_gestor ON (pessoa_gestor.idpes = escola.ref_idpes_gestor)
-              LEFT JOIN cadastro.fisica fisica_gestor ON (fisica_gestor.idpes = escola.ref_idpes_gestor)
-              LEFT JOIN modules.educacenso_cod_escola ON (educacenso_cod_escola.cod_escola = escola.cod_escola)
-              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = escola.ref_idpes)
-              LEFT JOIN cadastro.endereco_externo ON (endereco_externo.idpes = escola.ref_idpes)
-              LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(endereco_pessoa.idbai, (SELECT b.idbai
-                                                                                            FROM public.bairro b
-                                                                                           INNER JOIN cadastro.endereco_externo ee ON (UPPER(ee.bairro) = UPPER(b.nome))
-                                                                                           WHERE ee.idpes = escola.ref_idpes
-                                                                                           LIMIT 1)))
-              LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
-              LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, endereco_externo.sigla_uf))
-              LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
-             WHERE escola.cod_escola = $1
-               AND escola_ano_letivo.ano = $2';
+        $educacensoRepository = new EducacensoRepository();
+        $registro00Model = new Registro00();
+        $registro00 = new Registro00Data($educacensoRepository, $registro00Model);
 
-        $escola = $this->fetchPreparedQuery($sql, [$escola, $ano]);
+        /** @var Registro00 $escola */
+        $escola = $registro00->getData($escolaId, $ano);
 
         if (empty($escola)) {
             $this->messenger->append("O ano letivo {$ano} não foi definido.");
@@ -81,120 +52,174 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        $escola = $escola[0];
-        $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($escola['nome_escola']));
-        $codEscola = $escola['cod_escola'];
-        $idpesGestor = $escola['idpes_gestor_escolar'];
-        $codInstituicao = $escola['cod_instituicao'];
-        $codMunicipio = $escola['id_municipio'];
-        $siglaUF = $escola['sigla_uf'];
-        $codDistrito = $escola['id_distrito'];
+        $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($escola->nome));
+        $codEscola = $escola->idEscola;
+
+        $codInstituicao = $escola->idInstituicao;
+        $codDistrito = $escola->idDistrito;
         $anoAtual = $ano;
         $anoAnterior = $anoAtual-1;
         $anoPosterior = $anoAtual+1;
 
         $mensagem = [];
 
-        if (!$escola['inep']) {
+        if (strlen($escola->nome) > 100) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Insira no máximo 100 letras no nome da escola;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Escola)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (strlen($escola->nome) < 4) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Insira no mínimo 4 letras no nome da escola;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Escola)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (strlen($escola->logradouro) > 100) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Insira no máximo 100 letras no nome do logradouro da escola;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Logradouro)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (strlen($escola->bairro) > 50) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Insira no máximo 50 letras no nome do bairro da escola;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Bairro)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        $telefoneValidator = new Telefone('Telefone 1', $escola->telefone);
+        if ($escola->telefone && !$telefoneValidator->isValid()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. <br>" . implode('<br>', $telefoneValidator->getMessage()) . ';',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Telefone 1)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        $telefoneValidator = new Telefone('Telefone 2', $escola->telefoneOutro);
+        if ($escola->telefoneOutro && !$telefoneValidator->isValid()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. <br>" . implode('<br>', $telefoneValidator->getMessage()) . ';',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Telefone 2)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->ddd && !$escola->telefone) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Insira o Telefone 1 quando o campo: DDD estiver preenchido;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: (DDD) / Telefone 1)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (strlen($escola->email) > 50) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Insira no máximo 50 letras ou símbolos no e-mail da escola;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: E-mail)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!$escola->zonaLocalizacao) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se a zona/localização da escola foi informada;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Zona localização)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->localizacaoDiferenciada == LocalizacaoDiferenciadaEscola::AREA_ASSENTAMENTO && $escola->zonaLocalizacao == App_Model_ZonaLocalizacao::URBANA) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a zona/localização da escola é urbana, portanto a localização diferenciada da escola não pode ser área de assentamento;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Localização diferenciada da escola)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!$escola->orgaoVinculado && $escola->dependenciaAdministrativa != DependenciaAdministrativaEscola::PRIVADA) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se órgão que a escola pública está vinculada foi informado;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Órgão que a escola pública está vinculada)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        $cnpjMantenedoraPrivada = new CnpjMantenedoraPrivada($escola);
+        if (!$cnpjMantenedoraPrivada->isValid()) {
+            $mensagem[] = [
+                'text' => $cnpjMantenedoraPrivada->getMessage(),
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!$escola->codigoInep) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados gerais > Campo: Código INEP)',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Código INEP)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
         }
 
-        if (!$escola['nome_gestor_escolar']) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar foi informado(a).",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados gerais > Campo: Gestor escolar)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if (!$escola['cpf_gestor_escolar'] && $escola['nome_gestor_escolar']) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar possui o CPF cadastrado.",
-                'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: CPF)',
-                'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesGestor}",
-                'fail' => true
-            ];
-        }
-
-        if (!$escola['email_gestor_escolar'] || empty($escola['email_gestor_escolar'])) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o e-mail do(a) gestor(a) escolar foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados gerais > Campo: E-mail do gestor escolar)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if (!$escola['cargo_gestor_escolar']) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados gerais > Campo: Cargo do gestor escolar)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if ($escola['data_inicio'] != $anoAtual && $escola['data_inicio'] != $anoAnterior) {
+        if ($escola->anoInicioAnoLetivo != $anoAtual && $escola->anoInicioAnoLetivo != $anoAnterior) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data inicial da primeira etapa foi cadastrada corretamente.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar ano letivo > Ok > Campo: Data inicial)',
+                'path' => '(Escola > Cadastros > Escolas > Editar ano letivo > Ok > Seção: Etapas do ano letivo)',
                 'linkPath' => "/intranet/educar_ano_letivo_modulo_cad.php?ref_cod_escola={$codEscola}&ano={$anoAtual}",
                 'fail' => true
             ];
         }
 
-        if ($escola['data_fim'] != $anoAtual && $escola['data_fim'] != $anoPosterior) {
+        if ($escola->anoFimAnoLetivo != $anoAtual && $escola->anoFimAnoLetivo != $anoPosterior) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data final da última etapa foi cadastrada corretamente.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar ano letivo > Ok > Campo: Data final)',
+                'path' => '(Escola > Cadastros > Escolas > Editar ano letivo > Ok > Seção: Etapas do ano letivo)',
                 'linkPath' => "/intranet/educar_ano_letivo_modulo_cad.php?ref_cod_escola={$codEscola}&ano={$anoAtual}",
                 'fail' => true
             ];
         }
 
-        if ((!$escola['latitude']) && $escola['longitude']) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a longitude foi informada, portanto obrigatoriamente a latitude também deve ser informada.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados gerais > Campo: Latitude)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if ((!$escola['longitude']) && $escola['latitude']) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a latitude foi informada, portanto obrigatoriamente a longitude também deve ser informada.",
-                'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados gerais > Campo: Longitude)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                'fail' => true
-            ];
-        }
-
-        if (!$escola['inep_uf']) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código da UF informada, foi cadastrado conforme a 'Tabela de UF'.",
-                'path' => '(Endereçamento > Cadastros > Estados > Editar > Campo: Código INEP)',
-                'linkPath' => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}",
-                'fail' => true
-            ];
-        }
-
-        if (!$escola['inep_municipio']) {
+        if (!$escola->codigoIbgeMunicipio) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código do município informado, foi cadastrado conforme a 'Tabela de Municípios'.",
-                'path' => '(Endereçamento > Cadastros > Municípios > Editar > Campo: Código INEP)',
-                'linkPath' => "/intranet/public_municipio_cad.php?idmun={$codMunicipio}",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Cidade)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
         }
 
-        if (!$escola['inep_distrito']) {
+        if (!$escola->codigoIbgeDistrito) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código do distrito informado, foi cadastrado conforme a 'Tabela de Distritos'.",
                 'path' => '(Endereçamento > Cadastros > Distritos > Editar > Campo: Código INEP)',
@@ -203,47 +228,38 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola['orgao_regional']) {
+        if (!$escola->orgaoRegional) {
             $mensagem[] = [
                 'text' => "<span class='avisos-educacenso'><b>Aviso!</b> Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.</span>",
-                'path' => '(Escola > Cadastros > Instituição > Cadastrar > Editar > Campo: Código do órgão regional de ensino)',
+                'path' => '(Escola > Cadastros > Instituição > Editar > Aba: Dados gerais > Campo: Código do órgão regional de ensino)',
                 'linkPath' => "/intranet/educar_instituicao_cad.php?cod_instituicao={$codInstituicao}",
                 'fail' => false
             ];
         }
 
-        if ($escola['dependencia_administrativa'] == 4 && $escola['situacao_funcionamento'] == 1) {
-            if (!$escola['categoria_escola_privada']) {
+        if ($escola->dependenciaAdministrativa == MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS && $escola->situacaoFuncionamento == Regulamentacao::SIM) {
+            if (!$escola->categoriaEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual a categoria desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Categoria da escola privada)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Categoria da escola privada)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
             }
 
-            if (!$escola['conveniada_com_poder_publico']) {
+            if (!$escola->conveniadaPoderPublico) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de convênio desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Conveniada com o poder público)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Conveniada com poder público)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
             }
 
-            if (!$escola['mantenedora_escola_privada']) {
+            if (!$escola->mantenedoraEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de mantenedora desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: Mantenedora da escola privada)',
-                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                    'fail' => true
-                ];
-            }
-
-            if (!$escola['cnpj_mantenedora_principal']) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar o CNPJ da mantenedora principal desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Cadastrar > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Mantenedora da escola privada)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -2001,6 +2017,8 @@ class EducacensoAnaliseController extends ApiCoreController
             $this->appendResponse($this->analisaEducacensoRegistro90());
         } elseif ($this->isRequestFor('get', 'registro-91')) {
             $this->appendResponse($this->analisaEducacensoRegistro91());
+        }  elseif ($this->isRequestFor('get', 'school-is-active')) {
+            $this->appendResponse($this->schoolIsActive());
         } else {
             $this->notImplementedOperationError();
         }
