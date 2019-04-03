@@ -15,7 +15,8 @@ class CreateSchoolManagers extends Migration
     {
         Schema::create('school_managers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('school_id')->nullable()->unsigned();
+            $table->integer('individual_id')->unsigned();
+            $table->integer('school_id')->unsigned();
             $table->integer('role_id')->nullable()->unsigned();
             $table->integer('access_criteria_id')->nullable()->unsigned();
             $table->string('access_criteria_description')->nullable();
@@ -23,10 +24,10 @@ class CreateSchoolManagers extends Migration
             $table->boolean('chief')->default(false);
             $table->timestamps();
 
+            $table->foreign('school_id')->references('cod_escola')->on('pmieducar.escola');
             $table->foreign('role_id')->references('id')->on('manager_roles');
             $table->foreign('access_criteria_id')->references('id')->on('manager_access_criterias');
             $table->foreign('link_type_id')->references('id')->on('manager_link_types');
-            $table->foreign('school_id')->references('cod_escola')->on('pmieducar.escola');
         });
     }
 
