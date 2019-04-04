@@ -14,3 +14,14 @@ $factory->define(LegacyStageType::class, function (Faker $faker) {
         'num_etapas' => $faker->numberBetween(1, 4),
     ];
 });
+
+$factory->state(LegacyStageType::class, 'unique', function () {
+
+    $stageType = LegacyStageType::query()->first();
+
+    if (empty($stageType)) {
+        $stageType = factory(LegacyStageType::class)->create();
+    }
+
+    return $stageType->toArray();
+});
