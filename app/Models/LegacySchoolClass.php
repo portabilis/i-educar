@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\DB;
  * @property LegacyCourse       $course
  * @property LegacyLevel        $grade
  * @property LegacySchool       $school
+ * @property LegacySchoolGrade  $schoolGrade
  * @property LegacyEnrollment[] $enrollments
  */
 class LegacySchoolClass extends Model
@@ -235,21 +236,30 @@ class LegacySchoolClass extends Model
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function schoolGrade()
+    {
+        $belongsTo = $this->belongsTo(LegacySchoolGrade::class, 'ref_ref_cod_escola', 'ref_cod_escola')
+            ->where('ref_cod_serie', $this->grade_id);
+
+        return $belongsTo;
+    }
+
+    /**
      * Indica se bloqueia enturmações quando não houver vagas.
      *
      * @return bool
      */
     public function denyEnrollmentsWhenNoVacancy()
     {
-        // TODO
-        // Transformar em uma relação.
-
-        $schoolGrade = DB::table('pmieducar.escola_serie')
-            ->where('ref_cod_escola', $this->school_id)
-            ->where('ref_cod_serie', $this->grade_id)
-            ->first();
+        $schoolGrade = $this->schoolGrade;
 
         if (empty($schoolGrade)) {
+            return true;
+        }
+
+        if (empty($schoolGrade->bloquear_enturmacao_sem_vagas)) {
             return true;
         }
 
