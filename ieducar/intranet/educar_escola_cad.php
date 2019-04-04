@@ -192,6 +192,12 @@ class indice extends clsCadastro
     public $com_cnpj;
     public $isEnderecoExterno = 0;
     public $esfera_administrativa;
+    public $managers_role_id;
+    public $managers_individual_id;
+    public $managers_access_criteria_id;
+    public $managers_access_criteria_description;
+    public $managers_link_type_id;
+    public $managers_chief;
 
     public function Inicializar()
     {
@@ -1602,6 +1608,8 @@ class indice extends clsCadastro
                                     return false;
                                 }
                             }
+
+                            $this->storeManagers($cod_escola);
                         }
                         //-----------------------FIM CADASTRA CURSO------------------------//
                     } else {
@@ -1752,8 +1760,13 @@ class indice extends clsCadastro
                                 return false;
                             }
                         }
+
+                        $this->storeManagers($cod_escola);
                     }
                     //-----------------------FIM CADASTRA CURSO------------------------//
+
+
+
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
                     die();
@@ -2125,6 +2138,9 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+
+                        $this->storeManagers($this->cod_escola);
+
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
                         header("Location: educar_escola_lst.php");
@@ -2157,6 +2173,9 @@ class indice extends clsCadastro
                             }
                         }
                     }
+
+                    $this->storeManagers($this->cod_escola);
+
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -2474,7 +2493,7 @@ class indice extends clsCadastro
 
         $rows = [];
         foreach ($managers as $manager) {
-            $rows = $this->makeRowManagerTable($manager);
+            $rows[] = $this->makeRowManagerTable($manager);
         }
 
         $this->campoTabelaInicio('gestores', 'Gestores',
@@ -2486,36 +2505,30 @@ class indice extends clsCadastro
                 'Tipo de vínculo',
                 'Gestor(a) principal'
             ],
-            [
-                $rows
-            ]
+            $rows
         );
 
         $helperOptions = ['objectName' => 'managers_individual'];
-        $this->inputsHelper()->simpleSearchPessoa('nome', ['size' => 50, 'required' => false], $helperOptions);
-        $this->campoOculto('managers_individual_id', null);
+        $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
 
         $options = [
                 'resources' => [null => 'Selecione'] + ManagerRole::all()->getKeyValueArray('name'),
-                'size' => 50,
                 'required' => false
             ];
         $this->inputsHelper()->select('managers_role_id', $options);
 
         $options = [
                 'resources' => [null => 'Selecione'] + ManagerAccessCriteria::all()->getKeyValueArray('name'),
-                'size' => 50,
                 'required' => false
             ];
         $this->inputsHelper()->select('managers_access_criteria_id', $options);
 
-        $options = ['size' => 50, 'required' => false];
+        $options = ['required' => false];
         $this->inputsHelper()->text('managers_access_criteria_description', $options);
 
         $options =
             [
                 'resources' => [null => 'Selecione'] + ManagerLinkType::all()->getKeyValueArray('name'),
-                'size' => 50,
                 'required' => false
             ];
         $this->inputsHelper()->select('managers_link_type_id', $options);
@@ -2527,7 +2540,6 @@ class indice extends clsCadastro
         $options =
             [
                 'resources' => $resources,
-                'size' => 50,
                 'required' => false
             ];
         $this->inputsHelper()->select('managers_chief', $options);
@@ -2550,6 +2562,24 @@ class indice extends clsCadastro
             (int)$schoolManager->chief,
             $schoolManager->individual_id,
         ];
+    }
+
+    protected function storeManagers($schoolId)
+    {
+        /** @var SchoolService $schoolService */
+        $schoolService = app(SchoolService::class);
+        $schoolService->deleteAllManagers($schoolId);
+        foreach($this->managers_individual_id as $key => $individualId) {
+            $schoolService->storeManager(
+                $individualId,
+                $schoolId,
+                $this->managers_role_id[$key],
+                $this->managers_access_criteria_id[$key],
+                $this->managers_access_criteria_description[$key],
+                $this->managers_link_type_id[$key],
+                $this->managers_chief[$key]
+            );
+        }
     }
 }
 
