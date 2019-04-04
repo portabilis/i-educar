@@ -34,14 +34,33 @@ class RegraController extends ApiCoreController
         if ($this->canGetTabelasDeArredondamento()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
 
-            $sql = 'SELECT ta.id, ta.nome, ta.tipo_nota, tav.nome as rotulo,
-                        tav.descricao, tav.valor_maximo, tav.casa_decimal_exata, tav.acao, ta.updated_at
+            $params = [$instituicaoId];
+            $modified = $this->getRequest()->modified ?: null;
+
+            if ($modified) {
+                $params[] = $modified;
+                $modified = 'AND updated_at >= $2';
+            }
+
+            $sql = "
+                SELECT 
+                    ta.id, 
+                    ta.nome, 
+                    ta.tipo_nota, 
+                    tav.nome as rotulo,
+                    tav.descricao, 
+                    tav.valor_maximo, 
+                    tav.casa_decimal_exata, 
+                    tav.acao, 
+                    ta.updated_at
                 FROM modules.tabela_arredondamento ta
                 INNER JOIN modules.tabela_arredondamento_valor tav
-                ON tav.tabela_arredondamento_id = ta.id
-                WHERE ta.instituicao_id = $1';
+                    ON tav.tabela_arredondamento_id = ta.id
+                WHERE ta.instituicao_id = $1
+                {$modified}
+            ";
 
-            $tabelas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
+            $tabelas = $this->fetchPreparedQuery($sql, $params);
 
             $attrs = ['id', 'nome', 'tipo_nota', 'rotulo', 'descricao', 'valor_maximo', 'casa_decimal_exata', 'acao', 'updated_at'];
             $tabelas = Portabilis_Array_Utils::filterSet($tabelas, $attrs);
