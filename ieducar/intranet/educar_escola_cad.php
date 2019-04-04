@@ -13,6 +13,7 @@ use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Validator\Managers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -2261,7 +2262,8 @@ class indice extends clsCadastro
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
-                $this->inepEscolaSedeDiferenteDaEscolaPrincipal();
+                $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
+                $this->validateCensusManagerRules();
     }
 
     protected function validaOcupacaoPredio()
@@ -2598,6 +2600,24 @@ class indice extends clsCadastro
             [
                 'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares'
             ]);
+    }
+
+    protected function validateCensusManagerRules()
+    {
+        $managersValidator = new Managers(
+            $this->managers_individual_id,
+            $this->managers_role_id,
+            $this->managers_access_criteria_id,
+            $this->managers_access_criteria_description,
+            $this->managers_link_type_id,
+            $this->managers_chief,
+            $this->dependencia_administrativa
+        );
+
+        if (!$managersValidator->isValid()) {
+            $this->mensagem = implode('<br>', $managersValidator->getMessage());
+            return false;
+        }
     }
 }
 
