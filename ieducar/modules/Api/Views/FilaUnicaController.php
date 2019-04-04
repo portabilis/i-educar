@@ -173,30 +173,35 @@ class FilaUnicaController extends ApiCoreController
 
         if ($aluno) {
             $sql = "SELECT pessoa.idpes,
-                           vinculo_familiar,
-                           pessoa.nome,
-                           fisica.sexo,
-                           fisica.ideciv,
-                           to_char(fisica.data_nasc, 'dd/mm/yyyy') AS data_nasc,
-                           fisica.cpf,
-                           fisica.tipo_trabalho,
-                           fisica.local_trabalho,
-                           documento.declaracao_trabalho_autonomo,
-                           to_char(fisica.horario_inicial_trabalho, 'HH24:MI') AS horario_inicial_trabalho,
-                           to_char(fisica.horario_final_trabalho, 'HH24:MI') AS horario_final_trabalho,
-                           fpr.ddd AS ddd_telefone,
-                           fpr.fone AS telefone,
-                           fpc.ddd AS ddd_telefone_celular,
-                           fpc.fone AS telefone_celular
-                      FROM pmieducar.responsaveis_aluno
-                     INNER JOIN cadastro.fisica ON (fisica.idpes = responsaveis_aluno.ref_idpes)
-                     INNER JOIN cadastro.pessoa ON (pessoa.idpes = responsaveis_aluno.ref_idpes)
-                      LEFT JOIN cadastro.documento ON (documento.idpes = responsaveis_aluno.ref_idpes)
-                      LEFT JOIN cadastro.fone_pessoa fpr ON (fpr.idpes = responsaveis_aluno.ref_idpes
-                                                             AND fpr.tipo = 1)
-                      LEFT JOIN cadastro.fone_pessoa fpc ON (fpc.idpes = responsaveis_aluno.ref_idpes
-                                                             AND fpc.tipo = 2)
-                     WHERE ref_cod_aluno = {$aluno}";
+                    CASE
+                        WHEN fisica_aluno.idpes_pai = pessoa.idpes THEN '1'
+                        WHEN fisica_aluno.idpes_mae = pessoa.idpes THEN '2'
+                        ELSE '3' END as vinculo_familiar,
+                       pessoa.nome,
+                       fisica.cpf,
+                       fisica.tipo_trabalho,
+                       fisica.local_trabalho,
+                       documento.declaracao_trabalho_autonomo,
+                       to_char(fisica.horario_inicial_trabalho, 'HH24:MI') AS horario_inicial_trabalho,
+                       to_char(fisica.horario_final_trabalho, 'HH24:MI') AS horario_final_trabalho,
+                       fpr.ddd AS ddd_telefone,
+                       fpr.fone AS telefone,
+                       fpc.ddd AS ddd_telefone_celular,
+                       fpc.fone AS telefone_celular
+                  FROM cadastro.fisica
+                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
+                  JOIN cadastro.fisica fisica_aluno
+                    ON pessoa.idpes = fisica_aluno.idpes_pai
+                    OR pessoa.idpes = fisica_aluno.idpes_mae
+                    OR pessoa.idpes = fisica_aluno.idpes_responsavel
+                  JOIN pmieducar.aluno ON (aluno.ref_idpes = fisica_aluno.idpes)
+                  LEFT JOIN cadastro.documento ON (documento.idpes = fisica.idpes)
+                  LEFT JOIN cadastro.fone_pessoa fpr ON (fpr.idpes = fisica.idpes
+                                                         AND fpr.tipo = 1)
+                  LEFT JOIN cadastro.fone_pessoa fpc ON (fpc.idpes = fisica.idpes
+                                                         AND fpc.tipo = 2)
+
+                 WHERE aluno.cod_aluno = {$aluno} ";
 
             $attrs = [
                 'idpes',
@@ -221,35 +226,30 @@ class FilaUnicaController extends ApiCoreController
 
             if (!count($responsaveis)) {
                 $sql = "SELECT pessoa.idpes,
-                        CASE
-                            WHEN fisica_aluno.idpes_pai = pessoa.idpes THEN '1'
-                            WHEN fisica_aluno.idpes_mae = pessoa.idpes THEN '2'
-                            ELSE '3' END as vinculo_familiar,
-                           pessoa.nome,
-                           fisica.cpf,
-                           fisica.tipo_trabalho,
-                           fisica.local_trabalho,
-                           documento.declaracao_trabalho_autonomo,
-                           to_char(fisica.horario_inicial_trabalho, 'HH24:MI') AS horario_inicial_trabalho,
-                           to_char(fisica.horario_final_trabalho, 'HH24:MI') AS horario_final_trabalho,
-                           fpr.ddd AS ddd_telefone,
-                           fpr.fone AS telefone,
-                           fpc.ddd AS ddd_telefone_celular,
-                           fpc.fone AS telefone_celular
-                      FROM cadastro.fisica
-                      INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
-                      JOIN cadastro.fisica fisica_aluno
-                        ON pessoa.idpes = fisica_aluno.idpes_pai
-                        OR pessoa.idpes = fisica_aluno.idpes_mae
-                        OR pessoa.idpes = fisica_aluno.idpes_responsavel
-                      JOIN pmieducar.aluno ON (aluno.ref_idpes = fisica_aluno.idpes)
-                      LEFT JOIN cadastro.documento ON (documento.idpes = fisica.idpes)
-                      LEFT JOIN cadastro.fone_pessoa fpr ON (fpr.idpes = fisica.idpes
-                                                             AND fpr.tipo = 1)
-                      LEFT JOIN cadastro.fone_pessoa fpc ON (fpc.idpes = fisica.idpes
-                                                             AND fpc.tipo = 2)
-
-                     WHERE aluno.cod_aluno = {$aluno} ";
+                               vinculo_familiar,
+                               pessoa.nome,
+                               fisica.sexo,
+                               fisica.ideciv,
+                               to_char(fisica.data_nasc, 'dd/mm/yyyy') AS data_nasc,
+                               fisica.cpf,
+                               fisica.tipo_trabalho,
+                               fisica.local_trabalho,
+                               documento.declaracao_trabalho_autonomo,
+                               to_char(fisica.horario_inicial_trabalho, 'HH24:MI') AS horario_inicial_trabalho,
+                               to_char(fisica.horario_final_trabalho, 'HH24:MI') AS horario_final_trabalho,
+                               fpr.ddd AS ddd_telefone,
+                               fpr.fone AS telefone,
+                               fpc.ddd AS ddd_telefone_celular,
+                               fpc.fone AS telefone_celular
+                          FROM pmieducar.responsaveis_aluno
+                         INNER JOIN cadastro.fisica ON (fisica.idpes = responsaveis_aluno.ref_idpes)
+                         INNER JOIN cadastro.pessoa ON (pessoa.idpes = responsaveis_aluno.ref_idpes)
+                          LEFT JOIN cadastro.documento ON (documento.idpes = responsaveis_aluno.ref_idpes)
+                          LEFT JOIN cadastro.fone_pessoa fpr ON (fpr.idpes = responsaveis_aluno.ref_idpes
+                                                                 AND fpr.tipo = 1)
+                          LEFT JOIN cadastro.fone_pessoa fpc ON (fpc.idpes = responsaveis_aluno.ref_idpes
+                                                                 AND fpc.tipo = 2)
+                         WHERE ref_cod_aluno = {$aluno}";
 
                 $responsaveis = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
             }
