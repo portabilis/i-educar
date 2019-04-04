@@ -2,7 +2,6 @@
 
 namespace iEducar\Modules\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
