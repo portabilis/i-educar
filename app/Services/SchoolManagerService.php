@@ -20,7 +20,10 @@ class SchoolManagerService
      */
     public function deleteAllManagers($schoolId)
     {
-        SchoolManager::whereSchoolId($schoolId)->delete();
+        $managers = SchoolManager::whereSchoolId($schoolId)->get();
+        foreach ($managers as $schoolManager) {
+            $schoolManager->delete();
+        }
     }
 
     /**

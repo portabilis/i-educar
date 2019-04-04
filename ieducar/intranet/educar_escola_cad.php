@@ -2582,9 +2582,9 @@ class indice extends clsCadastro
                 $individualId,
                 $schoolId,
                 $this->managers_role_id[$key],
-                $this->managers_access_criteria_id[$key],
+                $this->managers_access_criteria_id[$key] ?: null,
                 $this->managers_access_criteria_description[$key],
-                $this->managers_link_type_id[$key],
+                $this->managers_link_type_id[$key] ?: null,
                 $this->managers_chief[$key]
             );
         }
