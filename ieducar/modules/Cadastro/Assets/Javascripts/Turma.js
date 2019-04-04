@@ -54,7 +54,6 @@ function mostraAtividadesComplementares(){
   var mostraCampo = $j('#tipo_atendimento').val() == '4';
   $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
-    console.log('mostraCampo');
     $j('#atividades_complementares').removeAttr('disabled');
     $j('#atividades_complementares').trigger('chosen:updated');;
     if (obrigarCamposCenso) {
