@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\SchoolManager;
 
-class SchoolService
+class SchoolManagerService
 {
     /**
      * @param $schoolId
@@ -43,5 +43,10 @@ class SchoolService
         $schoolManager->link_type_id = $linkTypeId;
         $schoolManager->chief = (bool)$isChief;
         $schoolManager->save();
+    }
+
+    public function validateArrayManagers($individualId, $isChief)
+    {
+
     }
 }
