@@ -2618,6 +2618,8 @@ class indice extends clsCadastro
             $this->mensagem = implode('<br>', $managersValidator->getMessage());
             return false;
         }
+
+        return true;
     }
 }
 

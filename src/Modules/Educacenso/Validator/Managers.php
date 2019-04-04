@@ -48,7 +48,7 @@ class Managers implements EducacensoValidator
         }
 
         if ($this->containsEmptyOrIsNull($this->roleArray)) {
-            $this->message[] = 'Você precisa informar o cargo dos um gestores';
+            $this->message[] = 'Você precisa informar o cargo dos gestores';
             $this->valid = false;
         }
 
@@ -91,9 +91,9 @@ class Managers implements EducacensoValidator
 
     private function validateAccessCriteriaDescription($key)
     {
-        if ($this->accessCriteriaArray[$key] == SchoolManagerAccessCriteria::OUTRO && empty($this->accessCriteriaArray[$key])) {
+        if ($this->accessCriteriaArray[$key] == SchoolManagerAccessCriteria::OUTRO && empty($this->accessCriteriaDescriptionArray[$key])) {
             $this->valid = false;
-            $this->message[] = 'Se o citério de acesso ao cargo for <b>Outros</b>, você precisa informar uma especificação';
+            $this->message[] = 'Se o citério de acesso ao cargo do gestor for <b>Outros</b>, você precisa informar uma especificação';
         }
     }
 
@@ -105,7 +105,7 @@ class Managers implements EducacensoValidator
 
         if ($this->roleArray[$key] == SchoolManagerRole::DIRETOR && empty($this->linkTypeArray[$key])) {
             $this->valid = false;
-            $this->message[] = 'O campo <b>Tipo de vínculo</b> precisa ser preenchido';
+            $this->message[] = 'O campo <b>Tipo de vínculo</b> do gestor precisa ser preenchido';
         }
     }
 }
