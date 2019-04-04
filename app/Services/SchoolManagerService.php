@@ -44,9 +44,4 @@ class SchoolManagerService
         $schoolManager->chief = (bool)$isChief;
         $schoolManager->save();
     }
-
-    public function validateArrayManagers($individualId, $isChief)
-    {
-
-    }
 }
