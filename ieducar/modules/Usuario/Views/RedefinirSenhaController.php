@@ -103,7 +103,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
     protected function GerarNovo()
     {
         $this->nome_url_cancelar = 'Entrar';
-        $matricula = $_POST['matricula'];
+        $matricula = $_POST['matricula'] ?? null;
 
         if (empty($matricula) && is_numeric($this->getOption('id_usuario'))) {
             $user      = Portabilis_Utils_User::load($id = $this->getOption('id_usuario'));

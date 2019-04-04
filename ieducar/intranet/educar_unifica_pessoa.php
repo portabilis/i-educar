@@ -40,9 +40,7 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998878, $this->pessoa_logada, 7,
@@ -62,10 +60,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-    $this->pessoa_logada = (int) $_SESSION['id_pessoa'];
-    @session_write_close();
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998878, $this->pessoa_logada, 7,
       'index.php');

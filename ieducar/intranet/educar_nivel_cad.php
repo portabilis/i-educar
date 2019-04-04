@@ -71,9 +71,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->ref_cod_categoria_nivel = $_GET["cod_categoria"];
 
@@ -159,9 +157,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_det.php?cod_categoria_nivel={$this->cod_nivel}",true );
@@ -223,9 +219,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 829, $this->pessoa_logada, 3,  "educar_nivel_lst.php", true );

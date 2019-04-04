@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -90,13 +93,11 @@ class indice extends clsListagem
     var $cpf_responsavel;
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
-        //$_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
-        $_SESSION["campo3"] = $_GET["campo3"] ? $_GET["campo3"] : $_SESSION["campo3"];
-        $_SESSION["campo4"] = $_GET["campo4"] ? $_GET["campo4"] : $_SESSION["campo4"];
-        session_write_close();
+        Session::put('campo1', $_GET["campo1"] ?? Session::get('campo1'));
+        Session::put('campo3', $_GET["campo3"] ?? Session::get('campo3'));
+        Session::put('campo4', $_GET["campo4"] ?? Session::get('campo4'));
+        Session::save();
+        Session::start();
 
         $this->titulo = "Aluno - Listagem";
 
@@ -138,11 +139,11 @@ class indice extends clsListagem
 
                 if($registro["cpf_responsavel"])
                     $registro["cpf_responsavel_"] = int2CPF($registro["cpf_responsavel"]);
-            //addSel1('{$_SESSION['campo3']}','{$registro['nome_aluno']}','{$registro["nome_aluno"]}');
-                    //if($registro["tipo"] == 1)
-                        $script = " onclick=\"addVal1('{$_SESSION['campo3']}','{$registro['cpf_aluno']}'); addVal1('{$_SESSION['campo1']}','{$registro['cod_aluno']}');  addVal1('{$_SESSION['campo4']}','{$registro['cpf_aluno_']}'); fecha();\"";
-                    //elseif($registro["tipo"] == 2)
-                        //$script = " onclick=\"addVal1('{$_SESSION['campo3']}','{$registro['cpf_aluno']}');  addVal1('{$_SESSION['campo2']}','{$registro['cod_aluno']}'); addVal1('{$_SESSION['campo4']}','{$registro['cpf_aluno_']}');  fecha();\"";
+
+                $campo1 = Session::get('campo1');
+                $campo3 = Session::get('campo3');
+                $campo4 = Session::get('campo4');
+                $script = " onclick=\"addVal1('{$campo3}','{$registro['cpf_aluno']}'); addVal1('{$campo1}','{$registro['cod_aluno']}');  addVal1('{$campo4}','{$registro['cpf_aluno_']}'); fecha();\"";
                 $obj_det = "";
                 $obj_cpf_det = "";
                 if($registro["idpes_responsavel"])

@@ -24,9 +24,7 @@ class ViewController extends Core_Controller_Page_ViewController
      */
     public function __construct()
     {
-        @session_start();
-        $pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        // Apenas faz o override do construtor
     }
 
     protected function _preRender()
