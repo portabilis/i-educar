@@ -30,7 +30,6 @@
 
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\ViewErrorBag;
 
 require_once 'include/clsCampos.inc.php';
 

@@ -1415,9 +1415,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validateManagersRules()) {
-            return false;
-        }
+        $this->validateManagersRules();
 
         for ( $i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
@@ -1810,9 +1808,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validateManagersRules()) {
-            return false;
-        }
+        $this->validateManagersRules();
 
         for ( $i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
@@ -2596,15 +2592,12 @@ class indice extends clsCadastro
     {
         request()->validate(
             [
-                'managers_individual_id' => 'max:3',
-                'managers_individual_id' => new SchoolManagerUniqueIndividuals(),
+                'managers_individual_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
                 'managers_chief' => new SchoolManagerAtLeatOneChief(),
             ],
             [
                 'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares'
             ]);
-
-        return true;
     }
 }
 
