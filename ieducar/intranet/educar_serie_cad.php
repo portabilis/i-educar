@@ -58,9 +58,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_serie=$_GET['cod_serie'];
 
@@ -263,9 +261,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -317,9 +313,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -370,9 +364,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPmieducarSerie(
             $this->cod_serie,

@@ -48,9 +48,7 @@ class indice extends clsListagem
     function Gerar()
     {
 
-        @session_start();
-        $this->pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->pessoa = $this->pessoa_logada;
 
         $this->titulo = "Agendas que eu posso editar";
         

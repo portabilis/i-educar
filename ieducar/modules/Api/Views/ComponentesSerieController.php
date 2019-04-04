@@ -30,7 +30,13 @@ class ComponentesSerieController extends ApiCoreController
         $componentesInseridos = $updateInfo['insert'];
         $componentesExcluidos = $updateInfo['delete'];
 
-        if ($obj->atualizaComponentesDaSerie()) {
+        try {
+            $valido = $this->validaAtualizacao($serieId, $updateInfo);
+        } catch (\Exception $e) {
+            return ['msgErro' => $e->getMessage()];
+        }
+
+        if ($valido && $obj->atualizaComponentesDaSerie()) {
             if ($componentesExcluidos) {
                 $this->atualizaExclusoesDeComponentes($serieId, $componentesExcluidos);
             }
@@ -43,6 +49,98 @@ class ComponentesSerieController extends ApiCoreController
         }
 
         return ['msgErro' => 'Erro ao alterar componentes da série.'];
+    }
+
+    protected function validaAtualizacao($serieId, $updateInfo)
+    {
+        $erros = [];
+
+        if ($updateInfo['delete']) {
+            foreach ($updateInfo['delete'] as $componenteId) {
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                    SELECT COUNT(cct.*), cc.nome
+                    FROM modules.componente_curricular_turma cct
+                    INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                    WHERE TRUE
+                        AND cct.componente_curricular_id = $1
+                        AND cct.ano_escolar_id = $2
+                    GROUP BY cc.nome
+                ', ['params' => [
+                    $componenteId,
+                    $serieId
+                ]]);
+
+                $count = (int) $info[0]['count'] ?? 0;
+
+                if ($count > 0) {
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
+                }
+
+                //...
+
+                $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                    SELECT COUNT(ncc.*), cc.nome
+                    FROM modules.nota_componente_curricular ncc
+                    INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
+                    INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
+                    INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
+                    WHERE TRUE
+                        AND ncc.componente_curricular_id = $1
+                        AND m.ref_ref_cod_serie = $2
+                    GROUP BY cc.nome
+                ', ['params' => [
+                    $componenteId,
+                    $serieId
+                ]]);
+
+                $count = (int) $info[0]['count'] ?? 0;
+
+                if ($count > 0) {
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas lançadas para este componente nesta série.', $info[0]['nome']);
+                }
+            }
+        }
+
+        if ($updateInfo['update']) {
+            foreach ($updateInfo['update'] as $update) {
+                if (empty($update['anos_letivos_removidos'])) {
+                    continue;
+                }
+
+                foreach ($update['anos_letivos_removidos'] as $ano) {
+                    $info = Portabilis_Utils_Database::fetchPreparedQuery('
+                        SELECT COUNT(ncc.*), cc.nome
+                        FROM modules.nota_componente_curricular ncc
+                        INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
+                        INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
+                        INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
+                        WHERE TRUE
+                            AND ncc.componente_curricular_id = $1
+                            AND m.ref_ref_cod_serie = $2
+                            AND m.ano = $3
+                        GROUP BY cc.nome
+                    ', ['params' => [
+                        $update['id'],
+                        $serieId,
+                        $ano
+                    ]]);
+
+                    $count = (int) $info[0]['count'] ?? 0;
+
+                    if ($count > 0) {
+                        $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas lançadas para este componente nesta série e ano.', $ano, $info[0]['nome']);
+                    }
+                }
+            }
+        }
+
+        if ($erros) {
+            $errosDisplay = join("\n", $erros);
+
+            throw new \Exception($errosDisplay);
+        }
+
+        return true;
     }
 
     public function atualizaEscolasSerieDisciplina()

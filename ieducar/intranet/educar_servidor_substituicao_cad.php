@@ -88,10 +88,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
     $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
@@ -207,10 +203,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $professor  = isset($_POST['professor']) ? strtolower($_POST['professor']) : 'FALSE';
     $substituto = isset($_POST['ref_cod_servidor_todos']) ? $_POST['ref_cod_servidor_todos'] : NULL;
 

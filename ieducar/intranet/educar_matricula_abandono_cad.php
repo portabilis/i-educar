@@ -67,9 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_matricula=$_GET["ref_cod_matricula"];
         $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
