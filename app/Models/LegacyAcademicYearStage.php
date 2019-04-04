@@ -19,6 +19,14 @@ class LegacyAcademicYearStage extends Model
     /**
      * @var array
      */
+    protected $dates = [
+        'data_inicio',
+        'data_fim',
+    ];
+
+    /**
+     * @var array
+     */
     protected $fillable = [
         'ref_ano',
         'ref_ref_cod_escola',

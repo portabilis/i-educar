@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
 
 /**
  * LegacySchoolClass
@@ -124,60 +123,32 @@ class LegacySchoolClass extends Model
         return $vacancies > 0 ? $vacancies : 0;
     }
 
-    /**
-     * @return string
-     *
-     * @throws \Exception
-     */
-    public function getBeginAcademicYearAttribute()
+    public function stages()
     {
-        // TODO
-        // Transformar em uma relação.
-
         if ($this->course->is_standard_calendar) {
-            $stage = DB::table('pmieducar.ano_letivo_modulo')
+            return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
                 ->where('ref_ano', $this->year)
-                ->where('ref_ref_cod_escola', $this->school_id)
-                ->orderBy('sequencial')
-                ->first();
-
-            return new DateTime($stage->data_inicio);
+                ->orderBy('sequencial');
         }
 
-        $stage = DB::table('pmieducar.turma_modulo')
-            ->where('ref_cod_turma', $this->id)
-            ->orderBy('sequencial')
-            ->first();
-
-        return new DateTime($stage->data_inicio);
+        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma')
+            ->orderBy('sequencial');
     }
 
     /**
      * @return string
-     *
-     * @throws \Exception
+     */
+    public function getBeginAcademicYearAttribute()
+    {
+        return $this->stages()->first()->data_inicio;
+    }
+
+    /**
+     * @return string
      */
     public function getEndAcademicYearAttribute()
     {
-        // TODO
-        // Transformar em uma relação.
-
-        if ($this->course->is_standard_calendar) {
-            $stage = DB::table('pmieducar.ano_letivo_modulo')
-                ->where('ref_ano', $this->year)
-                ->where('ref_ref_cod_escola', $this->school_id)
-                ->orderByDesc('sequencial')
-                ->first();
-
-            return new DateTime($stage->data_fim);
-        }
-
-        $stage = DB::table('pmieducar.turma_modulo')
-            ->where('ref_cod_turma', $this->id)
-            ->orderByDesc('sequencial')
-            ->first();
-
-        return new DateTime($stage->data_fim);
+        return $this->stages()->orderByDesc('sequencial')->first()->data_fim;
     }
 
     /**

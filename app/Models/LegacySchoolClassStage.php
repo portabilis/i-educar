@@ -19,6 +19,14 @@ class LegacySchoolClassStage extends Model
     /**
      * @var array
      */
+    protected $dates = [
+        'data_inicio',
+        'data_fim',
+    ];
+
+    /**
+     * @var array
+     */
     protected $fillable = [
         'ref_cod_turma',
         'ref_cod_modulo',
