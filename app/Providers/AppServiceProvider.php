@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\SchoolManager;
+use App\Observers\SchoolManagerObserver;
 use App\Services\CacheManager;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
@@ -116,6 +118,8 @@ class AppServiceProvider extends ServiceProvider
 
             return $keyValueArray;
         });
+
+        SchoolManager::observe(SchoolManagerObserver::class);
 
         // https://laravel.com/docs/5.5/migrations#indexes
         Schema::defaultStringLength(191);
