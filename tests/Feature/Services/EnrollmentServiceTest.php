@@ -2,15 +2,20 @@
 
 namespace Tests\Feature\Services;
 
+use App\Exceptions\Enrollment\CancellationDateAfterAcademicYearException;
+use App\Exceptions\Enrollment\CancellationDateBeforeAcademicYearException;
+use App\Exceptions\Enrollment\EnrollDateAfterAcademicYearException;
+use App\Exceptions\Enrollment\EnrollDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Exceptions\Enrollment\NoVacancyException;
 use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use App\Models\LegacyEnrollment;
+use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyUser;
 use App\Services\EnrollmentService;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Throwable;
@@ -18,6 +23,11 @@ use Throwable;
 class EnrollmentServiceTest extends TestCase
 {
     use DatabaseTransactions;
+
+    /**
+     * @var LegacySchoolClass
+     */
+    private $schoolClass;
 
     /**
      * @var EnrollmentService
@@ -35,6 +45,13 @@ class EnrollmentServiceTest extends TestCase
 
         $user = User::find($user->id);
 
+        $schoolClass = factory(LegacySchoolClass::class)->create();
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        $this->schoolClass = $schoolClass;
         $this->service = new EnrollmentService($user);
     }
 
@@ -47,9 +64,11 @@ class EnrollmentServiceTest extends TestCase
      */
     public function testCancelEnrollment()
     {
-        $enrollment = factory(LegacyEnrollment::class)->create();
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
 
-        $result = $this->service->cancelEnrollment($enrollment, Carbon::now());
+        $result = $this->service->cancelEnrollment($enrollment, now());
 
         $this->assertTrue($result);
         $this->assertDatabaseHas($enrollment->getTable(), [
@@ -60,8 +79,56 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
-     * Erro ao cancelar uma enturmação devido a data de saída ser menor que a
-     * data de enturmação.
+     * Erro ao cancelar uma enturmação devido a data de saída ser anterior ao
+     * início do ano letivo.
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testCancellationDateBeforeAcademicYearException()
+    {
+        $this->expectException(CancellationDateBeforeAcademicYearException::class);
+
+        $stage = $this->schoolClass->stages()->first();
+
+        $stage->data_inicio = now()->addDay();
+        $stage->save();
+
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
+
+        $this->service->cancelEnrollment($enrollment, now());
+    }
+
+    /**
+     * Erro ao cancelar uma enturmação devido a data de saída ser posterior ao
+     * fim do ano letivo.
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testCancellationDateAfterAcademicYearException()
+    {
+        $this->expectException(CancellationDateAfterAcademicYearException::class);
+
+        $stage = $this->schoolClass->stages()->first();
+
+        $stage->data_fim = now()->subDay();
+        $stage->save();
+
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
+
+        $this->service->cancelEnrollment($enrollment, now());
+    }
+
+    /**
+     * Erro ao cancelar uma enturmação devido a data de saída ser anterior que
+     * a data de enturmação.
      *
      * @return void
      *
@@ -71,9 +138,11 @@ class EnrollmentServiceTest extends TestCase
     {
         $this->expectException(PreviousCancellationDateException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->create();
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
 
-        $this->service->cancelEnrollment($enrollment, Carbon::now()->subDay(1));
+        $this->service->cancelEnrollment($enrollment, now()->subDay(1));
     }
 
     /**
@@ -83,10 +152,12 @@ class EnrollmentServiceTest extends TestCase
      */
     public function testEnroll()
     {
-        $enrollment = factory(LegacyEnrollment::class)->make();
+        $enrollment = factory(LegacyEnrollment::class)->make([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
 
         $result = $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, Carbon::now()
+            $enrollment->registration, $enrollment->schoolClass, now()
         );
 
         $this->assertInstanceOf(LegacyEnrollment::class, $result);
@@ -106,12 +177,14 @@ class EnrollmentServiceTest extends TestCase
     {
         $this->expectException(NoVacancyException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->make();
+        $enrollment = factory(LegacyEnrollment::class)->make([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
 
         $enrollment->schoolClass->max_aluno = 0;
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, Carbon::now()
+            $enrollment->registration, $enrollment->schoolClass, now()
         );
     }
 
@@ -124,10 +197,64 @@ class EnrollmentServiceTest extends TestCase
     {
         $this->expectException(ExistsActiveEnrollmentException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->create();
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, Carbon::now()
+            $enrollment->registration, $enrollment->schoolClass, now()
+        );
+    }
+
+    /**
+     * Erro ao enturmar uma matrícula devido a data de entrada ser anterior ao
+     * início do ano letivo.
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testEnrollDateBeforeAcademicYearException()
+    {
+        $this->expectException(EnrollDateBeforeAcademicYearException::class);
+
+        $enrollment = factory(LegacyEnrollment::class)->make([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
+
+        $stage = $this->schoolClass->stages()->first();
+
+        $stage->data_inicio = now()->addDay();
+        $stage->save();
+
+        $this->service->enroll(
+            $enrollment->registration, $enrollment->schoolClass, now()
+        );
+    }
+
+    /**
+     * Erro ao enturmar uma matrícula devido a data de entrada ser posterior ao
+     * fim do ano letivo.
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testEnrollDateAfterAcademicYearException()
+    {
+        $this->expectException(EnrollDateAfterAcademicYearException::class);
+
+        $enrollment = factory(LegacyEnrollment::class)->make([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
+
+        $stage = $this->schoolClass->stages()->first();
+
+        $stage->data_fim = now()->subDay();
+        $stage->save();
+
+        $this->service->enroll(
+            $enrollment->registration, $enrollment->schoolClass, now()
         );
     }
 
@@ -142,12 +269,14 @@ class EnrollmentServiceTest extends TestCase
     {
         $this->expectException(PreviousEnrollDateException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->create();
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
 
-        $this->service->cancelEnrollment($enrollment, Carbon::now());
+        $this->service->cancelEnrollment($enrollment, now());
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, Carbon::now()->subDay(1)
+            $enrollment->registration, $enrollment->schoolClass, now()->subDay(1)
         );
     }
 }
