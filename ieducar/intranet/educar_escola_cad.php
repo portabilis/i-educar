@@ -4,7 +4,9 @@ use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
 use App\Models\SchoolManager;
-use App\Services\SchoolService;
+use App\Rules\SchoolManagerAtLeatOneChief;
+use App\Rules\SchoolManagerUniqueIndividuals;
+use App\Services\SchoolManagerService;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -1413,6 +1415,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validateManagersRules()) {
+            return false;
+        }
+
         for ( $i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
             $campo = 'codigo_inep_escola_compartilhada'.$seq;
@@ -1801,6 +1807,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaCamposCenso()) {
+            return false;
+        }
+
+        if (!$this->validateManagersRules()) {
             return false;
         }
 
@@ -2487,8 +2497,8 @@ class indice extends clsCadastro
 
     protected function addSchoolManagersTable()
     {
-        /** @var SchoolService $schoolService */
-        $schoolService = app(SchoolService::class);
+        /** @var SchoolManagerService $schoolService */
+        $schoolService = app(SchoolManagerService::class);
         $managers = $schoolService->getSchoolManagers($this->cod_escola);
 
         $rows = [];
@@ -2566,8 +2576,8 @@ class indice extends clsCadastro
 
     protected function storeManagers($schoolId)
     {
-        /** @var SchoolService $schoolService */
-        $schoolService = app(SchoolService::class);
+        /** @var SchoolManagerService $schoolService */
+        $schoolService = app(SchoolManagerService::class);
         $schoolService->deleteAllManagers($schoolId);
         foreach($this->managers_individual_id as $key => $individualId) {
             $schoolService->storeManager(
@@ -2580,6 +2590,21 @@ class indice extends clsCadastro
                 $this->managers_chief[$key]
             );
         }
+    }
+
+    protected function validateManagersRules()
+    {
+        request()->validate(
+            [
+                'managers_individual_id' => 'max:3',
+                'managers_individual_id' => new SchoolManagerUniqueIndividuals(),
+                'managers_chief' => new SchoolManagerAtLeatOneChief(),
+            ],
+            [
+                'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares'
+            ]);
+
+        return true;
     }
 }
 
