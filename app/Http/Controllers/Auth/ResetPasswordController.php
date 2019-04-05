@@ -58,7 +58,7 @@ class ResetPasswordController extends Controller
         return [
             'password.required' => 'O campo senha é obritório.',
             'password.confirmed' => 'As senhas não são iguais.',
-            'password.min' => 'A senha deve contar ao menos 8 caracteres.',
+            'password.min' => 'A senha deve conter ao menos 8 caracteres.',
         ];
     }
 
