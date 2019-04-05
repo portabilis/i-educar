@@ -43,8 +43,6 @@ const EQUIPAMENTOS = {
     COMPUTADORES: 1
 };
 
-$escolaInepIdField.closest('tr').hide();
-
 var submitForm = function(){
   var canSubmit = validationUtils.validatesFields(true);
 
@@ -54,23 +52,15 @@ var submitForm = function(){
   // #TODO refatorar cadastro de escola para que todos campos sejam enviados via ajax,
   // podendo então definir o código escolaInepId ao cadastrar a escola.
 
-  if (canSubmit && $escolaIdField.val())
-    putEscola();
-  else if (canSubmit)
+  if (canSubmit) {
     acao();
+  }
 }
 
 var handleGetEscola = function(dataResponse) {
   handleMessages(dataResponse.msgs);
 
   $escolaInepIdField.val(dataResponse.escola_inep_id);
-}
-
-var handlePutEscola = function(dataResponse) {
-  handleMessages(dataResponse.msgs);
-
-  // submete formulário somente após put (para não interromper requisição ajax)
-  acao();
 }
 
 var getEscola = function(escolaId) {
@@ -88,26 +78,8 @@ var getEscola = function(escolaId) {
   getResource(options);
 }
 
-var putEscola = function() {
-  var inep = $escolaInepIdField.val().length == 8 ? $escolaInepIdField.val() : '';
-  var data = {
-    id             : $escolaIdField.val(),
-    escola_inep_id : inep
-  };
-
-  var options = {
-    url      : putResourceUrlBuilder.buildUrl('/module/Api/escola', 'escola'),
-    dataType : 'json',
-    data     : data,
-    success  : handlePutEscola
-  };
-
-  putResource(options);
-}
-
 if ($escolaIdField.val()) {
   getEscola($escolaIdField.val());
-  $escolaInepIdField.closest('tr').show();
 }
 
 // unbind events

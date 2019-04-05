@@ -1996,6 +1996,8 @@ class indice extends clsCadastro
                     return false;
                 }
 
+                $this->saveInep($escola['cod_escola']);
+
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                 header("Location: educar_escola_lst.php");
                 die();
@@ -2140,6 +2142,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -2528,6 +2531,7 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+                        $this->saveInep($this->cod_escola);
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
                         header("Location: educar_escola_lst.php");
@@ -2560,6 +2564,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($this->cod_escola);
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -3125,6 +3130,23 @@ class indice extends clsCadastro
         return true;
     }
 
+    private function saveInep($schoolId)
+    {
+        DB::table('modules.educacenso_cod_escola')->where('cod_escola', $schoolId)
+            ->delete();
+        if (!empty($this->escola_inep_id)) {
+            $data = [
+                'cod_escola' => $schoolId,
+                'cod_escola_inep' => $this->escola_inep_id,
+                'fonte' => 'fonte',
+                'nome_inep' => '-',
+                'created_at' => 'NOW()',
+            ];
+
+            DB::table('modules.educacenso_cod_escola')->insert($data);
+        }
+    }
+  
     protected function validaLinguasIndigenas()
     {
         if (count($this->codigo_lingua_indigena) > 3) {
