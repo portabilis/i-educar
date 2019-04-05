@@ -17,7 +17,8 @@ class ChangeAppName
     {
         config([
             'app.name' => config('legacy.config.ieducar_entity_name'),
-            'app.nickname' => $request->getHost(),
+            'app.nickname' => url('/'),
+            'app.url' => $request->getBasePath(),
             'honeybadger.environment_name' => $request->getHost(),
         ]);
 
