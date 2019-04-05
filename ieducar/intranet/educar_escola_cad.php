@@ -2565,7 +2565,7 @@ class indice extends clsCadastro
     protected function makeRowManagerTable($schoolManager)
     {
         return [
-            $schoolManager->individual->getRealNameAttribute(),
+            $schoolManager->individual->real_name,
             $schoolManager->role_id,
             $schoolManager->access_criteria_id,
             $schoolManager->access_criteria_description,
