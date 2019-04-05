@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -53,5 +54,17 @@ class SchoolManager extends Model
     public function isChief()
     {
         return $this->chief;
+    }
+
+    /**
+     * Filtra pelo ID da escola
+     *
+     * @param  Builder $query
+     * @param  integer $schoolId
+     * @return Builder
+     */
+    public function scopeOfSchool($query, $schoolId)
+    {
+        return $query->where('school_id', $schoolId);
     }
 }
