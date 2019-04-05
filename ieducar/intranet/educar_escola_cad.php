@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\ManagerAccessCriteria;
-use App\Models\ManagerLinkType;
-use App\Models\ManagerRole;
 use App\Models\SchoolManager;
 use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
@@ -2523,13 +2520,13 @@ class indice extends clsCadastro
         $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
 
         $options = [
-                'resources' => [null => 'Selecione'] + ManagerRole::all()->getKeyValueArray('name'),
+                'resources' => SelectOptions::schoolManagerRoles(),
                 'required' => false
             ];
         $this->inputsHelper()->select('managers_role_id', $options);
 
         $options = [
-                'resources' => [null => 'Selecione'] + ManagerAccessCriteria::all()->getKeyValueArray('name'),
+                'resources' => SelectOptions::schoolManagerAccessCriterias(),
                 'required' => false
             ];
         $this->inputsHelper()->select('managers_access_criteria_id', $options);
@@ -2539,7 +2536,7 @@ class indice extends clsCadastro
 
         $options =
             [
-                'resources' => [null => 'Selecione'] + ManagerLinkType::all()->getKeyValueArray('name'),
+                'resources' => SelectOptions::schoolManagerLinkTypes(),
                 'required' => false
             ];
         $this->inputsHelper()->select('managers_link_type_id', $options);

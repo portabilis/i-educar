@@ -2,6 +2,9 @@
 
 namespace iEducar\Support\View;
 
+use App\Models\ManagerAccessCriteria;
+use App\Models\ManagerLinkType;
+use App\Models\ManagerRole;
 use iEducar\Modules\Transport\Period;
 use iEducar\Modules\Educacenso\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -79,5 +82,20 @@ class SelectOptions
     public static function unidadesVinculadasEscola()
     {
         return self::getDefaultOption() + UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
+    }
+
+    public static function schoolManagerRoles()
+    {
+        return self::getDefaultOption() + ManagerRole::all()->getKeyValueArray('name');
+    }
+
+    public static function schoolManagerAccessCriterias()
+    {
+        return self::getDefaultOption() + ManagerAccessCriteria::all()->getKeyValueArray('name');
+    }
+
+    public static function schoolManagerLinkTypes()
+    {
+        return self::getDefaultOption() + ManagerLinkType::all()->getKeyValueArray('name');
     }
 }
