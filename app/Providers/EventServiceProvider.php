@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Listeners\LoginLegacySession;
+use App\Listeners\NotificationWhenResetPassword;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Login::class => [
             LoginLegacySession::class,
+        ],
+        PasswordReset::class => [
+            NotificationWhenResetPassword::class,
         ],
     ];
 
