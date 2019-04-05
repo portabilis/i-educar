@@ -1,7 +1,7 @@
 .flashMessages {
   font-size: 14px;
   left: 0;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
   z-index: 9999;
@@ -69,5 +69,6 @@
 .flashMessages__message time {
   display: block;
   font-size: 10px;
+  font-weight: bold;
   margin-bottom: 4px;
 }
