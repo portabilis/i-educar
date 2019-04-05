@@ -12,7 +12,7 @@ class InsertAccessCriterias extends Migration
      */
     public function up()
     {
-        DB::table('manager_access_criterias')->insert(
+        DB::table('manager_access_criterias')->updateOrInsert(
             [
                 [
                     'id' => 1,

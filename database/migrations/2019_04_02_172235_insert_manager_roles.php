@@ -12,7 +12,7 @@ class InsertManagerRoles extends Migration
      */
     public function up()
     {
-        DB::table('manager_roles')->insert(
+        DB::table('manager_roles')->updateOrInsert(
             [
                 [
                     'id' => 1,

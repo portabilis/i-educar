@@ -12,7 +12,7 @@ class InsertManagerLinkTypes extends Migration
      */
     public function up()
     {
-        DB::table('manager_link_types')->insert(
+        DB::table('manager_link_types')->updateOrInsert(
             [
                 [
                     'id' => 1,
