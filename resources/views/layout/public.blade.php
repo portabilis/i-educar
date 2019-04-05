@@ -10,7 +10,7 @@
     <!-- Google Tag Manager -->
     <script>
         dataLayer = [{
-            'slug': '{{ config('app.name') }}',
+            'slug': '{{ config('app.nickname') }}',
             'user_id': 0
         }];
 

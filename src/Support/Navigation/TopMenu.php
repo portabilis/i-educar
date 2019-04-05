@@ -86,7 +86,7 @@ class TopMenu
 
         $cacheKey = $this->getCacheKey();
 
-        $cache = Cache::tags(['topmenu', config('app.name')]);
+        $cache = Cache::tags(['topmenu', config('app.nickname')]);
 
         if ($cache->has($cacheKey)) {
             return $cache->get($cacheKey);

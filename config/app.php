@@ -230,4 +230,6 @@ return [
     'trackerror' => env('APP_TRACK_ERROR', false),
 
     'default_host' => env('APP_DEFAULT_HOST', 'ieducar.com.br'),
+
+    'nickname' => 'ieducar',
 ];
