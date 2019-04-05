@@ -4,7 +4,7 @@ use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
 use App\Models\SchoolManager;
-use App\Rules\SchoolManagerAtLeatOneChief;
+use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
 use App\Services\SchoolManagerService;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
@@ -2595,7 +2595,7 @@ class indice extends clsCadastro
         request()->validate(
             [
                 'managers_individual_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
-                'managers_chief' => new SchoolManagerAtLeatOneChief(),
+                'managers_chief' => new SchoolManagerAtLeastOneChief(),
             ],
             [
                 'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares'

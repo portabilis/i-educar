@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class SchoolManagerAtLeatOneChief implements Rule
+class SchoolManagerAtLeastOneChief implements Rule
 {
     /**
      * Verifica se pelo menos um gestor foi marcado como principal
