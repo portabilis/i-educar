@@ -1087,7 +1087,8 @@ class indice extends clsCadastro
         if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
             !in_array($this->etapa_educacenso, [1, 2, 3, 56])
         ) {
-            $this->mensagem = 'Quando o campo: Local de funcionamento diferenciado é: (Nome da opção), o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56';
+            $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
+            $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
             return false;
         }
 
