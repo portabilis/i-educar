@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\SchoolClassService;
+use App\Models\School;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -78,6 +79,7 @@ class indice extends clsCadastro
     public $dias_letivos;
     public $etapas_especificas;
     public $etapas_utilizadas;
+    public $local_funcionamento_diferenciado;
     public $definirComponentePorEtapa;
     public $modulos = [];
     public $retorno;
@@ -591,10 +593,7 @@ class indice extends clsCadastro
             'value' => $this->codigo_inep_educacenso]);
 
         $resources = [null => 'Selecione',
-            0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
-            1 => 'Classe hospitalar',
-            2 => Portabilis_String_Utils::toLatin1('Unidade de internação socioeducativa'),
-            3 => 'Unidade prisional',
+            0 => 'Escolarização',
             4 => 'Atividade complementar',
             5 => 'Atendimento educacional especializado (AEE)'];
 
@@ -635,6 +634,12 @@ class indice extends clsCadastro
 
         $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
         $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
+        $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
+        $resources = array_replace([null => 'Selecione'], $resources);
+
+        $options = ['label' => 'Local de funcionamento diferenciado', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
+        $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
 
         $options = ['label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
             'value' => $this->nao_informar_educacenso,
@@ -981,6 +986,55 @@ class indice extends clsCadastro
         return true;
     }
 
+    protected function validaCampoTipoAtendimento()
+    {
+        if ($this->tipo_atendimento != 0 && in_array($this->tipo_mediacao_didatico_pedagogico, [
+            App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
+            App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
+        ])) {
+            $this->mensagem = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Semipresencial ou Educação a Distância.';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaCampoLocalFuncionamentoDiferenciad()
+    {
+        $school = School::find($this->ref_ref_cod_escola);
+        $localFuncionamentoEscola = $school->local_funcionamento;
+        if (is_string($localFuncionamentoEscola)) {
+            $localFuncionamentoEscola = explode(',', str_replace(array('{', "}"), '', $localFuncionamentoEscola));
+        }
+
+        $localFuncionamentoEscola = (array) $localFuncionamentoEscola;
+
+        if (!in_array(9, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO) {
+
+            $this->mensagem = 'Não é possível selecionar a opção: Unidade de atendimento socioeducativo quando o local de funcionamento da escola não for: Unidade de atendimento socioeducativo.';
+            return false;
+        }
+
+        if (!in_array(10, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL) {
+            $this->mensagem = 'Não é possível selecionar a opção: Unidade prisional quando o local de funcionamento da escola não for: Unidade prisional.';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaTipoAtendimento()
+    {
+        if ($this->tipo_atendimento == 4 && empty($this->atividades_complementares)) {
+            $this->mensagem = 'Campo atividades complementares é obrigatório';
+
+            return false;
+        }
+
+        return true;
+    }
+
     protected function validaCampoEtapaEnsino()
     {
         if (!empty($this->tipo_atendimento) &&
@@ -1007,6 +1061,12 @@ class indice extends clsCadastro
             return false;
         }
         if (!$this->validaCampoEtapaEnsino()) {
+            return false;
+        }
+        if (!$this->validaCampoTipoAtendimento()) {
+            return false;
+        }
+        if (!$this->validaCampoLocalFuncionamentoDiferenciad()) {
             return false;
         }
 

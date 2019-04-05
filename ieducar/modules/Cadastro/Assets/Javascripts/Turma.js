@@ -39,12 +39,27 @@ let verificaEtapaEducacenso = ()=>{
   }
 }
 
+let verificaLocalFuncionamentoDiferenciado = () => {
+  $j('#local_funcionamento_diferenciado').makeUnrequired();
+  let habilitaCampo = [1, 2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
+  $j('#local_funcionamento_diferenciado').prop('disabled', !habilitaCampo);
+
+  if (habilitaCampo) {
+    if (obrigarCamposCenso) {
+      $j('#local_funcionamento_diferenciado').makeRequired();
+    }
+  } else {
+    $j('#local_funcionamento_diferenciado').val();
+  }
+}
+
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
 });
 verificaEtapaEducacenso();
+verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
   mostraCursoTecnico();;
@@ -123,6 +138,8 @@ function validaAtividadesComplementares() {
   }
   return true;
 }
+
+$j('#tipo_mediacao_didatico_pedagogico').on('change', verificaLocalFuncionamentoDiferenciado);
 
 function habilitaEtapaEducacenso() {
   var atividadeComplementar = $j("#tipo_atendimento").val() == 4;
