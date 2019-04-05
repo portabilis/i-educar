@@ -6,7 +6,7 @@ use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 
-class Managers implements EducacensoValidator
+class SchoolManagers implements EducacensoValidator
 {
     private $message;
     private $individualArray;

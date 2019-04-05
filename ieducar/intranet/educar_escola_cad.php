@@ -13,7 +13,7 @@ use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
-use iEducar\Modules\Educacenso\Validator\Managers;
+use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -2604,7 +2604,7 @@ class indice extends clsCadastro
 
     protected function validateCensusManagerRules()
     {
-        $managersValidator = new Managers(
+        $managersValidator = new SchoolManagers(
             $this->managers_individual_id,
             $this->managers_role_id,
             $this->managers_access_criteria_id,
