@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SchoolManager;
+use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 
 class SchoolManagerService
 {
@@ -27,24 +28,18 @@ class SchoolManagerService
     }
 
     /**
-     * @param integer $individualId
-     * @param integer $schoolId
-     * @param integer $roleId
-     * @param integer $accessCriteriaId
-     * @param string $accessCriteriaDescription
-     * @param integer $linkTypeId
-     * @param boolean $isChief
+     * @param SchoolManagerValueObject $valueObject
      */
-    public function storeManager($individualId, $schoolId, $roleId, $accessCriteriaId, $accessCriteriaDescription, $linkTypeId, $isChief)
+    public function storeManager(SchoolManagerValueObject $valueObject)
     {
         $schoolManager = new SchoolManager();
-        $schoolManager->individual_id = $individualId;
-        $schoolManager->school_id = $schoolId;
-        $schoolManager->role_id = $roleId;
-        $schoolManager->access_criteria_id = $accessCriteriaId;
-        $schoolManager->access_criteria_description = $accessCriteriaDescription;
-        $schoolManager->link_type_id = $linkTypeId;
-        $schoolManager->chief = (bool)$isChief;
+        $schoolManager->individual_id = $valueObject->individualId;
+        $schoolManager->school_id = $valueObject->schoolId;
+        $schoolManager->role_id = $valueObject->roleId;
+        $schoolManager->access_criteria_id = $valueObject->accessCriteriaId;
+        $schoolManager->access_criteria_description = $valueObject->accessCriteriaDescription;
+        $schoolManager->link_type_id = $valueObject->linkTypeId;
+        $schoolManager->chief = (bool)$valueObject->isChief;
         $schoolManager->save();
     }
 }

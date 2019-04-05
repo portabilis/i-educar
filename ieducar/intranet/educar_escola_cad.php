@@ -12,6 +12,7 @@ use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
@@ -2582,15 +2583,15 @@ class indice extends clsCadastro
         $schoolService = app(SchoolManagerService::class);
         $schoolService->deleteAllManagers($schoolId);
         foreach($this->managers_individual_id as $key => $individualId) {
-            $schoolService->storeManager(
-                $individualId,
-                $schoolId,
-                $this->managers_role_id[$key],
-                $this->managers_access_criteria_id[$key] ?: null,
-                $this->managers_access_criteria_description[$key],
-                $this->managers_link_type_id[$key] ?: null,
-                $this->managers_chief[$key]
-            );
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->individualId = $individualId;
+            $valueObject->schoolId = $schoolId;
+            $valueObject->roleId = $this->managers_role_id[$key];
+            $valueObject->individualId = $this->managers_access_criteria_id[$key] ?: null;
+            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
+            $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
+            $valueObject->isChief = $this->managers_chief[$key];
+            $schoolService->storeManager($valueObject);
         }
     }
 
@@ -2615,15 +2616,19 @@ class indice extends clsCadastro
      */
     protected function validateCensusManagerRules()
     {
-        $managersValidator = new SchoolManagers(
-            $this->managers_individual_id,
-            $this->managers_role_id,
-            $this->managers_access_criteria_id,
-            $this->managers_access_criteria_description,
-            $this->managers_link_type_id,
-            $this->managers_chief,
-            $this->dependencia_administrativa
-        );
+        $managers = [];
+        foreach ($this->managers_individual_id as $key => $value) {
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->individualId = $this->managers_individual_id;
+            $valueObject->roleId = $this->managers_role_id;
+            $valueObject->accessCriteriaId = $this->managers_access_criteria_id;
+            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description;
+            $valueObject->linkTypeId = $this->managers_link_type_id;
+            $valueObject->isChief = $this->managers_chief;
+            $managers = $valueObject;
+        }
+
+        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa);
 
         if (!$managersValidator->isValid()) {
             $this->mensagem = implode('<br>', $managersValidator->getMessage());

@@ -5,36 +5,26 @@ namespace iEducar\Modules\Educacenso\Validator;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
+use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 
 class SchoolManagers implements EducacensoValidator
 {
     private $message;
-    private $individualArray;
-    private $roleArray;
-    private $accessCriteriaArray;
-    private $accessCriteriaDescriptionArray;
-    private $linkTypeArray;
-    private $isChiefArray;
     private $administrativeDependency;
     private $valid = true;
 
     /**
-     * @param integer[] $individualArray
-     * @param integer[] $roleArray
-     * @param integer[] $accessCriteriaArray
-     * @param string[] $accessCriteriaDescriptionArray
-     * @param integer[] $linkTypeArray
-     * @param boolean[] $isChiefArray
+     * @var SchoolManagerValueObject[]
+     */
+    private $valueObject;
+
+    /**
+     * @param SchoolManagerValueObject[] $valueObject
      * @param integer $administrativeDependency
      */
-    public function __construct($individualArray, $roleArray, $accessCriteriaArray, $accessCriteriaDescriptionArray, $linkTypeArray, $isChiefArray, $administrativeDependency)
+    public function __construct($valueObject, $administrativeDependency)
     {
-        $this->individualArray = $individualArray;
-        $this->roleArray = $roleArray;
-        $this->accessCriteriaArray = $accessCriteriaArray;
-        $this->accessCriteriaDescriptionArray = $accessCriteriaDescriptionArray;
-        $this->linkTypeArray = $linkTypeArray;
-        $this->isChiefArray = $isChiefArray;
+        $this->valueObject = $valueObject;
         $this->administrativeDependency = $administrativeDependency;
     }
 
@@ -43,20 +33,22 @@ class SchoolManagers implements EducacensoValidator
      */
     public function isValid(): bool
     {
-        if ($this->containsEmptyOrIsNull($this->individualArray)) {
+        $individualArray = $this->getIndividualArray();
+        if ($this->containsEmptyOrIsNull($individualArray)) {
             $this->message[] = 'Você precisa cadastrar pelo menos um gestor';
             $this->valid = false;
         }
 
-        if ($this->containsEmptyOrIsNull($this->roleArray)) {
+        $roleArray = $this->getRoleArray();
+        if ($this->containsEmptyOrIsNull($roleArray)) {
             $this->message[] = 'Você precisa informar o cargo dos gestores';
             $this->valid = false;
         }
 
-        foreach ($this->individualArray as $key => $value) {
-            $this->validateAccessCriteria($key);
-            $this->validateAccessCriteriaDescription($key);
-            $this->validateAccessLinkType($key);
+        foreach ($this->valueObject as $key => $valueObject) {
+            $this->validateAccessCriteria($valueObject);
+            $this->validateAccessCriteriaDescription($valueObject);
+            $this->validateAccessLinkType($valueObject);
         }
 
         return $this->valid;
@@ -80,41 +72,41 @@ class SchoolManagers implements EducacensoValidator
     }
 
     /**
-     * @param integer $key
+     * @param SchoolManagerValueObject $valueObject
      */
-    private function validateAccessCriteria($key)
+    private function validateAccessCriteria($valueObject)
     {
-        if (!isset($this->roleArray[$key])) {
+        if (!isset($valueObject->roleId)) {
             return;
         }
 
-        if ($this->roleArray[$key] == SchoolManagerRole::DIRETOR && empty($this->accessCriteriaArray[$key])) {
+        if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->accessCriteriaId)) {
             $this->valid = false;
             $this->message[] = 'Se o cargo do gestor for <b>Diretor</b>, você precisa informar o critério de acesso ao cargo';
         }
     }
 
     /**
-     * @param integer $key
+     * @param SchoolManagerValueObject $valueObject
      */
-    private function validateAccessCriteriaDescription($key)
+    private function validateAccessCriteriaDescription($valueObject)
     {
-        if (!isset($this->accessCriteriaArray[$key])) {
+        if (!isset($valueObject->accessCriteriaId)) {
             return;
         }
 
-        if ($this->accessCriteriaArray[$key] == SchoolManagerAccessCriteria::OUTRO && empty($this->accessCriteriaDescriptionArray[$key])) {
+        if ($valueObject->accessCriteriaId == SchoolManagerAccessCriteria::OUTRO && empty($valueObject->accessCriteriaDescription)) {
             $this->valid = false;
             $this->message[] = 'Se o citério de acesso ao cargo do gestor for <b>Outros</b>, você precisa informar uma especificação';
         }
     }
 
     /**
-     * @param integer $key
+     * @param SchoolManagerValueObject $valueObject
      */
-    private function validateAccessLinkType($key)
+    private function validateAccessLinkType($valueObject)
     {
-        if (!isset($this->roleArray[$key])) {
+        if (!isset($valueObject->roleId)) {
             return;
         }
 
@@ -122,9 +114,27 @@ class SchoolManagers implements EducacensoValidator
             return;
         }
 
-        if ($this->roleArray[$key] == SchoolManagerRole::DIRETOR && empty($this->linkTypeArray[$key])) {
+        if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->linkTypeId)) {
             $this->valid = false;
             $this->message[] = 'O campo <b>Tipo de vínculo</b> do gestor precisa ser preenchido';
         }
+    }
+
+    private function getIndividualArray()
+    {
+        $individualArray = [];
+        foreach ($this->valueObject as $manager) {
+            $individualArray[] = $manager->individualId;
+        }
+        return $individualArray;
+    }
+
+    private function getRoleArray()
+    {
+        $roleArray = [];
+        foreach ($this->valueObject as $manager) {
+            $roleArray[] = $manager->roleId;
+        }
+        return $roleArray;
     }
 }
