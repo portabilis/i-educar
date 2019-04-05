@@ -178,6 +178,9 @@ class FilaUnicaController extends ApiCoreController
                         WHEN fisica_aluno.idpes_mae = pessoa.idpes THEN '2'
                         ELSE '3' END as vinculo_familiar,
                        pessoa.nome,
+                       fisica.sexo,
+                       fisica.ideciv,
+                       to_char(fisica.data_nasc, 'dd/mm/yyyy') AS data_nasc,
                        fisica.cpf,
                        fisica.tipo_trabalho,
                        fisica.local_trabalho,
@@ -188,13 +191,15 @@ class FilaUnicaController extends ApiCoreController
                        fpr.fone AS telefone,
                        fpc.ddd AS ddd_telefone_celular,
                        fpc.fone AS telefone_celular
-                  FROM cadastro.fisica
-                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
+                  FROM pmieducar.aluno
                   JOIN cadastro.fisica fisica_aluno
-                    ON pessoa.idpes = fisica_aluno.idpes_pai
-                    OR pessoa.idpes = fisica_aluno.idpes_mae
-                    OR pessoa.idpes = fisica_aluno.idpes_responsavel
-                  JOIN pmieducar.aluno ON (aluno.ref_idpes = fisica_aluno.idpes)
+                  ON aluno.ref_idpes = fisica_aluno.idpes
+                  JOIN cadastro.fisica
+                  ON (fisica.idpes = fisica_aluno.idpes_pai AND aluno.tipo_responsavel IN ('a', 'p') )
+                    OR (fisica.idpes = fisica_aluno.idpes_mae AND aluno.tipo_responsavel IN ('a', 'm') )
+                    OR (fisica.idpes = fisica_aluno.idpes_responsavel AND aluno.tipo_responsavel = 'r' )
+                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
+
                   LEFT JOIN cadastro.documento ON (documento.idpes = fisica.idpes)
                   LEFT JOIN cadastro.fone_pessoa fpr ON (fpr.idpes = fisica.idpes
                                                          AND fpr.tipo = 1)
