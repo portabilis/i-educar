@@ -76,9 +76,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_exemplar=$_GET["cod_exemplar"];
 
@@ -136,14 +134,17 @@ class indice extends clsCadastro
     {
         $this->campoOculto( "cod_exemplar", $this->cod_exemplar );
 
-    $selectInputs = array('instituicao', 'escola', 'biblioteca', 'bibliotecaSituacao', 'bibliotecaFonte');
+    $selectInputs = ['instituicao', 'escola', 'biblioteca'];
     $this->inputsHelper()->dynamic($selectInputs);
+
+    $this->inputsHelper()->dynamic('bibliotecaSituacao', ['label' => 'Situação']);
+    $this->inputsHelper()->dynamic('bibliotecaFonte');
 
         $opcoes = array( "" => "Selecione", "2" => "Sim", "1" => "N&atilde;o" );
         $this->campoLista( "permite_emprestimo", "Permite empréstimo", $opcoes, $this->permite_emprestimo );
 
         $this->preco = is_numeric($this->preco) ? number_format($this->preco, 2, ",", ".") : "";
-        $this->campoMonetario( "preco", "Preco", $this->preco, 10, 20, false );
+        $this->campoMonetario( "preco", "Preço", $this->preco, 10, 20, false );
 
     $this->inputsHelper()->dynamic('bibliotecaPesquisaObra', array('required' => true));
 
@@ -161,9 +162,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 606, $this->pessoa_logada, 11,  "educar_exemplar_lst.php" );
@@ -200,9 +199,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
 
         $obj_permissoes = new clsPermissoes();
@@ -236,9 +233,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 606, $this->pessoa_logada, 11,  "educar_exemplar_lst.php" );

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -605,7 +607,8 @@ class clsPessoaFisica extends clsPessoaFj
     public function excluir()
     {
         if ($this->idpes) {
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
+            $this->pessoa_logada = Session::get('id_pessoa');
+
             $db  = new clsBanco();
             $detalheAntigo = $this->detalheSimples();
             $excluir = $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);

@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/clsAgenda.inc.php");
@@ -64,9 +67,7 @@ class indice extends clsCadastro
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        @session_start();
-        $this->editor = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->editor = Session::get('id_pessoa');
 
         Portabilis_View_Helper_Application::loadJavascript($this, "/intranet/scripts/agenda.js");
         Portabilis_View_Helper_Application::loadStylesheet($this, "/intranet/styles/agenda.css");

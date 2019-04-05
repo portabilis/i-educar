@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'intranet/index.php');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer']], function () {
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass']], function () {
 
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
@@ -34,4 +34,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.fo
     Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
     Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
 
+});
+
+Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
+    Route::get('students', 'StudentsController@export');
 });

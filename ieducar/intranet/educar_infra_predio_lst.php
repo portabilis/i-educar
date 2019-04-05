@@ -84,9 +84,6 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
         //** 2 - Escola 1 - institucional 0 - poli-institucional
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
