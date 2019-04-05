@@ -25,6 +25,7 @@ class SchoolManagers implements EducacensoValidator
      * @param string[] $accessCriteriaDescriptionArray
      * @param integer[] $linkTypeArray
      * @param boolean[] $isChiefArray
+     * @param integer $administrativeDependency
      */
     public function __construct($individualArray, $roleArray, $accessCriteriaArray, $accessCriteriaDescriptionArray, $linkTypeArray, $isChiefArray, $administrativeDependency)
     {
@@ -83,6 +84,10 @@ class SchoolManagers implements EducacensoValidator
      */
     private function validateAccessCriteria($key)
     {
+        if (!isset($this->roleArray[$key])) {
+            return;
+        }
+
         if ($this->roleArray[$key] == SchoolManagerRole::DIRETOR && empty($this->accessCriteriaArray[$key])) {
             $this->valid = false;
             $this->message[] = 'Se o cargo do gestor for <b>Diretor</b>, você precisa informar o critério de acesso ao cargo';
@@ -91,6 +96,10 @@ class SchoolManagers implements EducacensoValidator
 
     private function validateAccessCriteriaDescription($key)
     {
+        if (!isset($this->accessCriteriaArray[$key])) {
+            return;
+        }
+
         if ($this->accessCriteriaArray[$key] == SchoolManagerAccessCriteria::OUTRO && empty($this->accessCriteriaDescriptionArray[$key])) {
             $this->valid = false;
             $this->message[] = 'Se o citério de acesso ao cargo do gestor for <b>Outros</b>, você precisa informar uma especificação';
@@ -99,6 +108,10 @@ class SchoolManagers implements EducacensoValidator
 
     private function validateAccessLinkType(int $key)
     {
+        if (!isset($this->roleArray[$key])) {
+            return;
+        }
+
         if ($this->administrativeDependency == DependenciaAdministrativaEscola::PRIVADA) {
             return;
         }
