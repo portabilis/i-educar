@@ -230,7 +230,7 @@ class MatriculaController extends ApiCoreController
     {
         $ano = $this->getRequest()->ano;
         $escola = $this->getRequest()->escola;
-        $updatedAt = $this->getRequest()->data_atualizacao;
+        $updatedAt = $this->getRequest()->modified;
 
         if ($this->canGetMovimentacaoEnturmacao()) {
             if (!$escola) {
@@ -257,7 +257,19 @@ class MatriculaController extends ApiCoreController
                 $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
                 foreach ($matriculas as $key => $matricula) {
-                    $sql = 'SELECT 
+                    $params = [];
+                    $params[] = $matriculas[$key]['matricula_id'];
+                    $params[] = $ano;
+
+                    $whereMatriculaTurma = '';
+                    $whereMatriculaExcluidos = '';
+                    if ($updatedAt) {
+                        $whereMatriculaTurma = ' AND matricula_turma.updated_at >= $3';
+                        $whereMatriculaExcluidos = ' AND matricula_turma_excluidos.updated_at >= $3';
+                        $params[] = $updatedAt;
+                    }
+
+                    $sql = '(SELECT 
                                    matricula_turma.id,
                                    matricula_turma.ref_cod_turma AS turma_id,
                                    matricula_turma.sequencial AS sequencial,
@@ -275,24 +287,46 @@ class MatriculaController extends ApiCoreController
                                             matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
                                        ELSE FALSE
                                    END AS apresentar_fora_da_data,
-                                   matricula_turma.turno_id
-                              FROM matricula
+                                   matricula_turma.turno_id,
+                                   null AS deleted_at
+                              FROM pmieducar.matricula
                         INNER JOIN pmieducar.escola
                                 ON escola.cod_escola = matricula.ref_ref_cod_escola
                         INNER JOIN pmieducar.instituicao
                                 ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-                         LEFT JOIN matricula_turma
+                        INNER JOIN matricula_turma
                                 ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                             WHERE cod_matricula = $1';
-
-                    $params = [];
-                    $params[] = $matriculas[$key]['matricula_id'];
-                    $params[] = $ano;
-
-                    if ($updatedAt) {
-                        $sql .= ' AND matricula_turma.updated_at >= $3';
-                        $params[] = $updatedAt;
-                    }
+                             WHERE cod_matricula = $1
+                             ' . $whereMatriculaTurma . ') 
+                             UNION ALL
+                             (SELECT 
+                                   matricula_turma_excluidos.id,
+                                   matricula_turma_excluidos.ref_cod_turma AS turma_id,
+                                   matricula_turma_excluidos.sequencial AS sequencial,
+                                   matricula_turma_excluidos.sequencial_fechamento AS sequencial_fechamento,
+                                   COALESCE(matricula_turma_excluidos.data_enturmacao::date::varchar, \'\') AS data_entrada,
+                                   COALESCE(matricula_turma_excluidos.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
+                                   COALESCE(matricula_turma_excluidos.updated_at::varchar, \'\') AS data_atualizacao,
+                                   CASE
+                                       WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
+                                       WHEN matricula.aprovado = 4 AND
+                                            matricula_turma_excluidos.transferido AND
+                                            matricula_turma_excluidos.data_exclusao > ($2 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                       WHEN matricula.aprovado = 3 AND
+                                            matricula_turma_excluidos.remanejado AND
+                                            matricula_turma_excluidos.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                       ELSE FALSE
+                                   END AS apresentar_fora_da_data,
+                                   null AS turno_id,
+                                   matricula_turma_excluidos.deleted_at
+                              FROM pmieducar.matricula
+                        INNER JOIN pmieducar.escola
+                                ON escola.cod_escola = matricula.ref_ref_cod_escola
+                        INNER JOIN pmieducar.instituicao
+                                ON instituicao.cod_instituicao = escola.ref_cod_instituicao
+                        INNER JOIN matricula_turma_excluidos
+                                ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
+                             WHERE cod_matricula = $1 ' . $whereMatriculaExcluidos . ')';
 
                     $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
@@ -306,7 +340,8 @@ class MatriculaController extends ApiCoreController
                             'data_saida',
                             'data_atualizacao',
                             'apresentar_fora_da_data',
-                            'turno_id'
+                            'turno_id',
+                            'deleted_at',
                         ];
                         $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
                         $matriculas[$key]['enturmacoes'] = $enturmacoes;
