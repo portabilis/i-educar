@@ -14,21 +14,21 @@ class MigraTipoAtendimentoDaTurmaEducacenso extends Migration
     public function up()
     {
         DB::table('pmieducar.turma')
-            ->whereRaw('tipo_atendimento', 2)
+            ->where('tipo_atendimento', 2)
             ->update([
                 'tipo_atendimento' => null,
                 'local_funcionamento_diferenciado' => 2,
             ]);
 
         DB::table('pmieducar.turma')
-            ->whereRaw('tipo_atendimento', 3)
+            ->where('tipo_atendimento', 3)
             ->update([
                 'tipo_atendimento' => null,
                 'local_funcionamento_diferenciado' => 3,
             ]);
 
         DB::table('pmieducar.turma')
-            ->whereRaw('tipo_atendimento', 1)
+            ->where('tipo_atendimento', 1)
             ->update([
                 'tipo_atendimento' => null,
             ]);
