@@ -72,7 +72,7 @@ class clsCadastro extends clsCampos
   var $tipoacao;
   var $campos = [];
   var $erros;
-  var $mensagem;
+  private $mensagem;
 
   var $nome_pai;
   var $chave;
@@ -179,35 +179,33 @@ class clsCadastro extends clsCampos
           if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
             $this->mensagem = "N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]";
           }
-      }
-      elseif ($this->tipoacao == 'Editar') {
+      } elseif ($this->tipoacao == 'Editar') {
           $this->sucesso = $this->Editar();
           if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
             $this->mensagem = "N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]";
           }
-      }
-      elseif ($this->tipoacao == 'Excluir') {
+      } elseif ($this->tipoacao == 'Excluir') {
         $this->sucesso = $this->Excluir();
         if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]";
         }
-      }
-      elseif ($this->tipoacao == 'ExcluirImg') {
+      } elseif ($this->tipoacao == 'ExcluirImg') {
         $this->sucesso = $this->ExcluirImg();
         if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
         }
-      }
-      elseif ($this->tipoacao == 'Enturmar') {
+      } elseif ($this->tipoacao == 'Enturmar') {
         $this->sucesso = $this->Enturmar();
         if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]";
         }
       }
+
+      $this->setFlashMessage();
+
       if (empty($script) && $this->sucesso && !empty($this->url_sucesso)) {
         redirecionar( $this->url_sucesso );
-      }
-      else {
+      } else {
         $this->Formular();
       }
     }
@@ -258,6 +256,22 @@ class clsCadastro extends clsCampos
     return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
   }
 
+  protected function setFlashMessage() {
+    session()->forget('_flash');
+
+    if (empty($this->mensagem)) {
+        if ($_GET['mensagem'] ?? '' === 'sucesso') {
+            session()->flash('success', 'Registro incluido com sucesso!');
+        }
+    } else {
+        if ($this->sucesso) {
+            session()->flash('success'. $this->mensagem);
+        } else {
+            session()->flash('error', $this->mensagem);
+        }
+    }
+  }
+
   function RenderHTML()
   {
     $this->_preRender();
@@ -283,8 +297,6 @@ class clsCadastro extends clsCampos
     $this->nome_url_sucesso = empty( $this->nome_url_sucesso ) ? "Salvar" : $this->nome_url_sucesso;
 
     $width = empty($this->largura) ? "width='100%'" : "width='$this->largura'";
-
-
 
     $retorno .=  "\n<!-- cadastro begin -->\n";
     $retorno .=  "<form name='$this->__nome' id='$this->__nome' onsubmit='return $this->onSubmit' action='$this->action'  method='post' target='$this->target' $this->form_enctype>\n";
@@ -347,12 +359,6 @@ class clsCadastro extends clsCampos
     }
 
     $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
-
-    $flashMessage = $this->flashMessage();
-
-    if (! empty($flashMessage)) {
-      $retorno .=  "<tr><td class='formmdtd' colspan='2' height='24'><div id='flash-container'>{$flashMessage}</div></td></tr>";
-    }
 
     if (empty($this->campos)) {
       $retorno .=  "<tr><td class='linhaSim' colspan='2'><span class='form'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>";
@@ -822,15 +828,26 @@ class clsCadastro extends clsCampos
      * @return string
      */
     private function getPageTitle()
-  {
-      if (isset($this->titulo)) {
-          return $this->titulo;
-      }
+    {
+        if (isset($this->titulo)) {
+            return $this->titulo;
+        }
 
-      if (isset($this->_titulo)) {
-          return $this->_titulo;
-      }
+        if (isset($this->_titulo)) {
+            return $this->_titulo;
+        }
 
-      return '';
-  }
+        return '';
+    }
+
+    public function __set($name, $value)
+    {
+        if ($name === 'mensagem') {
+            $this->mensagem = $value;
+
+            $type = $this->sucesso ? 'info' : 'error';
+
+            session()->flash($type, $value);
+        }
+    }
 }
