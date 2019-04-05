@@ -2493,6 +2493,9 @@ class indice extends clsCadastro
 
     }
 
+    /**
+     * Cria tabela dinâmica com gestores da escola
+     */
     protected function addSchoolManagersTable()
     {
         /** @var SchoolManagerService $schoolService */
@@ -2572,6 +2575,10 @@ class indice extends clsCadastro
         ];
     }
 
+    /**
+     * Salva os gestores da escola
+     * @param $schoolId
+     */
     protected function storeManagers($schoolId)
     {
         /** @var SchoolManagerService $schoolService */
@@ -2590,6 +2597,9 @@ class indice extends clsCadastro
         }
     }
 
+    /**
+     * Valida as regras gerais dos gestores da escola
+     */
     protected function validateManagersRules()
     {
         request()->validate(
@@ -2602,6 +2612,10 @@ class indice extends clsCadastro
             ]);
     }
 
+    /**
+     * Valida as regras do censo referentes aos gestores da escola
+     * @return bool
+     */
     protected function validateCensusManagerRules()
     {
         $managersValidator = new SchoolManagers(

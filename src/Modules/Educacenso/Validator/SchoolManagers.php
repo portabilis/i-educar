@@ -63,7 +63,7 @@ class SchoolManagers implements EducacensoValidator
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getMessage()
     {
@@ -71,7 +71,7 @@ class SchoolManagers implements EducacensoValidator
     }
 
     /**
-     * @param $array
+     * @param array $array
      * @return bool
      */
     private function containsEmptyOrIsNull($array)
@@ -80,7 +80,7 @@ class SchoolManagers implements EducacensoValidator
     }
 
     /**
-     * @param $key
+     * @param integer $key
      */
     private function validateAccessCriteria($key)
     {
@@ -94,6 +94,9 @@ class SchoolManagers implements EducacensoValidator
         }
     }
 
+    /**
+     * @param integer $key
+     */
     private function validateAccessCriteriaDescription($key)
     {
         if (!isset($this->accessCriteriaArray[$key])) {
@@ -106,7 +109,10 @@ class SchoolManagers implements EducacensoValidator
         }
     }
 
-    private function validateAccessLinkType(int $key)
+    /**
+     * @param integer $key
+     */
+    private function validateAccessLinkType($key)
     {
         if (!isset($this->roleArray[$key])) {
             return;
