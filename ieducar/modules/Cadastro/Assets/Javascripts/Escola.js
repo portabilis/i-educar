@@ -655,27 +655,25 @@ function habilitaCampoEducacaoIndigena() {
     var escolaIndigena = $j('#educacao_indigena').val() == 1;
     if(escolaIndigena && obrigarCamposCenso){
         makeRequired('lingua_ministrada');
-        $j('#lingua_ministrada').prop('disabled', false);
     }else{
         makeUnrequired('lingua_ministrada');
         makeUnrequired('codigo_lingua_indigena');
-        $j('#lingua_ministrada').prop('disabled', true);
-        $j('#codigo_lingua_indigena').prop('disabled', true);
-        $j("#codigo_lingua_indigena").trigger("chosen:updated");
         $j('#lingua_ministrada').val(1)
     }
+
+    $j('#lingua_ministrada').prop('disabled', !escolaIndigena);
+    habilitaCampoLinguaMinistrada();
 }
 
 function habilitaCampoLinguaMinistrada() {
     var linguaIndigena = $j('#lingua_ministrada').val() == 2;
     if(linguaIndigena && obrigarCamposCenso){
         makeRequired('codigo_lingua_indigena');
-        $j('#codigo_lingua_indigena').prop('disabled', false);
     }else{
         makeUnrequired('codigo_lingua_indigena');
-        $j('#codigo_lingua_indigena').prop('disabled', true);
     }
 
+    $j('#codigo_lingua_indigena').prop('disabled', !linguaIndigena);
     $j("#codigo_lingua_indigena").trigger("chosen:updated");
 }
 
