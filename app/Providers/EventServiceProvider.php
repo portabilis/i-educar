@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\SchoolManager;
+use App\Observers\SchoolManagerObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -30,5 +32,6 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         //
+        SchoolManager::observe(SchoolManagerObserver::class);
     }
 }

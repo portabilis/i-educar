@@ -119,8 +119,6 @@ class AppServiceProvider extends ServiceProvider
             return $keyValueArray;
         });
 
-        SchoolManager::observe(SchoolManagerObserver::class);
-
         // https://laravel.com/docs/5.5/migrations#indexes
         Schema::defaultStringLength(191);
     }
