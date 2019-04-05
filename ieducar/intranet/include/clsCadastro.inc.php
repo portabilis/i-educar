@@ -72,7 +72,7 @@ class clsCadastro extends clsCampos
   var $tipoacao;
   var $campos = [];
   var $erros;
-  private $mensagem;
+  private $_mensagem;
 
   var $nome_pai;
   var $chave;
@@ -165,7 +165,7 @@ class clsCadastro extends clsCampos
 
       // Realiza cadastro
       $this->PreCadastrar();
-      $this->sucesso = FALSE;
+      $this->sucesso = false;
 
       if ($this->tipoacao == 'Novo') {
           $this->sucesso = $this->Novo();
@@ -176,28 +176,28 @@ class clsCadastro extends clsCampos
             </script>";
           }
 
-          if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-            $this->mensagem = "N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]";
+          if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+            $this->_mensagem = "N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]";
           }
       } elseif ($this->tipoacao == 'Editar') {
           $this->sucesso = $this->Editar();
-          if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-            $this->mensagem = "N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]";
+          if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+            $this->_mensagem = "N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]";
           }
       } elseif ($this->tipoacao == 'Excluir') {
         $this->sucesso = $this->Excluir();
-        if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-          $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]";
+        if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+          $this->_mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]";
         }
       } elseif ($this->tipoacao == 'ExcluirImg') {
         $this->sucesso = $this->ExcluirImg();
-        if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
-          $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
+        if (!$this->sucesso && empty( $this->erros ) && empty( $this->_mensagem )) {
+          $this->_mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
         }
       } elseif ($this->tipoacao == 'Enturmar') {
         $this->sucesso = $this->Enturmar();
-        if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
-          $this->mensagem = "N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]";
+        if (!$this->sucesso && empty( $this->erros ) && empty( $this->_mensagem )) {
+          $this->_mensagem = "N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]";
         }
       }
 
@@ -257,17 +257,21 @@ class clsCadastro extends clsCampos
   }
 
   protected function setFlashMessage() {
-    session()->forget('_flash');
+    session()->remove('_flash');
+    session()->remove('error');
+    session()->remove('success');
+    session()->remove('notice');
+    session()->remove('info');
 
-    if (empty($this->mensagem)) {
+    if (empty($this->_mensagem)) {
         if ($_GET['mensagem'] ?? '' === 'sucesso') {
-            session()->flash('success', 'Registro incluido com sucesso!');
+            session()->now('success', 'Registro incluido com sucesso!');
         }
     } else {
         if ($this->sucesso) {
-            session()->flash('success'. $this->mensagem);
+            session()->now('success', $this->_mensagem);
         } else {
-            session()->flash('error', $this->mensagem);
+            session()->now('error', $this->_mensagem);
         }
     }
   }
@@ -843,11 +847,11 @@ class clsCadastro extends clsCampos
     public function __set($name, $value)
     {
         if ($name === 'mensagem') {
-            $this->mensagem = $value;
+            $this->_mensagem = $value;
 
-            $type = $this->sucesso ? 'info' : 'error';
-
-            session()->flash($type, $value);
+            session()->flash('info', $value);
+        } else {
+            $this->{$name} = $value;
         }
     }
 }
