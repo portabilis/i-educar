@@ -2,6 +2,7 @@
 
 use App\Services\SchoolClassService;
 use App\Models\School;
+use App\Models\LegacyCourse;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1049,12 +1050,59 @@ class indice extends clsCadastro
         return true;
     }
 
+    private function validaEtapaEducacenso()
+    {
+        $course = LegacyCourse::find($this->ref_cod_curso);
+
+        if ($course->modalidade_curso == 1 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 2 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Especial - Modalidade Substitutiva, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67 ou 68.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 3 && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 4 && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções:30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
+            return false;
+        }
+
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72';
+            return false;
+        }
+
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+            return false;
+        }
+
+        if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
+            !in_array($this->etapa_educacenso, [1, 2, 3, 56])
+        ) {
+            $this->mensagem = 'Quando o campo: Local de funcionamento diferenciado é: (Nome da opção), o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56';
+            return false;
+        }
+
+        return true;
+    }
+
     protected function verificaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {
             return true;
         }
         if (!$this->validaCamposHorario()) {
+            return false;
+        }
+        if (!$this->validaEtapaEducacenso()) {
             return false;
         }
         if (!$this->validaCampoAtividadesComplementares()) {
