@@ -675,17 +675,29 @@ function setAutoComplete() {
 };
 
 setAutoComplete();
+addEventsManagerInputs();
 
 $j('#btn_add_tab_add_1').click(function () {
     setAutoComplete();
+    addEventsManagerInputs();
 });
 
-$j.each($j('select[id^="managers_role"]'), function (index, field) {
-    field.on('change', function () {
+function addEventsManagerInputs() {
+    $j.each($j('select[id^="managers_role"]'), function (index, field) {
+        field.on('change', function () {
+            changeManagerRole(this);
+        });
         changeManagerRole(this);
     });
-    changeManagerRole(this);
-});
+
+    $j.each($j('select[id^="managers_access_criteria_id"]'), function (index, field) {
+        field.on('change', function () {
+            changeAccessCriteria(this);
+        });
+        changeAccessCriteria(this);
+    });
+
+}
 
 function changeManagerRole(field) {
     let id = $j(field).attr('id');
@@ -698,13 +710,6 @@ function changeManagerRole(field) {
         accessCriteria.prop('disabled', true);
     }
 }
-
-$j.each($j('select[id^="managers_access_criteria_id"]'), function (index, field) {
-    field.on('change', function () {
-        changeAccessCriteria(this);
-    });
-    changeAccessCriteria(this);
-});
 
 function changeAccessCriteria(field) {
     let id = $j(field).attr('id');
