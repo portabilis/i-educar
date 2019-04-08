@@ -12,5 +12,19 @@ use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 
 class Registro40 implements RegistroEducacenso
 {
+    public $registro;
 
+    public $inepEscola;
+
+    public $codigoPessoa;
+
+    public $cargo;
+
+    public $criterioAcesso;
+
+    public $especificacaoCriterioAcesso;
+
+    public $tipoVinculo;
+
+    public $dependenciaAdministrativa;
 }

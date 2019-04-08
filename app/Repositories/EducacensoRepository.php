@@ -275,11 +275,12 @@ SQL;
             SELECT
                40 AS registro,
                educacenso_cod_escola.cod_escola_inep AS "inepEscola",
-               school_managers.individual_id AS codigoPessoa,
+               school_managers.individual_id AS "codigoPessoa",
                school_managers.role_id AS cargo,
                school_managers.access_criteria_id AS "criterioAcesso",
                school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
-               school_managers.link_type_id AS "tipoVinculo"
+               school_managers.link_type_id AS "tipoVinculo",
+               escola.dependencia_administrativa AS "dependenciaAdministrativa"
           FROM school_managers
           JOIN pmieducar.escola ON escola.cod_escola = school_managers.school_id
           JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola

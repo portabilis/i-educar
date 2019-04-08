@@ -14,16 +14,28 @@ class Registro40 extends AbstractRegistro
      */
     protected $model;
 
+
+    /**
+     * @var Registro40Model[]
+     */
+    protected $modelArray;
+
+
     /**
      * @param integer $escolaId
-     * @return Registro40Model
+     * @return Registro40Model[]
      */
     public function getData($escolaId)
     {
-        $data = $this->processData($this->repository->getDataForRecord40($escolaId));
-        $this->hydrateModel($data[0]);
+        $return = $this->processData($this->repository->getDataForRecord40($escolaId));
 
-        return $this->model;
+        foreach ($return as $data) {
+            $this->hydrateModel($data);
+            $this->modelArray[] = $this->model;
+            $this->model = new Registro40Model();
+        }
+
+        return $this->modelArray;
     }
 
     private function processData($data)

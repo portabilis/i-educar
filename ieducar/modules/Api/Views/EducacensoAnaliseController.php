@@ -3,6 +3,7 @@
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro10;
 use App\Models\Educacenso\Registro40;
+use App\Models\Individual;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
@@ -13,7 +14,9 @@ use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
+use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use Illuminate\Support\Facades\DB;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
@@ -853,10 +856,12 @@ class EducacensoAnaliseController extends ApiCoreController
         $gestores = $registro40->getData($escolaId);
 
         /** @var todo Refatorar para usar o model School */
-        $nomeEscola = DB::select(DB::raw('SELECT relatorio.get_nome_escola(:escolaId)'), [$escolaId]);
+        $escola = DB::select(DB::raw('SELECT relatorio.get_nome_escola(:escolaId) as nome'), [$escolaId])[0];
+        $nomeEscola = $escola->nome;
         $codEscola = $escolaId;
 
-        if (empty($gestores)) {
+        $mensagem = [];
+        if (count($gestores) > 3) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. A escola não pode ter mais de 3 gestores escolares.",
                     'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
@@ -865,8 +870,55 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
         }
 
-        $mensagem = [];
-        
+        if (empty($gestores)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verifique se algum(a) gestor(a) escolar foi informado(a)",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+
+            return [
+                'mensagens' => $mensagem,
+                'title' => 'Análise exportação - Registro 40'
+            ];
+        }
+
+        $valueObjectArray = [];
+
+        foreach ($gestores as $gestor) {
+            $nomeGestor = Individual::find($gestor->codigoPessoa)->realName;
+
+            if (empty($gestor->cargo)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verifique se o cargo do gestor(a) {$nomeGestor} foi informado",
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                    'fail' => true
+                ];
+            }
+
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->individualId = $gestor->codigoPessoa;
+            $valueObject->roleId = $gestor->cargo;
+            $valueObject->accessCriteriaId = $gestor->criterioAcesso;
+            $valueObject->accessCriteriaDescription = $gestor->especificacaoCriterioAcesso;
+            $valueObject->linkTypeId = $gestor->tipoVinculo;
+            $valueObjectArray[] = $valueObject;
+        }
+
+        $managersValidator = new SchoolManagers($valueObjectArray, $gestores[0]->dependencia_administrativa);
+
+        if (!$managersValidator->isValid()) {
+            foreach ($managersValidator->getMessage() as $message) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. " . $message,
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                    'fail' => true
+                ];
+            }
+        }
 
         return [
             'mensagens' => $mensagem,
