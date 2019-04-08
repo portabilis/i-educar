@@ -834,6 +834,7 @@ class clsCadastro extends clsCampos
             $this->_mensagem = $value;
 
             session()->flash('legacy', $value);
+            session()->save();
         } else {
             $this->{$name} = $value;
         }
