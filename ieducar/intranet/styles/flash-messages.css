@@ -11,7 +11,7 @@
 
 .flashMessages__controls {
   margin: 0;
-  padding: 0;
+  padding: 0 24px 0 0;
   text-align: right;
 }
 
