@@ -75,9 +75,6 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
         $db = new clsBanco();
         $db2 = new clsBanco();
         
@@ -121,9 +118,6 @@ class indice extends clsCadastro
 
     function Editar() 
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
         $db = new clsBanco();
         
         $objAgenda = new clsAgenda( $this->pessoa_logada, $this->pessoa_logada );

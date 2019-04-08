@@ -37,14 +37,17 @@ class MunicipioController extends ApiCoreController
         if ($this->canSearch()) {
             $sql = <<<SQL
                 SELECT
-                    distinct sigla_uf,
+                    DISTINCT sigla_uf,
                     idmun AS id,
                     nome AS name,
-                    ts_rank_cd(to_tsvector('portuguese', nome), to_tsquery('portuguese', $1), 16) AS rank
+                    LENGTH(nome) AS size
                 FROM
                     public.municipio
+                WHERE TRUE
+                    AND LOWER(UNACCENT(nome)) LIKE '%' || LOWER(UNACCENT($1)) || '%'
                 ORDER BY
-                    rank DESC
+                    size,
+                    nome
                 LIMIT 15
 SQL;
 

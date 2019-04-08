@@ -24,6 +24,12 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
@@ -47,9 +53,7 @@ class indice extends clsCadastro
     {
         $retorno = "Editar";
 
-        @session_start();
-         $this->idpes = $_SESSION['id_pessoa'];
-        @session_write_close();
+         $this->idpes = $this->pessoa_logada;
         
         if($this->idpes)
         {
@@ -85,13 +89,14 @@ class indice extends clsCadastro
     {
         $db = new clsBanco();
         $db->Consulta("UPDATE funcionario SET tipo_menu='$this->tipo_menu' WHERE ref_cod_pessoa_fj = '$this->idpes' ");
-        
-        @session_start();
-        $_SESSION['tipo_menu'] = $this->tipo_menu;
-        @session_write_close();
-        
-        header("Location: opcao_menu_det.php");
-        return false;
+
+        Session::put('tipo_menu', $this->tipo_menu);
+
+        throw new HttpResponseException(
+            new RedirectResponse(
+                URL::to('intranet/opcao_menu_det.php')
+            )
+        );
     }
 
     function Excluir()

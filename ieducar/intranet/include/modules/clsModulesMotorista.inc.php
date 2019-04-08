@@ -27,6 +27,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
@@ -111,7 +113,8 @@ class clsModulesMotorista
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}motorista";
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
+
+    $this->pessoa_logada = Session::get('id_pessoa');
 
     $this->_campos_lista = $this->_todos_campos = " cod_motorista, ref_idpes, cnh, tipo_cnh, dt_habilitacao, vencimento_cnh, ref_cod_empresa_transporte_escolar, 
        observacao"; 

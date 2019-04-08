@@ -95,9 +95,7 @@ class indice extends clsCadastro
     {
 
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         if($obj_permissoes->nivel_acesso($this->pessoa_logada) > 7)
@@ -111,9 +109,7 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         if($_POST){
             foreach ($_POST as $key => $value) {
                 $this->$key = $value;

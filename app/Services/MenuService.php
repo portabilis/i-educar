@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Submenu;
-use App\Models\User;
+use App\Models\LegacySubmenu;
+use App\Models\LegacyUser;
 use iEducar\Support\Repositories\MenuRepository;
 use iEducar\Support\Repositories\SubmenuRepository;
 use iEducar\Support\Repositories\UserRepository;
@@ -39,10 +39,10 @@ class MenuService
     }
 
     /**
-     * @param User $user
+     * @param LegacyUser $user
      * @return Collection
      */
-    public function getByUser(User $user)
+    public function getByUser(LegacyUser $user)
     {
         $submenus = $this->getSubmenusByUser($user);
 
@@ -65,10 +65,10 @@ class MenuService
     }
 
     /**
-     * @param User $user
+     * @param LegacyUser $user
      * @return Collection
      */
-    public function getSubmenusByUser(User $user)
+    public function getSubmenusByUser(LegacyUser $user)
     {
         $typeUser = $user->type->cod_tipo_usuario;
 
@@ -86,6 +86,6 @@ class MenuService
     {
         $arraySubmenuId = $submenus->pluck('cod_menu_submenu')->all();
 
-        return in_array(Submenu::SUPER_USER_MENU_ID, $arraySubmenuId);
+        return in_array(LegacySubmenu::SUPER_USER_MENU_ID, $arraySubmenuId);
     }
 }
