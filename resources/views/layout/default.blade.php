@@ -46,6 +46,8 @@
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/flash-messages.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}">
 
+    @stack('styles')
+
     <script>
         (function (e, t, n) {
             var r = e.querySelectorAll("html")[0];

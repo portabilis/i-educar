@@ -1,9 +1,10 @@
 <?php
 
 use App\District;
+use App\Neighborhood;
 use Faker\Generator as Faker;
 
-$factory->define(App\Neighborhood::class, function (Faker $faker) {
+$factory->define(Neighborhood::class, function (Faker $faker) {
     return [
         'district_id' => function () {
 
