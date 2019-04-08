@@ -15,6 +15,10 @@
         @if ($message = Session::get('info'))
             <div class="flashMessages__message -info"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
         @endif
+
+        @if ($message = Session::get('legacy'))
+            <div class="flashMessages__message -legacy"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
+        @endif
     </div>
     <ul class="flashMessages__controls">
         <li><a href="#" data-action="showAll">mostrar todos (+<span>0</span>)</a></li><li><a href="#" data-action="closeAll">fechar todos</a></li>
