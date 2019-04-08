@@ -246,17 +246,26 @@ class clsCadastro extends clsCampos
     return FALSE;
   }
 
-  protected function flashMessage() {
-    if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
-      $this->mensagem = 'Registro incluido com sucesso!';
-    }
+    protected function flashMessage()
+    {
+        if (Session::has('errors')) {
+            $messages = [];
+            foreach (Session::get('errors')->all() as $message) {
+                $messages[] = $message;
+            }
+            $this->mensagem = implode('<br>', $messages);
+        }
 
-    if ($this->sucesso) {
-      return "<p class='success'>$this->mensagem</p>";
-    }
+        if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
+            $this->mensagem = 'Registro incluido com sucesso!';
+        }
 
-    return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
-  }
+        if ($this->sucesso) {
+            return "<p class='success'>$this->mensagem</p>";
+        }
+
+        return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
+    }
 
   function RenderHTML()
   {

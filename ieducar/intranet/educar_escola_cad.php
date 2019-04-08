@@ -10,6 +10,10 @@ use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
+use App\Models\SchoolManager;
+use App\Rules\SchoolManagerAtLeastOneChief;
+use App\Rules\SchoolManagerUniqueIndividuals;
+use App\Services\SchoolManagerService;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -24,7 +28,9 @@ use iEducar\Modules\Educacenso\Model\SalasGerais;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
+use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
@@ -219,6 +225,12 @@ class indice extends clsCadastro
     public $qtd_bombeiro;
     public $qtd_psicologo;
     public $qtd_fonoaudiologo;
+    public $managers_role_id;
+    public $managers_individual_id;
+    public $managers_access_criteria_id;
+    public $managers_access_criteria_description;
+    public $managers_link_type_id;
+    public $managers_chief;
 
     private $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -923,12 +935,7 @@ class indice extends clsCadastro
             $options = array('label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_autorizativo', $options);
 
-            $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
-            $helperOptions = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
-            $options = array('label' => 'Gestor escolar',
-                'required' => $obrigarCamposCenso,
-                'size' => 50);
-            $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
+            $this->addSchoolManagersTable();
 
             $hiddenInputOptions = array('options' => array('value' => $this->secretario_id));
             $helperOptions = array('objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions);
@@ -936,15 +943,6 @@ class indice extends clsCadastro
                 'size' => 50,
                 'required' => false);
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
-
-            $resources = array(1 => 'Diretor',
-                2 => 'Outro cargo');
-            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
-            $this->inputsHelper()->select('cargo_gestor', $options);
-
-            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
-
-            $this->inputsHelper()->text('email_gestor', $options);
 
             $resources = SelectOptions::esferasAdministrativasEscola();
             $options = [
@@ -1798,6 +1796,8 @@ class indice extends clsCadastro
             return false;
         }
 
+        $this->validateManagersRules();
+
         for ( $i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
             $campo = 'codigo_inep_escola_compartilhada'.$seq;
@@ -1986,6 +1986,8 @@ class indice extends clsCadastro
                                     return false;
                                 }
                             }
+
+                            $this->storeManagers($cod_escola);
                         }
                         //-----------------------FIM CADASTRA CURSO------------------------//
                     } else {
@@ -2142,9 +2144,14 @@ class indice extends clsCadastro
                                 return false;
                             }
                         }
+
+                        $this->storeManagers($cod_escola);
                     }
                     $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
+
+
+
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
                     die();
@@ -2185,6 +2192,8 @@ class indice extends clsCadastro
         if (!$this->validaCamposCenso()) {
             return false;
         }
+
+        $this->validateManagersRules();
 
         for ( $i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
@@ -2532,7 +2541,11 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+
                         $this->saveInep($this->cod_escola);
+
+                        $this->storeManagers($this->cod_escola);
+
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
                         header("Location: educar_escola_lst.php");
@@ -2565,7 +2578,11 @@ class indice extends clsCadastro
                             }
                         }
                     }
+
                     $this->saveInep($this->cod_escola);
+
+                    $this->storeManagers($this->cod_escola);
+
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -2652,7 +2669,8 @@ class indice extends clsCadastro
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
-                $this->validaLinguasIndigenas();
+                $this->validaLinguasIndigenas() &&
+                $this->validateCensusManagerRules();
     }
 
     protected function validaOcupacaoPredio()
@@ -2863,6 +2881,7 @@ class indice extends clsCadastro
         }
 
     }
+
 
     protected function validaEscolaCompartilhaPredio()
     {
@@ -3152,6 +3171,152 @@ class indice extends clsCadastro
     {
         if (count($this->codigo_lingua_indigena) > 3) {
             $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
+            return false;
+        }
+
+        return true;
+    }
+    /**
+     * Cria tabela dinâmica com gestores da escola
+     */
+    protected function addSchoolManagersTable()
+    {
+        /** @var SchoolManagerService $schoolService */
+        $schoolService = app(SchoolManagerService::class);
+        $managers = $schoolService->getSchoolManagers($this->cod_escola);
+
+        $rows = [];
+        foreach ($managers as $manager) {
+            $rows[] = $this->makeRowManagerTable($manager);
+        }
+
+        $this->campoTabelaInicio('gestores', 'Gestores',
+            [
+                'Nome do(a) gestor(a)',
+                'Cargo do(a) gestor(a)',
+                'Critério de acesso ao cargo',
+                'Especificação do critério de acesso',
+                'Tipo de vínculo',
+                'Gestor(a) principal'
+            ],
+            $rows
+        );
+
+        $helperOptions = ['objectName' => 'managers_individual'];
+        $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
+
+        $options = [
+                'resources' => SelectOptions::schoolManagerRoles(),
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_role_id', $options);
+
+        $options = [
+                'resources' => SelectOptions::schoolManagerAccessCriterias(),
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_access_criteria_id', $options);
+
+        $options = ['required' => false];
+        $this->inputsHelper()->text('managers_access_criteria_description', $options);
+
+        $options =
+            [
+                'resources' => SelectOptions::schoolManagerLinkTypes(),
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_link_type_id', $options);
+
+        $resources = [
+                0 => 'Não',
+                1 => 'Sim',
+            ];
+        $options =
+            [
+                'resources' => $resources,
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_chief', $options);
+
+        $this->campoTabelaFim();
+    }
+
+    /**
+     * @param SchoolManager $schoolManager
+     * @return array
+     */
+    protected function makeRowManagerTable($schoolManager)
+    {
+        return [
+            $schoolManager->individual->real_name,
+            $schoolManager->role_id,
+            $schoolManager->access_criteria_id,
+            $schoolManager->access_criteria_description,
+            $schoolManager->link_type_id,
+            (int)$schoolManager->chief,
+            $schoolManager->individual_id,
+        ];
+    }
+
+    /**
+     * Salva os gestores da escola
+     * @param $schoolId
+     */
+    protected function storeManagers($schoolId)
+    {
+        /** @var SchoolManagerService $schoolService */
+        $schoolService = app(SchoolManagerService::class);
+        $schoolService->deleteAllManagers($schoolId);
+        foreach($this->managers_individual_id as $key => $individualId) {
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->individualId = $individualId;
+            $valueObject->schoolId = $schoolId;
+            $valueObject->roleId = $this->managers_role_id[$key];
+            $valueObject->individualId = $this->managers_access_criteria_id[$key] ?: null;
+            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
+            $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
+            $valueObject->isChief = $this->managers_chief[$key];
+            $schoolService->storeManager($valueObject);
+        }
+    }
+
+    /**
+     * Valida as regras gerais dos gestores da escola
+     */
+    protected function validateManagersRules()
+    {
+        request()->validate(
+            [
+                'managers_individual_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
+                'managers_chief' => new SchoolManagerAtLeastOneChief(),
+            ],
+            [
+                'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares'
+            ]);
+    }
+
+    /**
+     * Valida as regras do censo referentes aos gestores da escola
+     * @return bool
+     */
+    protected function validateCensusManagerRules()
+    {
+        $managers = [];
+        foreach ($this->managers_individual_id as $key => $value) {
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->individualId = $this->managers_individual_id;
+            $valueObject->roleId = $this->managers_role_id;
+            $valueObject->accessCriteriaId = $this->managers_access_criteria_id;
+            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description;
+            $valueObject->linkTypeId = $this->managers_link_type_id;
+            $valueObject->isChief = $this->managers_chief;
+            $managers = $valueObject;
+        }
+
+        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa);
+
+        if (!$managersValidator->isValid()) {
+            $this->mensagem = implode('<br>', $managersValidator->getMessage());
             return false;
         }
 

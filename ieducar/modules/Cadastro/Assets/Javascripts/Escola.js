@@ -43,6 +43,17 @@ const EQUIPAMENTOS = {
     COMPUTADORES: 1
 };
 
+const SCHOOL_MANAGER_ROLE = {
+    DIRETOR: 1,
+}
+
+const SCHOOL_MANAGER_ACCESS_CRITERIA = {
+    OUTRO: 7,
+}
+
+
+$escolaInepIdField.closest('tr').hide();
+
 var submitForm = function(){
   var canSubmit = validationUtils.validatesFields(true);
 
@@ -188,7 +199,8 @@ function changePossuiDependencias() {
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 if (!$j('#cnpj').is(':visible')){
 
-  $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Recursos</span></div></li><li><div id="tab6" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
+  $j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Recursos</span></div></li><li><div id="tab6" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
+
   $j('td .formdktd b').remove();
   $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
 
@@ -700,3 +712,86 @@ function habilitaReservaVagasCotas() {
 $j('#exame_selecao_ingresso').on('change', function() {
     habilitaReservaVagasCotas()
 });
+
+var search = function (request, response) {
+    var searchPath = '/module/Api/Pessoa?oper=get&resource=pessoa-search',
+        params = {
+            query: request.term
+        };
+
+    $j.get(searchPath, params, function (dataResponse) {
+        simpleSearch.handleSearch(dataResponse, response);
+    });
+};
+
+var handleSelect = function (event, ui) {
+    var $target = $j(event.target),
+        id = $target.attr('id'),
+        idNum = id.match(/\[(\d+)\]/),
+        $refEscola = $j('input[id="managers_individual_id[' + idNum[1] + ']"]');
+
+    $target.val(ui.item.label);
+    $refEscola.val(ui.item.value);
+
+    return false;
+};
+
+function setAutoComplete() {
+    $j.each($j('input[id^="managers_individual"]'), function (index, field) {
+        $j(field).autocomplete({
+            source: search,
+            select: handleSelect,
+            minLength: 1,
+            autoFocus: false
+        });
+    });
+};
+
+setAutoComplete();
+addEventsManagerInputs();
+
+$j('#btn_add_tab_add_1').click(function () {
+    setAutoComplete();
+    addEventsManagerInputs();
+});
+
+function addEventsManagerInputs() {
+    $j.each($j('select[id^="managers_role"]'), function (index, field) {
+        field.on('change', function () {
+            changeManagerRole(this);
+        });
+        changeManagerRole(this);
+    });
+
+    $j.each($j('select[id^="managers_access_criteria_id"]'), function (index, field) {
+        field.on('change', function () {
+            changeAccessCriteria(this);
+        });
+        changeAccessCriteria(this);
+    });
+
+}
+
+function changeManagerRole(field) {
+    let id = $j(field).attr('id');
+    let idNum = id.match(/\[(\d+)\]/);
+    let accessCriteria = $j('select[id="managers_access_criteria_id[' + idNum[1] + ']"]');
+
+    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
+        accessCriteria.prop('disabled', false);
+    } else {
+        accessCriteria.prop('disabled', true);
+    }
+}
+
+function changeAccessCriteria(field) {
+    let id = $j(field).attr('id');
+    let idNum = id.match(/\[(\d+)\]/);
+    let accessCriteriaDescription = $j('input[id="managers_access_criteria_description[' + idNum[1] + ']"]');
+
+    if ($j(field).val() == SCHOOL_MANAGER_ACCESS_CRITERIA.OUTRO.toString()) {
+        accessCriteriaDescription.prop('disabled', false);
+    } else {
+        accessCriteriaDescription.prop('disabled', true);
+    }
+}
