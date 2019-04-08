@@ -46,7 +46,7 @@ class App_Unificacao_Aluno
 
     private static function validaParametros($codAlunoPrincipal, $codAlunos, $codPessoa)
     {
-        if (!is_integer($codAlunoPrincipal)) {
+        if (!is_numeric($codAlunoPrincipal)) {
             throw new CoreExt_Exception('Parâmetro $codAlunoPrincipal deve ser um inteiro');
         }
 
@@ -54,7 +54,7 @@ class App_Unificacao_Aluno
             throw new CoreExt_Exception('Parâmetro $codAlunos deve ser um array de códigos de alunos');
         }
 
-        if (!is_integer($codPessoa)) {
+        if (!is_numeric($codPessoa)) {
             throw new CoreExt_Exception('Parâmetro $codPessoa deve ser um inteiro');
         }
     }
