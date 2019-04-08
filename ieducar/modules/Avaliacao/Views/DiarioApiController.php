@@ -825,6 +825,14 @@ class DiarioApiController extends ApiCoreController
                 $matriculaId = $aluno['ref_cod_matricula'];
                 $turmaId = $aluno['ref_cod_turma'];
                 $serieId = $aluno['ref_ref_cod_serie'];
+                $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+                $disciplinasDependenciaId = App_Model_IedFinder::getDisciplinasDependenciaPorMatricula($matriculaId, $serieId, $this->getRequest()->escola_id);
+                $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+                $matriculaDependencia = $objMatriculaTurma->verficaEnturmacaoDeDependencia($matriculaId, $turmaId);
+
+                if (!empty($componenteCurricularId) && $isDependencia && !in_array($componenteCurricularId, $disciplinasDependenciaId)) {
+                    continue;
+                }
 
                 // seta id da matricula a ser usado pelo metodo serviceBoletim
                 $this->setCurrentMatriculaId($matriculaId);
