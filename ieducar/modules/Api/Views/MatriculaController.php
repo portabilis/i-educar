@@ -317,7 +317,7 @@ class MatriculaController extends ApiCoreController
                                             matricula_turma_excluidos.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
                                        ELSE FALSE
                                    END AS apresentar_fora_da_data,
-                                   null AS turno_id,
+                                   turno_id,
                                    matricula_turma_excluidos.deleted_at
                               FROM pmieducar.matricula
                         INNER JOIN pmieducar.escola
