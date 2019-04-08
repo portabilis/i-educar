@@ -240,6 +240,7 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
 
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 

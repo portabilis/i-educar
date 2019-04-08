@@ -203,9 +203,7 @@ class clsControlador
   protected function destroyLoginSession($addMsg = false) {
     $tentativasLoginFalhas = Session::get('tentativas_login_falhas');
 
-    @session_start();
-    $_SESSION = array();
-    @session_destroy();
+    Session::flush();
 
     //mantem tentativas_login_falhas, até que senha senha informada corretamente
     Session::put('tentativas_login_falhas', $tentativasLoginFalhas);

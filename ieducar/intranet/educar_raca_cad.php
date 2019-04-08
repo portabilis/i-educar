@@ -62,9 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_raca=$_GET["cod_raca"];
 
@@ -125,9 +123,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsCadastroRaca( $this->cod_raca, null, $this->pessoa_logada , $this->nm_raca, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $obj->raca_educacenso = $this->raca_educacenso;
@@ -153,9 +149,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $racaDetalhe = new clsCadastroRaca($this->cod_raca);
         $racaDetalheAntes = $racaDetalhe->detalhe();
@@ -182,9 +176,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsCadastroRaca($this->cod_raca, $this->pessoa_logada, null, $this->nm_raca, $this->data_cadastro, $this->data_exclusao, 0);
         $detalhe = $obj->detalhe();
