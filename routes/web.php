@@ -18,6 +18,8 @@ Auth::routes(['register' => false]);
 
 Route::redirect('/', 'intranet/index.php');
 
+Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
+
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass', 'auth']], function () {
 
     Route::get('intranet/index.php', 'LegacyController@intranet')
