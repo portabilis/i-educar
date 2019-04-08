@@ -3,19 +3,27 @@
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
+use iEducar\Modules\Educacenso\Model\Equipamentos;
+use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
+use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
+use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
+use iEducar\Modules\Educacenso\Model\RedeLocal;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
 use iEducar\Modules\Educacenso\Model\SalasAtividades;
 use iEducar\Modules\Educacenso\Model\SalasFuncionais;
 use iEducar\Modules\Educacenso\Model\SalasGerais;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -127,6 +135,9 @@ class indice extends clsCadastro
     public $esgoto_sanitario;
     public $destinacao_lixo;
     public $tratamento_lixo;
+    public $alimentacao_escolar_alunos;
+    public $compartilha_espacos_atividades_integracao;
+    public $usa_espacos_equipamentos_atividades_regulares;
     public $salas_funcionais;
     public $salas_gerais;
     public $banheiros;
@@ -144,6 +155,12 @@ class indice extends clsCadastro
     public $atendimento_aee;
     public $atividade_complementar;
     public $fundamental_ciclo;
+    public $organizacao_ensino;
+    public $instrumentos_pedagogicos;
+    public $orgaos_colegiados;
+    public $exame_selecao_ingresso;
+    public $reserva_vagas_cotas;
+    public $projeto_politico_pedagogico;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -151,6 +168,14 @@ class indice extends clsCadastro
     public $espaco_brasil_aprendizado;
     public $abre_final_semana;
     public $codigo_lingua_indigena;
+    public $equipamentos;
+    public $uso_internet;
+    public $rede_local;
+    public $equipamentos_acesso_internet;
+    public $quantidade_computadores_alunos_mesa;
+    public $quantidade_computadores_alunos_portateis;
+    public $quantidade_computadores_alunos_tablets;
+    public $lousas_digitais;
     public $televisoes;
     public $videocassetes;
     public $dvds;
@@ -181,6 +206,35 @@ class indice extends clsCadastro
     public $com_cnpj;
     public $isEnderecoExterno = 0;
     public $esfera_administrativa;
+    public $qtd_secretario_escolar;
+    public $qtd_auxiliar_administrativo;
+    public $qtd_apoio_pedagogico;
+    public $qtd_coordenador_turno;
+    public $qtd_tecnicos;
+    public $qtd_bibliotecarios;
+    public $qtd_segurancas;
+    public $qtd_auxiliar_servicos_gerais;
+    public $qtd_nutricionistas;
+    public $qtd_profissionais_preparacao;
+    public $qtd_bombeiro;
+    public $qtd_psicologo;
+    public $qtd_fonoaudiologo;
+
+    private $inputsRecursos = [
+        'qtd_secretario_escolar' => 'Secretário(a) escolar',
+        'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
+        'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
+        'qtd_coordenador_turno' => 'Coordenador(a) de turno/disciplina',
+        'qtd_tecnicos' => 'Técnicos(as), monitores(as) ou auxiliares de laboratório(s)',
+        'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
+        'qtd_segurancas' => 'Seguranças, guarda ou segurança patrimonial',
+        'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), horticultor(a), jardineiro(a)',
+        'qtd_nutricionistas' => 'Nutricionista',
+        'qtd_profissionais_preparacao' => 'Profissionais de preparação e segurança alimentar, cozinheiro(a), merendeira e auxiliar de cozinha',
+        'qtd_bombeiro' => 'Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), Enfermeiro(a), Técnico(a) de enfermagem e socorrista',
+        'qtd_psicologo' => 'Psicólogo(a) Escolar',
+        'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
+    ];
 
     public function Inicializar()
     {
@@ -404,7 +458,6 @@ class indice extends clsCadastro
             $this->tratamento_lixo = explode(',', str_replace(array('{', "}"), '', $this->tratamento_lixo));
         }
 
-
         if (is_string($this->salas_funcionais)) {
             $this->salas_funcionais = explode(',', str_replace(array('{', "}"), '', $this->salas_funcionais));
         }
@@ -443,6 +496,42 @@ class indice extends clsCadastro
 
         if (is_string($this->orgao_vinculado_escola)) {
             $this->orgao_vinculado_escola = explode(',', str_replace(array('{', "}"), '', $this->orgao_vinculado_escola));
+        }
+
+        if (is_string($this->equipamentos)) {
+            $this->equipamentos = explode(',', str_replace(array('{', "}"), '', $this->equipamentos));
+        }
+
+        if (is_string($this->uso_internet)) {
+            $this->uso_internet = explode(',', str_replace(array('{', "}"), '', $this->uso_internet));
+        }
+
+        if (is_string($this->rede_local)) {
+            $this->rede_local = explode(',', str_replace(array('{', "}"), '', $this->rede_local));
+        }
+
+        if (is_string($this->equipamentos_acesso_internet)) {
+            $this->equipamentos_acesso_internet = explode(',', str_replace(array('{', "}"), '', $this->equipamentos_acesso_internet));
+        }
+
+        if (is_string($this->organizacao_ensino)) {
+            $this->organizacao_ensino = explode(',', str_replace(array('{', "}"), '', $this->organizacao_ensino));
+        }
+
+        if (is_string($this->instrumentos_pedagogicos)) {
+            $this->instrumentos_pedagogicos = explode(',', str_replace(array('{', "}"), '', $this->instrumentos_pedagogicos));
+        }
+
+        if (is_string($this->orgaos_colegiados)) {
+            $this->orgaos_colegiados = explode(',', str_replace(array('{', "}"), '', $this->orgaos_colegiados));
+        }
+
+        if (is_string($this->reserva_vagas_cotas)) {
+            $this->reserva_vagas_cotas = explode(',', str_replace(array('{', "}"), '', $this->reserva_vagas_cotas));
+        }
+
+        if (is_string($this->codigo_lingua_indigena)) {
+            $this->codigo_lingua_indigena = explode(',', str_replace(array('{', "}"), '', $this->codigo_lingua_indigena));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -1138,20 +1227,42 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $resources = [
-                null => 'Selecione',
-                0 => 'Não',
-                1 => 'Sim'
+            $options = [
+                'label' => 'Alimentação escolar para os alunos(as)',
+                'value' => $this->alimentacao_escolar_alunos,
+                'required' => $obrigarCamposCenso,
+                'prompt' => 'Selecione',
+                'size' => 70
             ];
+            $this->inputsHelper()->booleanSelect('alimentacao_escolar_alunos', $options);
+
+            $options = [
+                'label' => 'Escola compartilha espaços para atividades de integração escola-comunidade',
+                'value' => $this->compartilha_espacos_atividades_integracao,
+                'required' => false,
+                'prompt' => 'Selecione',
+                'size' => 70
+            ];
+            $this->inputsHelper()->booleanSelect('compartilha_espacos_atividades_integracao', $options);
+
+            $options = [
+                'label' => 'Escola usa espaços e equipamentos do entorno escolar para atividades regulares com os alunos(as)',
+                'value' => $this->usa_espacos_equipamentos_atividades_regulares,
+                'required' => false,
+                'prompt' => 'Selecione',
+                'size' => 70
+            ];
+            $this->inputsHelper()->booleanSelect('usa_espacos_equipamentos_atividades_regulares', $options);
+
             $options = [
                 'label' => 'Possui dependências',
                 'label_hint' => 'Preencha com: Sim, para exportar os campos de dependências no arquivo do Censo escolar',
-                'resources' => $resources,
                 'value' => $this->possui_dependencias,
                 'required' => $obrigarCamposCenso,
+                'prompt' => 'Selecione',
                 'size' => 40
             ];
-            $this->inputsHelper()->select('possui_dependencias', $options);
+            $this->inputsHelper()->booleanSelect('possui_dependencias', $options);
 
             $helperOptions = ['objectName' => 'salas_gerais'];
             $options = [
@@ -1261,14 +1372,32 @@ class indice extends clsCadastro
             $options = array('label' => 'Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida', 'resources' => $resources, 'value' => $this->numero_salas_acessibilidade, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
             $this->inputsHelper()->integer('numero_salas_acessibilidade', $options);
 
-            $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('televisoes', $options);
+            $helperOptions = ['objectName' => 'equipamentos'];
+            $options = [
+                'label' => 'Equipamentos da escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->equipamentos,
+                    'all_values' => Equipamentos::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'uso_internet'];
+            $options = [
+                'label' => 'Acesso à internet',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->uso_internet,
+                    'all_values' => UsoInternet::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $options = array('label' => 'Quantidade de videocassetes', 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('videocassetes', $options);
-
-            $options = array('label' => 'Quantidade de DVDs', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('dvds', $options);
 
             $options = array('label' => 'Quantidade de antenas parabólicas', 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('antenas_parabolicas', $options);
@@ -1281,12 +1410,6 @@ class indice extends clsCadastro
 
             $options = array('label' => 'Quantidade de impressoras', 'resources' => $resources, 'value' => $this->impressoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('impressoras', $options);
-
-            $options = array('label' => 'Quantidade de aparelhos de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('aparelhos_de_som', $options);
-
-            $options = array('label' => 'Quantidade de data show', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('projetores_digitais', $options);
 
             $options = array('label' => 'Quantidade de FAXs', 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('faxs', $options);
@@ -1306,18 +1429,81 @@ class indice extends clsCadastro
             $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
             $this->inputsHelper()->integer('computadores', $options);
 
-            $disabled = $this->computadores > 0;
             $options = array(
                 'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
                 'required' => false,
                 'prompt' => 'Selecione',
-                'disabled' => !$disabled
             );
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
-            $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('total_funcionario', $options);
+            $helperOptions = ['objectName' => 'rede_local'];
+            $options = [
+                'label' => 'Rede local de interligação de computadores',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->rede_local,
+                    'all_values' => RedeLocal::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'equipamentos_acesso_internet'];
+            $options = [
+                'label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->equipamentos_acesso_internet,
+                    'all_values' => EquipamentosAcessoInternet::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $this->campoRotulo(
+                'quantidade_computadores_alunos',
+                '<b>Quantidade de computadores de uso dos aluno</b>'
+            );
+
+            $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_mesa', $options);
+
+            $options = array('label' => 'Computadores portáteis', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_portateis, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_portateis', $options);
+
+            $options = array('label' => 'Tablets', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_tablets, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_tablets', $options);
+
+            $this->campoRotulo(
+                'equipamentos_aprendizagem',
+                '<b>Quantidade de equipamentos para ensino/aprendizagem</b>'
+            );
+
+            $options = array('label' => 'Aparelho de Televisão', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('televisoes', $options);
+
+            $options = array('label' => 'Projetor Multimídia (Data show)', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('projetores_digitais', $options);
+
+            $options = array('label' => 'Aparelho de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('aparelhos_de_som', $options);
+
+            $options = array('label' => 'Aparelho de DVD/Blu-ray', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('dvds', $options);
+
+            $options = array('label' => 'Lousa digital', 'resources' => $resources, 'value' => $this->lousas_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('lousas_digitais', $options);
+
+            $this->campoRotulo(
+                'quantidade_profissionais',
+                '<b>Quantidade de profissionais</b>'
+            );
+
+            foreach ($this->inputsRecursos as $key => $label) {
+                $options = array('label' => $label, 'value' => $this->{$key}, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+                $this->inputsHelper()->integer($key, $options);
+            }
 
             $resources = array(NULL => 'Selecione',
                 0 => 'Não oferece',
@@ -1349,6 +1535,81 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
+            $helperOptions = ['objectName' => 'organizacao_ensino'];
+            $options = [
+                'label' => 'Forma(s) de organização do ensino',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->organizacao_ensino,
+                    'all_values' => OrganizacaoEnsino::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'instrumentos_pedagogicos'];
+            $options = [
+                'label' => 'Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->instrumentos_pedagogicos,
+                    'all_values' => InstrumentosPedagogicos::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'orgaos_colegiados'];
+            $options = [
+                'label' => 'Órgãos colegiados em funcionamento na escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->orgaos_colegiados,
+                    'all_values' => OrgaosColegiados::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $options = array(
+                'label' => 'Escola faz exame de seleção para ingresso de seus aluno(a)s',
+                'label_hint' => 'Avaliação por prova e /ou analise curricular',
+                'placeholder' => 'Selecione',
+                'prompt' => 'Selecione',
+                'value' => $this->exame_selecao_ingresso,
+                'required' => false,
+            );
+            $this->inputsHelper()->booleanSelect('exame_selecao_ingresso', $options);
+
+            $helperOptions = ['objectName' => 'reserva_vagas_cotas'];
+            $options = [
+                'label' => 'Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->reserva_vagas_cotas,
+                    'all_values' => ReservaVagasCotas::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não sei',
+                1 => 'Sim',
+                2 => 'A escola não possui projeto político pedagógico/proposta pedagógica'
+            ];
+            $options = array(
+                'resources' => $resources,
+                'label' => 'Projeto político pedagógico ou a proposta pedagógica da escola atualizado nos últimos 12 meses até a data de referência',
+                'label_hint' => '(conforme art. 12 da LDB)',
+                'placeholder' => 'Selecione',
+                'prompt' => 'Selecione',
+                'value' => $this->projeto_politico_pedagogico,
+                'required' => false,
+            );
+            $this->inputsHelper()->select('projeto_politico_pedagogico', $options);
+
             $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
@@ -1364,36 +1625,45 @@ class indice extends clsCadastro
                 'size' => 70);
             $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
 
-            $options = array('label' => 'Escola indígena',
+            $options = [
+                'label' => 'Educação escolar indígena',
                 'value' => $this->educacao_indigena,
-                'required' => false);
+                'required' => false,
+                'prompt' => 'Selecione',
+            ];
             $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
-            $resources = array(1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena');
+            $resources = [
+                null => 'Selecione',
+                1 => 'Língua Portuguesa',
+                2 => 'Língua Indígena'
+            ];
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
             $options = array('label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
-                'required' => $habilitaLiguaMinistrada,
+                'required' => false,
                 'disabled' => !$habilitaLiguaMinistrada,
                 'size' => 70);
             $this->inputsHelper()->select('lingua_ministrada', $options);
 
-            $habilitaLiguasIndigenas = $this->lingua_ministrada == 2;
             $resources_ = Portabilis_Utils_Database::fetchPreparedQuery('SELECT * FROM modules.lingua_indigena_educacenso');
 
             foreach ($resources_ as $reg) {
                 $resources[$reg['id']] = $reg['lingua'];
             }
 
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'),
-                'resources' => $resources,
-                'value' => $this->codigo_lingua_indigena,
-                'required' => $habilitaLiguasIndigenas && $habilitaLiguaMinistrada,
-                'disabled' => !$habilitaLiguasIndigenas || !$habilitaLiguaMinistrada,
-                'size' => 70);
-            $this->inputsHelper()->select('codigo_lingua_indigena', $options);
+            $helperOptions = ['objectName' => 'codigo_lingua_indigena'];
+            $options = [
+                'label' => 'Línguas indígenas',
+                'size' => 70,
+                'required' => false,
+                'options' => [
+                    'values' => $this->codigo_lingua_indigena,
+                    'all_values' => $resources
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
                 'prompt' => 'Selecione',
@@ -1412,13 +1682,14 @@ class indice extends clsCadastro
                 'value' => $this->proposta_pedagogica,
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
-            
+
             $resources = SelectOptions::unidadesVinculadasEscola();
             $options = [
                 'label' => 'Unidade vinculada à Escola de Educação Básica ou Unidade Ofertante de Educação Superior',
                 'resources' => $resources,
                 'value' => $this->unidade_vinculada_outra_instituicao,
-                'size' => 70
+                'size' => 70,
+                'required' => false
             ];
             $this->inputsHelper()->select('unidade_vinculada_outra_instituicao', $options);
 
@@ -1496,6 +1767,15 @@ class indice extends clsCadastro
         $dormitorios = implode(',', $this->dormitorios);
         $areas_externas = implode(',', $this->areas_externas);
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
+        $equipamentos = implode(',', $this->equipamentos);
+        $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
+        $organizacao_ensino = implode(',', $this->organizacao_ensino);
+        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
+        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
+        $reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
+        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1526,28 +1806,7 @@ class indice extends clsCadastro
             }
         }
 
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
-            return false;
-        }
-
-        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+        if (!$this->validaOpcoesUnicasMultipleSearch()) {
             return false;
         }
 
@@ -1597,6 +1856,9 @@ class indice extends clsCadastro
                     $obj->esgoto_sanitario = $esgoto_sanitario;
                     $obj->destinacao_lixo = $destinacao_lixo;
                     $obj->tratamento_lixo = $tratamento_lixo;
+                    $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+                    $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+                    $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
                     $obj->salas_funcionais = $salas_funcionais;
                     $obj->salas_gerais = $salas_gerais;
                     $obj->banheiros = $banheiros;
@@ -1614,14 +1876,28 @@ class indice extends clsCadastro
                     $obj->atendimento_aee = $this->atendimento_aee;
                     $obj->atividade_complementar = $this->atividade_complementar;
                     $obj->fundamental_ciclo = $this->fundamental_ciclo;
+                    $obj->organizacao_ensino = $organizacao_ensino;
+                    $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+                    $obj->orgaos_colegiados = $orgaos_colegiados;
+                    $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+                    $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+                    $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
                     $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
                     $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
                     $obj->abre_final_semana = $this->abre_final_semana;
-                    $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+                    $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
                     $obj->proposta_pedagogica = $this->proposta_pedagogica;
+                    $obj->equipamentos = $equipamentos;
+                    $obj->uso_internet = $uso_internet;
+                    $obj->rede_local = $rede_local;
+                    $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+                    $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+                    $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+                    $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+                    $obj->lousas_digitais = $this->lousas_digitais;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1649,6 +1925,9 @@ class indice extends clsCadastro
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
                     $obj->esfera_administrativa = $this->esfera_administrativa;
+                    foreach ($this->inputsRecursos as $key => $value) {
+                        $obj->{$key} = $this->{$key};
+                    }
 
                     $cod_escola = $cadastrou1 = $obj->cadastra();
 
@@ -1717,6 +1996,8 @@ class indice extends clsCadastro
                     return false;
                 }
 
+                $this->saveInep($escola['cod_escola']);
+
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                 header("Location: educar_escola_lst.php");
                 die();
@@ -1760,6 +2041,9 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -1777,14 +2061,28 @@ class indice extends clsCadastro
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $this->organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -1812,6 +2110,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $cod_escola = $cadastrou = $obj->cadastra();
 
@@ -1841,6 +2142,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -1908,29 +2210,17 @@ class indice extends clsCadastro
         $dormitorios = implode(',', $this->dormitorios);
         $areas_externas = implode(',', $this->areas_externas);
         $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
+        $equipamentos = implode(',', $this->equipamentos);
+        $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
+        $organizacao_ensino = implode(',', $this->organizacao_ensino);
+        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
+        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
+        $reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
+        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
-            return false;
-        }
-
-        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+        if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
         }
 
@@ -1974,6 +2264,9 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -1991,14 +2284,28 @@ class indice extends clsCadastro
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2026,6 +2333,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $editou = $obj->edita();
 
@@ -2069,6 +2379,9 @@ class indice extends clsCadastro
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
             $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
             $obj->salas_funcionais = $salas_funcionais;
             $obj->salas_gerais = $salas_gerais;
             $obj->banheiros = $banheiros;
@@ -2086,14 +2399,28 @@ class indice extends clsCadastro
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2121,6 +2448,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $this->cod_escola = $editou = $obj->cadastra();
 
@@ -2201,6 +2531,7 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+                        $this->saveInep($this->cod_escola);
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
                         header("Location: educar_escola_lst.php");
@@ -2233,6 +2564,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($this->cod_escola);
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -2303,11 +2635,10 @@ class indice extends clsCadastro
     protected function validaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {
-            return TRUE;
+            return true;
         }
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
-                $this->validaPossuiBandaLarga() &&
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
@@ -2316,7 +2647,11 @@ class indice extends clsCadastro
                 $this->validaSalasUtilizadasDentroEscola() &&
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
-                $this->validaSalasAcessibilidade();
+                $this->validaSalasAcessibilidade() &&
+                $this->validaRecursos() &&
+                $this->validaQuantidadeComputadoresAlunos() &&
+                $this->validaQuantidadeEquipamentosEnsino() &&
+                $this->validaLinguasIndigenas();
     }
 
     protected function validaOcupacaoPredio()
@@ -2337,15 +2672,6 @@ class indice extends clsCadastro
         }
 
         return true;
-    }
-
-    protected function validaPossuiBandaLarga()
-    {
-        if (((int)$this->computadores) > 0 && !in_array($this->acesso_internet, array('0', '1'))) {
-            $this->mensagem = 'O campo: Possui internet banda larga, deve ser informado quando existir computadores na escola.';
-            return FALSE;
-        }
-        return TRUE;
     }
 
     protected function validaEsferaAdministrativa()
@@ -2648,6 +2974,183 @@ class indice extends clsCadastro
         $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
         if ((int)$this->numero_salas_acessibilidade > $totalSalas) {
             $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaOpcoesUnicasMultipleSearch()
+    {
+        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
+            return false;
+        }
+        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(OrgaosColegiados::NENHUM, $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaRecursos()
+    {
+        $algumCampoPreenchido = false;
+        foreach ($this->inputsRecursos as $key => $label) {
+            if ($this->{$key} == '0') {
+                $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
+                return false;
+            } elseif ((int) $this->{$key} > 0) {
+                $algumCampoPreenchido = true;
+            }
+        }
+
+        if ($algumCampoPreenchido) {
+            return true;
+        }
+
+        $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção</b> Quantidade de profissionais da aba Recursos.';
+        return false;
+    }
+
+    protected function validaQuantidadeComputadoresAlunos()
+    {
+        if ($this->quantidade_computadores_alunos_mesa == '0') {
+            $this->mensagem = 'O campo: <b>Computadores de mesa</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_portateis == '0') {
+            $this->mensagem = 'O campo: <b>Computadores portáteis</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_tablets == '0') {
+            $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+
+    protected function validaQuantidadeEquipamentosEnsino()
+    {
+        if ($this->televisoes == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de Televisão</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->dvds == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de DVD/Blu-ray</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->aparelhos_de_som == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de som</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->projetores_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Projetor Multimídia (Data show)</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->lousas_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Lousa digital</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+    private function saveInep($schoolId)
+    {
+        DB::table('modules.educacenso_cod_escola')->where('cod_escola', $schoolId)
+            ->delete();
+        if (!empty($this->escola_inep_id)) {
+            $data = [
+                'cod_escola' => $schoolId,
+                'cod_escola_inep' => $this->escola_inep_id,
+                'fonte' => 'fonte',
+                'nome_inep' => '-',
+                'created_at' => 'NOW()',
+            ];
+
+            DB::table('modules.educacenso_cod_escola')->insert($data);
+        }
+    }
+  
+    protected function validaLinguasIndigenas()
+    {
+        if (count($this->codigo_lingua_indigena) > 3) {
+            $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
             return false;
         }
 

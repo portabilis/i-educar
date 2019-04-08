@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
 use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
@@ -295,6 +296,7 @@ class EducacensoExportController extends ApiCoreController
 
         $escola = SituacaoFuncionamento::handle($escola);
         $escola = DependenciaAdministrativa::handle($escola);
+        $escola = Regulamentacao::handle($escola);
 
         $data = [
             $escola->registro,
@@ -341,7 +343,7 @@ class EducacensoExportController extends ApiCoreController
             $escola->codigoIes,
         ];
 
-        return ArrayToCenso::format($data);
+        return ArrayToCenso::format($data) . PHP_EOL;
     }
 
     protected function exportaDadosRegistro10($escolaId, $ano)

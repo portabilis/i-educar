@@ -3,7 +3,7 @@
 namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\RegistroEducacenso;
-use App\Services\EducacensoRepository;
+use App\Repositories\EducacensoRepository;
 
 abstract class AbstractRegistro
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 
@@ -70,14 +70,14 @@ class EducacensoRepository
             e.dependencia_administrativa AS "dependenciaAdministrativa",
             (ARRAY[1] <@ e.orgao_vinculado_escola)::INT AS "orgaoOutro",
             (ARRAY[2] <@ e.orgao_vinculado_escola)::INT AS "orgaoEducacao",
-            (ARRAY[3] <@ e.orgao_vinculado_escola)::INT AS "orgaoSaude",
-            (ARRAY[4] <@ e.orgao_vinculado_escola)::INT AS "orgaoSeguranca",
+            (ARRAY[3] <@ e.orgao_vinculado_escola)::INT AS "orgaoSeguranca",
+            (ARRAY[4] <@ e.orgao_vinculado_escola)::INT AS "orgaoSaude",
             (ARRAY[1] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraEmpresa",
             (ARRAY[2] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSindicato",
             (ARRAY[3] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOng",
             (ARRAY[4] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraInstituicoes",
             (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSistemaS",
-            (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",  
+            (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
             e.conveniada_com_poder_publico AS "conveniadaPoderPublico",
             e.cnpj_mantenedora_principal AS "cnpjMantenedoraPrincipal",
@@ -89,10 +89,10 @@ class EducacensoRepository
             e.unidade_vinculada_outra_instituicao AS "unidadeVinculada",
             e.inep_escola_sede AS "inepEscolaSede",
             e.codigo_ies AS "codigoIes",
-           
+
             e.mantenedora_escola_privada[1] AS "mantenedoraEscolaPrivada",
             e.orgao_vinculado_escola AS "orgaoVinculado",
-            e.esfera_administrativa AS "esferaAdministrativa",       
+            e.esfera_administrativa AS "esferaAdministrativa",
             e.cod_escola AS "idEscola",
             municipio.idmun AS "idMunicipio",
             distrito.iddis AS "idDistrito",
@@ -103,8 +103,8 @@ class EducacensoRepository
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "anoInicioAnoLetivo",
             (SELECT EXTRACT(YEAR FROM max(ano_letivo_modulo.data_fim))
               FROM pmieducar.ano_letivo_modulo
-              WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "anoFimAnoLetivo"         
-            
+              WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "anoFimAnoLetivo"
+
             FROM pmieducar.escola e
             JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
             INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
@@ -121,7 +121,7 @@ class EducacensoRepository
             LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
             LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
             LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
-        
+
             LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
             LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
             LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
@@ -141,7 +141,7 @@ SQL;
     public function getDataForRecord10($school)
     {
         $sql = "
-            SELECT 
+            SELECT
                 escola.cod_escola AS cod_escola,
                 escola.local_funcionamento AS local_funcionamento,
                 escola.condicao AS condicao,
@@ -219,9 +219,9 @@ SQL;
                 escola.educacao_indigena AS educacao_indigena,
                 juridica.fantasia AS nome_escola
             FROM pmieducar.escola
-            INNER JOIN cadastro.juridica ON TRUE 
+            INNER JOIN cadastro.juridica ON TRUE
                 AND juridica.idpes = escola.ref_idpes
-            WHERE TRUE 
+            WHERE TRUE
                 AND escola.cod_escola = $1
         ";
 
