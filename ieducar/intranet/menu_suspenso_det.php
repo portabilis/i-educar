@@ -41,10 +41,6 @@ class indice extends clsDetalhe
 {
     function Gerar()
     {
-        @session_start();
-            $id_pessoa = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->titulo = "Detalhe do Menu";
         
 

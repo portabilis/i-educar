@@ -190,7 +190,6 @@ class LegacyController extends Controller
     {
         ob_start();
 
-        $this->startLegacySession();
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
         $this->changeDirectory();
@@ -203,20 +202,6 @@ class LegacyController extends Controller
         return new Response(
             $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
         );
-    }
-
-    /**
-     * Start session.
-     *
-     * @return void
-     */
-    private function startLegacySession()
-    {
-        try {
-            session_start();
-        } catch (Exception $e) {
-
-        }
     }
 
     /**

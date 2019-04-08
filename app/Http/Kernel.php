@@ -2,13 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\Footer;
-use App\Http\Middleware\GetLegacySession;
-use App\Http\Middleware\LegacyAuthenticateSession;
-use App\Http\Middleware\Menu;
-use App\Http\Middleware\Navigation;
-use App\Http\Middleware\SetLayoutVariables;
-use App\Http\Middleware\ConnectTenantDatabase;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -38,15 +31,14 @@ class Kernel extends HttpKernel
         'web' => [
             // \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            // \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            // \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ChangeAppName::class,
-            GetLegacySession::class,
-            ConnectTenantDatabase::class,
-            SetLayoutVariables::class,
+            \App\Http\Middleware\ConnectTenantDatabase::class,
+            \App\Http\Middleware\SetLayoutVariables::class,
         ],
 
         'api' => [
@@ -71,11 +63,11 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'navigation' => Navigation::class,
-        'ieducar.navigation' => Navigation::class,
-        'ieducar.setlayoutvariables' => SetLayoutVariables::class,
-        'ieducar.menu' => Menu::class,
-        'ieducar.footer' => Footer::class,
+        'ieducar.navigation' => \App\Http\Middleware\Navigation::class,
+        'ieducar.setlayoutvariables' => \App\Http\Middleware\SetLayoutVariables::class,
+        'ieducar.menu' => \App\Http\Middleware\Menu::class,
+        'ieducar.footer' => \App\Http\Middleware\Footer::class,
+        'ieducar.xssbypass' => \App\Http\Middleware\XssByPass::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
@@ -87,7 +79,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewarePriority = [
-        ConnectTenantDatabase::class,
+        \App\Http\Middleware\ConnectTenantDatabase::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\Authenticate::class,

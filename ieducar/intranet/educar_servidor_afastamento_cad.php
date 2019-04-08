@@ -91,10 +91,6 @@ class indice extends clsCadastro {
    * @see ieducar/intranet/include/clsCadastro#Inicializar()
    */
   public function Inicializar() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $retorno = "Novo";
     $this->status = "N";
 
@@ -325,10 +321,6 @@ class indice extends clsCadastro {
    * @return  bool  FALSE em caso de falha
    */
   public function Novo() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->data_retorno = dataToBanco($this->data_retorno);
     $this->data_saida = dataToBanco($this->data_saida);
 
@@ -422,10 +414,6 @@ class indice extends clsCadastro {
    * @see ieducar/intranet/include/clsCadastro#Editar()
    */
   public function Editar() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $urlPermite = sprintf(
       'educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d',
       $this->ref_cod_servidor, $this->ref_cod_instituicao);
@@ -498,10 +486,6 @@ class indice extends clsCadastro {
    * @see ieducar/intranet/include/clsCadastro#Excluir()
    */
   public function Excluir() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $urlPermite = sprintf(
       "educar_servidor_det.php?cod_servidor=%d&ref_cod_instituicao=%d",
       $this->ref_cod_servidor, $this->ref_cod_instituicao);

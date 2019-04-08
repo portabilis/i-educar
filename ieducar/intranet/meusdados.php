@@ -75,9 +75,7 @@ class indice extends clsCadastro
   var $caminho_lst;
 
   public function Inicializar() {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $retorno = "Novo";
 
@@ -216,9 +214,7 @@ class indice extends clsCadastro
   }
 
   public function Editar() {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
       $this->mensagem = "Formato do e-mail inválido.";

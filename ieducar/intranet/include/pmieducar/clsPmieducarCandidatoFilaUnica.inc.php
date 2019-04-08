@@ -54,6 +54,8 @@ class clsPmieducarCandidatoFilaUnica
     var $via_judicial_doc;
     var $protocolo;
     var $ativo;
+    var $sexo;
+    var $ideciv;
 
     // propriedades padrao
 
@@ -433,6 +435,8 @@ class clsPmieducarCandidatoFilaUnica
                        d.num_folha,
                        d.comprovante_residencia,
                        f.data_nasc,
+                       f.sexo,
+                       f.ideciv,
                        (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
                        (SELECT (replace(textcat_all(nome),' <br>',','))
                           FROM (SELECT p.nome
@@ -506,6 +510,19 @@ class clsPmieducarCandidatoFilaUnica
             $filtros .= "{$whereAnd} f.data_nasc = '{$this->data_nasc}'";
             $whereAnd = " AND ";
         }
+
+        if(is_string($this->sexo))
+        {
+            $filtros .= "{$whereAnd} f.sexo = '{$this->sexo}'";
+            $whereAnd = " AND ";
+        }
+
+        if(is_numeric($this->ideciv))
+        {
+            $filtros .= "{$whereAnd} f.ideciv = '{$this->ideciv}'";
+            $whereAnd = " AND ";
+        }
+
         if(is_string($this->horario_inicial))
         {
             $filtros .= "{$whereAnd} horario_inicial = '{$this->horario_inicial}'";
@@ -623,18 +640,17 @@ class clsPmieducarCandidatoFilaUnica
                                   (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
                                   p.nome,
                                   f.data_nasc,
+                                  f.sexo,
+                                  f.ideciv,
                                   s.nm_serie,
                                   d.certidao_nascimento,
                                   d.num_termo,
                                   d.num_folha,
                                   d.num_livro,
                                   d.comprovante_residencia,
-                                  (SELECT (replace(textcat_all(nome),' <br>',','))
-                                     FROM (SELECT p.nome
-                                             FROM pmieducar.responsaveis_aluno ra
-                                            INNER JOIN cadastro.pessoa p ON (p.idpes = ra.ref_idpes)
-                                            WHERE ref_cod_aluno = cfu.ref_cod_aluno
-                                            ORDER BY vinculo_familiar) r) AS responsaveis,
+                                  fisica_responsavel.sexo AS sexo_responsavel,
+                                  fisica_responsavel.ideciv AS ideciv_responsavel,
+                                  replace(string_agg(pessoa_responsavel.nome, ' '),' ',',') AS responsaveis,
                                   (SELECT textcat_all(relatorio.get_nome_escola(ref_cod_escola))
                                      FROM (SELECT ref_cod_escola
                                              FROM pmieducar.escola_candidato_fila_unica ecfu
@@ -644,9 +660,43 @@ class clsPmieducarCandidatoFilaUnica
                             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
                             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
                             INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
+                            INNER JOIN pmieducar.responsaveis_aluno ra ON (ra.ref_cod_aluno= cfu.ref_cod_aluno)
+                            INNER JOIN cadastro.pessoa pessoa_responsavel ON (pessoa_responsavel.idpes = ra.ref_idpes)
+                            INNER JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = pessoa_responsavel.idpes)
                             INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
                              LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)
-                            WHERE cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}");
+                            WHERE cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}
+                            GROUP BY cfu.cod_candidato_fila_unica,
+                                     cfu.ref_cod_aluno,
+                                     cfu.ref_cod_serie,
+                                     cfu.ref_cod_turno,
+                                     cfu.ref_cod_pessoa_cad,
+                                     cfu.ref_cod_pessoa_exc,
+                                     cfu.ref_cod_matricula,
+                                     cfu.ano_letivo,
+                                     cfu.data_cadastro,
+                                     cfu.data_exclusao,
+                                     cfu.data_solicitacao,
+                                     cfu.hora_solicitacao,
+                                     cfu.horario_inicial,
+                                     cfu.horario_final,
+                                     cfu.situacao,
+                                     cfu.motivo,
+                                     cfu.via_judicial,
+                                     cfu.via_judicial_doc,
+                                     cfu.ativo,
+                                     p.nome,
+                                     f.data_nasc,
+                                     f.sexo,
+                                     f.ideciv,
+                                     s.nm_serie,
+                                     d.certidao_nascimento,
+                                     d.num_termo,
+                                     d.num_folha,
+                                     d.num_livro,
+                                     d.comprovante_residencia,
+                                     fisica_responsavel.sexo,
+                                     fisica_responsavel.ideciv");
             $db->ProximoRegistro();
             return $db->Tupla();
         }

@@ -81,10 +81,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->idmun = $_GET['idmun'];
 
     if (is_numeric($this->idmun)) {
@@ -169,10 +165,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido cadastro de municípios brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
@@ -203,10 +195,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
@@ -242,10 +230,6 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido exclusão de municípios brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;

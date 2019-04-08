@@ -29,6 +29,9 @@
 *
 * Criado em 13/02/2007 14:26 pelo gerador automatico de classes
 */
+
+use Illuminate\Support\Facades\Session;
+
 require_once( "include/urbano/geral.inc.php" );
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
@@ -120,7 +123,9 @@ class clsUrbanoCepLogradouro
         $db = new clsBanco();
         $this->_schema = "urbano.";
         $this->_tabela = "{$this->_schema}cep_logradouro";
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
+
+        $this->pessoa_logada = Session::get('id_pessoa');
+
         $this->_campos_lista = $this->_todos_campos = "cl.cep, cl.idlog, cl.nroini, cl.nrofin, cl.idpes_rev, cl.data_rev, cl.origem_gravacao, cl.idpes_cad, cl.data_cad, cl.operacao, cl.idsis_rev, cl.idsis_cad";
         if( is_numeric( $idsis_rev ) )
         {

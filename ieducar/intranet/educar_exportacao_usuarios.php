@@ -59,9 +59,7 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999869, $this->pessoa_logada, 7,

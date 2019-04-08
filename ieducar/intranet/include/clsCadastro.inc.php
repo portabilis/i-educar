@@ -378,7 +378,7 @@ class clsCadastro extends clsCampos
     { \n";
       reset($this->campos);
       foreach ($this->campos as $nome => $componente) {
-        $validador = $componente[4];
+        $validador = $componente[4] ?? null;
 
         if (!empty($validador)) {
           if ($validador == 'cor') {
