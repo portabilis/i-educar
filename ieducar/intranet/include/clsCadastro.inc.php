@@ -244,24 +244,8 @@ class clsCadastro extends clsCampos
     return FALSE;
   }
 
-  protected function flashMessage() {
-    if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
-      $this->mensagem = 'Registro incluido com sucesso!';
-    }
-
-    if ($this->sucesso) {
-      return "<p class='success'>$this->mensagem</p>";
-    }
-
-    return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
-  }
-
   protected function setFlashMessage() {
-    session()->remove('_flash');
-    session()->remove('error');
-    session()->remove('success');
-    session()->remove('notice');
-    session()->remove('info');
+    session()->remove('legacy');
 
     if (empty($this->_mensagem)) {
         if ($_GET['mensagem'] ?? '' === 'sucesso') {
@@ -849,7 +833,7 @@ class clsCadastro extends clsCampos
         if ($name === 'mensagem') {
             $this->_mensagem = $value;
 
-            session()->flash('info', $value);
+            session()->flash('legacy', $value);
         } else {
             $this->{$name} = $value;
         }
