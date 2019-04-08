@@ -4,6 +4,7 @@
   const flashMessages = {
     containerElm: $j('.flashMessages__container'),
     messagesElmSelector: '.flashMessages__message',
+    closeMessageElmSelector: '.close-msg',
     controlsElm: $j('.flashMessages__controls'),
     closeAllElm: $j('.flashMessages__controls a[data-action="closeAll"]'),
     showAllElm: $j('.flashMessages__controls a[data-action="showAll"]'),
@@ -19,11 +20,12 @@
     },
 
     closeEvent: () => {
-      flashMessages.containerElm.on('click', flashMessages.messagesElmSelector, e => {
+      flashMessages.containerElm.on('click', flashMessages.closeMessageElmSelector, e => {
         const $elm = $j(e.currentTarget)
+        const $msg = $elm.closest('.flashMessages__message')
 
-        $elm.fadeOut(250, () => {
-          $elm.remove()
+        $msg.fadeOut(250, () => {
+          $msg.remove()
 
           flashMessages.hideOverflow()
           flashMessages.showCloseAll()
@@ -102,7 +104,7 @@
     add: (type = 'error', msg = '') => {
       const date = new Date()
       const hourString = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-      const msgHtml = `<div title="Clique para fechar" class="flashMessages__message -${type}"><time>${hourString}</time>${msg}</div>`
+      const msgHtml = `<div class="flashMessages__message -${type}"><a href="#" class="close-msg">×</a><time>${hourString}</time>${msg}</div>`
       const msgElm = $j(msgHtml).hide()
 
       flashMessages.overflowDisabled = false
