@@ -405,10 +405,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes'
         ],
         [
-            'tabela' => 'pmieducar.responsaveis_aluno',
-            'coluna' => 'ref_idpes'
-        ],
-        [
             'tabela' => 'pmiotopic.grupopessoa',
             'coluna' => 'ref_idpes'
         ],
@@ -555,14 +551,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'pmieducar.candidato_reserva_vaga',
             'coluna' => 'ref_cod_pessoa_cad'
-        ],
-        [
-            'tabela' => 'pmieducar.candidato_fila_unica',
-            'coluna' => 'ref_cod_pessoa_cad'
-        ],
-        [
-            'tabela' => 'pmieducar.candidato_fila_unica',
-            'coluna' => 'ref_cod_pessoa_exc'
         ],
         [
             'tabela' => 'pmiotopic.funcionario_su',
