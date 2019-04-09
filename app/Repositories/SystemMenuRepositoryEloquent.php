@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\SystemMenu;
+use App\Models\LegacySystemMenu;
 use iEducar\Support\Repositories\SystemMenuRepository;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -17,7 +17,7 @@ class SystemMenuRepositoryEloquent extends BaseRepository implements SystemMenuR
      */
     public function model()
     {
-        return SystemMenu::class;
+        return LegacySystemMenu::class;
     }
 
     /**

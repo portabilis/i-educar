@@ -22,7 +22,7 @@ class CreateCadastroEnderecoPessoaTable extends Migration
                     tipo numeric(1,0) NOT NULL,
                     cep numeric(8,0) NOT NULL,
                     idlog numeric(6,0) NOT NULL,
-                    numero numeric(6,0),
+                    numero numeric(10) NULL,
                     letra character(1),
                     complemento character varying(50),
                     reside_desde date,

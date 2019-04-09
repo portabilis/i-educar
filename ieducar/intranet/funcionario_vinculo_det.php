@@ -21,9 +21,8 @@ class indice extends clsDetalhe
 
     public function Gerar()
     {
-        @session_start();
-        $this->cod_usuario = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->cod_usuario = $this->pessoa_logada;
+
         $this->titulo = 'Detalhe do Vínculo';
 
         $cod_func = $_GET['cod_func'] ?? null;

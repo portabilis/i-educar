@@ -167,10 +167,6 @@ class clsPmieducarAlunoCMF
                   {$where_responsavel}";*/
 
         $db = new clsBanco();
-        //@session_start();
-//  if($_SESSION['id_pessoa'] == 21317)
-    //      $this->_total = $total = $db->CampoUnico("SELECT COUNT(1) FROM cadastro.fisica cpf_aluno WHERE cpf_aluno.cpf is not null AND (cpf_aluno is not null OR cpf_aluno.ref_cod_sistema = 1 )");
-        //else
 
         $this->_total = $total = $db->CampoUnico("SELECT COUNT(1) {$sql_count}");
 

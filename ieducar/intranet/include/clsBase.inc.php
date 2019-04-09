@@ -1,7 +1,9 @@
 <?php
 
-use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once 'include/clsBanco.inc.php';
@@ -51,7 +53,7 @@ class clsBase
             $this->setupConfigs();
         }
 
-        $nivel = !empty($_SESSION['nivel']) ? (int) $_SESSION['nivel'] : null;
+        $nivel = Session::get('nivel');
 
         if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
             header('HTTP/1.1 503 Service Temporarily Unavailable');
@@ -88,7 +90,7 @@ class clsBase
     {
         $saida = $this->OpenTpl('htmlhead');
         $saida = str_replace('<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->', config('app.env'), $saida);
-        $saida = str_replace('<!-- #&USER_ID&# -->', $_SESSION['id_pessoa'], $saida);
+        $saida = str_replace('<!-- #&USER_ID&# -->', Session::get('id_pessoa'), $saida);
         $saida = str_replace('<!-- #&TITULO&# -->', $this->titulo, $saida);
 
         if ($this->refresh) {
@@ -245,7 +247,7 @@ class clsBase
                         $gets .= " - $key: $val\n";
                     }
 
-                    foreach ($_SESSION as $key => $val) {
+                    foreach (Session::all() as $key => $val) {
                         $sessions .= " - $key: $val\n";
                     }
 
@@ -323,18 +325,20 @@ class clsBase
      */
     public function CadastraAcesso()
     {
-        @session_start();
-        if (@$_SESSION['marcado'] != 'private') {
-            $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
-            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
-            $id_pessoa = $_SESSION['id_pessoa'];
+        if (Session::get('marcado') != "private") {
+            if (!$this->convidado) {
+                $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
+                $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
+                $id_pessoa = $this->pessoa_logada;
 
-            $logAcesso = new clsLogAcesso(false, $ip, $ip_de_rede, $id_pessoa);
-            $logAcesso->cadastra();
+                $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
+                $logAcesso->cadastra();
 
-            $_SESSION['marcado'] = 'private';
+                Session::put('marcado', 'private');
+                Session::save();
+                Session::start();
+            }
         }
-        session_write_close();
     }
 
     public function MakeAll()
@@ -372,10 +376,10 @@ class clsBase
             $saida_geral .= $this->MakeFootHtml();
         } else {
             $controlador->Logar(true);
-            $referer = $_SERVER['HTTP_REFERER'];
 
-            header('Location: ' . $referer, true, 302);
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse($_SERVER['HTTP_REFERER'])
+            );
         }
 
         $view = 'legacy.body';

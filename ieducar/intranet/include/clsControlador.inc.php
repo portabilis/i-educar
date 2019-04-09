@@ -1,5 +1,11 @@
 <?php
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'Portabilis/Messenger.php';
@@ -24,39 +30,12 @@ class clsControlador
      */
     public function __construct()
     {
-        /*
-          Desabilitado esta linha para usar o valor setado no php.ini > session.cookie_lifetime
-          @session_set_cookie_params(200);
-        */
-        @session_start();
-
-        if ('logado' == $_SESSION['itj_controle']) {
-            $this->logado = true;
-        } else {
-            $this->logado = false;
+        if ('logado' == Session::get('itj_controle')) {
+            $this->logado = TRUE;
         }
-
-        // Controle dos menus
-        if (isset($_GET['mudamenu']) && isset($_GET['categoria']) && isset($_GET['acao'])) {
-            if ($_GET['acao']) {
-                $_SESSION['menu_opt'][$_GET['categoria']] = 1;
-                $_SESSION['menu_atual'] = $_GET['categoria'];
-            } else {
-                // Está apagando variável session com o índice dado por $_GET
-                unset($_SESSION['menu_opt'][$_GET['categoria']]);
-
-                if ($_SESSION['menu_atual'] == $_GET['categoria']) {
-                    unset($_SESSION['menu_atual']);
-                }
-            }
-
-            $db = new clsBanco();
-            if (isset($_SESSION['id_pessoa'])) {
-                $db->Consulta('UPDATE funcionario SET opcao_menu = \'' . serialize($_SESSION['menu_opt']) . '\' WHERE ref_cod_pessoa_fj = \'' . $_SESSION['id_pessoa'] . '\'');
-            }
+        else {
+            $this->logado = FALSE;
         }
-
-        session_write_close();
 
         $this->_maximoTentativasFalhas = 7;
         $this->messenger = new Portabilis_Messenger();
@@ -72,23 +51,8 @@ class clsControlador
         return $this->logado;
     }
 
-    /**
-     * Executa o login do usuário.
-     */
-    public function obriga_Login()
-    {
-        if (!$this->logado) {
-            $validateUserCredentials = false;
-        } elseif ($_POST['login'] && $_POST['senha']) {
-            $validateUserCredentials = true;
-        }
-
-        $this->logar($validateUserCredentials);
-    }
-
     // novo metodo login, logica quebrada em metodos menores
-    public function Logar($validateUserCredentials)
-    {
+    public function Logar($validateUserCredentials) {
         if ($validateUserCredentials) {
             $user = $this->validateUserCredentials($username = @$_POST['login'], $password = md5(@$_POST['senha']));
 
@@ -103,20 +67,22 @@ class clsControlador
     }
 
     // valida se o usuário e senha informados, existem no banco de dados.
-    protected function validateUserCredentials($username, $password)
-    {
-        if (!$this->validateHumanAccess()) {
-            $msg = 'Você errou a senha muitas vezes, por favor, preencha o campo de ' .
-                'confirmação visual ou <a class=\'light decorated\' href=\'/module/Usuario/Rede' .
-                'finirSenha\'>redefina sua senha</a>.';
-            $this->messenger->append($msg, 'error', false, 'error');
-        } else {
+    protected function validateUserCredentials($username, $password) {
+        if (! $this->validateHumanAccess()) {
+            $msg = "Você errou a senha muitas vezes, por favor, preencha o campo de " .
+                "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" .
+                "finirSenha'>redefina sua senha</a>.";
+            $this->messenger->append($msg, "error", false, "error");
+        }
+
+        else {
             $user = Portabilis_Utils_User::loadUsingCredentials($username, $password);
 
             if (is_null($user)) {
-                $this->messenger->append('Usuário ou senha incorreta.', 'error');
+                $this->messenger->append("Usuário ou senha incorreta.", "error");
                 $this->incrementTentativasLogin();
-            } else {
+            }
+            else {
                 $this->unsetTentativasLogin();
 
                 $permissoes = new clsPermissoes();
@@ -129,40 +95,44 @@ class clsControlador
         return false;
     }
 
-    public function startLoginSession($user, $redirectTo = '')
-    {
+    public function startLoginSession($user, $redirectTo = '') {
         // unsetting login attempts here, because when the password is recovered the login attempts should be reseted.
         $this->unsetTentativasLogin();
 
-        @session_start();
-        $_SESSION = [];
-        $_SESSION['itj_controle'] = 'logado';
-        $_SESSION['id_pessoa'] = $user['id'];
-        $_SESSION['pessoa_setor'] = $user['ref_cod_setor_new'];
-        $_SESSION['menu_opt'] = unserialize($user['opcao_menu']);
-        $_SESSION['tipo_menu'] = $user['tipo_menu'];
-        $_SESSION['nivel'] = $user['nivel'];
-        @session_write_close();
+        Session::put([
+            'itj_controle' => 'logado',
+            'id_pessoa' => $user['id'],
+            'pessoa_setor' => $user['ref_cod_setor_new'],
+            'tipo_menu' => $user['tipo_menu'],
+            'nivel' => $user['nivel'],
+        ]);
+
+        Auth::loginUsingId(Session::get('id_pessoa'));
 
         Portabilis_Utils_User::logAccessFor($user['id'], $this->getClientIP());
         Portabilis_Utils_User::destroyStatusTokenFor($user['id'], 'redefinir_senha');
 
         $this->logado = true;
-        $this->messenger->append('Usuário logado com sucesso.', 'success');
+        $this->messenger->append("Usuário logado com sucesso.", "success");
 
         // solicita email para recuperação de senha, caso usuário ainda não tenha informado.
         if (!filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
-            header('Location: /module/Usuario/AlterarEmail');
+            throw new HttpResponseException(
+                new RedirectResponse('/module/Usuario/AlterarEmail')
+            );
         } elseif ($user['expired_password']) {
-            header('Location: /module/Usuario/AlterarSenha');
+            throw new HttpResponseException(
+                new RedirectResponse('/module/Usuario/AlterarSenha')
+            );
         } elseif (!empty($redirectTo)) {
-            header("Location: $redirectTo");
+            throw new HttpResponseException(
+                new RedirectResponse($redirectTo)
+            );
         }
     }
 
-    public function canStartLoginSession($user)
-    {
-        if (!$this->messenger->hasMsgWithType('error')) {
+    public function canStartLoginSession($user) {
+        if (! $this->messenger->hasMsgWithType("error")) {
             $this->checkForSuspended($user);
             $this->checkForDisabledAccount($user);
             $this->checkForBannedAccount($user);
@@ -171,8 +141,9 @@ class clsControlador
             // #TODO verificar se conta nunca usada (exibir "Sua conta n&atilde;o est&aacute; ativa. Use a op&ccedil;&atilde;o 'Nunca usei a intrenet'." ?)
         }
 
-        return !$this->messenger->hasMsgWithType('error');
+        return ! $this->messenger->hasMsgWithType("error");
     }
+
 
     // renderiza o template de login, com as mensagens adicionadas durante validações
     protected function renderLoginPage()
@@ -180,10 +151,10 @@ class clsControlador
         $this->destroyLoginSession();
 
         $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
-        $templateName = (trim($parceiro) == '' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/' . trim($parceiro));
-        $templateFile = fopen($templateName, 'r');
-        $templateText = fread($templateFile, filesize($templateName));
-        $templateText = str_replace('<!-- #&ERROLOGIN&# -->', $this->messenger->toHtml('p'), $templateText);
+        $templateName   = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
+        $templateFile   = fopen($templateName, "r");
+        $templateText   = fread($templateFile, filesize($templateName));
+        $templateText   = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
@@ -193,9 +164,9 @@ class clsControlador
             $msgCriarConta = 'Não possui uma conta? <a target="_BLANK" href="' . $configuracoes['url_cadastro_usuario'] . '">Crie sua conta agora</a>.';
         }
 
-        $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas'])
-            && is_numeric($_SESSION['tentativas_login_falhas'])
-            && $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
+    $requiresHumanAccessValidation = Session::get('tentativas_login_falhas')
+      && is_numeric(Session::get('tentativas_login_falhas'))
+      && Session::get('tentativas_login_falhas') >= $this->_maximoTentativasFalhas;
 
         if ($requiresHumanAccessValidation) {
             $templateText = str_replace('<!-- #&RECAPTCHA&# -->', Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
@@ -227,36 +198,32 @@ class clsControlador
         }
 
         fclose($templateFile);
-        die($templateText);
+
+        throw new HttpResponseException(
+            new Response($templateText)
+        );
     }
 
-    protected function destroyLoginSession($addMsg = false)
-    {
-        $tentativasLoginFalhas = $_SESSION['tentativas_login_falhas'];
+    protected function destroyLoginSession($addMsg = false) {
+        $tentativasLoginFalhas = Session::get('tentativas_login_falhas');
 
-        @session_start();
-        $_SESSION = [];
-        @session_destroy();
+        Session::flush();
 
         //mantem tentativas_login_falhas, até que senha senha informada corretamente
-        @session_start();
-        $_SESSION['tentativas_login_falhas'] = $tentativasLoginFalhas;
-        @session_write_close();
+        Session::put('tentativas_login_falhas', $tentativasLoginFalhas);
 
-        if ($addMsg) {
-            $this->messenger->append('Usuário deslogado com sucesso.', 'success');
-        }
+        if ($addMsg)
+            $this->messenger->append("Usuário deslogado com sucesso.", "success");
     }
 
-    protected function getClientIP()
-    {
+    protected function getClientIP() {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
             // pega o (ultimo) IP real caso o host esteja atrás de um proxy
             $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
             $ip = trim(array_pop($ip));
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
         }
+        else
+            $ip = $_SERVER['REMOTE_ADDR'];
 
         return $ip;
     }
@@ -275,87 +242,68 @@ class clsControlador
         return $result;
     }
 
-    protected function atingiuTentativasLogin()
-    {
-        return isset($_SESSION['tentativas_login_falhas'])
-            && is_numeric($_SESSION['tentativas_login_falhas'])
-            && $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
+    protected function atingiuTentativasLogin() {
+        return Session::get('tentativas_login_falhas')
+            && is_numeric(Session::get('tentativas_login_falhas'))
+            && Session::get('tentativas_login_falhas') >= $this->_maximoTentativasFalhas;
     }
 
-    protected function incrementTentativasLogin()
-    {
-        @session_start();
-
-        if (!isset($_SESSION['tentativas_login_falhas']) or !is_numeric($_SESSION['tentativas_login_falhas'])) {
-            $_SESSION['tentativas_login_falhas'] = 1;
-        } else {
-            $_SESSION['tentativas_login_falhas'] += 1;
-        }
-
-        @session_write_close();
+    protected function incrementTentativasLogin() {
+        if (! Session::get('tentativas_login_falhas') or ! is_numeric(Session::get('tentativas_login_falhas')))
+            Session::put('tentativas_login_falhas', 1);
+        else
+            Session::put('tentativas_login_falhas', Session::get('tentativas_login_falhas') + 1);
     }
 
-    protected function unsetTentativasLogin()
-    {
-        @session_start();
-        unset($_SESSION['tentativas_login_falhas']);
-        @session_write_close();
+    protected function unsetTentativasLogin() {
+        Session::forget('tentativas_login_falhas');
     }
 
-    protected function checkForDisabledAccount($user)
-    {
+    protected function checkForDisabledAccount($user) {
         if ($user['ativo'] != '1') {
-            $this->messenger->append('Sua conta de usuário foi desativada ou expirou, por favor, ' .
-                'entre em contato com o responsável pelo sistema do seu município.', 'error', false, 'error');
+            $this->messenger->append("Sua conta de usuário foi desativada ou expirou, por favor, " .
+                "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
         }
     }
 
-    protected function checkForSuspended($user)
-    {
+    protected function checkForSuspended($user) {
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
 
         $nivel = (int) $user['nivel'];
 
         if (!$configuracoes['active_on_ieducar'] && $nivel !== 1) {
-            $this->messenger->append('Sua conta de usuário não pode acessar o sistema, ' .
-                'por favor, entre em contato com o responsável pelo sistema do seu município.', 'error', false, 'error');
+            $this->messenger->append("Sua conta de usuário não pode acessar o sistema, " .
+                "por favor, entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
         }
     }
 
-    protected function checkForBannedAccount($user)
-    {
+    protected function checkForBannedAccount($user) {
         if ($user['proibido'] != '0') {
-            $this->messenger->append(
-                'Sua conta de usuário não pode mais acessar o sistema, ' .
-                'por favor, entre em contato com o responsável pelo sistema do seu município.',
-                'error',
-                false,
-                'error'
-            );
+            $this->messenger->append("Sua conta de usuário não pode mais acessar o sistema, " .
+                "por favor, entre em contato com o responsável pelo sistema do seu município.",
+                "error", false, "error");
         }
     }
 
-    protected function checkForExpiredAccount($user)
-    {
-        if ($user['expired_account']) {
-            if ($user['ativo'] == 1) {
+    protected function checkForExpiredAccount($user) {
+        if($user['expired_account']) {
+
+            if ($user['ativo'] == 1)
                 Portabilis_Utils_User::disableAccount($user['id']);
-            }
 
-            $this->messenger->append('Sua conta de usuário expirou, por favor, ' .
-                'entre em contato com o responsável pelo sistema do seu município.', 'error', false, 'error');
+            $this->messenger->append("Sua conta de usuário expirou, por favor, " .
+                "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
         }
     }
 
-    protected function checkForMultipleAccess($user)
-    {
+    protected function checkForMultipleAccess($user) {
         // considera como acesso multiplo, acesso em diferentes IPs em menos de $tempoMultiploAcesso minutos
         $tempoMultiploAcesso = 10;
-        $tempoEmEspera = abs(time() - strtotime($user['data_login'])) / 60;
+        $tempoEmEspera       = abs(time() - strtotime($user['data_login'])) / 60;
 
-        $multiploAcesso = $tempoEmEspera <= $tempoMultiploAcesso
-            && $user['ip_ultimo_acesso'] != $this->getClientIP();
+        $multiploAcesso = $tempoEmEspera <= $tempoMultiploAcesso &&
+            $user['ip_ultimo_acesso'] != $this->getClientIP();
 
         if ($multiploAcesso and $user['super']) {
 
@@ -366,55 +314,48 @@ class clsControlador
             $message = ("Aparentemente a conta do super usuário {$user['matricula']} foi acessada em " .
                 "outro computador nos últimos $tempoMultiploAcesso " .
                 "minutos, caso não tenha sido você, por favor, altere sua senha.\n\n" .
-                "Endereço IP último acesso: {$user['ip_ultimo_acesso']}\n" .
+                "Endereço IP último acesso: {$user['ip_ultimo_acesso']}\n".
                 "Endereço IP acesso atual: {$this->getClientIP()}");
 
             $mailer = new Portabilis_Mailer();
             $mailer->sendMail($user['email'], $subject, $message);
-        } elseif ($multiploAcesso) {
+        }
+        elseif ($multiploAcesso) {
             $minutosEmEspera = round($tempoMultiploAcesso - $tempoEmEspera) + 1;
-            $this->messenger->append(
-                'Aparentemente sua conta foi acessada em outro computador nos últimos ' .
+            $this->messenger->append("Aparentemente sua conta foi acessada em outro computador nos últimos " .
                 "$tempoMultiploAcesso minutos, caso não tenha sido você, " .
                 "por favor, altere sua senha ou tente novamente em $minutosEmEspera minutos",
-                'error',
-                false,
-                'error'
-            );
+                "error", false, "error");
         }
     }
 
-    public function getSocialMediaLinks($configuracoes)
-    {
-        $socialMedia = '';
+    public function getSocialMediaLinks($configuracoes){
+        $socialMedia = "";
 
-        if ($configuracoes['facebook_url'] || $configuracoes['linkedin_url'] || $configuracoes['twitter_url']) {
-            $socialMedia .= '<p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>';
+        if($configuracoes['facebook_url'] || $configuracoes['linkedin_url'] || $configuracoes['twitter_url']){
+            $socialMedia .= "<p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>";
         }
 
-        if ($configuracoes['facebook_url']) {
-            $socialMedia .= '<a target="_blank" href="' . $configuracoes['facebook_url'] . '"><img src="/intranet/imagens/icon-social-facebook.png"></a> ';
+        if($configuracoes['facebook_url']){
+            $socialMedia .= '<a target="_blank" href="'.$configuracoes['facebook_url'].'"><img src="/intranet/imagens/icon-social-facebook.png"></a> ';
         }
-
-        if ($configuracoes['linkedin_url']) {
-            $socialMedia .= '<a target="_blank" href="' . $configuracoes['linkedin_url'] . '"><img src="/intranet/imagens/icon-social-linkedin.png"></a> ';
+        if($configuracoes['linkedin_url']){
+            $socialMedia .= '<a target="_blank" href="'.$configuracoes['linkedin_url'].'"><img src="/intranet/imagens/icon-social-linkedin.png"></a> ';
         }
-
-        if ($configuracoes['twitter_url']) {
-            $socialMedia .= '<a target="_blank" href="' . $configuracoes['twitter_url'] . '"><img src="/intranet/imagens/icon-social-twitter.png"></a> ';
+        if($configuracoes['twitter_url']){
+            $socialMedia .= '<a target="_blank" href="'.$configuracoes['twitter_url'].'"><img src="/intranet/imagens/icon-social-twitter.png"></a> ';
         }
 
         return $socialMedia;
     }
 
-    public function getLoginLogo($configuracoes)
-    {
-        $logoUrl = '/intranet/imagens/brasao-republica.png';
+    public function getLoginLogo($configuracoes){
+        $logoUrl = "/intranet/imagens/brasao-republica.png";
 
-        if (!empty($configuracoes['ieducar_image'])) {
+        if(!empty($configuracoes['ieducar_image'])){
             $logoUrl = $configuracoes['ieducar_image'];
         }
 
-        return '<img width="150px" height="150px" src="' . $logoUrl . '"/>';
+        return '<img width="150px" height="150px" src="'.$logoUrl.'"/>';
     }
 }

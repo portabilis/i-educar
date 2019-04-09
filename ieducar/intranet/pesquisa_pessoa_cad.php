@@ -27,6 +27,8 @@
 /**
  * @author Adriano Erik Weiguert Nagasava
  *///die();
+use Illuminate\Support\Facades\Session;
+
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
@@ -686,18 +688,16 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-        $pessoa_logada = $_SESSION['id_pessoa'];
+        $pessoa_logada = $this->pessoa_logada;
         $parametros = new clsParametrosPesquisas();
-        if ( $_SESSION["campos"] ) {
-            $parametros->preencheAtributosComArray( $_SESSION['campos'] );
+        if ( Session::get('campos') ) {
+            $parametros->preencheAtributosComArray( Session::get('campos') );
         }
         if ( is_numeric( idFederal2int( $this->cep_ ) ) )
             $this->cep = idFederal2int( $this->cep_ );
         else
             $this->cep = idFederal2int( $this->cep );
 
-        @session_write_close();
         if ( $this->pessoa == "F" )
         {
             if ( $this->id_federal )
@@ -904,7 +904,7 @@ class indice extends clsCadastro
                 }
             }
             $this->insc_est      = idFederal2int( $this->insc_est );
-            $this->idpes_cad     = $_SESSION["id_pessoa"];
+            $this->idpes_cad     = $this->pessoa_logada;
             $objPessoa           = new clsPessoa_( false, $this->razao_social, $this->idpes_cad, $this->url, "J", false, false, $this->email );
             $this->cod_pessoa_fj = $objPessoa->cadastra();
             $objJuridica         = new clsJuridica( $this->cod_pessoa_fj, $this->id_federal, $this->fantasia, $this->insc_est, $this->capital_social );
@@ -1003,15 +1003,13 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-        $pessoaFj   = $_SESSION['id_pessoa'];
+        $pessoaFj = $this->pessoa_logada;
         $parametros = new clsParametrosPesquisas();
         if ( $this->cep_ )
             $this->cep = idFederal2int( $this->cep_ );
-        if ( $_SESSION["campos"] ) {
-            $parametros->preencheAtributosComArray( $_SESSION['campos'] );
+        if ( Session::get('campos') ) {
+            $parametros->preencheAtributosComArray( Session::get('campos') );
         }
-        session_write_close();
         if ( $_POST["pessoa"] == "F" )
         {
             if ( $this->id_federal )

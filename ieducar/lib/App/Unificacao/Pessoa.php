@@ -217,10 +217,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes'
         ],
         [
-            'tabela' => 'pmieducar.responsaveis_aluno',
-            'coluna' => 'ref_idpes'
-        ],
-        [
             'tabela' => 'public.distrito',
             'coluna' => 'idpes_rev'
         ],
@@ -331,14 +327,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'pmieducar.candidato_reserva_vaga',
             'coluna' => 'ref_cod_pessoa_cad'
-        ],
-        [
-            'tabela' => 'pmieducar.candidato_fila_unica',
-            'coluna' => 'ref_cod_pessoa_cad'
-        ],
-        [
-            'tabela' => 'pmieducar.candidato_fila_unica',
-            'coluna' => 'ref_cod_pessoa_exc'
         ],
         [
             'tabela' => 'portal.acesso',
