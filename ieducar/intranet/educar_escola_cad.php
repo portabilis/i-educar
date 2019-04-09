@@ -2563,7 +2563,7 @@ class indice extends clsCadastro
     protected function makeRowManagerTable($schoolManager)
     {
         return [
-            $schoolManager->individual->real_name,
+            $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
             $schoolManager->role_id,
             $schoolManager->access_criteria_id,
             $schoolManager->access_criteria_description,
@@ -2625,7 +2625,7 @@ class indice extends clsCadastro
             $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description;
             $valueObject->linkTypeId = $this->managers_link_type_id;
             $valueObject->isChief = $this->managers_chief;
-            $managers = $valueObject;
+            $managers[] = $valueObject;
         }
 
         $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa);
