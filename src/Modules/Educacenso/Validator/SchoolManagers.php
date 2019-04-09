@@ -35,13 +35,13 @@ class SchoolManagers implements EducacensoValidator
     {
         $individualArray = $this->getIndividualArray();
         if ($this->containsEmptyOrIsNull($individualArray)) {
-            $this->message[] = 'Você precisa cadastrar pelo menos um gestor';
+            $this->message[] = 'Informe pelo menos um(a) gestor(a) como gestor(a) principal';
             $this->valid = false;
         }
 
         $roleArray = $this->getRoleArray();
         if ($this->containsEmptyOrIsNull($roleArray)) {
-            $this->message[] = 'Você precisa informar o cargo dos gestores';
+            $this->message[] = 'O campo: <b>Cargo do gestor</b> deve ser preenchido';
             $this->valid = false;
         }
 
@@ -82,7 +82,7 @@ class SchoolManagers implements EducacensoValidator
 
         if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->accessCriteriaId)) {
             $this->valid = false;
-            $this->message[] = 'Se o cargo do gestor for <b>Diretor</b>, você precisa informar o critério de acesso ao cargo';
+            $this->message[] = 'O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>';
         }
     }
 
@@ -97,7 +97,7 @@ class SchoolManagers implements EducacensoValidator
 
         if ($valueObject->accessCriteriaId == SchoolManagerAccessCriteria::OUTRO && empty($valueObject->accessCriteriaDescription)) {
             $this->valid = false;
-            $this->message[] = 'Se o citério de acesso ao cargo do gestor for <b>Outros</b>, você precisa informar uma especificação';
+            $this->message[] = 'O campo: <b>Especificação do critério de acesso</b> deve ser preenchido quando o campo: <b>Critério de acesso ao cargo</b> for: <b>Outros</b>';
         }
     }
 
@@ -116,7 +116,7 @@ class SchoolManagers implements EducacensoValidator
 
         if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->linkTypeId)) {
             $this->valid = false;
-            $this->message[] = 'O campo <b>Tipo de vínculo</b> do gestor precisa ser preenchido';
+            $this->message[] = 'O campo: <b>Tipo de vínculo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>';
         }
     }
 
