@@ -37,4 +37,4 @@ LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
 LEFT JOIN public.municipio ON municipio.idmun = bairro.idmun
 LEFT JOIN public.uf ON uf.sigla_uf::text = municipio.sigla_uf::text
 LEFT JOIN public.pais ON pais.idpais = uf.idpais
-WHERE matricula_turma.sequencial = relatorio.get_max_sequencial_matricula(matricula_turma.ref_cod_matricula);
+WHERE matricula_turma.sequencial = (SELECT MAX(sequencial) FROM pmieducar.matricula_turma submt where submt.ref_cod_matricula = matricula_turma.ref_cod_matricula);
