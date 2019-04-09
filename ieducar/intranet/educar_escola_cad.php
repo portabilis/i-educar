@@ -437,6 +437,7 @@ class indice extends clsCadastro
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Cadastro/Assets/Javascripts/Escola.js',
+            '/modules/Cadastro/Assets/Javascripts/SchoolManagersModal.js',
         );
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = array('/modules/Cadastro/Assets/Stylesheets/Escola.css');
@@ -2508,39 +2509,19 @@ class indice extends clsCadastro
         $this->campoTabelaInicio('gestores', 'Gestores',
             [
                 'Nome do(a) gestor(a)',
-                'Cargo do(a) gestor(a)',
-                'Critério de acesso ao cargo',
-                'Especificação do critério de acesso',
-                'Tipo de vínculo',
-                'Gestor(a) principal'
+                'Detalhes',
+                'Gestor(a) principal',
             ],
             $rows
         );
 
         $helperOptions = ['objectName' => 'managers_individual'];
         $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
-
-        $options = [
-                'resources' => SelectOptions::schoolManagerRoles(),
-                'required' => false
-            ];
-        $this->inputsHelper()->select('managers_role_id', $options);
-
-        $options = [
-                'resources' => SelectOptions::schoolManagerAccessCriterias(),
-                'required' => false
-            ];
-        $this->inputsHelper()->select('managers_access_criteria_id', $options);
-
-        $options = ['required' => false];
-        $this->inputsHelper()->text('managers_access_criteria_description', $options);
-
-        $options =
-            [
-                'resources' => SelectOptions::schoolManagerLinkTypes(),
-                'required' => false
-            ];
-        $this->inputsHelper()->select('managers_link_type_id', $options);
+        $this->campoRotulo('detalhes', 'Detalhes', '<a style="cursor:pointer;" class="mais_informacoes" onclick="modalOpen(this)"> Informações adicionais </a>');
+        $this->campoOculto('managers_role_id', null);
+        $this->campoOculto('managers_access_criteria_id', null);
+        $this->campoOculto('managers_access_criteria_description', null);
+        $this->campoOculto('managers_link_type_id', null);
 
         $resources = [
                 0 => 'Não',
@@ -2564,12 +2545,13 @@ class indice extends clsCadastro
     {
         return [
             $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
+            null,
+            (int)$schoolManager->chief,
+            $schoolManager->individual_id,
             $schoolManager->role_id,
             $schoolManager->access_criteria_id,
             $schoolManager->access_criteria_description,
             $schoolManager->link_type_id,
-            (int)$schoolManager->chief,
-            $schoolManager->individual_id,
         ];
     }
 
