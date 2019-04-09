@@ -260,6 +260,21 @@ class clsCadastro extends clsCampos
     }
   }
 
+  protected function getErrorMessages()
+  {
+      if (session()->has('errors')) {
+        $msgs = [];
+
+        foreach (session()->get('errors')->all() as $msg) {
+            $msgs[] = $msg;
+        }
+
+        return implode('<br>', $msgs);
+      }
+
+      return null;
+  }
+
   function RenderHTML()
   {
     $this->_preRender();
@@ -347,6 +362,12 @@ class clsCadastro extends clsCampos
     }
 
     $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
+
+    $errorMessages = $this->getErrorMessages();
+
+    if (!empty($errorMessages)) {
+      $retorno .=  "<tr><td class='formmdtd' colspan='2' height='24'><div id='flash-container'><p class='form_erro error'>{$errorMessages}</p></div></td></tr>";
+    }
 
     if (empty($this->campos)) {
       $retorno .=  "<tr><td class='linhaSim' colspan='2'><span class='form'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>";
