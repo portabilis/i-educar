@@ -55,6 +55,10 @@ class AddForeignKeysOnPmieducarEscolaTable extends Migration
             $table->foreign('codigo_lingua_indigena')
                ->references('id')
                ->on('modules.lingua_indigena_educacenso');
+
+            $table->foreign('codigo_ies')
+                ->references('id')
+                ->on('modules.educacenso_ies');
         });
     }
 
@@ -74,6 +78,7 @@ class AddForeignKeysOnPmieducarEscolaTable extends Migration
             $table->dropForeign(['ref_cod_instituicao']);
             $table->dropForeign(['ref_cod_escola_rede_ensino']);
             $table->dropForeign(['codigo_lingua_indigena']);
+            $table->dropForeign(['codigo_ies']);
         });
     }
 }

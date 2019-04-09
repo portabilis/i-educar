@@ -1,5 +1,6 @@
-CREATE VIEW cadastro.v_endereco AS
- SELECT e.idpes,
+CREATE OR REPLACE VIEW cadastro.v_endereco AS
+SELECT
+    e.idpes,
     e.cep,
     e.idlog,
     e.numero,
@@ -15,13 +16,13 @@ CREATE VIEW cadastro.v_endereco AS
     m.nome AS cidade,
     m.sigla_uf,
     b.zona_localizacao
-   FROM cadastro.endereco_pessoa e,
+FROM cadastro.endereco_pessoa e,
     public.logradouro l,
     public.bairro b,
     public.municipio m
-  WHERE ((e.idlog = l.idlog) AND (e.idbai = b.idbai) AND (b.idmun = m.idmun) AND (e.tipo = (1)::numeric))
+WHERE e.idlog = l.idlog AND e.idbai = b.idbai AND b.idmun = m.idmun AND e.tipo = 1::numeric
 UNION
- SELECT e.idpes,
+SELECT e.idpes,
     e.cep,
     NULL::numeric AS idlog,
     e.numero,
@@ -37,5 +38,5 @@ UNION
     e.cidade,
     e.sigla_uf,
     e.zona_localizacao
-   FROM cadastro.endereco_externo e
-  WHERE (e.tipo = (1)::numeric);
+FROM cadastro.endereco_externo e
+WHERE e.tipo = 1::numeric;

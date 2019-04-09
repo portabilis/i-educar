@@ -141,7 +141,12 @@ class CreatePmieducarEscolaTable extends Migration
                     codigo_inep_escola_compartilhada3 integer,
                     codigo_inep_escola_compartilhada4 integer,
                     codigo_inep_escola_compartilhada5 integer,
-                    codigo_inep_escola_compartilhada6 integer
+                    codigo_inep_escola_compartilhada6 integer,
+	                orgao_vinculado_escola int4[] NULL,
+	                esfera_administrativa int4 NULL,
+	                unidade_vinculada_outra_instituicao int4 NULL,
+	                inep_escola_sede int4 NULL,
+	                codigo_ies int4 NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.escola

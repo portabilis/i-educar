@@ -22,7 +22,7 @@ class CreateCadastroEnderecoExternoTable extends Migration
                     tipo numeric(1,0) NOT NULL,
                     idtlog character varying(5) NOT NULL,
                     logradouro character varying(150) NOT NULL,
-                    numero numeric(6,0),
+                    numero numeric(10) NULL,
                     letra character(1),
                     complemento character varying(20),
                     bairro character varying(40),

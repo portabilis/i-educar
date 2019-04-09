@@ -22,7 +22,7 @@ class CreatePmieducarEscolaComplementoTable extends Migration
                     ref_usuario_exc integer,
                     ref_usuario_cad integer NOT NULL,
                     cep numeric(8,0) NOT NULL,
-                    numero numeric(6,0),
+                    numero numeric(10) NULL,
                     complemento character varying(50),
                     email character varying(50),
                     nm_escola character varying(255) NOT NULL,
