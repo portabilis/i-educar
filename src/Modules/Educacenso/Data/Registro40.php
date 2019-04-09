@@ -27,7 +27,7 @@ class Registro40 extends AbstractRegistro
      */
     public function getData($escolaId)
     {
-        $return = $this->processData($this->repository->getDataForRecord40($escolaId));
+        $return = $this->repository->getDataForRecord40($escolaId);
 
         foreach ($return as $data) {
             $this->hydrateModel($data);
@@ -38,8 +38,18 @@ class Registro40 extends AbstractRegistro
         return $this->modelArray;
     }
 
-    private function processData($data)
+    /**
+     * @param $escolaId
+     * @return Registro40Model[]
+     */
+    public function getExportFormatData($escolaId)
     {
-        return $data;
+        $modelArray = $this->getData($escolaId);
+
+        foreach ($modelArray as $registro40) {
+            $registro40->especificacaoCriterioAcesso = $this->convertStringToCenso($registro40->especificacaoCriterioAcesso);
+        }
+
+        return $modelArray;
     }
 }
