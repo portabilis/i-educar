@@ -29,7 +29,7 @@ $j(document).ready(function() {
       });
 
       $componentecurricular.trigger('chosen:updated');
-    }, 500);
+    }, 1000);
   }
 
   var handleAddComponenteCurricular = function(dataResponse, id) {
