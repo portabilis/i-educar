@@ -2587,7 +2587,7 @@ class indice extends clsCadastro
             $valueObject->individualId = $individualId;
             $valueObject->schoolId = $schoolId;
             $valueObject->roleId = $this->managers_role_id[$key];
-            $valueObject->individualId = $this->managers_access_criteria_id[$key] ?: null;
+            $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key] ?: null;
             $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
             $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
             $valueObject->isChief = $this->managers_chief[$key];
@@ -2619,12 +2619,12 @@ class indice extends clsCadastro
         $managers = [];
         foreach ($this->managers_individual_id as $key => $value) {
             $valueObject = new SchoolManagerValueObject();
-            $valueObject->individualId = $this->managers_individual_id;
-            $valueObject->roleId = $this->managers_role_id;
-            $valueObject->accessCriteriaId = $this->managers_access_criteria_id;
-            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description;
-            $valueObject->linkTypeId = $this->managers_link_type_id;
-            $valueObject->isChief = $this->managers_chief;
+            $valueObject->individualId = $this->managers_individual_id[$key];
+            $valueObject->roleId = $this->managers_role_id[$key];
+            $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key];
+            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
+            $valueObject->linkTypeId = $this->managers_link_type_id[$key];
+            $valueObject->isChief = $this->managers_chief[$key];
             $managers[] = $valueObject;
         }
 

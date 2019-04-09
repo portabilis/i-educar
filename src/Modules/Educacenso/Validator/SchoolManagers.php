@@ -76,7 +76,7 @@ class SchoolManagers implements EducacensoValidator
      */
     private function validateAccessCriteria($valueObject)
     {
-        if (!isset($valueObject->roleId)) {
+        if (empty($valueObject->roleId)) {
             return;
         }
 
@@ -91,7 +91,7 @@ class SchoolManagers implements EducacensoValidator
      */
     private function validateAccessCriteriaDescription($valueObject)
     {
-        if (!isset($valueObject->accessCriteriaId)) {
+        if (empty($valueObject->accessCriteriaId)) {
             return;
         }
 
@@ -106,7 +106,7 @@ class SchoolManagers implements EducacensoValidator
      */
     private function validateAccessLinkType($valueObject)
     {
-        if (!isset($valueObject->roleId)) {
+        if (empty($valueObject->roleId)) {
             return;
         }
 
