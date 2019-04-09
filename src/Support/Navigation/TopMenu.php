@@ -2,7 +2,6 @@
 
 namespace iEducar\Support\Navigation;
 
-use App\Models\LegacyMenu;
 use App\Models\LegacyUser;
 use App\Services\MenuService;
 use iEducar\Support\Repositories\MenuRepository;
@@ -91,7 +90,7 @@ class TopMenu
         if ($cache->has($cacheKey)) {
             return $cache->get($cacheKey);
         }
-        
+
         if (empty($this->currentMenu)) {
             return [];
         }
