@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
@@ -831,7 +833,6 @@ class AlunoController extends ApiCoreController
                             end
                     )
                     and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
-                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
                 limit 15
             ) as alunos
             order by
@@ -1693,20 +1694,18 @@ class AlunoController extends ApiCoreController
 
     protected function loadAcessoDataEntradaSaida()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = Session::get('id_pessoa');
+
         $acesso = new clsPermissoes();
-        session_write_close();
 
         return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
     }
 
     protected function isUsuarioAdmin()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $isAdmin = ($this->pessoa_logada == 1);
-        session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
+
+        $isAdmin = $this->pessoa_logada == 1;
 
         return $isAdmin;
     }

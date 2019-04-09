@@ -68,9 +68,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->ref_serie_origem=$_GET["ref_serie_origem"];
         $this->ref_serie_destino=$_GET["ref_serie_destino"];
@@ -260,9 +258,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -301,9 +297,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -332,9 +326,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );

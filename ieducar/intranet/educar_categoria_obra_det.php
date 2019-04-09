@@ -51,10 +51,6 @@ class indice extends clsDetalhe{
     var $observacoes;
 
     function Gerar(){
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Categoria Obras - Detalhe";
 
         $this->id = $_GET["id"];

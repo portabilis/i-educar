@@ -72,10 +72,6 @@ class indice extends clsListagem
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Lista de enturmações da matrí­cula';
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];

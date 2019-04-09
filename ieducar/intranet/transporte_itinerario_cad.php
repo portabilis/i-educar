@@ -78,9 +78,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Editar";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_rota=$_GET["cod_rota"];
 
@@ -190,9 +188,7 @@ class indice extends clsCadastro
     {
 
 
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 21238, $this->pessoa_logada, 7,  "transporte_rota_det.php?cod_rota={$this->cod_rota}" );
 

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
@@ -2575,9 +2577,9 @@ class clsPmieducarEscola
             }
         }
 
-        if (is_numeric($cod_usuario)) {
-            $permissao = new clsPermissoes();
-            $nivel = $permissao->nivel_acesso($_SESSION['id_pessoa']);
+    if (is_numeric($cod_usuario)) {
+      $permissao = new clsPermissoes();
+      $nivel = $permissao->nivel_acesso(Session::get('id_pessoa'));
 
             if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
                 $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {

@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -80,21 +83,20 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        
         foreach ($_GET as $campo => $valor)
         {
             $this->$campo = $valor;
         }
-        
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
-            $_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
-            $_SESSION["campo3"] = $_GET["campo3"] ? $_GET["campo3"] : $_SESSION["campo3"];
-        session_write_close();
+
+        Session::put([
+            'campo1' => $_GET["campo1"] ? $_GET["campo1"] : Session::get('campo1'),
+            'campo2' => $_GET["campo2"] ? $_GET["campo2"] : Session::get('campo2'),
+            'campo3' => $_GET["campo3"] ? $_GET["campo3"] : Session::get('campo3'),
+        ]);
+        Session::save();
+        Session::start();
 
         $this->titulo = "Obra - Listagem";
-
 
         $this->addCabecalhos( array(
             "Obra",
@@ -105,7 +107,7 @@ class indice extends clsListagem
         $this->campoTexto( "titulo_obra", "Obra", $this->nm_obra, 30, 255, false );
         $this->campoTexto( "ref_acervo_autor", "Autor", $this->ref_acervo_autor, 30, 255, false );
         $this->campoNumero( "isbn", "ISBN", $this->isbn, 15, 15, false );
-        $this->ref_cod_biblioteca = $_SESSION["campo3"];
+        $this->ref_cod_biblioteca = Session::get('campo3');
 
         // Paginador
         $this->limite = 20;
@@ -152,7 +154,9 @@ class indice extends clsListagem
                 $obj_acervo_autor = new clsPmieducarAcervoAutor($registro["cod_acervo_autor"]);
                 $det_acervo_autor = $obj_acervo_autor->detalhe();
                 $registro["cod_acervo_autor"] = $det_acervo_autor["nm_autor"];
-                $script = " onclick=\"addVal1('{$_SESSION['campo1']}',{$registro['cod_acervo']}); addVal1('{$_SESSION['campo2']}','{$registro['titulo']}'); addVal1('cod_biblioteca','{$this->ref_cod_biblioteca}'); fecha();\"";
+                $campo1 = Session::get('campo1');
+                $campo2 = Session::get('campo2');
+                $script = " onclick=\"addVal1('{$campo1}',{$registro['cod_acervo']}); addVal1('{$campo2}','{$registro['titulo']}'); addVal1('cod_biblioteca','{$this->ref_cod_biblioteca}'); fecha();\"";
                 $tituloSubtitulo = $registro["titulo"] . " " . $registro["sub_titulo"];
                 $this->addLinhas( array(
                     "<a href=\"javascript:void(0);\" {$script}>{$tituloSubtitulo}</a>",

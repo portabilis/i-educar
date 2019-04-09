@@ -65,7 +65,7 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
 
-        $this->idpes = ($_GET['id_pessoa']) ? $_GET['id_pessoa'] : $_SESSION['id_pessoa'];
+        $this->idpes = ($_GET['id_pessoa']) ? $_GET['id_pessoa'] : $this->pessoa_logada;
         $ObjDocumento = new clsDocumento($this->idpes);
         $detalheDocumento = $ObjDocumento->detalhe();
 
