@@ -80,8 +80,7 @@ class indice extends clsCadastro
             $this->ref_cod_servidor        = $ref_cod_servidor;
             $this->ref_cod_instituicao = $ref_ref_cod_instituicao;
         } else {
-            header('Location: educar_servidor_lst.php');
-            die();
+            $this->simpleRedirect('educar_servidor_lst.php');
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -294,8 +293,8 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-        header('Location: ' . sprintf('educar_servidor_alocacao_det.php?cod_servidor_alocacao=%d', $this->cod_servidor_alocacao));
-        die();
+        $this->simpleRedirect(sprintf('educar_servidor_alocacao_det.php?cod_servidor_alocacao=%d', $this->cod_servidor_alocacao));
+
     }
 
     public function Editar()
@@ -313,8 +312,7 @@ class indice extends clsCadastro
 
             if ($excluiu) {
                 $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-                header('Location: '. sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
-                die();
+                $this->simpleRedirect(sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
             }
         }
 

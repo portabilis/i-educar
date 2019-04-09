@@ -112,7 +112,7 @@ class indice extends clsListagem
             ]);
 
         }else{
-            header("location: educar_calendario_ano_letivo_lst.php");
+            $this->simpleRedirect('educar_calendario_ano_letivo_lst.php');
         }
 
 

@@ -90,8 +90,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: educar_servidor_professor_vinculo_lst.php');
-      die();
+        $this->simpleRedirect('educar_servidor_professor_vinculo_lst.php');
     }    
 
     $resources_funcao = array(  null => 'Selecione',

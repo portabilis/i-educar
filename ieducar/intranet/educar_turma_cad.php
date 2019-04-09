@@ -901,7 +901,7 @@ class indice extends clsCadastro
         $this->atualizaModulos();
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
-        header('Location: educar_turma_lst.php');
+        $this->simpleRedirect('educar_turma_lst.php');
     }
 
     public function Editar()

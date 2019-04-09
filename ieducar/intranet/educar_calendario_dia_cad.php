@@ -214,7 +214,7 @@ class indice extends clsCadastro
           'educar_calendario_dia_lst.php?ref_cod_calendario_ano_letivo=%d&mes=%d&dia=%d',
           $registro['ref_cod_calendario_ano_letivo'], $registro['mes'], $registro['dia']
         );
-        header('Location: ' . $url);
+        $this->simpleRedirect($url);
       }
     }
 
