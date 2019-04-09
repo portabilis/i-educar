@@ -84,6 +84,30 @@ class SchoolManagers implements EducacensoValidator
             $this->valid = false;
             $this->message[] = 'O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>';
         }
+
+        $publicDependency = [
+            DependenciaAdministrativaEscola::FEDERAL,
+            DependenciaAdministrativaEscola::ESTADUAL,
+            DependenciaAdministrativaEscola::MUNICIPAL,
+        ];
+
+        if ($valueObject->accessCriteriaId == SchoolManagerAccessCriteria::PROPRIETARIO && in_array($this->administrativeDependency, $publicDependency)) {
+            $this->valid = false;
+            $this->message[] = 'Não é possível selecionar a opção: <b>Ser proprietário(a) ou sócio(a)-proprietário(a) da escola</b> quando a dependência administrativa for: <b>Federal, Estadual ou Municipal</b>.';
+        }
+
+        $publicAccesCriteria = [
+            SchoolManagerAccessCriteria::CONCURSO,
+            SchoolManagerAccessCriteria::PROCESSO_ELEITORAL_COMUNIDADE,
+            SchoolManagerAccessCriteria::PROCESSO_SELETIVO_COMUNIDADE,
+        ];
+
+        $accessCriteriaSelected = SchoolManagerAccessCriteria::getDescriptiveValues()[$valueObject->accessCriteriaId];
+
+        if (in_array($valueObject->accessCriteriaId, $publicAccesCriteria) && $this->administrativeDependency == DependenciaAdministrativaEscola::PRIVADA) {
+            $this->valid = false;
+            $this->message[] = "Não é possível selecionar a opção: <b>{$accessCriteriaSelected}</b> quando a dependência administrativa da escola for: <b>Privada</b>";
+        }
     }
 
     /**
