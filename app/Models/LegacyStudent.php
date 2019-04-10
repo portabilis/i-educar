@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudent extends Model
 {
@@ -27,4 +28,12 @@ class LegacyStudent extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return BelongsTo
+     */
+    public function person()
+    {
+        return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
+    }
 }
