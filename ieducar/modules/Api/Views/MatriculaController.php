@@ -702,17 +702,49 @@ class MatriculaController extends ApiCoreController
         }
 
         $ano = $this->getRequest()->ano;
-        $params = $ano;
+        $modified = $this->getRequest()->modified;
 
-        $sql = 'SELECT matricula.cod_matricula AS matricula_id,
-                   disciplina_dependencia.ref_cod_disciplina AS disciplina_id
-              FROM pmieducar.matricula
-        INNER JOIN pmieducar.disciplina_dependencia ON (matricula.cod_matricula = disciplina_dependencia.ref_cod_matricula)
-             WHERE matricula.dependencia = \'t\'
-               AND matricula.ano = $1';
+        $params = [$ano];
+
+        $where = '';
+
+        if ($modified) {
+            $params[] = $modified;
+            $where = ' AND dd.updated_at >= $2';
+        }
+
+        $sql = "
+            (
+                SELECT 
+                    m.cod_matricula AS matricula_id,
+                    dd.ref_cod_disciplina AS disciplina_id,
+                    dd.updated_at,
+                    null as deleted_at
+                FROM pmieducar.matricula m
+                INNER JOIN pmieducar.disciplina_dependencia dd
+                ON m.cod_matricula = dd.ref_cod_matricula
+                WHERE m.dependencia = 't'
+                AND m.ano = $1
+                {$where}
+            )
+            UNION ALL
+            (
+                SELECT 
+                    m.cod_matricula AS matricula_id,
+                    dd.ref_cod_disciplina AS disciplina_id,
+                    dd.updated_at,
+                    dd.deleted_at
+                FROM pmieducar.matricula m
+                INNER JOIN pmieducar.disciplina_dependencia_excluidos dd
+                ON m.cod_matricula = dd.ref_cod_matricula
+                WHERE m.dependencia = 't'
+                AND m.ano = $1
+                {$where}
+            )
+        ";
 
         $matriculas = $this->fetchPreparedQuery($sql, $params);
-        $attrs = ['matricula_id', 'disciplina_id'];
+        $attrs = ['matricula_id', 'disciplina_id', 'updated_at', 'deleted_at'];
         $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
         return ['matriculas' => $matriculas];

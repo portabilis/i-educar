@@ -233,6 +233,7 @@ class indice extends clsCadastro
 
     function validaQuantidadeDisciplinasDependencia()
     {
+        return true;
         $db = new clsBanco();
         $db->consulta("SELECT (CASE
                                WHEN escola.utiliza_regra_diferenciada AND serie.regra_avaliacao_diferenciada_id IS NOT NULL

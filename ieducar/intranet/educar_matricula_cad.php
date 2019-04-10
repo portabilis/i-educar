@@ -976,11 +976,11 @@ class indice extends clsCadastro
                                                         INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = serie.regra_avaliacao_id)
                                                              WHERE serie.cod_serie = {$this->ref_cod_serie}");
 
-        if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
-            $this->mensagem = Portabilis_String_Utils::toLatin1("A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.");
-
-            return false;
-        }
+//        if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
+//            $this->mensagem = Portabilis_String_Utils::toLatin1("A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.");
+//
+//            return false;
+//        }
 
         return true;
     }
