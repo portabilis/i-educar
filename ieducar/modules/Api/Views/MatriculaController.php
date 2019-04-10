@@ -241,12 +241,16 @@ class MatriculaController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $updatedAt = $this->getRequest()->modified;
 
-        $params = [$ano, $escola];
+        if (is_array($escola)) {
+            $escola = implode(',', $escola);
+        }
+
+        $params = [$ano];
 
         $where = '';
 
         if ($updatedAt) {
-            $where = ' AND m.updated_at >= $3';
+            $where = ' AND m.updated_at >= $2';
             $params[] = $updatedAt;
         }
 
@@ -268,7 +272,7 @@ class MatriculaController extends ApiCoreController
                 ON a.cod_aluno = m.ref_cod_aluno
             WHERE m.ano = $1
                 AND a.ativo = 1
-                AND CASE WHEN $2 = 0 THEN TRUE ELSE m.ref_ref_cod_escola = $2 END
+                AND m.ref_ref_cod_escola in ({$escola})
                 {$where}
         ";
 
@@ -280,7 +284,7 @@ class MatriculaController extends ApiCoreController
             $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
         }
 
-        return ['matricula' => $matriculas];
+        return ['matriculas' => $matriculas];
     }
 
     protected function getMovimentacaoEnturmacao()
@@ -289,20 +293,23 @@ class MatriculaController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $updatedAt = $this->getRequest()->modified;
 
+        if (is_array($escola)) {
+            $escola = implode(',', $escola);
+        }
+
         if ($this->canGetMovimentacaoEnturmacao()) {
             if (!$escola) {
                 $escola = 0;
             }
 
-            $params = [];
-            $params[] = $escola;
-            $params[] = $ano;
+            $params = [$ano];
 
             $whereMatriculaTurma = '';
             $whereMatriculaExcluidos = '';
+
             if ($updatedAt) {
-                $whereMatriculaTurma = ' AND matricula_turma.updated_at >= $3';
-                $whereMatriculaExcluidos = ' AND matricula_turma_excluidos.deleted_at >= $3';
+                $whereMatriculaTurma = ' AND matricula_turma.updated_at >= $2';
+                $whereMatriculaExcluidos = ' AND matricula_turma_excluidos.deleted_at >= $2';
                 $params[] = $updatedAt;
             }
 
@@ -319,10 +326,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma.transferido AND
-                                matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma.remanejado AND
-                                matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma.turno_id,
@@ -334,7 +341,7 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN matricula_turma
                     ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                 WHERE matricula.ref_ref_cod_escola = $1
+                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                  ' . $whereMatriculaTurma . ') 
                  UNION ALL
                  (SELECT 
@@ -350,10 +357,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma_excluidos.transferido AND
-                                matricula_turma_excluidos.data_exclusao > ($2 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma_excluidos.remanejado AND
-                                matricula_turma_excluidos.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        turno_id,
@@ -365,7 +372,7 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN matricula_turma_excluidos
                     ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
-                 WHERE matricula.ref_ref_cod_escola = $1 ' . $whereMatriculaExcluidos . ')';
+                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ') ' . $whereMatriculaExcluidos . ')';
 
             $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
