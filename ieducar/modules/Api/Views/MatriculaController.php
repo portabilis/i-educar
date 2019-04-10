@@ -271,7 +271,6 @@ class MatriculaController extends ApiCoreController
             INNER JOIN pmieducar.aluno a
                 ON a.cod_aluno = m.ref_cod_aluno
             WHERE m.ano = $1
-                AND a.ativo = 1
                 AND m.ref_ref_cod_escola in ({$escola})
                 {$where}
         ";
