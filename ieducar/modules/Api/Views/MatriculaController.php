@@ -342,6 +342,7 @@ class MatriculaController extends ApiCoreController
             INNER JOIN matricula_turma
                     ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
+                   AND matricula.ano = $1
                  ' . $whereMatriculaTurma . ') 
                  UNION ALL
                  (SELECT 
@@ -372,7 +373,8 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN matricula_turma_excluidos
                     ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
-                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ') ' . $whereMatriculaExcluidos . ')';
+                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ') 
+                   AND matricula.ano = $1 ' . $whereMatriculaExcluidos . ')';
 
             $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
