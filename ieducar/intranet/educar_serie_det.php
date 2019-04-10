@@ -131,16 +131,10 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Etapa Curso', $registro['etapa_curso']));
     }
 
-    /*if ($regraId = $registro['regra_avaliacao_id']) {
-      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
-      $regra = $mapper->find($regraId);
-      $this->addDetalhe(array('Regra Avaliação', $regra));
-    }*/
-
     $regras = $this->getRegrasAvaliacao();
 
     if ($regras) {
-        $this->addDetalhe(['Regras de  avaliação', $regras]);
+        $this->addDetalhe(['Regras de avaliação', $regras]);
     }
 
     if ($registro['concluinte']) {
