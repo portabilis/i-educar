@@ -11,8 +11,12 @@ $j("#modal_school_managers").dialog({
     title: 'Informações adicionais',
     buttons: {
         "Gravar": function () {
-            fillHiddenInputs();
-            $j(this).dialog("close");
+            if ($j("#managers_inep_id").val().length != 12) {
+                messageUtils.error("O campo: Código INEP do gestor(a) deve conter 12 dígitos.");
+            } else {
+                fillHiddenInputs();
+                $j(this).dialog("close");
+            }
         },
         "Cancelar": function () {
             $j(this).dialog("close");
@@ -23,6 +27,16 @@ $j("#modal_school_managers").dialog({
             .closest(".ui-dialog")
             .find(".ui-button-text:first")
             .addClass("btn-green");
+
+        $j('#managers_inep_id').keyup(function(){
+            var oldValue = this.value;
+
+            this.value = this.value.replace(/[^0-9\.]/g, '');
+            this.value = this.value.replace('.', '');
+
+            if (oldValue != this.value)
+                messageUtils.error('Informe apenas números.', this);
+        });
     },
     close: function () {
 
@@ -47,11 +61,13 @@ function modalOpen(thisElement) {
 }
 
 function fillHiddenInputs() {
-    let roleId = $j("#managers_role_id").val(),
+    let inepId = $j("#managers_inep_id").val(),
+        roleId = $j("#managers_role_id").val(),
         accessCriteriaId = $j("#managers_access_criteria_id").val(),
         accessCriteriaIdDescription = $j("#managers_access_criteria_description").val(),
         linkTypeId = $j("#managers_link_type_id").val();
 
+    $j('input[id^="managers_inep_id[' + idLastLineUsed + ']').val(inepId);
     $j('input[id^="managers_role_id[' + idLastLineUsed + ']').val(roleId);
     $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(accessCriteriaId);
     $j('input[id^="managers_access_criteria_description[' + idLastLineUsed + ']').val(accessCriteriaIdDescription);
@@ -59,11 +75,13 @@ function fillHiddenInputs() {
 }
 
 function fillInputs() {
-    let roleId = $j('input[id^="managers_role_id[' + idLastLineUsed + ']').val(),
+    let inepId = $j('input[id^="managers_inep_id[' + idLastLineUsed + ']').val(),
+        roleId = $j('input[id^="managers_role_id[' + idLastLineUsed + ']').val(),
         accessCriteriaId = $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(),
         accessCriteriaIdDescription = $j('input[id^="managers_access_criteria_description[' + idLastLineUsed + ']').val(),
         linkTypeId = $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val();
 
+    $j("#managers_inep_id").val(inepId);
     $j("#managers_role_id").val(roleId);
     $j("#managers_access_criteria_id").val(accessCriteriaId);
     $j("#managers_access_criteria_description").val(accessCriteriaIdDescription);
@@ -73,6 +91,8 @@ function fillInputs() {
 function htmlFormModal() {
     return `<div id="modal_school_managers">
                 <form>
+                <label for="managers_inep_id">Código INEP</label>
+                    <input type="text" name="managers_inep_id" id="managers_inep_id" size="49" maxlength="12" class="text">
                     <label for="managers_role_id">Cargo do(a) gestor(a)</label>
                     <select class="select ui-widget-content ui-corner-all" name="managers_role_id" id="managers_role_id">
                         <option value="">Selecione</option>

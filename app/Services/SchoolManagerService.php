@@ -34,6 +34,7 @@ class SchoolManagerService
     {
         $schoolManager = new SchoolManager();
         $schoolManager->individual_id = $valueObject->individualId;
+        $schoolManager->inep_id = $valueObject->inepId;
         $schoolManager->school_id = $valueObject->schoolId;
         $schoolManager->role_id = $valueObject->roleId;
         $schoolManager->access_criteria_id = $valueObject->accessCriteriaId;
