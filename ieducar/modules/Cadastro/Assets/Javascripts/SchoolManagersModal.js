@@ -42,6 +42,7 @@ function modalOpen(thisElement) {
     var line = elementLine.replace(/\D/g, '');
     idLastLineUsed = line;
     fillInputs();
+    addEventsManagerInputs();
     $j("#modal_school_managers").dialog("open");
 }
 
@@ -101,4 +102,41 @@ function htmlFormModal() {
                     </select>
                 </form>
             </div>`;
+}
+
+function addEventsManagerInputs() {
+    $j.each($j('#managers_role_id'), function (index, field) {
+        field.on('change', function () {
+            changeManagerRole(this);
+        });
+        changeManagerRole(this);
+    });
+
+    $j.each($j('#managers_access_criteria_id'), function (index, field) {
+        field.on('change', function () {
+            changeAccessCriteria(this);
+        });
+        changeAccessCriteria(this);
+    });
+
+}
+
+function changeManagerRole(field) {
+    let accessCriteria = $j('#managers_access_criteria_id');
+
+    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
+        accessCriteria.prop('disabled', false);
+    } else {
+        accessCriteria.prop('disabled', true);
+    }
+}
+
+function changeAccessCriteria(field) {
+    let accessCriteriaDescription = $j('#managers_access_criteria_description');
+
+    if ($j(field).val() == SCHOOL_MANAGER_ACCESS_CRITERIA.OUTRO.toString()) {
+        accessCriteriaDescription.prop('disabled', false);
+    } else {
+        accessCriteriaDescription.prop('disabled', true);
+    }
 }

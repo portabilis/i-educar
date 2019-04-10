@@ -675,53 +675,10 @@ function setAutoComplete() {
 };
 
 setAutoComplete();
-addEventsManagerInputs();
 
 $j('#btn_add_tab_add_1').click(function () {
     setAutoComplete();
-    addEventsManagerInputs();
 });
-
-function addEventsManagerInputs() {
-    $j.each($j('select[id^="managers_role"]'), function (index, field) {
-        field.on('change', function () {
-            changeManagerRole(this);
-        });
-        changeManagerRole(this);
-    });
-
-    $j.each($j('select[id^="managers_access_criteria_id"]'), function (index, field) {
-        field.on('change', function () {
-            changeAccessCriteria(this);
-        });
-        changeAccessCriteria(this);
-    });
-
-}
-
-function changeManagerRole(field) {
-    let id = $j(field).attr('id');
-    let idNum = id.match(/\[(\d+)\]/);
-    let accessCriteria = $j('select[id="managers_access_criteria_id[' + idNum[1] + ']"]');
-
-    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
-        accessCriteria.prop('disabled', false);
-    } else {
-        accessCriteria.prop('disabled', true);
-    }
-}
-
-function changeAccessCriteria(field) {
-    let id = $j(field).attr('id');
-    let idNum = id.match(/\[(\d+)\]/);
-    let accessCriteriaDescription = $j('input[id="managers_access_criteria_description[' + idNum[1] + ']"]');
-
-    if ($j(field).val() == SCHOOL_MANAGER_ACCESS_CRITERIA.OUTRO.toString()) {
-        accessCriteriaDescription.prop('disabled', false);
-    } else {
-        accessCriteriaDescription.prop('disabled', true);
-    }
-}
 
 $j.each($j('input[id^="managers_access_criteria_description"]'), function (index, field) {
     $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
