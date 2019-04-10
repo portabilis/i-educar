@@ -670,77 +670,54 @@ class AlunoController extends ApiCoreController
 
     protected function loadOcorrenciasDisciplinares()
     {
-        $ocorrenciasAluno = [];
         $alunoId = $this->getRequest()->aluno_id;
 
         if (is_array($alunoId)) {
             $alunoId = implode(',', $alunoId);
         }
 
-        if (is_numeric($this->getRequest()->escola_id)) {
-            $sql = "
-                SELECT cod_matricula as matricula_id, ref_cod_aluno as aluno_id from pmieducar.matricula, pmieducar.escola where
-                cod_escola = ref_ref_cod_escola and ref_cod_aluno in ({$alunoId}) and ref_ref_cod_escola =
-                $1 and matricula.ativo = 1 order by ano desc, matricula_id
-            ";
+        $sql = "
+            select 
+                tod.nm_tipo as tipo,
+                od.data_cadastro as data_hora,
+                od.observacao as descricao,
+                od.cod_ocorrencia_disciplinar as ocorrencia_disciplinar_id,
+                m.ref_cod_aluno as aluno_id,
+                m.ref_ref_cod_escola as escola_id,
+                od.updated_at as updated_at,
+                (
+                    CASE WHEN od.ativo = 1 THEN 
+                        null 
+                    ELSE
+                        od.data_exclusao::timestamp(0)
+                    END
+                ) as deleted_at
+            from pmieducar.matricula_ocorrencia_disciplinar od 
+            inner join pmieducar.matricula m 
+            on m.cod_matricula = od.ref_cod_matricula
+            inner join pmieducar.tipo_ocorrencia_disciplinar tod 
+            on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
+            where true 
+                and m.ref_cod_aluno IN ({$alunoId})     
+                -- and m.ref_ref_cod_escola = $1    
+        ";
 
-            $params = [$this->getRequest()->escola_id];
-        } else {
-            $sql = "
-                SELECT cod_matricula as matricula_id,
-                ref_cod_aluno as aluno_id,
-                ref_ref_cod_escola as escola_id
-                FROM pmieducar.matricula
-                WHERE ref_cod_aluno IN ({$alunoId})
-                AND matricula.ativo = 1
-                ORDER BY ano DESC, matricula_id
-            ";
+        $ocorrencias = $this->fetchPreparedQuery($sql, []);
 
-            $params = [];
-        }
+        $attrsFilter = [
+            'tipo',
+            'data_hora',
+            'descricao',
+            'ocorrencia_disciplinar_id',
+            'aluno_id',
+            'escola_id',
+            'updated_at',
+            'deleted_at'
+        ];
 
-        $matriculas = $this->fetchPreparedQuery($sql, $params);
+        $ocorrencias = Portabilis_Array_Utils::filterSet($ocorrencias, $attrsFilter);
 
-        $_ocorrenciasMatricula = new clsPmieducarMatriculaOcorrenciaDisciplinar();
-
-        foreach ($matriculas as $matricula) {
-            $ocorrenciasMatricula = $_ocorrenciasMatricula->lista(
-                $matricula['matricula_id'],
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $visivel_pais = 1
-            );
-
-            if (is_array($ocorrenciasMatricula)) {
-                $attrsFilter = [
-                    'ref_cod_tipo_ocorrencia_disciplinar' => 'tipo',
-                    'data_cadastro' => 'data_hora',
-                    'observacao' => 'descricao',
-                    'cod_ocorrencia_disciplinar' => 'ocorrencia_disciplinar_id'
-                ];
-
-                $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
-
-                foreach ($ocorrenciasMatricula as $ocorrenciaMatricula) {
-                    $ocorrenciaMatricula['tipo'] = $this->loadTipoOcorrenciaDisciplinar($ocorrenciaMatricula['tipo']);
-                    $ocorrenciaMatricula['data_hora'] = Portabilis_Date_Utils::pgSQLToBr($ocorrenciaMatricula['data_hora']);
-                    $ocorrenciaMatricula['descricao'] = $this->toUtf8($ocorrenciaMatricula['descricao']);
-                    $ocorrenciaMatricula['aluno_id'] = $matricula['aluno_id'];
-                    $ocorrenciaMatricula['escola_id'] = $matricula['escola_id'];
-                    $ocorrenciasAluno[] = $ocorrenciaMatricula;
-                }
-            }
-        }
-
-        return ['ocorrencias_disciplinares' => $ocorrenciasAluno];
+        return ['ocorrencias_disciplinares' => $ocorrencias];
     }
 
     protected function getGradeUltimoHistorico()
