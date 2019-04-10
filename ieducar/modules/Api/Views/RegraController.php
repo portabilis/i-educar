@@ -108,7 +108,7 @@ class RegraController extends ApiCoreController
             $ano = $this->getRequest()->ano;
 
             $sql = '
-              SELECT 
+              SELECT
                   DISTINCT ra.id,
                   ra.tabela_arredondamento_id,
                   ra.tabela_arredondamento_id_conceitual,
@@ -116,14 +116,14 @@ class RegraController extends ApiCoreController
                   ra.tipo_presenca,
                   ra.parecer_descritivo,
                   (
-                      SELECT 
+                      SELECT
                           jsonb_agg(json_build_object(\'turma_id\', t.cod_turma) ORDER BY t.cod_turma)
-                      FROM 
-                          pmieducar.turma t 
-                      INNER JOIN pmieducar.serie s ON true 
+                      FROM
+                          pmieducar.turma t
+                      INNER JOIN pmieducar.serie s ON true
                           AND s.cod_serie = t.ref_ref_cod_serie
-                      INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true 
-                          AND rasa.serie_id = s.cod_serie 
+                      INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
+                          AND rasa.serie_id = s.cod_serie
                           AND rasa.ano_letivo = $2
                       WHERE true
                           AND rasa.regra_avaliacao_id = ra.id
@@ -139,7 +139,7 @@ class RegraController extends ApiCoreController
               FROM modules.regra_avaliacao ra
               WHERE true
                   AND ra.instituicao_id = $1
-              ORDER BY 
+              ORDER BY
                 COALESCE(ra.regra_diferenciada_id,0),
                 ra.id';
 
@@ -178,6 +178,9 @@ class RegraController extends ApiCoreController
     {
         $serieId = $this->getRequest()->serie_id;
 
+        // TODO enviar também o ano para que possa ser puxada a regra correta da série
+        // em `modules.regra_avaliacao_serie_ano`.
+        // Não recomendável usar este end-point até que ocorra esta correção.
         if ($this->canGetRegraSerie()) {
             $sql = 'SELECT *
                 FROM modules.regra_avaliacao
