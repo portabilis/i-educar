@@ -81,7 +81,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = 'Novo';
-        
+
 
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
@@ -233,6 +233,15 @@ class indice extends clsCadastro
 
     function validaQuantidadeDisciplinasDependencia()
     {
+        $query = <<<'SQL'
+            SELECT t.ano
+            FROM pmieducar.matricula AS m
+            INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+            INNER JOIN pmieducar.turma AS t ON t.cod_turma = mt.ref_cod_turma
+            WHERE m.cod_matricula = $1
+SQL;
+        $ano = Portabilis_Utils_Database::selectField($query, [$this->ref_cod_matricula]);
+
         $db = new clsBanco();
         $db->consulta("SELECT (CASE
                                WHEN escola.utiliza_regra_diferenciada AND serie.regra_avaliacao_diferenciada_id IS NOT NULL
@@ -241,8 +250,9 @@ class indice extends clsCadastro
                                 END) AS qtd_disciplinas_dependencia
                          FROM pmieducar.escola,
                               pmieducar.serie
-                    LEFT JOIN modules.regra_avaliacao ON (serie.regra_avaliacao_id = regra_avaliacao.id)
-                    LEFT JOIN modules.regra_avaliacao AS regra_avaliacao_diferenciada ON (serie.regra_avaliacao_diferenciada_id = regra_avaliacao_diferenciada.id)
+                    LEFT JOIN modules.regra_avaliacao_serie_ano AS rasa ON (rasa.serie_id = serie.cod_serie AND rasa.ano_letivo = {$ano})
+                    LEFT JOIN modules.regra_avaliacao ON (rasa.regra_avaliacao_id = regra_avaliacao.id)
+                    LEFT JOIN modules.regra_avaliacao AS regra_avaliacao_diferenciada ON (rasa.regra_avaliacao_diferenciada_id = regra_avaliacao_diferenciada.id)
                         WHERE serie.cod_serie = {$this->ref_cod_serie}
                           AND escola.cod_escola = {$this->ref_cod_escola}");
 
@@ -268,7 +278,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
@@ -321,7 +331,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
@@ -345,7 +355,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7,
