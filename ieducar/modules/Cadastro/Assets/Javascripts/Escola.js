@@ -722,3 +722,8 @@ function changeAccessCriteria(field) {
         accessCriteriaDescription.prop('disabled', true);
     }
 }
+
+$j.each($j('input[id^="managers_access_criteria_description"]'), function (index, field) {
+    $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
+});
+
