@@ -720,19 +720,50 @@ class MatriculaController extends ApiCoreController
 
     protected function getDispensaDisciplina()
     {
-        $sql = 'SELECT dd.ref_cod_matricula AS matricula_id,
-                   dd.ref_cod_disciplina AS disciplina_id,
-                   td_dispensa_etapa.etapas AS etapas
-              FROM pmieducar.dispensa_disciplina AS dd,
-           LATERAL (SELECT string_agg(CAST(de.etapa AS VARCHAR), \',\') AS etapas
-                      FROM pmieducar.dispensa_etapa AS de
-                     WHERE de.ref_cod_dispensa = dd.cod_dispensa
-                   ) AS td_dispensa_etapa
-             WHERE dd.ativo = 1
-               AND td_dispensa_etapa.etapas <> \'\'';
+        $modified = $this->getRequest()->modified;
 
-        $dispensas = $this->fetchPreparedQuery($sql);
-        $attrs = ['matricula_id', 'disciplina_id', 'etapas'];
+        $where = '';
+        $params = [];
+
+        if ($modified) {
+            $where = " AND dd.updated_at >= $1";
+            $params[] = $modified;
+        }
+
+        $sql = "
+            (
+                SELECT
+                    dd.ref_cod_matricula AS matricula_id,
+                    dd.ref_cod_disciplina AS disciplina_id,
+                    string_agg(CAST(de.etapa AS VARCHAR), ',') AS etapas,
+                    dd.updated_at,
+                    null as deleted_at
+                FROM pmieducar.dispensa_disciplina AS dd
+                LEFT JOIN pmieducar.dispensa_etapa de
+                ON de.ref_cod_dispensa = dd.cod_dispensa
+                WHERE dd.ativo = 1
+                {$where}
+                GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at
+            )
+            UNION ALL
+            (
+                SELECT
+                    dd.ref_cod_matricula AS matricula_id,
+                    dd.ref_cod_disciplina AS disciplina_id,
+                    string_agg(CAST(de.etapa AS VARCHAR), ',') AS etapas,
+                    dd.updated_at,
+                    dd.deleted_at
+                FROM pmieducar.dispensa_disciplina_excluidos AS dd
+                LEFT JOIN pmieducar.dispensa_etapa de
+                ON de.ref_cod_dispensa = dd.cod_dispensa
+                WHERE dd.ativo = 1
+                {$where}
+                GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at, dd.deleted_at
+            )
+        ";
+
+        $dispensas = $this->fetchPreparedQuery($sql, $params);
+        $attrs = ['matricula_id', 'disciplina_id', 'etapas', 'updated_at', 'deleted_at'];
         $dispensas = Portabilis_Array_Utils::filterSet($dispensas, $attrs);
 
         return ['dispensas' => $dispensas];
