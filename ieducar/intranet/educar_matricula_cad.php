@@ -973,7 +973,8 @@ class indice extends clsCadastro
         $db = new clsBanco();
         $matriculasDependenciaPermitida = $db->CampoUnico("SELECT regra_avaliacao.qtd_matriculas_dependencia
                                                               FROM pmieducar.serie
-                                                        INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = serie.regra_avaliacao_id)
+                                                        INNER JOIN modules.regra_avaliacao_serie_ano AS rasa ON (rasa.serie_id = serie.cod_serie AND rasa.ano_letivo = {$this->ano})
+                                                        INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = rasa.regra_avaliacao_id)
                                                              WHERE serie.cod_serie = {$this->ref_cod_serie}");
 
         if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
