@@ -2,6 +2,7 @@
 
 namespace App\Models\Educacenso;
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
@@ -12,7 +13,6 @@ use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 
 class Registro10 implements RegistroEducacenso
 {
-    public const PREDIO_ESCOLAR = 3;
     /**
       * @var string
       */
@@ -569,7 +569,7 @@ class Registro10 implements RegistroEducacenso
      */
     public function predioEscolar()
     {
-        return in_array(self::PREDIO_ESCOLAR, $this->localFuncionamento);
+        return in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->localFuncionamento);
     }
 
     /**
