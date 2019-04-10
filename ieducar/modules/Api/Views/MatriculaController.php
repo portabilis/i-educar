@@ -226,95 +226,174 @@ class MatriculaController extends ApiCoreController
         return $this->validatesPresenceOf('ano');
     }
 
+    protected function canGetMatriculasEscola()
+    {
+        return $this->validatesPresenceOf('ano') && $this->validatesPresenceOf('escola');
+    }
+
+    protected function getMatriculasEscola()
+    {
+        if ($this->canGetMatriculasEscola() == false) {
+            return;
+        }
+
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
+        $updatedAt = $this->getRequest()->modified;
+
+        if (is_array($escola)) {
+            $escola = implode(',', $escola);
+        }
+
+        $params = [$ano];
+
+        $where = '';
+
+        if ($updatedAt) {
+            $where = ' AND m.updated_at >= $2';
+            $params[] = $updatedAt;
+        }
+
+        $sql = "
+            SELECT 
+                m.ref_cod_aluno AS aluno_id,
+                m.cod_matricula AS matricula_id,
+                m.ref_ref_cod_escola AS escola_id,
+                m.aprovado AS situacao,
+                m.ativo AS ativo,
+                m.updated_at::timestamp(0) AS updated_at,
+                (
+                    case when m.ativo = 1 then null
+                    else m.updated_at::timestamp(0)
+                    end
+                ) as deleted_at
+            FROM pmieducar.matricula m
+            INNER JOIN pmieducar.aluno a
+                ON a.cod_aluno = m.ref_cod_aluno
+            WHERE m.ano = $1
+                AND a.ativo = 1
+                AND m.ref_ref_cod_escola in ({$escola})
+                {$where}
+        ";
+
+        $matriculas = $this->fetchPreparedQuery($sql, $params, false);
+
+        if (is_array($matriculas) && count($matriculas) > 0) {
+            $attrs = ['aluno_id', 'matricula_id', 'escola_id', 'situacao', 'ativo', 'updated_at', 'deleted_at'];
+
+            $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
+        }
+
+        return ['matriculas' => $matriculas];
+    }
+
     protected function getMovimentacaoEnturmacao()
     {
         $ano = $this->getRequest()->ano;
         $escola = $this->getRequest()->escola;
-        $updatedAt = $this->getRequest()->data_atualizacao;
+        $updatedAt = $this->getRequest()->modified;
+
+        if (is_array($escola)) {
+            $escola = implode(',', $escola);
+        }
 
         if ($this->canGetMovimentacaoEnturmacao()) {
             if (!$escola) {
                 $escola = 0;
             }
 
-            $sql = 'SELECT m.ref_cod_aluno AS aluno_id,
-                     m.cod_matricula AS matricula_id,
-                     m.aprovado AS situacao,
-                     m.ativo AS ativo,
-                     coalesce(m.updated_at::varchar, \'\') AS data_atualizacao
-              FROM pmieducar.matricula m
-              INNER JOIN pmieducar.aluno a
-              ON a.cod_aluno = m.ref_cod_aluno
-              WHERE m.ano = $1
-                AND a.ativo = 1
-                AND CASE WHEN $2 = 0 THEN TRUE ELSE m.ref_ref_cod_escola = $2 END';
+            $params = [$ano];
 
-            $params = [$ano, $escola];
-            $matriculas = $this->fetchPreparedQuery($sql, $params, false);
+            $whereMatriculaTurma = '';
+            $whereMatriculaExcluidos = '';
 
-            if (is_array($matriculas) && count($matriculas) > 0) {
-                $attrs = ['aluno_id', 'matricula_id', 'situacao', 'data_atualizacao', 'ativo'];
-                $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
-
-                foreach ($matriculas as $key => $matricula) {
-                    $sql = 'SELECT 
-                                   matricula_turma.id,
-                                   matricula_turma.ref_cod_turma AS turma_id,
-                                   matricula_turma.sequencial AS sequencial,
-                                   matricula_turma.sequencial_fechamento AS sequencial_fechamento,
-                                   COALESCE(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
-                                   COALESCE(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
-                                   COALESCE(matricula_turma.updated_at::varchar, \'\') AS data_atualizacao,
-                                   CASE
-                                       WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
-                                       WHEN matricula.aprovado = 4 AND
-                                            matricula_turma.transferido AND
-                                            matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
-                                       WHEN matricula.aprovado = 3 AND
-                                            matricula_turma.remanejado AND
-                                            matricula_turma.data_exclusao > ($2 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
-                                       ELSE FALSE
-                                   END AS apresentar_fora_da_data,
-                                   matricula_turma.turno_id
-                              FROM matricula
-                        INNER JOIN pmieducar.escola
-                                ON escola.cod_escola = matricula.ref_ref_cod_escola
-                        INNER JOIN pmieducar.instituicao
-                                ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-                         LEFT JOIN matricula_turma
-                                ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                             WHERE cod_matricula = $1';
-
-                    $params = [];
-                    $params[] = $matriculas[$key]['matricula_id'];
-                    $params[] = $ano;
-
-                    if ($updatedAt) {
-                        $sql .= ' AND matricula_turma.updated_at >= $3';
-                        $params[] = $updatedAt;
-                    }
-
-                    $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
-
-                    if (is_array($enturmacoes) && count($enturmacoes) > 0) {
-                        $attrs = [
-                            'id',
-                            'turma_id',
-                            'sequencial',
-                            'sequencial_fechamento',
-                            'data_entrada',
-                            'data_saida',
-                            'data_atualizacao',
-                            'apresentar_fora_da_data',
-                            'turno_id'
-                        ];
-                        $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
-                        $matriculas[$key]['enturmacoes'] = $enturmacoes;
-                    }
-                }
-
-                return ['matriculas' => $matriculas];
+            if ($updatedAt) {
+                $whereMatriculaTurma = ' AND matricula_turma.updated_at >= $2';
+                $whereMatriculaExcluidos = ' AND matricula_turma_excluidos.deleted_at >= $2';
+                $params[] = $updatedAt;
             }
+
+            $sql = '(SELECT 
+                       matricula_turma.id,
+                       pmieducar.matricula.cod_matricula as matricula_id,
+                       matricula_turma.ref_cod_turma AS turma_id,
+                       matricula_turma.sequencial AS sequencial,
+                       matricula_turma.sequencial_fechamento AS sequencial_fechamento,
+                       COALESCE(matricula_turma.data_enturmacao::date::varchar, \'\') AS data_entrada,
+                       COALESCE(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
+                       matricula_turma.updated_at::timestamp(0) AS updated_at,
+                       CASE
+                           WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
+                           WHEN matricula.aprovado = 4 AND
+                                matricula_turma.transferido AND
+                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                           WHEN matricula.aprovado = 3 AND
+                                matricula_turma.remanejado AND
+                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                           ELSE FALSE
+                       END AS apresentar_fora_da_data,
+                       matricula_turma.turno_id,
+                       null AS deleted_at
+                  FROM pmieducar.matricula
+            INNER JOIN pmieducar.escola
+                    ON escola.cod_escola = matricula.ref_ref_cod_escola
+            INNER JOIN pmieducar.instituicao
+                    ON instituicao.cod_instituicao = escola.ref_cod_instituicao
+            INNER JOIN matricula_turma
+                    ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
+                 ' . $whereMatriculaTurma . ') 
+                 UNION ALL
+                 (SELECT 
+                       matricula_turma_excluidos.id,
+                       pmieducar.matricula.cod_matricula as matricula_id,
+                       matricula_turma_excluidos.ref_cod_turma AS turma_id,
+                       matricula_turma_excluidos.sequencial AS sequencial,
+                       matricula_turma_excluidos.sequencial_fechamento AS sequencial_fechamento,
+                       COALESCE(matricula_turma_excluidos.data_enturmacao::date::varchar, \'\') AS data_entrada,
+                       COALESCE(matricula_turma_excluidos.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
+                       matricula_turma_excluidos.updated_at::timestamp(0) AS updated_at,
+                       CASE
+                           WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
+                           WHEN matricula.aprovado = 4 AND
+                                matricula_turma_excluidos.transferido AND
+                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                           WHEN matricula.aprovado = 3 AND
+                                matricula_turma_excluidos.remanejado AND
+                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                           ELSE FALSE
+                       END AS apresentar_fora_da_data,
+                       turno_id,
+                       matricula_turma_excluidos.deleted_at
+                  FROM pmieducar.matricula
+            INNER JOIN pmieducar.escola
+                    ON escola.cod_escola = matricula.ref_ref_cod_escola
+            INNER JOIN pmieducar.instituicao
+                    ON instituicao.cod_instituicao = escola.ref_cod_instituicao
+            INNER JOIN matricula_turma_excluidos
+                    ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
+                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ') ' . $whereMatriculaExcluidos . ')';
+
+            $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
+
+            if (is_array($enturmacoes) && count($enturmacoes) > 0) {
+                $attrs = [
+                    'id',
+                    'turma_id',
+                    'matricula_id',
+                    'sequencial',
+                    'sequencial_fechamento',
+                    'data_entrada',
+                    'data_saida',
+                    'apresentar_fora_da_data',
+                    'turno_id',
+                    'updated_at',
+                    'deleted_at',
+                ];
+                $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
+            }
+
+            return ['enturmacoes' => $enturmacoes];
         }
     }
 
@@ -706,6 +785,8 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->get());
         } elseif ($this->isRequestFor('get', 'matriculas')) {
             $this->appendResponse($this->getMatriculas());
+        } elseif ($this->isRequestFor('get', 'matriculas-escola')) {
+            $this->appendResponse($this->getMatriculasEscola());
         } elseif ($this->isRequestFor('get', 'frequencia')) {
             $this->appendResponse($this->getFrequencia());
         } elseif ($this->isRequestFor('get', 'matricula-search')) {

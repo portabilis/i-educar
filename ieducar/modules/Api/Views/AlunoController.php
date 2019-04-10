@@ -833,7 +833,6 @@ class AlunoController extends ApiCoreController
                             end
                     )
                     and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
-                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
                 limit 15
             ) as alunos
             order by
