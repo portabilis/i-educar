@@ -35,4 +35,9 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
      * @var bool
      */
     public $timestamps = false;
+
+    public function getNameAttribute()
+    {
+        return $this->nome;
+    }
 }
