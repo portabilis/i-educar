@@ -116,10 +116,7 @@ class indice extends clsCadastro
                         parent.document.getElementById('ref_cod_deficiencia').value = '$cadastrou';
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_deficiencia_lst.php" );
             die();
-            return true;
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";

@@ -720,8 +720,6 @@ class indice extends clsCadastro
                     {
                         // por algum motivo ele mandou o cara pra tela de excessoes, mas nao existe nenhuma excessao
                         $this->campoRotulo("alerta","Alerta","Erro: [4] Nenhum aluno reprovado por faltas pendente.");
-//                      header("location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
-//                      die();
                     }
                 }
             }
