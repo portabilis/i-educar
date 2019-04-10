@@ -28,6 +28,9 @@
  * @version   $Id$
  */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -211,7 +214,7 @@ class indice extends clsCadastro
           'educar_calendario_dia_lst.php?ref_cod_calendario_ano_letivo=%d&mes=%d&dia=%d',
           $registro['ref_cod_calendario_ano_letivo'], $registro['mes'], $registro['dia']
         );
-        header('Location: ' . $url);
+        $this->simpleRedirect($url);
       }
     }
 
@@ -315,8 +318,9 @@ class indice extends clsCadastro
         'educar_calendario_anotacao_lst.php?dia=%d&mes=%d&ano=%d&ref_cod_calendario_ano_letivo=%d',
         $this->dia, $this->mes, $this->ano, $this->ref_cod_calendario_ano_letivo
       );
-      header('Location: ' . $url);
-      die();
+      throw new HttpResponseException(
+          new RedirectResponse($url)
+      );
     }
 
     $this->mensagem = 'Cadastro não realizado. <br />';
@@ -386,8 +390,9 @@ class indice extends clsCadastro
         'educar_calendario_anotacao_lst.php?dia=%d&mes=%d&ano=%d&ref_cod_calendario_ano_letivo=%d',
         $this->dia, $this->mes, $this->ano, $this->ref_cod_calendario_ano_letivo
       );
-      header('Location: ' . $url);
-      die();
+      throw new HttpResponseException(
+        new RedirectResponse($url)
+      );
     }
 
     $this->mensagem = 'Edição não realizada. <br />';
@@ -429,8 +434,9 @@ class indice extends clsCadastro
         'educar_calendario_anotacao_lst.php?dia=%d&mes=%d&ano=%d&ref_cod_calendario_ano_letivo=%d',
         $this->dia, $this->mes, $this->ano, $this->ref_cod_calendario_ano_letivo
       );
-      header('Location: ' . $url);
-      die();
+      throw new HttpResponseException(
+          new RedirectResponse($url)
+      );
     }
 
     $this->mensagem = 'Exclusão não realizada. <br />';

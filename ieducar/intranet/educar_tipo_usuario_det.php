@@ -74,7 +74,7 @@ class indice extends clsDetalhe
       NULL, NULL, NULL, NULL, NULL, 1);
 
     if (! $registro = $tmp_obj->detalhe()){
-      header('Location: educar_tipo_usuario_lst.php');
+        $this->simpleRedirect('educar_tipo_usuario_lst.php');
     }
 
     if ($registro['cod_tipo_usuario']) {

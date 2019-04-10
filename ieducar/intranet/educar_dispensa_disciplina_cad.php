@@ -56,8 +56,7 @@ class indice extends clsCadastro
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie  = $det_matricula['ref_ref_cod_serie'];
         } else {
-            header('Location: educar_matricula_lst.php');
-            die();
+            $this->simpleRedirect('educar_matricula_lst.php');
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
@@ -266,8 +265,8 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-        header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-        die();
+        $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+
     }
 
     public function Editar()
@@ -286,8 +285,7 @@ class indice extends clsCadastro
         $editou = $objetoDispensa->edita();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-            header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
+            $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
         $this->mensagem = 'Edição não realizada.<br />';
@@ -309,8 +307,7 @@ class indice extends clsCadastro
 
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-            header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
+            $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
         $this->mensagem = 'Exclusão não realizada.<br />';

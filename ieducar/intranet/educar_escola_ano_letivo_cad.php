@@ -157,8 +157,7 @@ class indice extends clsCadastro
       $this->ref_cod_escola, $this->ano
     );
 
-    header('Location: ' . $url);
-    die();
+      $this->simpleRedirect($url);
   }
 }
 

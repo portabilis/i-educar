@@ -190,8 +190,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-    header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-    die();
+    $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
   }
 
   function Editar()
@@ -207,8 +206,7 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-      die();
+      $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
@@ -228,8 +226,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-      die();
+      $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
     }
 
     $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';

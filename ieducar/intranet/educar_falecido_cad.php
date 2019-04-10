@@ -157,8 +157,7 @@ class indice extends clsCadastro
                     ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::FALECIDO);
 
                 $this->mensagem .= "Alteração realizado com sucesso.<br>";
-                header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
-                return true;
+                $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
             $this->mensagem = "A alteração não pode ser salva.<br>";
