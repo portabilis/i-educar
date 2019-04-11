@@ -11,6 +11,11 @@ abstract class EloquentTestCase extends TestCase
     use DatabaseTransactions;
 
     /**
+     * @var array
+     */
+    protected $relations = [];
+
+    /**
      * Return the Eloquent model name to be used in tests.
      *
      * @return string
@@ -133,5 +138,21 @@ abstract class EloquentTestCase extends TestCase
         $expected = array_intersect_key($created, $found);
 
         $this->assertEquals($expected, $created);
+    }
+
+    /**
+     * Relations.
+     *
+     * @return void
+     */
+    public function testRelationships()
+    {
+        $model = factory($this->getEloquentModelName())->create();
+
+        foreach ($this->relations as $relation => $class) {
+            $this->assertInstanceOf($class, $model->{$relation});
+        }
+
+        $this->assertInstanceOf($this->getEloquentModelName(), $model);
     }
 }

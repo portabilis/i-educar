@@ -42,16 +42,14 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
 
     $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
     if ($nivel != 1) {
-      header('Location: educar_index.php');
+      $this->simpleRedirect('educar_index.php');
     }
 
     $obj_permissoes->permissao_cadastra(999873, $this->pessoa_logada, 7,
@@ -71,9 +69,7 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -267,9 +263,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -310,9 +304,7 @@ class indice extends clsCadastro
       Cache::invalidateByTags(['configurations']);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header( "Location: index.php" );
-      die();
-      return true;
+      $this->simpleRedirect('index.php');
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

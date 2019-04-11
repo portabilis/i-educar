@@ -73,9 +73,7 @@ class indice extends clsCadastro
   function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_cliente   = $_GET["cod_cliente"];
         $this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"];
@@ -213,10 +211,6 @@ class indice extends clsCadastro
    * Insere novo registro nas tabelas pmieducar.cliente e pmieducar.cliente_tipo_cliente.
    */
   public function Novo() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $senha = md5($this->senha . 'asnk@#*&(23');
 
     $obj_permissoes = new clsPermissoes();
@@ -249,8 +243,7 @@ class indice extends clsCadastro
           if ($obj_cliente_tipo->existeCliente()) {
             if ($obj_cliente_tipo->trocaTipo()) {
               $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-              header('Location: educar_definir_cliente_tipo_lst.php');
-              die();
+              $this->simpleRedirect('educar_definir_cliente_tipo_lst.php');
             }
           }
           else {
@@ -259,9 +252,8 @@ class indice extends clsCadastro
 
             if ($obj_cliente_tipo->cadastra()) {
               $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-              header('Location: educar_cliente_lst.php');
-              die();
-                        }
+              $this->simpleRedirect('educar_cliente_lst.php');
+            }
           }
         }
 
@@ -294,10 +286,7 @@ class indice extends clsCadastro
           return FALSE;
                 }
         else {
-          header('Location: educar_cliente_lst.php');
-
-          return TRUE;
-          die();
+            $this->simpleRedirect('educar_cliente_lst.php');
                 }
       }
             else {
@@ -319,10 +308,6 @@ class indice extends clsCadastro
    *   - Senão, cadastra como cliente da biblioteca
    */
   public function Editar() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $senha = md5($this->senha . 'asnk@#*&(23');
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
@@ -347,8 +332,7 @@ class indice extends clsCadastro
       if ($obj_cliente_tipo->existeClienteBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
         if ($obj_cliente_tipo->trocaTipoBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
           $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: educar_cliente_lst.php');
-          die();
+          $this->simpleRedirect('educar_cliente_lst.php');
         }
       }
       else {
@@ -358,8 +342,7 @@ class indice extends clsCadastro
 
         if ($obj_cliente_tipo->cadastra()) {
           $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-          header('Location: educar_cliente_lst.php');
-          die();
+          $this->simpleRedirect('educar_cliente_lst.php');
         }
       }
     }
@@ -372,9 +355,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
@@ -388,9 +369,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_cliente_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

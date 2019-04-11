@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -64,9 +65,6 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $this->cod_acervo_autor=$_GET["cod_acervo_autor"];
 
@@ -147,9 +145,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->nm_autor = addslashes($this->nm_autor);
 
@@ -166,9 +162,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_autor", $this->pessoa_logada, $this->cod_acervo_autor);
       $auditoria->inclusao($acervo_autor);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_acervo_autor_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_assunto_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -178,9 +173,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->nm_autor = addslashes($this->nm_autor);
 
@@ -198,9 +191,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_autor", $this->pessoa_logada, $this->cod_acervo_autor);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_autor_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_assunto_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -210,9 +202,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
@@ -227,9 +217,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_autor", $this->pessoa_logada, $this->cod_acervo_autor);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_autor_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_assunto_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

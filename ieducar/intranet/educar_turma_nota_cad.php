@@ -103,9 +103,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->ref_cod_turma      = $_GET["ref_cod_turma"];
         $this->ref_ref_cod_escola = $_GET["ref_ref_cod_escola"];
@@ -247,8 +245,7 @@ class indice extends clsCadastro
                                     $objAprova = new clsPmieducarMatricula($mat,null,null,null,$this->pessoa_logada,null,null,1);
                                     $objAprova->edita();
                                 }
-                                header("location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
-                                die();
+                                $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
                             }
                         }
                     }
@@ -284,8 +281,7 @@ class indice extends clsCadastro
                                 $objAprova->edita();
                             }
                             //$this->campoRotulo("alerta","Alerta","Erro: [2] Todos os alunos dessa turma jï¿½ foram aprovados/reprovados.");
-                            header("location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
-                            die();
+                            $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
                         }
                     }
                 }
@@ -321,8 +317,7 @@ class indice extends clsCadastro
                             $objAprova = new clsPmieducarMatricula($mat,null,null,null,$this->pessoa_logada,null,null,1);
                             $objAprova->edita();
                         }
-                        header("location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
-                        die();
+                        $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
                     }
                 }
             }
@@ -356,12 +351,12 @@ class indice extends clsCadastro
                     /**
                      * nao existem disciplinas sem nota redireciona para listagem de nota turma
                      */
-                    if(!$_POST)
+                    if(!$_POST) {
                         echo "<script>alert('Todas as disciplinas já se encontram com nota!');window.location='educar_turma_mvto_det.php?cod_turma=$this->ref_cod_turma';</script>";
-                    else
-                        header("location:educar_turma_mvto_det.php?cod_turma=$this->ref_cod_turma");
-                    die;
+                        die;
+                    }
 
+                    $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
                 }
 
 
@@ -725,8 +720,6 @@ class indice extends clsCadastro
                     {
                         // por algum motivo ele mandou o cara pra tela de excessoes, mas nao existe nenhuma excessao
                         $this->campoRotulo("alerta","Alerta","Erro: [4] Nenhum aluno reprovado por faltas pendente.");
-//                      header("location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
-//                      die();
                     }
                 }
             }
@@ -1071,9 +1064,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 650, $this->pessoa_logada, 7,  "educar_turma_mvto_det.php" );

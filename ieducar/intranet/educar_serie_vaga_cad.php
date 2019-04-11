@@ -78,9 +78,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->cod_serie_vaga = $_GET['cod_serie_vaga'];
 
@@ -151,9 +149,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(21253, $this->pessoa_logada, 7, 'educar_serie_vaga_lst.php');
@@ -175,8 +171,7 @@ class indice extends clsCadastro
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado. Verifique se j&aacute; n&atilde;o existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
@@ -185,9 +180,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(21253, $this->pessoa_logada, 7, 'educar_serie_vaga_lst.php');
@@ -198,8 +191,7 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
@@ -208,9 +200,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(21253, $this->pessoa_logada, 7, 'educar_serie_vaga_lst.php');
@@ -221,8 +211,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';

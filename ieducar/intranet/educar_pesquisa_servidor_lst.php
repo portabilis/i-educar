@@ -26,6 +26,9 @@
  * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version   $Id$
  */
+
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -95,52 +98,51 @@ class indice extends clsListagem
   var $ano_alocacao;
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    $_SESSION['campo1']             = $_GET['campo1'] ? $_GET['campo1'] : $_SESSION['campo1'];
-    $_SESSION['campo2']             = $_GET['campo2'] ? $_GET['campo2'] : $_SESSION['campo2'];
-    $_SESSION['dia_semana']         = isset($_GET['dia_semana']) ? $_GET['dia_semana'] : $_SESSION['dia_semana'];
-    $_SESSION['hora_inicial']       = $_GET['hora_inicial'] ? $_GET['hora_inicial'] : $_SESSION['hora_inicial'];
-    $_SESSION['hora_final']         = $_GET['hora_final'] ? $_GET['hora_final'] : $_SESSION['hora_final'];
-    $_SESSION['professor']          = $_GET['professor'] ? $_GET['professor'] : $_SESSION['professor'];
-    $_SESSION['horario']            = $_GET['horario'] ? $_GET['horario'] : $_SESSION['horario'];
-    $_SESSION['ref_cod_escola']     = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
-    $_SESSION['min_mat']            = $_GET['min_mat'] ? $_GET['min_mat'] : $_SESSION['min_mat'];
-    $_SESSION['min_ves']            = $_GET['min_ves'] ? $_GET['min_ves'] : $_SESSION['min_ves'];
-    $_SESSION['min_not']            = $_GET['min_not'] ? $_GET['min_not'] : $_SESSION['min_not'];
-    $_SESSION['ref_cod_disciplina'] = $_GET['ref_cod_disciplina'] ? $_GET['ref_cod_disciplina'] : $_SESSION['ref_cod_disciplina'];
-    $_SESSION['ref_cod_curso']      = $_GET['ref_cod_curso'] ? $_GET['ref_cod_curso'] : $_SESSION['ref_cod_curso'];
-    $_SESSION['ano_alocacao']       = $_GET['ano_alocacao'] ? $_GET['ano_alocacao'] : $_SESSION['ano_alocacao'];
-    /**
-     * Controle para cÃ¡lculo de horas
-     */
-    $_SESSION['identificador'] = $_GET['identificador'] ?
-      $_GET['identificador'] : $_SESSION['identificador'];
-    if (isset($_GET['lst_matriculas'])) {
-      $_SESSION['lst_matriculas'] = $_GET['lst_matriculas'] ?
-        $_GET['lst_matriculas'] : $_SESSION['lst_matriculas'];
-    }
-    if (!isset($_GET['tipo'])) {
-       $_SESSION['setAllField1'] = $_SESSION['setAllField2'] = $_SESSION['tipo'] = '';
-    }
-    $this->ref_cod_instituicao = $_SESSION['ref_cod_instituicao'] = $_GET['ref_cod_instituicao'] ? $_GET['ref_cod_instituicao'] : $_SESSION['ref_cod_instituicao'];
-    $this->ref_cod_servidor    = $_SESSION['ref_cod_servidor']    = $_GET['ref_cod_servidor'] ? $_GET['ref_cod_servidor'] : $_SESSION['ref_cod_servidor'];
-    $this->professor           = $_SESSION['professor']           = $_GET['professor'] ? $_GET['professor'] : $_SESSION['professor'];
-    $this->horario             = $_SESSION['horario']             = $_GET['horario'] ? $_GET['horario'] : $_SESSION['horario'];
-    $this->ref_cod_escola      = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
-    $this->min_mat             = $_SESSION['min_mat']             = $_GET['min_mat'] ? $_GET['min_mat'] : $_SESSION['min_mat'];
-    $this->min_ves             = $_SESSION['min_ves']             = $_GET['min_ves'] ? $_GET['min_ves'] : $_SESSION['min_ves'];
-    $this->min_not             = $_SESSION['min_not']             = $_GET['min_not'] ? $_GET['min_not'] : $_SESSION['min_not'];
-    $this->ref_cod_disciplina  = $_SESSION['ref_cod_disciplina']  = $_GET['ref_cod_disciplina'] ? $_GET['ref_cod_disciplina'] : $_SESSION['ref_cod_disciplina'];
-    $this->ref_cod_curso       = $_SESSION['ref_cod_curso']       = $_GET['ref_cod_curso'] ? $_GET['ref_cod_curso'] : $_SESSION['ref_cod_curso'];
-    $this->identificador       = $_SESSION['identificador']       = $_GET['identificador'] ? $_GET['identificador'] : $_SESSION['identificador'];
-    $this->ano_alocacao        = $_SESSION['ano_alocacao']        = $_GET['ano_alocacao'] ? $_GET['ano_alocacao'] : $_SESSION['ano_alocacao'];
-    if (isset($_GET['lst_matriculas']) && isset($_SESSION['lst_matriculas'])) {
-      $this->lst_matriculas = $_GET['lst_matriculas'] ?
-        $_GET['lst_matriculas'] : $_SESSION['lst_matriculas'];
-    }
-    $_SESSION['tipo'] = $_GET['tipo'] ? $_GET['tipo'] : $_SESSION['tipo'];
-    session_write_close();
+      Session::put([
+          'campo1' => $_GET['campo1'] ?? Session::get('campo1'),
+          'campo2' => $_GET['campo2'] ?? Session::get('campo2'),
+          'dia_semana' => $_GET['dia_semana'] ?? Session::get('dia_semana'),
+          'hora_inicial' => $_GET['hora_inicial'] ?? Session::get('hora_inicial'),
+          'hora_final' => $_GET['hora_final'] ?? Session::get('hora_final'),
+          'professor' => $_GET['professor'] ?? Session::get('professor'),
+          'horario' => $_GET['horario'] ?? Session::get('horario'),
+          'ref_cod_escola' => $_GET['ref_cod_escola'] ?? Session::get('ref_cod_escola'),
+          'min_mat' => $_GET['min_mat'] ?? Session::get('min_mat'),
+          'min_ves' => $_GET['min_ves'] ?? Session::get('min_ves'),
+          'min_not' => $_GET['min_not'] ?? Session::get('min_not'),
+          'ref_cod_disciplina' => $_GET['ref_cod_disciplina'] ?? Session::get('ref_cod_disciplina'),
+          'ref_cod_curso' => $_GET['ref_cod_curso'] ?? Session::get('ref_cod_curso'),
+          'ano_alocacao' => $_GET['ano_alocacao'] ?? Session::get('ano_alocacao'),
+          'identificador' => $_GET['identificador'] ?? Session::get('identificador'),
+          'lst_matriculas' => $_GET['lst_matriculas'] ?? Session::get('lst_matriculas'),
+          'ref_cod_instituicao' => $_GET['ref_cod_instituicao'] ? $_GET['ref_cod_instituicao'] : Session::get('ref_cod_instituicao'),
+          'ref_cod_servidor' => $_GET['ref_cod_servidor'] ? $_GET['ref_cod_servidor'] : Session::get('ref_cod_servidor'),
+      ]);
+
+      if (!isset($_GET['tipo'])) {
+          Session::forget([
+              'setAllField1',
+              'setAllField2',
+              'tipo',
+          ]);
+      }
+
+      $this->ref_cod_escola      = Session::get('ref_cod_escola');
+      $this->ref_cod_instituicao = Session::get('ref_cod_instituicao');
+      $this->ref_cod_servidor    = Session::get('ref_cod_servidor');
+      $this->professor           = Session::get('professor');
+      $this->horario             = Session::get('horario');
+      $this->min_mat             = Session::get('min_mat');
+      $this->min_ves             = Session::get('min_ves');
+      $this->min_not             = Session::get('min_not');
+      $this->ref_cod_disciplina  = Session::get('ref_cod_disciplina');
+      $this->ref_cod_curso       = Session::get('ref_cod_curso');
+      $this->identificador       = Session::get('identificador');
+      $this->ano_alocacao        = Session::get('ano_alocacao');
+      $this->lst_matriculas        = Session::get('lst_matriculas');
+
+      Session::put('tipo', $_GET['tipo'] ?? Session::get('tipo'));
+
     $this->titulo = 'Servidores P&uacute;blicos - Listagem';
     // Passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET as $var => $val)  {
@@ -164,8 +166,8 @@ class indice extends clsListagem
     $string2 = floor($this->min_not / 60);
     $string2 = str_repeat(0, 2 - strlen($string2)).$string2;
     $hr_not  = $string2.':'.$string1;
-    $hora_inicial_ = explode(':', $_SESSION['hora_inicial']);
-    $hora_final_   = explode(':', $_SESSION['hora_final']);
+    $hora_inicial_ = explode(':', Session::get('hora_inicial'));
+    $hora_final_   = explode(':', Session::get('hora_final'));
     $horas_ini     = sprintf('%02d', (int) abs($hora_final_[0]) - abs($hora_inicial_[0]));
     $minutos_ini   = sprintf('%02d', (int) abs($hora_final_[1]) - abs($hora_inicial_[1]));
     $h_m_ini = ($hora_inicial_[0] * 60) + $hora_inicial_[1];
@@ -201,9 +203,12 @@ class indice extends clsListagem
     $obj_servidor = new clsPmieducarServidor();
     $obj_servidor->setOrderby('carga_horaria ASC');
     $obj_servidor->setLimite($this->limite, $this->offset);
-    if ($_SESSION['dia_semana'] && $_SESSION['hora_inicial'] && $_SESSION['hora_final']) {
-      $array_hora = array($_SESSION['dia_semana'], $_SESSION['hora_inicial'],
-        $_SESSION['hora_final']);
+    if (Session::has(['dia_semana', 'hora_inicial', 'hora_final'])) {
+      $array_hora = [
+          Session::get('dia_semana'),
+          Session::get('hora_inicial'),
+          Session::get('hora_final')
+      ];
     }
     // Marca a disciplina como NULL se nÃ£o for informada, restringindo a busca
     // aos professores e nÃ£o selecionar aqueles em que o curso nÃ£o seja
@@ -224,7 +229,7 @@ class indice extends clsListagem
       NULL,
       1,
       $this->ref_cod_instituicao,
-      $_SESSION['tipo'],
+      Session::get('tipo'),
       $array_hora,
       $this->ref_cod_servidor,
       $this->nome_servidor,
@@ -239,7 +244,7 @@ class indice extends clsListagem
       $hr_mat,
       $hr_ves,
       $hr_not,
-      $_SESSION['dia_semana'],
+      Session::get('dia_semana'),
       $this->ref_cod_escola,
       $this->identificador,
       $this->ref_cod_curso,
@@ -288,28 +293,30 @@ class indice extends clsListagem
           $registro["cod_servidor"] = "Erro na geracao";
           echo "<!--\nErro\nClasse nao existente: clsFuncionario\n-->";
         }
-        if ($_SESSION['tipo']) {
-          if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
-            if (is_string( $_SESSION['horario'])) {
-              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+        $campo1 = Session::get('campo1');
+        $campo2 = Session::get('campo2');
+        if (Session::get('tipo')) {
+          if (is_string($campo1) && is_string($campo2)) {
+            if (is_string( Session::get('horario'))) {
+              $script = " onclick=\"addVal1('{$campo1}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
             }
             else {
-              $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
+              $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
             }
           }
-          elseif (is_string($_SESSION['campo1'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          elseif (is_string($campo1)) {
+            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
         }
         else {
-          if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          if (is_string($campo1) && is_string($campo2)) {
+            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
-          elseif (is_string($_SESSION['campo2'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          elseif (is_string($campo2)) {
+            $script = " onclick=\"addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
-          elseif (is_string($_SESSION['campo1'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+          elseif (is_string($campo1)) {
+            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
         }
         $this->addLinhas(array(

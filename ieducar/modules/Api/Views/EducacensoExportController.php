@@ -1,10 +1,19 @@
 <?php
 
+use App\Models\Educacenso\Registro00;
+use App\Repositories\EducacensoRepository;
+use iEducar\Modules\Educacenso\ArrayToCenso;
+use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
 use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
+use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
+use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
+use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
+use Illuminate\Support\Facades\Session;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/clsBanco.inc.php';
@@ -24,6 +33,7 @@ require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
  */
 class EducacensoExportController extends ApiCoreController
 {
+    use Formatters;
 
     var $pessoa_logada;
 
@@ -102,10 +112,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim)
     {
-
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
@@ -142,9 +149,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
@@ -273,154 +278,68 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro00($escolaId, $ano)
     {
-        $sql =
-            ' SELECT
-        \'00\' AS r00s1,
-        ece.cod_escola_inep AS r00s2,
+        $educacensoRepository = new EducacensoRepository();
+        $registro00Model = new Registro00();
+        $registro00 = new Registro00Data($educacensoRepository, $registro00Model);
 
-      gestor_f.cpf AS r00s3,
-      gestor_p.nome AS r00s4,
-      e.cargo_gestor AS r00s5,
-      e.email_gestor AS r00s6,
+        /** @var Registro00 $escola */
+        $escola = $registro00->getExportFormatData($escolaId, $ano);
 
-      e.situacao_funcionamento AS r00s7,
-
-        (SELECT min(ano_letivo_modulo.data_inicio)
-          FROM pmieducar.ano_letivo_modulo
-          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s8,
-
-        (SELECT max(ano_letivo_modulo.data_fim)
-          FROM pmieducar.ano_letivo_modulo
-          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS r00s9,
-
-        p.nome AS r00s10,
-        e.latitude AS r00s11,
-        e.longitude AS r00s12,
-        COALESCE(ep.cep, ee.cep) AS r00s13,
-        COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) AS r00s14,
-        COALESCE(ep.numero, ee.numero) AS r00s15,
-        COALESCE(ep.complemento, ee.complemento) AS r00s16,
-        COALESCE(bairro.nome, ee.bairro) AS r00s17,
-        uf.cod_ibge AS r00s18,
-        municipio.cod_ibge AS r00s19,
-        distrito.cod_ibge AS r00s20,
-
-        (SELECT COALESCE(
-          (SELECT min(fone_pessoa.ddd)
-                FROM cadastro.fone_pessoa
-                WHERE j.idpes = fone_pessoa.idpes),
-          (SELECT min(ddd_telefone)
-            FROM pmieducar.escola_complemento
-            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s21,
-
-        (SELECT COALESCE(
-          (SELECT min(fone_pessoa.fone)
-                FROM cadastro.fone_pessoa
-                WHERE j.idpes = fone_pessoa.idpes),
-          (SELECT min(telefone)
-            FROM pmieducar.escola_complemento
-            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s22,
-
-
-        (SELECT COALESCE(
-          (SELECT min(fone_pessoa.fone)
-                FROM cadastro.fone_pessoa
-                WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 3),
-          (SELECT min(fax)
-            FROM pmieducar.escola_complemento
-            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s24,
-
-        (SELECT COALESCE(
-          (SELECT min(fone_pessoa.fone)
-                FROM cadastro.fone_pessoa
-                WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 4),
-          (SELECT min(fax)
-            FROM pmieducar.escola_complemento
-            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS r00s25,
-
-        (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento WHERE ref_cod_escola = e.cod_escola))) AS r00s26,
-
-        i.orgao_regional AS r00s27,
-        e.dependencia_administrativa AS r00s28,
-        e.zona_localizacao AS r00s29,
-        e.categoria_escola_privada AS r00s30,
-        e.conveniada_com_poder_publico r00s31,
-        (ARRAY[1] <@ e.mantenedora_escola_privada)::INT AS r00s32,
-        (ARRAY[2] <@ e.mantenedora_escola_privada)::INT AS r00s33,
-        (ARRAY[3] <@ e.mantenedora_escola_privada)::INT AS r00s34,
-        (ARRAY[4] <@ e.mantenedora_escola_privada)::INT AS r00s35,
-        (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS r00s36,
-        e.cnpj_mantenedora_principal AS r00s37,
-        j.cnpj AS r00s38,
-        e.regulamentacao AS r00s39,
-        0 AS r00s40,
-        e.situacao_funcionamento
-
-        FROM pmieducar.escola e
-        JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
-        INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
-        INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
-        INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
-        INNER JOIN cadastro.pessoa gestor_p ON (gestor_p.idpes = e.ref_idpes_gestor)
-        INNER JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = gestor_p.idpes)
-         LEFT JOIN cadastro.endereco_externo ee ON (ee.idpes = p.idpes)
-         LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-         LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(ep.idbai, (SELECT b.idbai
-                                                                   FROM public.bairro b
-                                                                       INNER JOIN cadastro.endereco_externo ee
-                                                                           ON (UPPER(ee.bairro) = UPPER(b.nome))
-                                                                   WHERE ee.idpes = e.ref_idpes
-                                                                   LIMIT 1)))
-        LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
-        LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
-        LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
-    
-        LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-        LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-        LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
-        WHERE e.cod_escola = $1
-    ';
-        // Transforma todos resultados em variáveis
-        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('return_only' => 'first-row', 'params' => array($escolaId, $ano))));
-        if ($r00s1) {
-            $d = '|';
-            $return = '';
-
-            $r00s2 = substr($r00s2, 0, 8);
-            $r00s3 = $this->cpfToCenso($r00s3);
-            $r00s4 = $this->convertStringToCenso($r00s4);
-            $r00s6 = strtoupper($r00s6);
-
-            $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
-            $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
-
-            $r00s10 = $this->convertStringToCenso($r00s10);
-            $r00s14 = $this->convertStringToCenso($r00s14);
-            $r00s15 = $this->convertStringToCenso($r00s15);
-            $r00s16 = $this->convertStringToCenso($r00s16);
-            $r00s17 = $this->convertStringToCenso($r00s17);
-            $r00s26 = strtoupper($r00s26);
-            $r00s27 = ($r00s27 ? str_pad($r00s27, 5, "0", STR_PAD_LEFT) : null);
-
-            $r00s37 = $this->cnpjToCenso($r00s37);
-            $r00s38 = $this->cnpjToCenso($r00s38);
-
-            if ($r00s28 != 4) {
-                $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = null;
-            }
-
-            for ($i = 1; $i <= 42; $i++) {
-                $return .= ${'r00s' . $i} . $d;
-            }
-
-            $return = substr_replace($return, "", -1);
-
-            return $return . "\n";
-        } else {
+        if (empty($escola->codigoInep)) {
             $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
             $this->error = true;
         }
+
+        $escola = SituacaoFuncionamento::handle($escola);
+        $escola = DependenciaAdministrativa::handle($escola);
+        $escola = Regulamentacao::handle($escola);
+
+        $data = [
+            $escola->registro,
+            $escola->codigoInep,
+            $escola->situacaoFuncionamento,
+            $escola->inicioAnoLetivo,
+            $escola->fimAnoLetivo,
+            $escola->nome,
+            $escola->cep,
+            $escola->codigoIbgeMunicipio,
+            $escola->codigoIbgeDistrito,
+            $escola->logradouro,
+            $escola->numero,
+            $escola->complemento,
+            $escola->bairro,
+            $escola->ddd,
+            $escola->telefone,
+            $escola->telefoneOutro,
+            $escola->email,
+            $escola->orgaoRegional,
+            $escola->zonaLocalizacao,
+            $escola->localizacaoDiferenciada,
+            $escola->dependenciaAdministrativa,
+            $escola->orgaoEducacao,
+            $escola->orgaoSeguranca,
+            $escola->orgaoSaude,
+            $escola->orgaoOutro,
+            $escola->mantenedoraEmpresa,
+            $escola->mantenedoraSindicato,
+            $escola->mantenedoraOng,
+            $escola->mantenedoraInstituicoes,
+            $escola->mantenedoraSistemaS,
+            $escola->mantenedoraOscip,
+            $escola->categoriaEscolaPrivada,
+            $escola->conveniadaPoderPublico,
+            $escola->cnpjMantenedoraPrincipal,
+            $escola->cnpjEscolaPrivada,
+            $escola->regulamentacao,
+            $escola->esferaFederal,
+            $escola->esferaEstadual,
+            $escola->esferaMunicipal,
+            $escola->unidadeVinculada,
+            $escola->inepEscolaSede,
+            $escola->codigoIes,
+        ];
+
+        return ArrayToCenso::format($data) . PHP_EOL;
     }
 
     protected function exportaDadosRegistro10($escolaId, $ano)
@@ -2282,119 +2201,6 @@ SQL;
         $return .= "\n";
 
         return $return;
-    }
-
-    protected function cpfToCenso($cpf)
-    {
-        $cpf = str_replace(array('.', '-'), '', int2CPF($cpf));
-        return $cpf == '00000000000' ? null : $cpf;
-    }
-
-    protected function cnpjToCenso($cnpj)
-    {
-        $cnpj = str_replace(array('.', '-', '/'), '', int2CNPJ($cnpj));
-        return $cnpj == '00000000000000' ? null : $cnpj;
-    }
-
-    protected function upperAndUnaccent($string)
-    {
-        $string = Portabilis_String_Utils::toUtf8($string);
-        $string = preg_replace(array(
-            "/(á|à|ã|â|ä)/",
-            "/(Á|À|Ã|Â|Ä)/",
-            "/(é|è|ê|ë)/",
-            "/(É|È|Ê|Ë)/",
-            "/(í|ì|î|ï)/",
-            "/(Í|Ì|Î|Ï)/",
-            "/(ó|ò|õ|ô|ö)/",
-            "/(Ó|Ò|Õ|Ô|Ö)/",
-            "/(ú|ù|û|ü)/",
-            "/(Ú|Ù|Û|Ü)/",
-            "/(ñ)/",
-            "/(Ñ)/",
-            "/(ç)/",
-            "/(Ç)/"
-        ),
-            explode(" ", "a A e E i I o O u U n N c C"), $string);
-
-        return strtoupper($string);
-    }
-
-    protected function convertStringToAlpha($string)
-    {
-        $string = $this->upperAndUnaccent($string);
-
-        //Aceita apenas letras
-        $alphas = range('A', 'Z');
-        $caracteresAceitos = array(" ");
-        $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
-
-
-        //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-        $string = preg_replace($regex, '', $string);
-
-        //Elimina espaços indesejados
-        $string = trim($string);
-        $string = preg_replace('/( )+/', ' ', $string);
-
-        return $string;
-    }
-
-    protected function convertStringToCenso($string)
-    {
-        $string = $this->upperAndUnaccent($string);
-
-        //Aceita apenas letras e numeros e alguns caracteres especiais
-        $alphas = range('A', 'Z');
-        $numbers = range(0, 9);
-        $caracteresAceitos = array(" ", "ª", "º", "-");
-        $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
-        $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
-
-        //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-        $string = preg_replace($regex, '', $string);
-
-        //Elimina espaços indesejados
-        $string = trim($string);
-        $string = preg_replace('/( )+/', ' ', $string);
-
-        return $string;
-    }
-
-    protected function convertStringToCertNovoFormato($string)
-    {
-        $string = $this->upperAndUnaccent($string);
-
-        //Aceita apenas números e letra X
-        $numbers = range(0, 9);
-        $caracteresAceitos = array(" ", "x", "X");
-        $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
-
-        //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-        $string = preg_replace($regex, '', $string);
-
-        return $string;
-    }
-
-    protected function convertEmailToCenso($string)
-    {
-        $string = $this->upperAndUnaccent($string);
-
-        //Aceita apenas letras e numeros e alguns caracteres especiais
-        $alphas = range('A', 'Z');
-        $numbers = range(0, 9);
-        $caracteresAceitos = array("_", "-", "@", ".");
-        $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
-        $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
-
-        //Aplica filtro na string eliminando caracteres indesejados
-        $regex = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
-        $string = preg_replace($regex, '', $string);
-
-        return $string;
     }
 
     public function Gerar()

@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -68,9 +72,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->ref_serie_origem=$_GET["ref_serie_origem"];
         $this->ref_serie_destino=$_GET["ref_serie_destino"];
@@ -134,7 +136,6 @@ class indice extends clsCadastro
         // foreign keys
         if( $nivel_usuario == 1 )
         {
-//      echo "<pre>"; print_r($GLOBALS); die();
             $GLOBALS["nivel_usuario_fora"] = 1;
             $objInstituicao = new clsPmieducarInstituicao();
             $opcoes = array( "" => "Selecione" );
@@ -260,9 +261,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -276,9 +275,10 @@ class indice extends clsCadastro
             if( $cadastrou )
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
-                die();
-                return true;
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_sequencia_serie_lst.php')
+                );
             }
         }
         else
@@ -288,9 +288,10 @@ class indice extends clsCadastro
             if( $editou )
             {
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
-                die();
-                return true;
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_sequencia_serie_lst.php')
+                );
             }
         }
 
@@ -301,9 +302,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -317,9 +316,10 @@ class indice extends clsCadastro
             if( $editou )
             {
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
-                die();
-                return true;
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_sequencia_serie_lst.php')
+                );
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
             echo "<!--\nErro ao editar clsPmieducarSequenciaSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada ) )\n-->";
@@ -332,9 +332,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -345,9 +343,10 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_sequencia_serie_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_sequencia_serie_lst.php')
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

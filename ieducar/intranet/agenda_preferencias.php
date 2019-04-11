@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
@@ -75,9 +76,6 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
         $db = new clsBanco();
         $db2 = new clsBanco();
         
@@ -121,9 +119,6 @@ class indice extends clsCadastro
 
     function Editar() 
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
         $db = new clsBanco();
         
         $objAgenda = new clsAgenda( $this->pessoa_logada, $this->pessoa_logada );
@@ -144,8 +139,7 @@ class indice extends clsCadastro
         }
 
         $db->Consulta( "UPDATE portal.agenda SET ref_ref_cod_pessoa_exc = '{$this->pessoa_logada}', data_edicao = NOW() $set WHERE cod_agenda = '{$this->cod_agenda}'" );
-        header( "location: agenda.php" );
-        die();
+        $this->simpleRedirect('agenda.php');
     }
 }
 

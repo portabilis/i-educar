@@ -63,9 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         //** Verificacao de permissao para exclusao
         $obj_permissao = new clsPermissoes();
@@ -80,11 +78,11 @@ class indice extends clsCadastro
             
             $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino,null,null,null,null,null,1);
             if(!$registro = $obj->detalhe()){
-                header("Location: educar_tipo_ensino_lst.php");
+                $this->simpleRedirect('educar_tipo_ensino_lst.php');
             }
 
             if(!$registro["ativo"] )
-                header("Location: educar_tipo_ensino_lst.php");
+                $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
             if( $registro )
             {
@@ -134,9 +132,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
 
@@ -156,9 +152,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($tipoEnsino);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -168,9 +162,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
 
@@ -193,9 +185,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($tipoEnsinoDetalheAntes, $tipoEnsinoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -205,9 +195,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
         $tipoEnsino = $obj->detalhe();
@@ -218,9 +206,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($tipoEnsino);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

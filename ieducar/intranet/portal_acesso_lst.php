@@ -77,10 +77,6 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         if( is_numeric( $_GET["cod_pessoa_libera"] ) )
         {
             $obj_acesso = new clsPortalAcesso();

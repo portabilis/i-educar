@@ -268,9 +268,7 @@ class clsModulesAuditoriaNota {
         return $nomeTurma;
     }
     private function getUsuarioAtual(){
-        @session_start();
-    $pessoaId = $_SESSION['id_pessoa'];
-    @session_write_close();
+    $pessoaId = $this->pessoa_logada;
     $objFuncionario = new clsFuncionario($pessoaId);
     $detFuncionario = $objFuncionario->detalhe();
     $matricula = $detFuncionario["matricula"];
