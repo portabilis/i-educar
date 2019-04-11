@@ -81,125 +81,69 @@ class ServidorController extends ApiCoreController
 
             if ($modified) {
                 $params[] = $modified;
-                $where = ' AND pt.updated_at >= $3';
+                $where = ' AND pt.updated_at >= $1';
             }
 
             $sql = "
-            (
-                    SELECT 
-                        pt.id as id,
-                        s.cod_servidor as servidor_id,
-                        p.nome as name,
-                        pt.turma_id,
-                        pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
-                        ptd.componente_curricular_id as disciplina_id,
-                        (
-                            CASE WHEN ccae.tipo_nota IN (1,2) THEN
-                                ccae.tipo_nota
-                            ELSE
-                                NULL
-                            END 
-                        ) AS tipo_nota,
-                        max(pt.updated_at::timestamp(0)) as updated_at,
-                        null as deleted_at,
-                        s.ativo as ativo,
-                        pt.turno_id
-                    FROM pmieducar.servidor s
-                    INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
-                    INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
-                    INNER JOIN modules.professor_turma_disciplina ptd ON pt.id = ptd.professor_turma_id
-                    INNER JOIN pmieducar.turma t ON t.cod_turma = pt.turma_id
-                    INNER JOIN modules.componente_curricular_ano_escolar ccae 
-                    ON ccae.ano_escolar_id = t.ref_ref_cod_serie
-                    AND ccae.componente_curricular_id = ptd.componente_curricular_id
-                    WHERE s.ref_cod_instituicao = $1
-                    AND pt.ano = $2
-                    AND $2 = any(ccae.anos_letivos)
-                    {$where}
-                    GROUP BY 
-                        pt.id, 
-                        s.cod_servidor, 
-                        p.nome, 
-                        pt.turma_id, 
-                        pt.permite_lancar_faltas_componente, 
-                        ptd.componente_curricular_id, 
-                        ccae.tipo_nota, 
-                        s.ativo,
-                        pt.turno_id
-                )
-                UNION ALL
                 (
-                    SELECT 
-                        pt.id as id,
-                        s.cod_servidor as servidor_id,
-                        p.nome as name,
+                    select
+                        pt.id,
+                        pt.servidor_id,
                         pt.turma_id,
-                        pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
-                        ptd.componente_curricular_id as disciplina_id,
-                        (
-                            CASE WHEN ccae.tipo_nota IN (1,2) THEN
-                                ccae.tipo_nota
-                            ELSE
-                                NULL
-                            END 
-                        ) AS tipo_nota,
-                        max(pt.updated_at) as updated_at,
-                        max(pt.deleted_at) as deleted_at,
-                        s.ativo as ativo,
-                        pt.turno_id
-                    FROM pmieducar.servidor s
-                    INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
-                    INNER JOIN modules.professor_turma_excluidos pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
-                    LEFT JOIN modules.professor_turma_disciplina ptd ON pt.id = ptd.professor_turma_id
-                    LEFT JOIN pmieducar.turma t ON t.cod_turma = pt.turma_id
-                    LEFT JOIN modules.componente_curricular_ano_escolar ccae 
-                    ON ccae.ano_escolar_id = t.ref_ref_cod_serie
-                    AND ccae.componente_curricular_id = ptd.componente_curricular_id
-                    WHERE s.ref_cod_instituicao = $1
-                    AND pt.ano = $2
-                    -- AND $2 = any(ccae.anos_letivos)
+                        pt.permite_lancar_faltas_componente,
+                        string_agg(ptd.componente_curricular_id::varchar, ',') as disciplinas,
+                        ccae.tipo_nota,
+                        pt.updated_at,
+                        null as deleted_at
+                    from modules.professor_turma pt 
+                    left join modules.professor_turma_disciplina ptd 
+                    on ptd.professor_turma_id = pt.id
+                    inner join pmieducar.turma t 
+                    on t.cod_turma = pt.turma_id
+                    inner join modules.componente_curricular_ano_escolar ccae 
+                    on ccae.ano_escolar_id = t.ref_ref_cod_serie
+                    and ccae.componente_curricular_id = ptd.componente_curricular_id
+                    where true
+                    and pt.instituicao_id = $1
+                    and pt.ano = $2
                     {$where}
-                    GROUP BY 
-                        pt.id, 
-                        s.cod_servidor, 
-                        p.nome, 
-                        pt.turma_id, 
-                        pt.permite_lancar_faltas_componente, 
-                        ptd.componente_curricular_id, 
-                        ccae.tipo_nota, 
-                        s.ativo,
-                        pt.turno_id
+                    group by id, ccae.tipo_nota
+                )
+                union all
+                (
+                    select
+                        pt.id,
+                        pt.servidor_id,
+                        pt.turma_id,
+                        null as permite_lancar_faltas_componente,
+                        null as disciplinas,
+                        null as tipo_nota,
+                        pt.updated_at,
+                        pt.deleted_at
+                    from modules.professor_turma_excluidos pt 
+                    where true 
+                    and pt.instituicao_id = $1
+                    and pt.ano = $2
+                    {$where}
                 )
             ";
 
-            $_servidores = $this->fetchPreparedQuery($sql, $params);
+            $vinculos = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at', 'deleted_at', 'ativo', 'turno_id'];
-            $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
-            $servidores = [];
-            $__servidores = [];
+            $attrs = ['id', 'servidor_id', 'turma_id', 'permite_lancar_faltas_componente', 'disciplinas','tipo_nota', 'updated_at', 'deleted_at'];
 
-            foreach ($_servidores as $servidor) {
-                $__servidores[$servidor['id']]['id'] = $servidor['id'];
-                $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
-                $__servidores[$servidor['id']]['name'] = $servidor['name'];
-                $__servidores[$servidor['id']]['updated_at'] = $servidor['updated_at'];
-                $__servidores[$servidor['id']]['deleted_at'] = $servidor['deleted_at'];
-                $__servidores[$servidor['id']]['ativo'] = $servidor['ativo'];
-                $__servidores[$servidor['id']]['turno_id'] = $servidor['turno_id'];
-                $__servidores[$servidor['id']]['disciplinas_turmas'][] = [
-                    'turma_id' => $servidor['turma_id'],
-                    'disciplina_id' => $servidor['disciplina_id'],
-                    'permite_lancar_faltas_componente' => $servidor['permite_lancar_faltas_componente'],
-                    'tipo_nota' => $servidor['tipo_nota']
-                ];
-            }
+            $vinculos = Portabilis_Array_Utils::filterSet($vinculos, $attrs);
 
-            foreach ($__servidores as $servidor) {
-                $servidores[] = $servidor;
-            }
+            $vinculos = array_map(function ($vinculo) {
+                if (is_null($vinculo['disciplinas'])) {
+                    $vinculo['disciplinas'] = [];
+                } elseif (is_string($vinculo['disciplinas'])) {
+                    $vinculo['disciplinas'] = explode(',', $vinculo['disciplinas']);
+                }
+                return $vinculo;
+            }, $vinculos);
 
-            return ['servidores' => $servidores];
+            return ['vinculos' => $vinculos];
         }
     }
 
