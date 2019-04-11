@@ -77,9 +77,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->idlog = $_GET['idlog'];
 
@@ -206,10 +204,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicLogradouro(NULL, $this->idtlog, $this->nome, $this->idmun,
       NULL, 'S', NULL, NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9);
 
@@ -222,8 +216,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($enderecamento);
 
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('public_logradouro_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -234,10 +227,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $enderecamentoDetalhe = new clsPublicLogradouro(null, null, $this->idlog);
     $enderecamentoDetalhe->cadastrou = $this->idlog;
     $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
@@ -248,8 +237,7 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-      header('Location: public_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('public_logradouro_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -260,18 +248,13 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicLogradouro($this->idlog, $this->idtlog, $this->nome,
       $this->idmun, NULL, 'S', $this->pessoa_logada);
 
     $excluiu = $obj->excluir();
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: public_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('public_logradouro_lst.php');
     }
 
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

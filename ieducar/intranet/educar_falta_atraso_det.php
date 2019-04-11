@@ -84,10 +84,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Falta Atraso - Detalhe';
 
 
@@ -101,10 +97,9 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->lista($this->cod_falta_atraso);
 
     if (!$registro) {
-      header('Location: ' . sprintf(
-        'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
-      die();
+        $this->simpleRedirect(sprintf(
+            'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
     }
     else {
       $tabela = '<table>

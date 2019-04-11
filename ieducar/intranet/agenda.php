@@ -24,6 +24,11 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/clsAgenda.inc.php");
@@ -64,9 +69,7 @@ class indice
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        @session_start();
-        $this->editor = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->editor = Session::get('id_pessoa');
 
         if( $_REQUEST["cod_agenda"] )
         {
@@ -82,8 +85,9 @@ class indice
         // Checa se a pessoa possui permissao (daqui por diante comeca a visualizar, editar, excluir, etc.)
         if( ! $objAgenda->permissao_agenda() )
         {
-            header( "location: " . $this->scriptNome );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse( $this->scriptNome)
+            );
         }
 
         if( isset( $_REQUEST["time"] ) )

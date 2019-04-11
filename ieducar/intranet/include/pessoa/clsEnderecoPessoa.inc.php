@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBanco.inc.php';
 
 class clsPessoaEndereco
@@ -48,8 +50,8 @@ class clsPessoaEndereco
     $this->bloco        = $str_bloco;
     $this->apartamento  = $int_apartamento;
     $this->andar        = $int_andar;
-    $this->idpes_cad    = $idpes_cad ? $idpes_cad : $_SESSION['id_pessoa'];
-    $this->idpes_rev    = $idpes_rev ? $idpes_rev : $_SESSION['id_pessoa'];
+    $this->idpes_cad    = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
+    $this->idpes_rev    = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
     $this->observacoes  = $observacoes;
   }
 

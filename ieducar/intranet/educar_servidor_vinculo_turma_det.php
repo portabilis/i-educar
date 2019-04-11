@@ -81,10 +81,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Servidor Vínculo Turma - Detalhe';
     
 
@@ -94,8 +90,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: educar_servidor_professor_vinculo_lst.php');
-      die();
+        $this->simpleRedirect('educar_servidor_professor_vinculo_lst.php');
     }    
 
     $resources_funcao = array(  null => 'Selecione',

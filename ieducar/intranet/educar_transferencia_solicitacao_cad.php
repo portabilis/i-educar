@@ -305,8 +305,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header("Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
-            die();
+            $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
         }
 
         $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -328,8 +327,7 @@ class indice extends clsCadastro
             $excluiu = $obj->excluir();
             if ($excluiu) {
                 $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-                header("Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
-                die();
+                $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
         } else {
             $this->mensagem = 'N&atilde;o foi poss&iacute;vel encontrar a Solicita&ccedil;&atilde;o de Transfer&ecirc;ncia do Aluno.<br>';

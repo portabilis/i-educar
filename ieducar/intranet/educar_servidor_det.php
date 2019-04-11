@@ -89,10 +89,6 @@ class indice extends clsDetalhe
    */
   function Gerar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Servidor - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
@@ -104,9 +100,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
-      header('Location: educar_servidor_lst.php');
-
-      die();
+        $this->simpleRedirect('educar_servidor_lst.php');
     }
 
     // Escolaridade
@@ -118,11 +112,8 @@ class indice extends clsDetalhe
     $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
     $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
     $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
-// echo $registro['nome'];
-    // Nome
 
-
-
+     // Nome
      $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
      $det_cod_servidor      = $obj_cod_servidor->detalhe();
      $registro['matricula'] = $det_cod_servidor['matricula'];
@@ -184,10 +175,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Nome', $registro['nome']));
     }
 
-    if ($registro['matricula']) {
-      $this->addDetalhe(array('Matrícula', $registro['matricula']));
-    }
-
     // Dados no Educacenso/Inep.
       $docenteMapper = new Educacenso_Model_DocenteDataMapper();
 
@@ -244,6 +231,7 @@ class indice extends clsDetalhe
         <table cellspacing='0' cellpadding='0' border='0'>
           <tr bgcolor='#ccdce6' align='center'>
             <td width='150'>Função</td>
+            <td width='150'>Matrícula</td>
           </tr>";
 
       $class = 'formlttd';
@@ -311,6 +299,7 @@ class indice extends clsDetalhe
         $tabela .= "
           <tr class='$class' align='left'>
             <td><b>{$det_funcao['nm_funcao']}</b></td>
+            <td align='center'>{$funcao['matricula']}</td>
           </tr>";
         if (!$this->is_professor){
             $this->is_professor = (bool) $det_funcao['professor'];

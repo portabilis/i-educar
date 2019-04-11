@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -82,13 +86,14 @@ class indice extends clsCadastro
         $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
 
         if (!$obj_aluno->existe() and !$this->ref_cod_turma_copiar_enturmacoes) {
-            header('Location: educar_aluno_lst.php');
-            die;
+            throw new HttpResponseException(
+                new RedirectResponse('educar_aluno_lst.php')
+            );
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
             $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
-            $url = 'educar_matriculas_turma_cad.php?ref_cod_turma=' . $this->ref_cod_turma_copiar_enturmacoes;
+            $url = route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma_copiar_enturmacoes]);
         } else {
             $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
         }
@@ -326,8 +331,9 @@ class indice extends clsCadastro
             $this->addEnturmacao($matricula, $this->ref_cod_turma, $enturmar['sequencial'], $enturmar['ativo']);
         }
 
-        header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
-        die();
+        throw new HttpResponseException(
+            new RedirectResponse("educar_matriculas_turma_cad.php?ref_cod_turma={$this->ref_cod_turma}")
+        );
     }
 
     public function Novo()
@@ -502,9 +508,7 @@ class indice extends clsCadastro
 
             $verificarDataCorte = $alertaFaixaEtaria || $bloquearMatriculaFaixaEtaria;
 
-            @session_start();
-            $reload = $_SESSION['reload_faixa_etaria'];
-            @session_write_close();
+            $reload = Session::get('reload_faixa_etaria');
 
             if ($verificarDataCorte && !$reload) {
                 $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
@@ -539,9 +543,9 @@ class indice extends clsCadastro
                     //Permite que o usuário possa salvar a matrícula na próxima tentativa
                     $reload = 1;
 
-                    @session_start();
-                    $_SESSION['reload_faixa_etaria'] = $reload;
-                    @session_write_close();
+                    Session::put('reload_faixa_etaria', $reload);
+                    Session::save();
+                    Session::start();
 
                     return true;
                 }
@@ -797,9 +801,7 @@ class indice extends clsCadastro
                 return false;
             }
 
-            @session_start();
-            $reloadReserva = $_SESSION['reload_reserva_vaga'];
-            @session_write_close();
+            $reloadReserva = Session::get('reload_reserva_vaga');
 
             $obj_CandidatoReservaVaga = new clsPmieducarCandidatoReservaVaga();
 
@@ -839,9 +841,10 @@ class indice extends clsCadastro
                     </script>';
 
                     $reloadReserva = 1;
-                    @session_start();
-                    $_SESSION['reload_reserva_vaga'] = $reloadReserva;
-                    @session_write_close();
+
+                    Session::put('reload_reserva_vaga', $reloadReserva);
+                    Session::save();
+                    Session::start();
 
                     return true;
                 } elseif (($countEscolasDiferentes > 0) && ($reloadReserva == 1)) {
@@ -932,9 +935,8 @@ class indice extends clsCadastro
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
                 $this->verificaSolicitacaoTransferencia();
 
-                // TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-                header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }
 
             $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
@@ -1260,8 +1262,10 @@ class indice extends clsCadastro
 
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-            header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
-            die();
+
+            throw new HttpResponseException(
+                new RedirectResponse("educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
+            );
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br />';

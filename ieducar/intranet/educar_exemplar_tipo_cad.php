@@ -65,9 +65,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_exemplar_tipo=$_GET["cod_exemplar_tipo"];
 
@@ -199,9 +197,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 597, $this->pessoa_logada, 11,  "educar_exemplar_tipo_lst.php" );
@@ -242,9 +238,7 @@ class indice extends clsCadastro
         //-----------------------FIM CADASTRA CLIENTE TIPO------------------------//
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_exemplar_tipo_lst.php" );
-            die();
-            return true;
+             $this->simpleRedirect('educar_exemplar_tipo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -254,9 +248,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 597, $this->pessoa_logada, 11,  "educar_exemplar_tipo_lst.php" );
@@ -297,9 +289,7 @@ class indice extends clsCadastro
         //-----------------------FIM EDITA CLIENTE TIPO------------------------//
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_exemplar_tipo_lst.php" );
-            die();
-            return true;
+             $this->simpleRedirect('educar_exemplar_tipo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -309,9 +299,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 597, $this->pessoa_logada, 11,  "educar_exemplar_tipo_lst.php" );
@@ -325,9 +313,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("exemplar_tipo", $this->pessoa_logada, $this->cod_exemplar_tipo);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_exemplar_tipo_lst.php" );
-            die();
-            return true;
+             $this->simpleRedirect('educar_exemplar_tipo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

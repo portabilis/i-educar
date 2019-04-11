@@ -47,10 +47,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = 'Turma - Detalhe';
         $this->addBanner(
             'imagens/nvp_top_intranet.jpg',
@@ -119,8 +115,7 @@ class indice extends clsDetalhe
         }
 
         if (!$registro) {
-            header('Location: educar_turma_lst.php');
-            die();
+            $this->simpleRedirect('educar_turma_lst.php');
         }
 
         if (class_exists('clsPmieducarTurmaTipo')) {

@@ -1,29 +1,7 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -42,13 +20,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    var $pessoa_logada;
-
     var $cod_biblioteca;
     var $ref_cod_instituicao;
     var $ref_cod_escola;
@@ -56,7 +27,6 @@ class indice extends clsCadastro
     var $data_cadastro;
     var $data_exclusao;
     var $ativo;
-
     var $biblioteca_usuario;
     var $ref_cod_usuario;
     var $incluir_usuario;
@@ -65,10 +35,8 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $this->tipo_biblioteca = $_SESSION['biblioteca']['tipo_biblioteca'];
-        @session_write_close();
+
+        $this->tipo_biblioteca = Session::get('biblioteca.tipo_biblioteca');
 
         $this->cod_biblioteca=$_GET["cod_biblioteca"];
 
@@ -263,9 +231,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
         /*if ($this->tombo_automatico == "on")
@@ -302,9 +268,8 @@ class indice extends clsCadastro
         //-----------------------FIM CADASTRA USUARIOS------------------------//
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_biblioteca_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_biblioteca_lst.php');
+            $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -314,9 +279,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
@@ -356,9 +319,7 @@ class indice extends clsCadastro
         //-----------------------FIM EDITA USUARIOS------------------------//
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_biblioteca_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -368,9 +329,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
@@ -384,9 +343,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_biblioteca_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

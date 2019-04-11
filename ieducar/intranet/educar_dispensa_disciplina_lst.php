@@ -90,10 +90,6 @@ class indice extends clsListagem
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     // Helper para url
     $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
 
@@ -105,8 +101,7 @@ class indice extends clsListagem
     }
 
     if (!$_GET['ref_cod_matricula']) {
-      header('Location: educar_matricula_lst.php');
-      die();
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];

@@ -1,7 +1,9 @@
 <?php
 
-use iEducar\Modules\ErrorTracking\TrackerFactory;
 use iEducar\Support\Navigation\TopMenu;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -21,7 +23,9 @@ require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
-    header("Location: /404.html");
+    throw new HttpResponseException(
+        new RedirectResponse('404.html')
+    );
 }
 
 
@@ -70,7 +74,7 @@ class clsBase extends clsConfig
             $this->setupConfigs();
         }
 
-        $nivel = !empty($_SESSION['nivel']) ? (int)$_SESSION['nivel'] : null;
+        $nivel = Session::get('nivel');
 
         if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
             header('HTTP/1.1 503 Service Temporarily Unavailable');
@@ -109,7 +113,7 @@ class clsBase extends clsConfig
 
         $saida = $this->OpenTpl('htmlhead');
         $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
-        $saida = str_replace("<!-- #&USER_ID&# -->", $_SESSION['id_pessoa'], $saida);
+        $saida = str_replace("<!-- #&USER_ID&# -->", Session::get('id_pessoa'), $saida);
         $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
 
         if ($this->refresh) {
@@ -208,13 +212,15 @@ class clsBase extends clsConfig
             }
 
             if (!$permite) {
-                header("location: index.php?negado=1&err=1");
-                die("Acesso negado para este usu&acute;rio");
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         } else {
             if (!$this->VerificaPermicaoNumerico($this->processoAp)) {
-                header("location: index.php?negado=1&err=2");
-                die("Acesso negado para este usu&acute;rio");
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         }
 
@@ -271,7 +277,7 @@ class clsBase extends clsConfig
                         $gets .= " - $key: $val\n";
                     }
 
-                    foreach ($_SESSION as $key => $val) {
+                    foreach (Session::all() as $key => $val) {
                         $sessions .= " - $key: $val\n";
                     }
 
@@ -348,20 +354,20 @@ class clsBase extends clsConfig
      */
     function CadastraAcesso()
     {
-        @session_start();
-        if (@$_SESSION['marcado'] != "private") {
+        if (Session::get('marcado') != "private") {
             if (!$this->convidado) {
                 $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
                 $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                $id_pessoa = $_SESSION['id_pessoa'];
+                $id_pessoa = $this->pessoa_logada;
 
                 $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
                 $logAcesso->cadastra();
 
-                $_SESSION['marcado'] = "private";
+                Session::put('marcado', 'private');
+                Session::save();
+                Session::start();
             }
         }
-        session_write_close();
     }
 
     function MakeAll()
@@ -373,10 +379,10 @@ class clsBase extends clsConfig
         $saida_geral = '';
 
         if ($this->convidado) {
-            @session_start();
-            $_SESSION['convidado'] = TRUE;
-            $_SESSION['id_pessoa'] = '0';
-            session_write_close();
+            Session::put([
+                'convidado' => TRUE,
+                'id_pessoa' => '0',
+            ]);
         }
 
         $controlador = new clsControlador();
@@ -412,10 +418,10 @@ class clsBase extends clsConfig
             $saida_geral .= $this->MakeFootHtml();
         } else {
             $controlador->Logar(true);
-            $referer = $_SERVER['HTTP_REFERER'];
 
-            header("Location: " . $referer, true, 302);
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse($_SERVER['HTTP_REFERER'])
+            );
         }
 
         $view = 'legacy.body';
@@ -425,26 +431,6 @@ class clsBase extends clsConfig
         }
 
         echo view($view, ['body' => $saida_geral])->render();
-    }
-
-    function setAlertaProgramacao($string)
-    {
-        if (is_string($string) && $string) {
-            $this->prog_alert = $string;
-        }
-    }
-
-    protected function checkUserExpirations()
-    {
-        $user = Portabilis_Utils_User::load('current_user');
-        $uri = $_SERVER['REQUEST_URI'];
-        $forcePasswordUpdate = $GLOBALS['coreExt']['Config']->app->user_accounts->force_password_update == true;
-
-        if ($user['expired_account'] || $user['proibido'] != '0' || $user['ativo'] != '1')
-            header("Location: /intranet/logof.php");
-
-        elseif ($user['expired_password'] && $forcePasswordUpdate && $uri != '/module/Usuario/AlterarSenha')
-            header("Location: /module/Usuario/AlterarSenha");
     }
 
     protected function db()

@@ -47,9 +47,7 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->ref_cod_modulo = $_GET['ref_cod_modulo'];
         $this->ref_ref_cod_escola = $_GET['ref_cod_escola'];
@@ -262,9 +260,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
 
@@ -322,9 +318,8 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-                header('Location: educar_escola_det.php?cod_escola=' . $this->ref_ref_cod_escola . '#ano_letivo');
 
-                die();
+                $this->simpleRedirect('educar_escola_det.php?cod_escola=' . $this->ref_ref_cod_escola . '#ano_letivo');
             }
 
             $this->mensagem = 'Cadastro não realizado. <br />';
@@ -339,9 +334,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -384,8 +377,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-                header('Location: educar_escola_lst.php');
-                die();
+                $this->simpleRedirect('educar_escola_lst.php');
             }
         }
 
@@ -397,9 +389,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
 
@@ -429,8 +419,7 @@ class indice extends clsCadastro
 
             if ($excluiu1) {
                 $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-                header('Location: educar_escola_lst.php');
-                die();
+                $this->simpleRedirect('educar_escola_lst.php');
             }
 
             $this->mensagem = 'Exclusão não realizada.<br />';

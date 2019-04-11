@@ -61,10 +61,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Tipo Material Did&aacute;tico - Detalhe";
         
 
@@ -75,8 +71,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_material_tipo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_material_tipo_lst.php');
         }
         if (class_exists("clsPmieducarInstituicao"))
         {

@@ -61,10 +61,6 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->idesco = $_GET['idesco'];
 
     $obj_permissoes = new clsPermissoes();
@@ -127,10 +123,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $tamanhoDesc = strlen($this->descricao);
     if($tamanhoDesc > 60){
       $this->mensagem = 'A descrição deve conter no máximo 60 caracteres.<br>';
@@ -149,8 +141,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($escolaridade);
 
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: educar_escolaridade_lst.php');
-      die();
+      $this->simpleRedirect('educar_escolaridade_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -159,10 +150,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $escolaridade = new clsCadastroEscolaridade($this->idesco);
     $escolaridadeAntes = $escolaridade->detalhe();
 
@@ -176,8 +163,7 @@ class indice extends clsCadastro
       $auditoria->alteracao($escolaridadeAntes, $escolaridadeDepois);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header("Location: educar_escolaridade_lst.php");
-      die();
+      $this->simpleRedirect('educar_escolaridade_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -186,10 +172,6 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
     $escolaridade = $obj->detalhe();
     $excluiu = $obj->excluir();
@@ -199,8 +181,7 @@ class indice extends clsCadastro
       $auditoria->exclusao($escolaridade);
 
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: educar_escolaridade_lst.php');
-      die();
+      $this->simpleRedirect('educar_escolaridade_lst.php');
     }
 
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

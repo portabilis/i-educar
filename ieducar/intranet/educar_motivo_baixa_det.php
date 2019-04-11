@@ -59,10 +59,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Motivo Baixa - Detalhe";
         
 
@@ -73,8 +69,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_motivo_baixa_lst.php" );
-            die();
+            $this->simpleRedirect('educar_motivo_baixa_lst.php');
         }
 
         if( $registro["nm_motivo_baixa"] )

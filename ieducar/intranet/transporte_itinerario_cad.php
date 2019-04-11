@@ -78,9 +78,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Editar";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_rota=$_GET["cod_rota"];
 
@@ -100,8 +98,7 @@ class indice extends clsCadastro
 
 
         if ($volta){
-            header('Location: transporte_rota_lst.php');
-            die();
+            $this->simpleRedirect('transporte_rota_lst.php');
         }
         $this->url_cancelar = "transporte_rota_det.php?cod_rota={$this->cod_rota}";
         $this->nome_url_cancelar = "Cancelar";
@@ -190,9 +187,7 @@ class indice extends clsCadastro
     {
 
 
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 21238, $this->pessoa_logada, 7,  "transporte_rota_det.php?cod_rota={$this->cod_rota}" );
 
@@ -236,10 +231,7 @@ class indice extends clsCadastro
                 }
             }
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: transporte_rota_det.php?cod_rota={$this->cod_rota}" );
-            die();
-            return true;
-
+            $this->simpleRedirect("transporte_rota_det.php?cod_rota={$this->cod_rota}");
         }
 
     }

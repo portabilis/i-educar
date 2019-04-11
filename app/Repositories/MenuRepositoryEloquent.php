@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\Menu;
 use iEducar\Support\Repositories\MenuRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
+use App\Models\LegacyMenu;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class MenuRepositoryEloquent extends BaseRepository implements MenuRepository
@@ -16,7 +16,7 @@ class MenuRepositoryEloquent extends BaseRepository implements MenuRepository
      */
     public function model()
     {
-        return Menu::class;
+        return LegacyMenu::class;
     }
 
     /**

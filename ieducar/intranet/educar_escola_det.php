@@ -67,10 +67,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         // Verificação de permissão para cadastro.
         $this->obj_permissao = new clsPermissoes();
 
@@ -85,8 +81,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_escola_lst.php" );
-            die();
+            $this->simpleRedirect('educar_aluno_lst.php');
         }
 
         if( class_exists( "clsPmieducarInstituicao" ) )

@@ -63,9 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
 
         $this->cod_infra_comodo_funcao=$_GET["cod_infra_comodo_funcao"];
@@ -92,8 +90,7 @@ class indice extends clsCadastro
 
                     $retorno = "Editar";
                 }else{
-                    header( "Location: educar_infra_comodo_funcao_lst.php" );
-                    die();
+                    $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
                 }
             }
         }
@@ -129,9 +126,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPmieducarInfraComodoFuncao( null, null, $this->pessoa_logada, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
         $cadastrou = $obj->cadastra();
@@ -144,9 +139,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($infraComodoFuncao);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -156,9 +149,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $infraComodoFuncaoDetalhe = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao);
         $infraComodoFuncaoDetalheAntes = $infraComodoFuncaoDetalhe->detalhe();
@@ -172,9 +163,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($infraComodoFuncaoDetalheAntes, $infraComodoFuncaoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -184,9 +173,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null,null,null,null,null, 0);
         $infraComodoFuncao = $obj->detalhe();
@@ -197,9 +184,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($infraComodoFuncao);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

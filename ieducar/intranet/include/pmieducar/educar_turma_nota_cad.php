@@ -94,9 +94,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->ref_cod_turma      = $_GET["ref_cod_turma"];
         $this->ref_ref_cod_escola = $_GET["ref_ref_cod_escola"];
@@ -132,8 +130,7 @@ class indice extends clsCadastro
 //              Verifica se existe alguma matrícula em exame ou em andamento
                 if ( !( $existe_matricula == "S" ) )
                 {
-                    header( "Location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}" );
-                    die();
+                    $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
                 }
             }
             else
@@ -143,8 +140,7 @@ class indice extends clsCadastro
         }
         else
         {
-            header( "Location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}" );
-            die();
+            $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
         }
         $this->url_cancelar      = "educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}";
         $this->nome_url_cancelar = "Cancelar";
@@ -923,9 +919,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 650, $this->pessoa_logada, 7,  "educar_turma_mvto_det.php" );
@@ -1084,8 +1078,7 @@ class indice extends clsCadastro
                         }
                     }
                 }
-                header( "location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}" );
-                die();
+                $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
             }
 //          Executa o bloco de instrução abaixo, caso o servidor não tenha classificado nenhum aluno
             else
@@ -1366,13 +1359,11 @@ class indice extends clsCadastro
 //                  if ( $total_notas == ( $this->qtd_modulos * $this->qtd_disciplinas ) )
                     if ( $fimAnoLetivo == "S" )
                     {
-                        header( "location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}" );
-                        die();
+                        $this->simpleRedirect("educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}");
                     }
                     else
                     {
-                        header( "location: educar_turma_nota_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_ref_cod_escola={$this->ref_ref_cod_escola}&ref_ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}" );
-                        die();
+                        $this->simpleRedirect("educar_turma_nota_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_ref_cod_escola={$this->ref_ref_cod_escola}&ref_ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}");
                     }
                 }
 
@@ -1604,13 +1595,11 @@ class indice extends clsCadastro
                                     }
                                 }
                             }
-                            header( "location: educar_turma_nota_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_ref_cod_escola={$this->ref_ref_cod_escola}&ref_ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}" );
-                            die();
+                            $this->simpleRedirect("educar_turma_nota_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_ref_cod_escola={$this->ref_ref_cod_escola}&ref_ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}");
                         }
                     }
                 }
-                header( "location: educar_turma_nota_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_ref_cod_escola={$this->ref_ref_cod_escola}&ref_ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}" );
-                die();
+                $this->simpleRedirect("educar_turma_nota_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_ref_cod_escola={$this->ref_ref_cod_escola}&ref_ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}");
             }
         }
     }

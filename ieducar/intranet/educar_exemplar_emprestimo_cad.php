@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -67,11 +70,9 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            $this->ref_cod_cliente = $_SESSION['emprestimo']['cod_cliente'];
-            $this->ref_cod_biblioteca = $_SESSION['emprestimo']['ref_cod_biblioteca'];
-        @session_write_close();
+
+        $this->ref_cod_cliente = Session::get('emprestimo.cod_cliente');
+        $this->ref_cod_biblioteca = Session::get('emprestimo.ref_cod_biblioteca');
 
         $this->cod_emprestimo=$_GET["cod_emprestimo"];
 
@@ -412,10 +413,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            $this->ref_cod_cliente = $_SESSION['emprestimo']['cod_cliente'];
-        @session_write_close();
+        $this->ref_cod_cliente = Session::get('emprestimo.cod_cliente');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 610, $this->pessoa_logada, 11,  "educar_exemplar_emprestimo_lst.php" );
@@ -458,9 +456,7 @@ class indice extends clsCadastro
                 }
             }
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_exemplar_emprestimo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
         echo "<script> alert('É necessário adicionar pelo menos 1 Tombo!') </script>";
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";

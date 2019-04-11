@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/imagem/clsPortalImagem.inc.php';
@@ -82,47 +84,46 @@ class indice extends clsCadastro
   {
      $retorno = "Editar";
 
-     @session_start();
-     $this->id_pessoa = $_SESSION['id_pessoa'];
-     @session_write_close();
+     $this->id_pessoa = $this->pessoa_logada;
 
      $this->cod_menu = $_GET['cod_menu'];
 
      if ($this->cod_menu && !$_POST) {
-       @session_start();
-       unset($_SESSION['menu_suspenso']);
+       Session::forget('menu_suspenso');
        $obj = new clsMenuSuspenso();
        $lista  = $obj->listaNivel($this->cod_menu,$this->id_pessoa);
 
        if ($lista) {
            foreach ($lista as $menu) {
-             $_SESSION['menu_suspenso'][] = array(
-               'ref_cod_menu_pai'     => $menu['ref_cod_menu_pai'],
-               'cod_menu'             => $menu['cod_menu'],
-               'ref_cod_menu_submenu' => $menu['ref_cod_menu_submenu'],
-               'tt_menu'              => $menu['tt_menu'],
-               'ico_menu'             => $menu['ref_cod_ico'],
-               'ord_menu'             => $menu['ord_menu'],
-               'caminho'              => $menu['caminho'],
-               'alvo'                 => $menu['alvo'],
-               'suprime_menu'         => $menu['suprime_menu'],
-               'ref_cod_tutor_menu'   => $_GET['cod_menu'],
-               'menu_menu_pai'        => $menu['menu_menu_pai']
-             );
+               Session::put([
+                   'menu_suspenso.ref_cod_menu_pai' => $menu['ref_cod_menu_pai'],
+                   'menu_suspenso.cod_menu' => $menu['cod_menu'],
+                   'menu_suspenso.ref_cod_menu_submenu' => $menu['ref_cod_menu_submenu'],
+                   'menu_suspenso.tt_menu' => $menu['tt_menu'],
+                   'menu_suspenso.ico_menu' => $menu['ref_cod_ico'],
+                   'menu_suspenso.ord_menu' => $menu['ord_menu'],
+                   'menu_suspenso.caminho' => $menu['caminho'],
+                   'menu_suspenso.alvo' => $menu['alvo'],
+                   'menu_suspenso.suprime_menu' => $menu['suprime_menu'],
+                   'menu_suspenso.ref_cod_tutor_menu' => $_GET['cod_menu'],
+                   'menu_suspenso.menu_menu_pai' => $menu['menu_menu_pai']
+               ]);
            }
       }
 
-      if ($_SESSION['menu_suspenso']) {
-        foreach ($_SESSION['menu_suspenso'] as $id => $valor) {
-          foreach ($_SESSION['menu_suspenso'] as $id2 => $valor2) {
+      $menususpenso = Session::get('menu_suspenso');
+
+      if ($menususpenso) {
+        foreach ($menususpenso as $id => $valor) {
+          foreach ($menususpenso as $id2 => $valor2) {
             if($valor2['ref_cod_menu_pai'] == $valor['cod_menu']) {
-              $_SESSION['menu_suspenso'][$id2]['ref_cod_menu_pai'] = $id;
+              Session::put([
+                  'menu_suspenso.' . $id2 . '.ref_cod_menu_pai' => $id,
+              ]);
             }
           }
         }
       }
-
-      @session_write_close();
      }
 
      if ($_FILES['ico_menu']['name']) {
@@ -140,8 +141,7 @@ class indice extends clsCadastro
      }
 
      if (isset($_POST['id_deletar']) && $_POST['id_deletar'] != "" && $_POST['editando'] == 2) {
-       @session_start();
-       foreach ($_SESSION['menu_suspenso'] as $id => $ref_pai) {
+       foreach ($menususpenso as $id => $ref_pai) {
          if ($ref_pai['ref_cod_menu_pai'] == $_POST['id_deletar']) {
            $arr_del[] = $id;
          }
@@ -149,19 +149,18 @@ class indice extends clsCadastro
 
        if ($arr_del) {
          foreach ($arr_del as $indice) {
-           unset($_SESSION['menu_suspenso'][$indice]);
+           Session::forget('menu_suspenso.' . $indice);
          }
        }
 
        if ($_POST['id_deletar'] == 0) {
-         unset($_SESSION['menu_suspenso'][0]);
+         Session::forget('menu_suspenso.0');
        }
        else {
-         unset($_SESSION['menu_suspenso'][$_POST['id_deletar']]);
+         Session::forget('menu_suspenso.' . $_POST['id_deletar']);
        }
      }
      elseif (!$_POST['lista'] && $_POST) {
-       @session_start();
        if ($_POST['ref_cod_menu_submenu']) {
          $db1 = new clsBanco();
          $cod_submenu = @$_POST['ref_cod_menu_submenu'];
@@ -182,20 +181,23 @@ class indice extends clsCadastro
              $menu_menu_pai = $db1->CampoUnico("SELECT ref_cod_menu_pai FROM menu_menu mm, menu_submenu ms WHERE mm.cod_menu_menu = ms.ref_cod_menu_menu and ms.cod_menu_submenu = {$_POST['ref_cod_menu_submenu']}");
            }
 
+           $editar = $_POST['editar'];
+
            $icone = ($_POST['img_banco']) ? @$_POST['img_banco'] : $cod_imagem;
-           $_SESSION['menu_suspenso'][$_POST['editar']]  = array(
-             'ref_cod_menu_pai'     => $_POST['ref_cod_menu_pai'],
-             'cod_menu'             => $this->cod_menu,
-             'ref_cod_menu_submenu' => $_POST['ref_cod_menu_submenu'],
-             'tt_menu'              => $_POST['tt_menu'],
-             'ico_menu'             => $icone,
-             'ord_menu'             => $_POST['ord_menu'],
-             'caminho'              => $caminho,
-             'alvo'                 => $_POST['alvo'],
-             'suprime_menu'         => $_POST['suprime_menu'],
-             'ref_cod_tutor_menu'   => $_GET['cod_menu'],
-             'menu_menu_pai'        => $menu_menu_pai
-           );
+
+           Session::put([
+               'menu_suspenso' . $editar . 'ref_cod_menu_pai'     => $_POST['ref_cod_menu_pai'],
+               'menu_suspenso' . $editar . 'cod_menu'             => $this->cod_menu,
+               'menu_suspenso' . $editar . 'ref_cod_menu_submenu' => $_POST['ref_cod_menu_submenu'],
+               'menu_suspenso' . $editar . 'tt_menu'              => $_POST['tt_menu'],
+               'menu_suspenso' . $editar . 'ico_menu'             => $icone,
+               'menu_suspenso' . $editar . 'ord_menu'             => $_POST['ord_menu'],
+               'menu_suspenso' . $editar . 'caminho'              => $caminho,
+               'menu_suspenso' . $editar . 'alvo'                 => $_POST['alvo'],
+               'menu_suspenso' . $editar . 'suprime_menu'         => $_POST['suprime_menu'],
+               'menu_suspenso' . $editar . 'ref_cod_tutor_menu'   => $_GET['cod_menu'],
+               'menu_suspenso' . $editar . 'menu_menu_pai'        => $menu_menu_pai
+           ]);
          }
          else {
            echo '<script>alert("Os campos Ordem e Título são obrigatórios!");</script>';
@@ -213,32 +215,30 @@ class indice extends clsCadastro
 
            $icone = ($_POST['img_banco']) ? @$_POST['img_banco'] : $cod_imagem;
 
-           $_SESSION['menu_suspenso'][]  = array(
-             'ref_cod_menu_pai'     => $_POST['ref_cod_menu_pai'],
-             'cod_menu'             => $this->cod_menu,
-             'ref_cod_menu_submenu' => $_POST['ref_cod_menu_submenu'],
-             'tt_menu'              => $_POST['tt_menu'],
-             'ico_menu'             => $icone,
-             'ord_menu'             => $_POST['ord_menu'],
-             'caminho'              => $caminho,
-             'alvo'                 => $_POST['alvo'],
-             'suprime_menu'         => $_POST['suprime_menu'],
-             'ref_cod_tutor_menu'   => $_GET['cod_menu'],
-             'menu_menu_pai'        => $menu_menu_pai
-           );
+           Session::put([
+               'menu_suspenso.ref_cod_menu_pai'     => $_POST['ref_cod_menu_pai'],
+               'menu_suspenso.cod_menu'             => $this->cod_menu,
+               'menu_suspenso.ref_cod_menu_submenu' => $_POST['ref_cod_menu_submenu'],
+               'menu_suspenso.tt_menu'              => $_POST['tt_menu'],
+               'menu_suspenso.ico_menu'             => $icone,
+               'menu_suspenso.ord_menu'             => $_POST['ord_menu'],
+               'menu_suspenso.caminho'              => $caminho,
+               'menu_suspenso.alvo'                 => $_POST['alvo'],
+               'menu_suspenso.suprime_menu'         => $_POST['suprime_menu'],
+               'menu_suspenso.ref_cod_tutor_menu'   => $_GET['cod_menu'],
+               'menu_suspenso.menu_menu_pai'        => $menu_menu_pai
+           ]);
          }
          else {
            echo '<script>alert("Os campos Ordem e Título são obrigatórios!");</script>';
          }
        }
-
-       @session_write_close();
      }
 
-     if ($_SESSION['menu_suspenso']) {
+     if (Session::get('menu_suspenso')) {
        $this->saida ="<script>";
 
-       foreach ($_SESSION['menu_suspenso'] as $key=>$detalhe) {
+       foreach (Session::get('menu_suspenso') as $key=>$detalhe) {
          $ico_menu = '';
 
          if (is_numeric($detalhe['ico_menu'])) {
@@ -292,8 +292,8 @@ class indice extends clsCadastro
       $where = "AND ref_cod_menu_menu = '{$_POST['ref_cod_menu']}'";
     }
 
-    if ($_GET &&  $_SESSION['menu_suspenso']) {
-      foreach ($_SESSION['menu_suspenso'] as $id => $value) {
+    if ($_GET &&  Session::get('menu_suspenso')) {
+      foreach (Session::get('menu_suspenso') as $id => $value) {
         $menu = $value['ref_cod_menu_submenu'];
         $menu_pai = $value['menu_menu_pai'];
 
@@ -327,11 +327,13 @@ class indice extends clsCadastro
         list($cod_sub, $nm_sub) = $db->Tupla();
         $where_filho = " AND ref_cod_menu_menu = '{$cod_sub}' ";
 
-        reset($_SESSION['menu_suspenso']);
+        $menususpenso = Session::get('menu_suspenso');
+
+        reset($menususpenso);
         $menu_suspenso_filho = "";
 
-        if($_SESSION['menu_suspenso']) {
-          foreach ($_SESSION['menu_suspenso'] as $campo)  {
+        if($menususpenso) {
+          foreach ($menususpenso as $campo)  {
             if (!empty($campo['ref_cod_menu_submenu']) && $campo['menu_menu_pai']) {
               $AND = 'AND';
               $menu_suspenso_filho .= " {$AND} cod_menu_submenu <> '{$campo['ref_cod_menu_submenu']}'";
@@ -360,9 +362,9 @@ class indice extends clsCadastro
       $AND = "AND";
     }
 
-    if ($_SESSION['menu_suspenso']) {
-      reset($_SESSION['menu_suspenso']);
-      foreach ($_SESSION['menu_suspenso'] as $campo) {
+    if ($menususpenso = Session::get('menu_suspenso')) {
+      reset($menususpenso);
+      foreach ($menususpenso as $campo) {
         if (!empty($campo['ref_cod_menu_submenu'])) {
           $AND = "AND";
           $menu_suspenso .= " {$AND} cod_menu_submenu <> '{$campo['ref_cod_menu_submenu']}'";
@@ -392,7 +394,7 @@ class indice extends clsCadastro
       }
     }
 
-    $lista_menu_pai = $_SESSION['menu_suspenso'];
+    $lista_menu_pai = Session::get('menu_suspenso');
     $opcoes_pai = array('' => 'Selecione');
 
     if ($lista_menu_pai) {
@@ -436,8 +438,8 @@ class indice extends clsCadastro
 
     $vf = FALSE;
 
-    if ($_SESSION['menu_suspenso']) {
-      foreach ($_SESSION['menu_suspenso'] as $campo) {
+    if (Session::get('menu_suspenso')) {
+      foreach (Session::get('menu_suspenso') as $campo) {
         if (!empty($campo['ref_cod_menu_pai']) || $campo['ref_cod_menu_pai'] == '0') {
           $vf = TRUE;
         }
@@ -447,15 +449,15 @@ class indice extends clsCadastro
     if (!$vf) {
       $this->campoLista("ref_cod_menu", "Menu", $opcoes_menu, $this->ref_cod_menu,"insereSubmitLista();");
     }
-    elseif (!$_SESSION['menu_suspenso']) {
+    elseif (!Session::get('menu_suspenso')) {
       $this->campoLista("ref_cod_menu", "Menu", $opcoes_menu, $this->ref_cod_menu,"insereSubmitLista();");
     }
     elseif ($_POST['ref_cod_menu']) {
       $this->campoRotulo("ref_cod_menu_1", "Menu", $opcoes_menu[$_POST['ref_cod_menu']]);
       $this->campoOculto("ref_cod_menu", $_POST['ref_cod_menu']);
     }
-    elseif ($_SESSION['menu_suspenso']) {
-      foreach ($_SESSION['menu_suspenso'] as $id => $value) {
+    elseif (Session::get('menu_suspenso')) {
+      foreach (Session::get('menu_suspenso') as $id => $value) {
         $menu = $value['ref_cod_menu_submenu'];
         $menu_pai =  $value['menu_menu_pai'];
 
@@ -497,24 +499,20 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $ordenado = $_SESSION['menu_suspenso'];
-    @session_write_close();
-
     $ObjDel = new clsMenuSuspenso(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
       FALSE, FALSE, FALSE, $this->cod_menu);
 
     $excluiu = $ObjDel->exclui();
     $arr_chaves = array();
 
-    foreach ($_SESSION['menu_suspenso'] as $id=>$menu) {
+    foreach (Session::get('menu_suspenso') as $id=>$menu) {
       $arr_chaves[$id] = $menu['ref_cod_menu_pai'];
     }
 
     $filhos = array();
 
-    if (is_array($_SESSION['menu_suspenso']) && $excluiu) {
-      foreach ($_SESSION['menu_suspenso'] as $id => $menu) {
+    if (is_array(Session::get('menu_suspenso')) && $excluiu) {
+      foreach (Session::get('menu_suspenso') as $id => $menu) {
         $obj = new clsMenuSuspenso(FALSE, $menu['ref_cod_menu_submenu'],
           $filhos[$id], $menu['tt_menu'], $menu['ico_menu'], $menu['ord_menu'],
           $menu['caminho'], $menu['alvo'], $menu['suprime_menu'],
@@ -535,7 +533,7 @@ class indice extends clsCadastro
         }
       }
 
-      header("Location: menu_suspenso_det.php?cod_menu={$_GET['cod_menu']}");
+      $this->simpleRedirect("menu_suspenso_det.php?cod_menu={$_GET['cod_menu']}");
     }
 
     return FALSE;
