@@ -1,6 +1,8 @@
 <?php
 
 use App\Services\SchoolClassService;
+use App\Models\School;
+use App\Models\LegacyCourse;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -64,9 +66,7 @@ class indice extends clsCadastro
     public $excluir_modulo;
     public $visivel;
     public $tipo_atendimento;
-    public $turma_mais_educacao;
     public $atividades_complementares;
-    public $atividades_aee;
     public $cod_curso_profissional;
     public $etapa_educacenso;
     public $ref_cod_disciplina_dispensada;
@@ -82,6 +82,7 @@ class indice extends clsCadastro
     public $dias_letivos;
     public $etapas_especificas;
     public $etapas_utilizadas;
+    public $local_funcionamento_diferenciado;
     public $definirComponentePorEtapa;
     public $modulos = [];
     public $retorno;
@@ -169,10 +170,6 @@ class indice extends clsCadastro
 
         if (is_string($this->atividades_complementares)) {
             $this->atividades_complementares = explode(',', str_replace(['{', '}'], '', $this->atividades_complementares));
-        }
-
-        if (is_string($this->atividades_aee)) {
-            $this->atividades_aee = explode(',', str_replace(['{', '}'], '', $this->atividades_aee));
         }
 
         if (is_string($this->cod_curso_profissional)) {
@@ -446,13 +443,17 @@ class indice extends clsCadastro
             $this->hora_fim_intervalo = '';
             $this->dias_semana = [];
         }
-        $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, false, null, null, null);
 
-        $this->campoHora('hora_final', 'Hora final', $this->hora_final, false, null, null, null);
+        $this->campoRotulo(
+            'horario_funcionamento_turma',
+            '<b>Horário de funcionamento da turma</b>'
+        );
+
+        $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, false, null, null, null);
 
         $this->campoHora(
             'hora_inicio_intervalo',
-            'Hora início intervalo',
+            'Hora inicial do intervalo',
             $this->hora_inicio_intervalo,
             false,
             null,
@@ -460,7 +461,10 @@ class indice extends clsCadastro
             null
         );
 
-        $this->campoHora('hora_fim_intervalo', 'Hora fim intervalo', $this->hora_fim_intervalo, false, null, null, null);
+        $this->campoHora('hora_fim_intervalo', 'Hora final do intervalo', $this->hora_fim_intervalo, false, null, null, null);
+
+        $this->campoHora('hora_final', 'Hora final', $this->hora_final, false, null, null, null);
+
 
         $helperOptions = ['objectName' => 'dias_semana'];
         $options = ['label' => 'Dias da semana',
@@ -592,10 +596,7 @@ class indice extends clsCadastro
             'value' => $this->codigo_inep_educacenso]);
 
         $resources = [null => 'Selecione',
-            0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
-            1 => 'Classe hospitalar',
-            2 => Portabilis_String_Utils::toLatin1('Unidade de internação socioeducativa'),
-            3 => 'Unidade prisional',
+            0 => 'Escolarização',
             4 => 'Atividade complementar',
             5 => 'Atendimento educacional especializado (AEE)'];
 
@@ -611,24 +612,6 @@ class indice extends clsCadastro
                 'all_values' => $atividadesComplementares]];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $helperOptions = ['objectName' => 'atividades_aee'];
-        $options = ['label' => 'Atividades do Atendimento Educacional Especializado - AEE',
-            'size' => 50,
-            'required' => false,
-            'options' => ['values' => $this->atividades_aee,
-                'all_values' => [1 => 'Ensino do Sistema Braille',
-                    2 => 'Ensino de uso de recursos ópticos e não ópticos',
-                    3 => 'Estratégias para o desenvolvimento de processos mentais',
-                    4 => 'Técnica de orientações a mobilidade',
-                    5 => 'Ensino da Língua Brasileira de Sinais - LIBRAS',
-                    6 => 'Ensino de uso da Comunicação Alternativa e Aumentativa - CAA',
-                    7 => 'Estratégias para enriquecimento curricular',
-                    8 => 'Ensino do uso do Soroban',
-                    9 => 'Ensino da usabilidade e das funcionalidades de informática acessível',
-                    10 => 'Ensino da Língua Portuguesa na modalidade escrita',
-                    11 => 'Estratégias para autonomia no ambiente escolar']]];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
         $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id,nome FROM modules.etapas_educacenso');
         $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
         $resources = Portabilis_Array_Utils::merge($resources, ['null' => 'Selecione']);
@@ -642,7 +625,7 @@ class indice extends clsCadastro
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
             'type' => 'single'];
-        $options = ['label' => 'Curso técnico',
+        $options = ['label' => 'Curso de educação profissional',
             'size' => 50,
             'required' => false,
             'options' => ['values' => $this->cod_curso_profissional,
@@ -650,23 +633,21 @@ class indice extends clsCadastro
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
+        $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
         $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
+        $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
+        $resources = array_replace([null => 'Selecione'], $resources);
+
+        $options = ['label' => 'Local de funcionamento diferenciado', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
+        $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
 
         $options = ['label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
             'value' => $this->nao_informar_educacenso,
             'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar')];
         $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
-
-        $options = [
-            'label' => 'Turma participante do programa Mais Educação/Ensino Médio Inovador',
-            'resources' => $resources,
-            'value' => $this->turma_mais_educacao,
-            'required' => false,
-            'prompt' => 'Selecione'
-        ];
-        $this->inputsHelper()->booleanSelect('turma_mais_educacao', $options);
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Turma.js',
@@ -1010,10 +991,48 @@ class indice extends clsCadastro
         return true;
     }
 
-    protected function validaCampoAEE()
+    protected function validaCampoTipoAtendimento()
     {
-        if ($this->tipo_atendimento == 5 && empty($this->atividades_aee)) {
-            $this->mensagem = 'Campo atividades do Atendimento Educacional Especializado - AEE é obrigatório';
+        if ($this->tipo_atendimento != 0 && in_array($this->tipo_mediacao_didatico_pedagogico, [
+            App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
+            App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
+        ])) {
+            $this->mensagem = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Semipresencial ou Educação a Distância.';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaCampoLocalFuncionamentoDiferenciad()
+    {
+        $school = School::find($this->ref_ref_cod_escola);
+        $localFuncionamentoEscola = $school->local_funcionamento;
+        if (is_string($localFuncionamentoEscola)) {
+            $localFuncionamentoEscola = explode(',', str_replace(array('{', "}"), '', $localFuncionamentoEscola));
+        }
+
+        $localFuncionamentoEscola = (array) $localFuncionamentoEscola;
+
+        if (!in_array(9, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO) {
+
+            $this->mensagem = 'Não é possível selecionar a opção: Unidade de atendimento socioeducativo quando o local de funcionamento da escola não for: Unidade de atendimento socioeducativo.';
+            return false;
+        }
+
+        if (!in_array(10, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL) {
+            $this->mensagem = 'Não é possível selecionar a opção: Unidade prisional quando o local de funcionamento da escola não for: Unidade prisional.';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaTipoAtendimento()
+    {
+        if ($this->tipo_atendimento == 4 && empty($this->atividades_complementares)) {
+            $this->mensagem = 'Campo atividades complementares é obrigatório';
 
             return false;
         }
@@ -1035,6 +1054,51 @@ class indice extends clsCadastro
         return true;
     }
 
+    private function validaEtapaEducacenso()
+    {
+        $course = LegacyCourse::find($this->ref_cod_curso);
+
+        if ($course->modalidade_curso == 1 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 2 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Especial - Modalidade Substitutiva, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67 ou 68.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 3 && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 4 && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções:30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
+            return false;
+        }
+
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72';
+            return false;
+        }
+
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+            return false;
+        }
+
+        if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
+            !in_array($this->etapa_educacenso, [1, 2, 3, 56])
+        ) {
+            $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
+            $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
+            return false;
+        }
+
+        return true;
+    }
+
     protected function verificaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {
@@ -1043,13 +1107,19 @@ class indice extends clsCadastro
         if (!$this->validaCamposHorario()) {
             return false;
         }
+        if (!$this->validaEtapaEducacenso()) {
+            return false;
+        }
         if (!$this->validaCampoAtividadesComplementares()) {
             return false;
         }
-        if (!$this->validaCampoAEE()) {
+        if (!$this->validaCampoEtapaEnsino()) {
             return false;
         }
-        if (!$this->validaCampoEtapaEnsino()) {
+        if (!$this->validaCampoTipoAtendimento()) {
+            return false;
+        }
+        if (!$this->validaCampoLocalFuncionamentoDiferenciad()) {
             return false;
         }
 
@@ -1060,15 +1130,10 @@ class indice extends clsCadastro
     {
         $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
         $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
-        $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
         $this->cod_curso_profissional = $this->cod_curso_profissional[0];
 
         if ($this->tipo_atendimento != 4) {
             $this->atividades_complementares = '{}';
-        }
-
-        if ($this->tipo_atendimento != 5) {
-            $this->atividades_aee = '{}';
         }
 
         $etapasCursoTecnico = [30, 31, 32, 33, 34, 39, 40, 64, 74];
@@ -1105,7 +1170,6 @@ class indice extends clsCadastro
         $objTurma->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
         $objTurma->ano = $this->ano_letivo;
         $objTurma->tipo_atendimento = $this->tipo_atendimento;
-        $objTurma->turma_mais_educacao = $this->turma_mais_educacao;
         $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
         $objTurma->etapa_educacenso = $this->etapa_educacenso == '' ? null : $this->etapa_educacenso;
         $objTurma->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == '' ? null : $this->ref_cod_disciplina_dispensada;
@@ -1113,7 +1177,6 @@ class indice extends clsCadastro
         $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $objTurma->dias_semana = $this->dias_semana;
         $objTurma->atividades_complementares = $this->atividades_complementares;
-        $objTurma->atividades_aee = $this->atividades_aee;
 
         return $objTurma;
     }
