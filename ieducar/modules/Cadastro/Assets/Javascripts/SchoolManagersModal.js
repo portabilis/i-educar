@@ -13,9 +13,10 @@ $j("#modal_school_managers").dialog({
     title: 'Dados adicionais do diretor(a)',
     buttons: {
         "Gravar": function () {
-            fillHiddenInputs();
-            $j(this).dialog("close");
-
+            if (validateAccessCriteriaId() && validateAccessCriteriaDescription() && validateLinkType()) {
+                fillHiddenInputs();
+                $j(this).dialog("close");
+            }
         },
         "Cancelar": function () {
             $j(this).dialog("close");
@@ -108,13 +109,20 @@ function addEventsManagerInputs() {
 }
 
 function changeManagerRole(field) {
-    let accessCriteria = $j('#managers_access_criteria_id');
+    let accessCriteria = $j('#managers_access_criteria_id'),
+        linkType = $j('#managers_link_type_id');
 
     if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
         accessCriteria.prop('disabled', false);
     } else {
         accessCriteria.prop('disabled', true);
         accessCriteria.val('');
+    }
+
+    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString() && $j('#dependencia_administrativa').val() != DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+        linkType.prop('disabled', false);
+    } else {
+        linkType.prop('disabled', true);
     }
 
     changeAccessCriteria(accessCriteria)
@@ -129,4 +137,59 @@ function changeAccessCriteria(field) {
         accessCriteriaDescription.prop('disabled', true);
         accessCriteriaDescription.val('');
     }
+}
+
+function validateAccessCriteriaId() {
+    if (!obrigarCamposCenso){
+        return true;
+    }
+
+    if ($j('select[id="managers_role_id[' + idLastLineUsed + ']"]').val() != SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
+        return true;
+    }
+
+    if ($j('#managers_access_criteria_id').val() == '') {
+        messageUtils.error("O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>");
+        return false;
+    }
+
+    return true;
+}
+
+function validateAccessCriteriaDescription() {
+    if (!obrigarCamposCenso){
+        return true;
+    }
+
+    if ($j('#managers_access_criteria_id').val() != SCHOOL_MANAGER_ACCESS_CRITERIA.OUTRO.toString()) {
+        return true;
+    }
+
+    if ($j('#managers_access_criteria_description').val() == '') {
+        messageUtils.error("O campo: <b>Especificação do critério de acesso</b> deve ser preenchido quando o campo: <b>Critério de acesso ao cargo</b> for: <b>Outros</b>");
+        return false;
+    }
+
+    return true;
+}
+
+function validateLinkType() {
+    if (!obrigarCamposCenso){
+        return true;
+    }
+
+    if ($j('select[id="managers_role_id[' + idLastLineUsed + ']"]').val() != SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
+        return true;
+    }
+
+    if ($j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA) {
+        return true;
+    }
+
+    if ($j('#managers_link_type_id').val() == '') {
+        messageUtils.error("O campo: <b>Tipo de vínculo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>");
+        return false;
+    }
+
+    return true;
 }
