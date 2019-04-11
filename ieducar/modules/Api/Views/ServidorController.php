@@ -28,6 +28,11 @@ class ServidorController extends ApiCoreController
         );
     }
 
+    protected function canGetServidores()
+    {
+        return $this->validatesPresenceOf('instituicao_id');
+    }
+
     protected function sqlsForNumericSearch()
     {
         $sqls[] = 'SELECT p.idpes as id, p.nome
@@ -66,6 +71,45 @@ class ServidorController extends ApiCoreController
                 LIMIT 15';
 
         return $sqls;
+    }
+
+    protected function getServidores()
+    {
+        if (false == $this->canGetServidores()) {
+            return;
+        }
+
+        $instituicaoId = $this->getRequest()->instituicao_id;
+        $modified = $this->getRequest()->modified;
+
+        $params = [$instituicaoId];
+
+        $where = '';
+
+        if ($modified) {
+            $params[] = $modified;
+            $where = ' AND greatest(p.data_rev::timestamp(0), s.updated_at) >= $2';
+        }
+
+        $sql = "
+            SELECT 
+                s.cod_servidor as servidor_id,
+                p.nome as nome,
+                s.ativo as ativo,
+                greatest(p.data_rev::timestamp(0), s.updated_at) as updated_at
+            FROM pmieducar.servidor s
+            INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
+            WHERE s.ref_cod_instituicao = $1
+            {$where}
+        ";
+
+        $servidores = $this->fetchPreparedQuery($sql, $params);
+
+        $attrs = ['servidor_id', 'nome', 'ativo', 'updated_at'];
+
+        $servidores = Portabilis_Array_Utils::filterSet($servidores, $attrs);
+
+        return ['servidores' => $servidores];
     }
 
     protected function getServidoresDisciplinasTurmas()
@@ -168,6 +212,8 @@ class ServidorController extends ApiCoreController
             $this->appendResponse($this->getEscolaridade());
         } elseif ($this->isRequestFor('get', 'servidores-disciplinas-turmas')) {
             $this->appendResponse($this->getServidoresDisciplinasTurmas());
+        } elseif ($this->isRequestFor('get', 'servidores')) {
+            $this->appendResponse($this->getServidores());
         } else {
             $this->notImplementedOperationError();
         }
