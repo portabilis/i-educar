@@ -1,9 +1,10 @@
 <?php
 
 use App\Country;
+use App\State;
 use Faker\Generator as Faker;
 
-$factory->define(App\State::class, function (Faker $faker) {
+$factory->define(State::class, function (Faker $faker) {
     return [
         'country_id' => function () use ($faker) {
 

@@ -74,7 +74,7 @@ class indice extends clsCadastro
         $obj = new clsTutormenu(false, $this->nm_tutormenu);
         if($obj->cadastra())
         {
-            header("Location: menu_suspenso_lst.php");
+            $this->simpleRedirect('menu_suspenso_lst.php');
         }
         return false;
     }
@@ -85,7 +85,7 @@ class indice extends clsCadastro
 
         if($obj->edita())
         {
-            header("Location: menu_suspenso_lst.php");
+            $this->simpleRedirect('menu_suspenso_lst.php');
         }
         return false;
     }
@@ -94,7 +94,7 @@ class indice extends clsCadastro
     {
         $obj = new clsTutormenu($this->cod_tutormenu);
         $obj->exclui();
-        header("Location: menu_suspenso_lst.php");
+        $this->simpleRedirect('menu_suspenso_lst.php');
         return true;
     }
 

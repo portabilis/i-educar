@@ -122,8 +122,7 @@ class indice extends clsCadastro{
                                                                    AND ref_cod_turma = $3', 
                                                                  array('params' => array($sequencial, $matricula, $cod_turma)));
     }
-    header("location: educar_turma_det.php?cod_turma={$cod_turma}");
-    return true;
+    $this->simpleRedirect("educar_turma_det.php?cod_turma={$cod_turma}");
   }
 
   function Excluir(){

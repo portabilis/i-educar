@@ -203,9 +203,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($clienteSuspensao);
 
             $this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
-            header("Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
         }
 
         $this->mensagem = "Suspens&atilde;o n&atilde;o realizada.<br>";
@@ -226,9 +224,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Libera&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_lst.php?cod_cliente={$this->cod_cliente}");
         }
         $obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $editou = $obj->edita();
@@ -253,9 +249,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php?cod_cliente={$this->cod_cliente}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

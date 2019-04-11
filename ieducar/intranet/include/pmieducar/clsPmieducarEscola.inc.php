@@ -2438,8 +2438,6 @@ class clsPmieducarEscola
                 return true;
             }
         }
-
-        return false;
     }
 
     /**

@@ -10,6 +10,8 @@ use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -1994,9 +1996,10 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header("Location: educar_escola_lst.php");
-                die();
-                return true;
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_escola_lst.php')
+                );
             } else {
                 $this->mensagem = "Cadastro não realizado (clsPessoa_).<br>";
                 return false;
@@ -2139,9 +2142,10 @@ class indice extends clsCadastro
                     }
                     //-----------------------FIM CADASTRA CURSO------------------------//
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                    header("Location: educar_escola_lst.php");
-                    die();
-                    return true;
+
+                    throw new HttpResponseException(
+                        new RedirectResponse('educar_escola_lst.php')
+                    );
                 } else {
                     $this->mensagem = "Cadastro não realizado.<br>";
                     echo "<!--\nErro ao cadastrar clsPmieducarEscolaComplemento\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric($this->pessoa_logada) && is_numeric($this->numero) && is_string($this->complemento) && is_string($this->p_email) && is_string($this->fantasia) && is_string($this->cidade) && is_string($this->bairro)\n-->";
@@ -2527,9 +2531,10 @@ class indice extends clsCadastro
                         }
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
-                        header("Location: educar_escola_lst.php");
-                        die();
-                        return true;
+
+                        throw new HttpResponseException(
+                            new RedirectResponse('educar_escola_lst.php')
+                        );
                     }
                 }
             } elseif ($this->sem_cnpj) {
@@ -2559,9 +2564,10 @@ class indice extends clsCadastro
                     }
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
-                    header("Location: educar_escola_lst.php");
-                    die();
-                    return true;
+
+                    throw new HttpResponseException(
+                        new RedirectResponse('educar_escola_lst.php')
+                    );
                 } else {
                     $this->mensagem = "Edição não realizada (clsPmieducarEscolaComplemento).<br>";
                     return false;
@@ -2586,9 +2592,10 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
             $auditoria->exclusao($escola);
             $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-            header("Location: educar_escola_lst.php");
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_escola_lst.php')
+            );
         }
 
         $this->mensagem = "Exclusão não realizada.<br>";

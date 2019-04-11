@@ -107,7 +107,7 @@ class indice extends clsListagem
       }
 
       if ($_GET) {
-          header('Location: educar_calendario_ano_letivo_lst.php');
+          $this->simpleRedirect('educar_calendario_ano_letivo_lst.php');
       }
 
       if (!$this->mes) {
