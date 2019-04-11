@@ -3,6 +3,7 @@
 use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -1057,6 +1058,10 @@ class indice extends clsCadastro
     private function validaEtapaEducacenso()
     {
         $course = LegacyCourse::find($this->ref_cod_curso);
+
+        if ($this->tipo_atendimento != TipoAtendimentoTurma::ESCOLARIZACAO) {
+            return true;
+        }
 
         if ($course->modalidade_curso == 1 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
             $this->mensagem = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56.';
