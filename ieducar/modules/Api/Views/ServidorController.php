@@ -81,7 +81,8 @@ class ServidorController extends ApiCoreController
 
             if ($modified) {
                 $params[] = $modified;
-                $where = ' AND pt.updated_at >= $1';
+                $where = 'AND greatest(pt.updated_at, ccae.updated_at) >= $3';
+                $whereDeleted = 'AND pt.updated_at >= $3';
             }
 
             $sql = "
@@ -94,7 +95,7 @@ class ServidorController extends ApiCoreController
                         pt.permite_lancar_faltas_componente,
                         string_agg(ptd.componente_curricular_id::varchar, ',') as disciplinas,
                         ccae.tipo_nota,
-                        pt.updated_at,
+                        greatest(pt.updated_at, ccae.updated_at) as updated_at,
                         null as deleted_at
                     from modules.professor_turma pt 
                     left join modules.professor_turma_disciplina ptd 
@@ -108,7 +109,7 @@ class ServidorController extends ApiCoreController
                     and pt.instituicao_id = $1
                     and pt.ano = $2
                     {$where}
-                    group by id, ccae.tipo_nota
+                    group by id, ccae.tipo_nota, ccae.updated_at
                 )
                 union all
                 (
@@ -126,7 +127,7 @@ class ServidorController extends ApiCoreController
                     where true 
                     and pt.instituicao_id = $1
                     and pt.ano = $2
-                    {$where}
+                    {$whereDeleted}
                 )
             ";
 
