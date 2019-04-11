@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
 
@@ -189,6 +191,10 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
         if ($this->ref_cod_turma) {
+            if (!$this->validaCamposCenso()) {
+                return false;
+            }
+
             $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
             if ($professorTurma->existe2()) {
                 $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
@@ -237,6 +243,11 @@ class indice extends clsCadastro
             $this->turma_turno_id
         );
 
+        if (!$this->validaCamposCenso()) {
+            return false;
+        }
+
+
         if ($professorTurma->existe2()) {
             $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
 
@@ -275,6 +286,47 @@ class indice extends clsCadastro
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
         header('Location:' . $backUrl);
         die();
+    }
+
+    private function validaCamposCenso()
+    {
+        if (!$this->validarCamposObrigatoriosCenso()) {
+            return true;
+        }
+
+        return $this->validaFuncaoExercida();
+    }
+
+    private function validaFuncaoExercida()
+    {
+        $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
+        $turma = $obj_turma->detalhe();
+
+        if (empty($turma)) {
+            return true;
+        }
+
+        $funcoesEad = [
+            FuncaoExercida::DOCENTE_TITULAR_EAD,
+            FuncaoExercida::DOCENTE_TUTOR_EAD,
+        ];
+
+        if ($turma['tipo_mediacao_didatico_pedagogico'] == TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->funcao_exercida, $funcoesEad)) {
+            $this->mensagem = 'O campo: <b>Função exercida</b> deve ser <b>Docente titular</b> ou <b>Docente tutor</b>, quando o campo: <b>Tipo de mediação didático-pedagógica</b> da turma for: <b>Educação a Distância</b>.';
+            return false;
+        }
+
+        if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ESCOLARIZACAO && $this->funcao_exercida == FuncaoExercida::AUXILIAR_EDUCACIONAL) {
+            $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b>Auxiliar/Assistente Educacional</b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+            return false;
+        }
+
+        if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR && $this->funcao_exercida == FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR) {
+            $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b> Profissional/Monitor de Atividade Complementar </b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+            return false;
+        }
+
+        return true;
     }
 }
 
