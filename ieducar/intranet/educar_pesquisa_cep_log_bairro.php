@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 
@@ -70,29 +72,32 @@ class miolo1 extends clsListagem
   {
     global $coreExt;
 
-    @session_start();
-    $_SESSION['campo1']  = $_GET['campo1']  ? $_GET['campo1']  : $_SESSION['campo1'];
-    $_SESSION['campo2']  = $_GET['campo2']  ? $_GET['campo2']  : $_SESSION['campo2'];
-    $_SESSION['campo3']  = $_GET['campo3']  ? $_GET['campo3']  : $_SESSION['campo3'];
-    $_SESSION['campo4']  = $_GET['campo4']  ? $_GET['campo4']  : $_SESSION['campo4'];
-    $_SESSION['campo5']  = $_GET['campo5']  ? $_GET['campo5']  : $_SESSION['campo5'];
-    $_SESSION['campo6']  = $_GET['campo6']  ? $_GET['campo6']  : $_SESSION['campo6'];
-    $_SESSION['campo7']  = $_GET['campo7']  ? $_GET['campo7']  : $_SESSION['campo7'];
-    $_SESSION['campo8']  = $_GET['campo8']  ? $_GET['campo8']  : $_SESSION['campo8'];
-    $_SESSION['campo9']  = $_GET['campo9']  ? $_GET['campo9']  : $_SESSION['campo9'];
-    $_SESSION['campo10'] = $_GET['campo10'] ? $_GET['campo10'] : $_SESSION['campo10'];
-    $_SESSION['campo11'] = $_GET['campo11'] ? $_GET['campo11'] : $_SESSION['campo11'];
-    $_SESSION['campo12'] = $_GET['campo12'] ? $_GET['campo12'] : $_SESSION['campo12'];
-    $_SESSION['campo13'] = $_GET['campo13'] ? $_GET['campo13'] : $_SESSION['campo13'];
-    $_SESSION['campo14'] = $_GET['campo14'] ? $_GET['campo14'] : $_SESSION['campo14'];
+    Session::put([
+        'campo1' => $_GET['campo1'] ?? Session::get('campo1'),
+        'campo2' => $_GET['campo2'] ?? Session::get('campo2'),
+        'campo3' => $_GET['campo3'] ?? Session::get('campo3'),
+        'campo4' => $_GET['campo4'] ?? Session::get('campo4'),
+        'campo5' => $_GET['campo5'] ?? Session::get('campo5'),
+        'campo6' => $_GET['campo6'] ?? Session::get('campo6'),
+        'campo7' => $_GET['campo7'] ?? Session::get('campo7'),
+        'campo8' => $_GET['campo8'] ?? Session::get('campo8'),
+        'campo9' => $_GET['campo9'] ?? Session::get('campo9'),
+        'campo10' => $_GET['campo10'] ?? Session::get('campo10'),
+        'campo11' => $_GET['campo11'] ?? Session::get('campo11'),
+        'campo12' => $_GET['campo12'] ?? Session::get('campo12'),
+        'campo13' => $_GET['campo13'] ?? Session::get('campo13'),
+        'campo14' => $_GET['campo14'] ?? Session::get('campo14'),
+    ]);
+    Session::save();
+    Session::start();
 
     $this->nome = 'form1';
 
     $this->funcao_js = sprintf(
       'cv_libera_campos(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')',
-      $_SESSION['campo10'], $_SESSION['campo11'], $_SESSION['campo7'],
-      $_SESSION['campo1'], $_SESSION['campo12'], $_SESSION['campo4'],
-      $_SESSION['campo9'], $_SESSION['campo14']
+      Session::get('campo10'), Session::get('campo11'), Session::get('campo7'),
+      Session::get('campo1'), Session::get('campo12'), Session::get('campo4'),
+      Session::get('campo9'), Session::get('campo14')
     );
 
     $this->titulo = 'Endereço';
@@ -195,15 +200,15 @@ class miolo1 extends clsListagem
 
       $url = sprintf(
         '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
-        $_SESSION['campo1'], $bairro, $_SESSION['campo2'],
-        $idbai, $_SESSION['campo3'], $cep,
-        $_SESSION['campo4'], $logradouro,
-        $_SESSION['campo5'], $idlog,
-        $_SESSION['campo6'], $uf, $_SESSION['campo7'], $cidade,
-        $_SESSION['campo8'], $tipoLogradouroId, $_SESSION['campo9'], $s_end,
-        $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $uf,
-        $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
-        $_SESSION['campo14'], $zona
+        Session::get('campo1'), $bairro, Session::get('campo2'),
+        $idbai, Session::get('campo3'), $cep,
+        Session::get('campo4'), $logradouro,
+        Session::get('campo5'), $idlog,
+        Session::get('campo6'), $uf, Session::get('campo7'), $cidade,
+        Session::get('campo8'), $tipoLogradouroId, Session::get('campo9'), $s_end,
+        Session::get('campo10'), $cep2, Session::get('campo11'), $uf,
+        Session::get('campo12'), Session::get('campo13'), $id_mun,
+        Session::get('campo14'), $zona
       );
 
       $this->addLinhas(array(
@@ -242,8 +247,6 @@ class miolo1 extends clsListagem
         $this->funcao_js
       );
     }*/
-
-    @session_write_close();
   }
 }
 

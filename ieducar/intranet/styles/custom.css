@@ -955,6 +955,14 @@ td.area-conhecimento-destaque {
   padding: 5px !important;
 }
 
+#estado_civil_id_aluno, #estado_civil_id_responsavel {
+  width: 225px !important;
+}
+
+#sexo_id_aluno, #sexo_responsavel{
+  width: 205px !important;
+}
+
 #formcadastro select{
   border-radius: 3px;
   background-color: #ffffff;

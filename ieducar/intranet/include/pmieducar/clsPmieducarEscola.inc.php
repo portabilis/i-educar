@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
@@ -2053,7 +2055,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->exame_selecao_ingresso)) {
+            if (is_numeric($this->exame_selecao_ingresso)) {
                 $set .= "{$gruda}exame_selecao_ingresso = '{$this->exame_selecao_ingresso}'";
                 $gruda = ', ';
             } elseif ($this->exame_selecao_ingresso !== false) {
@@ -2069,7 +2071,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->projeto_politico_pedagogico)) {
+            if (is_numeric($this->projeto_politico_pedagogico)) {
                 $set .= "{$gruda}projeto_politico_pedagogico = '{$this->projeto_politico_pedagogico}'";
                 $gruda = ', ';
             } elseif ($this->projeto_politico_pedagogico !== false) {
@@ -2575,9 +2577,9 @@ class clsPmieducarEscola
             }
         }
 
-        if (is_numeric($cod_usuario)) {
-            $permissao = new clsPermissoes();
-            $nivel = $permissao->nivel_acesso($_SESSION['id_pessoa']);
+    if (is_numeric($cod_usuario)) {
+      $permissao = new clsPermissoes();
+      $nivel = $permissao->nivel_acesso(Session::get('id_pessoa'));
 
             if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
                 $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {

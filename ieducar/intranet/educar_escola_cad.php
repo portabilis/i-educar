@@ -240,6 +240,7 @@ class indice extends clsCadastro
     {
         $retorno = "Novo";
 
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
@@ -1573,6 +1574,7 @@ class indice extends clsCadastro
 
             $options = array(
                 'label' => 'Escola faz exame de seleção para ingresso de seus aluno(a)s',
+                'label_hint' => 'Avaliação por prova e /ou analise curricular',
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->exame_selecao_ingresso,
@@ -1632,13 +1634,16 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
-            $resources = array(1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena');
+            $resources = [
+                null => 'Selecione',
+                1 => 'Língua Portuguesa',
+                2 => 'Língua Indígena'
+            ];
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
             $options = array('label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
-                'required' => $habilitaLiguaMinistrada,
+                'required' => false,
                 'disabled' => !$habilitaLiguaMinistrada,
                 'size' => 70);
             $this->inputsHelper()->select('lingua_ministrada', $options);
@@ -1992,6 +1997,8 @@ class indice extends clsCadastro
                     return false;
                 }
 
+                $this->saveInep($escola['cod_escola']);
+
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                 header("Location: educar_escola_lst.php");
                 die();
@@ -2136,6 +2143,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -2524,6 +2532,7 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+                        $this->saveInep($this->cod_escola);
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
                         header("Location: educar_escola_lst.php");
@@ -2556,6 +2565,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($this->cod_escola);
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
                     header("Location: educar_escola_lst.php");
@@ -2641,7 +2651,8 @@ class indice extends clsCadastro
                 $this->validaSalasAcessibilidade() &&
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
-                $this->validaQuantidadeEquipamentosEnsino();
+                $this->validaQuantidadeEquipamentosEnsino() &&
+                $this->validaLinguasIndigenas();
     }
 
     protected function validaOcupacaoPredio()
@@ -3042,7 +3053,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
             return false;
         }
 
@@ -3114,6 +3125,33 @@ class indice extends clsCadastro
 
         if ($this->lousas_digitais == '0') {
             $this->mensagem = 'O campo: <b>Lousa digital</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+    private function saveInep($schoolId)
+    {
+        DB::table('modules.educacenso_cod_escola')->where('cod_escola', $schoolId)
+            ->delete();
+        if (!empty($this->escola_inep_id)) {
+            $data = [
+                'cod_escola' => $schoolId,
+                'cod_escola_inep' => $this->escola_inep_id,
+                'fonte' => 'fonte',
+                'nome_inep' => '-',
+                'created_at' => 'NOW()',
+            ];
+
+            DB::table('modules.educacenso_cod_escola')->insert($data);
+        }
+    }
+  
+    protected function validaLinguasIndigenas()
+    {
+        if (count($this->codigo_lingua_indigena) > 3) {
+            $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
             return false;
         }
 

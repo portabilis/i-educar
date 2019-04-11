@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -94,11 +97,11 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
-        $this->ref_cod_biblioteca = $_SESSION["ref_cod_biblioteca"] = $_GET["ref_cod_biblioteca"] ? $_GET["ref_cod_biblioteca"] : $_SESSION["ref_cod_biblioteca"];
-        session_write_close();
+        $this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"] ? $_GET["ref_cod_biblioteca"] : Session::get('ref_cod_biblioteca');
+        Session::put('ref_cod_biblioteca', $this->ref_cod_biblioteca);
+        Session::put('campo1', $_GET["campo1"] ?? Session::get('campo1'));
+        Session::save();
+        Session::start();
 
         foreach ($_GET as $key => $value)
             $this->$key = $value;
@@ -167,8 +170,8 @@ class indice extends clsListagem
 
                 $registro["ref_cod_biblioteca"] = $obj_det["nm_biblioteca"];
 
-
-                $script = " onclick=\"addSel1('{$_SESSION['campo1']}','{$registro['cod_acervo']}','{$registro['titulo']}'); fecha();\"";
+                $campo1 = Session::get('campo1');
+                $script = " onclick=\"addSel1('{$campo1}','{$registro['cod_acervo']}','{$registro['titulo']}'); fecha();\"";
                 $this->addLinhas( array(
                     "<a href=\"javascript:void(0);\" {$script}>{$registro["titulo"]}</a>",
                     "<a href=\"javascript:void(0);\" {$script}>{$registro["ref_cod_biblioteca"]}</a>"

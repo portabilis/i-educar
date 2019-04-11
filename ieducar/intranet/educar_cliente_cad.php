@@ -73,9 +73,7 @@ class indice extends clsCadastro
   function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_cliente   = $_GET["cod_cliente"];
         $this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"];
@@ -213,10 +211,6 @@ class indice extends clsCadastro
    * Insere novo registro nas tabelas pmieducar.cliente e pmieducar.cliente_tipo_cliente.
    */
   public function Novo() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $senha = md5($this->senha . 'asnk@#*&(23');
 
     $obj_permissoes = new clsPermissoes();
@@ -319,10 +313,6 @@ class indice extends clsCadastro
    *   - Senão, cadastra como cliente da biblioteca
    */
   public function Editar() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $senha = md5($this->senha . 'asnk@#*&(23');
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
@@ -372,9 +362,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
