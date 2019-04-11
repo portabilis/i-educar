@@ -273,11 +273,11 @@ class clsPmieducarEscola
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.projeto_politico_pedagogico, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
-          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4,
+          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som,
           e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
-          e.lousas_digitais, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
-          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
+          e.lousas_digitais, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao,
+          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal,
           e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies,
           e.qtd_secretario_escolar,
           e.qtd_auxiliar_administrativo,
@@ -774,7 +774,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->possui_dependencias)) {
+            if (is_numeric($this->possui_dependencias)) {
                 $campos .= "{$gruda}possui_dependencias";
                 $valores .= "{$gruda}'{$this->possui_dependencias}'";
                 $gruda = ', ';
@@ -1038,7 +1038,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->exame_selecao_ingresso)) {
+            if (is_numeric($this->exame_selecao_ingresso)) {
                 $campos .= "{$gruda}exame_selecao_ingresso";
                 $valores .= "{$gruda}'{$this->exame_selecao_ingresso}'";
                 $gruda = ', ';
@@ -1050,7 +1050,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->projeto_politico_pedagogico)) {
+            if (is_numeric($this->projeto_politico_pedagogico)) {
                 $campos .= "{$gruda}projeto_politico_pedagogico";
                 $valores .= "{$gruda}'{$this->projeto_politico_pedagogico}'";
                 $gruda = ', ';
@@ -1367,7 +1367,7 @@ class clsPmieducarEscola
                 $valores .= "{$gruda}$this->qtd_psicologo";
                 $gruda = ', ';
             }
-            
+
             if (is_numeric($this->qtd_fonoaudiologo)) {
                 $campos .= "{$gruda}qtd_fonoaudiologo";
                 $valores .= "{$gruda}$this->qtd_fonoaudiologo";
