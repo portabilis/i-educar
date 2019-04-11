@@ -8,7 +8,7 @@ $j("#modal_school_managers").dialog({
     modal: true,
     resizable: false,
     draggable: false,
-    title: 'Informações adicionais',
+    title: 'Dados adicionais do diretor(a)',
     buttons: {
         "Gravar": function () {
             if ($j("#managers_inep_id").val().length != 12) {
@@ -92,7 +92,7 @@ function htmlFormModal() {
     return `<div id="modal_school_managers">
                 <form>
                 <label for="managers_inep_id">Código INEP</label>
-                    <input type="text" name="managers_inep_id" id="managers_inep_id" size="49" maxlength="12" class="text">
+                    <input type="text" name="managers_inep_id" id="managers_inep_id" size="50" maxlength="12" class="text">
                     <label for="managers_role_id">Cargo do(a) gestor(a)</label>
                     <select class="select ui-widget-content ui-corner-all" name="managers_role_id" id="managers_role_id">
                         <option value="">Selecione</option>
@@ -100,7 +100,7 @@ function htmlFormModal() {
                         <option value="2">Outro cargo</option>
                     </select>
                     <label for="managers_access_criteria_id">Critério de acesso ao cargo</label>
-                    <select class="select ui-widget-content ui-corner-all" name="managers_access_criteria_id" id="managers_access_criteria_id">
+                    <select class="geral" name="managers_access_criteria_id" id="managers_access_criteria_id">
                         <option value="">Selecione</option>
                         <option value="1">Proprietário(a) ou sócio(a)-proprietário(a) da escola</option>
                         <option value="2">Exclusivamente por indicação/escolha da gestão</option>
@@ -111,7 +111,7 @@ function htmlFormModal() {
                         <option value="7">Outros</option>
                     </select>
                     <label for="managers_access_criteria_description">Especificação do critério de acesso</label>
-                    <input type="text" name="managers_access_criteria_description" id="managers_access_criteria_description" size="49" maxlength="255" class="text">
+                    <input type="text" name="managers_access_criteria_description" id="managers_access_criteria_description" size="50" maxlength="255" class="text">
                     <label for="managers_link_type_id">Tipo de vínculo</label>
                     <select class="select ui-widget-content ui-corner-all" name="managers_link_type_id" id="managers_link_type_id">
                         <option value="">Selecione</option>

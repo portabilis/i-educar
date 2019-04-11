@@ -2507,7 +2507,7 @@ class indice extends clsCadastro
             $rows[] = $this->makeRowManagerTable($manager);
         }
 
-        $this->campoTabelaInicio('gestores', 'Gestores',
+        $this->campoTabelaInicio('gestores', 'Gestores escolares',
             [
                 'Nome do(a) gestor(a)',
                 'Detalhes',
@@ -2518,7 +2518,7 @@ class indice extends clsCadastro
 
         $helperOptions = ['objectName' => 'managers_individual'];
         $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
-        $this->campoRotulo('detalhes', 'Detalhes', '<a style="cursor:pointer;" class="mais_informacoes" onclick="modalOpen(this)"> Informações adicionais </a>');
+        $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do diretor(a)</a>');
         $this->campoOculto('managers_inep_id', null);
         $this->campoOculto('managers_role_id', null);
         $this->campoOculto('managers_access_criteria_id', null);
