@@ -81,10 +81,6 @@ class indice extends clsListagem
   function Gerar()
   {
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     // Helper para url
     $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
 

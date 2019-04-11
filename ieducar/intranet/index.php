@@ -31,6 +31,9 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsAgenda.inc.php';
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 /**
  * clsIndex class.
  *
@@ -75,9 +78,7 @@ class indice
 
   function RenderHTML()
   {
-    @session_start();
-    $id_pessoa = $_SESSION['id_pessoa'];
-    @session_write_close();
+    $id_pessoa = Session::get('id_pessoa');
 
     if ($id_pessoa) {
       $endScript = '<script>var x = new Array();' . PHP_EOL;
@@ -423,8 +424,9 @@ class indice
       return $temp;
     }
     else {
-      header('Location: logof.php?login=1');
-      die();
+        throw new HttpResponseException(
+            new RedirectResponse('logof.php?login=1')
+        );
     }
   }
   function mostraModalPesquisa($municipio, $linkPesquisa){

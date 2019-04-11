@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -59,18 +62,18 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            unset($_SESSION['reload']);
-        session_write_close();
+        Session::forget('reload');
+        Session::save();
+        Session::start();
 
         $this->titulo = "Exemplar Devolu&ccedil;&atilde;o - Detalhe";
 
 
         $this->cod_emprestimo=$_GET["cod_emprestimo"];
 
-        if(!$this->cod_emprestimo)
-            header("Location: educar_exemplar_devolucao_lst.php");
+        if(!$this->cod_emprestimo){
+            $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
+        }
 
         $obj_exemplar_emprestimo = new clsPmieducarExemplarEmprestimo();
         $lista = $obj_exemplar_emprestimo->lista($this->cod_emprestimo);
@@ -80,8 +83,7 @@ class indice extends clsDetalhe
 
             if( ! $registro )
             {
-                header( "location: educar_exemplar_devolucao_lst.php" );
-                die();
+                $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
             }
 
             if( class_exists( "clsPmieducarBiblioteca" ) )

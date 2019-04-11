@@ -69,10 +69,6 @@ class indice extends clsDetalhe
     
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-        
         $this->titulo = "Logradouro - Detalhe";
         
 
@@ -82,8 +78,7 @@ class indice extends clsDetalhe
         $lst_logradouro = $obj_logradouro->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->idlog );
         if( ! $lst_logradouro )
         {
-            header( "location: public_logradouro_lst.php" );
-            die();
+            $this->simpleRedirect('public_logradouro_lst.php');
         }
         else 
         {

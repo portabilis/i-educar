@@ -30,6 +30,9 @@
  * @author Adriano Erik Weiguert Nagasava
  *
  */
+
+use Illuminate\Support\Facades\Session;
+
 $desvio_diretorio = "";
 
 require_once ("include/clsBase.inc.php");
@@ -55,22 +58,19 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-        $id_pessoa  = $_SESSION['id_pessoa'];
         $this->nome = "form1";
 
         if ($_GET["campos"]) {
             $parametros = new clsParametrosPesquisas();
             $parametros->deserializaCampos( $_GET["campos"] );
-            $_SESSION['campos'] = $parametros->geraArrayComAtributos();
+            Session::put('campos', $parametros->geraArrayComAtributos());
 
             unset( $_GET["campos"] );
         } else {
             $parametros = new clsParametrosPesquisas();
-            $parametros->preencheAtributosComArray( $_SESSION['campos'] );
+            $parametros->preencheAtributosComArray( Session::get('campos') );
         }
 
-        @session_write_close();
         $submit = false;
 
         $this->addCabecalhos(array("Matr&iacute;cula", "CPF", "Funcion&aacute;rio"));

@@ -1665,7 +1665,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $campo_valor = $componente[3][$adicionador_indice];
             } else {
                 $adicionador_complemento_campo = '';
-                $campo_valor = $componente[3];
+                $campo_valor = $componente[3] ?? null;
             }
 
             $nome .= $adicionador_complemento_campo;
@@ -2231,7 +2231,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         reset($componente[3]);
 
-                        while (list($chave, $texto) = each($componente[3])) {
+                        foreach ($componente[3] as $chave => $texto) {
                             if (substr($texto, 0, 9) == 'optgroup:') {
                                 $opt_open = true;
                                 $retorno .= '<optgroup label="' . substr($texto, 9) . '">';

@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 header('Content-type: text/xml');
 
 require_once 'include/clsBanco.inc.php';
@@ -41,9 +43,7 @@ require_once 'App/Model/MatriculaSituacao.php';
 print '<?xml version="1.0" encoding=""?>' . "\n";
 print '<query xmlns="sugestoes">' . "\n";
 
-@session_start();
-$pessoa_logada = $_SESSION['id_pessoa'];
-@session_write_close();
+$pessoa_logada = Session::get('id_pessoa');
 
 /**
  * @param  array  $data

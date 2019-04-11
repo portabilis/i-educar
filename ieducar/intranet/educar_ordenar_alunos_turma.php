@@ -72,9 +72,7 @@ class indice extends clsCadastro{
 
   function Inicializar(){
     $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $this->cod_turma=$_GET['cod_turma'];
 
@@ -124,8 +122,7 @@ class indice extends clsCadastro{
                                                                    AND ref_cod_turma = $3', 
                                                                  array('params' => array($sequencial, $matricula, $cod_turma)));
     }
-    header("location: educar_turma_det.php?cod_turma={$cod_turma}");
-    return true;
+    $this->simpleRedirect("educar_turma_det.php?cod_turma={$cod_turma}");
   }
 
   function Excluir(){

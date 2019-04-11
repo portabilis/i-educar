@@ -196,10 +196,6 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->tab_habilitado = TRUE;
 
     $this->cod_aluno= $_GET['cod_aluno'];
@@ -1260,10 +1256,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if (!$this->cpf && $this->cpf_2) {
       $cpf = idFederal2int($this->cpf_2);
       $obj_pessoa_fisica = new clsPessoaFisica();
@@ -1682,8 +1674,7 @@ class indice extends clsCadastro
     $this->_cadastraTransporte($this->cod_aluno, $this->transporte_aluno,
       $this->transporte_responsavel, $this->pessoa_logada);
 
-    header('Location: educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
-    die();
+      $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
   }
 
   function Editar()
@@ -1693,10 +1684,6 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPmieducarAluno($this->cod_aluno, $this->ref_cod_aluno_beneficio,
       $this->ref_cod_religiao, $this->pessoa_logada, $this->pessoa_logada,
       $this->ref_idpes, $this->data_cadastro, $this->data_exclusao, 0);
@@ -1705,8 +1692,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header("Location: educar_aluno_lst.php");
-      die();
+      $this->simpleRedirect('educar_aluno_lst.php');
     }
 
     $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

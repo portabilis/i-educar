@@ -61,9 +61,7 @@ class indice extends clsCadastro
     {
     //  print_r($_POST);die;
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         //$this->ref_cod_turma=$_GET["ref_cod_turma"];
 
@@ -97,9 +95,7 @@ class indice extends clsCadastro
 
         }
 
-        header("location: educar_matricula_lst.php");;
-        die;
-
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     function Gerar()

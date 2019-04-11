@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -63,9 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_habilitacao=$_GET["cod_habilitacao"];
 
@@ -119,9 +121,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarHabilitacao( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao,null,null,1,$this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -134,9 +134,10 @@ class indice extends clsCadastro
             $auditoria->inclusao($habilitacao);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_habilitacao_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_habilitacao_lst.php')
+            );
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -146,9 +147,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $habilitacaoDetalhe = new clsPmieducarHabilitacao($this->cod_habilitacao);
         $habilitacaoDetalheAntes = $habilitacaoDetalhe->detalhe();
@@ -162,9 +161,10 @@ class indice extends clsCadastro
             $auditoria->alteracao($habilitacaoDetalheAntes, $habilitacaoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_habilitacao_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_habilitacao_lst.php')
+            );
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -174,9 +174,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, null, null, null, null, 0,$this->ref_cod_instituicao);
         $habilitacao = $obj->detalhe();
@@ -187,9 +185,10 @@ class indice extends clsCadastro
             $auditoria->exclusao($habilitacao);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_habilitacao_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_habilitacao_lst.php')
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

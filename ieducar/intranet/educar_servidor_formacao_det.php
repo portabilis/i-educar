@@ -79,10 +79,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Servidor Formacao - Detalhe';
     
 
@@ -92,8 +88,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: educar_servidor_formacao_lst.php');
-      die();
+        $this->simpleRedirect('educar_servidor_formacao_lst.php');
     }
 
     if (class_exists('clsPmieducarServidor')) {

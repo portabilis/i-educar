@@ -67,10 +67,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Reserva Vaga - Detalhe';
     
 
@@ -82,8 +78,7 @@ class indice extends clsDetalhe
     $registro = array_shift($lst_obj);
 
     if (! $registro) {
-      header('Location: educar_reserva_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_reserva_vaga_lst.php');
     }
 
     // Instituição

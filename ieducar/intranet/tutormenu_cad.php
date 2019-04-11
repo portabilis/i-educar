@@ -46,9 +46,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
         
         $this->cod_tutormenu = $_GET['cod_tutormenu'];
         
@@ -76,7 +74,7 @@ class indice extends clsCadastro
         $obj = new clsTutormenu(false, $this->nm_tutormenu);
         if($obj->cadastra())
         {
-            header("Location: menu_suspenso_lst.php");
+            $this->simpleRedirect('menu_suspenso_lst.php');
         }
         return false;
     }
@@ -87,7 +85,7 @@ class indice extends clsCadastro
 
         if($obj->edita())
         {
-            header("Location: menu_suspenso_lst.php");
+            $this->simpleRedirect('menu_suspenso_lst.php');
         }
         return false;
     }
@@ -96,7 +94,7 @@ class indice extends clsCadastro
     {
         $obj = new clsTutormenu($this->cod_tutormenu);
         $obj->exclui();
-        header("Location: menu_suspenso_lst.php");
+        $this->simpleRedirect('menu_suspenso_lst.php');
         return true;
     }
 

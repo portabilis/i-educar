@@ -62,9 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_motivo_suspensao=$_GET["cod_motivo_suspensao"];
 
@@ -118,9 +116,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
@@ -135,9 +131,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("motivo_suspensao", $this->pessoa_logada, $this->cod_motivo_suspensao);
       $auditoria->inclusao($motivo_suspensao);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_motivo_suspensao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -147,9 +141,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
@@ -164,9 +156,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("motivo_suspensao", $this->pessoa_logada, $this->cod_motivo_suspensao);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_motivo_suspensao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -176,9 +166,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
@@ -192,9 +180,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("motivo_suspensao", $this->pessoa_logada, $this->cod_motivo_suspensao);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_motivo_suspensao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
