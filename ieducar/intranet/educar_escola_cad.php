@@ -2509,18 +2509,24 @@ class indice extends clsCadastro
 
         $this->campoTabelaInicio('gestores', 'Gestores escolares',
             [
+                'INEP',
                 'Nome do(a) gestor(a)',
+                'Cargo do(a) gestor(a)',
                 'Detalhes',
-                'Gestor(a) principal',
+                'Principal',
             ],
             $rows
         );
 
+        $this->campoTexto('managers_inep_id', null, null, null, 12);
         $helperOptions = ['objectName' => 'managers_individual'];
         $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
+        $options = [
+            'resources' => SelectOptions::schoolManagerRoles(),
+            'required' => false
+        ];
+        $this->inputsHelper()->select('managers_role_id', $options);
         $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do diretor(a)</a>');
-        $this->campoOculto('managers_inep_id', null);
-        $this->campoOculto('managers_role_id', null);
         $this->campoOculto('managers_access_criteria_id', null);
         $this->campoOculto('managers_access_criteria_description', null);
         $this->campoOculto('managers_link_type_id', null);
@@ -2546,12 +2552,12 @@ class indice extends clsCadastro
     protected function makeRowManagerTable($schoolManager)
     {
         return [
+            $schoolManager->inep_id,
             $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
+            $schoolManager->role_id,
             null,
             (int)$schoolManager->chief,
             $schoolManager->individual_id,
-            $schoolManager->inep_id,
-            $schoolManager->role_id,
             $schoolManager->access_criteria_id,
             $schoolManager->access_criteria_description,
             $schoolManager->link_type_id,

@@ -684,3 +684,19 @@ $j.each($j('input[id^="managers_access_criteria_description"]'), function (index
     $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
 });
 
+$j('input[id^="managers_inep_id"]').keyup(function(){
+    var oldValue = this.value;
+
+    this.value = this.value.replace(/[^0-9\.]/g, '');
+    this.value = this.value.replace('.', '');
+
+    if (oldValue != this.value)
+        messageUtils.error('Informe apenas números.', this);
+});
+
+$j('input[id^="managers_inep_id"]').blur(function(){
+    if ($j(this).val().length != 12 && $j(this).val().length != 0) {
+        messageUtils.error("O campo: Código INEP do gestor(a) deve conter 12 dígitos.");
+        $(this).focus().select();
+    }
+});
