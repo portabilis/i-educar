@@ -671,9 +671,18 @@ class AlunoController extends ApiCoreController
     protected function loadOcorrenciasDisciplinares()
     {
         $alunoId = $this->getRequest()->aluno_id;
+        $modified = $this->getRequest()->modified;
 
         if (is_array($alunoId)) {
             $alunoId = implode(',', $alunoId);
+        }
+
+        $params = [];
+        $where = '';
+
+        if ($modified) {
+            $where = ' AND od.updated_at >= $1';
+            $params[] = $modified;
         }
 
         $sql = "
@@ -698,11 +707,12 @@ class AlunoController extends ApiCoreController
             inner join pmieducar.tipo_ocorrencia_disciplinar tod 
             on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
             where true 
+                and od.visivel_pais = 1
                 and m.ref_cod_aluno IN ({$alunoId})     
-                -- and m.ref_ref_cod_escola = $1    
+                {$where}
         ";
 
-        $ocorrencias = $this->fetchPreparedQuery($sql, []);
+        $ocorrencias = $this->fetchPreparedQuery($sql, $params);
 
         $attrsFilter = [
             'tipo',
