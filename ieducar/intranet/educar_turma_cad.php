@@ -1747,10 +1747,14 @@ $pagina->MakeAll();
         var DOM_escola_serie_hora = xml.getElementsByTagName('item');
 
         if (DOM_escola_serie_hora.length) {
-            campoHoraInicial.value = (DOM_escola_serie_hora[0].firstChild || {}).data;
-            campoHoraFinal.value = (DOM_escola_serie_hora[1].firstChild || {}).data;
-            campoHoraInicioIntervalo.value = (DOM_escola_serie_hora[2].firstChild || {}).data;
-            campoHoraFimIntervalo.value = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            horaInicial = (DOM_escola_serie_hora[0].firstChild || {}).data;
+            horaFinal = (DOM_escola_serie_hora[1].firstChild || {}).data;
+            horaInicioIntervalo = (DOM_escola_serie_hora[2].firstChild || {}).data;
+            horaFimIntervalo = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            campoHoraInicial.value = typeof(horaInicial) != 'undefined' ? horaInicial : null;
+            campoHoraFinal.value = typeof(horaFinal) != 'undefined' ? horaFinal : null;
+            campoHoraInicioIntervalo.value = typeof(horaInicioIntervalo) != 'undefined' ? horaInicioIntervalo : null;
+            campoHoraFimIntervalo.value = typeof(horaFimIntervalo) != 'undefined' ? horaFimIntervalo : null;
         }
     }
 
