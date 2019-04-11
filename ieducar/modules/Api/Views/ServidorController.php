@@ -90,6 +90,7 @@ class ServidorController extends ApiCoreController
                         pt.id,
                         pt.servidor_id,
                         pt.turma_id,
+                        pt.turno_id,
                         pt.permite_lancar_faltas_componente,
                         string_agg(ptd.componente_curricular_id::varchar, ',') as disciplinas,
                         ccae.tipo_nota,
@@ -115,6 +116,7 @@ class ServidorController extends ApiCoreController
                         pt.id,
                         pt.servidor_id,
                         pt.turma_id,
+                        pt.turno_id,
                         null as permite_lancar_faltas_componente,
                         null as disciplinas,
                         null as tipo_nota,
@@ -130,7 +132,7 @@ class ServidorController extends ApiCoreController
 
             $vinculos = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'servidor_id', 'turma_id', 'permite_lancar_faltas_componente', 'disciplinas','tipo_nota', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'servidor_id', 'turma_id', 'turno_id', 'permite_lancar_faltas_componente', 'disciplinas','tipo_nota', 'updated_at', 'deleted_at'];
 
             $vinculos = Portabilis_Array_Utils::filterSet($vinculos, $attrs);
 
