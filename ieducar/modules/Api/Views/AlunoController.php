@@ -229,7 +229,7 @@ class AlunoController extends ApiCoreController
 
     protected function canGetOcorrenciasDisciplinares()
     {
-        return $this->validatesId('aluno');
+        return $this->validatesPresenceOf('aluno');
     }
 
     // load resources
@@ -670,7 +670,7 @@ class AlunoController extends ApiCoreController
 
     protected function loadOcorrenciasDisciplinares()
     {
-        $alunoId = $this->getRequest()->aluno_id;
+        $alunoId = $this->getRequest()->aluno;
         $modified = $this->getRequest()->modified;
 
         if (is_array($alunoId)) {
