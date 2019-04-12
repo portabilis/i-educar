@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
@@ -120,8 +119,7 @@ class indice extends clsListagem
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);   
 
-    $resources_tipo = TipoVinculo::getDescriptiveValues();
-    $resources_tipo = array_replace([null => 'Selecione'], $resources_tipo);
+    $resources_tipo = SelectOptions::tiposVinculoServidor();
     $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo);
     $this->inputsHelper()->select('tipo_vinculo', $options);
 

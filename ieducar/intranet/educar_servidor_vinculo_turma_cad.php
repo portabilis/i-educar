@@ -3,7 +3,6 @@
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
-use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
@@ -146,9 +145,7 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('funcao_exercida', $options);
 
-        $resources = TipoVinculo::getDescriptiveValues();
-        $resources = array_replace([null => 'Selecione'], $resources);
-
+        $resources = SelectOptions::tiposVinculoServidor();
         $options = [
             'label' => 'Tipo do vínculo',
             'resources' => $resources,
