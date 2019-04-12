@@ -72,8 +72,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: educar_escolaridade_lst.php');
-      die();
+        $this->simpleRedirect('educar_escolaridade_lst.php');
     }
 
     if ($registro['descricao']) {

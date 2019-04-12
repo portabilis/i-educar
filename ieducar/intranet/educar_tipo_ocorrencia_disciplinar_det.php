@@ -71,8 +71,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_tipo_ocorrencia_disciplinar_lst.php" );
-            die();
+            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
 

@@ -24,13 +24,13 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
         28 => 'Estudos sociais',
         29 => 'Sociologia',
         16 => 'Informática/Computação',
-        17 => 'Discilpinas profissionalizantes',
-        20 => 'Disciplinas voltadas ao atendimento às necessidades educacionais especificas dos alunos que são alvo da ed especial e às praticas educacionais inclusivas',
-        21 => 'Disciplinas voltadas à diversidade sociocultural',
+        17 => 'Disciplinas dos Cursos Técnicos Profissionais;',
         23 => 'LIBRAS',
         25 => 'Disciplinas pedagógicas',
         26 => 'Ensino religioso',
         27 => 'Língua indígena',
+        31 => 'Língua Portuguesa como Segunda Língua',
+        32 => 'Estágio Curricular Supervisionado',
         99 => 'Outras disciplinas'
     ];
 

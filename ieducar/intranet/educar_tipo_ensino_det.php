@@ -67,10 +67,10 @@ class indice extends clsDetalhe
 
         $tmp_obj = new clsPmieducarTipoEnsino( $this->cod_tipo_ensino,null,null,null,null,null,1);
         if( !$registro = $tmp_obj->detalhe())
-            header("Location: educar_tipo_ensino_lst.php");
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
         if(!$registro["ativo"] )
-            header("Location: educar_tipo_ensino_lst.php");
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
         if( $registro["cod_tipo_ensino"] )
         {

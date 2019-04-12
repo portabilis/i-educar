@@ -833,7 +833,6 @@ class AlunoController extends ApiCoreController
                             end
                     )
                     and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
-                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
                 limit 15
             ) as alunos
             order by
@@ -1669,7 +1668,6 @@ class AlunoController extends ApiCoreController
         $documentos->sigla_uf_cert_civil = $this->getRequest()->uf_emissao_certidao_civil;
         $documentos->cartorio_cert_civil = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
         $documentos->passaporte = addslashes($this->getRequest()->passaporte);
-        $documentos->cartorio_cert_civil_inep = $this->getRequest()->cartorio_cert_civil_inep_id;
 
         // Alteração de documentos compativel com a versão anterior do cadastro,
         // onde era possivel criar uma pessoa, não informando os documentos,

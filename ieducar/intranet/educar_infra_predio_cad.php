@@ -88,8 +88,7 @@ class indice extends clsCadastro
             }
             else
             {
-                header( "Location: educar_infra_predio_lst.php" );
-                die();
+                $this->simpleRedirect('educar_infra_predio_lst.php');
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}" : "educar_infra_predio_lst.php";
@@ -137,9 +136,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($infraPredio);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_infra_predio_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_predio_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -163,9 +160,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($infraPredioDetalheAntes, $infraPredioDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_predio_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_predio_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -186,9 +181,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($infraPredio);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_predio_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_predio_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
