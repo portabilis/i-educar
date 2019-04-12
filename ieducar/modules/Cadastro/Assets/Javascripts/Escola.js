@@ -675,50 +675,39 @@ function setAutoComplete() {
 };
 
 setAutoComplete();
-addEventsManagerInputs();
 
 $j('#btn_add_tab_add_1').click(function () {
     setAutoComplete();
-    addEventsManagerInputs();
+    addEventManegerInep();
 });
 
-function addEventsManagerInputs() {
-    $j.each($j('select[id^="managers_role"]'), function (index, field) {
-        field.on('change', function () {
-            changeManagerRole(this);
-        });
-        changeManagerRole(this);
-    });
+$j.each($j('input[id^="managers_access_criteria_description"]'), function (index, field) {
+    $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
+});
 
-    $j.each($j('select[id^="managers_access_criteria_id"]'), function (index, field) {
-        field.on('change', function () {
-            changeAccessCriteria(this);
-        });
-        changeAccessCriteria(this);
-    });
+$j('input[id^="managers_inep_id"]').keyup(function(){
+    var oldValue = this.value;
 
-}
+    this.value = this.value.replace(/[^0-9\.]/g, '');
+    this.value = this.value.replace('.', '');
 
-function changeManagerRole(field) {
-    let id = $j(field).attr('id');
-    let idNum = id.match(/\[(\d+)\]/);
-    let accessCriteria = $j('select[id="managers_access_criteria_id[' + idNum[1] + ']"]');
+    if (oldValue != this.value)
+        messageUtils.error('Informe apenas números.', this);
+});
 
-    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
-        accessCriteria.prop('disabled', false);
-    } else {
-        accessCriteria.prop('disabled', true);
+addEventManegerInep();
+
+function validateManagerInep(field) {
+    if ($j(field).val().length != 12 && $j(field).val().length != 0) {
+        messageUtils.error("O campo: Código INEP do gestor(a) deve conter 12 dígitos.");
+        $j(field).addClass('error');
     }
 }
 
-function changeAccessCriteria(field) {
-    let id = $j(field).attr('id');
-    let idNum = id.match(/\[(\d+)\]/);
-    let accessCriteriaDescription = $j('input[id="managers_access_criteria_description[' + idNum[1] + ']"]');
-
-    if ($j(field).val() == SCHOOL_MANAGER_ACCESS_CRITERIA.OUTRO.toString()) {
-        accessCriteriaDescription.prop('disabled', false);
-    } else {
-        accessCriteriaDescription.prop('disabled', true);
-    }
+function addEventManegerInep() {
+    $j.each($j('input[id^="managers_inep_id"]'), function (index, field) {
+        field.on('blur', function () {
+            validateManagerInep(this);
+        });
+    });
 }

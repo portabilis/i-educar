@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -131,6 +132,14 @@ class LegacyController extends Controller
             // Para evitar encerrar a aplicação com `die` ou `exit`, é lançada
             // uma exceção do tipo `HttpResponseException` com uma `Response`
             // interna que será a resposta devolvida pela aplicação.
+
+            throw $exception;
+
+        } catch (ValidationException $exception) {
+
+            // Trata as exceções geradas pela validação do Laravel.
+            // Nesse caso a exception será lançada e o próprio framework fará o redirect
+            // e tratamento das mensagens de erro
 
             throw $exception;
 
