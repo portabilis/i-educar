@@ -609,8 +609,8 @@ class EducacensoAnaliseController extends ApiCoreController
         $ano = $this->getRequest()->ano;
 
         $educacensoRepository = new EducacensoRepository();
-        $registro10Model = new Registro20();
-        $registro20 = new Registro20Data($educacensoRepository, $registro10Model);
+        $registro20Model = new Registro20();
+        $registro20 = new Registro20Data($educacensoRepository, $registro20Model);
 
         $turmas = $registro20->getData($escola, $ano);
 

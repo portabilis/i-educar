@@ -34,13 +34,13 @@ class Registro20 extends AbstractRegistro
     }
 
     /**
-     * @param $classroomId
+     * @param $schoolClassId
      * @param $disciplineIds
      * @return array
      */
-    public function getDisciplinesWithoutTeacher($classroomId, $disciplineIds)
+    public function getDisciplinesWithoutTeacher($schoolClassId, $disciplineIds)
     {
-        return $this->repository->getDisciplinesWithoutTeacher($classroomId, $disciplineIds);
+        return $this->repository->getDisciplinesWithoutTeacher($schoolClassId, $disciplineIds);
     }
 
     /**
