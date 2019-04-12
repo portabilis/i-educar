@@ -113,8 +113,7 @@ class indice extends clsDetalhe
         }
 
         if (empty($registro)) {
-            header('location: educar_matriculas_turma_lst.php');
-            die();
+            $this->simpleRedirect('educar_matricula_lst.php');
         }
 
         $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);

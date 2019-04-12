@@ -243,8 +243,7 @@ class indice extends clsCadastro
           if ($obj_cliente_tipo->existeCliente()) {
             if ($obj_cliente_tipo->trocaTipo()) {
               $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-              header('Location: educar_definir_cliente_tipo_lst.php');
-              die();
+              $this->simpleRedirect('educar_definir_cliente_tipo_lst.php');
             }
           }
           else {
@@ -253,9 +252,8 @@ class indice extends clsCadastro
 
             if ($obj_cliente_tipo->cadastra()) {
               $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-              header('Location: educar_cliente_lst.php');
-              die();
-                        }
+              $this->simpleRedirect('educar_cliente_lst.php');
+            }
           }
         }
 
@@ -288,10 +286,7 @@ class indice extends clsCadastro
           return FALSE;
                 }
         else {
-          header('Location: educar_cliente_lst.php');
-
-          return TRUE;
-          die();
+            $this->simpleRedirect('educar_cliente_lst.php');
                 }
       }
             else {
@@ -337,8 +332,7 @@ class indice extends clsCadastro
       if ($obj_cliente_tipo->existeClienteBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
         if ($obj_cliente_tipo->trocaTipoBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
           $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: educar_cliente_lst.php');
-          die();
+          $this->simpleRedirect('educar_cliente_lst.php');
         }
       }
       else {
@@ -348,8 +342,7 @@ class indice extends clsCadastro
 
         if ($obj_cliente_tipo->cadastra()) {
           $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-          header('Location: educar_cliente_lst.php');
-          die();
+          $this->simpleRedirect('educar_cliente_lst.php');
         }
       }
     }
@@ -376,9 +369,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_cliente_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

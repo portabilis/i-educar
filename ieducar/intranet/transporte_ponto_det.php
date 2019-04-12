@@ -85,8 +85,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_ponto_lst.php');
-      die();
+        $this->simpleRedirect('transporte_ponto_lst.php');
     }
 
     $this->addDetalhe( array("Código do ponto", $cod_ponto_transporte_escolar));

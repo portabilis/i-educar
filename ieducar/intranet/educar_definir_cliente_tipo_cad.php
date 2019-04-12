@@ -171,9 +171,7 @@ class indice extends clsCadastro
                 if ( $obj_cliente_tipo->trocaTipo() )
                 {
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                    header( "Location: educar_definir_cliente_tipo_lst.php" );
-                    die();
-                    return true;
+                    $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
                 }
             }
             else
@@ -182,9 +180,7 @@ class indice extends clsCadastro
                 if ( $obj_cliente_tipo->cadastra() )
                 {
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                    header( "Location: educar_definir_cliente_tipo_lst.php" );
-                    die();
-                    return true;
+                    $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
                 }
             }
             $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -211,9 +207,7 @@ class indice extends clsCadastro
                 //$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo_original, $this->cod_cliente, null, null, null, $this->pessoa_logada, 0 );
                 if ( $obj_cliente_tipo->trocaTipo() ) {
                     $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                    header( "Location: educar_definir_cliente_tipo_lst.php" );
-                    die();
-                    return true;
+                    $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
                 }
         //  }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -248,11 +242,8 @@ class indice extends clsCadastro
         if( $obj_cliente_tipo->existe() )
         {
             if ( $obj_cliente_tipo->excluir() ) {
-
                 $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_definir_cliente_tipo_lst.php" );
-                die();
-                return true;
+                $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
             }
         }
 

@@ -23,7 +23,9 @@ require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
-    header("Location: /404.html");
+    throw new HttpResponseException(
+        new RedirectResponse('404.html')
+    );
 }
 
 
@@ -209,13 +211,15 @@ class clsBase extends clsConfig
             }
 
             if (!$permite) {
-                header("location: index.php?negado=1&err=1");
-                die("Acesso negado para este usu&acute;rio");
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         } else {
             if (!$this->VerificaPermicaoNumerico($this->processoAp)) {
-                header("location: index.php?negado=1&err=2");
-                die("Acesso negado para este usu&acute;rio");
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         }
 

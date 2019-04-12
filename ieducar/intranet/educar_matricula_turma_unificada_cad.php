@@ -121,7 +121,7 @@ class indice extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
     }

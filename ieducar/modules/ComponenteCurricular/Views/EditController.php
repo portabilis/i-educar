@@ -169,7 +169,7 @@ class EditController extends Core_Controller_Page_EditController
     public function Novo()
     {
         if ($this->_save()) {
-            header('Location: /intranet/educar_componente_curricular_lst.php');
+            $this->simpleRedirect('/intranet/educar_componente_curricular_lst.php');
         }
 
         return false;
