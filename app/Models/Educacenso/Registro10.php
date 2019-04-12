@@ -687,13 +687,13 @@ class Registro10 implements RegistroEducacenso
     {
         return !empty(array_filter(
             [
-                $this->salasGerais,
-                $this->salasFuncionais,
-                $this->banheiros,
-                $this->laboratorios,
-                $this->salasAtividades,
-                $this->dormitorios,
-                $this->areasExternas,
+                array_filter($this->salasGerais),
+                array_filter($this->salasFuncionais),
+                array_filter($this->banheiros),
+                array_filter($this->laboratorios),
+                array_filter($this->salasAtividades),
+                array_filter($this->dormitorios),
+                array_filter($this->areasExternas),
             ]
         ));
     }
