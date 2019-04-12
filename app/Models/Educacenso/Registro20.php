@@ -38,7 +38,7 @@ class Registro20 implements RegistroEducacenso
     public $horaFinal;
 
     /**
-      * @var string
+      * @var array
       */
     public $diasSemana;
 
@@ -48,7 +48,7 @@ class Registro20 implements RegistroEducacenso
     public $tipoAtendimento;
 
     /**
-      * @var string
+      * @var array
       */
     public $atividadesComplementares;
 

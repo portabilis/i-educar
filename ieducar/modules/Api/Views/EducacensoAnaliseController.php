@@ -629,7 +629,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $nomeEscola = strtoupper($turma->nomeEscola);
             $nomeTurma = strtoupper($turma->nomeTurma);
             $atividadeComplementar = ($turma->tipoAtendimento == 4); //Código 4 fixo no cadastro de turma
-            $existeAtividadeComplementar = ($turma->atividadesComplementares);
+            $existeAtividadeComplementar = !empty($turma->atividadesComplementares);
 
             $chaveTurma = "{$nomeTurma}|{$turma->tipoMediacaoDidaticoPedagogico}|{$turma->horaInicial}|{$turma->horaFinal}|{$turma->tipoAtendimento}|{$turma->localFuncionamentoDiferenciado}|{$turma->modalidadeCurso}|{$turma->etapaEducacenso}";
 
@@ -705,7 +705,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$turma->diasSemana && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
+            if (empty($turma->diasSemana) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial, portanto é necessário informar os dias da semana em que ela funciona.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Campo: Dias da semana)',

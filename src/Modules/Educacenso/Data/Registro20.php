@@ -61,6 +61,8 @@ class Registro20 extends AbstractRegistro
     private function processData($data)
     {
         $data->localFuncionamento = Portabilis_Utils_Database::pgArrayToArray($data->localFuncionamento);
+        $data->diasSemana = Portabilis_Utils_Database::pgArrayToArray($data->diasSemana);
+        $data->atividadesComplementares = Portabilis_Utils_Database::pgArrayToArray($data->atividadesComplementares);
 
         return $data;
     }
