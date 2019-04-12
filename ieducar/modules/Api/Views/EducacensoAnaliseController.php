@@ -313,7 +313,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->predioEscolar() && empty($escola->predioCompartilhadoOutraEscola)) {
+        if ($escola->predioEscolar() && is_null($escola->predioCompartilhadoOutraEscola)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que o local de funcionamento da escola é em um prédio escolar, portanto é necessário informar se a escola compartilha o prédio com outra escola.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Prédio compartilhado com outra escola)',
@@ -406,7 +406,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if ($escola->tratamentoLixoInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção do tratamento do lixo/resíduos que a escola realiza foi informada.",
+                'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o tratamento do lixo/resíduos foi preenchido incorretamente.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Tratamento do lixo/resíduos que a escola realiza)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
@@ -442,8 +442,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if ($escola->recursosAcessibilidadeInexistenteEOutrosCamposPreenchidos()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção do tratamento do lixo/resíduos que a escola realiza foi informada.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Tratamento do lixo/resíduos que a escola realiza)',
+                'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o recurso de acessibilidade foi preenchido incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Recursos de acessibilidade)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
@@ -487,14 +487,14 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if ($escola->usaInternet() && empty($escola->equipamentosAcessoInternet)) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o acesso à internet foi preenchido incorretamente.",
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção de equipamentos que os aluno(a)s usam para acessar a internet da escola foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Acesso à internet)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
         }
 
-        if ($escola->usaInternet() && !is_null($escola->acessoInternet)) {
+        if ($escola->usaInternet() && is_null($escola->acessoInternet)) {
             $mensagem[] = [
                 'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a internet banda larga foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Possui internet banda larga)',
@@ -548,7 +548,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->educacaoIndigena && !$escola->linguaMinistrada) {
+        if (!is_null($escola->educacaoIndigena) && !$escola->linguaMinistrada) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a língua em que o ensino é ministrado não foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
