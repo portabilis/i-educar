@@ -4,6 +4,7 @@ use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -434,6 +435,10 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_cod_serie_mult_', $this->ref_ref_cod_serie_mult);
 
+        $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
+        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
+        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
         $this->campoQuebra2();
 
         // hora
@@ -632,12 +637,6 @@ class indice extends clsCadastro
             'options' => ['values' => $this->cod_curso_profissional,
                 'all_values' => $cursos]];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
-        $resources = array_replace([null => 'Selecione'], $resources);
-
-        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
-        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
 
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
@@ -888,6 +887,10 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+        $turmaDetalhe = $turmaDetalhe->detalhe();
+        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+
         if (!$this->verificaModulos()) {
             return false;
         }
@@ -900,8 +903,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
-        $turmaDetalhe = $turmaDetalhe->detalhe();
 
         if (is_null($this->ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $turmaDetalhe['ref_cod_instituicao'];
@@ -1094,7 +1095,7 @@ class indice extends clsCadastro
         }
 
         if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
-            !in_array($this->etapa_educacenso, [1, 2, 3, 56])
+            in_array($this->etapa_educacenso, [1, 2, 3, 56])
         ) {
             $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
             $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
@@ -1182,6 +1183,7 @@ class indice extends clsCadastro
         $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $objTurma->dias_semana = $this->dias_semana;
         $objTurma->atividades_complementares = $this->atividades_complementares;
+        $objTurma->local_funcionamento_diferenciado = $this->local_funcionamento_diferenciado;
 
         return $objTurma;
     }

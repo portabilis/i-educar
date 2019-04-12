@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
@@ -774,7 +776,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->possui_dependencias)) {
+            if (is_numeric($this->possui_dependencias)) {
                 $campos .= "{$gruda}possui_dependencias";
                 $valores .= "{$gruda}'{$this->possui_dependencias}'";
                 $gruda = ', ';
@@ -1038,7 +1040,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->exame_selecao_ingresso)) {
+            if (is_numeric($this->exame_selecao_ingresso)) {
                 $campos .= "{$gruda}exame_selecao_ingresso";
                 $valores .= "{$gruda}'{$this->exame_selecao_ingresso}'";
                 $gruda = ', ';
@@ -1050,7 +1052,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->projeto_politico_pedagogico)) {
+            if (is_numeric($this->projeto_politico_pedagogico)) {
                 $campos .= "{$gruda}projeto_politico_pedagogico";
                 $valores .= "{$gruda}'{$this->projeto_politico_pedagogico}'";
                 $gruda = ', ';
@@ -2053,7 +2055,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->exame_selecao_ingresso)) {
+            if (is_numeric($this->exame_selecao_ingresso)) {
                 $set .= "{$gruda}exame_selecao_ingresso = '{$this->exame_selecao_ingresso}'";
                 $gruda = ', ';
             } elseif ($this->exame_selecao_ingresso !== false) {
@@ -2069,7 +2071,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->projeto_politico_pedagogico)) {
+            if (is_numeric($this->projeto_politico_pedagogico)) {
                 $set .= "{$gruda}projeto_politico_pedagogico = '{$this->projeto_politico_pedagogico}'";
                 $gruda = ', ';
             } elseif ($this->projeto_politico_pedagogico !== false) {
