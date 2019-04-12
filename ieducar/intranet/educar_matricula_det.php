@@ -69,8 +69,7 @@ class indice extends clsDetalhe
         }
 
         if (!$registro) {
-            header('Location: educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
-            die();
+            $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
         }
 
         $verificaMatriculaUltimoAno = $obj_matricula->verificaMatriculaUltimoAno($registro['ref_cod_aluno'], $registro['cod_matricula']);

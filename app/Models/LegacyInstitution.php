@@ -2,9 +2,15 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * LegacyInstitution
+ *
+ * @property DateTime $relocation_date Data base para remanejamento
+ */
 class LegacyInstitution extends Model
 {
     /**
@@ -26,6 +32,13 @@ class LegacyInstitution extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $dates = [
+        'data_base_remanejamento'
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
@@ -36,5 +49,18 @@ class LegacyInstitution extends Model
     public function generalConfiguration(): HasOne
     {
         return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->nm_instituicao;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getRelocationDateAttribute()
+    {
+        return $this->data_base_remanejamento;
     }
 }

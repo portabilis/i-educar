@@ -50,7 +50,7 @@ class indice extends clsCadastro
     $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
     if ($nivel != 1) {
-      header('Location: educar_index.php');
+      $this->simpleRedirect('educar_index.php');
     }
 
     $obj_permissoes->permissao_cadastra(999873, $this->pessoa_logada, 7,
@@ -315,9 +315,7 @@ class indice extends clsCadastro
       Cache::invalidateByTags(['configurations']);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header( "Location: index.php" );
-      die();
-      return true;
+      $this->simpleRedirect('index.php');
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

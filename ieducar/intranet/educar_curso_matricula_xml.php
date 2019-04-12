@@ -102,7 +102,7 @@
                     $cursos_matriculado[] = $curso;
                 }
             }
-//          echo "<pre>"; print_r($cursos_matriculado); die();
+
             if (is_array($cursos_matriculado))
             {
                 $sql = "

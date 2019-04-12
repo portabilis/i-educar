@@ -86,8 +86,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("configuracoes_gerais", $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header("Location: index.php");
-      die();
+      $this->simpleRedirect('index.php');
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

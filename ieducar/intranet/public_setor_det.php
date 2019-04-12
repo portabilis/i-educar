@@ -81,8 +81,7 @@ class indice extends clsDetalhe
     $det_setor_bai = $tmp_obj->detalhe();
 
     if (! $det_setor_bai) {
-      header('Location: public_setor_lst.php');
-      die();
+        $this->simpleRedirect('public_setor_lst.php');
     }
     else {
       $registro = $det_setor_bai;

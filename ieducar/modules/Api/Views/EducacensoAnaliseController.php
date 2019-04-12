@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Educacenso\Registro00;
-use App\Services\EducacensoRepository;
+use App\Models\School;
+use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
@@ -20,6 +21,17 @@ require_once 'lib/App/Model/Educacenso.php';
  */
 class EducacensoAnaliseController extends ApiCoreController
 {
+    private function schoolIsActive()
+    {
+        $schoolId = $this->getRequest()->school_id;
+        $school = School::findOrFail($schoolId);
+        $active = !in_array($school->situacao_funcionamento, ['2', '3']);
+
+        return [
+            'active' => $active
+        ];
+    }
+
     protected function analisaEducacensoRegistro00()
     {
         $escolaId = $this->getRequest()->escola;
@@ -2005,6 +2017,8 @@ class EducacensoAnaliseController extends ApiCoreController
             $this->appendResponse($this->analisaEducacensoRegistro90());
         } elseif ($this->isRequestFor('get', 'registro-91')) {
             $this->appendResponse($this->analisaEducacensoRegistro91());
+        }  elseif ($this->isRequestFor('get', 'school-is-active')) {
+            $this->appendResponse($this->schoolIsActive());
         } else {
             $this->notImplementedOperationError();
         }

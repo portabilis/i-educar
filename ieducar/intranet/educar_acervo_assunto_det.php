@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -70,8 +71,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_acervo_assunto_lst.php" );
-            die();
+            $this->simpleRedirect('educar_acervo_assunto_lst.php');
         }
 
         if( $registro["nm_assunto"] )

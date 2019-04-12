@@ -25,6 +25,8 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
 require_once ("include/clsBase.inc.php");
@@ -83,8 +85,9 @@ class indice
         // Checa se a pessoa possui permissao (daqui por diante comeca a visualizar, editar, excluir, etc.)
         if( ! $objAgenda->permissao_agenda() )
         {
-            header( "location: " . $this->scriptNome );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse( $this->scriptNome)
+            );
         }
 
         if( isset( $_REQUEST["time"] ) )

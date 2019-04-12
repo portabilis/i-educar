@@ -283,9 +283,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_exemplar_devolucao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

@@ -101,7 +101,6 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->inclusao($acervo_colecao);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            //header( "Location: educar_acervo_colecao_lst.php" );
             echo "<script>
                     parent.document.getElementById('colecao').value = '$cadastrou';
                     parent.document.getElementById('ref_cod_acervo_colecao').disabled = false;

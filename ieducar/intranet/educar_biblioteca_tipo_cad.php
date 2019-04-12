@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
@@ -49,11 +47,7 @@ class indice extends clsCadastro
 
         Session::put('biblioteca.tipo_biblioteca', $this->tipo_biblioteca);
 
-        throw new HttpResponseException(
-            new RedirectResponse(
-                URL::to('intranet/educar_biblioteca_cad.php')
-            )
-        );
+        $this->simpleRedirect('educar_biblioteca_cad.php');
     }
 }
 

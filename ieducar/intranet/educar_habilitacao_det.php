@@ -71,8 +71,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_habilitacao_lst.php" );
-            die();
+            $this->simpleRedirect('educar_habilitacao_lst.php');
         }
         if( $registro["ref_cod_instituicao"] )
         {

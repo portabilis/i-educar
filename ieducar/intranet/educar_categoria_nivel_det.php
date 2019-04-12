@@ -76,8 +76,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_categoria_nivel_lst.php" );
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
 

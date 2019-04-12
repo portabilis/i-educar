@@ -1,7 +1,9 @@
 <?php
 
-use App\Services\SchoolClassService;
 use App\Services\iDiarioService;
+use App\Services\SchoolClassService;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -902,7 +904,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
-        header('Location: educar_turma_lst.php');
+        $this->simpleRedirect('educar_turma_lst.php');
     }
 
     public function Editar()
@@ -961,9 +963,11 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->mensagem .= 'Edição efetuada com sucesso.';
-        header('Location: educar_turma_lst.php');
-        die();
+        $this->message = 'Edição efetuada com sucesso.';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_turma_lst.php')
+        );
     }
 
     protected function validaCamposHorario()
@@ -1345,9 +1349,11 @@ class indice extends clsCadastro
                 $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
                 $auditoria->exclusao($turma);
 
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-                header('Location: educar_turma_lst.php');
-                die();
+                $this->mensagem .= 'Exclusão efetuada com sucesso.';
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_turma_lst.php')
+                );
             } else {
                 $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
                 echo "<!--\nErro ao excluir clsPmieducarTurma\nvalores obrigatorios\nif( is_numeric( $this->cod_turma ) && is_numeric( $this->pessoa_logada ) )\n-->";
