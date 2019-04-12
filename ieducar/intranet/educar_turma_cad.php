@@ -3,6 +3,7 @@
 use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
+use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -433,8 +434,7 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_cod_serie_mult_', $this->ref_ref_cod_serie_mult);
 
-        $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
-        $resources = array_replace([null => 'Selecione'], $resources);
+        $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
         $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
         $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
 
