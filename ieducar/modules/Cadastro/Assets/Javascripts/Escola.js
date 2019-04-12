@@ -678,6 +678,7 @@ setAutoComplete();
 
 $j('#btn_add_tab_add_1').click(function () {
     setAutoComplete();
+    addEventManegerInep();
 });
 
 $j.each($j('input[id^="managers_access_criteria_description"]'), function (index, field) {
@@ -694,9 +695,19 @@ $j('input[id^="managers_inep_id"]').keyup(function(){
         messageUtils.error('Informe apenas números.', this);
 });
 
-$j('input[id^="managers_inep_id"]').blur(function(){
-    if ($j(this).val().length != 12 && $j(this).val().length != 0) {
+addEventManegerInep();
+
+function validateManagerInep(field) {
+    if ($j(field).val().length != 12 && $j(field).val().length != 0) {
         messageUtils.error("O campo: Código INEP do gestor(a) deve conter 12 dígitos.");
-        $(this).focus().select();
+        $j(field).addClass('error');
     }
-});
+}
+
+function addEventManegerInep() {
+    $j.each($j('input[id^="managers_inep_id"]'), function (index, field) {
+        field.on('blur', function () {
+            validateManagerInep(this);
+        });
+    });
+}
