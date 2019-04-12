@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
@@ -115,7 +117,12 @@ class clsPmieducarEscola
     public $atendimento_aee;
     public $atividade_complementar;
     public $fundamental_ciclo;
-    public $organizacao_ensino;
+    public $organizacao_ensino = false;
+    public $instrumentos_pedagogicos = false;
+    public $orgaos_colegiados = false;
+    public $exame_selecao_ingresso = false;
+    public $reserva_vagas_cotas = false;
+    public $projeto_politico_pedagogico = false;
     public $localizacao_diferenciada;
     public $materiais_didaticos_especificos;
     public $educacao_indigena;
@@ -267,12 +274,12 @@ class clsPmieducarEscola
           e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio,
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia,
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
-          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4, 
-          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som, 
+          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.organizacao_ensino, e.instrumentos_pedagogicos, e.orgaos_colegiados, e.exame_selecao_ingresso, e.reserva_vagas_cotas, e.projeto_politico_pedagogico, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.codigo_inep_escola_compartilhada2, e.codigo_inep_escola_compartilhada3, e.codigo_inep_escola_compartilhada4,
+          e.codigo_inep_escola_compartilhada5, e.codigo_inep_escola_compartilhada6, e.equipamentos, e.uso_internet, e.rede_local, e.equipamentos_acesso_internet, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, e.retroprojetores, e.impressoras, e.aparelhos_de_som,
           e.quantidade_computadores_alunos_mesa, e.quantidade_computadores_alunos_portateis, e.quantidade_computadores_alunos_tablets,
-          e.lousas_digitais, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao, 
-          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, 
+          e.lousas_digitais, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.ato_criacao,
+          e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal,
           e.email_gestor, e.orgao_vinculado_escola, e.esfera_administrativa, e.unidade_vinculada_outra_instituicao, e.inep_escola_sede, e.codigo_ies,
           e.qtd_secretario_escolar,
           e.qtd_auxiliar_administrativo,
@@ -769,7 +776,7 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_string($this->possui_dependencias)) {
+            if (is_numeric($this->possui_dependencias)) {
                 $campos .= "{$gruda}possui_dependencias";
                 $valores .= "{$gruda}'{$this->possui_dependencias}'";
                 $gruda = ', ';
@@ -1021,6 +1028,36 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
+            if (is_string($this->instrumentos_pedagogicos)) {
+                $campos .= "{$gruda}instrumentos_pedagogicos";
+                $valores .= "{$gruda}'{{$this->instrumentos_pedagogicos}}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->orgaos_colegiados)) {
+                $campos .= "{$gruda}orgaos_colegiados";
+                $valores .= "{$gruda}'{{$this->orgaos_colegiados}}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->exame_selecao_ingresso)) {
+                $campos .= "{$gruda}exame_selecao_ingresso";
+                $valores .= "{$gruda}'{$this->exame_selecao_ingresso}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->reserva_vagas_cotas)) {
+                $campos .= "{$gruda}reserva_vagas_cotas";
+                $valores .= "{$gruda}'{{$this->reserva_vagas_cotas}}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->projeto_politico_pedagogico)) {
+                $campos .= "{$gruda}projeto_politico_pedagogico";
+                $valores .= "{$gruda}'{$this->projeto_politico_pedagogico}'";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->localizacao_diferenciada)) {
                 $campos .= "{$gruda}localizacao_diferenciada";
                 $valores .= "{$gruda}'{$this->localizacao_diferenciada}'";
@@ -1059,7 +1096,7 @@ class clsPmieducarEscola
 
             if (is_numeric($this->codigo_lingua_indigena)) {
                 $campos .= "{$gruda}codigo_lingua_indigena";
-                $valores .= "{$gruda}'{$this->codigo_lingua_indigena}'";
+                $valores .= "{$gruda}'{{$this->codigo_lingua_indigena}}'";
                 $gruda = ', ';
             }
 
@@ -1332,7 +1369,7 @@ class clsPmieducarEscola
                 $valores .= "{$gruda}$this->qtd_psicologo";
                 $gruda = ', ';
             }
-            
+
             if (is_numeric($this->qtd_fonoaudiologo)) {
                 $campos .= "{$gruda}qtd_fonoaudiologo";
                 $valores .= "{$gruda}$this->qtd_fonoaudiologo";
@@ -2002,6 +2039,46 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
+            if (is_string($this->instrumentos_pedagogicos)) {
+                $set .= "{$gruda}instrumentos_pedagogicos = '{{$this->instrumentos_pedagogicos}}'";
+                $gruda = ', ';
+            } elseif ($this->instrumentos_pedagogicos !== false) {
+                $set .= "{$gruda}instrumentos_pedagogicos = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->orgaos_colegiados)) {
+                $set .= "{$gruda}orgaos_colegiados = '{{$this->orgaos_colegiados}}'";
+                $gruda = ', ';
+            } elseif ($this->orgaos_colegiados !== false) {
+                $set .= "{$gruda}orgaos_colegiados = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->exame_selecao_ingresso)) {
+                $set .= "{$gruda}exame_selecao_ingresso = '{$this->exame_selecao_ingresso}'";
+                $gruda = ', ';
+            } elseif ($this->exame_selecao_ingresso !== false) {
+                $set .= "{$gruda}exame_selecao_ingresso = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->reserva_vagas_cotas)) {
+                $set .= "{$gruda}reserva_vagas_cotas = '{{$this->reserva_vagas_cotas}}'";
+                $gruda = ', ';
+            } elseif ($this->reserva_vagas_cotas !== false) {
+                $set .= "{$gruda}reserva_vagas_cotas = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->projeto_politico_pedagogico)) {
+                $set .= "{$gruda}projeto_politico_pedagogico = '{$this->projeto_politico_pedagogico}'";
+                $gruda = ', ';
+            } elseif ($this->projeto_politico_pedagogico !== false) {
+                $set .= "{$gruda}projeto_politico_pedagogico = NULL";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->localizacao_diferenciada)) {
                 $set .= "{$gruda}localizacao_diferenciada = '{$this->localizacao_diferenciada}'";
                 $gruda = ', ';
@@ -2038,10 +2115,10 @@ class clsPmieducarEscola
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->codigo_lingua_indigena)) {
-                $set .= "{$gruda}codigo_lingua_indigena = '{$this->codigo_lingua_indigena}'";
+            if (is_string($this->codigo_lingua_indigena)) {
+                $set .= "{$gruda}codigo_lingua_indigena = '{{$this->codigo_lingua_indigena}}'";
                 $gruda = ', ';
-            } else {
+            } elseif ($this->codigo_lingua_indigena !== false) {
                 $set .= "{$gruda}codigo_lingua_indigena = NULL";
                 $gruda = ', ';
             }
@@ -2500,9 +2577,9 @@ class clsPmieducarEscola
             }
         }
 
-        if (is_numeric($cod_usuario)) {
-            $permissao = new clsPermissoes();
-            $nivel = $permissao->nivel_acesso($_SESSION['id_pessoa']);
+    if (is_numeric($cod_usuario)) {
+      $permissao = new clsPermissoes();
+      $nivel = $permissao->nivel_acesso(Session::get('id_pessoa'));
 
             if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
                 $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {

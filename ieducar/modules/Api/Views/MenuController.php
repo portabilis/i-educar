@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -9,9 +11,7 @@ class MenuController extends ApiCoreController
 
     private function getCurrentUser()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
 
         return $this->pessoa_logada;
     }

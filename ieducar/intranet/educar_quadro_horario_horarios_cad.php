@@ -117,9 +117,7 @@ class indice extends clsCadastro
     $this->identificador          = $_GET['identificador'];
     $this->ano_alocacao           = $_GET['ano'];
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj_permissoes = new clsPermissoes();
 
@@ -499,9 +497,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(641, $this->pessoa_logada, 7,
@@ -600,9 +596,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(641, $this->pessoa_logada, 7,
@@ -730,9 +724,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7,

@@ -30,6 +30,8 @@
 * Criado em 17/07/2006 09:18 pelo gerador automatico de classes
 */
 
+use Illuminate\Support\Facades\Session;
+
 require_once( "include/pmieducar/geral.inc.php" );
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
@@ -125,9 +127,7 @@ class clsPmieducarExemplar
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}exemplar";
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial, e.data_baixa_exemplar";
 
