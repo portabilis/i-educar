@@ -26,7 +26,8 @@ class RegraController extends ApiCoreController
 
     protected function canGetRegraSerie()
     {
-        return $this->validatesPresenceOf('serie_id');
+        return $this->validatesPresenceOf('serie_id') &&
+        $this->validatesPresenceOf('ano_letivo');
     }
 
     protected function getTabelasDeArredondamento()
@@ -177,18 +178,17 @@ class RegraController extends ApiCoreController
     public function getRegraSerie()
     {
         $serieId = $this->getRequest()->serie_id;
+        $anoLetivo = $this->getRequest()->ano_letivo;
 
-        // TODO enviar também o ano para que possa ser puxada a regra correta da série
-        // em `modules.regra_avaliacao_serie_ano`.
-        // Não recomendável usar este end-point até que ocorra esta correção.
         if ($this->canGetRegraSerie()) {
-            $sql = 'SELECT *
-                FROM modules.regra_avaliacao
-               WHERE regra_avaliacao.id = (SELECT regra_avaliacao_id
-                                             FROM pmieducar.serie
-                                            WHERE serie.cod_serie = $1) LIMIT 1';
+            $sql = 'SELECT ra.*
+                      FROM modules.regra_avaliacao AS ra
+                INNER JOIN modules.regra_avaliacao_serie_ano AS rasa ON rasa.regra_avaliacao_id = ra.id
+                     WHERE rasa.serie_id = $1
+                       AND rasa.ano_letivo = $2
+                     LIMIT 1';
 
-            $regra = $this->fetchPreparedQuery($sql, ['params' => $serieId]);
+            $regra = $this->fetchPreparedQuery($sql, [$serieId, $anoLetivo]);
 
             $atributos = [
                 'id',
