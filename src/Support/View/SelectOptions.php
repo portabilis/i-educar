@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\View;
 
+use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Transport\Period;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
@@ -85,5 +86,10 @@ class SelectOptions
     public static function locaisFuncionamentoEscola()
     {
         return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
+    }
+
+    public static function tiposMediacaoDidaticoPedagogico()
+    {
+        return self::getDefaultOption() + App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
     }
 }
