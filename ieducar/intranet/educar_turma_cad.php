@@ -887,6 +887,10 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+        $turmaDetalhe = $turmaDetalhe->detalhe();
+        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+
         if (!$this->verificaModulos()) {
             return false;
         }
@@ -899,8 +903,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
-        $turmaDetalhe = $turmaDetalhe->detalhe();
 
         if (is_null($this->ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $turmaDetalhe['ref_cod_instituicao'];
@@ -1089,7 +1091,7 @@ class indice extends clsCadastro
         }
 
         if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
-            !in_array($this->etapa_educacenso, [1, 2, 3, 56])
+            in_array($this->etapa_educacenso, [1, 2, 3, 56])
         ) {
             $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
             $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
