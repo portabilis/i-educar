@@ -1674,8 +1674,7 @@ class indice extends clsCadastro
     $this->_cadastraTransporte($this->cod_aluno, $this->transporte_aluno,
       $this->transporte_responsavel, $this->pessoa_logada);
 
-    header('Location: educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
-    die();
+      $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->cod_aluno);
   }
 
   function Editar()
@@ -1693,8 +1692,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header("Location: educar_aluno_lst.php");
-      die();
+      $this->simpleRedirect('educar_aluno_lst.php');
     }
 
     $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

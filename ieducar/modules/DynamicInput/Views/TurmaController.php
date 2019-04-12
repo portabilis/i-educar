@@ -94,7 +94,7 @@ $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'S
         }
 
       }
-      // echo "<pre>";print_r($ano);die();
+
       // caso no ano letivo esteja definido para filtrar turmas por ano,
       // somente retorna as turmas do ano letivo.
 

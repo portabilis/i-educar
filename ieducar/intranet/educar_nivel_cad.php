@@ -116,8 +116,7 @@ class indice extends clsCadastro
         }
         else
         {
-            header("location:educar_categoria_nivel_lst.php");
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
         $this->url_cancelar = "educar_categoria_nivel_det.php?cod_categoria_nivel={$this->cod_nivel}";
@@ -198,10 +197,7 @@ class indice extends clsCadastro
                 $obj->desativaTodos($niveis);
             }
 
-            header("location:educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
-            die();
-
-            return true;
+            $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
 
@@ -230,9 +226,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header("location:educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
-            die();
-            return true;
+            $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

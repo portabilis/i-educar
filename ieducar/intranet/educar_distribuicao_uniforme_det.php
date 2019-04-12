@@ -40,8 +40,7 @@ class indice extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
-            header("location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-            die();
+            $this->simpleRedirect("educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
         $obj_aluno = new clsPmieducarAluno();

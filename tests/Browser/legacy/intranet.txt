@@ -301,8 +301,6 @@ educar_matricula_turma_det.php
 educar_matricula_turma_lst.php
 educar_matricula_turma_unificada_cad.php
 educar_matricula_turno_cad.php
-educar_matriculas_turma_cad.php
-educar_matriculas_turma_det.php
 educar_matriculas_turma_lst.php
 educar_modulo_cad.php
 educar_modulo_det.php

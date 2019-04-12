@@ -1,19 +1,9 @@
-TABLE, BODY
-{
-	font-family: arial, heveltica, sans, verdana;
-	font-size: 12px;
-	color: #000000;
-}
-TD.claro
-{
-	background-color: #FFFFFF;
-	padding: 5px;
-}
 TD.escuro
 {
 	background-color: #f5f9fd;
 	padding: 5px;
 }
+
 .titulo
 {
 	font-family: arial, heveltica, sans, verdana;
@@ -21,6 +11,7 @@ TD.escuro
 	font-weight: bold;
 	color: #708694;
 }
+
 .data1
 {
 	font-family: arial, heveltica, sans, verdana;
@@ -118,44 +109,4 @@ INPUT.agenda_rap_botao
 	top:30px;
 	overflow:auto;
 	width:250px;
-}
-
-/* 
-	CALENDARIO
-*/
-SELECT.calendario{
-	font-size: 9px;
-}
-TABLE.calendario{
-	font-size: 9px;
-	border: 2px solid;
-	border-color: black;
-	text-align: center;
-}
-.calendario_dias{
-	border: 1px solid;
-}
-.calendario_dia_sel{
-	border: 1px solid;
-	border-color: #FF2211;
-	background-color: #FFFFFF;
-}
-.calendario_dias_t{
-	border: 1px solid;
-	font-weight: bold;
-	color: white;
-	background-color: black;
-}
-a.calendario, a.calendario:hover, a.calendario:visited{
-	color: black;
-	text-decoration: none;
-}
-.calendario_outromes{
-	border: 1px solid;
-	background-color: #BABABA;
-}
-.calendario_dias_sobre{
-	border: 1px solid;
-	background-color: #22AAFF;
-	
 }

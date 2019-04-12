@@ -329,8 +329,7 @@ class indice extends clsCadastro
 
         if ($obj->cadastra()) {
           $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
       elseif ( $this->tipo == 'T' || $this->tipo == 'O' ) {
@@ -339,8 +338,7 @@ class indice extends clsCadastro
 
         if ($obj->cadastra()) {
           $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
     }
@@ -378,8 +376,7 @@ class indice extends clsCadastro
 
         if ($editou_cur) {
           $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
       else {
@@ -391,8 +388,7 @@ class indice extends clsCadastro
 
         if ($editou_tit) {
           $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
     }
@@ -421,8 +417,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-      header('Location:' . $backUrl);
-      die();
+      $this->simpleRedirect($backUrl);
     }
 
     $this->mensagem = 'Exclusão não realizada.<br>';

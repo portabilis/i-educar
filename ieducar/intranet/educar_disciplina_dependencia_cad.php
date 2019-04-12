@@ -97,15 +97,13 @@ class indice extends clsCadastro
             $det_matricula = $obj_matricula->detalhe();
 
             if (!$det_matricula) {
-                header('Location: educar_matricula_lst.php');
-                die();
+                $this->simpleRedirect("educar_matricula_lst.php");
             }
 
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
         } else {
-            header('Location: educar_matricula_lst.php');
-            die();
+            $this->simpleRedirect("educar_matricula_lst.php");
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
@@ -313,15 +311,13 @@ SQL;
                 $this->observacao);
 
             $obj->edita();
-            header('Location: educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
+            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-            header('Location: educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
+            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
         $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
@@ -344,8 +340,7 @@ SQL;
         $editou = $obj->edita();
         if ($editou) {
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
-            header('Location: educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
+            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
         $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
@@ -369,8 +364,7 @@ SQL;
 
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-            header('Location: educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-            die();
+            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
         $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';

@@ -107,9 +107,9 @@ class EducacensoRepository
 
             FROM pmieducar.escola e
             JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
-            INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
             INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
             INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
+            LEFT JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
             LEFT JOIN cadastro.endereco_externo ee ON (ee.idpes = p.idpes)
             LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
             LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(ep.idbai, (SELECT b.idbai

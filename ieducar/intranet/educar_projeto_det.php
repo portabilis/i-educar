@@ -64,8 +64,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_projeto_lst.php" );
-            die();
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         if( $registro["cod_projeto"] )

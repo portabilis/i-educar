@@ -456,9 +456,7 @@ class indice extends clsCadastro
                 }
             }
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_exemplar_emprestimo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
         echo "<script> alert('É necessário adicionar pelo menos 1 Tombo!') </script>";
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";

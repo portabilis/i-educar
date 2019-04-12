@@ -118,8 +118,6 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_nivel_ensino_lst.php" );
             echo "<script>
                         if (parent.document.getElementById('ref_cod_nivel_ensino').disabled)
                             parent.document.getElementById('ref_cod_nivel_ensino').options[0] = new Option('Selecione um nível de ensino', '', false, false);

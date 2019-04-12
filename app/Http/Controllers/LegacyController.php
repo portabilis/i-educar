@@ -154,8 +154,6 @@ class LegacyController extends Controller
             );
         }
 
-        app(ExceptionHandler::class)->report($exception);
-
         if (config('app.debug')) {
             throw $exception;
         }
@@ -280,5 +278,18 @@ class LegacyController extends Controller
     public function modules($uri)
     {
         return $this->requireFileFromLegacy('modules/' . $uri);
+    }
+
+    /**
+     * Load module route file and generate a response for API.
+     *
+     * @return Response
+     *
+     * @throws HttpResponseException
+     * @throws Exception
+     */
+    public function api()
+    {
+        return $this->requireFileFromLegacy('module/index.php');
     }
 }
