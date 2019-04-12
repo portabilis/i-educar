@@ -1179,6 +1179,7 @@ class indice extends clsCadastro
         $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $objTurma->dias_semana = $this->dias_semana;
         $objTurma->atividades_complementares = $this->atividades_complementares;
+        $objTurma->local_funcionamento_diferenciado = $this->local_funcionamento_diferenciado;
 
         return $objTurma;
     }
