@@ -4,6 +4,7 @@ use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
+use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -137,9 +138,7 @@ class indice extends clsCadastro
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
 
-        $resources = FuncaoExercida::getDescriptiveValues();
-        $resources = array_replace([null => 'Selecione'], $resources);
-
+        $resources = SelectOptions::funcoesExercidaServidor();
         $options = [
             'label' => 'Função exercida',
             'resources' => $resources,

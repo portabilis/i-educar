@@ -28,7 +28,7 @@
  * @version   $Id$
  */
 
-use iEducar\Modules\Servidores\Model\FuncaoExercida;
+use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
@@ -115,9 +115,7 @@ class indice extends clsListagem
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao','escola','curso','serie', 'turma'), array('required' => false));
 
-    $resources_funcao = FuncaoExercida::getDescriptiveValues();
-    $resources_funcao = array_replace([null => 'Selecione'], $resources_funcao);
-
+    $resources_funcao = SelectOptions::funcoesExercidaServidor();
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);   
 
