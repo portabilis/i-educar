@@ -483,7 +483,6 @@ class Registro10 implements RegistroEducacenso
      */
     public $redeLocal;
 
-
     /**
      * @var int
      */
@@ -563,6 +562,11 @@ class Registro10 implements RegistroEducacenso
      * @var array
      */
     public $reservaVagasCotas;
+
+    /**
+     * @var int
+     */
+    public $alimentacaoEscolarAlunos;
 
     /**
      * @return bool
