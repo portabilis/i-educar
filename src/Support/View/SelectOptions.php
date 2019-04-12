@@ -4,6 +4,7 @@ namespace iEducar\Support\View;
 
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
+use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Modules\Transport\Period;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -94,12 +95,22 @@ class SelectOptions
     }
 
     /**
-     * Retorna as opções disponíveis referentes aos locais de funcionamento da escola
+     * Retorna as opções disponíveis referentes às funções exercidas do servidor
      *
      * @return array
      */
     public static function funcoesExercidaServidor()
     {
         return self::getDefaultOption() + FuncaoExercida::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis referentes aos tipos de vínculo do servidor
+     *
+     * @return array
+     */
+    public static function tiposVinculoServidor()
+    {
+        return self::getDefaultOption() + TipoVinculo::getDescriptiveValues();
     }
 }
