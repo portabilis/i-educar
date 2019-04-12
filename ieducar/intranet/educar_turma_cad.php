@@ -3,6 +3,7 @@
 use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
+use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -433,6 +434,10 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_cod_serie_mult_', $this->ref_ref_cod_serie_mult);
 
+        $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
+        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
+        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
         $this->campoQuebra2();
 
         // hora
@@ -631,12 +636,6 @@ class indice extends clsCadastro
             'options' => ['values' => $this->cod_curso_profissional,
                 'all_values' => $cursos]];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
-        $resources = array_replace([null => 'Selecione'], $resources);
-
-        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
-        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
 
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
@@ -1179,6 +1178,7 @@ class indice extends clsCadastro
         $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $objTurma->dias_semana = $this->dias_semana;
         $objTurma->atividades_complementares = $this->atividades_complementares;
+        $objTurma->local_funcionamento_diferenciado = $this->local_funcionamento_diferenciado;
 
         return $objTurma;
     }

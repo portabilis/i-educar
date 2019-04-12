@@ -9,7 +9,7 @@ class clsPmieducarTurma
     const TURNO_VESPERTINO = 2;
     const TURNO_NOTURNO = 3;
     const TURNO_INTEGRAL = 4;
-    
+
     public $cod_turma;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -72,6 +72,7 @@ class clsPmieducarTurma
     public $dias_semana;
     public $atividades_complementares;
     public $atividades_aee;
+    public $local_funcionamento_diferenciado;
 
     public $listarNaoInformarEducacenso = true;
     public $codUsuario;
@@ -147,7 +148,7 @@ class clsPmieducarTurma
 
         $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
         t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee ';
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado ';
 
         if (is_numeric($ref_cod_turma_tipo)) {
             if (class_exists('clsPmieducarTurmaTipo')) {
@@ -676,6 +677,12 @@ class clsPmieducarTurma
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->local_funcionamento_diferenciado)) {
+                $campos .= "{$gruda}local_funcionamento_diferenciado";
+                $valores .= "{$gruda}'{$this->local_funcionamento_diferenciado}'";
+                $gruda = ', ';
+            }
+
             if (is_string($this->dias_semana)) {
                 $campos .= "{$gruda}dias_semana";
                 $valores .= "{$gruda}'{$this->dias_semana}'";
@@ -1023,6 +1030,13 @@ class clsPmieducarTurma
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->local_funcionamento_diferenciado)) {
+                $set .= "{$gruda}local_funcionamento_diferenciado = '{$this->local_funcionamento_diferenciado}'";
+            } else {
+                $set .= "{$gruda}local_funcionamento_diferenciado = NULL ";
+            }
+
+            $gruda = ', ';
             if (is_string($this->dias_semana)) {
                 $set .= "{$gruda}dias_semana = '{$this->dias_semana}'";
                 $gruda = ', ';
