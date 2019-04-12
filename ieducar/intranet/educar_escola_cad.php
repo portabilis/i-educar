@@ -193,6 +193,7 @@ class indice extends clsCadastro
     public $com_cnpj;
     public $isEnderecoExterno = 0;
     public $esfera_administrativa;
+    public $managers_inep_id;
     public $managers_role_id;
     public $managers_individual_id;
     public $managers_access_criteria_id;
@@ -437,6 +438,7 @@ class indice extends clsCadastro
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Cadastro/Assets/Javascripts/Escola.js',
+            '/modules/Cadastro/Assets/Javascripts/SchoolManagersModal.js',
         );
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = array('/modules/Cadastro/Assets/Stylesheets/Escola.css');
@@ -2505,42 +2507,29 @@ class indice extends clsCadastro
             $rows[] = $this->makeRowManagerTable($manager);
         }
 
-        $this->campoTabelaInicio('gestores', 'Gestores',
+        $this->campoTabelaInicio('gestores', 'Gestores escolares',
             [
+                'INEP',
                 'Nome do(a) gestor(a)',
                 'Cargo do(a) gestor(a)',
-                'Critério de acesso ao cargo',
-                'Especificação do critério de acesso',
-                'Tipo de vínculo',
-                'Gestor(a) principal'
+                'Detalhes',
+                'Principal',
             ],
             $rows
         );
 
+        $this->campoTexto('managers_inep_id', null, null, null, 12);
         $helperOptions = ['objectName' => 'managers_individual'];
         $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
-
         $options = [
-                'resources' => SelectOptions::schoolManagerRoles(),
-                'required' => false
-            ];
+            'resources' => SelectOptions::schoolManagerRoles(),
+            'required' => false
+        ];
         $this->inputsHelper()->select('managers_role_id', $options);
-
-        $options = [
-                'resources' => SelectOptions::schoolManagerAccessCriterias(),
-                'required' => false
-            ];
-        $this->inputsHelper()->select('managers_access_criteria_id', $options);
-
-        $options = ['required' => false];
-        $this->inputsHelper()->text('managers_access_criteria_description', $options);
-
-        $options =
-            [
-                'resources' => SelectOptions::schoolManagerLinkTypes(),
-                'required' => false
-            ];
-        $this->inputsHelper()->select('managers_link_type_id', $options);
+        $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do diretor(a)</a>');
+        $this->campoOculto('managers_access_criteria_id', null);
+        $this->campoOculto('managers_access_criteria_description', null);
+        $this->campoOculto('managers_link_type_id', null);
 
         $resources = [
                 0 => 'Não',
@@ -2563,13 +2552,15 @@ class indice extends clsCadastro
     protected function makeRowManagerTable($schoolManager)
     {
         return [
+            $schoolManager->inep_id,
             $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
             $schoolManager->role_id,
+            null,
+            (int)$schoolManager->chief,
+            $schoolManager->individual_id,
             $schoolManager->access_criteria_id,
             $schoolManager->access_criteria_description,
             $schoolManager->link_type_id,
-            (int)$schoolManager->chief,
-            $schoolManager->individual_id,
         ];
     }
 
@@ -2586,6 +2577,7 @@ class indice extends clsCadastro
             $valueObject = new SchoolManagerValueObject();
             $valueObject->individualId = $individualId;
             $valueObject->schoolId = $schoolId;
+            $valueObject->inepId = $this->managers_inep_id[$key];
             $valueObject->roleId = $this->managers_role_id[$key];
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key] ?: null;
             $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
@@ -2604,9 +2596,11 @@ class indice extends clsCadastro
             [
                 'managers_individual_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
                 'managers_chief' => new SchoolManagerAtLeastOneChief(),
+                'managers_inep_id.*' => 'nullable|size:12',
             ],
             [
-                'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares'
+                'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares',
+                'managers_inep_id.*.size' => 'O campo: Código INEP do gestor(a) deve conter 12 dígitos'
             ]);
     }
 
@@ -2620,6 +2614,7 @@ class indice extends clsCadastro
         foreach ($this->managers_individual_id as $key => $value) {
             $valueObject = new SchoolManagerValueObject();
             $valueObject->individualId = $this->managers_individual_id[$key];
+            $valueObject->inepId = $this->managers_inep_id[$key];
             $valueObject->roleId = $this->managers_role_id[$key];
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key];
             $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
