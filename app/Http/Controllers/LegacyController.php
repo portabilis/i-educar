@@ -281,4 +281,17 @@ class LegacyController extends Controller
     {
         return $this->requireFileFromLegacy('modules/' . $uri);
     }
+
+    /**
+     * Load module route file and generate a response for API.
+     *
+     * @return Response
+     *
+     * @throws HttpResponseException
+     * @throws Exception
+     */
+    public function api()
+    {
+        return $this->requireFileFromLegacy('module/index.php');
+    }
 }
