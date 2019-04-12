@@ -488,7 +488,7 @@ class EducacensoAnaliseController extends ApiCoreController
         if ($escola->usaInternet() && empty($escola->equipamentosAcessoInternet)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção de equipamentos que os aluno(a)s usam para acessar a internet da escola foi informada.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Acesso à internet)',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Equipamentos que os aluno(a)s usam para acessar a internet da escola)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
